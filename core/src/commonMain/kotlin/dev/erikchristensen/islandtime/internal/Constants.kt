@@ -1,0 +1,30 @@
+package dev.erikchristensen.islandtime.internal
+
+internal const val DAYS_IN_COMMON_YEAR = 365L
+internal const val MONTHS_IN_YEAR = 12
+internal const val DAYS_IN_WEEK = 7
+internal const val HOURS_PER_DAY = 24
+internal const val MINUTES_PER_HOUR = 60
+internal const val SECONDS_PER_MINUTE = 60
+internal const val NANOSECONDS_PER_SECOND = 1_000_000_000L
+
+internal const val YEARS_PER_DECADE = 10
+internal const val YEARS_PER_CENTURY = 100
+
+internal const val MINUTES_PER_DAY = MINUTES_PER_HOUR * HOURS_PER_DAY
+
+internal const val SECONDS_PER_HOUR = SECONDS_PER_MINUTE * MINUTES_PER_HOUR
+internal const val SECONDS_PER_DAY = SECONDS_PER_MINUTE * MINUTES_PER_DAY
+
+internal const val NANOSECONDS_PER_MINUTE = NANOSECONDS_PER_SECOND * SECONDS_PER_MINUTE
+internal const val NANOSECONDS_PER_HOUR = NANOSECONDS_PER_SECOND * SECONDS_PER_HOUR
+internal const val NANOSECONDS_PER_DAY = NANOSECONDS_PER_SECOND * SECONDS_PER_DAY
+
+internal const val DAYS_PER_400_YEAR_CYCLE = 146_097
+internal const val NUMBER_OF_400_YEAR_CYCLES_FROM_0000_TO_1970 = 5L
+internal const val LEAP_YEARS_FROM_1970_TO_2000 = 7L
+internal const val YEARS_FROM__1970_TO_2000 = 30L
+
+internal const val DAYS_FROM_0000_TO_1970 =
+    (DAYS_PER_400_YEAR_CYCLE * NUMBER_OF_400_YEAR_CYCLES_FROM_0000_TO_1970) -
+        (YEARS_FROM__1970_TO_2000 * DAYS_IN_COMMON_YEAR + LEAP_YEARS_FROM_1970_TO_2000)
