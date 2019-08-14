@@ -29,7 +29,7 @@ data class Date(
         return if (yearDiff != 0) {
             yearDiff
         } else {
-            val monthDiff = month.compareTo(other.month)
+            val monthDiff = month.ordinal - other.month.ordinal
 
             if (monthDiff != 0) {
                 monthDiff
@@ -85,6 +85,27 @@ data class Date(
 }
 
 /**
+ * Create a [Date] from a year and day of year
+ * @param year the year
+ * @param dayOfYear the day of the calendar year
+ * @return a new [Date]
+ */
+@Suppress("FunctionName")
+fun Date(year: Int, dayOfYear: Int): Date {
+    checkYear(year)
+    require(dayOfYear in 1..366) { "'$dayOfYear' is not a valid day of the year" }
+
+    if (dayOfYear > Year(year).length.value) {
+        throw DateTimeException("Day of year '$dayOfYear' is invalid since '$year' isn't a leap year")
+    }
+
+    val testMonth = ((dayOfYear - 1) / 31 + 1).toMonth()
+    val month = if (dayOfYear > testMonth.lastDayOfYearIn(year)) testMonth + 1.months else testMonth
+    val dayOfMonth = dayOfYear - month.firstDayOfYearIn(year) + 1
+    return Date(year, month, dayOfMonth)
+}
+
+/**
  * The day of the week
  */
 val Date.dayOfWeek: DayOfWeek
@@ -137,10 +158,9 @@ operator fun Date.plus(monthsToAdd: MonthSpan): Date {
         val newYear = newMonthsRelativeTo0 / MONTHS_IN_YEAR
         val newMonth = Month.values()[newMonthsRelativeTo0 % MONTHS_IN_YEAR]
 
-        Date(
-            month = newMonth,
-            day = dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)),
-            year = newYear
+        Date(newYear,
+            newMonth,
+            dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear))
         )
     }
 }

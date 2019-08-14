@@ -1,9 +1,6 @@
 package dev.erikchristensen.islandtime.date
 
-import dev.erikchristensen.islandtime.DateTime
-import dev.erikchristensen.islandtime.DayOfWeek
-import dev.erikchristensen.islandtime.Month
-import dev.erikchristensen.islandtime.Time
+import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.DateTimeParseException
 import dev.erikchristensen.islandtime.parser.Iso8601
@@ -21,6 +18,19 @@ class DateTest {
         assertFailsWith<IllegalArgumentException> { Date(2000, Month.JANUARY, 32) }
         assertFailsWith<IllegalArgumentException> { Date(2001, Month.FEBRUARY, 29) }
         assertFailsWith<IllegalArgumentException> { Date(2001, Month.FEBRUARY, 0) }
+    }
+
+    @Test
+    fun `throws an exception when creating from a day of year that's impossible`() {
+        assertFailsWith<IllegalArgumentException> { Date(2019, -1) }
+        assertFailsWith<IllegalArgumentException> { Date(2019, 367) }
+        assertFailsWith<DateTimeException> { Date(2019, 366) }
+    }
+
+    @Test
+    fun `creates dates from year and day of year`() {
+        assertEquals(Date(2019, Month.DECEMBER, 1), Date(2019, 335))
+        assertEquals(Date(2020, Month.DECEMBER, 1), Date(2020, 336))
     }
 
     @Test
@@ -502,20 +512,104 @@ class DateTest {
     }
 
     @Test
-    fun `daysBetween() returns the number of days between two dates`() {
+    fun `daysBetween() returns zero days when the start and end date are the same`() {
         assertEquals(
             0L.days,
             daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
         )
+    }
 
+    @Test
+    fun `daysBetween() returns the number of days between two dates in positive progression`() {
         assertEquals(
             33L.days,
             daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
         )
+    }
 
+    @Test
+    fun `daysBetween() returns the number of days between two dates in negative progression`() {
         assertEquals(
             (-16L).days,
             daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 15))
+        )
+    }
+
+    @Test
+    fun `monthsBetween() returns zero when the start and end date are the same`() {
+        assertEquals(
+            0.months,
+            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.JULY, 15))
+        )
+    }
+
+    @Test
+    fun `monthsBetween() returns the months between two dates in positive progression`() {
+        assertEquals(
+            0.months,
+            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.AUGUST, 14))
+        )
+
+        assertEquals(
+            1.months,
+            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.AUGUST, 15))
+        )
+
+        assertEquals(
+            13.months,
+            monthsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.AUGUST, 15))
+        )
+    }
+
+    @Test
+    fun `monthsBetween() returns the months between two dates in negative progression`() {
+        assertEquals(
+            0.months,
+            monthsBetween(Date(2019, Month.AUGUST, 14), Date(2019, Month.JULY, 15))
+        )
+
+        assertEquals(
+            (-1).months,
+            monthsBetween(Date(2019, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
+        )
+
+        assertEquals(
+            (-13).months,
+            monthsBetween(Date(2020, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
+        )
+    }
+
+    @Test
+    fun `yearsBetween() returns zero when the start and end date are the same`() {
+        assertEquals(
+            0.years,
+            yearsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.JULY, 15))
+        )
+    }
+
+    @Test
+    fun `yearsBetween() returns the years between two dates in positive progression`() {
+        assertEquals(
+            0.years,
+            yearsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.JULY, 14))
+        )
+
+        assertEquals(
+            1.years,
+            yearsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.JULY, 15))
+        )
+    }
+
+    @Test
+    fun `yearsBetween() returns the years between two dates in negative progression`() {
+        assertEquals(
+            0.years,
+            yearsBetween(Date(2020, Month.JULY, 15), Date(2019, Month.JULY, 16))
+        )
+
+        assertEquals(
+            (-1).years,
+            yearsBetween(Date(2020, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
         )
     }
 }

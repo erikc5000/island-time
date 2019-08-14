@@ -108,6 +108,16 @@ fun Month.firstDayOfYearIn(year: Int): Int {
     return if (Year(year).isLeap) firstDayOfLeapYear else firstDayOfCommonYear
 }
 
+fun Month.lastDayOfYearIn(year: Int): Int {
+    val isLeap = Year(year).isLeap
+
+    return if (isLeap) {
+        firstDayOfLeapYear + lengthInLeapYear.value - 1
+    } else {
+        firstDayOfCommonYear + lengthInCommonYear.value - 1
+    }
+}
+
 /**
  * The range of valid days for this month within a given year
  * @param year Retrieve the day range within this year
