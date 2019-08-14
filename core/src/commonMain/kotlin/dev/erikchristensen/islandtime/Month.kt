@@ -89,7 +89,7 @@ val Month.firstDayOfLeapYear: Int
  */
 fun Month.lengthIn(year: Int): DaySpan {
     return when (this) {
-        Month.FEBRUARY -> if (isLeapYear(year)) lengthInLeapYear else lengthInCommonYear
+        Month.FEBRUARY -> if (Year(year).isLeap) lengthInLeapYear else lengthInCommonYear
         else -> lengthInCommonYear
     }
 }
@@ -105,7 +105,7 @@ fun Month.lastDayIn(year: Int) = lengthIn(year).value
  * @param year Retrieve the day of year number within this year
  */
 fun Month.firstDayOfYearIn(year: Int): Int {
-    return if (isLeapYear(year)) firstDayOfLeapYear else firstDayOfCommonYear
+    return if (Year(year).isLeap) firstDayOfLeapYear else firstDayOfCommonYear
 }
 
 /**

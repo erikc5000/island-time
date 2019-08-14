@@ -49,6 +49,8 @@ inline val DateTime.dayOfYear: Int get() = date.dayOfYear
 inline val DateTime.year: Int get() = date.year
 inline val DateTime.isInLeapYear: Boolean get() = date.isInLeapYear
 inline val DateTime.isLeapDay: Boolean get() = date.isLeapDay
+inline val DateTime.lengthOfMonth: DaySpan get() = date.lengthOfMonth
+inline val DateTime.lengthOfYear: DaySpan get() = date.lengthOfYear
 
 operator fun DateTime.plus(daysToAdd: LongDaySpan) = date.plus(daysToAdd)
 operator fun DateTime.plus(daysToAdd: DaySpan) = date.plus(daysToAdd)

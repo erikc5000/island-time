@@ -6,18 +6,15 @@ inline class YearSpan(val value: Int) : Comparable<YearSpan> {
     override fun compareTo(other: YearSpan) = value.compareTo(other.value)
 }
 
-operator fun YearSpan.unaryPlus() = YearSpan(+value)
+operator fun YearSpan.unaryPlus() = this
 operator fun YearSpan.unaryMinus() = YearSpan(-value)
 operator fun YearSpan.plus(years: YearSpan) = YearSpan(value + years.value)
+operator fun YearSpan.plus(months: MonthSpan) = this.asMonths() + months
 operator fun YearSpan.minus(years: YearSpan) = plus(-years)
+operator fun YearSpan.minus(months: MonthSpan) = plus(-months)
 
-//operator fun YearSpan.times(scalar: Long) = YearSpan(value * scalar)
 operator fun YearSpan.times(scalar: Int) = YearSpan(value * scalar)
-
-//operator fun YearSpan.div(scalar: Long) = YearSpan(value / scalar)
 operator fun YearSpan.div(scalar: Int) = YearSpan(value / scalar)
-
-//operator fun YearSpan.rem(scalar: Long) = YearSpan(value % scalar)
 operator fun YearSpan.rem(scalar: Int) = YearSpan(value % scalar)
 
 fun YearSpan.asMonths() = MonthSpan(value * MONTHS_IN_YEAR)
@@ -34,7 +31,9 @@ inline class LongYearSpan(val value: Long) : Comparable<LongYearSpan> {
 operator fun LongYearSpan.unaryPlus() = LongYearSpan(+value)
 operator fun LongYearSpan.unaryMinus() = LongYearSpan(-value)
 operator fun LongYearSpan.plus(years: LongYearSpan) = LongYearSpan(value + years.value)
+operator fun LongYearSpan.plus(months: LongMonthSpan) = this.asMonths() + months
 operator fun LongYearSpan.minus(years: LongYearSpan) = plus(-years)
+operator fun LongYearSpan.minus(months: LongMonthSpan) = plus(-months)
 
 operator fun LongYearSpan.times(scalar: Long) = LongYearSpan(value * scalar)
 operator fun LongYearSpan.times(scalar: Int) = LongYearSpan(value * scalar)

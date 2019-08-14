@@ -1,13 +1,10 @@
-@file:JvmName("Years")
 package dev.erikchristensen.islandtime
 
-import kotlin.jvm.JvmName
+import dev.erikchristensen.islandtime.interval.DaySpan
+import dev.erikchristensen.islandtime.interval.days
 
-inline class Year(private val value: Int) : Comparable<Year> {
-
-    val isLeap: Boolean get() = isLeapYear(value)
-
-    override fun compareTo(other: Year) = value.compareTo(other.value)
+inline class Year(val value: Int) : Comparable<Year> {
+    override fun compareTo(other: Year) = value - other.value
 
     companion object {
         const val MIN_VALUE = 1
@@ -15,6 +12,19 @@ inline class Year(private val value: Int) : Comparable<Year> {
     }
 }
 
-fun isLeapYear(year: Int): Boolean {
-    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+val Year.isValid: Boolean
+    get() = value in Year.MIN_VALUE..Year.MAX_VALUE
+
+val Year.isLeap: Boolean
+    get() = value % 4 == 0 && (value % 100 != 0 || value % 400 == 0)
+
+val Year.length: DaySpan
+    get() = if (isLeap) 366.days else 365.days
+
+fun checkYear(year: Int) {
+    if (!Year(year).isValid) {
+        throw IllegalArgumentException(
+            "The year '$year' is outside the supported range of ${Year.MIN_VALUE}..${Year.MAX_VALUE}"
+        )
+    }
 }

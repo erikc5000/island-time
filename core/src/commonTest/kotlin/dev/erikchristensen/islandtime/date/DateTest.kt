@@ -4,11 +4,8 @@ import dev.erikchristensen.islandtime.DateTime
 import dev.erikchristensen.islandtime.DayOfWeek
 import dev.erikchristensen.islandtime.Month
 import dev.erikchristensen.islandtime.Time
+import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.DateTimeParseException
-import dev.erikchristensen.islandtime.interval.days
-import dev.erikchristensen.islandtime.interval.months
-import dev.erikchristensen.islandtime.interval.unaryMinus
-import dev.erikchristensen.islandtime.interval.years
 import dev.erikchristensen.islandtime.parser.Iso8601
 import kotlin.test.*
 
@@ -29,17 +26,29 @@ class DateTest {
     @Test
     fun `dayOfWeek returns the expected day`() {
         assertEquals(
-            DayOfWeek.THURSDAY, Date(1970,
-                Month.JANUARY, 1).dayOfWeek)
+            DayOfWeek.THURSDAY, Date(
+                1970,
+                Month.JANUARY, 1
+            ).dayOfWeek
+        )
         assertEquals(
-            DayOfWeek.FRIDAY, Date(1970,
-                Month.JANUARY, 2).dayOfWeek)
+            DayOfWeek.FRIDAY, Date(
+                1970,
+                Month.JANUARY, 2
+            ).dayOfWeek
+        )
         assertEquals(
-            DayOfWeek.WEDNESDAY, Date(1969,
-                Month.DECEMBER, 31).dayOfWeek)
+            DayOfWeek.WEDNESDAY, Date(
+                1969,
+                Month.DECEMBER, 31
+            ).dayOfWeek
+        )
         assertEquals(
-            DayOfWeek.SATURDAY, Date(2019,
-                Month.JULY, 27).dayOfWeek)
+            DayOfWeek.SATURDAY, Date(
+                2019,
+                Month.JULY, 27
+            ).dayOfWeek
+        )
     }
 
     @Test
@@ -69,6 +78,18 @@ class DateTest {
     @Test
     fun `isInLeapYear returns false in common year`() {
         assertFalse { Date(2019, Month.JANUARY, 1).isInLeapYear }
+    }
+
+    @Test
+    fun `isLeapDay property returns true only on February 29`() {
+        assertTrue { Date(2020, Month.FEBRUARY, 29).isLeapDay }
+        assertFalse { Date(2019, Month.FEBRUARY, 28).isLeapDay }
+    }
+
+    @Test
+    fun `lengthOfMonth property returns the length in days of a date's month`() {
+        assertEquals(29.days, Date(2020, Month.FEBRUARY, 29).lengthOfMonth)
+        assertEquals(28.days, Date(2019, Month.FEBRUARY, 28).lengthOfMonth)
     }
 
     @Test
@@ -434,5 +455,67 @@ class DateTest {
     @Test
     fun `String_toDate() parses valid strings with explicit parser`() {
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate(Iso8601.DATE_PARSER))
+    }
+
+    @Test
+    fun `periodBetween() returns a zeroed period when the start and end dates are the same`() {
+        assertEquals(
+            periodOfZero(),
+            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
+        )
+    }
+
+    @Test
+    fun `periodBetween() returns the period between two dates in positive progression`() {
+        assertEquals(
+            periodOf(1.months, 2.days),
+            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
+        )
+
+        assertEquals(
+            periodOf(1.months, 8.days),
+            periodBetween(Date(2019, Month.MAY, 25), Date(2019, Month.JULY, 3))
+        )
+
+        assertEquals(
+            periodOf(2.years, 29.days),
+            periodBetween(Date(2018, Month.JANUARY, 31), Date(2020, Month.FEBRUARY, 29))
+        )
+    }
+
+    @Test
+    fun `periodBetween() returns the period between two dates in negative progression`() {
+        assertEquals(
+            periodOf((-28).days),
+            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 3))
+        )
+
+        assertEquals(
+            periodOf((-1).months),
+            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 1))
+        )
+
+        assertEquals(
+            periodOf((-1).years, (-10).months, (-21).days),
+            periodBetween(Date(2019, Month.MAY, 25), Date(2017, Month.JULY, 4))
+        )
+    }
+
+    @Test
+    fun `daysBetween() returns the number of days between two dates`() {
+        assertEquals(
+            0L.days,
+            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
+        )
+
+        assertEquals(
+            33L.days,
+            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
+        )
+
+        assertEquals(
+            (-16L).days,
+            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 15))
+        )
     }
 }

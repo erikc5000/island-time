@@ -19,12 +19,12 @@ data class Date(
     val dayOfMonth: Int get() = day
 
     init {
-        require(isValidYear(year)) { "The year '$year' is outside the supported range" }
+        checkYear(year)
         require(day in month.dayRangeIn(year)) { "The day '$day' doesn't exist in $month of $year" }
     }
 
     override fun compareTo(other: Date): Int {
-        val yearDiff = year.compareTo(other.year)
+        val yearDiff = year - other.year
 
         return if (yearDiff != 0) {
             yearDiff
@@ -34,7 +34,7 @@ data class Date(
             if (monthDiff != 0) {
                 monthDiff
             } else {
-                day.compareTo(other.day)
+                day - other.day
             }
         }
     }
@@ -101,19 +101,22 @@ val Date.dayOfYear: Int get() = month.firstDayOfYearIn(year) + dayOfMonth - 1
 /**
  * true if this date falls within a leap year
  */
-val Date.isInLeapYear: Boolean
-    get() = isLeapYear(
-        year
-    )
+val Date.isInLeapYear: Boolean get() = Year(year).isLeap
 
 /**
  * true if this is a leap day
  */
-val Date.isLeapDay: Boolean
-    get() = isLeapDay(
-        month,
-        dayOfMonth
-    )
+val Date.isLeapDay: Boolean get() = isLeapDay(month, dayOfMonth)
+
+/**
+ * The length of this date's month in days
+ */
+val Date.lengthOfMonth: DaySpan get() = month.lengthIn(year)
+
+/**
+ * The length of this date's year in days
+ */
+val Date.lengthOfYear: DaySpan get() = Year(year).length
 
 operator fun Date.plus(daysToAdd: LongDaySpan): Date {
     return if (daysToAdd.value == 0L) {
@@ -206,33 +209,40 @@ internal fun DateTimeParseResult.toDate(): Date {
     return Date(year, month, day)
 }
 
-fun periodBetween(start: Date, endInclusive: Date): Period {
-    val totalMonths = monthsBetween(start, endInclusive)
-    val years = totalMonths.asWholeYears()
-    val months = totalMonths % MONTHS_IN_YEAR
+fun periodBetween(start: Date, endExclusive: Date): Period {
+    var totalMonths = endExclusive.asMonthsRelativeToYear0() - start.asMonthsRelativeToYear0()
+    val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
 
-    val testDate = start + totalMonths
-    val days = daysBetween(testDate, endInclusive)
+    val days = when {
+        totalMonths > 0 && dayDiff.value < 0 -> {
+            totalMonths--
+            val testDate = start + totalMonths.months
+            daysBetween(testDate, endExclusive).toInt()
+        }
+        totalMonths < 0 && dayDiff.value > 0 -> {
+            totalMonths++
+            dayDiff - endExclusive.lengthOfMonth
+        }
+        else -> dayDiff
+    }
+    val years = (totalMonths / MONTHS_IN_YEAR).years.toInt()
+    val months = (totalMonths % MONTHS_IN_YEAR).months.toInt()
 
-    return periodOf(years, months, days.toInt())
+    return periodOf(years, months, days)
 }
 
-fun daysBetween(start: Date, endInclusive: Date): LongDaySpan {
-    return endInclusive.asUnixEpochDays() - start.asUnixEpochDays()
+fun daysBetween(start: Date, endExclusive: Date): LongDaySpan {
+    return endExclusive.asUnixEpochDays() - start.asUnixEpochDays()
 }
 
-fun monthsBetween(start: Date, endInclusive: Date): MonthSpan {
-    val yearsBetween = endInclusive.year - start.year
-    val monthsBetween = yearsBetween * MONTHS_IN_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
-
-    // Deal with variable month lengths
-    val coercedStartDay = start.dayOfMonth.coerceAtMost(endInclusive.month.lastDayIn(endInclusive.year))
-    val monthAdjustment = if (endInclusive.dayOfMonth < coercedStartDay) -1 else 0
-    return (monthsBetween + monthAdjustment).months
+fun monthsBetween(start: Date, endExclusive: Date): MonthSpan {
+    val startDays = start.asMonthsRelativeToYear0() * 32L + start.dayOfMonth
+    val endDays = endExclusive.asMonthsRelativeToYear0() * 32L + endExclusive.dayOfMonth
+    return ((endDays - startDays) / 32).toInt().months
 }
 
-fun yearsBetween(start: Date, endInclusive: Date): YearSpan {
-    return monthsBetween(start, endInclusive).asWholeYears()
+fun yearsBetween(start: Date, endExclusive: Date): YearSpan {
+    return monthsBetween(start, endExclusive).asWholeYears()
 }
 
 internal const val MAX_DATE_STRING_LENGTH = 10
@@ -247,3 +257,5 @@ internal fun StringBuilder.appendDate(date: Date): StringBuilder {
     }
     return this
 }
+
+private fun Date.asMonthsRelativeToYear0() = year * 12L + month.ordinal

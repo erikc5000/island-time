@@ -15,7 +15,7 @@ internal class DateDayProgressionIterator(
 ) : DateIterator() {
 
     private val finalElement = last
-    private var hasNext = if (step.value > 0L) first <= last else first >= last
+    private var hasNext = if (step.value > 0) first <= last else first >= last
     private var next = if (hasNext) first else finalElement
 
     override fun hasNext() = hasNext
@@ -44,7 +44,7 @@ internal class DateMonthProgressionIterator(
 ) : DateIterator() {
 
     private val finalElement = last
-    private var hasNext = if (step > 0.months) first <= last else first >= last
+    private var hasNext = if (step.value > 0) first <= last else first >= last
     private var next = if (hasNext) first else finalElement
 
     override fun hasNext() = hasNext

@@ -8,8 +8,11 @@ inline class MonthSpan(val value: Int) : Comparable<MonthSpan> {
 
 operator fun MonthSpan.unaryPlus() = MonthSpan(+value)
 operator fun MonthSpan.unaryMinus() = MonthSpan(-value)
-operator fun MonthSpan.plus(monthsToAdd: MonthSpan) = MonthSpan(value + monthsToAdd.value)
-operator fun MonthSpan.minus(monthsToSubtract: MonthSpan) = plus(-monthsToSubtract)
+
+operator fun MonthSpan.plus(years: YearSpan) = this + years.asMonths()
+operator fun MonthSpan.plus(months: MonthSpan) = MonthSpan(value + months.value)
+operator fun MonthSpan.minus(years: YearSpan) = plus(-years)
+operator fun MonthSpan.minus(months: MonthSpan) = plus(-months)
 
 //operator fun MonthSpan.times(scalar: Long) = MonthSpan(value * scalar)
 operator fun MonthSpan.times(scalar: Int) = MonthSpan(value * scalar)
@@ -23,7 +26,7 @@ operator fun MonthSpan.rem(scalar: Int) = MonthSpan(value % scalar)
 fun MonthSpan.toLong() = LongMonthSpan(value.toLong())
 
 /**
- * Convert a month span into the number of whole years that it represents
+ * Convert a month span into the number of whole years represented by it
  */
 fun MonthSpan.asWholeYears() = YearSpan(value / MONTHS_IN_YEAR)
 
@@ -36,8 +39,10 @@ inline class LongMonthSpan(val value: Long) : Comparable<LongMonthSpan> {
 operator fun LongMonthSpan.unaryPlus() = LongMonthSpan(+value)
 operator fun LongMonthSpan.unaryMinus() = LongMonthSpan(-value)
 
-operator fun LongMonthSpan.plus(monthsToAdd: LongMonthSpan) = LongMonthSpan(value + monthsToAdd.value)
-operator fun LongMonthSpan.minus(monthsToSubtract: LongMonthSpan) = plus(-monthsToSubtract)
+operator fun LongMonthSpan.plus(years: LongYearSpan) = this + years.asMonths()
+operator fun LongMonthSpan.plus(months: LongMonthSpan) = LongMonthSpan(value + months.value)
+operator fun LongMonthSpan.minus(years: LongYearSpan) = plus(-years)
+operator fun LongMonthSpan.minus(months: LongMonthSpan) = plus(-months)
 
 operator fun LongMonthSpan.times(scalar: Long) = LongMonthSpan(value * scalar)
 operator fun LongMonthSpan.times(scalar: Int) = LongMonthSpan(value * scalar)

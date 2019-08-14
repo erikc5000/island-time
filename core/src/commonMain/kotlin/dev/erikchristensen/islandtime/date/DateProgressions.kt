@@ -1,6 +1,8 @@
 package dev.erikchristensen.islandtime.date
 
+import dev.erikchristensen.islandtime.internal.MONTHS_IN_YEAR
 import dev.erikchristensen.islandtime.interval.*
+import dev.erikchristensen.islandtime.lastDayIn
 import kotlin.math.abs
 
 open class DateDayProgression protected constructor(
@@ -111,16 +113,31 @@ private fun getLastDateInProgression(start: Date, end: Date, step: MonthSpan): D
         step.value > 0 -> if (start >= end) {
             end
         } else {
-            val monthsBetween = monthsBetween(start, end)
+            val monthsBetween = progressionMonthsBetween(start, end)
             val steppedMonths = monthsBetween - (monthsBetween % step.value)
             start + steppedMonths
         }
         else -> if (start <= end) {
             end
         } else {
-            val monthsBetween = monthsBetween(end, start)
+            val monthsBetween = progressionMonthsBetween(end, start)
             val steppedMonths = monthsBetween - (monthsBetween % step.value)
             start - steppedMonths
         }
     }
+}
+
+/**
+ * Get the number of months between two dates for the purposes of a progression.  This works a little differently than
+ * the usual [monthsBetween] since it tries to use the same day as the start date while stepping months, coercing that
+ * day as needed to fit the number of days in the current month.
+ */
+private fun progressionMonthsBetween(start: Date, endInclusive: Date): MonthSpan {
+    val yearsBetween = endInclusive.year - start.year
+    val monthsBetween = yearsBetween * MONTHS_IN_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
+
+    // Deal with variable month lengths
+    val coercedStartDay = start.dayOfMonth.coerceAtMost(endInclusive.month.lastDayIn(endInclusive.year))
+    val monthAdjustment = if (endInclusive.dayOfMonth < coercedStartDay) -1 else 0
+    return (monthsBetween + monthAdjustment).months
 }
