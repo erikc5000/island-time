@@ -8,7 +8,7 @@ import kotlin.math.abs
 open class DateDayProgression protected constructor(
     first: Date,
     endInclusive: Date,
-    val step: DaySpan
+    val step: IntDays
 ) : Iterable<Date> {
 
     init {
@@ -18,8 +18,8 @@ open class DateDayProgression protected constructor(
         }
     }
 
-    private val firstUnixEpochDay: LongDaySpan = first.asUnixEpochDays()
-    private val lastUnixEpochDay: LongDaySpan = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
+    private val firstUnixEpochDay: LongDays = first.asUnixEpochDays()
+    private val lastUnixEpochDay: LongDays = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
     val first: Date get() = Date.ofUnixEpochDays(firstUnixEpochDay)
     val last: Date get() = Date.ofUnixEpochDays(lastUnixEpochDay)
 
@@ -28,7 +28,7 @@ open class DateDayProgression protected constructor(
     override fun toString() = if (step.value > 0L) "$first..$last step $step" else "$first downTo $ last step ${-step}"
 
     companion object {
-        fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: DaySpan): DateDayProgression {
+        fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntDays): DateDayProgression {
             return DateDayProgression(rangeStart, rangeEnd, step)
         }
     }
@@ -37,7 +37,7 @@ open class DateDayProgression protected constructor(
 class DateMonthProgression private constructor(
     val first: Date,
     endInclusive: Date,
-    val step: MonthSpan
+    val step: IntMonths
 ) : Iterable<Date> {
 
     init {
@@ -54,7 +54,7 @@ class DateMonthProgression private constructor(
     override fun toString() = if (step > 0.months) "$first..$last step $step" else "$first downTo $ last step ${-step}"
 
     companion object {
-        fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: MonthSpan): DateMonthProgression {
+        fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntMonths): DateMonthProgression {
             return DateMonthProgression(rangeStart, rangeEnd, step)
         }
     }
@@ -65,7 +65,7 @@ fun DateDayProgression.reversed() = DateDayProgression.fromClosedRange(last, fir
 /**
  * Step over dates in increments of days
  */
-infix fun DateDayProgression.step(step: DaySpan): DateDayProgression {
+infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
     if (step.value <= 0) {
         throw IllegalArgumentException("step must be positive")
     }
@@ -76,7 +76,7 @@ infix fun DateDayProgression.step(step: DaySpan): DateDayProgression {
 /**
  * Step over dates in increments of months
  */
-infix fun DateDayProgression.step(step: MonthSpan): DateMonthProgression {
+infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
     if (step <= 0.months) {
         throw IllegalArgumentException("step must be positive")
     }
@@ -84,14 +84,14 @@ infix fun DateDayProgression.step(step: MonthSpan): DateMonthProgression {
     return DateMonthProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
-infix fun DateDayProgression.step(step: YearSpan) = this.step(step.asMonths())
+infix fun DateDayProgression.step(step: IntYears) = this.step(step.asMonths())
 
 fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last, first, -step)
 
 /**
  * Assumes step is non-zero
  */
-private fun getLastDayInProgression(startInDays: LongDaySpan, endDate: Date, step: DaySpan): LongDaySpan {
+private fun getLastDayInProgression(startInDays: LongDays, endDate: Date, step: IntDays): LongDays {
     val endInDays = endDate.asUnixEpochDays()
 
     return when {
@@ -108,7 +108,7 @@ private fun getLastDayInProgression(startInDays: LongDaySpan, endDate: Date, ste
     }
 }
 
-private fun getLastDateInProgression(start: Date, end: Date, step: MonthSpan): Date {
+private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): Date {
     return when {
         step.value > 0 -> if (start >= end) {
             end
@@ -132,7 +132,7 @@ private fun getLastDateInProgression(start: Date, end: Date, step: MonthSpan): D
  * the usual [monthsBetween] since it tries to use the same day as the start date while stepping months, coercing that
  * day as needed to fit the number of days in the current month.
  */
-private fun progressionMonthsBetween(start: Date, endInclusive: Date): MonthSpan {
+private fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths {
     val yearsBetween = endInclusive.year - start.year
     val monthsBetween = yearsBetween * MONTHS_IN_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
 

@@ -470,7 +470,7 @@ class DateTest {
     @Test
     fun `periodBetween() returns a zeroed period when the start and end dates are the same`() {
         assertEquals(
-            periodOfZero(),
+            Period.ZERO,
             periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
         )
     }

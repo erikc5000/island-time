@@ -10,9 +10,9 @@ import dev.erikchristensen.islandtime.internal.MONTHS_IN_YEAR
  * @property days number of days in this period
  */
 class Period private constructor(
-    val years: YearSpan = 0.years,
-    val months: MonthSpan = 0.months,
-    val days: DaySpan = 0.days
+    val years: IntYears = 0.years,
+    val months: IntMonths = 0.months,
+    val days: IntDays = 0.days
 ) {
 
     override fun equals(other: Any?): Boolean {
@@ -64,9 +64,9 @@ class Period private constructor(
         val ZERO = Period()
 
         internal fun create(
-            years: YearSpan = 0.years,
-            months: MonthSpan = 0.months,
-            days: DaySpan = 0.days
+            years: IntYears = 0.years,
+            months: IntMonths = 0.months,
+            days: IntDays = 0.days
         ): Period {
             return if (years.value or months.value or days.value == 0) {
                 ZERO
@@ -78,42 +78,37 @@ class Period private constructor(
 }
 
 /**
- * A period of no length
- */
-fun periodOfZero() = Period.ZERO
-
-/**
  * Create a [Period]
  */
-fun periodOf(years: YearSpan, months: MonthSpan = 0.months, days: DaySpan = 0.days): Period {
+fun periodOf(years: IntYears, months: IntMonths = 0.months, days: IntDays = 0.days): Period {
     return Period.create(years, months, days)
 }
 
 /**
  * Create a [Period]
  */
-fun periodOf(years: YearSpan, days: DaySpan): Period {
+fun periodOf(years: IntYears, days: IntDays): Period {
     return Period.create(years = years, days = days)
 }
 
 /**
  * Create a [Period]
  */
-fun periodOf(months: MonthSpan, days: DaySpan = 0.days): Period {
+fun periodOf(months: IntMonths, days: IntDays = 0.days): Period {
     return Period.create(months = months, days = days)
 }
 
 /**
  * Create a [Period]
  */
-fun periodOf(days: DaySpan): Period {
+fun periodOf(days: IntDays): Period {
     return Period.create(days = days)
 }
 
 /**
  * The total number of months in this period, including years
  */
-val Period.totalMonths: MonthSpan get() = years.asMonths() + months
+val Period.totalMonths: IntMonths get() = years.asMonths() + months
 
 /**
  * true if this period has no length
@@ -129,19 +124,19 @@ val Period.isNegative get() = years.value < 0 || months.value < 0 || days.value 
  * Return a new period, replacing the years component with the provided value
  * @param years the new years value
  */
-fun Period.with(years: YearSpan) = Period.create(years, this.months, this.days)
+fun Period.with(years: IntYears) = Period.create(years, this.months, this.days)
 
 /**
  * Return a new period, replacing the months component with the provided value
  * @param months the new months value
  */
-fun Period.with(months: MonthSpan) = Period.create(this.years, months, this.days)
+fun Period.with(months: IntMonths) = Period.create(this.years, months, this.days)
 
 /**
  * Return a new period, replacing the days component with the provided value
  * @param days the new days value
  */
-fun Period.with(days: DaySpan) = Period.create(this.years, this.months, days)
+fun Period.with(days: IntDays) = Period.create(this.years, this.months, days)
 
 /**
  * Normalize the number of years and months such that "1 year, 15 months" becomes "2 years, 3 months".  Only the
@@ -155,24 +150,24 @@ fun Period.normalized(): Period {
 }
 
 /**
- * Convert a [YearSpan] into a [Period] with the same number of years
+ * Convert a [IntYears] into a [Period] with the same number of years
  */
-fun YearSpan.asPeriod() = Period.create(years = this)
+fun IntYears.asPeriod() = Period.create(years = this)
 
 /**
- * Convert a [MonthSpan] into a [Period] with the same number of months
+ * Convert a [IntMonths] into a [Period] with the same number of months
  */
-fun MonthSpan.asPeriod() = Period.create(months = this)
+fun IntMonths.asPeriod() = Period.create(months = this)
 
 /**
- * Convert a [DaySpan] into a [Period] with the same number of days
+ * Convert a [IntDays] into a [Period] with the same number of days
  */
-fun DaySpan.asPeriod() = Period.create(days = this)
+fun IntDays.asPeriod() = Period.create(days = this)
 
 // TODO: Revisit including these since it may be better to make the conversion explicit
-fun LongYearSpan.asPeriod() = this.toInt().asPeriod()
-fun LongMonthSpan.asPeriod() = this.toInt().asPeriod()
-fun LongDaySpan.asPeriod() = this.toInt().asPeriod()
+fun LongYears.asPeriod() = this.toInt().asPeriod()
+fun LongMonths.asPeriod() = this.toInt().asPeriod()
+fun LongDays.asPeriod() = this.toInt().asPeriod()
 
 /**
  * Reverse the sign of each component in the period
@@ -202,21 +197,21 @@ operator fun Period.minus(other: Period) = Period.create(
     days - other.days
 )
 
-operator fun Period.plus(yearsToAdd: YearSpan) = this.with(years + yearsToAdd)
-operator fun Period.plus(monthsToAdd: MonthSpan) = this.with(months + monthsToAdd)
-operator fun Period.plus(daysToAdd: DaySpan) = this.with(days + daysToAdd)
+operator fun Period.plus(yearsToAdd: IntYears) = this.with(years + yearsToAdd)
+operator fun Period.plus(monthsToAdd: IntMonths) = this.with(months + monthsToAdd)
+operator fun Period.plus(daysToAdd: IntDays) = this.with(days + daysToAdd)
 
-operator fun Period.plus(yearsToAdd: LongYearSpan) = this.with((years.toLong() + yearsToAdd).toInt())
-operator fun Period.plus(monthsToAdd: LongMonthSpan) = this.with((months.toLong() + monthsToAdd).toInt())
-operator fun Period.plus(daysToAdd: LongDaySpan) = this.with((days.toLong() + daysToAdd).toInt())
+operator fun Period.plus(yearsToAdd: LongYears) = this.with((years.toLong() + yearsToAdd).toInt())
+operator fun Period.plus(monthsToAdd: LongMonths) = this.with((months.toLong() + monthsToAdd).toInt())
+operator fun Period.plus(daysToAdd: LongDays) = this.with((days.toLong() + daysToAdd).toInt())
 
-operator fun Period.minus(yearsToSubtract: YearSpan) = plus(-yearsToSubtract)
-operator fun Period.minus(monthsToSubtract: MonthSpan) = plus(-monthsToSubtract)
-operator fun Period.minus(daysToSubtract: DaySpan) = plus(-daysToSubtract)
+operator fun Period.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+operator fun Period.minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
+operator fun Period.minus(daysToSubtract: IntDays) = plus(-daysToSubtract)
 
-operator fun Period.minus(yearsToSubtract: LongYearSpan) = plus(-yearsToSubtract)
-operator fun Period.minus(monthsToSubtract: LongMonthSpan) = plus(-monthsToSubtract)
-operator fun Period.minus(daysToSubtract: LongDaySpan) = plus(-daysToSubtract)
+operator fun Period.minus(yearsToSubtract: LongYears) = plus(-yearsToSubtract)
+operator fun Period.minus(monthsToSubtract: LongMonths) = plus(-monthsToSubtract)
+operator fun Period.minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
 
 /**
  * Multiply each component of this period by a scalar value
@@ -229,27 +224,27 @@ operator fun Period.times(scalar: Int): Period {
     }
 }
 
-operator fun YearSpan.plus(period: Period) = period.with(this + period.years)
-operator fun MonthSpan.plus(period: Period) = period.with(this + period.months)
-operator fun DaySpan.plus(period: Period) = period.with(this + period.days)
+operator fun IntYears.plus(period: Period) = period.with(this + period.years)
+operator fun IntMonths.plus(period: Period) = period.with(this + period.months)
+operator fun IntDays.plus(period: Period) = period.with(this + period.days)
 
-operator fun LongYearSpan.plus(period: Period) = period.with((this + period.years.toLong()).toInt())
-operator fun LongMonthSpan.plus(period: Period) = period.with((this + period.months.toLong()).toInt())
-operator fun LongDaySpan.plus(period: Period) = period.with((this + period.days.toLong()).toInt())
+operator fun LongYears.plus(period: Period) = period.with((this + period.years.toLong()).toInt())
+operator fun LongMonths.plus(period: Period) = period.with((this + period.months.toLong()).toInt())
+operator fun LongDays.plus(period: Period) = period.with((this + period.days.toLong()).toInt())
 
-operator fun YearSpan.minus(period: Period) = Period.create(
+operator fun IntYears.minus(period: Period) = Period.create(
     this - period.years,
     -period.months,
     -period.days
 )
 
-operator fun MonthSpan.minus(period: Period) = Period.create(
+operator fun IntMonths.minus(period: Period) = Period.create(
     -period.years,
     this - period.months,
     -period.days
 )
 
-operator fun DaySpan.minus(period: Period) = Period.create(
+operator fun IntDays.minus(period: Period) = Period.create(
     -period.years,
     -period.months,
     this - period.days

@@ -9,9 +9,9 @@ abstract class DateIterator : Iterator<Date> {
 }
 
 internal class DateDayProgressionIterator(
-    first: LongDaySpan,
-    last: LongDaySpan,
-    private val step: DaySpan
+    first: LongDays,
+    last: LongDays,
+    private val step: IntDays
 ) : DateIterator() {
 
     private val finalElement = last
@@ -40,7 +40,7 @@ internal class DateDayProgressionIterator(
 internal class DateMonthProgressionIterator(
     first: Date,
     last: Date,
-    private val step: MonthSpan
+    private val step: IntMonths
 ) : DateIterator() {
 
     private val finalElement = last

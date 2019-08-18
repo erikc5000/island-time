@@ -4,16 +4,16 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class YearSpanTest {
+class YearsTest {
     @Test
-    fun `YearSpans can be compared to other YearSpans`() {
+    fun `IntYears can be compared to other IntYears`() {
         assertTrue { 0.years < 1.years }
         assertTrue { 0.years == 0.years }
         assertTrue { 5.years > (-1).years }
     }
 
     @Test
-    fun `LongYearSpans can be compared to other LongYearSpans`() {
+    fun `LongYears can be compared to other LongYears`() {
         assertTrue { 0L.years < 1L.years }
         assertTrue { 0L.years == 0L.years }
         assertTrue { 5L.years > (-1L).years }
@@ -38,12 +38,12 @@ class YearSpanTest {
     }
 
     @Test
-    fun `toLong() converts to a YearSpan to a LongYearSpan`() {
+    fun `toLong() converts IntYears to LongYears`() {
         assertEquals(2L.years, 2.years.toLong())
     }
 
     @Test
-    fun `toInt() converts to a LongYearSpan to a YearSpan`() {
+    fun `toInt() converts LongYears to IntYears`() {
         assertEquals(2.years, 2L.years.toInt())
     }
 }

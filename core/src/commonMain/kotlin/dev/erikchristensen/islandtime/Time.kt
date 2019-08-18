@@ -2,10 +2,7 @@ package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.parser.DateTimeField
-import dev.erikchristensen.islandtime.parser.DateTimeParseResult
-import dev.erikchristensen.islandtime.parser.DateTimeParser
-import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.*
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
@@ -68,9 +65,9 @@ data class Time @JvmOverloads constructor(
                 "'$secondOfDay' is not valid second of the day"
             }
 
-            val hour = secondOfDay / SECONDS_PER_HOUR
-            val minute = (secondOfDay / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
-            val second = secondOfDay % SECONDS_PER_MINUTE
+            val hour = secondOfDay / SECONDS_PER_HOUR.toInt()
+            val minute = (secondOfDay / SECONDS_PER_MINUTE.toInt()) % MINUTES_PER_HOUR.toInt()
+            val second = secondOfDay % SECONDS_PER_MINUTE.toInt()
             return Time(hour, minute, second, nanoOfSecond)
         }
 
@@ -90,7 +87,7 @@ data class Time @JvmOverloads constructor(
 }
 
 val Time.secondOfDay: Int
-    get() = hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second
+    get() = hour * SECONDS_PER_HOUR.toInt() + minute * SECONDS_PER_MINUTE.toInt() + second
 
 val Time.nanosecondOfDay: Long
     get() {
@@ -100,46 +97,46 @@ val Time.nanosecondOfDay: Long
             nanoOfSecond
     }
 
-operator fun Time.plus(hoursToAdd: LongHourSpan): Time {
+operator fun Time.plus(hoursToAdd: LongHours): Time {
     val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
 
     return if (wrappedHours.value == 0) {
         this
     } else {
-        val newHour = (wrappedHours.value + hour + HOURS_PER_DAY) % HOURS_PER_DAY
+        val newHour = (wrappedHours.value + hour + HOURS_PER_DAY.toInt()) % HOURS_PER_DAY.toInt()
         return copy(hour = newHour)
     }
 }
 
-operator fun Time.plus(hoursToAdd: HourSpan) = plus(hoursToAdd.toLong())
+operator fun Time.plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
 
-operator fun Time.plus(minutesToAdd: LongMinuteSpan): Time {
+operator fun Time.plus(minutesToAdd: LongMinutes): Time {
     return if (minutesToAdd.value == 0L) {
         this
     } else {
-        val currentMinuteOfDay = hour * MINUTES_PER_HOUR + minute
+        val currentMinuteOfDay = hour * MINUTES_PER_HOUR.toInt() + minute
         val wrappedMinutes = (minutesToAdd.value % MINUTES_PER_DAY).toInt()
-        val newMinuteOfDay = (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY) % MINUTES_PER_DAY
+        val newMinuteOfDay = (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY.toInt()) % MINUTES_PER_DAY.toInt()
 
         if (currentMinuteOfDay == newMinuteOfDay) {
             this
         } else {
-            val newHour = newMinuteOfDay / MINUTES_PER_HOUR
-            val newMinute = newMinuteOfDay % MINUTES_PER_HOUR
+            val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
+            val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
             copy(hour = newHour, minute = newMinute)
         }
     }
 }
 
-operator fun Time.plus(minutesToAdd: MinuteSpan) = plus(minutesToAdd.toLong())
+operator fun Time.plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
 
-operator fun Time.plus(secondsToAdd: LongSecondSpan): Time {
+operator fun Time.plus(secondsToAdd: LongSeconds): Time {
     return if (secondsToAdd.value == 0L) {
         this
     } else {
         val currentSecondOfDay = secondOfDay
         val wrappedSeconds = (secondsToAdd.value % SECONDS_PER_DAY).toInt()
-        val newSecondOfDay = (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY) % SECONDS_PER_DAY
+        val newSecondOfDay = (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY.toInt()) % SECONDS_PER_DAY.toInt()
 
         if (currentSecondOfDay == newSecondOfDay) {
             this
@@ -149,9 +146,9 @@ operator fun Time.plus(secondsToAdd: LongSecondSpan): Time {
     }
 }
 
-operator fun Time.plus(secondsToAdd: SecondSpan) = plus(secondsToAdd.toLong())
+operator fun Time.plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
 
-operator fun Time.plus(nanosecondsToAdd: LongNanosecondSpan): Time {
+operator fun Time.plus(nanosecondsToAdd: LongNanoseconds): Time {
     return if (nanosecondsToAdd.value == 0L) {
         this
     } else {
@@ -167,27 +164,31 @@ operator fun Time.plus(nanosecondsToAdd: LongNanosecondSpan): Time {
     }
 }
 
-operator fun Time.plus(nanosecondsToAdd: NanosecondSpan) = plus(nanosecondsToAdd.toLong())
+operator fun Time.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
 
-operator fun Time.minus(hoursToSubtract: HourSpan) = plus(-hoursToSubtract)
-operator fun Time.minus(minutesToSubtract: MinuteSpan) = plus(-minutesToSubtract)
-operator fun Time.minus(secondsToSubtract: SecondSpan) = plus(-secondsToSubtract)
-operator fun Time.minus(nanosecondsToSubtract: LongNanosecondSpan) = plus(-nanosecondsToSubtract)
+operator fun Time.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+operator fun Time.minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
+operator fun Time.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
+operator fun Time.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
 
 fun String.toTime() = toTime(Iso8601.Extended.TIME_PARSER)
 
 fun String.toTime(parser: DateTimeParser): Time {
     val result = parser.parse(this)
-    return result.toTime()
+    return result.toTime() ?: raiseParserFieldResolutionException("Time", this)
 }
 
-internal fun DateTimeParseResult.toTime(): Time {
-    val hour = this[DateTimeField.HOUR_OF_DAY]?.toInt() ?: throw DateTimeException("Missing hour of day")
-    val minute = this[DateTimeField.MINUTE_OF_HOUR]?.toInt() ?: 0
-    val second = this[DateTimeField.SECOND_OF_MINUTE]?.toInt() ?: 0
-    val nanoOfSecond = this[DateTimeField.NANO_OF_SECOND]?.toInt() ?: 0
+internal fun DateTimeParseResult.toTime(): Time? {
+    val hour = this[DateTimeField.HOUR_OF_DAY]
 
-    return Time(hour, minute, second, nanoOfSecond)
+    if (hour != null) {
+        val minute = this[DateTimeField.MINUTE_OF_HOUR]?.toInt() ?: 0
+        val second = this[DateTimeField.SECOND_OF_MINUTE]?.toInt() ?: 0
+        val nanoOfSecond = this[DateTimeField.NANO_OF_SECOND]?.toInt() ?: 0
+        return Time(hour.toInt(), minute, second, nanoOfSecond)
+    }
+
+    return null
 }
 
 internal const val MAX_TIME_STRING_LENGTH = 18

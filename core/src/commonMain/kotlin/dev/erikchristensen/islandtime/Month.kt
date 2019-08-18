@@ -55,9 +55,9 @@ enum class Month(val number: Int) {
         override val firstDayOfCommonYear = 335
     };
 
-    abstract val lengthInCommonYear: DaySpan
+    abstract val lengthInCommonYear: IntDays
 
-    open val lengthInLeapYear: DaySpan
+    open val lengthInLeapYear: IntDays
         get() = lengthInCommonYear
 
     abstract val firstDayOfCommonYear: Int
@@ -87,7 +87,7 @@ val Month.firstDayOfLeapYear: Int
  * The number of days in the month for a particular year
  * @param year Retrieve the length of the month within this year
  */
-fun Month.lengthIn(year: Int): DaySpan {
+fun Month.lengthIn(year: Int): IntDays {
     return when (this) {
         Month.FEBRUARY -> if (Year(year).isLeap) lengthInLeapYear else lengthInCommonYear
         else -> lengthInCommonYear
@@ -130,12 +130,12 @@ fun Month.dayRangeIn(year: Int): IntRange {
 /**
  * Add a given number of months to this month.
  */
-operator fun Month.plus(months: MonthSpan): Month {
+operator fun Month.plus(months: IntMonths): Month {
     val monthsToAdd = months.value % 12
     return Month.values()[(ordinal + (monthsToAdd + 12)) % 12]
 }
 
-operator fun Month.minus(months: MonthSpan) = plus(-months)
+operator fun Month.minus(months: IntMonths) = plus(-months)
 
 fun Int.toMonth(): Month {
     return try {

@@ -1,7 +1,7 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.interval.LongSecondSpan
-import dev.erikchristensen.islandtime.interval.NanosecondSpan
+import dev.erikchristensen.islandtime.interval.LongSeconds
+import dev.erikchristensen.islandtime.interval.IntNanoseconds
 import dev.erikchristensen.islandtime.interval.nanoseconds
 
 /**
@@ -24,6 +24,6 @@ inline class Instant(val unixEpochMilliseconds: Long) : Comparable<Instant> {
  * An instant in time with nanosecond precision
  */
 data class NanoInstant(
-    val unixEpochSeconds: LongSecondSpan,
-    val nanoOfSeconds: NanosecondSpan = 0.nanoseconds
+    val unixEpochSeconds: LongSeconds,
+    val nanoOfSeconds: IntNanoseconds = 0.nanoseconds
 )

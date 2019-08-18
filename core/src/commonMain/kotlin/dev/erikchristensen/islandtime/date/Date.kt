@@ -52,7 +52,7 @@ data class Date(
         // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
         //
         @JvmStatic
-        fun ofUnixEpochDays(unixEpochDays: LongDaySpan): Date {
+        fun ofUnixEpochDays(unixEpochDays: LongDays): Date {
             var zeroDay = unixEpochDays.value + DAYS_FROM_0000_TO_1970
             // find the march-based year
             zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four year cycle
@@ -132,14 +132,14 @@ val Date.isLeapDay: Boolean get() = isLeapDay(month, dayOfMonth)
 /**
  * The length of this date's month in days
  */
-val Date.lengthOfMonth: DaySpan get() = month.lengthIn(year)
+val Date.lengthOfMonth: IntDays get() = month.lengthIn(year)
 
 /**
  * The length of this date's year in days
  */
-val Date.lengthOfYear: DaySpan get() = Year(year).length
+val Date.lengthOfYear: IntDays get() = Year(year).length
 
-operator fun Date.plus(daysToAdd: LongDaySpan): Date {
+operator fun Date.plus(daysToAdd: LongDays): Date {
     return if (daysToAdd.value == 0L) {
         this
     } else {
@@ -147,9 +147,9 @@ operator fun Date.plus(daysToAdd: LongDaySpan): Date {
     }
 }
 
-operator fun Date.plus(daysToAdd: DaySpan) = plus(daysToAdd.toLong())
+operator fun Date.plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
 
-operator fun Date.plus(monthsToAdd: MonthSpan): Date {
+operator fun Date.plus(monthsToAdd: IntMonths): Date {
     return if (monthsToAdd.value == 0) {
         this
     } else {
@@ -158,16 +158,17 @@ operator fun Date.plus(monthsToAdd: MonthSpan): Date {
         val newYear = newMonthsRelativeTo0 / MONTHS_IN_YEAR
         val newMonth = Month.values()[newMonthsRelativeTo0 % MONTHS_IN_YEAR]
 
-        Date(newYear,
+        Date(
+            newYear,
             newMonth,
             dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear))
         )
     }
 }
 
-operator fun Date.plus(monthsToAdd: LongMonthSpan) = plus(monthsToAdd.toInt())
+operator fun Date.plus(monthsToAdd: LongMonths) = plus(monthsToAdd.toInt())
 
-operator fun Date.plus(yearsToAdd: YearSpan): Date {
+operator fun Date.plus(yearsToAdd: IntYears): Date {
     return if (yearsToAdd.value == 0) {
         this
     } else {
@@ -176,14 +177,14 @@ operator fun Date.plus(yearsToAdd: YearSpan): Date {
     }
 }
 
-operator fun Date.plus(yearsToAdd: LongYearSpan) = plus(yearsToAdd.toInt())
+operator fun Date.plus(yearsToAdd: LongYears) = plus(yearsToAdd.toInt())
 
-operator fun Date.minus(daysToSubtract: LongDaySpan) = plus(-daysToSubtract)
-operator fun Date.minus(daysToSubtract: DaySpan) = plus(-(daysToSubtract.toLong()))
-operator fun Date.minus(monthsToSubtract: LongMonthSpan) = plus(-monthsToSubtract)
-operator fun Date.minus(monthsToSubtract: MonthSpan) = plus(-monthsToSubtract)
-operator fun Date.minus(yearsToSubtract: LongYearSpan) = plus(-yearsToSubtract)
-operator fun Date.minus(yearsToSubtract: YearSpan) = plus(-yearsToSubtract)
+operator fun Date.minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
+operator fun Date.minus(daysToSubtract: IntDays) = plus(-(daysToSubtract.toLong()))
+operator fun Date.minus(monthsToSubtract: LongMonths) = plus(-monthsToSubtract)
+operator fun Date.minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
+operator fun Date.minus(yearsToSubtract: LongYears) = plus(-yearsToSubtract)
+operator fun Date.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
 
 operator fun Date.rangeTo(other: Date) = DateRange(this, other)
 
@@ -192,7 +193,7 @@ fun Date.atStartOfDay() = DateTime(this, Time.MIDNIGHT)
 //
 // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
 //
-fun Date.asUnixEpochDays(): LongDaySpan {
+fun Date.asUnixEpochDays(): LongDays {
     var total = DAYS_IN_COMMON_YEAR * year
 
     if (year >= 0) {
@@ -215,18 +216,28 @@ fun String.toDate() = toDate(Iso8601.Extended.DATE_PARSER)
 
 fun String.toDate(parser: DateTimeParser): Date {
     val result = parser.parse(this)
-    return result.toDate()
+    return result.toDate() ?: raiseParserFieldResolutionException("Date", this)
 }
 
-internal fun DateTimeParseResult.toDate(): Date {
-    val year = this[DateTimeField.YEAR]?.toInt()
-        ?: throw DateTimeException("Missing year")
-    val month = this[DateTimeField.MONTH_OF_YEAR]?.toInt()?.toMonth()
-        ?: throw DateTimeException("Missing month")
-    val day = this[DateTimeField.DAY_OF_MONTH]?.toInt()
-        ?: throw DateTimeException("Missing day")
+internal fun DateTimeParseResult.toDate(): Date? {
+    val year = this[DateTimeField.YEAR]
 
-    return Date(year, month, day)
+    if (year != null) {
+        val month = this[DateTimeField.MONTH_OF_YEAR]
+        val dayOfMonth = this[DateTimeField.DAY_OF_MONTH]
+
+        if (month != null && dayOfMonth != null) {
+            return Date(year.toInt(), month.toInt().toMonth(), dayOfMonth.toInt())
+        }
+
+        val dayOfYear = this[DateTimeField.DAY_OF_YEAR]
+
+        if (dayOfYear != null) {
+            return Date(year.toInt(), dayOfYear.toInt())
+        }
+    }
+
+    return null
 }
 
 fun periodBetween(start: Date, endExclusive: Date): Period {
@@ -251,18 +262,18 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
     return periodOf(years, months, days)
 }
 
-fun daysBetween(start: Date, endExclusive: Date): LongDaySpan {
+fun daysBetween(start: Date, endExclusive: Date): LongDays {
     return endExclusive.asUnixEpochDays() - start.asUnixEpochDays()
 }
 
-fun monthsBetween(start: Date, endExclusive: Date): MonthSpan {
+fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
     val startDays = start.asMonthsRelativeToYear0() * 32L + start.dayOfMonth
     val endDays = endExclusive.asMonthsRelativeToYear0() * 32L + endExclusive.dayOfMonth
     return ((endDays - startDays) / 32).toInt().months
 }
 
-fun yearsBetween(start: Date, endExclusive: Date): YearSpan {
-    return monthsBetween(start, endExclusive).asWholeYears()
+fun yearsBetween(start: Date, endExclusive: Date): IntYears {
+    return monthsBetween(start, endExclusive).toWholeYears()
 }
 
 internal const val MAX_DATE_STRING_LENGTH = 10

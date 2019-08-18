@@ -1,7 +1,7 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.internal.DAYS_IN_WEEK
-import dev.erikchristensen.islandtime.interval.DaySpan
+import dev.erikchristensen.islandtime.interval.IntDays
 import dev.erikchristensen.islandtime.interval.unaryMinus
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
@@ -30,12 +30,12 @@ enum class DayOfWeek(val number: Int) {
     }
 }
 
-operator fun DayOfWeek.plus(days: DaySpan): DayOfWeek {
+operator fun DayOfWeek.plus(days: IntDays): DayOfWeek {
     val daysToAdd = days.value % DAYS_IN_WEEK
     return DayOfWeek.values()[(ordinal + (daysToAdd + DAYS_IN_WEEK)) % DAYS_IN_WEEK]
 }
 
-operator fun DayOfWeek.minus(days: DaySpan) = plus(-days)
+operator fun DayOfWeek.minus(days: IntDays) = plus(-days)
 
 fun Int.toDayOfWeek(): DayOfWeek {
     return try {

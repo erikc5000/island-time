@@ -1,6 +1,6 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.interval.DaySpan
+import dev.erikchristensen.islandtime.interval.IntDays
 import dev.erikchristensen.islandtime.interval.days
 
 inline class Year(val value: Int) : Comparable<Year> {
@@ -18,7 +18,7 @@ val Year.isValid: Boolean
 val Year.isLeap: Boolean
     get() = value % 4 == 0 && (value % 100 != 0 || value % 400 == 0)
 
-val Year.length: DaySpan
+val Year.length: IntDays
     get() = if (isLeap) 366.days else 365.days
 
 fun checkYear(year: Int) {

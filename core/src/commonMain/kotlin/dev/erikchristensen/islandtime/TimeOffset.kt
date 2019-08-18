@@ -4,13 +4,10 @@ import dev.erikchristensen.islandtime.internal.SECONDS_PER_HOUR
 import dev.erikchristensen.islandtime.internal.SECONDS_PER_MINUTE
 import dev.erikchristensen.islandtime.internal.appendZeroPadded
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.parser.DateTimeField
-import dev.erikchristensen.islandtime.parser.DateTimeParseResult
-import dev.erikchristensen.islandtime.parser.DateTimeParser
-import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.*
 import kotlin.math.abs
 
-inline class TimeOffset(val totalSeconds: SecondSpan) : Comparable<TimeOffset> {
+inline class TimeOffset(val totalSeconds: IntSeconds) : Comparable<TimeOffset> {
     val isValid: Boolean get() = totalSeconds.value in MIN_VALUE..MAX_VALUE
 
     override fun compareTo(other: TimeOffset) = totalSeconds.compareTo(other.totalSeconds)
@@ -24,8 +21,8 @@ inline class TimeOffset(val totalSeconds: SecondSpan) : Comparable<TimeOffset> {
     }
 
     companion object {
-        const val MAX_VALUE = 18 * SECONDS_PER_HOUR
-        const val MIN_VALUE = -18 * SECONDS_PER_HOUR
+        const val MAX_VALUE = 18 * SECONDS_PER_HOUR.toInt()
+        const val MIN_VALUE = -18 * SECONDS_PER_HOUR.toInt()
 
         val MIN = TimeOffset(MAX_VALUE.seconds)
         val MAX = TimeOffset(MIN_VALUE.seconds)
@@ -35,7 +32,7 @@ inline class TimeOffset(val totalSeconds: SecondSpan) : Comparable<TimeOffset> {
 
 inline val TimeOffset.isUtc get() = this == TimeOffset.UTC
 
-fun validateTimeOffset(hours: HourSpan, minutes: MinuteSpan, seconds: SecondSpan) {
+fun validateTimeOffset(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
     // TODO: Throw exceptions if values are invalid
 //    val absHours = abs(hours.value)
 //
@@ -45,9 +42,9 @@ fun validateTimeOffset(hours: HourSpan, minutes: MinuteSpan, seconds: SecondSpan
 }
 
 fun timeOffsetOf(
-    hours: HourSpan,
-    minutes: MinuteSpan = 0.minutes,
-    seconds: SecondSpan = 0.seconds
+    hours: IntHours,
+    minutes: IntMinutes = 0.minutes,
+    seconds: IntSeconds = 0.seconds
 ): TimeOffset {
     validateTimeOffset(hours, minutes, seconds)
     val totalSeconds = hours.asSeconds() + minutes.asSeconds() + seconds
@@ -63,26 +60,37 @@ fun String.toTimeOffset() = toTimeOffset(Iso8601.Extended.TIME_OFFSET_PARSER)
 
 fun String.toTimeOffset(parser: DateTimeParser): TimeOffset {
     val result = parser.parse(this)
-    return result.toTimeOffset()
+    return result.toTimeOffset() ?: raiseParserFieldResolutionException("TimeOffset", this)
 }
 
-internal fun DateTimeParseResult.toTimeOffset(): TimeOffset {
+/**
+ * Resolve a parser result into a [TimeOffset]
+ *
+ * Required fields are TIME_OFFSET_UTC or TIME_OFFSET_SIGN in conjunction with any combination of TIME_OFFSET_HOURS,
+ * TIME_OFFSET_MINUTES, and TIME_OFFSET_SECONDS.
+ */
+internal fun DateTimeParseResult.toTimeOffset(): TimeOffset? {
     val isUtc = this[DateTimeField.TIME_OFFSET_UTC] != null
 
-    return if (isUtc) {
-        TimeOffset.UTC
-    } else {
-        val sign = this[DateTimeField.TIME_OFFSET_SIGN] ?: throw DateTimeException("Missing sign of time offset")
+    if (isUtc) {
+        return TimeOffset.UTC
+    }
+
+    val sign = this[DateTimeField.TIME_OFFSET_SIGN]
+
+    if (sign != null) {
         val hours = (this[DateTimeField.TIME_OFFSET_HOURS]?.toInt() ?: 0).hours
         val minutes = (this[DateTimeField.TIME_OFFSET_MINUTES]?.toInt() ?: 0).minutes
         val seconds = (this[DateTimeField.TIME_OFFSET_SECONDS]?.toInt() ?: 0).seconds
 
-        if (sign < 0L) {
+        return if (sign < 0L) {
             timeOffsetOf(-hours, -minutes, -seconds)
         } else {
             timeOffsetOf(hours, minutes, seconds)
         }
     }
+
+    return null
 }
 
 internal const val MAX_TIME_OFFSET_STRING_LENGTH = 9
@@ -90,9 +98,9 @@ internal const val MAX_TIME_OFFSET_STRING_LENGTH = 9
 internal fun StringBuilder.appendTimeOffset(timeOffset: TimeOffset): StringBuilder {
     with(timeOffset) {
         val absTotalSeconds = abs(totalSeconds.value)
-        val hours = absTotalSeconds / SECONDS_PER_HOUR
-        val minutes = (absTotalSeconds / SECONDS_PER_MINUTE) % SECONDS_PER_HOUR
-        val seconds = absTotalSeconds % SECONDS_PER_MINUTE
+        val hours = absTotalSeconds / SECONDS_PER_HOUR.toInt()
+        val minutes = (absTotalSeconds / SECONDS_PER_MINUTE.toInt()) % SECONDS_PER_HOUR.toInt()
+        val seconds = absTotalSeconds % SECONDS_PER_MINUTE.toInt()
 
         append(if (totalSeconds.value < 0L) '-' else '+')
         appendZeroPadded(hours, 2)

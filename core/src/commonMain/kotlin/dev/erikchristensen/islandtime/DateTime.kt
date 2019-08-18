@@ -7,9 +7,7 @@ import dev.erikchristensen.islandtime.internal.MINUTES_PER_DAY
 import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_DAY
 import dev.erikchristensen.islandtime.internal.SECONDS_PER_DAY
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.parser.DateTimeParseResult
-import dev.erikchristensen.islandtime.parser.DateTimeParser
-import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.*
 import kotlin.jvm.JvmField
 
 data class DateTime(
@@ -49,17 +47,17 @@ inline val DateTime.dayOfYear: Int get() = date.dayOfYear
 inline val DateTime.year: Int get() = date.year
 inline val DateTime.isInLeapYear: Boolean get() = date.isInLeapYear
 inline val DateTime.isLeapDay: Boolean get() = date.isLeapDay
-inline val DateTime.lengthOfMonth: DaySpan get() = date.lengthOfMonth
-inline val DateTime.lengthOfYear: DaySpan get() = date.lengthOfYear
+inline val DateTime.lengthOfMonth: IntDays get() = date.lengthOfMonth
+inline val DateTime.lengthOfYear: IntDays get() = date.lengthOfYear
 
-operator fun DateTime.plus(daysToAdd: LongDaySpan) = date.plus(daysToAdd)
-operator fun DateTime.plus(daysToAdd: DaySpan) = date.plus(daysToAdd)
-operator fun DateTime.plus(monthsToAdd: LongMonthSpan) = date.plus(monthsToAdd)
-operator fun DateTime.plus(monthsToAdd: MonthSpan) = date.plus(monthsToAdd)
-operator fun DateTime.plus(yearsToAdd: LongYearSpan) = date.plus(yearsToAdd)
-operator fun DateTime.plus(yearsToAdd: YearSpan) = date.plus(yearsToAdd)
+operator fun DateTime.plus(daysToAdd: LongDays) = date.plus(daysToAdd)
+operator fun DateTime.plus(daysToAdd: IntDays) = date.plus(daysToAdd)
+operator fun DateTime.plus(monthsToAdd: LongMonths) = date.plus(monthsToAdd)
+operator fun DateTime.plus(monthsToAdd: IntMonths) = date.plus(monthsToAdd)
+operator fun DateTime.plus(yearsToAdd: LongYears) = date.plus(yearsToAdd)
+operator fun DateTime.plus(yearsToAdd: IntYears) = date.plus(yearsToAdd)
 
-operator fun DateTime.plus(hoursToAdd: LongHourSpan): DateTime {
+operator fun DateTime.plus(hoursToAdd: LongHours): DateTime {
     return if (hoursToAdd.value == 0L) {
         this
     } else {
@@ -71,9 +69,9 @@ operator fun DateTime.plus(hoursToAdd: LongHourSpan): DateTime {
     }
 }
 
-operator fun DateTime.plus(hoursToAdd: HourSpan) = plus(hoursToAdd.toLong())
+operator fun DateTime.plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
 
-operator fun DateTime.plus(minutesToAdd: LongMinuteSpan): DateTime {
+operator fun DateTime.plus(minutesToAdd: LongMinutes): DateTime {
     return if (minutesToAdd.value == 0L) {
         this
     } else {
@@ -85,9 +83,9 @@ operator fun DateTime.plus(minutesToAdd: LongMinuteSpan): DateTime {
     }
 }
 
-operator fun DateTime.plus(minutesToAdd: MinuteSpan) = plus(minutesToAdd.toLong())
+operator fun DateTime.plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
 
-operator fun DateTime.plus(secondsToAdd: LongSecondSpan): DateTime {
+operator fun DateTime.plus(secondsToAdd: LongSeconds): DateTime {
     return if (secondsToAdd.value == 0L) {
         this
     } else {
@@ -99,9 +97,9 @@ operator fun DateTime.plus(secondsToAdd: LongSecondSpan): DateTime {
     }
 }
 
-operator fun DateTime.plus(secondsToAdd: SecondSpan) = plus(secondsToAdd.toLong())
+operator fun DateTime.plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
 
-operator fun DateTime.plus(nanosecondsToAdd: LongNanosecondSpan): DateTime {
+operator fun DateTime.plus(nanosecondsToAdd: LongNanoseconds): DateTime {
     return if (nanosecondsToAdd.value == 0L) {
         this
     } else {
@@ -113,30 +111,35 @@ operator fun DateTime.plus(nanosecondsToAdd: LongNanosecondSpan): DateTime {
     }
 }
 
-operator fun DateTime.plus(nanosecondsToAdd: NanosecondSpan) = plus(nanosecondsToAdd.toLong())
+operator fun DateTime.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
 
-operator fun DateTime.minus(daysToSubtract: LongDaySpan) = plus(-daysToSubtract)
-operator fun DateTime.minus(monthsToSubtract: MonthSpan) = plus(-monthsToSubtract)
-operator fun DateTime.minus(yearsToSubtract: YearSpan) = plus(-yearsToSubtract)
-operator fun DateTime.minus(hoursToSubtract: HourSpan) = plus(-hoursToSubtract)
-operator fun DateTime.minus(minutesToSubtract: LongMinuteSpan) = plus(-minutesToSubtract)
-operator fun DateTime.minus(minutesToSubtract: MinuteSpan) = plus(-minutesToSubtract)
-operator fun DateTime.minus(secondsToSubtract: LongSecondSpan) = plus(-secondsToSubtract)
-operator fun DateTime.minus(secondsToSubtract: SecondSpan) = plus(-secondsToSubtract)
-operator fun DateTime.minus(nanosecondsToSubtract: LongNanosecondSpan) = plus(-nanosecondsToSubtract)
-operator fun DateTime.minus(nanosecondsToSubtract: NanosecondSpan) = plus(-nanosecondsToSubtract)
+operator fun DateTime.minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
+operator fun DateTime.minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
+operator fun DateTime.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+operator fun DateTime.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+operator fun DateTime.minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
+operator fun DateTime.minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
+operator fun DateTime.minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
+operator fun DateTime.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
+operator fun DateTime.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+operator fun DateTime.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
 fun String.toDateTime() = toDateTime(Iso8601.Extended.DATE_TIME_PARSER)
 
 fun String.toDateTime(parser: DateTimeParser): DateTime {
     val result = parser.parse(this)
-    return result.toDateTime()
+    return result.toDateTime() ?: raiseParserFieldResolutionException("DateTime", this)
 }
 
-internal fun DateTimeParseResult.toDateTime(): DateTime {
+internal fun DateTimeParseResult.toDateTime(): DateTime? {
     val date = this.toDate()
     val time = this.toTime()
-    return DateTime(date, time)
+
+    return if (date != null && time != null) {
+        DateTime(date, time)
+    } else {
+        null
+    }
 }
 
 internal const val MAX_DATE_TIME_STRING_LENGTH = MAX_DATE_STRING_LENGTH + 1 + MAX_TIME_STRING_LENGTH

@@ -4,16 +4,16 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class MonthSpanTest {
+class MonthsTest {
     @Test
-    fun `MonthSpans can be compared to other MonthSpans`() {
+    fun `IntMonths can be compared to other IntMonths`() {
         assertTrue { 0.months < 1.months }
         assertTrue { 0.months == 0.months }
         assertTrue { 5.months > (-1).months }
     }
 
     @Test
-    fun `LongMonthSpans can be compared to other LongMonthSpans`() {
+    fun `LongMonths can be compared to other LongMonths`() {
         assertTrue { 0L.months < 1L.months }
         assertTrue { 0L.months == 0L.months }
         assertTrue { 5L.months > (-1L).months }
@@ -32,18 +32,18 @@ class MonthSpanTest {
     }
 
     @Test
-    fun `asWholeYears() converts months to an equivalent number of full years`() {
-        assertEquals(1.years, 13.months.asWholeYears())
-        assertEquals(1L.years, 13L.months.asWholeYears())
+    fun `toWholeYears() converts months to an equivalent number of full years`() {
+        assertEquals(1.years, 13.months.toWholeYears())
+        assertEquals(1L.years, 13L.months.toWholeYears())
     }
 
     @Test
-    fun `toLong() converts to a MonthSpan to a LongMonthSpan`() {
+    fun `toLong() converts IntMonths to LongMonths`() {
         assertEquals(2L.months, 2.months.toLong())
     }
 
     @Test
-    fun `toInt() converts to a LongMonthSpan to a MonthSpan`() {
+    fun `toInt() converts LongMonths to IntMonths`() {
         assertEquals(2.months, 2L.months.toInt())
     }
 }

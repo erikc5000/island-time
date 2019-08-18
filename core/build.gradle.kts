@@ -21,6 +21,8 @@ kotlin {
 //    mingwX64("mingw")
     sourceSets {
         val commonMain by getting {
+            kotlin.srcDirs("src/commonMain/generated", "src/commonMain/kotlin")
+
             dependencies {
                 implementation(kotlin("stdlib-common"))
             }

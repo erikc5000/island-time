@@ -4,8 +4,8 @@ import kotlin.test.*
 
 class PeriodTest {
     @Test
-    fun `periodOfZero() returns a zeroed-out Period`() {
-        val period = periodOfZero()
+    fun `ZERO returns a zeroed-out Period`() {
+        val period = Period.ZERO
 
         assertEquals(0.years, period.years)
         assertEquals(0.months, period.months)
@@ -40,7 +40,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts a YearSpan to a period with similar years`() {
+    fun `asPeriod() converts years to a period with similar years`() {
         val period = 3.years.asPeriod()
 
         assertEquals(3.years, period.years)
@@ -49,7 +49,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts a MonthSpan to a period with similar months`() {
+    fun `asPeriod() converts months to a period with similar months`() {
         val period = (1.years + 3.months).asPeriod()
 
         assertEquals(0.years, period.years)
@@ -58,7 +58,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts a DaySpan to a period with similar days`() {
+    fun `asPeriod() converts days to a period with similar days`() {
         val period = 10.days.asPeriod()
 
         assertEquals(0.years, period.years)
@@ -86,7 +86,7 @@ class PeriodTest {
 
     @Test
     fun `toString() returns 'P0D' when he period is zero`() {
-        assertEquals("P0D", periodOfZero().toString())
+        assertEquals("P0D", Period.ZERO.toString())
     }
 
     @Test
@@ -106,7 +106,7 @@ class PeriodTest {
 
     @Test
     fun `isZero property returns true for zeroed-out periods`() {
-        assertTrue { periodOfZero().isZero }
+        assertTrue { Period.ZERO.isZero }
         assertTrue { Period.ZERO.isZero }
     }
 
@@ -127,7 +127,7 @@ class PeriodTest {
         assertFalse { periodOf(1.years, 0.months, 0.days).isNegative }
         assertFalse { periodOf(0.years, 1.months, 0.days).isNegative }
         assertFalse { periodOf(0.years, 0.months, 1.days).isNegative }
-        assertFalse { periodOfZero().isNegative }
+        assertFalse { Period.ZERO.isNegative }
     }
 
     @Test
@@ -142,7 +142,7 @@ class PeriodTest {
 
     @Test
     fun `with() replaces days value`() {
-        assertEquals(periodOfZero(), periodOf(10.days).with(0.days))
+        assertEquals(Period.ZERO, periodOf(10.days).with(0.days))
     }
 
     @Test
@@ -244,7 +244,7 @@ class PeriodTest {
 
     @Test
     fun `multiplying a zero period by a scalar has no effect`() {
-        assertEquals(periodOfZero(), periodOfZero() * 1500)
+        assertEquals(Period.ZERO, Period.ZERO * 1500)
     }
 
     @Test
@@ -256,7 +256,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `adding a period to a YearSpan returns a new period with adjusted years`() {
+    fun `adding a period to years returns a new period with adjusted years`() {
         assertEquals(
             periodOf(2.years, 1.months),
             1.years + periodOf(1.years, 1.months)
@@ -264,7 +264,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `adding a period to a MonthSpan returns a new period with adjusted months`() {
+    fun `adding a period to months returns a new period with adjusted months`() {
         assertEquals(
             periodOf(3.months, 4.days),
             (-2).months + periodOf(5.months, 4.days)
@@ -272,7 +272,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `adding a period to a DaySpan returns a new period with adjusted days`() {
+    fun `adding a period to days returns a new period with adjusted days`() {
         assertEquals(
             periodOf(1.years, 3.days),
             5.days + periodOf(1.years, (-2).days)
@@ -280,7 +280,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `subtracting a period from a YearSpan returns a new period with adjusted years`() {
+    fun `subtracting a period from years returns a new period with adjusted years`() {
         assertEquals(
             periodOf((-1).months),
             1.years - periodOf(1.years, 1.months)
@@ -288,7 +288,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `subtracting a period from a MonthSpan returns a new period with adjusted months`() {
+    fun `subtracting a period from months returns a new period with adjusted months`() {
         assertEquals(
             periodOf((-4).days),
             2.months - periodOf(2.months, 4.days)
@@ -296,7 +296,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `subtracting a period from a DaySpan returns a new period with adjusted days`() {
+    fun `subtracting a period from days returns a new period with adjusted days`() {
         assertEquals(
             periodOf((-1).years, 7.days),
             5.days - periodOf(1.years, (-2).days)
