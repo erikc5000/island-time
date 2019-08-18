@@ -41,7 +41,7 @@ inline class IntDays(
   override fun compareTo(other: IntDays): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
-      "PT0S"
+      "P0D"
   } else {
       buildString {
           append('P')
@@ -76,7 +76,7 @@ inline class LongDays(
   override fun compareTo(other: LongDays): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
-      "PT0S"
+      "P0D"
   } else {
       buildString {
           append('P')

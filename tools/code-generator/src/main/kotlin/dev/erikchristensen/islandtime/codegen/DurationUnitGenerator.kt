@@ -87,7 +87,7 @@ fun DurationUnit.buildClass(
                     addStatement(
                         """
                             |return if (this.isZero) {
-                            |    "PT0S"
+                            |    "$isoPeriodZeroString"
                             |} else {
                             |    buildString {
                             |        append('P')
@@ -109,7 +109,7 @@ fun DurationUnit.buildClass(
                     addStatement(
                         """
                             |return if (this.isZero) {
-                            |    "PT0S"
+                            |    "$isoPeriodZeroString"
                             |} else {
                             |    buildString {
                             |        append('P')

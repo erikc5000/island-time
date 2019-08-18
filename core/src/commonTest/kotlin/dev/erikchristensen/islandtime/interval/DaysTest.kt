@@ -28,4 +28,15 @@ class DaysTest {
     fun `toInt() converts LongDays to IntDays`() {
         assertEquals(2.days, 2L.days.toInt())
     }
+
+    @Test
+    fun `toString() converts zero days to 'P0D'`() {
+        assertEquals("P0D", 0.days.toString())
+    }
+
+    @Test
+    fun `toString() converts to ISO-8601 period representation`() {
+        assertEquals("P1D", 1.days.toString())
+        assertEquals("P-1D", (-1).days.toString())
+    }
 }

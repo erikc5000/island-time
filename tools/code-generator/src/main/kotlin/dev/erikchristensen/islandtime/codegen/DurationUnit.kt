@@ -5,7 +5,9 @@ enum class DurationUnit(
     private val conversionFactor: Int,
     val isoPeriodUnit: Char
 ) {
-    DAYS("Days", 1, 'D'),
+    DAYS("Days", 1, 'D') {
+        override val isoPeriodZeroString: String = "P0D"
+    },
     HOURS("Hours", 24, 'H'),
     MINUTES("Minutes", 60, 'M'),
     SECONDS("Seconds", 60, 'S'),
@@ -37,6 +39,7 @@ enum class DurationUnit(
     open val isoPeriodIsFractional: Boolean = false
     open val isoPeriodDecimalPlaces: Int = 0
     open val isoPeriodUnitConversionFactor: Int = 1
+    open val isoPeriodZeroString: String = "PT0S"
     open val forceLongInOperators: Boolean = false
 
     fun per(unit: DurationUnit): DurationConstant {
