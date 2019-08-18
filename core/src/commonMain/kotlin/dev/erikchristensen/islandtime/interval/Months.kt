@@ -1,13 +1,36 @@
 package dev.erikchristensen.islandtime.interval
 
 import dev.erikchristensen.islandtime.internal.MONTHS_IN_YEAR
+import kotlin.math.absoluteValue
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntMonths internal constructor(val value: Int) : Comparable<IntMonths> {
+    val isZero: Boolean
+        get() = this.value == 0
+
+    val isNegative: Boolean
+        get() = this.value < 0
+
+    val isPositive: Boolean
+        get() = this.value > 0
+
+    val absoluteValue: IntMonths
+        get() = IntMonths(this.value.absoluteValue)
+
     override fun compareTo(other: IntMonths) = value.compareTo(other.value)
+
+    override fun toString(): String = if (this.isZero) {
+        "P0D"
+    } else {
+        buildString {
+            append('P')
+            append(value)
+            append('M')
+        }
+    }
 }
 
-operator fun IntMonths.unaryPlus() = IntMonths(+value)
+operator fun IntMonths.unaryPlus() = this
 operator fun IntMonths.unaryMinus() = IntMonths(-value)
 
 operator fun IntMonths.plus(years: IntYears) = this + years.asMonths()
@@ -30,10 +53,32 @@ val Int.months: IntMonths get() = IntMonths(this)
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongMonths internal constructor(val value: Long) : Comparable<LongMonths> {
+    val isZero: Boolean
+        get() = this.value == 0L
+
+    val isNegative: Boolean
+        get() = this.value < 0L
+
+    val isPositive: Boolean
+        get() = this.value > 0L
+
+    val absoluteValue: LongMonths
+        get() = LongMonths(this.value.absoluteValue)
+
     override fun compareTo(other: LongMonths) = value.compareTo(other.value)
+
+    override fun toString(): String = if (this.isZero) {
+        "P0D"
+    } else {
+        buildString {
+            append('P')
+            append(value)
+            append('M')
+        }
+    }
 }
 
-operator fun LongMonths.unaryPlus() = LongMonths(+value)
+operator fun LongMonths.unaryPlus() = this
 operator fun LongMonths.unaryMinus() = LongMonths(-value)
 
 operator fun LongMonths.plus(years: LongYears) = this + years.asMonths()

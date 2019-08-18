@@ -1,10 +1,33 @@
 package dev.erikchristensen.islandtime.interval
 
 import dev.erikchristensen.islandtime.internal.MONTHS_IN_YEAR
+import kotlin.math.absoluteValue
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntYears internal constructor(val value: Int) : Comparable<IntYears> {
+    val isZero: Boolean
+        get() = this.value == 0
+
+    val isNegative: Boolean
+        get() = this.value < 0
+
+    val isPositive: Boolean
+        get() = this.value > 0
+
+    val absoluteValue: IntYears
+        get() = IntYears(this.value.absoluteValue)
+
     override fun compareTo(other: IntYears) = value.compareTo(other.value)
+
+    override fun toString(): String = if (this.isZero) {
+        "P0D"
+    } else {
+        buildString {
+            append('P')
+            append(value)
+            append('Y')
+        }
+    }
 }
 
 operator fun IntYears.unaryPlus() = this
@@ -25,10 +48,32 @@ val Int.years: IntYears get() = IntYears(this)
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongYears internal constructor(val value: Long) : Comparable<LongYears> {
+    val isZero: Boolean
+        get() = this.value == 0L
+
+    val isNegative: Boolean
+        get() = this.value < 0L
+
+    val isPositive: Boolean
+        get() = this.value > 0L
+
+    val absoluteValue: LongYears
+        get() = LongYears(this.value.absoluteValue)
+
     override fun compareTo(other: LongYears) = value.compareTo(other.value)
+
+    override fun toString(): String = if (this.isZero) {
+        "P0D"
+    } else {
+        buildString {
+            append('P')
+            append(value)
+            append('Y')
+        }
+    }
 }
 
-operator fun LongYears.unaryPlus() = LongYears(+value)
+operator fun LongYears.unaryPlus() = this
 operator fun LongYears.unaryMinus() = LongYears(-value)
 operator fun LongYears.plus(years: LongYears) = LongYears(value + years.value)
 operator fun LongYears.plus(months: LongMonths) = this.asMonths() + months

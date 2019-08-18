@@ -85,7 +85,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `toString() returns 'P0D' when he period is zero`() {
+    fun `toString() returns 'P0D' when the period is zero`() {
         assertEquals("P0D", Period.ZERO.toString())
     }
 
