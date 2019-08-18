@@ -5,6 +5,10 @@ object Iso8601 {
         anyOf(Basic.DATE_PARSER, Extended.DATE_PARSER)
     }
 
+    val ORDINAL_DATE_PARSER = dateTimeParser {
+        anyOf(Basic.ORDINAL_DATE_PARSER, Extended.ORDINAL_DATE_PARSER)
+    }
+
     val TIME_PARSER = dateTimeParser {
         anyOf(Basic.TIME_PARSER, Extended.TIME_PARSER)
     }
@@ -64,6 +68,15 @@ object Iso8601 {
             }
         }
 
+        val ORDINAL_DATE_PARSER = dateTimeParser {
+            year(4) {
+                enforceSignStyle(SignStyle.NEVER)
+            }
+            dayOfYear(3) {
+                enforceSignStyle(SignStyle.NEVER)
+            }
+        }
+
         val TIME_PARSER = dateTimeParser {
             hourOfDay(2)
             optional {
@@ -118,6 +131,16 @@ object Iso8601 {
             }
             +'-'
             dayOfMonth(2) {
+                enforceSignStyle(SignStyle.NEVER)
+            }
+        }
+
+        val ORDINAL_DATE_PARSER = dateTimeParser {
+            year(4) {
+                enforceSignStyle(SignStyle.NEVER)
+            }
+            +'-'
+            dayOfYear(3) {
                 enforceSignStyle(SignStyle.NEVER)
             }
         }
