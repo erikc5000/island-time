@@ -35,6 +35,9 @@ inline class IntDays(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntDays
+    get() = IntDays(this.value.absoluteValue)
+
   override fun compareTo(other: IntDays): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -46,8 +49,6 @@ inline class IntDays(
           append('D')
       }
   }
-
-  fun absoluteValue() = IntDays(this.value.absoluteValue)
 
   companion object {
     val MIN: IntDays = IntDays(Int.MIN_VALUE)
@@ -69,6 +70,9 @@ inline class LongDays(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongDays
+    get() = LongDays(this.value.absoluteValue)
+
   override fun compareTo(other: LongDays): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -80,8 +84,6 @@ inline class LongDays(
           append('D')
       }
   }
-
-  fun absoluteValue() = LongDays(this.value.absoluteValue)
 
   companion object {
     val MIN: LongDays = LongDays(Long.MIN_VALUE)

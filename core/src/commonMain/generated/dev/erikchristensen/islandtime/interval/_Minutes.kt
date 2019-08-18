@@ -35,6 +35,9 @@ inline class IntMinutes(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntMinutes
+    get() = IntMinutes(this.value.absoluteValue)
+
   override fun compareTo(other: IntMinutes): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -46,8 +49,6 @@ inline class IntMinutes(
           append('M')
       }
   }
-
-  fun absoluteValue() = IntMinutes(this.value.absoluteValue)
 
   companion object {
     val MIN: IntMinutes = IntMinutes(Int.MIN_VALUE)
@@ -69,6 +70,9 @@ inline class LongMinutes(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongMinutes
+    get() = LongMinutes(this.value.absoluteValue)
+
   override fun compareTo(other: LongMinutes): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -80,8 +84,6 @@ inline class LongMinutes(
           append('M')
       }
   }
-
-  fun absoluteValue() = LongMinutes(this.value.absoluteValue)
 
   companion object {
     val MIN: LongMinutes = LongMinutes(Long.MIN_VALUE)

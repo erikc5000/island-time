@@ -91,7 +91,7 @@ fun DurationUnit.buildClass(
                             |} else {
                             |    buildString {
                             |        append('P')
-                            |        val absValue = %T($valueName)
+                            |        val absValue = $valueName.%T
                             |        val wholePart = absValue / $isoPeriodUnitConversionFactor
                             |        val fractionalPart = $fractionalPartConversionString
                             |        if (isNegative) { append('-') }
@@ -102,7 +102,7 @@ fun DurationUnit.buildClass(
                             |    }
                             |}
                         """.trimMargin(),
-                        ClassName("kotlin.math", "abs"),
+                        ClassName("kotlin.math", "absoluteValue"),
                         ClassName(INTERNAL_PACKAGE_NAME, "toZeroPaddedString")
                     )
                 } else {
@@ -122,15 +122,6 @@ fun DurationUnit.buildClass(
                 }
             }
         )
-        addFunction(
-            buildFunSpec("absoluteValue") {
-                addStatement(
-                    "return %T(this.$valueName.%T)",
-                    className,
-                    ClassName("kotlin.math", "absoluteValue")
-                )
-            }
-        )
         addProperties(
             listOf(
                 buildPropertySpec("isZero", Boolean::class) {
@@ -147,6 +138,15 @@ fun DurationUnit.buildClass(
                     getter(buildGetterFunSpec {
                         addStatement("return this.$valueName > ${primitiveType.zero}")
                     })
+                },
+                buildPropertySpec("absoluteValue", className) {
+                    getter(
+                        buildGetterFunSpec {
+                            addStatement("return %T(this.$valueName.%T)",
+                                className,
+                                ClassName("kotlin.math", "absoluteValue"))
+                        }
+                    )
                 }
             )
         )

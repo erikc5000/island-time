@@ -35,6 +35,9 @@ inline class IntHours(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntHours
+    get() = IntHours(this.value.absoluteValue)
+
   override fun compareTo(other: IntHours): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -46,8 +49,6 @@ inline class IntHours(
           append('H')
       }
   }
-
-  fun absoluteValue() = IntHours(this.value.absoluteValue)
 
   companion object {
     val MIN: IntHours = IntHours(Int.MIN_VALUE)
@@ -69,6 +70,9 @@ inline class LongHours(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongHours
+    get() = LongHours(this.value.absoluteValue)
+
   override fun compareTo(other: LongHours): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -80,8 +84,6 @@ inline class LongHours(
           append('H')
       }
   }
-
-  fun absoluteValue() = LongHours(this.value.absoluteValue)
 
   companion object {
     val MIN: LongHours = LongHours(Long.MIN_VALUE)

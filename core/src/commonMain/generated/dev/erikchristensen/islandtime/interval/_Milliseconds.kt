@@ -21,7 +21,6 @@ import kotlin.String
 import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -37,6 +36,9 @@ inline class IntMilliseconds(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntMilliseconds
+    get() = IntMilliseconds(this.value.absoluteValue)
+
   override fun compareTo(other: IntMilliseconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -44,7 +46,7 @@ inline class IntMilliseconds(
   } else {
       buildString {
           append('P')
-          val absValue = abs(value)
+          val absValue = value.absoluteValue
           val wholePart = absValue / 1000
           val fractionalPart = absValue % 1000
           if (isNegative) { append('-') }
@@ -54,8 +56,6 @@ inline class IntMilliseconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = IntMilliseconds(this.value.absoluteValue)
 
   companion object {
     val MIN: IntMilliseconds = IntMilliseconds(Int.MIN_VALUE)
@@ -77,6 +77,9 @@ inline class LongMilliseconds(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongMilliseconds
+    get() = LongMilliseconds(this.value.absoluteValue)
+
   override fun compareTo(other: LongMilliseconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -84,7 +87,7 @@ inline class LongMilliseconds(
   } else {
       buildString {
           append('P')
-          val absValue = abs(value)
+          val absValue = value.absoluteValue
           val wholePart = absValue / 1000
           val fractionalPart = (absValue % 1000).toInt()
           if (isNegative) { append('-') }
@@ -94,8 +97,6 @@ inline class LongMilliseconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = LongMilliseconds(this.value.absoluteValue)
 
   companion object {
     val MIN: LongMilliseconds = LongMilliseconds(Long.MIN_VALUE)

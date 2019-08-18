@@ -21,7 +21,6 @@ import kotlin.String
 import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -37,6 +36,9 @@ inline class IntNanoseconds(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntNanoseconds
+    get() = IntNanoseconds(this.value.absoluteValue)
+
   override fun compareTo(other: IntNanoseconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -44,7 +46,7 @@ inline class IntNanoseconds(
   } else {
       buildString {
           append('P')
-          val absValue = abs(value)
+          val absValue = value.absoluteValue
           val wholePart = absValue / 1000000000
           val fractionalPart = absValue % 1000000000
           if (isNegative) { append('-') }
@@ -54,8 +56,6 @@ inline class IntNanoseconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = IntNanoseconds(this.value.absoluteValue)
 
   companion object {
     val MIN: IntNanoseconds = IntNanoseconds(Int.MIN_VALUE)
@@ -77,6 +77,9 @@ inline class LongNanoseconds(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongNanoseconds
+    get() = LongNanoseconds(this.value.absoluteValue)
+
   override fun compareTo(other: LongNanoseconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -84,7 +87,7 @@ inline class LongNanoseconds(
   } else {
       buildString {
           append('P')
-          val absValue = abs(value)
+          val absValue = value.absoluteValue
           val wholePart = absValue / 1000000000
           val fractionalPart = (absValue % 1000000000).toInt()
           if (isNegative) { append('-') }
@@ -94,8 +97,6 @@ inline class LongNanoseconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = LongNanoseconds(this.value.absoluteValue)
 
   companion object {
     val MIN: LongNanoseconds = LongNanoseconds(Long.MIN_VALUE)

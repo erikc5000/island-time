@@ -35,6 +35,9 @@ inline class IntSeconds(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntSeconds
+    get() = IntSeconds(this.value.absoluteValue)
+
   override fun compareTo(other: IntSeconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -46,8 +49,6 @@ inline class IntSeconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = IntSeconds(this.value.absoluteValue)
 
   companion object {
     val MIN: IntSeconds = IntSeconds(Int.MIN_VALUE)
@@ -69,6 +70,9 @@ inline class LongSeconds(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongSeconds
+    get() = LongSeconds(this.value.absoluteValue)
+
   override fun compareTo(other: LongSeconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -80,8 +84,6 @@ inline class LongSeconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = LongSeconds(this.value.absoluteValue)
 
   companion object {
     val MIN: LongSeconds = LongSeconds(Long.MIN_VALUE)

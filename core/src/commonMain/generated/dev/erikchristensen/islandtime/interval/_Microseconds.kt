@@ -21,7 +21,6 @@ import kotlin.String
 import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
-import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -37,6 +36,9 @@ inline class IntMicroseconds(
   val isPositive: Boolean
     get() = this.value > 0
 
+  val absoluteValue: IntMicroseconds
+    get() = IntMicroseconds(this.value.absoluteValue)
+
   override fun compareTo(other: IntMicroseconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -44,7 +46,7 @@ inline class IntMicroseconds(
   } else {
       buildString {
           append('P')
-          val absValue = abs(value)
+          val absValue = value.absoluteValue
           val wholePart = absValue / 1000000
           val fractionalPart = absValue % 1000000
           if (isNegative) { append('-') }
@@ -54,8 +56,6 @@ inline class IntMicroseconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = IntMicroseconds(this.value.absoluteValue)
 
   companion object {
     val MIN: IntMicroseconds = IntMicroseconds(Int.MIN_VALUE)
@@ -77,6 +77,9 @@ inline class LongMicroseconds(
   val isPositive: Boolean
     get() = this.value > 0L
 
+  val absoluteValue: LongMicroseconds
+    get() = LongMicroseconds(this.value.absoluteValue)
+
   override fun compareTo(other: LongMicroseconds): Int = this.value.compareTo(other.value)
 
   override fun toString(): String = if (this.isZero) {
@@ -84,7 +87,7 @@ inline class LongMicroseconds(
   } else {
       buildString {
           append('P')
-          val absValue = abs(value)
+          val absValue = value.absoluteValue
           val wholePart = absValue / 1000000
           val fractionalPart = (absValue % 1000000).toInt()
           if (isNegative) { append('-') }
@@ -94,8 +97,6 @@ inline class LongMicroseconds(
           append('S')
       }
   }
-
-  fun absoluteValue() = LongMicroseconds(this.value.absoluteValue)
 
   companion object {
     val MIN: LongMicroseconds = LongMicroseconds(Long.MIN_VALUE)
