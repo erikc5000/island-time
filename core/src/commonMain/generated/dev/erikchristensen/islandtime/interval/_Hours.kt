@@ -44,7 +44,7 @@ inline class IntHours(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           append(value)
           append('H')
       }
@@ -79,7 +79,7 @@ inline class LongHours(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           append(value)
           append('H')
       }

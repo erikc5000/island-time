@@ -90,7 +90,7 @@ fun DurationUnit.buildClass(
                             |    "$isoPeriodZeroString"
                             |} else {
                             |    buildString {
-                            |        append('P')
+                            |        append("$isoPeriodPrefix")
                             |        val absValue = $valueName.%T
                             |        val wholePart = absValue / $isoPeriodUnitConversionFactor
                             |        val fractionalPart = $fractionalPartConversionString
@@ -112,7 +112,7 @@ fun DurationUnit.buildClass(
                             |    "$isoPeriodZeroString"
                             |} else {
                             |    buildString {
-                            |        append('P')
+                            |        append("$isoPeriodPrefix")
                             |        append($valueName)
                             |        append('$isoPeriodUnit')
                             |    }

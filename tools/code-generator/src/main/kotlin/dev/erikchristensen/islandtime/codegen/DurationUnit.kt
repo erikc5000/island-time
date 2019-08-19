@@ -6,6 +6,7 @@ enum class DurationUnit(
     val isoPeriodUnit: Char
 ) {
     DAYS("Days", 1, 'D') {
+        override val isoPeriodPrefix = "P"
         override val isoPeriodZeroString: String = "P0D"
     },
     HOURS("Hours", 24, 'H'),
@@ -36,6 +37,7 @@ enum class DurationUnit(
     val lowerCaseName: String get() = pluralName.toLowerCase()
     val valueName: String get() = "value"
 
+    open val isoPeriodPrefix: String = "PT"
     open val isoPeriodIsFractional: Boolean = false
     open val isoPeriodDecimalPlaces: Int = 0
     open val isoPeriodUnitConversionFactor: Int = 1

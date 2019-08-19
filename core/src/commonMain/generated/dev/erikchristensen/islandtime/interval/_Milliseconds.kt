@@ -45,7 +45,7 @@ inline class IntMilliseconds(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           val absValue = value.absoluteValue
           val wholePart = absValue / 1000
           val fractionalPart = absValue % 1000
@@ -86,7 +86,7 @@ inline class LongMilliseconds(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           val absValue = value.absoluteValue
           val wholePart = absValue / 1000
           val fractionalPart = (absValue % 1000).toInt()

@@ -44,7 +44,7 @@ inline class IntSeconds(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           append(value)
           append('S')
       }
@@ -79,7 +79,7 @@ inline class LongSeconds(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           append(value)
           append('S')
       }

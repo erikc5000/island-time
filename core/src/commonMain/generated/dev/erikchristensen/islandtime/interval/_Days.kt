@@ -44,7 +44,7 @@ inline class IntDays(
       "P0D"
   } else {
       buildString {
-          append('P')
+          append("P")
           append(value)
           append('D')
       }
@@ -79,7 +79,7 @@ inline class LongDays(
       "P0D"
   } else {
       buildString {
-          append('P')
+          append("P")
           append(value)
           append('D')
       }

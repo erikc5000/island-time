@@ -49,4 +49,26 @@ class MinutesTest {
             assertEquals(1.minutes, minutes)
         }
     }
+
+    @Test
+    fun `IntMinutes_toString() converts zero minutes to 'PT0S'`() {
+        assertEquals("PT0S", 0.minutes.toString())
+    }
+
+    @Test
+    fun `IntMinutes_toString() converts to ISO-8601 period representation`() {
+        assertEquals("PT1M", 1.minutes.toString())
+        assertEquals("PT-1M", (-1).minutes.toString())
+    }
+
+    @Test
+    fun `LongMinutes_toString() converts zero minutes to 'PT0S'`() {
+        assertEquals("PT0S", 0L.minutes.toString())
+    }
+
+    @Test
+    fun `LongMinutes_toString() converts to ISO-8601 period representation`() {
+        assertEquals("PT1M", 1L.minutes.toString())
+        assertEquals("PT-1M", (-1L).minutes.toString())
+    }
 }

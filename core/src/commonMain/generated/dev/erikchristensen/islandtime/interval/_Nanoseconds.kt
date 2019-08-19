@@ -45,7 +45,7 @@ inline class IntNanoseconds(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           val absValue = value.absoluteValue
           val wholePart = absValue / 1000000000
           val fractionalPart = absValue % 1000000000
@@ -86,7 +86,7 @@ inline class LongNanoseconds(
       "PT0S"
   } else {
       buildString {
-          append('P')
+          append("PT")
           val absValue = value.absoluteValue
           val wholePart = absValue / 1000000000
           val fractionalPart = (absValue % 1000000000).toInt()
