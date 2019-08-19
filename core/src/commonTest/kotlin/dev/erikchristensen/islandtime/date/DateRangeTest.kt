@@ -50,11 +50,7 @@ class DateRangeTest {
 
     @Test
     fun `random() returns a date within range`() {
-        val range = Date(
-            2018,
-            Month.FEBRUARY,
-            20
-        )..Date(2018, Month.MARCH, 25)
+        val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 25)
         val randomDate = range.random()
         assertTrue { randomDate in range }
     }
@@ -66,18 +62,10 @@ class DateRangeTest {
 
     @Test
     fun `months property returns the number of months in a range`() {
-        val range1 = Date(
-            2018,
-            Month.FEBRUARY,
-            20
-        )..Date(2018, Month.MARCH, 19)
+        val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 19)
         assertEquals(0.months, range1.months)
 
-        val range2 = Date(
-            2018,
-            Month.FEBRUARY,
-            20
-        )..Date(2018, Month.MARCH, 20)
+        val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 20)
         assertEquals(1.months, range2.months)
     }
 
@@ -88,18 +76,10 @@ class DateRangeTest {
 
     @Test
     fun `years property returns the number of months in a range`() {
-        val range1 = Date(
-            2018,
-            Month.FEBRUARY,
-            20
-        )..Date(2018, Month.MARCH, 20)
+        val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 20)
         assertEquals(0.years, range1.years)
 
-        val range2 = Date(
-            2018,
-            Month.FEBRUARY,
-            20
-        )..Date(2019, Month.FEBRUARY, 20)
+        val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 20)
         assertEquals(1.years, range2.years)
     }
 
