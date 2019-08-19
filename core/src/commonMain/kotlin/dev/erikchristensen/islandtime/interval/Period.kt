@@ -249,3 +249,21 @@ operator fun IntDays.minus(period: Period) = Period.create(
     -period.months,
     this - period.days
 )
+
+operator fun LongYears.minus(period: Period) = Period.create(
+    (this - period.years.toLong()).toInt(),
+    -period.months,
+    -period.days
+)
+
+operator fun LongMonths.minus(period: Period) = Period.create(
+    -period.years,
+    (this - period.months.toLong()).toInt(),
+    -period.days
+)
+
+operator fun LongDays.minus(period: Period) = Period.create(
+    -period.years,
+    -period.months,
+    (this - period.days.toLong()).toInt()
+)

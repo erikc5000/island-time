@@ -277,6 +277,11 @@ class PeriodTest {
             periodOf(1.years, 3.days),
             5.days + periodOf(1.years, (-2).days)
         )
+
+        assertEquals(
+            periodOf(1.years, 3.days),
+            5L.days + periodOf(1.years, (-2).days)
+        )
     }
 
     @Test
@@ -284,6 +289,11 @@ class PeriodTest {
         assertEquals(
             periodOf((-1).months),
             1.years - periodOf(1.years, 1.months)
+        )
+
+        assertEquals(
+            periodOf((-1).months),
+            1L.years - periodOf(1.years, 1.months)
         )
     }
 
@@ -293,6 +303,11 @@ class PeriodTest {
             periodOf((-4).days),
             2.months - periodOf(2.months, 4.days)
         )
+
+        assertEquals(
+            periodOf((-4).days),
+            2L.months - periodOf(2.months, 4.days)
+        )
     }
 
     @Test
@@ -300,6 +315,11 @@ class PeriodTest {
         assertEquals(
             periodOf((-1).years, 7.days),
             5.days - periodOf(1.years, (-2).days)
+        )
+
+        assertEquals(
+            periodOf((-1).years, 7.days),
+            5L.days - periodOf(1.years, (-2).days)
         )
     }
 }
