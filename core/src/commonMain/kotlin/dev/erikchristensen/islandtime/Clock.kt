@@ -1,5 +1,6 @@
 package dev.erikchristensen.islandtime
 
+import dev.erikchristensen.islandtime.interval.LongMilliseconds
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
@@ -23,7 +24,7 @@ internal expect class SystemClock() : Clock {
 fun systemClock() = Clock.system()
 
 class FixedClock @JvmOverloads constructor(
-    private val unixEpochMilliseconds: Long,
+    private val unixEpochMilliseconds: LongMilliseconds,
     override val timeZone: TimeZone = TimeZone.UTC
 ) : Clock {
 

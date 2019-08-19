@@ -15,14 +15,14 @@ public class JvmClockTest {
         assertThat(Clock.system().getTimeZone()).isNotNull();
     }
 
-    @Test
-    public void fixedClock_sanityCheck() {
-        FixedClock fixedClock = new FixedClock(5L);
-        assertThat(fixedClock.instant()).isEqualTo(5L);
-        assertThat(fixedClock.getTimeZone()).isEqualTo(TimeZone.UTC);
-
-        fixedClock = new FixedClock(5L, new TimeZone("Etc/UTC"));
-        assertThat(fixedClock.instant()).isEqualTo(5L);
-        assertThat(fixedClock.getTimeZone()).isEqualTo(new TimeZone("Etc/UTC"));
-    }
+//    @Test
+//    public void fixedClock_sanityCheck() {
+//        FixedClock fixedClock = new FixedClock(5L);
+//        assertThat(fixedClock.instant()).isEqualTo(5L);
+//        assertThat(fixedClock.getTimeZone()).isEqualTo(TimeZone.UTC);
+//
+//        fixedClock = new FixedClock(5L, new TimeZone("Etc/UTC"));
+//        assertThat(fixedClock.instant()).isEqualTo(5L);
+//        assertThat(fixedClock.getTimeZone()).isEqualTo(new TimeZone("Etc/UTC"));
+//    }
 }

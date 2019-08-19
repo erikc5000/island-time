@@ -1,23 +1,38 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.interval.LongSeconds
-import dev.erikchristensen.islandtime.interval.IntNanoseconds
-import dev.erikchristensen.islandtime.interval.nanoseconds
+import dev.erikchristensen.islandtime.date.Date
+import dev.erikchristensen.islandtime.interval.*
 
 /**
  * An instant in time with millisecond precision
  */
-inline class Instant(val unixEpochMilliseconds: Long) : Comparable<Instant> {
+inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<Instant> {
 
     override fun compareTo(other: Instant): Int {
-        return unixEpochMilliseconds .compareTo(other.unixEpochMilliseconds)
+        return unixEpochMilliseconds.compareTo(other.unixEpochMilliseconds)
+    }
+
+    override fun toString(): String {
+        val dateTime = this.toUtcDateTime()
+
+        return buildString(MAX_DATE_TIME_STRING_LENGTH + 1) {
+            appendDateTime(dateTime)
+            append('Z')
+        }
     }
 
     companion object {
-        val MAX = Instant(Long.MAX_VALUE)
-        val MIN = Instant(Long.MIN_VALUE)
-        val UNIX_EPOCH = Instant(0)
+        val MAX = Instant(LongMilliseconds.MAX)
+        val MIN = Instant(LongMilliseconds.MIN)
+        val UNIX_EPOCH = Instant(0L.milliseconds)
     }
+}
+
+internal fun Instant.toUtcDateTime(): DateTime {
+    val days = unixEpochMilliseconds.toWholeDays()
+    val remainingMilliseconds = unixEpochMilliseconds - days
+    val nanosecondOfDay = remainingMilliseconds.asNanoseconds()
+    return DateTime(Date.ofUnixEpochDays(days), Time.ofNanosecondOfDay(nanosecondOfDay.value))
 }
 
 /**
