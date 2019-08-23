@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("multiplatform") version "1.3.41" apply false
+    kotlin("multiplatform") version "1.3.50" apply false
 }
 
 buildscript {

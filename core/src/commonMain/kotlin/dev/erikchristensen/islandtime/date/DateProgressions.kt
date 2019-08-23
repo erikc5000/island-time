@@ -66,9 +66,7 @@ fun DateDayProgression.reversed() = DateDayProgression.fromClosedRange(last, fir
  * Step over dates in increments of days
  */
 infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
-    if (step.value <= 0) {
-        throw IllegalArgumentException("step must be positive")
-    }
+    require(step.value > 0) { "step must be positive" }
 
     return DateDayProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
@@ -77,9 +75,7 @@ infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
  * Step over dates in increments of months
  */
 infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
-    if (step <= 0.months) {
-        throw IllegalArgumentException("step must be positive")
-    }
+    require(step > 0.months) { "step must be positive" }
 
     return DateMonthProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
