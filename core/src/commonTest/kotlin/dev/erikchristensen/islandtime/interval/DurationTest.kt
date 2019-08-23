@@ -1,9 +1,7 @@
 package dev.erikchristensen.islandtime.interval
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import dev.erikchristensen.islandtime.parser.DateTimeParseException
+import kotlin.test.*
 
 class DurationTest {
     @Test
@@ -47,6 +45,21 @@ class DurationTest {
         val duration2 = durationOf((-1_500_000_000).nanoseconds)
         assertEquals((-1L).seconds, duration2.seconds)
         assertEquals((-500_000_000).nanoseconds, duration2.nanoOfSeconds)
+    }
+
+    @Test
+    fun `durationOf() creates durations from seconds and nanoseconds components`() {
+        val duration1 = durationOf(1.seconds, (-5).nanoseconds)
+        assertEquals(0L.seconds, duration1.seconds)
+        assertEquals(999_999_995.nanoseconds, duration1.nanoOfSeconds)
+
+        val duration2 = durationOf((-2).seconds, 1_200_000_000.nanoseconds)
+        assertEquals(0L.seconds, duration2.seconds)
+        assertEquals((-800_000_000).nanoseconds, duration2.nanoOfSeconds)
+
+        val duration3 = durationOf((-1).seconds, 1_500_000_000.nanoseconds)
+        assertEquals(0L.seconds, duration3.seconds)
+        assertEquals(500_000_000.nanoseconds, duration3.nanoOfSeconds)
     }
 
     @Test
@@ -150,5 +163,85 @@ class DurationTest {
     fun `abs() returns the absolute value of a duration`() {
         assertEquals(durationOf(30.seconds), abs(30.seconds.asDuration()))
         assertEquals(durationOf(30.seconds), abs((-30).seconds.asDuration()))
+    }
+
+    @Test
+    fun `toString() converts zero durations to 'PT0S'`() {
+        assertEquals("PT0S", Duration.ZERO.toString())
+    }
+
+    @Test
+    fun `toString() converts positive durations to ISO-8601 duration representation`() {
+        assertEquals(
+            "PT25H30M30.5S",
+            durationOf(1.days + 1.hours + 30.minutes + 30.seconds + 500.milliseconds).toString()
+        )
+
+        assertEquals(
+            "PT0.005S",
+            durationOf(5.milliseconds).toString()
+        )
+    }
+
+    @Test
+    fun `toString() converts negative durations to ISO-8601 duration representation`() {
+        assertEquals(
+            "PT-25H-30M-30.5S",
+            durationOf((-1).days - 1.hours - 30.minutes - 30.seconds - 500.milliseconds).toString()
+        )
+
+        assertEquals(
+            "PT-0.005S",
+            durationOf((-5).milliseconds).toString()
+        )
+    }
+
+    @Test
+    fun `String_toDuration() throws an exception when string is empty`() {
+        assertFailsWith<DateTimeParseException> { "".toDuration() }
+    }
+
+    @Test
+    fun `String_toDuration() throws an exception when string is invalid`() {
+        assertFailsWith<DateTimeParseException> { "P4Y".toDuration() }
+        assertFailsWith<DateTimeParseException> { "P4M".toDuration() }
+        assertFailsWith<DateTimeParseException> { "PT4H ".toDuration() }
+        assertFailsWith<DateTimeParseException> { " PT4H".toDuration() }
+        assertFailsWith<DateTimeParseException> { "PT4S4H".toDuration() }
+        assertFailsWith<DateTimeParseException> { "PT9Y".toDuration() }
+    }
+
+    @Test
+    fun `String_toDuration() parses durations of zero`() {
+        assertEquals(Duration.ZERO, "P0D".toDuration())
+        assertEquals(Duration.ZERO, "PT0S".toDuration())
+    }
+
+    @Test
+    fun `String_toDuration() converts ISO-8601 period strings to a Duration`() {
+        assertEquals(
+            durationOf(1.seconds),
+            "PT1S".toDuration()
+        )
+
+        assertEquals(
+            durationOf(1.days),
+            "P1D".toDuration()
+        )
+
+        assertEquals(
+            durationOf(0.seconds, 1.nanoseconds),
+            "PT0.000000001S".toDuration()
+        )
+
+        assertEquals(
+            durationOf(1.hours + 1.seconds),
+            "PT1H1S".toDuration()
+        )
+
+        assertEquals(
+            durationOf(1.hours - 5.seconds - 200.milliseconds),
+            "PT1H-5.2S".toDuration()
+        )
     }
 }

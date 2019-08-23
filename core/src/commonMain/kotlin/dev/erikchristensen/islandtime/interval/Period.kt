@@ -1,6 +1,10 @@
 package dev.erikchristensen.islandtime.interval
 
 import dev.erikchristensen.islandtime.internal.MONTHS_IN_YEAR
+import dev.erikchristensen.islandtime.parser.DateTimeField
+import dev.erikchristensen.islandtime.parser.DateTimeParseResult
+import dev.erikchristensen.islandtime.parser.DateTimeParser
+import dev.erikchristensen.islandtime.parser.Iso8601
 
 /**
  * A date-based period of time, such as "2 years, 5 months, 16 days". Unlike [Duration], which uses exact increments,
@@ -267,3 +271,18 @@ operator fun LongDays.minus(period: Period) = Period.create(
     -period.months,
     (this - period.days.toLong()).toInt()
 )
+
+fun String.toPeriod() = toPeriod(Iso8601.PERIOD_PARSER)
+
+fun String.toPeriod(parser: DateTimeParser): Period {
+    val result = parser.parse(this)
+    return result.toPeriod()
+}
+
+internal fun DateTimeParseResult.toPeriod(): Period {
+    val years = (this[DateTimeField.PERIOD_OF_YEARS]?.toInt() ?: 0).years
+    val months = (this[DateTimeField.PERIOD_OF_MONTHS]?.toInt() ?: 0).months
+    val days = (this[DateTimeField.PERIOD_OF_DAYS]?.toInt() ?: 0).days
+
+    return periodOf(years, months, days)
+}

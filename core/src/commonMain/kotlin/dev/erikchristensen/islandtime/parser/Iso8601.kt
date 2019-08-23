@@ -1,12 +1,19 @@
 package dev.erikchristensen.islandtime.parser
 
 object Iso8601 {
-    val DATE_PARSER = dateTimeParser {
-        anyOf(Basic.DATE_PARSER, Extended.DATE_PARSER)
+    val CALENDAR_DATE_PARSER = dateTimeParser {
+        anyOf(Basic.CALENDAR_DATE_PARSER, Extended.CALENDAR_DATE_PARSER)
     }
 
     val ORDINAL_DATE_PARSER = dateTimeParser {
         anyOf(Basic.ORDINAL_DATE_PARSER, Extended.ORDINAL_DATE_PARSER)
+    }
+
+    /**
+     * Parse ISO-8601 calendar or ordinal dates in basic or extended format
+     */
+    val DATE_PARSER = dateTimeParser {
+        anyOf(CALENDAR_DATE_PARSER, ORDINAL_DATE_PARSER)
     }
 
     val TIME_PARSER = dateTimeParser {
@@ -41,10 +48,22 @@ object Iso8601 {
                         timeOffsetSeconds(2) {
                             enforceSignStyle(SignStyle.NEVER)
                         }
+                        optional {
+                            decimalSeparator()
+                            nanosecondOfSecond()
+                        }
                     }
                 })
             }
         })
+    }
+
+    val CALENDAR_DATE_TIME_PARSER = dateTimeParser {
+        anyOf(Basic.CALENDAR_DATE_TIME_PARSER, Extended.CALENDAR_DATE_TIME_PARSER)
+    }
+
+    val ORDINAL_DATE_TIME_PARSER = dateTimeParser {
+        anyOf(Basic.ORDINAL_DATE_TIME_PARSER, Extended.ORDINAL_DATE_TIME_PARSER)
     }
 
     val DATE_TIME_PARSER = dateTimeParser {
@@ -55,12 +74,51 @@ object Iso8601 {
         anyOf(Basic.OFFSET_DATE_TIME_PARSER, Extended.OFFSET_DATE_TIME_PARSER)
     }
 
+    val PERIOD_PARSER = dateTimeParser {
+        +'P'
+        optional {
+            periodOfYears()
+            +'Y'
+        }
+        optional {
+            periodOfMonths()
+            +'M'
+        }
+        optional {
+            periodOfDays()
+            +'D'
+        }
+    }
+
+    val DURATION_PARSER = dateTimeParser {
+        +'P'
+        optional {
+            periodOfDays()
+            +'D'
+        }
+        optional {
+            +'T'
+            optional {
+                durationOfHours()
+                +'H'
+            }
+            optional {
+                durationOfMinutes()
+                +'M'
+            }
+            optional {
+                durationOfFractionalSeconds()
+                +'S'
+            }
+        }
+    }
+
     object Basic {
-        val DATE_PARSER = dateTimeParser {
+        val CALENDAR_DATE_PARSER = dateTimeParser {
             year(4) {
                 enforceSignStyle(SignStyle.NEVER)
             }
-            monthNumber(2) {
+            monthOfYear(2) {
                 enforceSignStyle(SignStyle.NEVER)
             }
             dayOfMonth(2) {
@@ -77,12 +135,26 @@ object Iso8601 {
             }
         }
 
+        val DATE_PARSER = dateTimeParser {
+            anyOf(CALENDAR_DATE_PARSER, ORDINAL_DATE_PARSER)
+        }
+
         val TIME_PARSER = dateTimeParser {
-            hourOfDay(2)
+            hourOfDay(2) {
+                enforceSignStyle(SignStyle.NEVER)
+            }
             optional {
-                minuteOfHour(2)
+                minuteOfHour(2) {
+                    enforceSignStyle(SignStyle.NEVER)
+                }
                 optional {
-                    secondOfMinute(2)
+                    secondOfMinute(2) {
+                        enforceSignStyle(SignStyle.NEVER)
+                    }
+                    optional {
+                        decimalSeparator()
+                        nanosecondOfSecond()
+                    }
                 }
             }
         }
@@ -108,6 +180,18 @@ object Iso8601 {
             })
         }
 
+        val CALENDAR_DATE_TIME_PARSER = dateTimeParser {
+            subParser(CALENDAR_DATE_PARSER)
+            anyOf({ +'T' }, { +' ' })
+            subParser(TIME_PARSER)
+        }
+
+        val ORDINAL_DATE_TIME_PARSER = dateTimeParser {
+            subParser(ORDINAL_DATE_PARSER)
+            anyOf({ +'T' }, { +' ' })
+            subParser(TIME_PARSER)
+        }
+
         val DATE_TIME_PARSER = dateTimeParser {
             subParser(DATE_PARSER)
             anyOf({ +'T' }, { +' ' })
@@ -115,18 +199,18 @@ object Iso8601 {
         }
 
         val OFFSET_DATE_TIME_PARSER = dateTimeParser {
-            subParser(DATE_TIME_PARSER)
+            subParser(CALENDAR_DATE_TIME_PARSER)
             subParser(TIME_OFFSET_PARSER)
         }
     }
 
     object Extended {
-        val DATE_PARSER = dateTimeParser {
+        val CALENDAR_DATE_PARSER = dateTimeParser {
             year(4) {
                 enforceSignStyle(SignStyle.NEVER)
             }
             +'-'
-            monthNumber(2) {
+            monthOfYear(2) {
                 enforceSignStyle(SignStyle.NEVER)
             }
             +'-'
@@ -145,6 +229,10 @@ object Iso8601 {
             }
         }
 
+        val DATE_PARSER = dateTimeParser {
+            anyOf(CALENDAR_DATE_PARSER, ORDINAL_DATE_PARSER)
+        }
+
         val TIME_PARSER = dateTimeParser {
             hourOfDay(2) {
                 enforceSignStyle(SignStyle.NEVER)
@@ -158,6 +246,10 @@ object Iso8601 {
                     +':'
                     secondOfMinute(2) {
                         enforceSignStyle(SignStyle.NEVER)
+                    }
+                    optional {
+                        decimalSeparator()
+                        nanosecondOfSecond()
                     }
                 }
             }
@@ -186,6 +278,18 @@ object Iso8601 {
             })
         }
 
+        val CALENDAR_DATE_TIME_PARSER = dateTimeParser {
+            subParser(CALENDAR_DATE_PARSER)
+            anyOf({ +'T' }, { +' ' })
+            subParser(TIME_PARSER)
+        }
+
+        val ORDINAL_DATE_TIME_PARSER = dateTimeParser {
+            subParser(ORDINAL_DATE_PARSER)
+            anyOf({ +'T' }, { +' ' })
+            subParser(TIME_PARSER)
+        }
+
         val DATE_TIME_PARSER = dateTimeParser {
             subParser(DATE_PARSER)
             anyOf({ +'T' }, { +' ' })
@@ -193,7 +297,7 @@ object Iso8601 {
         }
 
         val OFFSET_DATE_TIME_PARSER = dateTimeParser {
-            subParser(DATE_TIME_PARSER)
+            subParser(CALENDAR_DATE_TIME_PARSER)
             subParser(TIME_OFFSET_PARSER)
         }
     }

@@ -1,13 +1,15 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.date.*
-import dev.erikchristensen.islandtime.date.MAX_DATE_STRING_LENGTH
 import dev.erikchristensen.islandtime.internal.HOURS_PER_DAY
 import dev.erikchristensen.islandtime.internal.MINUTES_PER_DAY
 import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_DAY
 import dev.erikchristensen.islandtime.internal.SECONDS_PER_DAY
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.parser.*
+import dev.erikchristensen.islandtime.parser.DateTimeParseResult
+import dev.erikchristensen.islandtime.parser.DateTimeParser
+import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
 import kotlin.jvm.JvmField
 
 data class DateTime(
@@ -124,8 +126,15 @@ operator fun DateTime.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubt
 operator fun DateTime.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
 operator fun DateTime.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
-fun String.toDateTime() = toDateTime(Iso8601.Extended.DATE_TIME_PARSER)
+/**
+ * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or
+ * "2019-08-22 18:00:30.123456789"
+ */
+fun String.toDateTime() = toDateTime(Iso8601.Extended.CALENDAR_DATE_TIME_PARSER)
 
+/**
+ * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the necessary fields
+ */
 fun String.toDateTime(parser: DateTimeParser): DateTime {
     val result = parser.parse(this)
     return result.toDateTime() ?: raiseParserFieldResolutionException("DateTime", this)

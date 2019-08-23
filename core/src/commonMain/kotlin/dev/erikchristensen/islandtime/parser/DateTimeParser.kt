@@ -13,12 +13,6 @@ enum class SignStyle {
     ALWAYS
 }
 
-enum class DecimalSeparator {
-    DOT,
-    COMMA,
-    DOT_OR_COMMA
-}
-
 enum class DateTimeField {
     YEAR,
     MONTH_OF_YEAR,
@@ -29,6 +23,8 @@ enum class DateTimeField {
     MINUTE_OF_HOUR,
     SECOND_OF_MINUTE,
     NANO_OF_SECOND,
+    MICRO_OF_SECOND,
+    MILLI_OF_SECOND,
     TIME_OFFSET_SIGN,
     TIME_OFFSET_HOURS,
     TIME_OFFSET_MINUTES,
@@ -47,6 +43,7 @@ inline class DateTimeParseResult(
     private val fields: MutableMap<DateTimeField, Long> = hashMapOf()
 ) {
     fun deepCopy() = DateTimeParseResult().apply { fields.putAll(this@DateTimeParseResult.fields) }
+    fun count() = fields.count()
 
     operator fun set(field: DateTimeField, value: Long) {
         fields[field] = value
@@ -57,15 +54,18 @@ inline class DateTimeParseResult(
     }
 }
 
-class DateTimeParseContext internal constructor() {
+class DateTimeParseContext internal constructor(
+    val settings: DateTimeParserSettings
+) {
     var result = DateTimeParseResult()
-    // var locale: Locale
-    // var mode: DateTimeParseMode
 }
 
 abstract class DateTimeParser internal constructor() {
-    fun parse(text: CharSequence): DateTimeParseResult {
-        val context = DateTimeParseContext()
+    fun parse(
+        text: CharSequence,
+        settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    ): DateTimeParseResult {
+        val context = DateTimeParseContext(settings)
         val endPosition = parse(context, text, 0)
 
         if (endPosition < 0) {
@@ -141,41 +141,8 @@ class AnyOfDateTimeParser internal constructor(
 }
 
 class CharLiteralParser internal constructor(
-    private vararg val acceptableChars: Char
-) : DateTimeParser() {
-
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        return if (position >= text.length) {
-            position.inv()
-        } else {
-            val charFound = text[position]
-
-            if (acceptableChars.any { it == charFound }) {
-                position + 1
-            } else {
-                position.inv()
-            }
-        }
-    }
-}
-
-class StringLiteralParser internal constructor(
-    private val string: String
-) : DateTimeParser() {
-
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        return if (position >= text.length || text.subSequence(position, position + string.length) != string) {
-            position.inv()
-        } else {
-            position + string.length
-        }
-    }
-}
-
-class CharValueParser internal constructor(
     private val char: Char,
-    private val field: DateTimeField,
-    private val value: Long
+    private val onParsed: DateTimeParseContext.() -> Unit
 ) : DateTimeParser() {
 
     override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
@@ -185,7 +152,7 @@ class CharValueParser internal constructor(
             val charFound = text[position]
 
             if (char == charFound) {
-                context.result[field] = value
+                onParsed(context)
                 position + 1
             } else {
                 position.inv()
@@ -194,12 +161,107 @@ class CharValueParser internal constructor(
     }
 }
 
-class FixedLengthNumberValueParser internal constructor(
-    private val field: DateTimeField,
-    private val length: Int,
-    private val signStyle: SignStyle? = null,
-    private val signExceedsLength: Boolean = false
+class StringLiteralParser internal constructor(
+    private val string: String,
+    private val onParsed: DateTimeParseContext.() -> Unit
 ) : DateTimeParser() {
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        return if (position >= text.length ||
+            string.length > text.length - position ||
+            text.subSequence(position, position + string.length) != string
+        ) {
+            position.inv()
+        } else {
+            onParsed(context)
+            position + string.length
+        }
+    }
+}
+
+class SignParser internal constructor(
+    private val onParsed: DateTimeParseContext.(parsed: Int) -> Unit
+) : DateTimeParser() {
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        return if (position >= text.length) {
+            position.inv()
+        } else {
+            val chars = context.settings.chars
+
+            when (text[position]) {
+                in chars.plusSign -> {
+                    onParsed(context, 1)
+                    position + 1
+                }
+                in chars.minusSign -> {
+                    onParsed(context, -1)
+                    position + 1
+                }
+                else -> position.inv()
+            }
+        }
+    }
+}
+
+class DecimalSeparatorParser internal constructor(
+    private val onParsed: (DateTimeParseContext.() -> Unit)? = null
+) : DateTimeParser() {
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        val chars = context.settings.chars
+
+        return if (position < text.length && text[position] in chars.decimalSeparator) {
+            onParsed?.invoke(context)
+            position + 1
+        } else {
+            position.inv()
+        }
+    }
+
+    companion object {
+        val DEFAULT = DecimalSeparatorParser()
+    }
+}
+
+abstract class AbstractNumberParser internal constructor(
+    private val signStyle: SignStyle?
+) : DateTimeParser() {
+
+    protected fun parseSign(
+        chars: DateTimeParserSettings.Chars,
+        text: CharSequence,
+        position: Int
+    ): ParseSignResult {
+        return when (text[position]) {
+            in chars.plusSign -> when (signStyle) {
+                SignStyle.NEVER, SignStyle.NEGATIVE_ONLY -> ParseSignResult.ERROR
+                else -> ParseSignResult.POSITIVE
+            }
+            in chars.minusSign -> when (signStyle) {
+                SignStyle.NEVER -> ParseSignResult.ERROR
+                else -> ParseSignResult.NEGATIVE
+            }
+            else -> when (signStyle) {
+                SignStyle.ALWAYS -> ParseSignResult.ERROR
+                else -> ParseSignResult.ABSENT
+            }
+        }
+    }
+
+    protected enum class ParseSignResult {
+        POSITIVE,
+        NEGATIVE,
+        ABSENT,
+        ERROR
+    }
+}
+
+class FixedLengthNumberParser internal constructor(
+    private val length: Int,
+    private val onParsed: DateTimeParseContext.(parsed: Long) -> Unit,
+    signStyle: SignStyle?
+) : AbstractNumberParser(signStyle) {
 
     init {
         require(length in 1..MAX_LONG_DIGITS) { "length must be from 1-19" }
@@ -213,7 +275,7 @@ class FixedLengthNumberValueParser internal constructor(
             return currentPosition.inv()
         }
 
-        val signResult = parseSign(text, currentPosition)
+        val signResult = parseSign(context.settings.chars, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -221,21 +283,15 @@ class FixedLengthNumberValueParser internal constructor(
             currentPosition++
         }
 
-        val remainingLength = if (signExceedsLength || signResult == ParseSignResult.ABSENT) {
-            length
-        } else {
-            length - 1
-        }
-
         var value = 0L
 
-        for (i in remainingLength downTo 1) {
+        for (i in length downTo 1) {
             if (currentPosition >= text.length) {
                 return currentPosition.inv()
             }
 
             val char = text[currentPosition]
-            val digit = char.toDigit()
+            val digit = char.toDigit(context.settings.numberConverter)
 
             if (digit < 0) {
                 return currentPosition.inv()
@@ -245,32 +301,242 @@ class FixedLengthNumberValueParser internal constructor(
             currentPosition++
         }
 
-        context.result[field] = if (signResult == ParseSignResult.NEGATIVE) -value else value
+        if (signResult == ParseSignResult.NEGATIVE) {
+            value = -value
+        }
+
+        onParsed(context, value)
         return currentPosition
     }
+}
 
-    private fun parseSign(text: CharSequence, position: Int): ParseSignResult {
-        return when (text[position]) {
-            '+' -> when (signStyle) {
-                SignStyle.NEVER, SignStyle.NEGATIVE_ONLY -> ParseSignResult.ERROR
-                else -> ParseSignResult.POSITIVE
-            }
-            '-' -> when (signStyle) {
-                SignStyle.NEVER -> ParseSignResult.ERROR
-                else -> ParseSignResult.NEGATIVE
-            }
-            else -> when (signStyle) {
-                SignStyle.ALWAYS -> ParseSignResult.ERROR
-                else -> ParseSignResult.ABSENT
-            }
-        }
+class VariableLengthNumberParser internal constructor(
+    private val minLength: Int,
+    private val maxLength: Int,
+    private val onParsed: DateTimeParseContext.(parsed: Long) -> Unit,
+    signStyle: SignStyle?
+) : AbstractNumberParser(signStyle) {
+
+    init {
+        require(minLength <= maxLength) { "minLength must be <= maxLength" }
+        require(minLength in 1..MAX_LONG_DIGITS) { "minLength must be from 1-19" }
+        require(maxLength in 1..MAX_LONG_DIGITS) { "maxLength must be from 1-19" }
     }
 
-    private enum class ParseSignResult {
-        POSITIVE,
-        NEGATIVE,
-        ABSENT,
-        ERROR
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        val textLength = text.length
+        var currentPosition = position
+
+        if (currentPosition >= textLength) {
+            return currentPosition.inv()
+        }
+
+        val settings = context.settings
+        val signResult = parseSign(settings.chars, text, currentPosition)
+
+        if (signResult == ParseSignResult.ERROR) {
+            return currentPosition.inv()
+        } else if (signResult != ParseSignResult.ABSENT) {
+            currentPosition++
+        }
+
+        var numberLength = 0
+
+        for (i in currentPosition until textLength) {
+            if (text[i].toDigit(settings.numberConverter) < 0) {
+                break
+            }
+            numberLength++
+        }
+
+        if (numberLength < minLength) {
+            return (currentPosition + numberLength).inv()
+        } else if (numberLength > maxLength) {
+            return (currentPosition + maxLength).inv()
+        }
+
+        var value = 0L
+
+        for (i in numberLength downTo 1) {
+            val char = text[currentPosition]
+            val digit = char.toDigit(settings.numberConverter)
+            value += digit * FACTOR[i]
+            currentPosition++
+        }
+
+        if (signResult == ParseSignResult.NEGATIVE) {
+            value = -value
+        }
+
+        onParsed(context, value)
+        return currentPosition
+    }
+}
+
+class DecimalNumberParser internal constructor(
+    private val minWholeLength: Int,
+    private val maxWholeLength: Int,
+    private val minFractionLength: Int,
+    private val maxFractionLength: Int,
+    private val fractionScale: Int,
+    signStyle: SignStyle?,
+    private val onParsed: DateTimeParseContext.(whole: Long, fraction: Long) -> Unit
+) : AbstractNumberParser(signStyle) {
+
+    init {
+        require(minWholeLength <= maxWholeLength) { "minWholeLength must be <= maxWholeLength" }
+        require(minWholeLength in 1..MAX_LONG_DIGITS) { "minWholeLength must be from 1-19" }
+        require(maxWholeLength in 1..MAX_LONG_DIGITS) { "maxWholeLength must be from 1-19" }
+
+        require(minFractionLength <= maxFractionLength) { "minFractionLength must be <= maxFractionLength" }
+        require(minFractionLength in 0..9) { "minFractionLength must be from 0-9" }
+        require(maxFractionLength in 0..9) { "maxFractionLength must be from 0-9" }
+
+        require(fractionScale in 1..9) { "fractionScale must be from 1-9" }
+    }
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        val textLength = text.length
+        var currentPosition = position
+
+        if (currentPosition >= textLength) {
+            return currentPosition.inv()
+        }
+
+        val settings = context.settings
+        val signResult = parseSign(settings.chars, text, currentPosition)
+
+        if (signResult == ParseSignResult.ERROR) {
+            return currentPosition.inv()
+        } else if (signResult != ParseSignResult.ABSENT) {
+            currentPosition++
+        }
+
+        var wholeNumberLength = 0
+
+        for (i in currentPosition until textLength) {
+            if (text[i].toDigit(settings.numberConverter) < 0) {
+                break
+            }
+            wholeNumberLength++
+        }
+
+        if (wholeNumberLength < minWholeLength) {
+            return (currentPosition + wholeNumberLength).inv()
+        } else if (wholeNumberLength > maxWholeLength) {
+            return (currentPosition + maxWholeLength).inv()
+        }
+
+        var wholeResult = 0L
+
+        for (i in wholeNumberLength downTo 1) {
+            val char = text[currentPosition]
+            val digit = char.toDigit(settings.numberConverter)
+            wholeResult += digit * FACTOR[i]
+            currentPosition++
+        }
+
+        if (signResult == ParseSignResult.NEGATIVE) {
+            wholeResult = -wholeResult
+        }
+
+        if (currentPosition < textLength && maxFractionLength > 0) {
+            if (text[currentPosition] in settings.chars.decimalSeparator) {
+                currentPosition++
+
+                if (currentPosition >= textLength) {
+                    return currentPosition.inv()
+                }
+
+                var fractionNumberLength = 0
+
+                for (i in currentPosition until textLength) {
+                    if (text[i].toDigit(settings.numberConverter) < 0) {
+                        break
+                    }
+                    fractionNumberLength++
+                }
+
+                if (fractionNumberLength < minFractionLength) {
+                    return (currentPosition + fractionNumberLength).inv()
+                } else if (fractionNumberLength > maxFractionLength) {
+                    return (currentPosition + maxFractionLength).inv()
+                }
+
+                var fractionResult = 0L
+
+                for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
+                    val char = text[currentPosition]
+                    val digit = char.toDigit(settings.numberConverter)
+                    fractionResult += digit * FACTOR[i]
+                    currentPosition++
+                }
+
+                if (signResult == ParseSignResult.NEGATIVE) {
+                    fractionResult = -fractionResult
+                }
+
+                onParsed(context, wholeResult, fractionResult)
+                return currentPosition
+            } else if (minFractionLength > 0) {
+                return currentPosition.inv()
+            }
+        } else if (minFractionLength > 0) {
+            return currentPosition.inv()
+        }
+
+        onParsed(context, wholeResult, 0L)
+        return currentPosition
+    }
+}
+
+class FractionParser internal constructor(
+    private val minLength: Int,
+    private val maxLength: Int,
+    private val onParsed: DateTimeParseContext.(parsed: Long) -> Unit
+) : DateTimeParser() {
+
+    init {
+        require(minLength <= maxLength) { "minLength must be <= maxLength" }
+        require(minLength in 1..9) { "minLength must be from 1-9" }
+        require(maxLength in 1..9) { "maxLength must be from 1-9" }
+    }
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        val textLength = text.length
+        var currentPosition = position
+
+        if (currentPosition >= textLength) {
+            return currentPosition.inv()
+        }
+
+        val settings = context.settings
+        var numberLength = 0
+
+        for (i in currentPosition until textLength) {
+            if (text[i].toDigit(settings.numberConverter) < 0) {
+                break
+            }
+            numberLength++
+        }
+
+        if (numberLength < minLength) {
+            return (currentPosition + numberLength).inv()
+        } else if (numberLength > maxLength) {
+            return (currentPosition + maxLength).inv()
+        }
+
+        var value = 0L
+
+        for (i in 9 downTo 9 - numberLength + 1) {
+            val char = text[currentPosition]
+            val digit = char.toDigit(settings.numberConverter)
+            value += digit * FACTOR[i]
+            currentPosition++
+        }
+
+        onParsed(context, value)
+        return currentPosition
     }
 }
 
@@ -299,19 +565,12 @@ private val FACTOR = arrayOf(
     1_000_000_000_000_000_000L
 )
 
-private fun Char.toDigit(): Int {
-    val digit = toInt() - 48
+private fun Char.toDigit(numberConverter: DateTimeParserSettings.NumberConverter) =
+    numberConverter.convertToDigit(this)
 
-    return if (digit > 9 || digit < 0) {
-        -1
-    } else {
-        digit
-    }
-}
-
-fun dateTimeParser(block: DateTimeParserBuilder.() -> Unit): DateTimeParser {
+fun dateTimeParser(builder: DateTimeParserBuilder.() -> Unit): DateTimeParser {
     return DateTimeParserBuilderImpl().run {
-        block()
+        builder()
         build()
     }
 }

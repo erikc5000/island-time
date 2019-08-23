@@ -116,7 +116,7 @@ class TimeTest {
         assertEquals(Time(2, 0), "02".toTime())
         assertEquals(Time(23, 0), "23:00".toTime())
         assertEquals(Time(23, 30, 5), "23:30:05".toTime())
-//        assertEquals(Time(23, 30, 5), "23:30:05.000".toTime())
+        assertEquals(Time(23, 30, 5, 100_000), "23:30:05.0001".toTime())
     }
 
     @Test
@@ -124,6 +124,9 @@ class TimeTest {
         assertEquals(Time(2, 0), "02".toTime(Iso8601.Basic.TIME_PARSER))
         assertEquals(Time(23, 0), "2300".toTime(Iso8601.Basic.TIME_PARSER))
         assertEquals(Time(23, 30, 5), "233005".toTime(Iso8601.Basic.TIME_PARSER))
-//        assertEquals(Time(23, 30, 5), "233005.000".toTime(Iso8601.Basic.TIME_PARSER))
+        assertEquals(
+            Time(23, 30, 5, 100_000),
+            "233005.0001".toTime(Iso8601.Basic.TIME_PARSER)
+        )
     }
 }

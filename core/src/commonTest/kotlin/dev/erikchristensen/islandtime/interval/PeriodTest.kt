@@ -1,5 +1,6 @@
 package dev.erikchristensen.islandtime.interval
 
+import dev.erikchristensen.islandtime.parser.DateTimeParseException
 import kotlin.test.*
 
 class PeriodTest {
@@ -96,6 +97,28 @@ class PeriodTest {
         assertEquals("P-100D", periodOf((-100).days).toString())
         assertEquals("P1M", periodOf(1.months).toString())
         assertEquals("P1D", periodOf(1.days).toString())
+    }
+
+    @Test
+    fun `String_toPeriod() throws an exception when string is empty`() {
+        assertFailsWith<DateTimeParseException> { "".toPeriod() }
+    }
+
+    @Test
+    fun `String_toPeriod() parses zero ISO-8601 period strings`() {
+        assertEquals(Period.ZERO, "P0D".toPeriod())
+    }
+
+    @Test
+    fun `String_toPeriod() parses valid ISO-8601 period strings`() {
+        assertEquals(periodOf(1.years, 13.months, 6.days), "P1Y13M6D".toPeriod())
+        assertEquals(periodOf((-1).months, 10.days), "P-1M10D".toPeriod())
+        assertEquals(periodOf(1.days), "P1D".toPeriod())
+    }
+
+    @Test
+    fun `String_toPeriod() throws an exception when string contains duration components`() {
+        assertFailsWith<DateTimeParseException> { "PT4S".toPeriod() }
     }
 
     @Test

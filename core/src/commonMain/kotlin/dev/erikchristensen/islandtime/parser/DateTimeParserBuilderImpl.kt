@@ -3,79 +3,86 @@ package dev.erikchristensen.islandtime.parser
 internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     private val parsers = mutableListOf<DateTimeParser>()
 
-    override fun year(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.YEAR, length, block)
+    override fun sign(builder: SignParserBuilder.() -> Unit) {
+        parsers += SignParserBuilderImpl().apply(builder).build()
     }
 
-    override fun monthNumber(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.MONTH_OF_YEAR, length, block)
+    override fun decimalSeparator(builder: LiteralParserBuilder.() -> Unit) {
+        parsers += DecimalSeparatorParserBuilderImpl().apply(builder).build()
     }
 
-    override fun dayOfYear(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.DAY_OF_YEAR, length, block)
+    override fun wholeNumber(
+        length: Int,
+        builder: WholeNumberParserBuilder.() -> Unit
+    ) {
+        parsers += FixedLengthNumberParserBuilderImpl(length).apply(builder).build()
     }
 
-    override fun dayOfMonth(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.DAY_OF_MONTH, length, block)
+    override fun wholeNumber(
+        length: Int,
+        field: DateTimeField,
+        builder: WholeNumberParserBuilder.() -> Unit
+    ) {
+        wholeNumber(length) {
+            onParsed { parsed -> result[field] = parsed }
+            builder()
+        }
     }
 
-    override fun dayOfWeekNumber(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.DAY_OF_WEEK, length, block)
+    override fun wholeNumber(length: IntRange, builder: WholeNumberParserBuilder.() -> Unit) {
+        parsers += VariableLengthNumberParserBuilderImpl(length.first, length.last).apply(builder).build()
     }
 
-    override fun hourOfDay(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.HOUR_OF_DAY, length, block)
+    override fun wholeNumber(
+        length: IntRange,
+        field: DateTimeField,
+        builder:WholeNumberParserBuilder.() -> Unit
+    ) {
+        wholeNumber(length) {
+            onParsed { parsed -> result[field] = parsed }
+            builder()
+        }
     }
 
-    override fun minuteOfHour(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.MINUTE_OF_HOUR, length, block)
+    override fun decimalNumber(
+        wholeLength: IntRange,
+        fractionLength: IntRange,
+        fractionScale: Int,
+        builder: DecimalNumberParserBuilder.() -> Unit
+    ) {
+        parsers += DecimalNumberParserBuilderImpl(
+            wholeLength.first,
+            wholeLength.last,
+            fractionLength.first,
+            fractionLength.last,
+            fractionScale
+        ).apply(builder).build()
     }
 
-    override fun secondOfMinute(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.SECOND_OF_MINUTE, length, block)
+    override fun fraction(length: IntRange, builder: FractionParserBuilder.() -> Unit) {
+        parsers += FractionParserBuilderImpl(length.first, length.last).apply(builder).build()
     }
 
-    override fun timeOffsetHours(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.TIME_OFFSET_HOURS, length, block)
+    override fun literal(char: Char, builder: LiteralParserBuilder.() -> Unit) {
+        parsers += CharLiteralParserBuilderImpl(char).apply(builder).build()
     }
 
-    override fun timeOffsetMinutes(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.TIME_OFFSET_MINUTES, length, block)
+    override fun literal(string: String, builder: LiteralParserBuilder.() -> Unit) {
+        parsers += StringLiteralParserBuilderImpl(string).apply(builder).build()
     }
 
-    override fun timeOffsetSeconds(length: Int, block: FixedLengthNumberParserBuilder.() -> Unit) {
-        fixedNumberValue(DateTimeField.TIME_OFFSET_SECONDS, length, block)
-    }
-
-    override fun timeOffsetSign() {
-        anyOf(
-            CharValueParser('+', DateTimeField.TIME_OFFSET_SIGN, 1L),
-            CharValueParser('-', DateTimeField.TIME_OFFSET_SIGN, -1L)
-        )
-    }
-
-    override fun timeOffsetUtc() {
-        parsers += CharValueParser('Z', DateTimeField.TIME_OFFSET_UTC, 1L)
-    }
-
-    override fun literal(char: Char) {
-        parsers += CharLiteralParser(char)
-    }
-
-    override fun literal(string: String) {
-        parsers += StringLiteralParser(string)
-    }
-
-    override fun optional(block: DateTimeParserBuilder.() -> Unit) {
-        val subParser = DateTimeParserBuilderImpl().apply { block() }.buildElement()
+    override fun optional(builder: DateTimeParserBuilder.() -> Unit) {
+        val subParser = DateTimeParserBuilderImpl().apply(builder).buildElement()
 
         if (subParser != null) {
             parsers += OptionalDateTimeParser(subParser)
         }
     }
 
-    override fun anyOf(vararg block: DateTimeParserBuilder.() -> Unit) {
-        val subParsers = block.mapNotNull { DateTimeParserBuilderImpl().apply { it() }.buildElement() }
+    override fun anyOf(vararg builders: DateTimeParserBuilder.() -> Unit) {
+        val subParsers = builders.mapNotNull {
+            DateTimeParserBuilderImpl().apply(it).buildElement()
+        }
         anyOf(*subParsers.toTypedArray())
     }
 
@@ -93,15 +100,6 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         return buildElement() ?: throw IllegalStateException("Parser is empty")
     }
 
-    private fun fixedNumberValue(
-        field: DateTimeField,
-        length: Int,
-        block: FixedLengthNumberParserBuilder.() -> Unit
-    ) {
-        val builder = FixedLengthNumberParserBuilderImpl(field, length).apply { block() }
-        parsers += builder.build()
-    }
-
     private fun buildElement(): DateTimeParser? {
         return when (parsers.count()) {
             0 -> null
@@ -111,23 +109,146 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     }
 }
 
-class FixedLengthNumberParserBuilderImpl(
-    private val field: DateTimeField,
-    private val length: Int
-) : FixedLengthNumberParserBuilder {
-    private var signStyle: SignStyle? = null
-    override var signExceedsLength: Boolean = false
+class SignParserBuilderImpl internal constructor(): SignParserBuilder {
+    private var onParsed: (DateTimeParseContext.(parsed: Int) -> Unit) = {}
+
+    override fun onParsed(action: DateTimeParseContext.(parsed: Int) -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return SignParser(onParsed)
+    }
+}
+
+class DecimalSeparatorParserBuilderImpl internal constructor(): LiteralParserBuilder {
+    private var onParsed: (DateTimeParseContext.() -> Unit) = {}
+
+    override fun onParsed(action: DateTimeParseContext.() -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return DecimalSeparatorParser(onParsed)
+    }
+}
+
+abstract class WholeNumberParserBuilderImpl internal constructor() : WholeNumberParserBuilder {
+    protected var onParsed: DateTimeParseContext.(parsed: Long) -> Unit = {}
+    protected var signStyle: SignStyle? = null
 
     override fun enforceSignStyle(signStyle: SignStyle) {
         this.signStyle = signStyle
     }
 
+    override fun onParsed(action: DateTimeParseContext.(parsed: Long) -> Unit) {
+        onParsed = action
+    }
+}
+
+class FixedLengthNumberParserBuilderImpl internal constructor(
+    private val length: Int
+) : WholeNumberParserBuilderImpl() {
+
     fun build(): DateTimeParser {
-        return FixedLengthNumberValueParser(
-            field,
+        return FixedLengthNumberParser(
             length,
-            signStyle,
-            signExceedsLength
+            onParsed,
+            signStyle
         )
+    }
+}
+
+class VariableLengthNumberParserBuilderImpl internal constructor(
+    private val minLength: Int,
+    private val maxLength: Int
+) : WholeNumberParserBuilderImpl() {
+
+    fun build(): DateTimeParser {
+        return VariableLengthNumberParser(
+            minLength,
+            maxLength,
+            onParsed,
+            signStyle
+        )
+    }
+}
+
+class DecimalNumberParserBuilderImpl internal constructor(
+    private val minWholeLength: Int,
+    private val maxWholeLength: Int,
+    private val minFractionLength: Int,
+    private val maxFractionLength: Int,
+    private val fractionScale: Int
+) : DecimalNumberParserBuilder {
+
+    private var signStyle: SignStyle? = null
+    private var onParsed: DateTimeParseContext.(whole: Long, fraction: Long) -> Unit = { _, _ -> }
+
+    override fun enforceSignStyle(signStyle: SignStyle) {
+        this.signStyle = signStyle
+    }
+
+    override fun onParsed(action: DateTimeParseContext.(whole: Long, fraction: Long) -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return DecimalNumberParser(
+            minWholeLength,
+            maxWholeLength,
+            minFractionLength,
+            maxFractionLength,
+            fractionScale,
+            signStyle,
+            onParsed
+        )
+    }
+}
+
+class FractionParserBuilderImpl internal constructor(
+    private val minLength: Int,
+    private val maxLength: Int
+) : FractionParserBuilder {
+    private var onParsed: DateTimeParseContext.(parsed: Long) -> Unit = {}
+
+    override fun onParsed(action: DateTimeParseContext.(parsed: Long) -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return FractionParser(
+            minLength,
+            maxLength,
+            onParsed
+        )
+    }
+}
+
+class CharLiteralParserBuilderImpl internal constructor(
+    private val char: Char
+) : LiteralParserBuilder {
+    private var onParsed: (DateTimeParseContext.() -> Unit) = {}
+
+    override fun onParsed(action: DateTimeParseContext.() -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return CharLiteralParser(char, onParsed)
+    }
+}
+
+class StringLiteralParserBuilderImpl internal constructor(
+    private val string: String
+) : LiteralParserBuilder {
+    private var onParsed: (DateTimeParseContext.() -> Unit) = {}
+
+    override fun onParsed(action: DateTimeParseContext.() -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return StringLiteralParser(string, onParsed)
     }
 }

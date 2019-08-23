@@ -419,7 +419,7 @@ class DateTest {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended date`() {
+    fun `toString() returns an ISO-8601 extended calendar date`() {
         assertEquals("2019-08-01", Date(2019, Month.AUGUST, 1).toString())
         assertEquals("0001-10-10", Date(1, Month.OCTOBER, 10).toString())
     }
@@ -465,6 +465,9 @@ class DateTest {
     @Test
     fun `String_toDate() parses valid strings with explicit parser`() {
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate(Iso8601.DATE_PARSER))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "20000229".toDate(Iso8601.DATE_PARSER))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-060".toDate(Iso8601.DATE_PARSER))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000060".toDate(Iso8601.DATE_PARSER))
     }
 
     @Test

@@ -1,9 +1,9 @@
 package dev.erikchristensen.islandtime.date
 
 import dev.erikchristensen.islandtime.*
-import dev.erikchristensen.islandtime.parser.*
 import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
+import dev.erikchristensen.islandtime.parser.*
 import kotlin.jvm.JvmField
 import kotlin.jvm.JvmStatic
 
@@ -212,7 +212,7 @@ fun Date.asUnixEpochDays(): LongDays {
     return (total - DAYS_FROM_0000_TO_1970).days
 }
 
-fun String.toDate() = toDate(Iso8601.Extended.DATE_PARSER)
+fun String.toDate() = toDate(Iso8601.Extended.CALENDAR_DATE_PARSER)
 
 fun String.toDate(parser: DateTimeParser): Date {
     val result = parser.parse(this)

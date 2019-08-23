@@ -5,6 +5,10 @@ import dev.erikchristensen.islandtime.internal.MILLISECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.toZeroPaddedString
 import dev.erikchristensen.islandtime.interval.Duration.Companion.create
+import dev.erikchristensen.islandtime.parser.DateTimeField
+import dev.erikchristensen.islandtime.parser.DateTimeParseResult
+import dev.erikchristensen.islandtime.parser.DateTimeParser
+import dev.erikchristensen.islandtime.parser.Iso8601
 import kotlin.math.abs
 
 /**
@@ -190,15 +194,17 @@ fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
 
     if (newNanoOfSeconds.value < 0 && adjustedSeconds.value > 0) {
         adjustedSeconds -= 1L.seconds
-        newNanoOfSeconds = (NANOSECONDS_PER_SECOND.toInt() - newNanoOfSeconds.value).nanoseconds
+        newNanoOfSeconds = (newNanoOfSeconds.value + NANOSECONDS_PER_SECOND.toInt()).nanoseconds
     } else if (newNanoOfSeconds.value > 0 && adjustedSeconds.value < 0) {
         adjustedSeconds += 1L.seconds
         newNanoOfSeconds = (newNanoOfSeconds.value - NANOSECONDS_PER_SECOND.toInt()).nanoseconds
     }
-    
+
     return create(adjustedSeconds, newNanoOfSeconds)
 }
 
+fun durationOf(days: IntDays) = durationOf(days.toLong())
+fun durationOf(days: LongDays) = durationOf(days.asSeconds())
 fun durationOf(hours: IntHours) = durationOf(hours.toLong())
 fun durationOf(hours: LongHours) = create(hours.asSeconds())
 fun durationOf(minutes: IntMinutes) = durationOf(minutes.toLong())
@@ -230,7 +236,7 @@ fun durationOf(nanoseconds: IntNanoseconds) = durationOf(nanoseconds.toLong())
 fun durationOf(nanoseconds: LongNanoseconds): Duration {
     val seconds = nanoseconds.toWholeSeconds()
     val nanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
-    
+
     return create(seconds, nanoOfSeconds)
 }
 
@@ -277,9 +283,7 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
                 append('-')
             }
 
-            if (seconds.value != 0) {
-                append(seconds.value)
-            }
+            append(seconds.value)
 
             if (nanoseconds.value != 0) {
                 append('.')
@@ -294,4 +298,24 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
         }
     }
     return this
+}
+
+fun String.toDuration() = toDuration(Iso8601.DURATION_PARSER)
+
+fun String.toDuration(parser: DateTimeParser): Duration {
+    val result = parser.parse(this)
+    return result.toDuration()
+}
+
+internal fun DateTimeParseResult.toDuration(): Duration {
+    val days = (this[DateTimeField.PERIOD_OF_DAYS] ?: 0L).days
+    val hours = (this[DateTimeField.DURATION_OF_HOURS] ?: 0L).hours
+    val minutes = (this[DateTimeField.DURATION_OF_MINUTES] ?: 0L).minutes
+    val seconds = (this[DateTimeField.DURATION_OF_SECONDS] ?: 0L).seconds
+    val nanoseconds = (this[DateTimeField.NANO_OF_SECOND] ?: 0L).nanoseconds
+
+    return durationOf(
+        days + hours + minutes + seconds,
+        nanoseconds
+    )
 }
