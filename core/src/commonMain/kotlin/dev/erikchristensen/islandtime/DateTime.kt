@@ -10,7 +10,6 @@ import dev.erikchristensen.islandtime.parser.DateTimeParseResult
 import dev.erikchristensen.islandtime.parser.DateTimeParser
 import dev.erikchristensen.islandtime.parser.Iso8601
 import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
-import kotlin.jvm.JvmField
 
 data class DateTime(
     val date: Date,
@@ -30,10 +29,8 @@ data class DateTime(
     override fun toString() = buildString(MAX_DATE_TIME_STRING_LENGTH) { appendDateTime(this@DateTime) }
 
     companion object {
-        @JvmField
         val MIN = DateTime(Date.MIN, Time.MIN)
 
-        @JvmField
         val MAX = DateTime(Date.MAX, Time.MAX)
     }
 }

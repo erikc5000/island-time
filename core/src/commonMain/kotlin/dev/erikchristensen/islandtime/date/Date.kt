@@ -4,8 +4,6 @@ import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
-import kotlin.jvm.JvmField
-import kotlin.jvm.JvmStatic
 
 data class Date(
     val year: Int,
@@ -42,16 +40,12 @@ data class Date(
     override fun toString() = buildString(MAX_DATE_STRING_LENGTH) { appendDate(this@Date) }
 
     companion object {
-        @JvmField
         val MIN = Date(Year.MIN_VALUE, Month.MIN, 1)
-
-        @JvmField
         val MAX = Date(Year.MAX_VALUE, Month.MAX, Month.MAX.lastDayIn(Year.MAX_VALUE))
 
         //
         // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
         //
-        @JvmStatic
         fun ofUnixEpochDays(unixEpochDays: LongDays): Date {
             var zeroDay = unixEpochDays.value + DAYS_FROM_0000_TO_1970
             // find the march-based year

@@ -3,11 +3,8 @@ package dev.erikchristensen.islandtime
 import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
-import kotlin.jvm.JvmField
-import kotlin.jvm.JvmOverloads
-import kotlin.jvm.JvmStatic
 
-data class Time @JvmOverloads constructor(
+data class Time(
     val hour: Int,
     val minute: Int,
     val second: Int = 0,
@@ -46,20 +43,11 @@ data class Time @JvmOverloads constructor(
     override fun toString() = buildString(MAX_TIME_STRING_LENGTH) { appendTime(this@Time) }
 
     companion object {
-        @JvmField
         val MIN = Time(0, 0, 0, 0)
-
-        @JvmField
         val MAX = Time(23, 59, 59, 999_999_999)
-
-        @JvmField
         val MIDNIGHT = Time(0, 0, 0, 0)
-
-        @JvmField
         val NOON = Time(12, 0, 0, 0)
 
-        @JvmStatic
-        @JvmOverloads
         fun ofSecondOfDay(secondOfDay: Int, nanoOfSecond: Int = 0): Time {
             require(secondOfDay in 0 until SECONDS_PER_DAY) {
                 "'$secondOfDay' is not valid second of the day"
@@ -71,7 +59,6 @@ data class Time @JvmOverloads constructor(
             return Time(hour, minute, second, nanoOfSecond)
         }
 
-        @JvmStatic
         fun ofNanosecondOfDay(nanosecondOfDay: Long): Time {
             require(nanosecondOfDay in 0L until NANOSECONDS_PER_DAY) {
                 "'$nanosecondOfDay' is not valid nanosecond of the day"

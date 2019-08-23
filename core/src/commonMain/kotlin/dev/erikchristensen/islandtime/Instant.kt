@@ -13,7 +13,7 @@ inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<I
     }
 
     override fun toString(): String {
-        val dateTime = this.toUtcDateTime()
+        val dateTime = this.asUtcDateTime()
 
         return buildString(MAX_DATE_TIME_STRING_LENGTH + 1) {
             appendDateTime(dateTime)
@@ -28,7 +28,12 @@ inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<I
     }
 }
 
-internal fun Instant.toUtcDateTime(): DateTime {
+fun Instant.atOffset(offset: TimeOffset): OffsetDateTime {
+    val dateTime = this.asUtcDateTime() + offset.totalSeconds
+    return OffsetDateTime(dateTime, offset)
+}
+
+internal fun Instant.asUtcDateTime(): DateTime {
     val days = unixEpochMilliseconds.toWholeDays()
     val remainingMilliseconds = unixEpochMilliseconds - days
     val nanosecondOfDay = remainingMilliseconds.asNanoseconds()

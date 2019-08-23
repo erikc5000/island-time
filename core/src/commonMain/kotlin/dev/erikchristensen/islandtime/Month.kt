@@ -1,8 +1,9 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.interval.*
-import kotlin.jvm.JvmField
-import kotlin.jvm.JvmStatic
+import dev.erikchristensen.islandtime.interval.IntDays
+import dev.erikchristensen.islandtime.interval.IntMonths
+import dev.erikchristensen.islandtime.interval.days
+import dev.erikchristensen.islandtime.interval.unaryMinus
 
 enum class Month(val number: Int) {
     JANUARY(1) {
@@ -63,17 +64,8 @@ enum class Month(val number: Int) {
     abstract val firstDayOfCommonYear: Int
 
     companion object {
-        @JvmField
         val MIN = JANUARY
-
-        @JvmField
         val MAX = DECEMBER
-
-        @JvmStatic
-        fun of(number: Int): Month {
-            require(number in MIN.number..MAX.number) { "'$number' is not a valid month of the year" }
-            return values()[number - 1]
-        }
     }
 }
 
@@ -138,11 +130,11 @@ operator fun Month.plus(months: IntMonths): Month {
 operator fun Month.minus(months: IntMonths) = plus(-months)
 
 fun Int.toMonth(): Month {
-    return try {
-        Month.of(this)
-    } catch (e: IllegalArgumentException) {
-        throw DateTimeException(e.message)
+    if (this !in Month.MIN.number..Month.MAX.number) {
+        throw DateTimeException("'$this' is not a valid month of the year")
     }
+
+    return Month.values()[this - 1]
 }
 
 fun isLeapDay(month: Month, day: Int) = month == Month.FEBRUARY && day == 29

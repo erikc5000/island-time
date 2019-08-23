@@ -1,7 +1,9 @@
 package dev.erikchristensen.islandtime.date
 
-import dev.erikchristensen.islandtime.interval.*
-import kotlin.jvm.JvmField
+import dev.erikchristensen.islandtime.interval.Period
+import dev.erikchristensen.islandtime.interval.days
+import dev.erikchristensen.islandtime.interval.months
+import dev.erikchristensen.islandtime.interval.years
 import kotlin.random.Random
 import kotlin.random.nextLong
 
@@ -17,7 +19,6 @@ class DateRange(
     override fun toString() = "$first..$last"
 
     companion object {
-        @JvmField
         val EMPTY = DateRange(Date.ofUnixEpochDays(1L.days), Date.ofUnixEpochDays(0L.days))
     }
 }

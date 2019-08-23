@@ -1,19 +1,10 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.interval.LongMilliseconds
-import kotlin.jvm.JvmOverloads
-import kotlin.jvm.JvmStatic
 
 interface Clock {
     val timeZone: TimeZone
     fun instant(): Instant
-
-    companion object {
-        @JvmStatic
-        fun system(): Clock {
-            return SystemClock()
-        }
-    }
 }
 
 internal expect class SystemClock() : Clock {
@@ -21,9 +12,9 @@ internal expect class SystemClock() : Clock {
     override fun instant(): Instant
 }
 
-fun systemClock() = Clock.system()
+fun systemClock(): Clock = SystemClock()
 
-class FixedClock @JvmOverloads constructor(
+class FixedClock(
     private val unixEpochMilliseconds: LongMilliseconds,
     override val timeZone: TimeZone = TimeZone.UTC
 ) : Clock {
