@@ -114,14 +114,14 @@ operator fun Duration.plus(nanosecondsToAdd: LongNanoseconds): Duration {
 
 private fun Duration.plus(secondsToAdd: LongSeconds, nanosecondsToAdd: IntNanoseconds): Duration {
     var newSeconds = seconds + secondsToAdd
-    var newNanoOfSeconds = nanoOfSeconds.unsafeAdd(nanosecondsToAdd)
+    var newNanoOfSeconds = nanoOfSeconds unsafeAdd nanosecondsToAdd
 
     if (newNanoOfSeconds.value >= NANOSECONDS_PER_SECOND) {
         newSeconds += 1L.seconds
-        newNanoOfSeconds = newNanoOfSeconds.unsafeSubtract(1.seconds)
+        newNanoOfSeconds = newNanoOfSeconds unsafeSubtract 1.seconds
     } else if (newNanoOfSeconds.value <= -NANOSECONDS_PER_SECOND) {
         newSeconds -= 1L.seconds
-        newNanoOfSeconds = newNanoOfSeconds.unsafeAdd(1.seconds)
+        newNanoOfSeconds = newNanoOfSeconds unsafeAdd 1.seconds
     }
 
     if (newNanoOfSeconds.value < 0 && newSeconds.value > 0) {
