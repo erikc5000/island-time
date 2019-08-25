@@ -76,12 +76,15 @@ inline val DateTime.isLeapDay: Boolean get() = date.isLeapDay
 inline val DateTime.lengthOfMonth: IntDays get() = date.lengthOfMonth
 inline val DateTime.lengthOfYear: IntDays get() = date.lengthOfYear
 
-operator fun DateTime.plus(daysToAdd: LongDays) = date.plus(daysToAdd)
-operator fun DateTime.plus(daysToAdd: IntDays) = date.plus(daysToAdd)
-operator fun DateTime.plus(monthsToAdd: LongMonths) = date.plus(monthsToAdd)
-operator fun DateTime.plus(monthsToAdd: IntMonths) = date.plus(monthsToAdd)
-operator fun DateTime.plus(yearsToAdd: LongYears) = date.plus(yearsToAdd)
-operator fun DateTime.plus(yearsToAdd: IntYears) = date.plus(yearsToAdd)
+fun DateTime.with(newDate: Date) = DateTime(newDate, time)
+fun DateTime.with(newTime: Time) = DateTime(date, newTime)
+
+operator fun DateTime.plus(daysToAdd: LongDays) = this.with(date + daysToAdd)
+operator fun DateTime.plus(daysToAdd: IntDays) = this.with(date + daysToAdd)
+operator fun DateTime.plus(monthsToAdd: LongMonths) = this.with(date + monthsToAdd)
+operator fun DateTime.plus(monthsToAdd: IntMonths) = this.with(date + monthsToAdd)
+operator fun DateTime.plus(yearsToAdd: LongYears) = this.with(date + yearsToAdd)
+operator fun DateTime.plus(yearsToAdd: IntYears) = this.with(date + yearsToAdd)
 
 operator fun DateTime.plus(hoursToAdd: LongHours): DateTime {
     return if (hoursToAdd.value == 0L) {

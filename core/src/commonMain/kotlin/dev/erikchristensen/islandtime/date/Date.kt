@@ -143,6 +143,11 @@ val Date.isLeapDay: Boolean get() = isLeapDay(month, dayOfMonth)
  */
 val Date.lengthOfMonth: IntDays get() = month.lengthIn(year)
 
+fun Date.withYear(newYear: Int) = Date(newYear, month, dayOfMonth)
+fun Date.withMonth(newMonth: Month) = Date(year, newMonth, dayOfMonth)
+fun Date.withDayOfMonth(newDayOfMonth: Int) = Date(year, month, dayOfMonth)
+fun Date.withDayOfYear(newDayOfYear: Int) = Date(year, newDayOfYear)
+
 /**
  * The length of this date's year in days
  */
