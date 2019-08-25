@@ -7,10 +7,15 @@ import kotlin.test.assertFailsWith
 
 class DayOfWeekTest {
     @Test
+    fun `DayOfWeek() returns the day of the week by number, starting with Monday`() {
+        assertEquals(DayOfWeek.WEDNESDAY, DayOfWeek(3))
+    }
+
+    @Test
     fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {
-        assertFailsWith<DateTimeException> { 0.toDayOfWeek() }
-        assertFailsWith<DateTimeException> { 8.toDayOfWeek() }
-        assertFailsWith<DateTimeException> { (-1).toDayOfWeek() }
+        assertFailsWith<IllegalArgumentException> { 0.toDayOfWeek() }
+        assertFailsWith<IllegalArgumentException> { 8.toDayOfWeek() }
+        assertFailsWith<IllegalArgumentException> { (-1).toDayOfWeek() }
     }
 
     @Test

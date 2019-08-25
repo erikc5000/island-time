@@ -6,19 +6,7 @@
 
 package dev.erikchristensen.islandtime.interval
 
-import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_DAY
-import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_HOUR
-import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_MICROSECOND
-import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_MILLISECOND
-import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_MINUTE
-import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_SECOND
-import dev.erikchristensen.islandtime.internal.toZeroPaddedString
-import kotlin.Boolean
-import kotlin.Comparable
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.Suppress
+import dev.erikchristensen.islandtime.internal.*
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -51,8 +39,10 @@ inline class IntNanoseconds(
           val fractionalPart = absValue % 1000000000
           if (isNegative) { append('-') }
           append(wholePart)
-          append('.')
-          append(fractionalPart.toZeroPaddedString(9).dropLastWhile { it == '0' })
+          if (fractionalPart != 0) {
+              append('.')
+              append(fractionalPart.toZeroPaddedString(9).dropLastWhile { it == '0' })
+          }
           append('S')
       }
   }
@@ -92,8 +82,10 @@ inline class LongNanoseconds(
           val fractionalPart = (absValue % 1000000000).toInt()
           if (isNegative) { append('-') }
           append(wholePart)
-          append('.')
-          append(fractionalPart.toZeroPaddedString(9).dropLastWhile { it == '0' })
+          if (fractionalPart != 0) {
+              append('.')
+              append(fractionalPart.toZeroPaddedString(9).dropLastWhile { it == '0' })
+          }
           append('S')
       }
   }

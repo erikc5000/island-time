@@ -16,6 +16,14 @@ enum class DayOfWeek(val number: Int) {
     companion object {
         val MIN = MONDAY
         val MAX = SUNDAY
+
+        operator fun invoke(number: Int): DayOfWeek {
+            require(number in MIN.number..MAX.number) {
+                "'$number' is not a valid day of week number"
+            }
+
+            return values()[number - 1]
+        }
     }
 }
 
@@ -26,10 +34,4 @@ operator fun DayOfWeek.plus(days: IntDays): DayOfWeek {
 
 operator fun DayOfWeek.minus(days: IntDays) = plus(-days)
 
-fun Int.toDayOfWeek(): DayOfWeek {
-    if (this !in DayOfWeek.MIN.number..DayOfWeek.MAX.number) {
-        throw DateTimeException("'$this' is not a valid day of week number")
-    }
-
-    return DayOfWeek.values()[this - 1]
-}
+fun Int.toDayOfWeek() = DayOfWeek(this)

@@ -32,7 +32,7 @@ class OffsetDateTimeTest {
             "2018-05-05T12:00-12:30",
             OffsetDateTime(
                 DateTime(Date(2018, Month.MAY, 5), Time.NOON),
-                timeOffsetOf((-12).hours, (-30).minutes)
+                TimeOffset((-12).hours, (-30).minutes)
             ).toString()
         )
     }
@@ -61,7 +61,7 @@ class OffsetDateTimeTest {
         assertEquals(
             OffsetDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time(5, 0, 3, 500)),
-                timeOffsetOf(2.hours, 30.minutes, 23.seconds)
+                TimeOffset(2.hours, 30.minutes, 23.seconds)
             ),
             "2019-05-05T05:00:03.0000005+02:30:23".toOffsetDateTime()
         )

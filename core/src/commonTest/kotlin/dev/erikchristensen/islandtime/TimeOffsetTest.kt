@@ -7,23 +7,23 @@ import kotlin.test.*
 
 class TimeOffsetTest {
     @Test
-    fun `timeOffsetOf() requires all values to have the same sign`() {
-        assertFailsWith<DateTimeException> { timeOffsetOf((-2).hours, 30.minutes) }
-        assertFailsWith<DateTimeException> { timeOffsetOf(2.hours, 0.minutes, (-5).seconds) }
+    fun `TimeOffset() requires all values to have the same sign`() {
+        assertFailsWith<IllegalArgumentException> { TimeOffset((-2).hours, 30.minutes) }
+        assertFailsWith<IllegalArgumentException> { TimeOffset(2.hours, 0.minutes, (-5).seconds) }
     }
 
     @Test
-    fun `timeOffsetOf() requires each component to be valid individually`() {
-        assertFailsWith<DateTimeException> { timeOffsetOf(19.hours) }
-        assertFailsWith<DateTimeException> { timeOffsetOf(2.hours, 60.minutes) }
-        assertFailsWith<DateTimeException> { timeOffsetOf((-2).hours, 0.minutes, (-60).seconds) }
+    fun `TimeOffset() requires each component to be valid individually`() {
+        assertFailsWith<IllegalArgumentException> { TimeOffset(19.hours) }
+        assertFailsWith<IllegalArgumentException> { TimeOffset(2.hours, 60.minutes) }
+        assertFailsWith<IllegalArgumentException> { TimeOffset((-2).hours, 0.minutes, (-60).seconds) }
     }
 
     @Test
-    fun `timeOffsetOf() creates an offset with the sum of all components`() {
-        assertEquals(3_600.seconds, timeOffsetOf(1.hours).totalSeconds)
-        assertEquals(3_661.seconds, timeOffsetOf(1.hours, 1.minutes, 1.seconds).totalSeconds)
-        assertEquals((-3_661).seconds, timeOffsetOf((-1).hours, (-1).minutes, (-1).seconds).totalSeconds)
+    fun `TimeOffset() creates an offset with the sum of all components`() {
+        assertEquals(3_600.seconds, TimeOffset(1.hours).totalSeconds)
+        assertEquals(3_661.seconds, TimeOffset(1.hours, 1.minutes, 1.seconds).totalSeconds)
+        assertEquals((-3_661).seconds, TimeOffset((-1).hours, (-1).minutes, (-1).seconds).totalSeconds)
     }
 
     @Test
@@ -61,7 +61,7 @@ class TimeOffsetTest {
 
     @Test
     fun `toComponents() breaks a time offset down into hours, minutes, and seconds`() {
-        timeOffsetOf((-1).hours, (-30).minutes).toComponents { hours, minutes, seconds ->
+        TimeOffset((-1).hours, (-30).minutes).toComponents { hours, minutes, seconds ->
             assertEquals((-1).hours, hours)
             assertEquals((-30).minutes, minutes)
             assertEquals(0.seconds, seconds)
@@ -70,7 +70,7 @@ class TimeOffsetTest {
 
     @Test
     fun `toComponents() breaks a time offset down into sign, hours, minutes, and seconds`() {
-        timeOffsetOf((-1).hours, (-30).minutes).toComponents { sign, hours, minutes, seconds ->
+        TimeOffset((-1).hours, (-30).minutes).toComponents { sign, hours, minutes, seconds ->
             assertEquals(-1, sign)
             assertEquals(1.hours, hours)
             assertEquals(30.minutes, minutes)
@@ -85,10 +85,10 @@ class TimeOffsetTest {
 
     @Test
     fun `toString() returns an ISO-8601 time offset string for non-UTC offsets`() {
-        assertEquals("+02:00", timeOffsetOf(2.hours).toString())
-        assertEquals("-02:00", timeOffsetOf((-2).hours).toString())
-        assertEquals("+02:30", timeOffsetOf(2.hours, 30.minutes).toString())
-        assertEquals("+02:30:05", timeOffsetOf(2.hours, 30.minutes, 5.seconds).toString())
+        assertEquals("+02:00", TimeOffset(2.hours).toString())
+        assertEquals("-02:00", TimeOffset((-2).hours).toString())
+        assertEquals("+02:30", TimeOffset(2.hours, 30.minutes).toString())
+        assertEquals("+02:30:05", TimeOffset(2.hours, 30.minutes, 5.seconds).toString())
     }
 
     @Test
@@ -112,22 +112,22 @@ class TimeOffsetTest {
     @Test
     fun `String_toTimeOffset() parses valid ISO-8601 extended time offset strings`() {
         assertEquals(
-            timeOffsetOf(1.hours),
+            TimeOffset(1.hours),
             "+01".toTimeOffset()
         )
 
         assertEquals(
-            timeOffsetOf(1.hours),
+            TimeOffset(1.hours),
             "+01:00".toTimeOffset()
         )
 
         assertEquals(
-            timeOffsetOf(1.hours),
+            TimeOffset(1.hours),
             "+01:00:00".toTimeOffset()
         )
 
         assertEquals(
-            timeOffsetOf((-4).hours, (-30).minutes),
+            TimeOffset((-4).hours, (-30).minutes),
             "-04:30".toTimeOffset()
         )
     }
@@ -135,22 +135,22 @@ class TimeOffsetTest {
     @Test
     fun `String_toTimeOffset() parses valid ISO-8601 basic time offsets with explicit parser`() {
         assertEquals(
-            timeOffsetOf(1.hours),
+            TimeOffset(1.hours),
             "+01".toTimeOffset(Iso8601.TIME_OFFSET_PARSER)
         )
 
         assertEquals(
-            timeOffsetOf(1.hours),
+            TimeOffset(1.hours),
             "+0100".toTimeOffset(Iso8601.TIME_OFFSET_PARSER)
         )
 
         assertEquals(
-            timeOffsetOf(1.hours),
+            TimeOffset(1.hours),
             "+010000".toTimeOffset(Iso8601.TIME_OFFSET_PARSER)
         )
 
         assertEquals(
-            timeOffsetOf((-4).hours, (-30).minutes),
+            TimeOffset((-4).hours, (-30).minutes),
             "-0430".toTimeOffset(Iso8601.TIME_OFFSET_PARSER)
         )
     }

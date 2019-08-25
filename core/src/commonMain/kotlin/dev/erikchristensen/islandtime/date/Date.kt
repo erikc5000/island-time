@@ -5,21 +5,25 @@ import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
 
-data class Date(
+class Date(
     val year: Int,
     val month: Month,
     private val day: Int
 ) : Comparable<Date> {
+
+    init {
+        checkYear(year)
+        require(day in month.dayRangeIn(year)) { "The day '$day' doesn't exist in $month of $year" }
+    }
 
     /**
      * The day of the month
      */
     val dayOfMonth: Int get() = day
 
-    init {
-        checkYear(year)
-        require(day in month.dayRangeIn(year)) { "The day '$day' doesn't exist in $month of $year" }
-    }
+    operator fun component1() = year
+    operator fun component2() = month
+    operator fun component3() = day
 
     override fun compareTo(other: Date): Int {
         val yearDiff = year - other.year
@@ -38,6 +42,17 @@ data class Date(
     }
 
     override fun toString() = buildString(MAX_DATE_STRING_LENGTH) { appendDate(this@Date) }
+
+    override fun equals(other: Any?): Boolean {
+        return this === other || (other is Date && year == other.year && month == other.month && day == other.day)
+    }
+
+    override fun hashCode(): Int {
+        var result = year
+        result = 31 * result + month.hashCode()
+        result = 31 * result + day
+        return result
+    }
 
     companion object {
         val MIN = Date(Year.MIN_VALUE, Month.MIN, 1)
@@ -152,11 +167,7 @@ operator fun Date.plus(monthsToAdd: IntMonths): Date {
         val newYear = newMonthsRelativeTo0 / MONTHS_IN_YEAR
         val newMonth = Month.values()[newMonthsRelativeTo0 % MONTHS_IN_YEAR]
 
-        Date(
-            newYear,
-            newMonth,
-            dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear))
-        )
+        Date(newYear, newMonth, dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)))
     }
 }
 
@@ -167,7 +178,7 @@ operator fun Date.plus(yearsToAdd: IntYears): Date {
         this
     } else {
         val newYear = year + yearsToAdd.value
-        copy(day = dayOfMonth.coerceAtMost(month.lastDayIn(newYear)), year = newYear)
+        Date(newYear, month, dayOfMonth.coerceAtMost(month.lastDayIn(newYear)))
     }
 }
 

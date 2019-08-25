@@ -1,21 +1,32 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.date.*
+import dev.erikchristensen.islandtime.date.Date
 import dev.erikchristensen.islandtime.interval.IntDays
 import dev.erikchristensen.islandtime.parser.DateTimeParseResult
 import dev.erikchristensen.islandtime.parser.DateTimeParser
 import dev.erikchristensen.islandtime.parser.Iso8601
 import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
 
-data class OffsetDateTime(
+class OffsetDateTime(
     val dateTime: DateTime,
     val offset: TimeOffset
 ) {
     val date: Date get() = dateTime.date
     val time: Time get() = dateTime.time
 
+    operator fun component1() = dateTime
+    operator fun component2() = offset
+
     override fun toString() = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
         appendOffsetDateTime(this@OffsetDateTime)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return this === other || (other is OffsetDateTime && dateTime == other.dateTime && offset == other.offset)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * dateTime.hashCode() + offset.hashCode()
     }
 }
 
@@ -32,7 +43,6 @@ inline val OffsetDateTime.isInLeapYear: Boolean get() = dateTime.isInLeapYear
 inline val OffsetDateTime.isLeapDay: Boolean get() = dateTime.isLeapDay
 inline val OffsetDateTime.lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
 inline val OffsetDateTime.lengthOfYear: IntDays get() = dateTime.lengthOfYear
-
 
 fun String.toOffsetDateTime() = toOffsetDateTime(Iso8601.Extended.OFFSET_DATE_TIME_PARSER)
 

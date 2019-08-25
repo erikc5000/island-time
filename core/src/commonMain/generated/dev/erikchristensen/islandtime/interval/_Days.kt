@@ -6,18 +6,7 @@
 
 package dev.erikchristensen.islandtime.interval
 
-import dev.erikchristensen.islandtime.internal.DAYS_PER_HOUR
-import dev.erikchristensen.islandtime.internal.DAYS_PER_MICROSECOND
-import dev.erikchristensen.islandtime.internal.DAYS_PER_MILLISECOND
-import dev.erikchristensen.islandtime.internal.DAYS_PER_MINUTE
-import dev.erikchristensen.islandtime.internal.DAYS_PER_NANOSECOND
-import dev.erikchristensen.islandtime.internal.DAYS_PER_SECOND
-import kotlin.Boolean
-import kotlin.Comparable
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.Suppress
+import dev.erikchristensen.islandtime.internal.*
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -183,11 +172,11 @@ fun IntDays.asMinutes() = (this.value * DAYS_PER_MINUTE.toInt()).minutes
 
 fun IntDays.asSeconds() = (this.value * DAYS_PER_SECOND.toInt()).seconds
 
-fun IntDays.asMilliseconds() = (this.value.toLong() * DAYS_PER_MILLISECOND.toInt()).milliseconds
+fun IntDays.asMilliseconds() = (this.value.toLong() * DAYS_PER_MILLISECOND).milliseconds
 
-fun IntDays.asMicroseconds() = (this.value.toLong() * DAYS_PER_MICROSECOND.toInt()).microseconds
+fun IntDays.asMicroseconds() = (this.value.toLong() * DAYS_PER_MICROSECOND).microseconds
 
-fun IntDays.asNanoseconds() = (this.value.toLong() * DAYS_PER_NANOSECOND.toInt()).nanoseconds
+fun IntDays.asNanoseconds() = (this.value.toLong() * DAYS_PER_NANOSECOND).nanoseconds
 
 operator fun LongDays.unaryPlus() = this
 

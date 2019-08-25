@@ -96,8 +96,10 @@ fun DurationUnit.buildClass(
                             |        val fractionalPart = $fractionalPartConversionString
                             |        if (isNegative) { append('-') }
                             |        append(wholePart)
-                            |        append('.')
-                            |        append(fractionalPart.%T($isoPeriodDecimalPlaces).dropLastWhile { it == '0' })
+                            |        if (fractionalPart != 0) {
+                            |            append('.')
+                            |            append(fractionalPart.%T($isoPeriodDecimalPlaces).dropLastWhile { it == '0' })
+                            |        }
                             |        append('$isoPeriodUnit')
                             |    }
                             |}
@@ -430,14 +432,15 @@ fun DurationUnit.buildUnitConversionFunctions(
         .map {
             val conversion = this.per(it)
 
-            val conversionString = if (primitiveType == Int::class) {
-                "%T.toInt()"
-            } else {
-                "%T"
-            }
-
             if (it < this) {
                 val functionName = "toWhole${it.pluralName}"
+
+                val conversionString = if (primitiveType == Int::class) {
+                    "%T.toInt()"
+                } else {
+                    "%T"
+                }
+
                 buildFunSpec(functionName) {
                     receiver(className)
                     addStatement(
@@ -447,6 +450,13 @@ fun DurationUnit.buildUnitConversionFunctions(
                 }
             } else {
                 val functionName = "as${it.pluralName}"
+
+                val conversionString = if (!it.forceLongInOperators && primitiveType == Int::class) {
+                    "%T.toInt()"
+                } else {
+                    "%T"
+                }
+
                 buildFunSpec(functionName) {
                     receiver(className)
 

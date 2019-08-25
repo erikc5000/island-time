@@ -66,6 +66,14 @@ enum class Month(val number: Int) {
     companion object {
         val MIN = JANUARY
         val MAX = DECEMBER
+
+        operator fun invoke(number: Int): Month {
+            require(number in MIN.number..MAX.number) {
+                "'$number' is not a valid month of the year"
+            }
+
+            return values()[number - 1]
+        }
     }
 }
 
@@ -129,12 +137,6 @@ operator fun Month.plus(months: IntMonths): Month {
 
 operator fun Month.minus(months: IntMonths) = plus(-months)
 
-fun Int.toMonth(): Month {
-    if (this !in Month.MIN.number..Month.MAX.number) {
-        throw DateTimeException("'$this' is not a valid month of the year")
-    }
-
-    return Month.values()[this - 1]
-}
+fun Int.toMonth() = Month(this)
 
 fun isLeapDay(month: Month, day: Int) = month == Month.FEBRUARY && day == 29

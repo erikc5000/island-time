@@ -30,19 +30,41 @@ inline class TimeOffset internal constructor(
         val MIN = TimeOffset(MAX_TOTAL_SECONDS)
         val MAX = TimeOffset(MIN_TOTAL_SECONDS)
         val UTC = TimeOffset(0.seconds)
+
+        /**
+         * Create a UTC time offset from the total number of seconds to offset by
+         */
+        operator fun invoke(totalSeconds: IntSeconds): TimeOffset {
+            require(totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {
+                "'$totalSeconds' is outside the valid offset range of +/-18:00"
+            }
+
+            return TimeOffset(totalSeconds)
+        }
+
+        /**
+         * Create a UTC time offset of hours, minutes, and seconds. Each component must be within its valid range and
+         * without any mixed positive and negative values.
+         * @param hours hours to offset by, within +/-18
+         * @param minutes minutes to offset by, within +/-59
+         * @param seconds seconds to offset by, within +/-59
+         * @return a [TimeOffset]
+         */
+        operator fun invoke(
+            hours: IntHours,
+            minutes: IntMinutes = 0.minutes,
+            seconds: IntSeconds = 0.seconds
+        ): TimeOffset {
+            validateTimeOffsetComponents(hours, minutes, seconds)
+            return invoke(hours.asSeconds() + minutes.asSeconds() + seconds)
+        }
     }
 }
 
+/**
+ * Is this the UTC offset of +00:00?
+ */
 inline val TimeOffset.isUtc get() = this == TimeOffset.UTC
-
-fun timeOffsetOf(
-    hours: IntHours,
-    minutes: IntMinutes = 0.minutes,
-    seconds: IntSeconds = 0.seconds
-): TimeOffset {
-    validateTimeOffsetComponents(hours, minutes, seconds)
-    return TimeOffset(hours.asSeconds() + minutes.asSeconds() + seconds).validated()
-}
 
 /**
  * Break a time offset down into components.  The sign will indicate whether the offset is positive or negative while
@@ -73,12 +95,29 @@ fun <T> TimeOffset.toComponents(
     return action(hours, minutes, seconds)
 }
 
-fun IntHours.asTimeOffset() = TimeOffset(this.asSeconds()).validated()
-fun IntMinutes.asTimeOffset() = TimeOffset(this.asSeconds()).validated()
-fun IntSeconds.asTimeOffset() = TimeOffset(this).validated()
+/**
+ * Convert a duration of hours into a UTC time offset of the same length
+ */
+fun IntHours.asTimeOffset() = TimeOffset(this.asSeconds())
 
+/**
+ * Convert a duration of minutes into a UTC time offset of the same length
+ */
+fun IntMinutes.asTimeOffset() = TimeOffset(this.asSeconds())
+
+/**
+ * Convert a duration of seconds into a UTC time offset of the same length
+ */
+fun IntSeconds.asTimeOffset() = TimeOffset(this)
+
+/**
+ * Convert an ISO-8601 time offset string in extended format into a [TimeOffset]
+ */
 fun String.toTimeOffset() = toTimeOffset(Iso8601.Extended.TIME_OFFSET_PARSER)
 
+/**
+ * Convert an ISO-8601 time offset string into a [TimeOffset] using a specific parser
+ */
 fun String.toTimeOffset(parser: DateTimeParser): TimeOffset {
     val result = parser.parse(this)
     return result.toTimeOffset() ?: raiseParserFieldResolutionException("TimeOffset", this)
@@ -105,9 +144,9 @@ internal fun DateTimeParseResult.toTimeOffset(): TimeOffset? {
         val seconds = (this[DateTimeField.TIME_OFFSET_SECONDS]?.toInt() ?: 0).seconds
 
         return if (sign < 0L) {
-            timeOffsetOf(-hours, -minutes, -seconds)
+            TimeOffset(-hours, -minutes, -seconds)
         } else {
-            timeOffsetOf(hours, minutes, seconds)
+            TimeOffset(hours, minutes, seconds)
         }
     }
 
@@ -131,35 +170,23 @@ internal fun StringBuilder.appendTimeOffset(timeOffset: TimeOffset): StringBuild
     return this
 }
 
-internal fun TimeOffset.validated(): TimeOffset {
-    if (!this.isValid) {
-        throw DateTimeException("'$this' is outside the valid offset range of +/-18:00")
-    }
-    return this
-}
-
 private fun validateTimeOffsetComponents(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
-    if (hours.isPositive) {
-        if (minutes.isNegative || seconds.isNegative) {
-            throw DateTimeException("Time offset minutes and seconds must be positive when hours are positive")
+    when {
+        hours.isPositive -> require(!minutes.isNegative && !seconds.isNegative) {
+            "Time offset minutes and seconds must be positive when hours are positive"
         }
-    } else if (hours.isNegative) {
-        if (minutes.isPositive || seconds.isPositive) {
-            throw DateTimeException("Time offset minutes and seconds must be negative when hours are negative")
+        hours.isNegative -> require(!minutes.isPositive && !seconds.isPositive) {
+            "Time offset minutes and seconds must be negative when hours are negative"
         }
-    } else if (minutes.isPositive && seconds.isNegative || minutes.isNegative && seconds.isPositive) {
-        throw DateTimeException("Time offset minutes and seconds must have the same sign")
+        else -> require(
+            !(minutes.isNegative && seconds.isPositive) &&
+                !(minutes.isPositive && seconds.isNegative)
+        ) {
+            "Time offset minutes and seconds must have the same sign"
+        }
     }
 
-    if (hours.value !in -18..18) {
-        throw DateTimeException("Time offset hours must be within +/-18, got '${hours.value}'")
-    }
-
-    if (minutes.value !in -59..59) {
-        throw DateTimeException("Time offset minutes must be within +/-59, got '${minutes.value}'")
-    }
-
-    if (seconds.value !in -59..59) {
-        throw DateTimeException("Time offset seconds must be within +/-59, got '${seconds.value}'")
-    }
+    require(hours.value in -18..18) { "Time offset hours must be within +/-18, got '${hours.value}'" }
+    require(minutes.value in -59..59) { "Time offset minutes must be within +/-59, got '${minutes.value}'" }
+    require(seconds.value in -59..59) { "Time offset seconds must be within +/-59, got '${seconds.value}'" }
 }

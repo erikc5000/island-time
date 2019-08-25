@@ -21,6 +21,8 @@ val Year.isLeap: Boolean
 val Year.length: IntDays
     get() = if (isLeap) 366.days else 365.days
 
-fun checkYear(year: Int) {
-    require(Year(year).isValid) { "The year '$year' is outside the supported range of ${Year.MIN_VALUE}..${Year.MAX_VALUE}" }
+internal fun checkYear(year: Int) {
+    require(Year(year).isValid) {
+        "The year '$year' is outside the supported range of ${Year.MIN_VALUE}..${Year.MAX_VALUE}"
+    }
 }

@@ -9,9 +9,14 @@ import kotlin.test.assertFailsWith
 
 class MonthTest {
     @Test
+    fun `Month() returns a month by number`() {
+        assertEquals(Month.APRIL, Month(4))
+    }
+
+    @Test
     fun `Int_toMonth() throws an exception when out of range`() {
-        assertFailsWith<DateTimeException> { 0.toMonth() }
-        assertFailsWith<DateTimeException> { 13.toMonth() }
+        assertFailsWith<IllegalArgumentException> { 0.toMonth() }
+        assertFailsWith<IllegalArgumentException> { 13.toMonth() }
     }
 
     @Test
