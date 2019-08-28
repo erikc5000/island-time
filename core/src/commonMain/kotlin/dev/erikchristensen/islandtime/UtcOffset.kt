@@ -19,7 +19,7 @@ inline class UtcOffset internal constructor(
         return if (isZero) {
             "Z"
         } else {
-            buildString(MAX_TIME_OFFSET_STRING_LENGTH) { appendUtcOffset(this@UtcOffset) }
+            buildString(MAX_UTC__OFFSET_STRING_LENGTH) { appendUtcOffset(this@UtcOffset) }
         }
     }
 
@@ -67,7 +67,7 @@ inline class UtcOffset internal constructor(
 inline val UtcOffset.isZero get() = this == UtcOffset.ZERO
 
 /**
- * Break a time offset down into components.  The sign will indicate whether the offset is positive or negative while
+ * Break a UTC offset down into components.  The sign will indicate whether the offset is positive or negative while
  * each component will be positive.
  */
 fun <T> UtcOffset.toComponents(
@@ -83,7 +83,7 @@ fun <T> UtcOffset.toComponents(
 }
 
 /**
- * Break a time offset down into components.  If the offset is negative, each component will be negative.
+ * Break a UTC offset down into components.  If the offset is negative, each component will be negative.
  */
 fun <T> UtcOffset.toComponents(
     action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
@@ -113,7 +113,7 @@ fun IntSeconds.asUtcOffset() = UtcOffset(this)
 /**
  * Convert an ISO-8601 time offset string in extended format into a [UtcOffset]
  */
-fun String.toUtcOffset() = toUtcOffset(Iso8601.Extended.TIME_OFFSET_PARSER)
+fun String.toUtcOffset() = toUtcOffset(Iso8601.Extended.UTC_OFFSET_PARSER)
 
 /**
  * Convert an ISO-8601 time offset string into a [UtcOffset] using a specific parser
@@ -126,13 +126,14 @@ fun String.toUtcOffset(parser: DateTimeParser): UtcOffset {
 /**
  * Resolve a parser result into a [UtcOffset]
  *
- * Required fields are TIME_OFFSET_UTC or TIME_OFFSET_SIGN in conjunction with any combination of TIME_OFFSET_HOURS,
- * TIME_OFFSET_MINUTES, and TIME_OFFSET_SECONDS.
+ * Required fields are [DateTimeField.UTC_OFFSET_ZERO] or [DateTimeField.UTC_OFFSET_SIGN] in conjunction with any
+ * combination of [DateTimeField.UTC_OFFSET_HOURS], [DateTimeField.UTC_OFFSET_MINUTES], and
+ * [DateTimeField.UTC_OFFSET_SECONDS].
  */
 internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
-    val isUtc = this[DateTimeField.UTC_OFFSET_ZERO] != null
+    val isZero = this[DateTimeField.UTC_OFFSET_ZERO] != null
 
-    if (isUtc) {
+    if (isZero) {
         return UtcOffset.ZERO
     }
 
@@ -153,7 +154,7 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
     return null
 }
 
-internal const val MAX_TIME_OFFSET_STRING_LENGTH = 9
+internal const val MAX_UTC__OFFSET_STRING_LENGTH = 9
 
 internal fun StringBuilder.appendUtcOffset(utcOffset: UtcOffset): StringBuilder {
     utcOffset.toComponents { sign, hours, minutes, seconds ->

@@ -20,7 +20,7 @@ object Iso8601 {
         anyOf(Basic.TIME_PARSER, Extended.TIME_PARSER)
     }
 
-    val TIME_OFFSET_PARSER = dateTimeParser {
+    val UTC_OFFSET_PARSER = dateTimeParser {
         anyOf({
             utcOffsetZero()
         }, {
@@ -159,7 +159,7 @@ object Iso8601 {
             }
         }
 
-        val TIME_OFFSET_PARSER = dateTimeParser {
+        val UTC_OFFSET_PARSER = dateTimeParser {
             anyOf({
                 utcOffsetZero()
             }, {
@@ -200,7 +200,7 @@ object Iso8601 {
 
         val OFFSET_DATE_TIME_PARSER = dateTimeParser {
             subParser(CALENDAR_DATE_TIME_PARSER)
-            subParser(TIME_OFFSET_PARSER)
+            subParser(UTC_OFFSET_PARSER)
         }
     }
 
@@ -255,7 +255,7 @@ object Iso8601 {
             }
         }
 
-        val TIME_OFFSET_PARSER = dateTimeParser {
+        val UTC_OFFSET_PARSER = dateTimeParser {
             anyOf({
                 utcOffsetZero()
             }, {
@@ -298,7 +298,7 @@ object Iso8601 {
 
         val OFFSET_DATE_TIME_PARSER = dateTimeParser {
             subParser(CALENDAR_DATE_TIME_PARSER)
-            subParser(TIME_OFFSET_PARSER)
+            subParser(UTC_OFFSET_PARSER)
         }
     }
 }

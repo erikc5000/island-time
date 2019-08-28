@@ -136,22 +136,22 @@ class UtcOffsetTest {
     fun `String_toUtcOffset() parses valid ISO-8601 basic time offsets with explicit parser`() {
         assertEquals(
             UtcOffset(1.hours),
-            "+01".toUtcOffset(Iso8601.TIME_OFFSET_PARSER)
+            "+01".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
         )
 
         assertEquals(
             UtcOffset(1.hours),
-            "+0100".toUtcOffset(Iso8601.TIME_OFFSET_PARSER)
+            "+0100".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
         )
 
         assertEquals(
             UtcOffset(1.hours),
-            "+010000".toUtcOffset(Iso8601.TIME_OFFSET_PARSER)
+            "+010000".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
         )
 
         assertEquals(
             UtcOffset((-4).hours, (-30).minutes),
-            "-0430".toUtcOffset(Iso8601.TIME_OFFSET_PARSER)
+            "-0430".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
         )
     }
 }

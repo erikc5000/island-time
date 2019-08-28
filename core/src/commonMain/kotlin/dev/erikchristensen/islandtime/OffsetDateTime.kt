@@ -108,7 +108,7 @@ internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {
     }
 }
 
-internal const val MAX_OFFSET_DATE_TIME_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + MAX_TIME_OFFSET_STRING_LENGTH
+internal const val MAX_OFFSET_DATE_TIME_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + MAX_UTC__OFFSET_STRING_LENGTH
 
 internal fun StringBuilder.appendOffsetDateTime(offsetDateTime: OffsetDateTime): StringBuilder {
     with(offsetDateTime) {
