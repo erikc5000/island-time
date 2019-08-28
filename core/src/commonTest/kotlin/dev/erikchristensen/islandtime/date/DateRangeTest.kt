@@ -2,9 +2,10 @@ package dev.erikchristensen.islandtime.date
 
 import dev.erikchristensen.islandtime.Month
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.interval.months
-import dev.erikchristensen.islandtime.interval.years
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class DateRangeTest {
     @Test
@@ -56,16 +57,34 @@ class DateRangeTest {
     }
 
     @Test
+    fun `days property returns 0 when range is empty`() {
+        assertEquals(0L.days, DateRange.EMPTY.days)
+    }
+
+    @Test
+    fun `days property returns 1 when the start and end date are the same`() {
+        val date = Date(2019, Month.JUNE, 1)
+        assertEquals(1L.days, (date..date).days)
+    }
+
+    @Test
+    fun `days property returns the expected number of days in a non-empty range`() {
+        val start = Date(2018, Month.FEBRUARY, 1)
+        val end = Date(2018, Month.FEBRUARY, 28)
+        assertEquals(28L.days, (start..end).days)
+    }
+
+    @Test
     fun `months property returns 0 when range is empty`() {
         assertEquals(0.months, DateRange.EMPTY.months)
     }
 
     @Test
-    fun `months property returns the number of months in a range`() {
-        val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 19)
+    fun `months property returns the expected number of months in a non-empty range`() {
+        val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 18)
         assertEquals(0.months, range1.months)
 
-        val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 20)
+        val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 19)
         assertEquals(1.months, range2.months)
     }
 
@@ -75,11 +94,11 @@ class DateRangeTest {
     }
 
     @Test
-    fun `years property returns the number of months in a range`() {
-        val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 20)
+    fun `years property returns the expected number of years in a non-empty range`() {
+        val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 18)
         assertEquals(0.years, range1.years)
 
-        val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 20)
+        val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 19)
         assertEquals(1.years, range2.years)
     }
 
@@ -89,9 +108,15 @@ class DateRangeTest {
     }
 
     @Test
-    fun `asPeriod() returns a period for non-empty ranges`() {
+    fun `asPeriod() returns a period of 1 day when the start and end date are equal`() {
+        val date = Date(2019, Month.JUNE, 1)
+        assertEquals(periodOf(1.days), (date..date).asPeriod())
+    }
+
+    @Test
+    fun `asPeriod() returns the expected period for non-empty ranges`() {
         val start = Date(2018, Month.FEBRUARY, 20)
         val end = Date(2019, Month.MARCH, 20)
-        assertEquals(periodOf(1.years, 1.months), (start..end).asPeriod())
+        assertEquals(periodOf(1.years, 1.months, 1.days), (start..end).asPeriod())
     }
 }

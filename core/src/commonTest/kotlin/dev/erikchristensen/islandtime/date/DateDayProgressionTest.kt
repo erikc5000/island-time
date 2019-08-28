@@ -56,6 +56,18 @@ class DateDayProgressionTest {
     }
 
     @Test
+    fun `reversed() creates a reserved progression`() {
+        val startDate = Date(2019, Month.JANUARY, 21)
+        val endDate = Date(2019, Month.JANUARY, 28)
+        val range = (startDate..endDate).reversed()
+
+        assertEquals(endDate, range.first)
+        assertEquals(startDate, range.last)
+        assertEquals((-1).days, range.step)
+        assertEquals(8, range.count())
+    }
+
+    @Test
     fun `steps in positive increments with dates after the unix epoch`() {
         val startDate = Date(2019, Month.JANUARY, 21)
         val endDate = Date(2019, Month.JANUARY, 28)

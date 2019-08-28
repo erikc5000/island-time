@@ -108,4 +108,23 @@ class DateMonthProgressionTest {
             progression.toList()
         )
     }
+
+    @Test
+    fun `reversed() creates a reserved progression`() {
+        val start = Date(2018, Month.JANUARY, 31)
+        val end = Date(2018, Month.APRIL, 30)
+        val progression = (start..end step 1.months).reversed()
+
+        assertEquals(end, progression.first)
+        assertEquals(Date(2018, Month.FEBRUARY, 28), progression.last)
+        assertEquals((-1).months, progression.step)
+        assertEquals(
+            listOf(
+                end,
+                Date(2018, Month.MARCH, 30),
+                Date(2018, Month.FEBRUARY, 28)
+            ),
+            progression.toList()
+        )
+    }
 }

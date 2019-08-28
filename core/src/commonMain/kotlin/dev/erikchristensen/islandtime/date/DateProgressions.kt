@@ -25,7 +25,7 @@ open class DateDayProgression protected constructor(
 
     override fun iterator(): DateIterator = DateDayProgressionIterator(firstUnixEpochDay, lastUnixEpochDay, step)
 
-    override fun toString() = if (step.value > 0L) "$first..$last step $step" else "$first downTo $ last step ${-step}"
+    override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $ last step ${-step}"
 
     companion object {
         fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntDays): DateDayProgression {
@@ -51,7 +51,7 @@ class DateMonthProgression private constructor(
 
     override fun iterator(): DateIterator = DateMonthProgressionIterator(first, last, step)
 
-    override fun toString() = if (step > 0.months) "$first..$last step $step" else "$first downTo $ last step ${-step}"
+    override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $ last step ${-step}"
 
     companion object {
         fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntMonths): DateMonthProgression {
@@ -60,6 +60,14 @@ class DateMonthProgression private constructor(
     }
 }
 
+/**
+ * A get progression of dates in descending order
+ */
+infix fun Date.downTo(to: Date) = DateDayProgression.fromClosedRange(this, to, (-1).days)
+
+/**
+ * Reverse a progression such that it counts down instead of up, or vice versa
+ */
 fun DateDayProgression.reversed() = DateDayProgression.fromClosedRange(last, first, -step)
 
 /**
@@ -105,21 +113,14 @@ private fun getLastDayInProgression(startInDays: LongDays, endDate: Date, step: 
 }
 
 private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): Date {
-    return when {
-        step.value > 0 -> if (start >= end) {
-            end
-        } else {
-            val monthsBetween = progressionMonthsBetween(start, end)
-            val steppedMonths = monthsBetween - (monthsBetween % step.value)
-            start + steppedMonths
-        }
-        else -> if (start <= end) {
-            end
-        } else {
-            val monthsBetween = progressionMonthsBetween(end, start)
-            val steppedMonths = monthsBetween - (monthsBetween % step.value)
-            start - steppedMonths
-        }
+    return if ((step.value > 0 && start >= end) ||
+        (step.value < 0 && start <= end)
+    ) {
+        end
+    } else {
+        val monthsBetween = progressionMonthsBetween(start, end)
+        val steppedMonths = monthsBetween - (monthsBetween % step.value)
+        start + steppedMonths
     }
 }
 
@@ -134,6 +135,12 @@ private fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths
 
     // Deal with variable month lengths
     val coercedStartDay = start.dayOfMonth.coerceAtMost(endInclusive.month.lastDayIn(endInclusive.year))
-    val monthAdjustment = if (endInclusive.dayOfMonth < coercedStartDay) -1 else 0
+
+    val monthAdjustment = when {
+        start > endInclusive && endInclusive.dayOfMonth > coercedStartDay -> 1
+        endInclusive > start && endInclusive.dayOfMonth < coercedStartDay -> -1
+        else -> 0
+    }
+
     return (monthsBetween + monthAdjustment).months
 }
