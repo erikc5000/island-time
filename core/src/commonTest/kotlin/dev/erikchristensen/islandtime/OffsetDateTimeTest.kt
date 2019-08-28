@@ -16,7 +16,7 @@ class OffsetDateTimeTest {
             "2018-05-05T12:00Z",
             OffsetDateTime(
                 DateTime(Date(2018, Month.MAY, 5), Time.NOON),
-                TimeOffset.UTC
+                UtcOffset.ZERO
             ).toString()
         )
 
@@ -24,7 +24,7 @@ class OffsetDateTimeTest {
             "2018-05-05T12:00+05:00",
             OffsetDateTime(
                 DateTime(Date(2018, Month.MAY, 5), Time.NOON),
-                5.hours.asTimeOffset()
+                5.hours.asUtcOffset()
             ).toString()
         )
 
@@ -32,7 +32,7 @@ class OffsetDateTimeTest {
             "2018-05-05T12:00-12:30",
             OffsetDateTime(
                 DateTime(Date(2018, Month.MAY, 5), Time.NOON),
-                TimeOffset((-12).hours, (-30).minutes)
+                UtcOffset((-12).hours, (-30).minutes)
             ).toString()
         )
     }
@@ -53,7 +53,7 @@ class OffsetDateTimeTest {
         assertEquals(
             OffsetDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
-                5.hours.asTimeOffset()
+                5.hours.asUtcOffset()
             ),
             "2019-05-05T12:00+05:00".toOffsetDateTime()
         )
@@ -61,7 +61,7 @@ class OffsetDateTimeTest {
         assertEquals(
             OffsetDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time(5, 0, 3, 500)),
-                TimeOffset(2.hours, 30.minutes, 23.seconds)
+                UtcOffset(2.hours, 30.minutes, 23.seconds)
             ),
             "2019-05-05T05:00:03.0000005+02:30:23".toOffsetDateTime()
         )

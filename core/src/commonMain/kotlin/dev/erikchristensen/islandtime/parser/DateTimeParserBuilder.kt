@@ -127,33 +127,33 @@ fun DateTimeParserBuilder.nanosecondOfSecond() {
     }
 }
 
-fun DateTimeParserBuilder.timeOffsetHours(length: Int, builder: WholeNumberParserBuilder.() -> Unit = {}) {
-    wholeNumber(length, DateTimeField.TIME_OFFSET_HOURS, builder)
+fun DateTimeParserBuilder.utcOffsetHours(length: Int, builder: WholeNumberParserBuilder.() -> Unit = {}) {
+    wholeNumber(length, DateTimeField.UTC_OFFSET_HOURS, builder)
 }
 
-fun DateTimeParserBuilder.timeOffsetMinutes(length: Int, builder: WholeNumberParserBuilder.() -> Unit = {}) {
-    wholeNumber(length, DateTimeField.TIME_OFFSET_MINUTES, builder)
+fun DateTimeParserBuilder.utcOffsetMinutes(length: Int, builder: WholeNumberParserBuilder.() -> Unit = {}) {
+    wholeNumber(length, DateTimeField.UTC_OFFSET_MINUTES, builder)
 }
 
-fun DateTimeParserBuilder.timeOffsetSeconds(length: Int, builder: WholeNumberParserBuilder.() -> Unit = {}) {
-    wholeNumber(length, DateTimeField.TIME_OFFSET_SECONDS, builder)
+fun DateTimeParserBuilder.utcOffsetSeconds(length: Int, builder: WholeNumberParserBuilder.() -> Unit = {}) {
+    wholeNumber(length, DateTimeField.UTC_OFFSET_SECONDS, builder)
 }
 
 /**
- * Parses a number's sign and populates [DateTimeField.TIME_OFFSET_SIGN] with -1L, if negative or 1L, if positive
+ * Parses a number's sign and populates [DateTimeField.UTC_OFFSET_SIGN] with -1L, if negative or 1L, if positive
  */
-fun DateTimeParserBuilder.timeOffsetSign() {
+fun DateTimeParserBuilder.utcOffsetSign() {
     sign {
-        onParsed { parsed -> result[DateTimeField.TIME_OFFSET_SIGN] = parsed.toLong() }
+        onParsed { parsed -> result[DateTimeField.UTC_OFFSET_SIGN] = parsed.toLong() }
     }
 }
 
 /**
- * Parses the character 'Z' and populates [DateTimeField.TIME_OFFSET_UTC] with 1L if found
+ * Parses the character 'Z' and populates [DateTimeField.UTC_OFFSET_ZERO] with 1L if found
  */
-fun DateTimeParserBuilder.timeOffsetUtc() {
+fun DateTimeParserBuilder.utcOffsetZero() {
     literal('Z') {
-        onParsed { result[DateTimeField.TIME_OFFSET_UTC] = 1L }
+        onParsed { result[DateTimeField.UTC_OFFSET_ZERO] = 1L }
     }
 }
 

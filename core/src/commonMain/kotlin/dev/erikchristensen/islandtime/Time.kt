@@ -4,6 +4,9 @@ import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
 
+/**
+ * A time of day
+ */
 class Time private constructor(
     val hour: Int,
     val minute: Int,
@@ -239,7 +242,7 @@ fun Time.withNanoOfSecond(newNanoOfSecond: Int): Time {
 }
 
 /**
- * Return a copy of this Time with each non-negative value   replaced by the new value
+ * Return a copy of this Time with each non-negative value replaced by the new value
  */
 fun Time.with(hour: Int = -1, minute: Int = -1, second: Int = -1, nanoOfSecond: Int = -1): Time {
     return Time(

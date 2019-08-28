@@ -49,7 +49,7 @@ fun java.time.OffsetDateTime.toIslandOffsetDateTime(): dev.erikchristensen.islan
             Date(year, monthValue.toMonth(), dayOfMonth),
             Time(hour, minute, second, nano)
         ),
-        TimeOffset(offset.totalSeconds.seconds)
+        UtcOffset(offset.totalSeconds.seconds)
     )
 }
 
@@ -62,12 +62,12 @@ fun dev.erikchristensen.islandtime.OffsetDateTime.toJavaOffsetDateTime(): java.t
 }
 
 @JvmName("convertFromJava")
-fun ZoneOffset.toIslandTimeOffset(): TimeOffset {
-    return TimeOffset(totalSeconds.seconds)
+fun ZoneOffset.toIslandUtcOffset(): UtcOffset {
+    return UtcOffset(totalSeconds.seconds)
 }
 
 @JvmName("convertToJava")
-fun TimeOffset.toJavaZoneOffset(): ZoneOffset {
+fun UtcOffset.toJavaZoneOffset(): ZoneOffset {
     return ZoneOffset.ofTotalSeconds(totalSeconds.value)
 }
 

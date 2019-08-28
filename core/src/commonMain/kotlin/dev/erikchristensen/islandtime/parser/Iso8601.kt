@@ -22,30 +22,30 @@ object Iso8601 {
 
     val TIME_OFFSET_PARSER = dateTimeParser {
         anyOf({
-            timeOffsetUtc()
+            utcOffsetZero()
         }, {
-            timeOffsetSign()
-            timeOffsetHours(2) {
+            utcOffsetSign()
+            utcOffsetHours(2) {
                 enforceSignStyle(SignStyle.NEVER)
             }
             optional {
                 anyOf({
-                    timeOffsetMinutes(2) {
+                    utcOffsetMinutes(2) {
                         enforceSignStyle(SignStyle.NEVER)
                     }
                     optional {
-                        timeOffsetSeconds(2) {
+                        utcOffsetSeconds(2) {
                             enforceSignStyle(SignStyle.NEVER)
                         }
                     }
                 }, {
                     +':'
-                    timeOffsetMinutes(2) {
+                    utcOffsetMinutes(2) {
                         enforceSignStyle(SignStyle.NEVER)
                     }
                     optional {
                         +':'
-                        timeOffsetSeconds(2) {
+                        utcOffsetSeconds(2) {
                             enforceSignStyle(SignStyle.NEVER)
                         }
                         optional {
@@ -161,18 +161,18 @@ object Iso8601 {
 
         val TIME_OFFSET_PARSER = dateTimeParser {
             anyOf({
-                timeOffsetUtc()
+                utcOffsetZero()
             }, {
-                timeOffsetSign()
-                timeOffsetHours(2) {
+                utcOffsetSign()
+                utcOffsetHours(2) {
                     enforceSignStyle(SignStyle.NEVER)
                 }
                 optional {
-                    timeOffsetMinutes(2) {
+                    utcOffsetMinutes(2) {
                         enforceSignStyle(SignStyle.NEVER)
                     }
                     optional {
-                        timeOffsetSeconds(2) {
+                        utcOffsetSeconds(2) {
                             enforceSignStyle(SignStyle.NEVER)
                         }
                     }
@@ -257,20 +257,20 @@ object Iso8601 {
 
         val TIME_OFFSET_PARSER = dateTimeParser {
             anyOf({
-                timeOffsetUtc()
+                utcOffsetZero()
             }, {
-                timeOffsetSign()
-                timeOffsetHours(2) {
+                utcOffsetSign()
+                utcOffsetHours(2) {
                     enforceSignStyle(SignStyle.NEVER)
                 }
                 optional {
                     +':'
-                    timeOffsetMinutes(2) {
+                    utcOffsetMinutes(2) {
                         enforceSignStyle(SignStyle.NEVER)
                     }
                     optional {
                         +':'
-                        timeOffsetSeconds(2) {
+                        utcOffsetSeconds(2) {
                             enforceSignStyle(SignStyle.NEVER)
                         }
                     }

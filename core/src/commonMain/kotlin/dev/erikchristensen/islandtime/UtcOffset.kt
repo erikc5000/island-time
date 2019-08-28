@@ -7,19 +7,19 @@ import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-inline class TimeOffset internal constructor(
+inline class UtcOffset internal constructor(
     val totalSeconds: IntSeconds
-) : Comparable<TimeOffset> {
+) : Comparable<UtcOffset> {
 
     val isValid: Boolean get() = totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS
 
-    override fun compareTo(other: TimeOffset) = totalSeconds.compareTo(other.totalSeconds)
+    override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
 
     override fun toString(): String {
-        return if (isUtc) {
+        return if (isZero) {
             "Z"
         } else {
-            buildString(MAX_TIME_OFFSET_STRING_LENGTH) { appendTimeOffset(this@TimeOffset) }
+            buildString(MAX_TIME_OFFSET_STRING_LENGTH) { appendUtcOffset(this@UtcOffset) }
         }
     }
 
@@ -27,19 +27,19 @@ inline class TimeOffset internal constructor(
         val MAX_TOTAL_SECONDS = (18 * SECONDS_PER_HOUR.toInt()).seconds
         val MIN_TOTAL_SECONDS = (-18 * SECONDS_PER_HOUR.toInt()).seconds
 
-        val MIN = TimeOffset(MAX_TOTAL_SECONDS)
-        val MAX = TimeOffset(MIN_TOTAL_SECONDS)
-        val UTC = TimeOffset(0.seconds)
+        val MIN = UtcOffset(MAX_TOTAL_SECONDS)
+        val MAX = UtcOffset(MIN_TOTAL_SECONDS)
+        val ZERO = UtcOffset(0.seconds)
 
         /**
          * Create a UTC time offset from the total number of seconds to offset by
          */
-        operator fun invoke(totalSeconds: IntSeconds): TimeOffset {
+        operator fun invoke(totalSeconds: IntSeconds): UtcOffset {
             require(totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {
                 "'$totalSeconds' is outside the valid offset range of +/-18:00"
             }
 
-            return TimeOffset(totalSeconds)
+            return UtcOffset(totalSeconds)
         }
 
         /**
@@ -48,14 +48,14 @@ inline class TimeOffset internal constructor(
          * @param hours hours to offset by, within +/-18
          * @param minutes minutes to offset by, within +/-59
          * @param seconds seconds to offset by, within +/-59
-         * @return a [TimeOffset]
+         * @return a [UtcOffset]
          */
         operator fun invoke(
             hours: IntHours,
             minutes: IntMinutes = 0.minutes,
             seconds: IntSeconds = 0.seconds
-        ): TimeOffset {
-            validateTimeOffsetComponents(hours, minutes, seconds)
+        ): UtcOffset {
+            validateUtcOffsetComponents(hours, minutes, seconds)
             return invoke(hours.asSeconds() + minutes.asSeconds() + seconds)
         }
     }
@@ -64,13 +64,13 @@ inline class TimeOffset internal constructor(
 /**
  * Is this the UTC offset of +00:00?
  */
-inline val TimeOffset.isUtc get() = this == TimeOffset.UTC
+inline val UtcOffset.isZero get() = this == UtcOffset.ZERO
 
 /**
  * Break a time offset down into components.  The sign will indicate whether the offset is positive or negative while
  * each component will be positive.
  */
-fun <T> TimeOffset.toComponents(
+fun <T> UtcOffset.toComponents(
     action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
 ): T {
     val sign = if (totalSeconds.isNegative) -1 else 1
@@ -85,7 +85,7 @@ fun <T> TimeOffset.toComponents(
 /**
  * Break a time offset down into components.  If the offset is negative, each component will be negative.
  */
-fun <T> TimeOffset.toComponents(
+fun <T> UtcOffset.toComponents(
     action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
 ): T {
     val hours = (totalSeconds.value / SECONDS_PER_HOUR.toInt()).hours
@@ -98,55 +98,55 @@ fun <T> TimeOffset.toComponents(
 /**
  * Convert a duration of hours into a UTC time offset of the same length
  */
-fun IntHours.asTimeOffset() = TimeOffset(this.asSeconds())
+fun IntHours.asUtcOffset() = UtcOffset(this.asSeconds())
 
 /**
  * Convert a duration of minutes into a UTC time offset of the same length
  */
-fun IntMinutes.asTimeOffset() = TimeOffset(this.asSeconds())
+fun IntMinutes.asUtcOffset() = UtcOffset(this.asSeconds())
 
 /**
  * Convert a duration of seconds into a UTC time offset of the same length
  */
-fun IntSeconds.asTimeOffset() = TimeOffset(this)
+fun IntSeconds.asUtcOffset() = UtcOffset(this)
 
 /**
- * Convert an ISO-8601 time offset string in extended format into a [TimeOffset]
+ * Convert an ISO-8601 time offset string in extended format into a [UtcOffset]
  */
-fun String.toTimeOffset() = toTimeOffset(Iso8601.Extended.TIME_OFFSET_PARSER)
+fun String.toUtcOffset() = toUtcOffset(Iso8601.Extended.TIME_OFFSET_PARSER)
 
 /**
- * Convert an ISO-8601 time offset string into a [TimeOffset] using a specific parser
+ * Convert an ISO-8601 time offset string into a [UtcOffset] using a specific parser
  */
-fun String.toTimeOffset(parser: DateTimeParser): TimeOffset {
+fun String.toUtcOffset(parser: DateTimeParser): UtcOffset {
     val result = parser.parse(this)
-    return result.toTimeOffset() ?: raiseParserFieldResolutionException("TimeOffset", this)
+    return result.toUtcOffset() ?: raiseParserFieldResolutionException("UtcOffset", this)
 }
 
 /**
- * Resolve a parser result into a [TimeOffset]
+ * Resolve a parser result into a [UtcOffset]
  *
  * Required fields are TIME_OFFSET_UTC or TIME_OFFSET_SIGN in conjunction with any combination of TIME_OFFSET_HOURS,
  * TIME_OFFSET_MINUTES, and TIME_OFFSET_SECONDS.
  */
-internal fun DateTimeParseResult.toTimeOffset(): TimeOffset? {
-    val isUtc = this[DateTimeField.TIME_OFFSET_UTC] != null
+internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
+    val isUtc = this[DateTimeField.UTC_OFFSET_ZERO] != null
 
     if (isUtc) {
-        return TimeOffset.UTC
+        return UtcOffset.ZERO
     }
 
-    val sign = this[DateTimeField.TIME_OFFSET_SIGN]
+    val sign = this[DateTimeField.UTC_OFFSET_SIGN]
 
     if (sign != null) {
-        val hours = (this[DateTimeField.TIME_OFFSET_HOURS]?.toInt() ?: 0).hours
-        val minutes = (this[DateTimeField.TIME_OFFSET_MINUTES]?.toInt() ?: 0).minutes
-        val seconds = (this[DateTimeField.TIME_OFFSET_SECONDS]?.toInt() ?: 0).seconds
+        val hours = (this[DateTimeField.UTC_OFFSET_HOURS]?.toInt() ?: 0).hours
+        val minutes = (this[DateTimeField.UTC_OFFSET_MINUTES]?.toInt() ?: 0).minutes
+        val seconds = (this[DateTimeField.UTC_OFFSET_SECONDS]?.toInt() ?: 0).seconds
 
         return if (sign < 0L) {
-            TimeOffset(-hours, -minutes, -seconds)
+            UtcOffset(-hours, -minutes, -seconds)
         } else {
-            TimeOffset(hours, minutes, seconds)
+            UtcOffset(hours, minutes, seconds)
         }
     }
 
@@ -155,8 +155,8 @@ internal fun DateTimeParseResult.toTimeOffset(): TimeOffset? {
 
 internal const val MAX_TIME_OFFSET_STRING_LENGTH = 9
 
-internal fun StringBuilder.appendTimeOffset(timeOffset: TimeOffset): StringBuilder {
-    timeOffset.toComponents { sign, hours, minutes, seconds ->
+internal fun StringBuilder.appendUtcOffset(utcOffset: UtcOffset): StringBuilder {
+    utcOffset.toComponents { sign, hours, minutes, seconds ->
         append(if (sign < 0) '-' else '+')
         appendZeroPadded(hours.value, 2)
         append(':')
@@ -170,7 +170,7 @@ internal fun StringBuilder.appendTimeOffset(timeOffset: TimeOffset): StringBuild
     return this
 }
 
-private fun validateTimeOffsetComponents(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
+private fun validateUtcOffsetComponents(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
     when {
         hours.isPositive -> require(!minutes.isNegative && !seconds.isNegative) {
             "Time offset minutes and seconds must be positive when hours are positive"

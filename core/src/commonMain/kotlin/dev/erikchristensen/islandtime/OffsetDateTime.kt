@@ -12,7 +12,7 @@ import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
  */
 class OffsetDateTime(
     val dateTime: DateTime,
-    val offset: TimeOffset
+    val offset: UtcOffset
 ) {
     val date: Date get() = dateTime.date
     val time: Time get() = dateTime.time
@@ -33,16 +33,16 @@ class OffsetDateTime(
     }
 
     companion object {
-        val MIN = DateTime.MIN at TimeOffset.MAX
-        val MAX = DateTime.MAX at TimeOffset.MIN
+        val MIN = DateTime.MIN at UtcOffset.MAX
+        val MAX = DateTime.MAX at UtcOffset.MIN
 
-        operator fun invoke(date: Date, time: Time, offset: TimeOffset): OffsetDateTime {
+        operator fun invoke(date: Date, time: Time, offset: UtcOffset): OffsetDateTime {
             return OffsetDateTime(DateTime(date, time), offset)
         }
     }
 }
 
-infix fun DateTime.at(offset: TimeOffset) = OffsetDateTime(this, offset)
+infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 
 inline val OffsetDateTime.hour: Int get() = dateTime.hour
 inline val OffsetDateTime.minute: Int get() = dateTime.minute
@@ -99,10 +99,10 @@ fun String.toOffsetDateTime(parser: DateTimeParser): OffsetDateTime {
 
 internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {
     val dateTime = this.toDateTime()
-    val timeOffset = this.toTimeOffset()
+    val utcOffset = this.toUtcOffset()
 
-    return if (dateTime != null && timeOffset != null) {
-        OffsetDateTime(dateTime, timeOffset)
+    return if (dateTime != null && utcOffset != null) {
+        OffsetDateTime(dateTime, utcOffset)
     } else {
         null
     }
@@ -114,10 +114,10 @@ internal fun StringBuilder.appendOffsetDateTime(offsetDateTime: OffsetDateTime):
     with(offsetDateTime) {
         appendDateTime(dateTime)
 
-        if (offset.isUtc) {
+        if (offset.isZero) {
             append('Z')
         } else {
-            appendTimeOffset(offset)
+            appendUtcOffset(offset)
         }
     }
     return this

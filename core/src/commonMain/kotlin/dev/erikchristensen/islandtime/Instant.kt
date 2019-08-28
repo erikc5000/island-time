@@ -28,7 +28,7 @@ inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<I
     }
 }
 
-fun Instant.atOffset(offset: TimeOffset): OffsetDateTime {
+fun Instant.atOffset(offset: UtcOffset): OffsetDateTime {
     val dateTime = this.asUtcDateTime() + offset.totalSeconds
     return OffsetDateTime(dateTime, offset)
 }
