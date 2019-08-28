@@ -86,6 +86,14 @@ class PeriodTest {
     }
 
     @Test
+    fun `can be broken down into components`() {
+        val (years, months, days) = periodOf(1.years, 2.months, 3.days)
+        assertEquals(1.years, years)
+        assertEquals(2.months, months)
+        assertEquals(3.days, days)
+    }
+
+    @Test
     fun `toString() returns 'P0D' when the period is zero`() {
         assertEquals("P0D", Period.ZERO.toString())
     }

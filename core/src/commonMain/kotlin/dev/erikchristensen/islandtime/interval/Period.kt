@@ -19,11 +19,16 @@ class Period private constructor(
     val days: IntDays = 0.days
 ) {
 
+    operator fun component1() = years
+    operator fun component2() = months
+    operator fun component3() = days
+
     override fun equals(other: Any?): Boolean {
-        return other is Period &&
-            other.years == years &&
-            other.months == months &&
-            other.days == days
+        return this === other ||
+            (other is Period &&
+                other.years == years &&
+                other.months == months &&
+                other.days == days)
     }
 
     override fun hashCode(): Int {
