@@ -25,9 +25,10 @@ class Duration private constructor(
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is Duration &&
-            other.seconds.value == seconds.value &&
-            other.nanoOfSeconds.value == nanoOfSeconds.value
+        return other === this ||
+            (other is Duration &&
+                other.seconds.value == seconds.value &&
+                other.nanoOfSeconds.value == nanoOfSeconds.value)
     }
 
     override fun hashCode(): Int {
