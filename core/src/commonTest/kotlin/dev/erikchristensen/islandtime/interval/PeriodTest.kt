@@ -162,18 +162,18 @@ class PeriodTest {
     }
 
     @Test
-    fun `with() replaces years value`() {
-        assertEquals(periodOf((-1).years, 12.months), periodOf(1.years, 12.months).with((-1).years))
+    fun `copy() replaces years value`() {
+        assertEquals(periodOf((-1).years, 12.months), periodOf(1.years, 12.months).copy(years = (-1).years))
     }
 
     @Test
-    fun `with() replaces months value`() {
-        assertEquals(periodOf(1.years, 12.months), periodOf(1.years, 3.months).with(12.months))
+    fun `copy() replaces months value`() {
+        assertEquals(periodOf(1.years, 12.months), periodOf(1.years, 3.months).copy(months = 12.months))
     }
 
     @Test
-    fun `with() replaces days value`() {
-        assertEquals(Period.ZERO, periodOf(10.days).with(0.days))
+    fun `copy() replaces days value`() {
+        assertEquals(Period.ZERO, periodOf(10.days).copy(days = 0.days))
     }
 
     @Test

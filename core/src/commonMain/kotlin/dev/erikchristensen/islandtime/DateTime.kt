@@ -21,7 +21,7 @@ class DateTime(
         minute: Int,
         second: Int = 0,
         nanoOfSecond: Int = 0
-    ): this(Date(year, month, day), Time(hour, minute, second, nanoOfSecond))
+    ) : this(Date(year, month, day), Time(hour, minute, second, nanoOfSecond))
 
     operator fun component1() = date
     operator fun component2() = time
@@ -45,6 +45,36 @@ class DateTime(
     override fun hashCode(): Int {
         return 31 * date.hashCode() + time.hashCode()
     }
+
+    fun copy(
+        date: Date = this.date,
+        time: Time = this.time
+    ) = DateTime(date, time)
+
+    /**
+     * Return a new [DateTime], replacing any of the components with new values
+     */
+    fun copy(
+        year: Int = this.year,
+        dayOfYear: Int = this.dayOfYear,
+        hour: Int = this.hour,
+        minute: Int = this.minute,
+        second: Int = this.second,
+        nanoOfSecond: Int = this.nanoOfSecond
+    ) = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanoOfSecond))
+
+    /**
+     * Return a new [DateTime], replacing any of the components with new values
+     */
+    fun copy(
+        year: Int = this.year,
+        month: Month = this.month,
+        dayOfMonth: Int = this.dayOfMonth,
+        hour: Int = this.hour,
+        minute: Int = this.minute,
+        second: Int = this.second,
+        nanoOfSecond: Int = this.nanoOfSecond
+    ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanoOfSecond))
 
     companion object {
         val MIN = DateTime(Date.MIN, Time.MIN)
@@ -76,15 +106,34 @@ inline val DateTime.isLeapDay: Boolean get() = date.isLeapDay
 inline val DateTime.lengthOfMonth: IntDays get() = date.lengthOfMonth
 inline val DateTime.lengthOfYear: IntDays get() = date.lengthOfYear
 
-fun DateTime.with(newDate: Date) = DateTime(newDate, time)
-fun DateTime.with(newTime: Time) = DateTime(date, newTime)
+operator fun DateTime.plus(daysToAdd: LongDays): DateTime {
+    return if (daysToAdd == 0L.days) {
+        this
+    } else {
+        copy(date = date + daysToAdd)
+    }
+}
 
-operator fun DateTime.plus(daysToAdd: LongDays) = this.with(date + daysToAdd)
-operator fun DateTime.plus(daysToAdd: IntDays) = this.with(date + daysToAdd)
-operator fun DateTime.plus(monthsToAdd: LongMonths) = this.with(date + monthsToAdd)
-operator fun DateTime.plus(monthsToAdd: IntMonths) = this.with(date + monthsToAdd)
-operator fun DateTime.plus(yearsToAdd: LongYears) = this.with(date + yearsToAdd)
-operator fun DateTime.plus(yearsToAdd: IntYears) = this.with(date + yearsToAdd)
+operator fun DateTime.plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
+operator fun DateTime.plus(monthsToAdd: LongMonths) = plus(monthsToAdd.toInt())
+
+operator fun DateTime.plus(monthsToAdd: IntMonths): DateTime {
+    return if (monthsToAdd == 0.months) {
+        this
+    } else {
+        copy(date = date + monthsToAdd)
+    }
+}
+
+operator fun DateTime.plus(yearsToAdd: LongYears) = plus(yearsToAdd.toInt())
+
+operator fun DateTime.plus(yearsToAdd: IntYears): DateTime {
+    return if (yearsToAdd == 0.years) {
+        this
+    } else {
+        copy(date = date + yearsToAdd)
+    }
+}
 
 operator fun DateTime.plus(hoursToAdd: LongHours): DateTime {
     return if (hoursToAdd.value == 0L) {
@@ -103,7 +152,7 @@ operator fun DateTime.plus(hoursToAdd: LongHours): DateTime {
         }
 
         val newDate = date + daysToAdd
-        val newTime = time.withHour(newHour)
+        val newTime = time.copy(hour = newHour)
         DateTime(newDate, newTime)
     }
 }

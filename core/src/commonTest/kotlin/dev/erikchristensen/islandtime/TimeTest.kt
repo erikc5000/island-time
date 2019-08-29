@@ -76,6 +76,26 @@ class TimeTest {
     }
 
     @Test
+    fun `can be broken down into components`() {
+        val (hour, minute, second, nano) = Time(1, 2, 3, 4)
+        assertEquals(1, hour)
+        assertEquals(2, minute)
+        assertEquals(3, second)
+        assertEquals(4, nano)
+    }
+
+    @Test
+    fun `copy() returns a Time with altered values`() {
+        assertEquals(Time(3, 30), Time(9, 30).copy(hour = 3))
+        assertEquals(Time(9, 1), Time(9, 30).copy(minute = 1))
+        assertEquals(Time(9, 30, 3), Time(9, 30).copy(second = 3))
+        assertEquals(
+            Time(9, 30, 0, 3),
+            Time(9, 30).copy(nanoOfSecond = 3)
+        )
+    }
+
+    @Test
     fun `adds zero hours`() {
         assertEquals(Time(9, 0), Time(9, 0) + 0.hours)
     }

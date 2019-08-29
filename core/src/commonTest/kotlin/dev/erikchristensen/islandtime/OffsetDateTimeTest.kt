@@ -11,6 +11,20 @@ import kotlin.test.assertFailsWith
 
 class OffsetDateTimeTest {
     @Test
+    fun `copy() returns an OffsetDateTime, replacing the specified values`() {
+        assertEquals(
+            (Date(2019, Month.FEBRUARY, 1) at Time.NOON at UtcOffset.ZERO),
+            (Date(2019, Month.JANUARY, 1) at Time.NOON at UtcOffset.ZERO).copy(dayOfYear = 32)
+        )
+
+        assertEquals(
+            (Date(2019, Month.JANUARY, 12) at Time(23, 0) at UtcOffset(4.hours)),
+            (Date(2019, Month.JANUARY, 1) at Time.NOON at UtcOffset(4.hours))
+                .copy(dayOfMonth = 12, hour = 23)
+        )
+    }
+
+    @Test
     fun `toString() returns ISO-8601 extended representation of the date, time, and offset`() {
         assertEquals(
             "2018-05-05T12:00Z",

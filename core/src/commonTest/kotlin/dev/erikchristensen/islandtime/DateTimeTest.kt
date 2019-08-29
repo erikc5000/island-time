@@ -31,6 +31,19 @@ class DateTimeTest {
     }
 
     @Test
+    fun `copy() returns a new DateTime replacing the desired values`() {
+        assertEquals(
+            DateTime(2018, Month.MAY, 8, 12, 0),
+            DateTime(2018, Month.MAY, 4, 18, 0).copy(hour = 12, dayOfMonth = 8)
+        )
+
+        assertEquals(
+            DateTime(2018, Month.FEBRUARY, 2, 18, 0, 12),
+            DateTime(2018, Month.MAY, 4, 18, 0).copy(second = 12, dayOfYear = 33)
+        )
+    }
+
+    @Test
     fun `can be compared`() {
         assertTrue {
             (Date(1969, Month.DECEMBER, 1) at Time.NOON) <

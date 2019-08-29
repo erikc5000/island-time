@@ -34,6 +34,29 @@ class DateTest {
     }
 
     @Test
+    fun `copy() creates a new Date, replacing any combination of values`() {
+        assertEquals(
+            Date(2017, Month.NOVEMBER, 19),
+            Date(2018, Month.NOVEMBER, 19).copy(year = 2017)
+        )
+
+        assertEquals(
+            Date(2018, Month.DECEMBER, 19),
+            Date(2018, Month.NOVEMBER, 19).copy(month = Month.DECEMBER)
+        )
+
+        assertEquals(
+            Date(2018, Month.NOVEMBER, 3),
+            Date(2018, Month.NOVEMBER, 19).copy(dayOfMonth = 3)
+        )
+
+        assertEquals(
+            Date(2018, Month.DECEMBER, 31),
+            Date(2018, Month.NOVEMBER, 19).copy(dayOfYear = 365)
+        )
+    }
+
+    @Test
     fun `dayOfWeek returns the expected day`() {
         assertEquals(
             DayOfWeek.THURSDAY, Date(
@@ -100,6 +123,14 @@ class DateTest {
     fun `lengthOfMonth property returns the length in days of a date's month`() {
         assertEquals(29.days, Date(2020, Month.FEBRUARY, 29).lengthOfMonth)
         assertEquals(28.days, Date(2019, Month.FEBRUARY, 28).lengthOfMonth)
+    }
+
+    @Test
+    fun `can be broken down into components`() {
+        val (year, month, day) = Date(2019, Month.AUGUST, 4)
+        assertEquals(2019, year)
+        assertEquals(Month.AUGUST, month)
+        assertEquals(4, day)
     }
 
     @Test

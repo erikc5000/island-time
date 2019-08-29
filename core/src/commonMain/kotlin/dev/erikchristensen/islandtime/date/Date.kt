@@ -54,6 +54,23 @@ class Date(
         return result
     }
 
+    /**
+     * Return a new Date, replacing the year, month, and day of month with new values, as desired
+     */
+    fun copy(
+        year: Int = this.year,
+        month: Month = this.month,
+        dayOfMonth: Int = this.day
+    ) = Date(year, month, dayOfMonth)
+
+    /**
+     * Return a new Date, replacing the year and day of the year with new values, as desired
+     */
+    fun copy(
+        year: Int = this.year,
+        dayOfYear: Int = this.dayOfYear
+    ) = Date(year, dayOfYear)
+
     companion object {
         val MIN = Date(Year.MIN_VALUE, Month.MIN, 1)
         val MAX = Date(Year.MAX_VALUE, Month.MAX, Month.MAX.lastDayIn(Year.MAX_VALUE))
@@ -143,11 +160,6 @@ val Date.isLeapDay: Boolean get() = isLeapDay(month, dayOfMonth)
  */
 val Date.lengthOfMonth: IntDays get() = month.lengthIn(year)
 
-fun Date.withYear(newYear: Int) = Date(newYear, month, dayOfMonth)
-fun Date.withMonth(newMonth: Month) = Date(year, newMonth, dayOfMonth)
-fun Date.withDayOfMonth(newDayOfMonth: Int) = Date(year, month, dayOfMonth)
-fun Date.withDayOfYear(newDayOfYear: Int) = Date(year, newDayOfYear)
-
 /**
  * The length of this date's year in days
  */
@@ -183,7 +195,7 @@ operator fun Date.plus(yearsToAdd: IntYears): Date {
         this
     } else {
         val newYear = year + yearsToAdd.value
-        Date(newYear, month, dayOfMonth.coerceAtMost(month.lastDayIn(newYear)))
+        copy(year = newYear, dayOfMonth = dayOfMonth.coerceAtMost(month.lastDayIn(newYear)))
     }
 }
 

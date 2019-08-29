@@ -66,6 +66,19 @@ class Period private constructor(
         }
     }
 
+    /**
+     * Return a new Period, replacing the years, months, and days components with new values, as desired
+     * @param years new years value
+     * @param months new months value
+     * @param days new days value
+     * @return a new Period with the supplied values
+     */
+    fun copy(
+        years: IntYears = this.years,
+        months: IntMonths = this.months,
+        days: IntDays = this.days
+    ) = create(years, months, days)
+
     companion object {
         /**
          * A period of no length
@@ -130,24 +143,6 @@ inline val Period.isZero: Boolean get() = this == Period.ZERO
 val Period.isNegative get() = years.value < 0 || months.value < 0 || days.value < 0
 
 /**
- * Return a new period, replacing the years component with the provided value
- * @param years the new years value
- */
-fun Period.with(years: IntYears) = Period.create(years, this.months, this.days)
-
-/**
- * Return a new period, replacing the months component with the provided value
- * @param months the new months value
- */
-fun Period.with(months: IntMonths) = Period.create(this.years, months, this.days)
-
-/**
- * Return a new period, replacing the days component with the provided value
- * @param days the new days value
- */
-fun Period.with(days: IntDays) = Period.create(this.years, this.months, days)
-
-/**
  * Normalize the number of years and months such that "1 year, 15 months" becomes "2 years, 3 months".  Only the
  * months and years components are combined.  Days are never adjusted.
  */
@@ -206,13 +201,13 @@ operator fun Period.minus(other: Period) = Period.create(
     days - other.days
 )
 
-operator fun Period.plus(yearsToAdd: IntYears) = this.with(years + yearsToAdd)
-operator fun Period.plus(monthsToAdd: IntMonths) = this.with(months + monthsToAdd)
-operator fun Period.plus(daysToAdd: IntDays) = this.with(days + daysToAdd)
+operator fun Period.plus(yearsToAdd: IntYears) = copy(years = years + yearsToAdd)
+operator fun Period.plus(monthsToAdd: IntMonths) = copy(months = months + monthsToAdd)
+operator fun Period.plus(daysToAdd: IntDays) = copy(days = days + daysToAdd)
 
-operator fun Period.plus(yearsToAdd: LongYears) = this.with((years.toLong() + yearsToAdd).toInt())
-operator fun Period.plus(monthsToAdd: LongMonths) = this.with((months.toLong() + monthsToAdd).toInt())
-operator fun Period.plus(daysToAdd: LongDays) = this.with((days.toLong() + daysToAdd).toInt())
+operator fun Period.plus(yearsToAdd: LongYears) = copy(years = (years.toLong() + yearsToAdd).toInt())
+operator fun Period.plus(monthsToAdd: LongMonths) = copy(months = (months.toLong() + monthsToAdd).toInt())
+operator fun Period.plus(daysToAdd: LongDays) = copy(days = (days.toLong() + daysToAdd).toInt())
 
 operator fun Period.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
 operator fun Period.minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
@@ -233,13 +228,13 @@ operator fun Period.times(scalar: Int): Period {
     }
 }
 
-operator fun IntYears.plus(period: Period) = period.with(this + period.years)
-operator fun IntMonths.plus(period: Period) = period.with(this + period.months)
-operator fun IntDays.plus(period: Period) = period.with(this + period.days)
+operator fun IntYears.plus(period: Period) = period.copy(years = this + period.years)
+operator fun IntMonths.plus(period: Period) = period.copy(months = this + period.months)
+operator fun IntDays.plus(period: Period) = period.copy(days = this + period.days)
 
-operator fun LongYears.plus(period: Period) = period.with((this + period.years.toLong()).toInt())
-operator fun LongMonths.plus(period: Period) = period.with((this + period.months.toLong()).toInt())
-operator fun LongDays.plus(period: Period) = period.with((this + period.days.toLong()).toInt())
+operator fun LongYears.plus(period: Period) = period.copy(years = (this + period.years.toLong()).toInt())
+operator fun LongMonths.plus(period: Period) = period.copy(months = (this + period.months.toLong()).toInt())
+operator fun LongDays.plus(period: Period) = period.copy(days = (this + period.days.toLong()).toInt())
 
 operator fun IntYears.minus(period: Period) = Period.create(
     this - period.years,
