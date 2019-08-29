@@ -3,6 +3,9 @@ package dev.erikchristensen.islandtime
 import dev.erikchristensen.islandtime.date.Date
 import dev.erikchristensen.islandtime.interval.*
 
+// TODO: Flush this out... possibly introduce EpochDay, EpochSecond, etc. classes to express "instants" with
+// different granularity levels.  Really, an instant is just a duration relative to an epoch.
+
 /**
  * An instant in time with millisecond precision
  */

@@ -139,7 +139,7 @@ operator fun DateTime.plus(hoursToAdd: LongHours): DateTime {
     return if (hoursToAdd.value == 0L) {
         this
     } else {
-        var daysToAdd = (hoursToAdd.value / HOURS_PER_DAY).days
+        var daysToAdd = hoursToAdd.toWholeDays()
         val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
         var newHour = time.hour + wrappedHours.value
 
@@ -163,7 +163,7 @@ operator fun DateTime.plus(minutesToAdd: LongMinutes): DateTime {
     return if (minutesToAdd.value == 0L) {
         this
     } else {
-        var daysToAdd = (minutesToAdd.value / MINUTES_PER_DAY).days
+        var daysToAdd = minutesToAdd.toWholeDays()
         val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR.toInt() + minute
         val wrappedMinutes = (minutesToAdd % MINUTES_PER_DAY).toInt()
         var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes.value
@@ -196,7 +196,7 @@ operator fun DateTime.plus(secondsToAdd: LongSeconds): DateTime {
     return if (secondsToAdd.value == 0L) {
         this
     } else {
-        var daysToAdd = (secondsToAdd.value / SECONDS_PER_DAY).days
+        var daysToAdd = secondsToAdd.toWholeDays()
         val currentSecondOfDay = time.secondOfDay
         val wrappedSeconds = (secondsToAdd % SECONDS_PER_DAY).toInt()
         var newSecondOfDay = currentSecondOfDay + wrappedSeconds.value
@@ -227,7 +227,7 @@ operator fun DateTime.plus(nanosecondsToAdd: LongNanoseconds): DateTime {
     return if (nanosecondsToAdd.value == 0L) {
         this
     } else {
-        var daysToAdd = (nanosecondsToAdd.value / NANOSECONDS_PER_DAY).days
+        var daysToAdd = nanosecondsToAdd.toWholeDays()
         val currentNanosecondOfDay = time.nanosecondOfDay
         val wrappedNanoseconds = nanosecondsToAdd % NANOSECONDS_PER_DAY
         var newNanosecondOfDay = currentNanosecondOfDay + wrappedNanoseconds.value

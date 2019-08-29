@@ -19,7 +19,7 @@ inline class UtcOffset internal constructor(
         return if (isZero) {
             "Z"
         } else {
-            buildString(MAX_UTC__OFFSET_STRING_LENGTH) { appendUtcOffset(this@UtcOffset) }
+            buildString(MAX_UTC_OFFSET_STRING_LENGTH) { appendUtcOffset(this@UtcOffset) }
         }
     }
 
@@ -56,7 +56,7 @@ inline class UtcOffset internal constructor(
             seconds: IntSeconds = 0.seconds
         ): UtcOffset {
             validateUtcOffsetComponents(hours, minutes, seconds)
-            return invoke(hours.asSeconds() + minutes.asSeconds() + seconds)
+            return invoke(hours + minutes + seconds)
         }
     }
 }
@@ -154,7 +154,7 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
     return null
 }
 
-internal const val MAX_UTC__OFFSET_STRING_LENGTH = 9
+internal const val MAX_UTC_OFFSET_STRING_LENGTH = 9
 
 internal fun StringBuilder.appendUtcOffset(utcOffset: UtcOffset): StringBuilder {
     utcOffset.toComponents { sign, hours, minutes, seconds ->

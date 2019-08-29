@@ -151,7 +151,7 @@ operator fun Duration.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nano
 // operator fun div(scalar: Int): Duration
 
 fun <T> Duration.toComponents(
-    block: (
+    action: (
         hours: IntHours,
         minutes: IntMinutes,
         seconds: IntSeconds,
@@ -161,11 +161,11 @@ fun <T> Duration.toComponents(
     val hours = seconds.toWholeHours()
     val minutes = (seconds - hours).toWholeMinutes()
     val seconds = seconds - hours - minutes
-    return block(hours.toInt(), minutes.toInt(), seconds.toInt(), nanoOfSeconds)
+    return action(hours.toInt(), minutes.toInt(), seconds.toInt(), nanoOfSeconds)
 }
 
 fun <T> Duration.toComponents(
-    block: (
+    action: (
         minutes: LongMinutes,
         seconds: IntSeconds,
         nanoseconds: IntNanoseconds
@@ -173,16 +173,16 @@ fun <T> Duration.toComponents(
 ): T {
     val minutes = seconds.toWholeMinutes()
     val seconds = seconds - minutes
-    return block(minutes, seconds.toInt(), nanoOfSeconds)
+    return action(minutes, seconds.toInt(), nanoOfSeconds)
 }
 
 inline fun <T> Duration.toComponents(
-    block: (
+    action: (
         seconds: LongSeconds,
         nanoseconds: IntNanoseconds
     ) -> T
 ): T {
-    return block(seconds, nanoOfSeconds)
+    return action(seconds, nanoOfSeconds)
 }
 
 fun durationOf(seconds: IntSeconds, nanoseconds: IntNanoseconds) = durationOf(seconds.toLong(), nanoseconds.toLong())

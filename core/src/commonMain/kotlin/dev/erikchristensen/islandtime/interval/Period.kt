@@ -130,7 +130,7 @@ fun periodOf(days: IntDays): Period {
 /**
  * The total number of months in this period, including years
  */
-val Period.totalMonths: IntMonths get() = years.asMonths() + months
+val Period.totalMonths: IntMonths get() = years + months
 
 /**
  * true if this period has no length
@@ -148,7 +148,7 @@ val Period.isNegative get() = years.value < 0 || months.value < 0 || days.value 
  */
 fun Period.normalized(): Period {
     val monthTotal = totalMonths
-    val newYears = (monthTotal.value / MONTHS_IN_YEAR).years
+    val newYears = monthTotal.toWholeYears()
     val newMonths = monthTotal % MONTHS_IN_YEAR
     return Period.create(newYears, newMonths, days)
 }
