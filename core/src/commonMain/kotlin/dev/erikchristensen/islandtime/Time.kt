@@ -213,10 +213,14 @@ operator fun Time.plus(nanosecondsToAdd: LongNanoseconds): Time {
 
 operator fun Time.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
 
+operator fun Time.minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
 operator fun Time.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+operator fun Time.minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
 operator fun Time.minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
+operator fun Time.minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
 operator fun Time.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
 operator fun Time.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+operator fun Time.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
 fun String.toTime() = toTime(Iso8601.Extended.TIME_PARSER)
 
