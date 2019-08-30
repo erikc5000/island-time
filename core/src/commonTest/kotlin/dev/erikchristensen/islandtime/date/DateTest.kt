@@ -441,12 +441,12 @@ class DateTest {
     }
 
     @Test
-    fun `asUnixEpochDays() works correctly`() {
-        assertEquals(0L.days, Date(1970, Month.JANUARY, 1).asUnixEpochDays())
-        assertEquals(1L.days, Date(1970, Month.JANUARY, 2).asUnixEpochDays())
-        assertEquals((-1L).days, Date(1969, Month.DECEMBER, 31).asUnixEpochDays())
-        assertEquals(18_105L.days, Date(2019, Month.JULY, 28).asUnixEpochDays())
-        assertEquals((-4_472L).days, Date(1957, Month.OCTOBER, 4).asUnixEpochDays())
+    fun `unixEpochDays property works correctly`() {
+        assertEquals(0L.days, Date(1970, Month.JANUARY, 1).unixEpochDays)
+        assertEquals(1L.days, Date(1970, Month.JANUARY, 2).unixEpochDays)
+        assertEquals((-1L).days, Date(1969, Month.DECEMBER, 31).unixEpochDays)
+        assertEquals(18_105L.days, Date(2019, Month.JULY, 28).unixEpochDays)
+        assertEquals((-4_472L).days, Date(1957, Month.OCTOBER, 4).unixEpochDays)
     }
 
     @Test

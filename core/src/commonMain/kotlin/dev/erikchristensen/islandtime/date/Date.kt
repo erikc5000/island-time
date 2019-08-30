@@ -136,7 +136,7 @@ fun Date(year: Int, dayOfYear: Int): Date {
  */
 val Date.dayOfWeek: DayOfWeek
     get() {
-        val zeroIndexedDayOfWeek = (this.asUnixEpochDays().value + 3) floorMod 7
+        val zeroIndexedDayOfWeek = (unixEpochDays.value + 3) floorMod 7
         return DayOfWeek.values()[zeroIndexedDayOfWeek.toInt()]
     }
 
@@ -169,7 +169,7 @@ operator fun Date.plus(daysToAdd: LongDays): Date {
     return if (daysToAdd.value == 0L) {
         this
     } else {
-        Date.ofUnixEpochDays(this.asUnixEpochDays() + daysToAdd)
+        Date.ofUnixEpochDays(unixEpochDays + daysToAdd)
     }
 }
 
@@ -215,7 +215,7 @@ fun Date.atStartOfDay() = DateTime(this, Time.MIDNIGHT)
 //
 // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
 //
-fun Date.asUnixEpochDays(): LongDays {
+val Date.unixEpochDays: LongDays get() {
     var total = DAYS_IN_COMMON_YEAR * year
 
     if (year >= 0) {
@@ -285,7 +285,7 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
 }
 
 fun daysBetween(start: Date, endExclusive: Date): LongDays {
-    return endExclusive.asUnixEpochDays() - start.asUnixEpochDays()
+    return endExclusive.unixEpochDays - start.unixEpochDays
 }
 
 fun monthsBetween(start: Date, endExclusive: Date): IntMonths {

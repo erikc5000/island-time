@@ -39,7 +39,7 @@ fun DateRange.random(): Date = random(Random)
  */
 fun DateRange.random(random: Random): Date {
     try {
-        val longRange = first.asUnixEpochDays().value..last.asUnixEpochDays().value
+        val longRange = first.unixEpochDays.value..last.unixEpochDays.value
         return Date.ofUnixEpochDays(random.nextLong(longRange).days)
     } catch (e: IllegalArgumentException) {
         throw NoSuchElementException(e.message)

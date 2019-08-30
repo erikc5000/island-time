@@ -1,16 +1,15 @@
 package dev.erikchristensen.islandtime.parser
 
 class DateTimeParseException(
-    message: String,
-    val parsedString: String,
-    val errorIndex: Int,
+    message: String? = null,
+    val parsedString: String? = null,
+    val errorIndex: Int = 0,
     cause: Throwable? = null
 ) : Exception(message, cause)
 
 fun raiseParserFieldResolutionException(objectType: String, parsedText: String): Nothing {
     throw DateTimeParseException(
-        "The supplied parser was unable to supply the fields needed to resolve '$objectType'",
-        parsedText,
-        0
+        "The provided parser was unable to supply the fields needed to resolve '$objectType'",
+        parsedText
     )
 }

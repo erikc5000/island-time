@@ -34,7 +34,7 @@ class DateComparisonTest {
     @Test
     fun `epoch days`() {
         javaDates.compareWithIsland { javaDate, islandDate ->
-            assertThat(javaDate.toEpochDay()).isEqualTo(islandDate.asUnixEpochDays().value)
+            assertThat(javaDate.toEpochDay()).isEqualTo(islandDate.unixEpochDays.value)
         }
     }
 

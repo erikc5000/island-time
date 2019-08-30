@@ -18,7 +18,7 @@ open class DateDayProgression protected constructor(
         }
     }
 
-    private val firstUnixEpochDay: LongDays = first.asUnixEpochDays()
+    private val firstUnixEpochDay: LongDays = first.unixEpochDays
     private val lastUnixEpochDay: LongDays = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
     val first: Date get() = Date.ofUnixEpochDays(firstUnixEpochDay)
     val last: Date get() = Date.ofUnixEpochDays(lastUnixEpochDay)
@@ -96,7 +96,7 @@ fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last,
  * Assumes step is non-zero
  */
 private fun getLastDayInProgression(startInDays: LongDays, endDate: Date, step: IntDays): LongDays {
-    val endInDays = endDate.asUnixEpochDays()
+    val endInDays = endDate.unixEpochDays
 
     return when {
         step.value > 0L -> if (startInDays >= endInDays) {
