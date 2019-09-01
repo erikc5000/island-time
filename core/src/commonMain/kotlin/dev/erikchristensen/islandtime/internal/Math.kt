@@ -27,3 +27,10 @@ internal infix fun Int.floorDiv(other: Int): Int {
         result
     }
 }
+
+internal fun Long.toIntExact(): Int {
+    if (this !in Int.MIN_VALUE..Int.MAX_VALUE) {
+        throw ArithmeticException("'$this' can't be converted to Int without overflow")
+    }
+    return toInt()
+}

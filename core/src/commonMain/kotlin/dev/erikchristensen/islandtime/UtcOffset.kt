@@ -35,8 +35,8 @@ inline class UtcOffset internal constructor(
          * Create a UTC time offset from the total number of seconds to offset by
          */
         operator fun invoke(totalSeconds: IntSeconds): UtcOffset {
-            require(totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {
-                "'$totalSeconds' is outside the valid offset range of +/-18:00"
+            if (totalSeconds !in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {
+                throw DateTimeException("'$totalSeconds' is outside the valid offset range of +/-18:00")
             }
 
             return UtcOffset(totalSeconds)
@@ -173,21 +173,24 @@ internal fun StringBuilder.appendUtcOffset(utcOffset: UtcOffset): StringBuilder 
 
 private fun validateUtcOffsetComponents(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
     when {
-        hours.isPositive -> require(!minutes.isNegative && !seconds.isNegative) {
-            "Time offset minutes and seconds must be positive when hours are positive"
+        hours.isPositive -> if (minutes.isNegative || seconds.isNegative) {
+            throw DateTimeException("Time offset minutes and seconds must be positive when hours are positive")
         }
-        hours.isNegative -> require(!minutes.isPositive && !seconds.isPositive) {
-            "Time offset minutes and seconds must be negative when hours are negative"
+        hours.isNegative -> if (minutes.isPositive || seconds.isPositive) {
+            throw DateTimeException("Time offset minutes and seconds must be negative when hours are negative")
         }
-        else -> require(
-            !(minutes.isNegative && seconds.isPositive) &&
-                !(minutes.isPositive && seconds.isNegative)
-        ) {
-            "Time offset minutes and seconds must have the same sign"
+        else -> if ((minutes.isNegative && seconds.isPositive) || (minutes.isPositive && seconds.isNegative)) {
+            throw DateTimeException("Time offset minutes and seconds must have the same sign")
         }
     }
 
-    require(hours.value in -18..18) { "Time offset hours must be within +/-18, got '${hours.value}'" }
-    require(minutes.value in -59..59) { "Time offset minutes must be within +/-59, got '${minutes.value}'" }
-    require(seconds.value in -59..59) { "Time offset seconds must be within +/-59, got '${seconds.value}'" }
+    if (hours.value !in -18..18) {
+        throw DateTimeException("Time offset hours must be within +/-18, got '${hours.value}'")
+    }
+    if (minutes.value !in -59..59) {
+        throw DateTimeException("Time offset minutes must be within +/-59, got '${minutes.value}'")
+    }
+    if (seconds.value !in -59..59) {
+        throw DateTimeException("Time offset seconds must be within +/-59, got '${seconds.value}'")
+    }
 }

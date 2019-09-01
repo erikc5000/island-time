@@ -8,10 +8,11 @@ import dev.erikchristensen.islandtime.interval.*
 import org.threeten.bp.*
 import org.threeten.bp.Duration
 import org.threeten.bp.Period
+import org.threeten.bp.YearMonth
 
 @JvmName("convertFromJava")
 fun LocalDate.toIslandDate(): Date {
-    return Date(year, monthValue.toMonth(), dayOfMonth)
+    return Date(year, monthValue, dayOfMonth)
 }
 
 @JvmName("convertToJava")
@@ -32,7 +33,7 @@ fun Time.toJavaLocalTime(): LocalTime {
 @JvmName("convertFromJava")
 fun LocalDateTime.toIslandDateTime(): DateTime {
     return DateTime(
-        Date(year, monthValue.toMonth(), dayOfMonth),
+        Date(year, monthValue, dayOfMonth),
         Time(hour, minute, second, nano)
     )
 }
@@ -46,7 +47,7 @@ fun DateTime.toJavaLocalDateTime(): LocalDateTime {
 fun org.threeten.bp.OffsetDateTime.toIslandOffsetDateTime(): dev.erikchristensen.islandtime.OffsetDateTime {
     return dev.erikchristensen.islandtime.OffsetDateTime(
         DateTime(
-            Date(year, monthValue.toMonth(), dayOfMonth),
+            Date(year, monthValue, dayOfMonth),
             Time(hour, minute, second, nano)
         ),
         UtcOffset(offset.totalSeconds.seconds)
@@ -89,4 +90,14 @@ fun Period.toIslandPeriod(): dev.erikchristensen.islandtime.interval.Period {
 @JvmName("convertToJava")
 fun dev.erikchristensen.islandtime.interval.Period.toJavaPeriod(): Period {
     return Period.of(years.value, months.value, days.value)
+}
+
+@JvmName("convertFromJava")
+fun YearMonth.toIslandYearMonth(): dev.erikchristensen.islandtime.YearMonth {
+    return dev.erikchristensen.islandtime.YearMonth(year, monthValue)
+}
+
+@JvmName("convertToJava")
+fun dev.erikchristensen.islandtime.YearMonth.toJavaYearMonth(): YearMonth {
+    return YearMonth.of(year, month.number)
 }

@@ -23,6 +23,16 @@ class DateTime(
         nanoOfSecond: Int = 0
     ) : this(Date(year, month, day), Time(hour, minute, second, nanoOfSecond))
 
+    constructor(
+        year: Int,
+        monthNumber: Int,
+        day: Int,
+        hour: Int,
+        minute: Int,
+        second: Int = 0,
+        nanoOfSecond: Int = 0
+    ) : this(year, Month(monthNumber), day, hour, minute, second, nanoOfSecond)
+
     operator fun component1() = date
     operator fun component2() = time
 
@@ -75,6 +85,19 @@ class DateTime(
         second: Int = this.second,
         nanoOfSecond: Int = this.nanoOfSecond
     ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanoOfSecond))
+
+    /**
+     * Return a new [DateTime], replacing any of the components with new values
+     */
+    fun copy(
+        year: Int = this.year,
+        monthNumber: Int,
+        dayOfMonth: Int = this.dayOfMonth,
+        hour: Int = this.hour,
+        minute: Int = this.minute,
+        second: Int = this.second,
+        nanoOfSecond: Int = this.nanoOfSecond
+    ) = DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanoOfSecond)
 
     companion object {
         val MIN = DateTime(Date.MIN, Time.MIN)

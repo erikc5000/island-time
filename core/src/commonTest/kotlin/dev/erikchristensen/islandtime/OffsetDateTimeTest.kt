@@ -147,10 +147,10 @@ class OffsetDateTimeTest {
 
     @Test
     fun `String_toOffsetDateTime() throws an exception when fields are out of range`() {
-        assertFailsWith<DateTimeParseException> { "2000-01-01T24:00+01:00".toOffsetDateTime() }
-        assertFailsWith<DateTimeParseException> { "2000-01-01T08:60-01:00".toOffsetDateTime() }
-        assertFailsWith<DateTimeParseException> { "2000-13-01T08:59-01:00".toOffsetDateTime() }
-        assertFailsWith<DateTimeParseException> { "2000-01-32T08:59-01:00".toOffsetDateTime() }
+        assertFailsWith<DateTimeException> { "2000-01-01T24:00+01:00".toOffsetDateTime() }
+        assertFailsWith<DateTimeException> { "2000-01-01T08:60-01:00".toOffsetDateTime() }
+        assertFailsWith<DateTimeException> { "2000-13-01T08:59-01:00".toOffsetDateTime() }
+        assertFailsWith<DateTimeException> { "2000-01-32T08:59-01:00".toOffsetDateTime() }
     }
 
     @Test

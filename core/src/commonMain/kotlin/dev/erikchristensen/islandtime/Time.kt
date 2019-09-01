@@ -88,14 +88,22 @@ class Time private constructor(
             second: Int = 0,
             nanoOfSecond: Int = 0
         ): Time {
-            require(isValidHour(hour)) { "'$hour' is not a valid hour" }
+            if (!isValidHour(hour)) {
+                throw DateTimeException("'$hour' is not a valid hour")
+            }
 
             return if (minute or second or nanoOfSecond == 0) {
                 HOURS[hour]
             } else {
-                require(isValidMinute(minute)) { "'$minute' is not a valid minute" }
-                require(isValidSecond(second)) { "'$second' is not a valid second" }
-                require(isValidNanoOfSecond(nanoOfSecond)) { "'$nanoOfSecond' is not a valid nanoOfSecond" }
+                if (!isValidMinute(minute)) {
+                    throw DateTimeException("'$minute' is not a valid minute")
+                }
+                if (!isValidSecond(second)) {
+                    throw DateTimeException("'$second' is not a valid second")
+                }
+                if (!isValidNanoOfSecond(nanoOfSecond)) {
+                    throw DateTimeException("'$nanoOfSecond' is not a valid nanoOfSecond")
+                }
 
                 Time(hour, minute, second, nanoOfSecond)
             }
@@ -106,8 +114,8 @@ class Time private constructor(
          * nanoseconds within that second
          */
         fun ofSecondOfDay(secondOfDay: Int, nanoOfSecond: Int = 0): Time {
-            require(secondOfDay in 0 until SECONDS_PER_DAY) {
-                "'$secondOfDay' is not a valid second of the day"
+            if (secondOfDay !in 0 until SECONDS_PER_DAY) {
+                throw DateTimeException("'$secondOfDay' is not a valid second of the day")
             }
 
             val hour = secondOfDay / SECONDS_PER_HOUR.toInt()
@@ -120,8 +128,8 @@ class Time private constructor(
          * Create the [Time] representing a number of nanoseconds since the start of the day
          */
         fun ofNanosecondOfDay(nanosecondOfDay: Long): Time {
-            require(nanosecondOfDay in 0L until NANOSECONDS_PER_DAY) {
-                "'$nanosecondOfDay' is not a valid nanosecond of the day"
+            if (nanosecondOfDay !in 0L until NANOSECONDS_PER_DAY) {
+                throw DateTimeException("'$nanosecondOfDay' is not a valid nanosecond of the day")
             }
 
             val hour = (nanosecondOfDay / NANOSECONDS_PER_HOUR).toInt()

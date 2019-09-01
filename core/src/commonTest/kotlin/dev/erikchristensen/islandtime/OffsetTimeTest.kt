@@ -121,8 +121,8 @@ class OffsetTimeTest {
 
     @Test
     fun `String_toOffsetTime() throws an exception when time is out of range`() {
-        assertFailsWith<DateTimeParseException> { "24:00+01:00".toOffsetTime() }
-        assertFailsWith<DateTimeParseException> { "08:60-01:00".toOffsetTime() }
+        assertFailsWith<DateTimeException> { "24:00+01:00".toOffsetTime() }
+        assertFailsWith<DateTimeException> { "08:60-01:00".toOffsetTime() }
     }
 
     @Test

@@ -11,7 +11,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class JavaSanityTest {
     @Test
     public void convertIslandDateToJavaLocalDate() {
-        Date islandDate = new Date(2019, Month.MARCH, 1);
+        Date islandDate = Date.Companion.invoke(2019, Month.MARCH, 1);
         LocalDate javaDate = IslandTime.convertToJava(islandDate);
 
         assertThat(javaDate.getYear()).isEqualTo(islandDate.getYear());

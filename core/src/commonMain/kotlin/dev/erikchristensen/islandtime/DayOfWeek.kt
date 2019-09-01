@@ -18,8 +18,8 @@ enum class DayOfWeek(val number: Int) {
         val MAX = SUNDAY
 
         operator fun invoke(number: Int): DayOfWeek {
-            require(number in MIN.number..MAX.number) {
-                "'$number' is not a valid day of week number"
+            if(number !in MIN.number..MAX.number) {
+                throw DateTimeException("'$number' is not a valid day of week number")
             }
 
             return values()[number - 1]

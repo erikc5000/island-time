@@ -19,7 +19,18 @@ class DateRange(
     override val start: Date get() = first
     override val endInclusive: Date get() = last
 
+    override fun isEmpty(): Boolean = firstUnixEpochDay > lastUnixEpochDay
+
     override fun toString() = "$first..$last"
+
+    override fun equals(other: Any?): Boolean {
+        return other is DateRange && (isEmpty() && other.isEmpty() ||
+            first == other.first && last == other.last)
+    }
+
+    override fun hashCode(): Int {
+        return if (isEmpty()) -1 else (31 * first.hashCode() + last.hashCode())
+    }
 
     companion object {
         /**

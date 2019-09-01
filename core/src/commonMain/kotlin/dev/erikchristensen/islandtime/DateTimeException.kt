@@ -1,3 +1,6 @@
 package dev.erikchristensen.islandtime
 
-class DateTimeException(override val message: String?) : Exception()
+open class DateTimeException(
+    message: String? = null,
+    cause: Throwable? = null
+) : Exception(message, cause)

@@ -13,9 +13,9 @@ class DayOfWeekTest {
 
     @Test
     fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {
-        assertFailsWith<IllegalArgumentException> { 0.toDayOfWeek() }
-        assertFailsWith<IllegalArgumentException> { 8.toDayOfWeek() }
-        assertFailsWith<IllegalArgumentException> { (-1).toDayOfWeek() }
+        assertFailsWith<DateTimeException> { 0.toDayOfWeek() }
+        assertFailsWith<DateTimeException> { 8.toDayOfWeek() }
+        assertFailsWith<DateTimeException> { (-1).toDayOfWeek() }
     }
 
     @Test

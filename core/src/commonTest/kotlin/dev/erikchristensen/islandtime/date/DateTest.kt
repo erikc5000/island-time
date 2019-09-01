@@ -9,21 +9,22 @@ import kotlin.test.*
 class DateTest {
     @Test
     fun `throws an exception when constructed with an invalid year`() {
-        assertFailsWith<IllegalArgumentException> { Date(-1, Month.JANUARY, 1) }
-        assertFailsWith<IllegalArgumentException> { Date(10000, Month.JANUARY, 1) }
+        assertFailsWith<DateTimeException> { Date(-1, Month.JANUARY, 1) }
+        assertFailsWith<DateTimeException> { Date(10000, Month.JANUARY, 1) }
     }
 
     @Test
     fun `throws an exception when constructed with an invalid day`() {
-        assertFailsWith<IllegalArgumentException> { Date(2000, Month.JANUARY, 32) }
-        assertFailsWith<IllegalArgumentException> { Date(2001, Month.FEBRUARY, 29) }
-        assertFailsWith<IllegalArgumentException> { Date(2001, Month.FEBRUARY, 0) }
+        assertFailsWith<DateTimeException> { Date(2000, Month.JANUARY, 32) }
+        assertFailsWith<DateTimeException> { Date(2001, Month.FEBRUARY, 29) }
+        assertFailsWith<DateTimeException> { Date(2001, Month.FEBRUARY, 0) }
     }
 
     @Test
     fun `throws an exception when creating from a day of year that's impossible`() {
-        assertFailsWith<IllegalArgumentException> { Date(2019, -1) }
-        assertFailsWith<IllegalArgumentException> { Date(2019, 367) }
+        assertFailsWith<DateTimeException> { Date(2019, -1) }
+        assertFailsWith<DateTimeException> { Date(2019, 0) }
+        assertFailsWith<DateTimeException> { Date(2019, 367) }
         assertFailsWith<DateTimeException> { Date(2019, 366) }
     }
 
@@ -438,6 +439,22 @@ class DateTest {
             ),
             Date(2019, Month.JULY, 1).atStartOfDay()
         )
+    }
+
+    @Test
+    fun `atEndOfDay() returns DateTime just before the end of the same day`() {
+        assertEquals(
+            DateTime(
+                Date(2019, Month.JULY, 1),
+                Time(23, 59, 59, 999_999_999)
+            ),
+            Date(2019, Month.JULY, 1).atEndOfDay()
+        )
+    }
+
+    @Test
+    fun `yearMonth property returns a YearMonth with the same month and year`() {
+        assertEquals(YearMonth(2018, Month.JULY), Date(2018, Month.JULY, 4).yearMonth)
     }
 
     @Test

@@ -10,26 +10,26 @@ import kotlin.test.assertFailsWith
 class TimeTest {
     @Test
     fun `throws an exception when constructed with an invalid hour`() {
-        assertFailsWith<IllegalArgumentException> { Time(-1, 0) }
-        assertFailsWith<IllegalArgumentException> { Time(24, 0) }
+        assertFailsWith<DateTimeException> { Time(-1, 0) }
+        assertFailsWith<DateTimeException> { Time(24, 0) }
     }
 
     @Test
     fun `throws an exception when constructed with an invalid minute`() {
-        assertFailsWith<IllegalArgumentException> { Time(0, -1) }
-        assertFailsWith<IllegalArgumentException> { Time(0, 60) }
+        assertFailsWith<DateTimeException> { Time(0, -1) }
+        assertFailsWith<DateTimeException> { Time(0, 60) }
     }
 
     @Test
     fun `throws an exception when constructed with an invalid second`() {
-        assertFailsWith<IllegalArgumentException> { Time(0, 0, -1) }
-        assertFailsWith<IllegalArgumentException> { Time(0, 0, 60) }
+        assertFailsWith<DateTimeException> { Time(0, 0, -1) }
+        assertFailsWith<DateTimeException> { Time(0, 0, 60) }
     }
 
     @Test
     fun `throws an exception when constructed with an invalid nanoOfSecond`() {
-        assertFailsWith<IllegalArgumentException> { Time(0, 0, 0, -1) }
-        assertFailsWith<IllegalArgumentException> { Time(0, 0, 0, 1_000_000_000) }
+        assertFailsWith<DateTimeException> { Time(0, 0, 0, -1) }
+        assertFailsWith<DateTimeException> { Time(0, 0, 0, 1_000_000_000) }
     }
 
     @Test

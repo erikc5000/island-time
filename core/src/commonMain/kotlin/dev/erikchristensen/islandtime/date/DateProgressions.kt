@@ -18,14 +18,33 @@ open class DateDayProgression protected constructor(
         }
     }
 
-    private val firstUnixEpochDay: LongDays = first.unixEpochDays
-    private val lastUnixEpochDay: LongDays = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
+    protected val firstUnixEpochDay: LongDays = first.unixEpochDays
+    protected val lastUnixEpochDay: LongDays = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
     val first: Date get() = Date.ofUnixEpochDays(firstUnixEpochDay)
     val last: Date get() = Date.ofUnixEpochDays(lastUnixEpochDay)
+
+    /** Is the progression empty? */
+    open fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
 
     override fun iterator(): DateIterator = DateDayProgressionIterator(firstUnixEpochDay, lastUnixEpochDay, step)
 
     override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $ last step ${-step}"
+
+    override fun equals(other: Any?): Boolean {
+        return other is DateDayProgression &&
+            (isEmpty() && other.isEmpty() ||
+                firstUnixEpochDay == other.firstUnixEpochDay &&
+                lastUnixEpochDay == other.lastUnixEpochDay &&
+                step == other.step)
+    }
+
+    override fun hashCode(): Int {
+        return if (isEmpty()) {
+            -1
+        } else {
+            31 * (31 * firstUnixEpochDay.hashCode() + lastUnixEpochDay.hashCode()) + step.value
+        }
+    }
 
     companion object {
         fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntDays): DateDayProgression {
@@ -49,9 +68,29 @@ class DateMonthProgression private constructor(
 
     val last = getLastDateInProgression(first, endInclusive, step)
 
+    /** Is the progression empty? */
+    fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
+
     override fun iterator(): DateIterator = DateMonthProgressionIterator(first, last, step)
 
     override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $ last step ${-step}"
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as DateMonthProgression
+
+        if (first != other.first) return false
+        if (step != other.step) return false
+        if (last != other.last) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return if (isEmpty()) -1 else 31 * (31 * first.hashCode() + last.hashCode()) + step.value
+    }
 
     companion object {
         fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntMonths): DateMonthProgression {

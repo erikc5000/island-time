@@ -30,6 +30,10 @@ inline class IntYears internal constructor(val value: Int) : Comparable<IntYears
     }
 }
 
+operator fun IntYears.compareTo(other: LongYears) = value.compareTo(other.value)
+operator fun IntYears.compareTo(other: LongMonths) = toLong().asMonths().value.compareTo(other.value)
+operator fun IntYears.compareTo(other: IntMonths) = toLong().asMonths().value.compareTo(other.value)
+
 operator fun IntYears.unaryPlus() = this
 operator fun IntYears.unaryMinus() = IntYears(-value)
 operator fun IntYears.plus(years: IntYears) = IntYears(value + years.value)
@@ -70,6 +74,24 @@ inline class LongYears internal constructor(val value: Long) : Comparable<LongYe
             append(value)
             append('Y')
         }
+    }
+}
+
+operator fun LongYears.compareTo(other: IntYears) = value.compareTo(other.value)
+
+operator fun LongYears.compareTo(other: LongMonths): Int {
+    return if (value > Long.MAX_VALUE / MONTHS_IN_YEAR) {
+        1
+    } else {
+        (value * MONTHS_IN_YEAR).compareTo(other.value)
+    }
+}
+
+operator fun LongYears.compareTo(other: IntMonths): Int {
+    return if (value > Int.MAX_VALUE) {
+        1
+    } else {
+        (value * MONTHS_IN_YEAR).compareTo(other.value)
     }
 }
 

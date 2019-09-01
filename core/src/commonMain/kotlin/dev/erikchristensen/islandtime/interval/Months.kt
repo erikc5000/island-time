@@ -34,9 +34,13 @@ operator fun IntMonths.unaryPlus() = this
 operator fun IntMonths.unaryMinus() = IntMonths(-value)
 
 operator fun IntMonths.plus(years: IntYears) = this + years.asMonths()
+operator fun IntMonths.plus(years: LongYears) = this + years.asMonths()
 operator fun IntMonths.plus(months: IntMonths) = IntMonths(value + months.value)
+operator fun IntMonths.plus(months: LongMonths) = LongMonths(value + months.value)
 operator fun IntMonths.minus(years: IntYears) = plus(-years)
+operator fun IntMonths.minus(years: LongYears) = plus(-years)
 operator fun IntMonths.minus(months: IntMonths) = plus(-months)
+operator fun IntMonths.minus(months: LongMonths) = plus(-months)
 
 operator fun IntMonths.times(scalar: Int) = IntMonths(value * scalar)
 operator fun IntMonths.div(scalar: Int) = IntMonths(value / scalar)
@@ -82,9 +86,13 @@ operator fun LongMonths.unaryPlus() = this
 operator fun LongMonths.unaryMinus() = LongMonths(-value)
 
 operator fun LongMonths.plus(years: LongYears) = this + years.asMonths()
+operator fun LongMonths.plus(years: IntYears) = this + years.asMonths()
 operator fun LongMonths.plus(months: LongMonths) = LongMonths(value + months.value)
+operator fun LongMonths.plus(months: IntMonths) = LongMonths(value + months.value)
 operator fun LongMonths.minus(years: LongYears) = plus(-years)
+operator fun LongMonths.minus(years: IntYears) = plus(-years)
 operator fun LongMonths.minus(months: LongMonths) = plus(-months)
+operator fun LongMonths.minus(months: IntMonths) = plus(-months)
 
 operator fun LongMonths.times(scalar: Long) = LongMonths(value * scalar)
 operator fun LongMonths.times(scalar: Int) = LongMonths(value * scalar)

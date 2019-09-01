@@ -1,11 +1,13 @@
 package dev.erikchristensen.islandtime.parser
 
+import dev.erikchristensen.islandtime.DateTimeException
+
 class DateTimeParseException(
     message: String? = null,
     val parsedString: String? = null,
     val errorIndex: Int = 0,
     cause: Throwable? = null
-) : Exception(message, cause)
+) : DateTimeException(message, cause)
 
 fun raiseParserFieldResolutionException(objectType: String, parsedText: String): Nothing {
     throw DateTimeParseException(

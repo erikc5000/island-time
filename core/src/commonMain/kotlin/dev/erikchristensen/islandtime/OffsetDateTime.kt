@@ -3,7 +3,10 @@ package dev.erikchristensen.islandtime
 import dev.erikchristensen.islandtime.date.Date
 import dev.erikchristensen.islandtime.date.unixEpochDays
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.parser.*
+import dev.erikchristensen.islandtime.parser.DateTimeParseResult
+import dev.erikchristensen.islandtime.parser.DateTimeParser
+import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
 
 /**
  * A calendar date and time combined with a fixed UTC offset
@@ -12,6 +15,39 @@ class OffsetDateTime(
     val dateTime: DateTime,
     val offset: UtcOffset
 ) : Comparable<OffsetDateTime> {
+
+    /**
+     * Create an [OffsetDateTime]
+     */
+    constructor(date: Date, time: Time, offset: UtcOffset) : this(DateTime(date, time), offset)
+
+    /**
+     * Create an [OffsetDateTime]
+     */
+    constructor(
+        year: Int,
+        month: Month,
+        dayOfMonth: Int,
+        hour: Int,
+        minute: Int,
+        second: Int,
+        nanoOfSecond: Int,
+        offset: UtcOffset
+    ) : this(DateTime(year, month, dayOfMonth, hour, minute, second, nanoOfSecond), offset)
+
+    /**
+     * Create an [OffsetDateTime]
+     */
+    constructor(
+        year: Int,
+        monthNumber: Int,
+        dayOfMonth: Int,
+        hour: Int,
+        minute: Int,
+        second: Int,
+        nanoOfSecond: Int,
+        offset: UtcOffset
+    ) : this(DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanoOfSecond), offset)
 
     val date: Date get() = dateTime.date
     val time: Time get() = dateTime.time
@@ -98,32 +134,6 @@ class OffsetDateTime(
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
         val MAX = DateTime.MAX at UtcOffset.MIN
-
-        /**
-         * Create an [OffsetDateTime]
-         */
-        operator fun invoke(date: Date, time: Time, offset: UtcOffset): OffsetDateTime {
-            return OffsetDateTime(DateTime(date, time), offset)
-        }
-
-        /**
-         * Create an [OffsetDateTime]
-         */
-        operator fun invoke(
-            year: Int,
-            month: Month,
-            dayOfMonth: Int,
-            hour: Int,
-            minute: Int,
-            second: Int,
-            nanoOfSecond: Int,
-            offset: UtcOffset
-        ): OffsetDateTime {
-            return OffsetDateTime(
-                DateTime(year, month, dayOfMonth, hour, minute, second, nanoOfSecond),
-                offset
-            )
-        }
     }
 }
 
@@ -246,12 +256,7 @@ fun String.toOffsetDateTime() = toOffsetDateTime(Iso8601.Extended.OFFSET_DATE_TI
 
 fun String.toOffsetDateTime(parser: DateTimeParser): OffsetDateTime {
     val result = parser.parse(this)
-
-    return try {
-        result.toOffsetDateTime() ?: raiseParserFieldResolutionException("OffsetDateTime", this)
-    } catch (e: IllegalArgumentException) {
-        throw DateTimeParseException(e.message, this, 0, e)
-    }
+    return result.toOffsetDateTime() ?: raiseParserFieldResolutionException("OffsetDateTime", this)
 }
 
 internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {

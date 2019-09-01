@@ -1,7 +1,10 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.parser.*
+import dev.erikchristensen.islandtime.parser.DateTimeParseResult
+import dev.erikchristensen.islandtime.parser.DateTimeParser
+import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
 
 /**
  * A time of day combined with a specific UTC offset
@@ -10,6 +13,17 @@ class OffsetTime(
     val time: Time,
     val offset: UtcOffset
 ) : Comparable<OffsetTime> {
+
+    /**
+     * Create an [OffsetTime]
+     */
+    constructor(
+        hour: Int,
+        minute: Int,
+        second: Int = 0,
+        nanoOfSecond: Int = 0,
+        offset: UtcOffset
+    ) : this(Time(hour, minute, second, nanoOfSecond), offset)
 
     operator fun component1() = time
     operator fun component2() = offset
@@ -62,17 +76,6 @@ class OffsetTime(
     companion object {
         val MIN = Time.MIN at UtcOffset.MAX
         val MAX = Time.MAX at UtcOffset.MIN
-
-        /**
-         * Create an [OffsetTime]
-         */
-        operator fun invoke(
-            hour: Int,
-            minute: Int,
-            second: Int = 0,
-            nanoOfSecond: Int = 0,
-            offset: UtcOffset
-        ) = OffsetTime(Time(hour, minute, second, nanoOfSecond), offset)
     }
 }
 
@@ -152,12 +155,7 @@ fun String.toOffsetTime() = toOffsetTime(Iso8601.Extended.OFFSET_TIME_PARSER)
 
 fun String.toOffsetTime(parser: DateTimeParser): OffsetTime {
     val result = parser.parse(this)
-
-    return try {
-        result.toOffsetTime() ?: raiseParserFieldResolutionException("OffsetTime", this)
-    } catch (e: IllegalArgumentException) {
-        throw DateTimeParseException(e.message, this, 0, e)
-    }
+    return result.toOffsetTime() ?: raiseParserFieldResolutionException("OffsetTime", this)
 }
 
 internal fun DateTimeParseResult.toOffsetTime(): OffsetTime? {

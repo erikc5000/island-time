@@ -68,8 +68,8 @@ enum class Month(val number: Int) {
         val MAX = DECEMBER
 
         operator fun invoke(number: Int): Month {
-            require(number in MIN.number..MAX.number) {
-                "'$number' is not a valid month of the year"
+            if (number !in MIN.number..MAX.number) {
+                throw DateTimeException("'$number' is not a valid month of the year")
             }
 
             return values()[number - 1]
@@ -89,7 +89,7 @@ val Month.firstDayOfLeapYear: Int
  */
 fun Month.lengthIn(year: Int): IntDays {
     return when (this) {
-        Month.FEBRUARY -> if (Year(year).isLeap) lengthInLeapYear else lengthInCommonYear
+        Month.FEBRUARY -> if (isLeapYear(year)) lengthInLeapYear else lengthInCommonYear
         else -> lengthInCommonYear
     }
 }
@@ -105,11 +105,11 @@ fun Month.lastDayIn(year: Int) = lengthIn(year).value
  * @param year Retrieve the day of year number within this year
  */
 fun Month.firstDayOfYearIn(year: Int): Int {
-    return if (Year(year).isLeap) firstDayOfLeapYear else firstDayOfCommonYear
+    return if (isLeapYear(year)) firstDayOfLeapYear else firstDayOfCommonYear
 }
 
 fun Month.lastDayOfYearIn(year: Int): Int {
-    val isLeap = Year(year).isLeap
+    val isLeap = isLeapYear(year)
 
     return if (isLeap) {
         firstDayOfLeapYear + lengthInLeapYear.value - 1
@@ -138,5 +138,3 @@ operator fun Month.plus(months: IntMonths): Month {
 operator fun Month.minus(months: IntMonths) = plus(-months)
 
 fun Int.toMonth() = Month(this)
-
-fun isLeapDay(month: Month, day: Int) = month == Month.FEBRUARY && day == 29

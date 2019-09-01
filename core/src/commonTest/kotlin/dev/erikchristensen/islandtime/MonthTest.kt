@@ -9,24 +9,24 @@ import kotlin.test.assertFailsWith
 
 class MonthTest {
     @Test
-    fun `Month() returns a month by number`() {
+    fun `Month() returns a month by ISO number`() {
         assertEquals(Month.APRIL, Month(4))
     }
 
     @Test
-    fun `Int_toMonth() throws an exception when out of range`() {
-        assertFailsWith<IllegalArgumentException> { 0.toMonth() }
-        assertFailsWith<IllegalArgumentException> { 13.toMonth() }
+    fun `Int_toMonth() throws an exception when the value isn't a valid ISO month number`() {
+        assertFailsWith<DateTimeException> { 0.toMonth() }
+        assertFailsWith<DateTimeException> { 13.toMonth() }
     }
 
     @Test
-    fun `Int_toMonth() works correctly when in range`() {
+    fun `Int_toMonth() gets a Month from an ISO month number when it's in range`() {
         assertEquals(Month.JANUARY, 1.toMonth())
         assertEquals(Month.DECEMBER, 12.toMonth())
     }
 
     @Test
-    fun `month number`() {
+    fun `month number property`() {
         assertEquals(1, Month.JANUARY.number)
         assertEquals(12, Month.DECEMBER.number)
     }
@@ -85,12 +85,12 @@ class MonthTest {
     }
 
     @Test
-    fun `adds zero month spans correctly`() {
+    fun `adding zero months has no effect`() {
         assertEquals(Month.JUNE, Month.JUNE + 0.months)
     }
 
     @Test
-    fun `adds positive month spans correctly`() {
+    fun `add positive months`() {
         assertEquals(Month.JULY, Month.JUNE + 1.months)
         assertEquals(Month.FEBRUARY, Month.NOVEMBER + 3.months)
         assertEquals(Month.JANUARY, Month.JANUARY + 12.months)
@@ -98,24 +98,24 @@ class MonthTest {
     }
 
     @Test
-    fun `adds negative month spans correctly`() {
+    fun `add negative months`() {
         assertEquals(Month.DECEMBER, Month.JANUARY + (-1).months)
         assertEquals(Month.DECEMBER, Month.JANUARY + -(13.months))
     }
 
     @Test
-    fun `subtracts zero month spans correctly`() {
+    fun `subtracting zero months has no effect`() {
         assertEquals(Month.MAY, Month.MAY - 0.months)
     }
 
     @Test
-    fun `subtracts positive month spans correctly`() {
+    fun `subtract positive months`() {
         assertEquals(Month.NOVEMBER, Month.JANUARY - 2.months)
         assertEquals(Month.JANUARY, Month.MAY - 16.months)
     }
 
     @Test
-    fun `subtracts negative month spans correctly`() {
+    fun `subtract negative months`() {
         assertEquals(Month.JANUARY, Month.NOVEMBER - (-2).months)
         assertEquals(Month.MAY, Month.MAY - -(12.months))
     }

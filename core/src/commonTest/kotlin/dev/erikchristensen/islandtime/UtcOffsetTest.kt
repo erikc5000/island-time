@@ -8,15 +8,21 @@ import kotlin.test.*
 class UtcOffsetTest {
     @Test
     fun `UtcOffset() requires all values to have the same sign`() {
-        assertFailsWith<IllegalArgumentException> { UtcOffset((-2).hours, 30.minutes) }
-        assertFailsWith<IllegalArgumentException> { UtcOffset(2.hours, 0.minutes, (-5).seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes) }
+        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes, 5.seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes, (-5).seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(2.hours, 0.minutes, (-5).seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(2.hours, (-30).minutes, 5.seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(2.hours, (-30).minutes, (-5).seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(0.hours, (-30).minutes, 5.seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(0.hours, 30.minutes, (-5).seconds) }
     }
 
     @Test
     fun `UtcOffset() requires each component to be valid individually`() {
-        assertFailsWith<IllegalArgumentException> { UtcOffset(19.hours) }
-        assertFailsWith<IllegalArgumentException> { UtcOffset(2.hours, 60.minutes) }
-        assertFailsWith<IllegalArgumentException> { UtcOffset((-2).hours, 0.minutes, (-60).seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(19.hours) }
+        assertFailsWith<DateTimeException> { UtcOffset(2.hours, 60.minutes) }
+        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 0.minutes, (-60).seconds) }
     }
 
     @Test

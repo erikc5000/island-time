@@ -13,32 +13,6 @@ enum class SignStyle {
     ALWAYS
 }
 
-enum class DateTimeField {
-    YEAR,
-    MONTH_OF_YEAR,
-    DAY_OF_YEAR,
-    DAY_OF_MONTH,
-    DAY_OF_WEEK,
-    HOUR_OF_DAY,
-    MINUTE_OF_HOUR,
-    SECOND_OF_MINUTE,
-    NANO_OF_SECOND,
-    MICRO_OF_SECOND,
-    MILLI_OF_SECOND,
-    UTC_OFFSET_SIGN,
-    UTC_OFFSET_HOURS,
-    UTC_OFFSET_MINUTES,
-    UTC_OFFSET_SECONDS,
-    UTC_OFFSET_ZERO,
-    PERIOD_OF_YEARS,
-    PERIOD_OF_MONTHS,
-    PERIOD_OF_WEEKS,
-    PERIOD_OF_DAYS,
-    DURATION_OF_HOURS,
-    DURATION_OF_MINUTES,
-    DURATION_OF_SECONDS,
-}
-
 inline class DateTimeParseResult(
     private val fields: MutableMap<DateTimeField, Long> = hashMapOf()
 ) {

@@ -41,6 +41,11 @@ class DateTimeTest {
             DateTime(2018, Month.FEBRUARY, 2, 18, 0, 12),
             DateTime(2018, Month.MAY, 4, 18, 0).copy(second = 12, dayOfYear = 33)
         )
+
+        assertEquals(
+            DateTime(2018, Month.DECEMBER, 4, 18, 2),
+            DateTime(2018, Month.MAY, 4, 18, 0).copy(minute = 2, monthNumber = 12)
+        )
     }
 
     @Test
