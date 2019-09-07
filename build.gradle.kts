@@ -7,6 +7,11 @@ plugins {
 buildscript {
     repositories {
         mavenCentral()
+        google()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:3.5.0")
     }
 }
 
@@ -28,11 +33,5 @@ allprojects {
     }
 
     group = "dev.erikchristensen.islandtime"
-    version = "0.0.1"
-}
-
-tasks {
-    val clean by registering(Delete::class) {
-        delete(buildDir)
-    }
+    version = "0.1.0-SNAPSHOT"
 }

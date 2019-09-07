@@ -180,3 +180,13 @@ internal fun DateTimeParseResult.toYearMonth(): YearMonth? {
         null
     }
 }
+
+/**
+ * Combine a year and month to get a [YearMonth]
+ */
+infix fun Year.at(month: Month) = YearMonth(value, month)
+
+/**
+ * Combine a year and month number to get a [YearMonth]
+ */
+fun Year.atMonth(number: Int) = YearMonth(value, Month(number))

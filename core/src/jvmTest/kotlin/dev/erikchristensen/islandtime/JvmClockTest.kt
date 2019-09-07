@@ -11,6 +11,6 @@ class JvmClockTest {
 
     @Test
     fun `timeZone()`() {
-        assertThat(systemClock().timeZone).isNotNull()
+        assertThat(systemClock().timeZone.regionId).isNotEmpty()
     }
 }

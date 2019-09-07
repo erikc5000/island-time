@@ -8,6 +8,27 @@ import kotlin.test.*
 
 class YearMonthTest {
     @Test
+    fun at_infix_combines_Year_and_Month() {
+        assertEquals(
+            YearMonth(2018, Month.DECEMBER),
+            Year(2018) at Month.DECEMBER
+        )
+
+        assertEquals(
+            YearMonth(2018, Month.APRIL),
+            Year(2018) at Month(4)
+        )
+    }
+
+    @Test
+    fun atMonth_combines_Year_and_Month() {
+        assertEquals(
+            YearMonth(2018, Month.APRIL),
+            Year(2018).atMonth(4)
+        )
+    }
+
+    @Test
     fun `isValid can be used to check if the YearMonth was initialized with an invalid value`() {
         assertFalse { YearMonth(0.months).isValid }
         assertFalse { YearMonth(100.centuries.asMonths()).isValid }

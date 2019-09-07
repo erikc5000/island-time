@@ -1,8 +1,7 @@
 include(
     ":core",
     ":tools:code-generator",
-    ":extensions:java-time",
-    ":extensions:threetenbp"
+    ":extensions:threetenabp"
 )
 
 enableFeaturePreview("GRADLE_METADATA")

@@ -1,6 +1,6 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.interval.LongMilliseconds
+import dev.erikchristensen.islandtime.interval.*
 
 interface Clock {
     val timeZone: TimeZone
@@ -15,9 +15,52 @@ internal expect class SystemClock() : Clock {
 fun systemClock(): Clock = SystemClock()
 
 class FixedClock(
-    private val unixEpochMilliseconds: LongMilliseconds,
+    private var unixEpochMilliseconds: LongMilliseconds,
     override val timeZone: TimeZone = TimeZone.UTC
 ) : Clock {
+
+    operator fun plusAssign(milliseconds: LongMilliseconds) {
+        unixEpochMilliseconds += milliseconds
+    }
+
+    operator fun plusAssign(milliseconds: IntMilliseconds) {
+        unixEpochMilliseconds += milliseconds
+    }
+
+    operator fun plusAssign(seconds: LongSeconds) {
+        unixEpochMilliseconds += seconds
+    }
+
+    operator fun plusAssign(seconds: IntSeconds) {
+        unixEpochMilliseconds += seconds
+    }
+
+    operator fun plusAssign(minutes: LongMinutes) {
+        unixEpochMilliseconds += minutes
+    }
+
+    operator fun plusAssign(minutes: IntMinutes) {
+        unixEpochMilliseconds += minutes
+    }
+
+    operator fun plusAssign(hours: LongHours) {
+        unixEpochMilliseconds += hours
+    }
+
+    operator fun plusAssign(hours: IntHours) {
+        unixEpochMilliseconds += hours
+    }
+
+    operator fun plusAssign(days: LongDays) {
+        unixEpochMilliseconds += days
+    }
+
+    operator fun plusAssign(days: IntDays) {
+        unixEpochMilliseconds += days
+    }
+
+    operator fun minusAssign(milliseconds: LongMilliseconds) = plusAssign(-milliseconds)
+    operator fun minusAssign(milliseconds: IntMilliseconds) = plusAssign(-milliseconds)
 
     override fun instant(): Instant {
         return Instant(unixEpochMilliseconds)

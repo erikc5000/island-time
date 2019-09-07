@@ -174,11 +174,11 @@ class DateTimeTest {
     fun `toString() returns an ISO-8601 extended calendar date time`() {
         assertEquals(
             "2019-08-01T00:01",
-            DateTime(2019, Month.AUGUST, 1,0, 1).toString()
+            DateTime(2019, Month.AUGUST, 1, 0, 1).toString()
         )
         assertEquals(
             "0001-10-10T01:01:01.000000001",
-            DateTime(1, Month.OCTOBER, 10,1, 1, 1, 1).toString()
+            DateTime(1, Month.OCTOBER, 10, 1, 1, 1, 1).toString()
         )
     }
 

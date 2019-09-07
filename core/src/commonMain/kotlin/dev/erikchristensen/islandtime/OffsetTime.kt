@@ -174,12 +174,7 @@ internal const val MAX_OFFSET_TIME_STRING_LENGTH = MAX_TIME_STRING_LENGTH + MAX_
 internal fun StringBuilder.appendOffsetTime(offsetTime: OffsetTime): StringBuilder {
     with(offsetTime) {
         appendTime(time)
-
-        if (offset.isZero) {
-            append('Z')
-        } else {
-            appendUtcOffset(offset)
-        }
+        appendUtcOffset(offset)
     }
     return this
 }

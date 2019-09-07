@@ -49,8 +49,8 @@ class OffsetDateTime(
         offset: UtcOffset
     ) : this(DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanoOfSecond), offset)
 
-    val date: Date get() = dateTime.date
-    val time: Time get() = dateTime.time
+    inline val date: Date get() = dateTime.date
+    inline val time: Time get() = dateTime.time
 
     operator fun component1() = dateTime
     operator fun component2() = offset
@@ -141,6 +141,8 @@ infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
 infix fun OffsetTime.on(date: Date) = OffsetDateTime(date, time, offset)
 
+infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTime(offset), offset)
+
 inline val OffsetDateTime.hour: Int get() = dateTime.hour
 inline val OffsetDateTime.minute: Int get() = dateTime.minute
 inline val OffsetDateTime.second: Int get() = dateTime.second
@@ -154,6 +156,11 @@ inline val OffsetDateTime.isInLeapYear: Boolean get() = dateTime.isInLeapYear
 inline val OffsetDateTime.isLeapDay: Boolean get() = dateTime.isLeapDay
 inline val OffsetDateTime.lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
 inline val OffsetDateTime.lengthOfYear: IntDays get() = dateTime.lengthOfYear
+
+/**
+ * Get the year and month of this date
+ */
+inline val OffsetDateTime.yearMonth: YearMonth get() = dateTime.yearMonth
 
 val OffsetDateTime.unixEpochSeconds: LongSeconds
     get() = date.unixEpochDays + time.secondOfDay.seconds - offset.totalSeconds
@@ -275,12 +282,7 @@ internal const val MAX_OFFSET_DATE_TIME_STRING_LENGTH = MAX_DATE_TIME_STRING_LEN
 internal fun StringBuilder.appendOffsetDateTime(offsetDateTime: OffsetDateTime): StringBuilder {
     with(offsetDateTime) {
         appendDateTime(dateTime)
-
-        if (offset.isZero) {
-            append('Z')
-        } else {
-            appendUtcOffset(offset)
-        }
+        appendUtcOffset(offset)
     }
     return this
 }

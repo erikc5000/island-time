@@ -102,6 +102,15 @@ class DateTime(
     companion object {
         val MIN = DateTime(Date.MIN, Time.MIN)
         val MAX = DateTime(Date.MAX, Time.MAX)
+
+        fun ofUnixEpochMilliseconds(unixEpochMilliseconds: LongMilliseconds, offset: UtcOffset): DateTime {
+            val localMilliseconds = unixEpochMilliseconds + offset.totalSeconds
+            val localEpochDays = localMilliseconds.toWholeDays()
+            val remainingNanoseconds = (localMilliseconds - localEpochDays).asNanoseconds()
+            val date = Date.ofUnixEpochDays(localEpochDays)
+            val time = Time.ofNanosecondOfDay(remainingNanoseconds.value)
+            return DateTime(date, time)
+        }
     }
 }
 
@@ -114,6 +123,15 @@ infix fun Time.on(date: Date) = DateTime(date, this)
  * Combine a Date with a Time to create a DateTime
  */
 infix fun Date.at(time: Time) = DateTime(this, time)
+
+fun Instant.toDateTime(offset: UtcOffset): DateTime {
+    return DateTime.ofUnixEpochMilliseconds(unixEpochMilliseconds, offset)
+}
+
+fun Instant.toDateTime(timeZone: TimeZone): DateTime {
+    val offset = timeZone.rules.offsetAt(this)
+    return DateTime.ofUnixEpochMilliseconds(unixEpochMilliseconds, offset)
+}
 
 inline val DateTime.hour: Int get() = time.hour
 inline val DateTime.minute: Int get() = time.minute
@@ -128,6 +146,11 @@ inline val DateTime.isInLeapYear: Boolean get() = date.isInLeapYear
 inline val DateTime.isLeapDay: Boolean get() = date.isLeapDay
 inline val DateTime.lengthOfMonth: IntDays get() = date.lengthOfMonth
 inline val DateTime.lengthOfYear: IntDays get() = date.lengthOfYear
+
+/**
+ * Get the year and month of this date
+ */
+inline val DateTime.yearMonth: YearMonth get() = date.yearMonth
 
 operator fun DateTime.plus(daysToAdd: LongDays): DateTime {
     return if (daysToAdd == 0L.days) {

@@ -157,15 +157,19 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
 internal const val MAX_UTC_OFFSET_STRING_LENGTH = 9
 
 internal fun StringBuilder.appendUtcOffset(utcOffset: UtcOffset): StringBuilder {
-    utcOffset.toComponents { sign, hours, minutes, seconds ->
-        append(if (sign < 0) '-' else '+')
-        appendZeroPadded(hours.value, 2)
-        append(':')
-        appendZeroPadded(minutes.value, 2)
-
-        if (seconds.value != 0) {
+    if (utcOffset.isZero) {
+        append('Z')
+    } else {
+        utcOffset.toComponents { sign, hours, minutes, seconds ->
+            append(if (sign < 0) '-' else '+')
+            appendZeroPadded(hours.value, 2)
             append(':')
-            appendZeroPadded(seconds.value, 2)
+            appendZeroPadded(minutes.value, 2)
+
+            if (seconds.value != 0) {
+                append(':')
+                appendZeroPadded(seconds.value, 2)
+            }
         }
     }
     return this

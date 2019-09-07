@@ -1,18 +1,17 @@
 plugins {
     kotlin("multiplatform")
+    `maven-publish`
+    signing
 }
-
-apply(plugin = "maven-publish")
 
 kotlin {
     jvm {
         withJava()
     }
 //    js {
-//        browser {
-//        }
-//        nodejs {
-//        }
+//        useCommonJs()
+//        browser()
+//        nodejs()
 //    }
     // For ARM, should be changed to iosArm32 or iosArm64
     // For Linux, should be changed to e.g. linuxX64
@@ -25,6 +24,7 @@ kotlin {
 
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation("co.touchlab:stately:0.9.3")
             }
         }
         val commonTest by getting {
@@ -33,26 +33,26 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        jvm().compilations["main"].defaultSourceSet {
+        val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
             }
         }
-        jvm().compilations["test"].defaultSourceSet {
+        val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
                 implementation("com.google.truth:truth:1.0")
             }
         }
-//        jsMain {
+//        val jsMain by getting {
 //            dependencies {
-//                implementation kotlin('stdlib-js')
+//                implementation(kotlin("stdlib-js"))
 //            }
 //        }
-//        jsTest {
+//        val jsTest by getting {
 //            dependencies {
-//                implementation kotlin('test-js')
+//                implementation(kotlin("test-js"))
 //            }
 //        }
 //        mingwMain {

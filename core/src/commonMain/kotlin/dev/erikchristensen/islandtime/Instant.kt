@@ -31,11 +31,6 @@ inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<I
     }
 }
 
-fun Instant.atOffset(offset: UtcOffset): OffsetDateTime {
-    val dateTime = this.asUtcDateTime() + offset.totalSeconds
-    return OffsetDateTime(dateTime, offset)
-}
-
 internal fun Instant.asUtcDateTime(): DateTime {
     val days = unixEpochMilliseconds.toWholeDays()
     val remainingMilliseconds = unixEpochMilliseconds - days
