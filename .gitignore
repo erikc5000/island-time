@@ -2,6 +2,7 @@
 .gradle/
 .idea/
 build/
+*.iml
 
 # Local configuration file
 local.properties
