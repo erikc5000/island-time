@@ -1,5 +1,6 @@
 package dev.erikchristensen.islandtime
 
+import dev.erikchristensen.islandtime.interval.hours
 import dev.erikchristensen.islandtime.interval.milliseconds
 import dev.erikchristensen.islandtime.tz.*
 import kotlin.test.AfterTest
@@ -99,6 +100,13 @@ class RegionalDateTimeTest {
             DateTime(2019, 3, 3, 1, 0) at
                 TimeZone("America/New_York")
         )
+
+        val actual = DateTime(2019, 11, 3, 2, 0) at
+                TimeZone("America/New_York")
+
+        assertEquals(UtcOffset((-4).hours), actual.offset)
+        assertEquals(DateTime(2019, 11, 3, 2, 0), actual.dateTime)
+        assertEquals(TimeZone("America/New_York"), actual.timeZone)
     }
 
     @Test
