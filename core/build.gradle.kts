@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
     `maven-publish`
@@ -13,12 +15,32 @@ kotlin {
 //        browser()
 //        nodejs()
 //    }
-    // For ARM, should be changed to iosArm32 or iosArm64
-    // For Linux, should be changed to e.g. linuxX64
-    // For MacOS, should be changed to e.g. macosX64
-    // For Windows, should be changed to e.g. mingwX64
-//    mingwX64("mingw")
+
+    //select iOS target platform depending on the Xcode environment variables
+    val iOSTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
+        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
+            ::iosArm64
+        else
+            ::iosX64
+
+    iOSTarget("ios") {
+        binaries {
+            framework {
+                baseName = "core"
+            }
+        }
+    }
+
+    (targets["ios"] as KotlinNativeTarget).compilations["main"].extraOpts.add("-Xobjc-generics")
+
     sourceSets {
+        all {
+            languageSettings.apply {
+                enableLanguageFeature("InlineClasses")
+                progressiveMode = true
+            }
+        }
+
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated", "src/commonMain/kotlin")
 
@@ -61,3 +83,16 @@ kotlin {
 //        }
     }
 }
+
+tasks.create("iosTest") {
+    dependsOn("linkDebugTestIos")
+    doLast {
+        val testBinaryPath =
+            (kotlin.targets["ios"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
+        exec {
+            commandLine("xcrun", "simctl", "spawn", "iPhone Xʀ", testBinaryPath)
+        }
+    }
+}
+
+tasks["check"].dependsOn("iosTest")
