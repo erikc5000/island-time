@@ -45,13 +45,13 @@ dependencies {
     testImplementation("com.google.truth:truth:1.0")
 }
 
-//project.afterEvaluate {
-//    publishing {
-//        publications {
-//            create<MavenPublication>("mavenThreetenabp") {
-//                artifactId = "threetenabp-extensions"
-//                artifact(tasks.getByName("bundleReleaseAar"))
-//            }
-//        }
-//    }
-//}
+project.afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("mavenAar") {
+                artifactId = "threetenabp-extensions"
+                artifact(tasks.getByName("bundleReleaseAar"))
+            }
+        }
+    }
+}
