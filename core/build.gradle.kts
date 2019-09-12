@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
     kotlin("multiplatform")
@@ -16,22 +17,8 @@ kotlin {
 //        nodejs()
 //    }
 
-    //select iOS target platform depending on the Xcode environment variables
-    val iOSTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget =
-        if (System.getenv("SDK_NAME")?.startsWith("iphoneos") == true)
-            ::iosArm64
-        else
-            ::iosX64
-
-    iOSTarget("ios") {
-        binaries {
-            framework {
-                baseName = "core"
-            }
-        }
-    }
-
-    (targets["ios"] as KotlinNativeTarget).compilations["main"].extraOpts.add("-Xobjc-generics")
+    iosArm64()
+    iosX64()
 
     sourceSets {
         all {
@@ -77,22 +64,41 @@ kotlin {
 //                implementation(kotlin("test-js"))
 //            }
 //        }
-//        mingwMain {
-//        }
-//        mingwTest {
-//        }
+        val iosMain by creating {
+            dependsOn(commonMain)
+        }
     }
-}
 
-tasks.create("iosTest") {
-    dependsOn("linkDebugTestIos")
-    doLast {
-        val testBinaryPath =
-            (kotlin.targets["ios"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile.absolutePath
-        exec {
-            commandLine("xcrun", "simctl", "spawn", "iPhone Xʀ", testBinaryPath)
+    configure(listOf(iosArm64(), iosX64())) {
+        compilations.getByName("main") {
+            source(sourceSets.getByName("iosMain"))
+            extraOpts.add("-Xobjc-generics")
+        }
+
+        binaries {
+            framework {
+                baseName = "core"
+            }
         }
     }
 }
 
-tasks["check"].dependsOn("iosTest")
+if (HostManager.hostIsMac) {
+    tasks.register("iosTest") {
+        val device = project.findProperty("iosDevice")?.toString() ?: "iPhone Xʀ"
+        dependsOn(tasks.named("linkDebugTestIosX64"))
+        group = JavaBasePlugin.VERIFICATION_GROUP
+        description = "Run tests for target 'ios' on an iOS simulator"
+
+        doLast {
+            val binary = (kotlin.targets["iosX64"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile
+            exec {
+                commandLine("xcrun", "simctl", "spawn", device, binary.absolutePath)
+            }
+        }
+    }
+
+    tasks.named("check") {
+        dependsOn(tasks.named("iosTest"))
+    }
+}
