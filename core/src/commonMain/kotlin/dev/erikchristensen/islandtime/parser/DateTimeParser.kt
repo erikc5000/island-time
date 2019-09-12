@@ -13,11 +13,13 @@ enum class SignStyle {
     ALWAYS
 }
 
-inline class DateTimeParseResult(
-    private val fields: MutableMap<DateTimeField, Long> = hashMapOf()
+data class DateTimeParseResult(
+    val fields: MutableMap<DateTimeField, Long> = hashMapOf(),
+    var timeZoneRegion: String? = null
 ) {
-    fun deepCopy() = DateTimeParseResult().apply { fields.putAll(this@DateTimeParseResult.fields) }
-    fun count() = fields.count()
+    fun deepCopy() = DateTimeParseResult(timeZoneRegion = timeZoneRegion).apply {
+        fields.putAll(this@DateTimeParseResult.fields)
+    }
 
     operator fun set(field: DateTimeField, value: Long) {
         fields[field] = value
@@ -150,6 +152,42 @@ class StringLiteralParser internal constructor(
             onParsed(context)
             position + string.length
         }
+    }
+}
+
+enum class StringParseAction {
+    ACCEPT_AND_CONTINUE,
+    REJECT_AND_STOP
+}
+
+class StringParser internal constructor(
+    private val length: IntRange,
+    private val onEachChar: DateTimeParseContext.(char: Char, index: Int) -> StringParseAction,
+    private val onParsed: (DateTimeParseContext.(parsed: String) -> Unit)
+) : DateTimeParser() {
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        if (position >= text.length) {
+            return position.inv()
+        }
+
+        var currentPosition = position
+
+        while (currentPosition < text.length &&
+            (length.isEmpty() || currentPosition - position <= length.last)
+        ) {
+            if (onEachChar(context, text[currentPosition], currentPosition) == StringParseAction.REJECT_AND_STOP) {
+                break
+            }
+            currentPosition++
+        }
+
+        if (!length.isEmpty() && currentPosition - position !in length) {
+            return currentPosition.inv()
+        }
+
+        onParsed(context, text.substring(position, currentPosition))
+        return currentPosition
     }
 }
 
