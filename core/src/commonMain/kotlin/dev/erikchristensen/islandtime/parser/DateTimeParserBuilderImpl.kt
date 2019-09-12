@@ -36,7 +36,7 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     override fun wholeNumber(
         length: IntRange,
         field: DateTimeField,
-        builder:WholeNumberParserBuilder.() -> Unit
+        builder: WholeNumberParserBuilder.() -> Unit
     ) {
         wholeNumber(length) {
             onParsed { parsed -> result[field] = parsed }
@@ -61,6 +61,10 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
 
     override fun fraction(length: IntRange, builder: FractionParserBuilder.() -> Unit) {
         parsers += FractionParserBuilderImpl(length.first, length.last).apply(builder).build()
+    }
+
+    override fun string(length: IntRange, builder: StringParserBuilder.() -> Unit) {
+        parsers += StringParserBuilderImpl(length).apply(builder).build()
     }
 
     override fun literal(char: Char, builder: LiteralParserBuilder.() -> Unit) {
@@ -109,7 +113,7 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     }
 }
 
-class SignParserBuilderImpl internal constructor(): SignParserBuilder {
+class SignParserBuilderImpl internal constructor() : SignParserBuilder {
     private var onParsed: (DateTimeParseContext.(parsed: Int) -> Unit) = {}
 
     override fun onParsed(action: DateTimeParseContext.(parsed: Int) -> Unit) {
@@ -121,7 +125,7 @@ class SignParserBuilderImpl internal constructor(): SignParserBuilder {
     }
 }
 
-class DecimalSeparatorParserBuilderImpl internal constructor(): LiteralParserBuilder {
+class DecimalSeparatorParserBuilderImpl internal constructor() : LiteralParserBuilder {
     private var onParsed: (DateTimeParseContext.() -> Unit) = {}
 
     override fun onParsed(action: DateTimeParseContext.() -> Unit) {
@@ -220,6 +224,30 @@ class FractionParserBuilderImpl internal constructor(
         return FractionParser(
             minLength,
             maxLength,
+            onParsed
+        )
+    }
+}
+
+class StringParserBuilderImpl internal constructor(
+    private val length: IntRange
+) : StringParserBuilder {
+    private var onEachChar: DateTimeParseContext.(char: Char, index: Int) -> StringParseAction =
+        { _, _ -> StringParseAction.REJECT_AND_STOP }
+    private var onParsed: (DateTimeParseContext.(parsed: String) -> Unit) = {}
+
+    override fun onEachChar(action: DateTimeParseContext.(char: Char, index: Int) -> StringParseAction) {
+        onEachChar = action
+    }
+
+    override fun onParsed(action: DateTimeParseContext.(parsed: String) -> Unit) {
+        onParsed = action
+    }
+
+    fun build(): DateTimeParser {
+        return StringParser(
+            length,
+            onEachChar,
             onParsed
         )
     }

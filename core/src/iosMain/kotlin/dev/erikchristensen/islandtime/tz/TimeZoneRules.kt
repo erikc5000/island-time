@@ -6,9 +6,9 @@ import dev.erikchristensen.islandtime.interval.seconds
 import platform.Foundation.*
 
 actual object PlatformDefault : TimeZoneRulesProvider {
-    override fun getAvailableRegionIds(): Set<String> {
-        return (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
-    }
+    private val cachedRegionIds = (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
+
+    override fun getAvailableRegionIds() = cachedRegionIds
 
     override fun getRules(regionId: String): TimeZoneRules {
         return IosTimeZoneRules(
@@ -58,7 +58,7 @@ private class IosTimeZoneRules(
             listOf(offsetAt(date))
         }
     }
-    
+
     private fun offsetAt(date: NSDate): UtcOffset {
         return timeZone.secondsFromGMTForDate(date).toInt().seconds.asUtcOffset()
     }

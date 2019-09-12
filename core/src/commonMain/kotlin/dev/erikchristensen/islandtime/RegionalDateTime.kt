@@ -1,13 +1,22 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.date.Date
+import dev.erikchristensen.islandtime.date.unixEpochDays
 import dev.erikchristensen.islandtime.interval.*
+import dev.erikchristensen.islandtime.parser.DateTimeParseResult
+import dev.erikchristensen.islandtime.parser.DateTimeParser
+import dev.erikchristensen.islandtime.parser.Iso8601
+import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
 
+/**
+ * A date and time in a particular region
+ */
 class RegionalDateTime private constructor(
     val dateTime: DateTime,
     val timeZone: TimeZone,
     val offset: UtcOffset
-) {
+) : Comparable<RegionalDateTime> {
+
     inline val date: Date get() = dateTime.date
     inline val time: Time get() = dateTime.time
     inline val hour: Int get() = dateTime.hour
@@ -23,7 +32,36 @@ class RegionalDateTime private constructor(
     inline val isLeapDay: Boolean get() = dateTime.isLeapDay
     inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
     inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
+
+    /**
+     * Get the year and month of this date
+     */
     inline val yearMonth: YearMonth get() = dateTime.yearMonth
+
+    val unixEpochSeconds: LongSeconds
+        get() = date.unixEpochDays.asSeconds() + time.secondOfDay.seconds - offset.totalSeconds
+
+    override fun compareTo(other: RegionalDateTime): Int {
+        val secondDiff = unixEpochSeconds.compareTo(other.unixEpochSeconds)
+
+        return if (secondDiff != 0) {
+            secondDiff
+        } else {
+            val nanoDiff = nanoOfSecond - other.nanoOfSecond
+
+            if (nanoDiff != 0) {
+                nanoDiff
+            } else {
+                val dateTimeDiff = dateTime.compareTo(other.dateTime)
+
+                if (dateTimeDiff != 0) {
+                    dateTimeDiff
+                } else {
+                    timeZone.compareTo(timeZone)
+                }
+            }
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is RegionalDateTime &&
@@ -190,6 +228,38 @@ fun RegionalDateTime.toOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
 fun Clock.now(): RegionalDateTime {
     return instant() at timeZone
+}
+
+fun String.toRegionalDateTime() = toRegionalDateTime(Iso8601.Extended.REGIONAL_DATE_TIME_PARSER)
+
+fun String.toRegionalDateTime(parser: DateTimeParser): RegionalDateTime {
+    val result = parser.parse(this)
+    return result.toRegionalDateTime() ?: raiseParserFieldResolutionException("RegionalDateTime", this)
+}
+
+internal fun DateTimeParseResult.toRegionalDateTime(): RegionalDateTime? {
+    val dateTime = this.toDateTime()
+    val utcOffset = this.toUtcOffset()
+    val regionId = timeZoneRegion
+
+    return if (dateTime != null && utcOffset != null && regionId != null) {
+        val timeZone = TimeZone(regionId)
+
+        // TODO: Revisit TimeZone and consider making it non-inline with built-in validation
+        if (!timeZone.isValid) {
+            throw DateTimeException("Invalid time zone region '$timeZoneRegion'")
+        }
+
+        if (!timeZone.rules.isValidOffset(dateTime, utcOffset)) {
+            // TODO: Check if the offset is valid for the time zone as we understand it and if not, interpret it as
+            //  an instant.  Need to do some rework on Instant.
+            RegionalDateTime(dateTime, timeZone, utcOffset)
+        } else {
+            RegionalDateTime(dateTime, timeZone, utcOffset)
+        }
+    } else {
+        null
+    }
 }
 
 internal const val MAX_REGIONAL_DATE_TIME_STRING_LENGTH =

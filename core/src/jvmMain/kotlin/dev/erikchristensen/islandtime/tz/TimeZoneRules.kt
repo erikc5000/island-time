@@ -16,9 +16,7 @@ import java.time.zone.ZoneRulesProvider
  * A time zone rules provider that draws from the database built into the java.time library
  */
 actual object PlatformDefault : TimeZoneRulesProvider {
-    override fun getAvailableRegionIds(): Set<String> {
-        return ZoneRulesProvider.getAvailableZoneIds()
-    }
+    override fun getAvailableRegionIds(): Set<String> = ZoneRulesProvider.getAvailableZoneIds()
 
     override fun getRules(regionId: String): TimeZoneRules {
         return try {
@@ -29,7 +27,7 @@ actual object PlatformDefault : TimeZoneRulesProvider {
     }
 }
 
-internal class JavaTimeZoneRules(
+private class JavaTimeZoneRules(
     private val javaZoneRules: ZoneRules
 ) : TimeZoneRules {
 
@@ -48,8 +46,9 @@ internal class JavaTimeZoneRules(
         return offsets.map { it.toIslandUtcOffset() }
     }
 
-    override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition {
-        return JavaTimeZoneOffsetTransition(javaZoneRules.getTransition(dateTime.toJavaLocalDateTime()))
+    override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
+        val transition = javaZoneRules.getTransition(dateTime.toJavaLocalDateTime())
+        return if (transition != null) JavaTimeZoneOffsetTransition(transition) else null
     }
 
     override fun isValidOffset(
@@ -60,7 +59,7 @@ internal class JavaTimeZoneRules(
     }
 }
 
-internal class JavaTimeZoneOffsetTransition(
+private class JavaTimeZoneOffsetTransition(
     private val javaZoneOffsetTransition: ZoneOffsetTransition
 ) : TimeZoneOffsetTransition {
 

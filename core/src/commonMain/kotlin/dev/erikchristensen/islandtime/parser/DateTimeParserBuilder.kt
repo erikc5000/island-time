@@ -1,5 +1,7 @@
 package dev.erikchristensen.islandtime.parser
 
+import dev.erikchristensen.islandtime.MAX_TIME_ZONE_STRING_LENGTH
+
 @DslMarker
 annotation class DateTimeParserDsl
 
@@ -43,6 +45,11 @@ interface DateTimeParserBuilder {
         builder: FractionParserBuilder.() -> Unit = {}
     )
 
+    fun string(
+        length: IntRange = IntRange.EMPTY,
+        builder: StringParserBuilder.() -> Unit
+    )
+
     operator fun Char.unaryPlus() {
         literal(this)
     }
@@ -82,6 +89,12 @@ interface DecimalNumberParserBuilder {
 @DateTimeParserDsl
 interface FractionParserBuilder {
     fun onParsed(action: DateTimeParseContext.(parsed: Long) -> Unit)
+}
+
+@DateTimeParserDsl
+interface StringParserBuilder {
+    fun onEachChar(action: DateTimeParseContext.(char: Char, index: Int) -> StringParseAction)
+    fun onParsed(action: DateTimeParseContext.(parsed: String) -> Unit)
 }
 
 @DateTimeParserDsl
@@ -208,5 +221,31 @@ fun DateTimeParserBuilder.durationOfFractionalSeconds(
             result[DateTimeField.NANO_OF_SECOND] = fraction
         }
         builder()
+    }
+}
+
+fun DateTimeParserBuilder.timeZoneRegion() {
+    string(length = 1..MAX_TIME_ZONE_STRING_LENGTH) {
+        onEachChar { char, index ->
+            if (index == 0) {
+                when (char) {
+                    in 'A'..'Z',
+                    in 'a'..'z' -> StringParseAction.ACCEPT_AND_CONTINUE
+                    else -> StringParseAction.REJECT_AND_STOP
+                }
+            } else {
+                when (char) {
+                    in 'A'..'Z',
+                    in 'a'..'z',
+                    in '-'..'9',
+                    '~',
+                    '_',
+                    '+' -> StringParseAction.ACCEPT_AND_CONTINUE
+                    else -> StringParseAction.REJECT_AND_STOP
+                }
+            }
+        }
+
+        onParsed { result.timeZoneRegion = it }
     }
 }

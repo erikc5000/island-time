@@ -47,7 +47,7 @@ class ThreeTenAbp(context: Context, assetPath: String = "") : TimeZoneRulesProvi
     }
 }
 
-internal class JavaTimeZoneRules(
+private class JavaTimeZoneRules(
     private val javaZoneRules: ZoneRules
 ) : TimeZoneRules {
 
@@ -79,7 +79,7 @@ internal class JavaTimeZoneRules(
     }
 }
 
-internal class JavaTimeZoneOffsetTransition(
+private class JavaTimeZoneOffsetTransition(
     private val javaZoneOffsetTransition: ZoneOffsetTransition
 ) : TimeZoneOffsetTransition {
 
