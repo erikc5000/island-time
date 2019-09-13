@@ -24,4 +24,6 @@ inline class TimeZone(val regionId: String) : Comparable<TimeZone> {
     }
 }
 
+fun String.toTimeZone() = TimeZone(this)
+
 internal const val MAX_TIME_ZONE_STRING_LENGTH = 50

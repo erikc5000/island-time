@@ -96,8 +96,8 @@ class RegionalDateTimeTest {
     fun `when constructed from a DateTime that falls in an overlap, a preferred offset may be provided`() {
         val actual = RegionalDateTime(
             DateTime(2019, 11, 3, 1, 0),
-            TimeZone("America/New_York"),
-            UtcOffset((-5).hours)
+            UtcOffset((-5).hours),
+            TimeZone("America/New_York")
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
@@ -109,8 +109,8 @@ class RegionalDateTimeTest {
     fun `when constructed from a DateTime that falls in an overlap, an invalid preferred offset is ignored`() {
         val actual = RegionalDateTime(
             DateTime(2019, 11, 3, 1, 0),
-            TimeZone("America/New_York"),
-            UtcOffset((-8).hours)
+            UtcOffset((-8).hours),
+            TimeZone("America/New_York")
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
@@ -122,8 +122,8 @@ class RegionalDateTimeTest {
     fun `when constructed from a DateTime that doesn't fall in an overlap, the preferred offset is ignored`() {
         val actual = RegionalDateTime(
             DateTime(2019, 11, 3, 2, 0),
-            TimeZone("America/New_York"),
-            UtcOffset((-4).hours)
+            UtcOffset((-4).hours),
+            TimeZone("America/New_York")
         )
 
         assertEquals(DateTime(2019, 11, 3, 2, 0), actual.dateTime)
@@ -211,26 +211,26 @@ class RegionalDateTimeTest {
         assertEquals(
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
-                UtcOffset((-4).hours)
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             ),
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
-                UtcOffset((-4).hours)
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             )
         )
 
         assertNotEquals(
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
-                UtcOffset((-4).hours)
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             ),
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
-                UtcOffset((-5).hours)
+                UtcOffset((-5).hours),
+                TimeZone("America/New_York")
             )
         )
 
@@ -251,13 +251,13 @@ class RegionalDateTimeTest {
         assertEquals(
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
-                UtcOffset((-4).hours)
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             ),
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
-                UtcOffset((-5).hours)
+                UtcOffset((-5).hours),
+                TimeZone("America/New_York")
             ).withEarlierOffsetAtOverlap()
         )
     }
@@ -281,13 +281,13 @@ class RegionalDateTimeTest {
         assertEquals(
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
-                UtcOffset((-5).hours)
+                UtcOffset((-5).hours),
+                TimeZone("America/New_York")
             ),
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
-                UtcOffset((-4).hours)
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             ).withLaterOffsetAtOverlap()
         )
     }
@@ -320,8 +320,8 @@ class RegionalDateTimeTest {
             "2019-11-03T01:30-05:00[America/New_York]",
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
-                UtcOffset((-5).hours)
+                UtcOffset((-5).hours),
+                TimeZone("America/New_York")
             ).toString()
         )
     }
@@ -360,8 +360,8 @@ class RegionalDateTimeTest {
         assertEquals(
             RegionalDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
-                TimeZone("America/New_York"),
-                (-4).hours.asUtcOffset()
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             ),
             "2019-05-05T12:00-04:00[America/New_York]".toRegionalDateTime()
         )
@@ -369,8 +369,8 @@ class RegionalDateTimeTest {
         assertEquals(
             RegionalDateTime(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
-                (-5).hours.asUtcOffset()
+                UtcOffset((-5).hours),
+                TimeZone("America/New_York")
             ),
             "2019-11-03T01:00-05:00[America/New_York]".toRegionalDateTime()
         )
@@ -381,8 +381,8 @@ class RegionalDateTimeTest {
         assertEquals(
             RegionalDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
-                TimeZone("America/New_York"),
-                (-4).hours.asUtcOffset()
+                UtcOffset((-4).hours),
+                TimeZone("America/New_York")
             ),
             "20190505 1200-04[America/New_York]".toRegionalDateTime(Iso8601.REGIONAL_DATE_TIME_PARSER)
         )

@@ -136,7 +136,7 @@ fun DateTimeParserBuilder.secondOfMinute(length: Int, builder: WholeNumberParser
 
 fun DateTimeParserBuilder.nanosecondOfSecond() {
     fraction {
-        onParsed { parsed -> result[DateTimeField.NANO_OF_SECOND] = parsed }
+        onParsed { parsed -> result[DateTimeField.NANOSECOND_OF_SECOND] = parsed }
     }
 }
 
@@ -218,7 +218,7 @@ fun DateTimeParserBuilder.durationOfFractionalSeconds(
     decimalNumber {
         onParsed { whole, fraction ->
             result[DateTimeField.DURATION_OF_SECONDS] = whole
-            result[DateTimeField.NANO_OF_SECOND] = fraction
+            result[DateTimeField.NANOSECOND_OF_SECOND] = fraction
         }
         builder()
     }

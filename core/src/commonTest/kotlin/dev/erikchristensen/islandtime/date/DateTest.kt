@@ -431,39 +431,17 @@ class DateTest {
     }
 
     @Test
-    fun `atStartOfDay() returns DateTime at midnight of same day`() {
-        assertEquals(
-            DateTime(
-                Date(2019, Month.JULY, 1),
-                Time.MIDNIGHT
-            ),
-            Date(2019, Month.JULY, 1).atStartOfDay()
-        )
-    }
-
-    @Test
-    fun `atEndOfDay() returns DateTime just before the end of the same day`() {
-        assertEquals(
-            DateTime(
-                Date(2019, Month.JULY, 1),
-                Time(23, 59, 59, 999_999_999)
-            ),
-            Date(2019, Month.JULY, 1).atEndOfDay()
-        )
-    }
-
-    @Test
     fun `yearMonth property returns a YearMonth with the same month and year`() {
         assertEquals(YearMonth(2018, Month.JULY), Date(2018, Month.JULY, 4).yearMonth)
     }
 
     @Test
-    fun `unixEpochDays property works correctly`() {
-        assertEquals(0L.days, Date(1970, Month.JANUARY, 1).unixEpochDays)
-        assertEquals(1L.days, Date(1970, Month.JANUARY, 2).unixEpochDays)
-        assertEquals((-1L).days, Date(1969, Month.DECEMBER, 31).unixEpochDays)
-        assertEquals(18_105L.days, Date(2019, Month.JULY, 28).unixEpochDays)
-        assertEquals((-4_472L).days, Date(1957, Month.OCTOBER, 4).unixEpochDays)
+    fun `daysSinceUnixEpoch property works correctly`() {
+        assertEquals(0L.days, Date(1970, Month.JANUARY, 1).daysSinceUnixEpoch)
+        assertEquals(1L.days, Date(1970, Month.JANUARY, 2).daysSinceUnixEpoch)
+        assertEquals((-1L).days, Date(1969, Month.DECEMBER, 31).daysSinceUnixEpoch)
+        assertEquals(18_105L.days, Date(2019, Month.JULY, 28).daysSinceUnixEpoch)
+        assertEquals((-4_472L).days, Date(1957, Month.OCTOBER, 4).daysSinceUnixEpoch)
     }
 
     @Test

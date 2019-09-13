@@ -32,7 +32,7 @@ private class JavaTimeZoneRules(
 ) : TimeZoneRules {
 
     override fun offsetAt(instant: Instant): UtcOffset {
-        val offset = javaZoneRules.getOffset(java.time.Instant.ofEpochMilli(instant.unixEpochMilliseconds.value))
+        val offset = javaZoneRules.getOffset(java.time.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
         return offset.toIslandUtcOffset()
     }
 

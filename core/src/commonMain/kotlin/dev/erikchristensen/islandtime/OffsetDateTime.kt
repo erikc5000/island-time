@@ -1,7 +1,6 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.date.Date
-import dev.erikchristensen.islandtime.date.unixEpochDays
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.DateTimeParseResult
 import dev.erikchristensen.islandtime.parser.DateTimeParser
@@ -31,9 +30,9 @@ class OffsetDateTime(
         hour: Int,
         minute: Int,
         second: Int,
-        nanoOfSecond: Int,
+        nanosecond: Int,
         offset: UtcOffset
-    ) : this(DateTime(year, month, dayOfMonth, hour, minute, second, nanoOfSecond), offset)
+    ) : this(DateTime(year, month, dayOfMonth, hour, minute, second, nanosecond), offset)
 
     /**
      * Create an [OffsetDateTime]
@@ -45,12 +44,130 @@ class OffsetDateTime(
         hour: Int,
         minute: Int,
         second: Int,
-        nanoOfSecond: Int,
+        nanosecond: Int,
         offset: UtcOffset
-    ) : this(DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanoOfSecond), offset)
+    ) : this(DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanosecond), offset)
 
     inline val date: Date get() = dateTime.date
     inline val time: Time get() = dateTime.time
+    inline val hour: Int get() = dateTime.hour
+    inline val minute: Int get() = dateTime.minute
+    inline val second: Int get() = dateTime.second
+    inline val nanosecond: Int get() = dateTime.nanosecond
+    inline val month: Month get() = dateTime.month
+    inline val dayOfWeek: DayOfWeek get() = dateTime.dayOfWeek
+    inline val dayOfMonth: Int get() = dateTime.dayOfMonth
+    inline val dayOfYear: Int get() = dateTime.dayOfYear
+    inline val year: Int get() = dateTime.year
+    inline val isInLeapYear: Boolean get() = dateTime.isInLeapYear
+    inline val isLeapDay: Boolean get() = dateTime.isLeapDay
+    inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
+    inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
+
+    /**
+     * Get the year and month of this date
+     */
+    inline val yearMonth: YearMonth get() = dateTime.yearMonth
+
+    inline val secondsSinceUnixEpoch: LongSeconds
+        get() = dateTime.secondsSinceUnixEpochAt(offset)
+
+    inline val millisecondsSinceUnixEpoch: LongMilliseconds
+        get() = dateTime.millisecondsSinceUnixEpochAt(offset)
+
+    /**
+     * Change the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
+     * represented by it remains the same
+     */
+    fun adjustedTo(newOffset: UtcOffset): OffsetDateTime {
+        return if (newOffset == offset) {
+            this
+        } else {
+            val newDateTime = dateTime + (newOffset.totalSeconds - offset.totalSeconds)
+            OffsetDateTime(newDateTime, newOffset)
+        }
+    }
+
+    operator fun plus(daysToAdd: LongDays): OffsetDateTime {
+        return if (daysToAdd == 0L.days) {
+            this
+        } else {
+            copy(dateTime = dateTime + daysToAdd)
+        }
+    }
+
+    operator fun plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
+
+    operator fun plus(monthsToAdd: LongMonths): OffsetDateTime {
+        return if (monthsToAdd == 0L.months) {
+            this
+        } else {
+            copy(dateTime = dateTime + monthsToAdd)
+        }
+    }
+
+    operator fun plus(monthsToAdd: IntMonths) = plus(monthsToAdd.toLong())
+
+    operator fun plus(yearsToAdd: LongYears): OffsetDateTime {
+        return if (yearsToAdd == 0L.years) {
+            this
+        } else {
+            copy(dateTime = dateTime + yearsToAdd)
+        }
+    }
+
+    operator fun plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong())
+
+    operator fun plus(hoursToAdd: LongHours): OffsetDateTime {
+        return if (hoursToAdd == 0L.hours) {
+            this
+        } else {
+            copy(dateTime = dateTime + hoursToAdd)
+        }
+    }
+
+    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
+
+    operator fun plus(minutesToAdd: LongMinutes): OffsetDateTime {
+        return if (minutesToAdd == 0L.minutes) {
+            this
+        } else {
+            copy(dateTime = dateTime + minutesToAdd)
+        }
+    }
+
+    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
+
+    operator fun plus(secondsToAdd: LongSeconds): OffsetDateTime {
+        return if (secondsToAdd == 0L.seconds) {
+            this
+        } else {
+            copy(dateTime = dateTime + secondsToAdd)
+        }
+    }
+
+    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
+
+    operator fun plus(nanosecondsToAdd: LongNanoseconds): OffsetDateTime {
+        return if (nanosecondsToAdd == 0L.nanoseconds) {
+            this
+        } else {
+            copy(dateTime = dateTime + nanosecondsToAdd)
+        }
+    }
+
+    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
+
+    operator fun minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
+    operator fun minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
+    operator fun minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+    operator fun minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
+    operator fun minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
+    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
+    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
     operator fun component1() = dateTime
     operator fun component2() = offset
@@ -63,12 +180,12 @@ class OffsetDateTime(
         return if (offset == other.offset) {
             dateTime.compareTo(other.dateTime)
         } else {
-            val secondDiff = unixEpochSeconds.value.compareTo(other.unixEpochSeconds.value)
+            val secondDiff = secondsSinceUnixEpoch.compareTo(other.secondsSinceUnixEpoch)
 
             if (secondDiff != 0) {
                 secondDiff
             } else {
-                val nanoDiff = nanoOfSecond - other.nanoOfSecond
+                val nanoDiff = nanosecond - other.nanosecond
 
                 if (nanoDiff != 0) {
                     nanoDiff
@@ -113,9 +230,9 @@ class OffsetDateTime(
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
-        nanoOfSecond: Int = this.nanoOfSecond,
+        nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset
-    ) = OffsetDateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanoOfSecond), offset)
+    ) = OffsetDateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond), offset)
 
     /**
      * Return a new OffsetDateTime, replacing any of the components with new values
@@ -127,9 +244,9 @@ class OffsetDateTime(
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
-        nanoOfSecond: Int = this.nanoOfSecond,
+        nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset
-    ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanoOfSecond), offset)
+    ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond), offset)
 
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
@@ -139,125 +256,7 @@ class OffsetDateTime(
 
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-infix fun OffsetTime.on(date: Date) = OffsetDateTime(date, time, offset)
-
 infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTime(offset), offset)
-
-inline val OffsetDateTime.hour: Int get() = dateTime.hour
-inline val OffsetDateTime.minute: Int get() = dateTime.minute
-inline val OffsetDateTime.second: Int get() = dateTime.second
-inline val OffsetDateTime.nanoOfSecond: Int get() = dateTime.nanoOfSecond
-inline val OffsetDateTime.month: Month get() = dateTime.month
-inline val OffsetDateTime.dayOfWeek: DayOfWeek get() = dateTime.dayOfWeek
-inline val OffsetDateTime.dayOfMonth: Int get() = dateTime.dayOfMonth
-inline val OffsetDateTime.dayOfYear: Int get() = dateTime.dayOfYear
-inline val OffsetDateTime.year: Int get() = dateTime.year
-inline val OffsetDateTime.isInLeapYear: Boolean get() = dateTime.isInLeapYear
-inline val OffsetDateTime.isLeapDay: Boolean get() = dateTime.isLeapDay
-inline val OffsetDateTime.lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
-inline val OffsetDateTime.lengthOfYear: IntDays get() = dateTime.lengthOfYear
-
-/**
- * Get the year and month of this date
- */
-inline val OffsetDateTime.yearMonth: YearMonth get() = dateTime.yearMonth
-
-val OffsetDateTime.unixEpochSeconds: LongSeconds
-    get() = date.unixEpochDays + time.secondOfDay.seconds - offset.totalSeconds
-
-/**
- * Change the offset of an OffsetDateTime, adjusting the date and time components such that the instant represented by
- * it remains the same
- */
-fun OffsetDateTime.adjustedTo(newOffset: UtcOffset): OffsetDateTime {
-    return if (newOffset == offset) {
-        this
-    } else {
-        val newDateTime = dateTime + (newOffset.totalSeconds - offset.totalSeconds)
-        OffsetDateTime(newDateTime, newOffset)
-    }
-}
-
-operator fun OffsetDateTime.plus(daysToAdd: LongDays): OffsetDateTime {
-    return if (daysToAdd == 0L.days) {
-        this
-    } else {
-        copy(dateTime = dateTime + daysToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
-
-operator fun OffsetDateTime.plus(monthsToAdd: LongMonths): OffsetDateTime {
-    return if (monthsToAdd == 0L.months) {
-        this
-    } else {
-        copy(dateTime = dateTime + monthsToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(monthsToAdd: IntMonths) = plus(monthsToAdd.toLong())
-
-operator fun OffsetDateTime.plus(yearsToAdd: LongYears): OffsetDateTime {
-    return if (yearsToAdd == 0L.years) {
-        this
-    } else {
-        copy(dateTime = dateTime + yearsToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong())
-
-operator fun OffsetDateTime.plus(hoursToAdd: LongHours): OffsetDateTime {
-    return if (hoursToAdd == 0L.hours) {
-        this
-    } else {
-        copy(dateTime = dateTime + hoursToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-
-operator fun OffsetDateTime.plus(minutesToAdd: LongMinutes): OffsetDateTime {
-    return if (minutesToAdd == 0L.minutes) {
-        this
-    } else {
-        copy(dateTime = dateTime + minutesToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-
-operator fun OffsetDateTime.plus(secondsToAdd: LongSeconds): OffsetDateTime {
-    return if (secondsToAdd == 0L.seconds) {
-        this
-    } else {
-        copy(dateTime = dateTime + secondsToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
-
-operator fun OffsetDateTime.plus(nanosecondsToAdd: LongNanoseconds): OffsetDateTime {
-    return if (nanosecondsToAdd == 0L.nanoseconds) {
-        this
-    } else {
-        copy(dateTime = dateTime + nanosecondsToAdd)
-    }
-}
-
-operator fun OffsetDateTime.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
-
-operator fun OffsetDateTime.minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
-operator fun OffsetDateTime.minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
-operator fun OffsetDateTime.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
-operator fun OffsetDateTime.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-operator fun OffsetDateTime.minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
-operator fun OffsetDateTime.minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
-operator fun OffsetDateTime.minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-operator fun OffsetDateTime.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-operator fun OffsetDateTime.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
-operator fun OffsetDateTime.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(Iso8601.Extended.OFFSET_DATE_TIME_PARSER)
 

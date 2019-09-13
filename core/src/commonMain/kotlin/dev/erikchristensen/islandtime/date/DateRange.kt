@@ -36,7 +36,7 @@ class DateRange(
         /**
          * A range containing zero days
          */
-        val EMPTY = DateRange(Date.ofUnixEpochDays(1L.days), Date.ofUnixEpochDays(0L.days))
+        val EMPTY = DateRange(Date.fromDaysSinceUnixEpoch(1L.days), Date.fromDaysSinceUnixEpoch(0L.days))
     }
 }
 
@@ -50,8 +50,8 @@ fun DateRange.random(): Date = random(Random)
  */
 fun DateRange.random(random: Random): Date {
     try {
-        val longRange = first.unixEpochDays.value..last.unixEpochDays.value
-        return Date.ofUnixEpochDays(random.nextLong(longRange).days)
+        val longRange = first.daysSinceUnixEpoch.value..last.daysSinceUnixEpoch.value
+        return Date.fromDaysSinceUnixEpoch(random.nextLong(longRange).days)
     } catch (e: IllegalArgumentException) {
         throw NoSuchElementException(e.message)
     }

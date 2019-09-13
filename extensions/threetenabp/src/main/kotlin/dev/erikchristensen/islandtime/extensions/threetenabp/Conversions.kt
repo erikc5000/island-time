@@ -23,7 +23,7 @@ fun org.threeten.bp.LocalTime.toIslandTime(): Time {
 
 @JvmName("convertToJava")
 fun Time.toJavaLocalTime(): org.threeten.bp.LocalTime {
-    return org.threeten.bp.LocalTime.of(hour, minute, second, nanoOfSecond)
+    return org.threeten.bp.LocalTime.of(hour, minute, second, nanosecond)
 }
 
 @JvmName("convertFromJava")
@@ -36,7 +36,7 @@ fun org.threeten.bp.LocalDateTime.toIslandDateTime(): DateTime {
 
 @JvmName("convertToJava")
 fun DateTime.toJavaLocalDateTime(): org.threeten.bp.LocalDateTime {
-    return org.threeten.bp.LocalDateTime.of(year, month.number, dayOfMonth, hour, minute, second, nanoOfSecond)
+    return org.threeten.bp.LocalDateTime.of(year, month.number, dayOfMonth, hour, minute, second, nanosecond)
 }
 
 @JvmName("convertFromJava")
@@ -53,7 +53,7 @@ fun org.threeten.bp.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
 @JvmName("convertToJava")
 fun OffsetDateTime.toJavaOffsetDateTime(): org.threeten.bp.OffsetDateTime {
     return org.threeten.bp.OffsetDateTime.of(
-        org.threeten.bp.LocalDateTime.of(year, month.number, dayOfMonth, hour, minute, second, nanoOfSecond),
+        org.threeten.bp.LocalDateTime.of(year, month.number, dayOfMonth, hour, minute, second, nanosecond),
         org.threeten.bp.ZoneOffset.ofTotalSeconds(offset.totalSeconds.value)
     )
 }

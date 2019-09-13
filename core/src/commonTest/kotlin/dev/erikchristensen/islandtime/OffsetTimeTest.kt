@@ -44,7 +44,7 @@ class OffsetTimeTest {
     fun `unixEpochNanoseconds property returns the time with offset relative to 1970-01-01Z`() {
         assertEquals(
             1.hours + 2.minutes + 3.seconds + 4.nanoseconds - UtcOffset.MAX.totalSeconds,
-            time1234.unixEpochNanoseconds
+            time1234.nanosecondsSinceStartOfUtcDay
         )
     }
 
@@ -64,7 +64,7 @@ class OffsetTimeTest {
         )
         assertEquals(
             (Time(1, 2, 3, 5) at UtcOffset.MAX),
-            time1234.copy(nanoOfSecond = 5)
+            time1234.copy(nanosecond = 5)
         )
     }
 

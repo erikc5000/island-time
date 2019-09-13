@@ -92,7 +92,7 @@ class OffsetDateTimeTest {
         assertEquals(1, testOffset.hour)
         assertEquals(2, testOffset.minute)
         assertEquals(3, testOffset.second)
-        assertEquals(4, testOffset.nanoOfSecond)
+        assertEquals(4, testOffset.nanosecond)
     }
 
     @Test

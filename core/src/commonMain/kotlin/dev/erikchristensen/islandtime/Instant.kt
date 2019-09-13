@@ -9,10 +9,10 @@ import dev.erikchristensen.islandtime.interval.*
 /**
  * An instant in time with millisecond precision
  */
-inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<Instant> {
+inline class Instant(val millisecondsSinceUnixEpoch: LongMilliseconds) : Comparable<Instant> {
 
     override fun compareTo(other: Instant): Int {
-        return unixEpochMilliseconds.compareTo(other.unixEpochMilliseconds)
+        return millisecondsSinceUnixEpoch.compareTo(other.millisecondsSinceUnixEpoch)
     }
 
     override fun toString(): String {
@@ -32,10 +32,10 @@ inline class Instant(val unixEpochMilliseconds: LongMilliseconds) : Comparable<I
 }
 
 internal fun Instant.asUtcDateTime(): DateTime {
-    val days = unixEpochMilliseconds.toWholeDays()
-    val remainingMilliseconds = unixEpochMilliseconds - days
-    val nanosecondOfDay = remainingMilliseconds.asNanoseconds()
-    return DateTime(Date.ofUnixEpochDays(days), Time.ofNanosecondOfDay(nanosecondOfDay.value))
+    val days = millisecondsSinceUnixEpoch.toWholeDays()
+    val remainingMilliseconds = millisecondsSinceUnixEpoch - days
+    val nanosecondOfDay = remainingMilliseconds.asNanoseconds().value
+    return DateTime(Date.fromDaysSinceUnixEpoch(days), Time.ofNanosecondOfDay(nanosecondOfDay))
 }
 
 /**

@@ -21,12 +21,24 @@ class DateTimeTest {
     }
 
     @Test
-    fun `on infix combines time with date`() {
-        val time = "02:30".toTime()
-
+    fun `Date_atStartOfDay() returns the DateTime at midnight of same day`() {
         assertEquals(
-            DateTime(Date(2019, Month.JANUARY, 1), time),
-            time on Date(2019, Month.JANUARY, 1)
+            DateTime(
+                Date(2019, Month.JULY, 1),
+                Time.MIDNIGHT
+            ),
+            Date(2019, Month.JULY, 1).atStartOfDay()
+        )
+    }
+
+    @Test
+    fun `Date_atEndOfDay() returns the DateTime just before the end of the same day`() {
+        assertEquals(
+            DateTime(
+                Date(2019, Month.JULY, 1),
+                Time(23, 59, 59, 999_999_999)
+            ),
+            Date(2019, Month.JULY, 1).atEndOfDay()
         )
     }
 

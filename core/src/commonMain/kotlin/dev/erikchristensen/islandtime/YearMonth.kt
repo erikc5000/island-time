@@ -10,14 +10,14 @@ import dev.erikchristensen.islandtime.parser.*
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class YearMonth internal constructor(
-    private val monthsRelativeToYear0: IntMonths
+    private val monthsSinceYear0: IntMonths
 ) : Comparable<YearMonth> {
 
     val year: Int
-        get() = monthsRelativeToYear0.toWholeYears().value
+        get() = monthsSinceYear0.toWholeYears().value
 
     val month: Month
-        get() = Month.values()[monthsRelativeToYear0.value % MONTHS_IN_YEAR]
+        get() = Month.values()[monthsSinceYear0.value % MONTHS_IN_YEAR]
 
     /**
      * Is this year month within the supported range?
@@ -26,10 +26,57 @@ inline class YearMonth internal constructor(
      * via Java code, but the validity can be checked via this property.
      */
     val isValid: Boolean
-        get() = this.monthsRelativeToYear0.value in MIN.monthsRelativeToYear0.value..MAX.monthsRelativeToYear0.value
+        get() = this.monthsSinceYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
+
+    val isInLeapYear: Boolean get() = isLeapYear(year)
+
+    /**
+     * Get the range of days within this year and month
+     */
+    val dayRange: IntRange get() = month.dayRangeIn(year)
+
+    /**
+     * Get the range of dates within this year and month
+     */
+    val dateRange: DateRange get() = DateRange(firstDate, lastDate)
+
+    /**
+     * Get the length of this year month in days
+     */
+    val lengthOfMonth: IntDays get() = month.lengthIn(year)
+
+    /**
+     * Get the length of the year in days
+     */
+    val lengthOfYear: IntDays get() = lengthOfYear(year)
+
+    /**
+     * Get the last day of the year month
+     */
+    val lastDay: Int get() = month.lastDayIn(year)
+
+    /**
+     * Get the ordinal date corresponding to the first day of this year month
+     */
+    val firstDayOfYear: Int get() = month.firstDayOfYearIn(year)
+
+    /**
+     * Get the ordinal date corresponding to the last day of this year month
+     */
+    val lastDayOfYear: Int get() = month.lastDayOfYearIn(year)
+
+    /**
+     * Get the [Date] representing the first day in this year and month
+     */
+    val firstDate: Date get() = Date(year, month, 1)
+
+    /**
+     * Get the [Date] representing the last day in this year and month
+     */
+    val lastDate: Date get() = Date(year, month, month.lastDayIn(year))
 
     override fun compareTo(other: YearMonth): Int {
-        return this.monthsRelativeToYear0.value - other.monthsRelativeToYear0.value
+        return this.monthsSinceYear0.value - other.monthsSinceYear0.value
     }
 
     override fun toString(): String {
@@ -51,7 +98,7 @@ inline class YearMonth internal constructor(
     fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
 
     operator fun plus(monthsToAdd: LongMonths): YearMonth {
-        val newValue = monthsRelativeToYear0 + monthsToAdd
+        val newValue = monthsSinceYear0 + monthsToAdd
         checkValid(newValue)
         return YearMonth(newValue.toInt())
     }
@@ -92,66 +139,19 @@ inline class YearMonth internal constructor(
         }
 
         private fun isValid(monthsRelativeToYear0: LongMonths): Boolean {
-            return monthsRelativeToYear0.value in MIN.monthsRelativeToYear0.value..MAX.monthsRelativeToYear0.value
+            return monthsRelativeToYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
         }
 
         private fun checkValid(monthsRelativeToYear0: LongMonths) {
             if (!isValid(monthsRelativeToYear0)) {
                 throw DateTimeException(
                     "Year month '$monthsRelativeToYear0' is outside the supported range of " +
-                        "${MIN.monthsRelativeToYear0}..${MAX.monthsRelativeToYear0}"
+                        "${MIN.monthsSinceYear0}..${MAX.monthsSinceYear0}"
                 )
             }
         }
     }
 }
-
-val YearMonth.isInLeapYear: Boolean get() = isLeapYear(year)
-
-/**
- * Get the range of days within this year and month
- */
-val YearMonth.dayRange: IntRange get() = month.dayRangeIn(year)
-
-/**
- * Get the range of dates within this year and month
- */
-val YearMonth.dateRange: DateRange get() = DateRange(firstDate, lastDate)
-
-/**
- * Get the length of this year month in days
- */
-val YearMonth.lengthOfMonth: IntDays get() = month.lengthIn(year)
-
-/**
- * Get the length of the year in days
- */
-val YearMonth.lengthOfYear: IntDays get() = lengthOfYear(year)
-
-/**
- * Get the last day of the year month
- */
-val YearMonth.lastDay: Int get() = month.lastDayIn(year)
-
-/**
- * Get the ordinal date corresponding to the first day of this year month
- */
-val YearMonth.firstDayOfYear: Int get() = month.firstDayOfYearIn(year)
-
-/**
- * Get the ordinal date corresponding to the last day of this year month
- */
-val YearMonth.lastDayOfYear: Int get() = month.lastDayOfYearIn(year)
-
-/**
- * Get the [Date] representing the first day in this year and month
- */
-val YearMonth.firstDate: Date get() = Date(year, month, 1)
-
-/**
- * Get the [Date] representing the last day in this year and month
- */
-val YearMonth.lastDate: Date get() = Date(year, month, month.lastDayIn(year))
 
 /**
  * Convert an ISO-8601 year-month in extended format into a [YearMonth]
