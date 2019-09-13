@@ -11,13 +11,110 @@ class Time private constructor(
     val hour: Int,
     val minute: Int,
     val second: Int,
-    val nanoOfSecond: Int
+    val nanosecond: Int
 ) : Comparable<Time> {
+
+    val secondOfDay: Int
+        get() = hour * SECONDS_PER_HOUR.toInt() + minute * SECONDS_PER_MINUTE.toInt() + second
+
+    inline val secondsSinceStartOfDay: IntSeconds
+        get() = secondOfDay.seconds
+
+    val nanosecondOfDay: Long
+        get() {
+            return hour * NANOSECONDS_PER_HOUR +
+                minute * NANOSECONDS_PER_MINUTE +
+                second * NANOSECONDS_PER_SECOND +
+                nanosecond
+        }
+
+    inline val nanosecondsSinceStartOfDay: LongNanoseconds
+        get() = nanosecondOfDay.nanoseconds
+
+    operator fun plus(hoursToAdd: LongHours): Time {
+        val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
+
+        return if (wrappedHours.value == 0) {
+            this
+        } else {
+            val newHour = (wrappedHours.value + hour + HOURS_PER_DAY.toInt()) % HOURS_PER_DAY.toInt()
+            return copy(hour = newHour)
+        }
+    }
+
+    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
+
+    operator fun plus(minutesToAdd: LongMinutes): Time {
+        return if (minutesToAdd.value == 0L) {
+            this
+        } else {
+            val currentMinuteOfDay = hour * MINUTES_PER_HOUR.toInt() + minute
+            val wrappedMinutes = (minutesToAdd.value % MINUTES_PER_DAY).toInt()
+            val newMinuteOfDay =
+                (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY.toInt()) % MINUTES_PER_DAY.toInt()
+
+            if (currentMinuteOfDay == newMinuteOfDay) {
+                this
+            } else {
+                val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
+                val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
+                copy(hour = newHour, minute = newMinute)
+            }
+        }
+    }
+
+    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
+
+    operator fun plus(secondsToAdd: LongSeconds): Time {
+        return if (secondsToAdd.value == 0L) {
+            this
+        } else {
+            val currentSecondOfDay = secondOfDay
+            val wrappedSeconds = (secondsToAdd.value % SECONDS_PER_DAY).toInt()
+            val newSecondOfDay =
+                (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY.toInt()) % SECONDS_PER_DAY.toInt()
+
+            if (currentSecondOfDay == newSecondOfDay) {
+                this
+            } else {
+                ofSecondOfDay(newSecondOfDay, nanosecond)
+            }
+        }
+    }
+
+    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
+
+    operator fun plus(nanosecondsToAdd: LongNanoseconds): Time {
+        return if (nanosecondsToAdd.value == 0L) {
+            this
+        } else {
+            val currentNanoOfDay = nanosecondOfDay
+            val wrappedNanos = nanosecondsToAdd.value % NANOSECONDS_PER_DAY
+            val newNanoOfDay = (wrappedNanos + currentNanoOfDay + NANOSECONDS_PER_DAY) % NANOSECONDS_PER_DAY
+
+            if (currentNanoOfDay == newNanoOfDay) {
+                this
+            } else {
+                ofNanosecondOfDay(newNanoOfDay)
+            }
+        }
+    }
+
+    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
+
+    operator fun minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
+    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+    operator fun minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
+    operator fun minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
+    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
+    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
     operator fun component1() = hour
     operator fun component2() = minute
     operator fun component3() = second
-    operator fun component4() = nanoOfSecond
+    operator fun component4() = nanosecond
 
     override fun equals(other: Any?): Boolean {
         return this === other ||
@@ -25,14 +122,14 @@ class Time private constructor(
                 hour == other.hour &&
                 minute == other.minute &&
                 second == other.second &&
-                nanoOfSecond == other.nanoOfSecond)
+                nanosecond == other.nanosecond)
     }
 
     override fun hashCode(): Int {
         var result = hour
         result = 31 * result + minute
         result = 31 * result + second
-        result = 31 * result + nanoOfSecond
+        result = 31 * result + nanosecond
         return result
     }
 
@@ -52,7 +149,7 @@ class Time private constructor(
                 if (secondDiff != 0) {
                     secondDiff
                 } else {
-                    nanoOfSecond.compareTo(other.nanoOfSecond)
+                    nanosecond.compareTo(other.nanosecond)
                 }
             }
         }
@@ -68,8 +165,8 @@ class Time private constructor(
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
-        nanoOfSecond: Int = this.nanoOfSecond
-    ) = invoke(hour, minute, second, nanoOfSecond)
+        nanosecond: Int = this.nanosecond
+    ) = invoke(hour, minute, second, nanosecond)
 
     companion object {
         private val HOURS = (0..23).map { hour -> (::Time)(hour, 0, 0, 0) }
@@ -86,26 +183,26 @@ class Time private constructor(
             hour: Int,
             minute: Int,
             second: Int = 0,
-            nanoOfSecond: Int = 0
+            nanosecond: Int = 0
         ): Time {
-            if (!isValidHour(hour)) {
+            if (hour !in 0 until HOURS_PER_DAY) {
                 throw DateTimeException("'$hour' is not a valid hour")
             }
 
-            return if (minute or second or nanoOfSecond == 0) {
+            return if (minute or second or nanosecond == 0) {
                 HOURS[hour]
             } else {
-                if (!isValidMinute(minute)) {
+                if (minute !in 0 until MINUTES_PER_HOUR) {
                     throw DateTimeException("'$minute' is not a valid minute")
                 }
-                if (!isValidSecond(second)) {
+                if (second !in 0 until SECONDS_PER_MINUTE) {
                     throw DateTimeException("'$second' is not a valid second")
                 }
-                if (!isValidNanoOfSecond(nanoOfSecond)) {
-                    throw DateTimeException("'$nanoOfSecond' is not a valid nanoOfSecond")
+                if (nanosecond !in 0 until NANOSECONDS_PER_SECOND) {
+                    throw DateTimeException("'$nanosecond' is not a valid nanosecond")
                 }
 
-                Time(hour, minute, second, nanoOfSecond)
+                Time(hour, minute, second, nanosecond)
             }
         }
 
@@ -113,7 +210,7 @@ class Time private constructor(
          * Create the [Time] representing a number of seconds since the start of the day and optionally, the number of
          * nanoseconds within that second
          */
-        fun ofSecondOfDay(secondOfDay: Int, nanoOfSecond: Int = 0): Time {
+        fun ofSecondOfDay(secondOfDay: Int, nanosecond: Int = 0): Time {
             if (secondOfDay !in 0 until SECONDS_PER_DAY) {
                 throw DateTimeException("'$secondOfDay' is not a valid second of the day")
             }
@@ -121,7 +218,7 @@ class Time private constructor(
             val hour = secondOfDay / SECONDS_PER_HOUR.toInt()
             val minute = (secondOfDay / SECONDS_PER_MINUTE.toInt()) % MINUTES_PER_HOUR.toInt()
             val second = secondOfDay % SECONDS_PER_MINUTE.toInt()
-            return invoke(hour, minute, second, nanoOfSecond)
+            return invoke(hour, minute, second, nanosecond)
         }
 
         /**
@@ -135,100 +232,11 @@ class Time private constructor(
             val hour = (nanosecondOfDay / NANOSECONDS_PER_HOUR).toInt()
             val minute = ((nanosecondOfDay / NANOSECONDS_PER_MINUTE) % MINUTES_PER_HOUR).toInt()
             val second = ((nanosecondOfDay / NANOSECONDS_PER_SECOND) % SECONDS_PER_MINUTE).toInt()
-            val nanoOfSecond = (nanosecondOfDay % NANOSECONDS_PER_SECOND).toInt()
-            return invoke(hour, minute, second, nanoOfSecond)
+            val nanosecond = (nanosecondOfDay % NANOSECONDS_PER_SECOND).toInt()
+            return invoke(hour, minute, second, nanosecond)
         }
     }
 }
-
-val Time.secondOfDay: Int
-    get() = hour * SECONDS_PER_HOUR.toInt() + minute * SECONDS_PER_MINUTE.toInt() + second
-
-val Time.nanosecondOfDay: Long
-    get() {
-        return hour * NANOSECONDS_PER_HOUR +
-            minute * NANOSECONDS_PER_MINUTE +
-            second * NANOSECONDS_PER_SECOND +
-            nanoOfSecond
-    }
-
-operator fun Time.plus(hoursToAdd: LongHours): Time {
-    val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
-
-    return if (wrappedHours.value == 0) {
-        this
-    } else {
-        val newHour = (wrappedHours.value + hour + HOURS_PER_DAY.toInt()) % HOURS_PER_DAY.toInt()
-        return copy(hour = newHour)
-    }
-}
-
-operator fun Time.plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-
-operator fun Time.plus(minutesToAdd: LongMinutes): Time {
-    return if (minutesToAdd.value == 0L) {
-        this
-    } else {
-        val currentMinuteOfDay = hour * MINUTES_PER_HOUR.toInt() + minute
-        val wrappedMinutes = (minutesToAdd.value % MINUTES_PER_DAY).toInt()
-        val newMinuteOfDay = (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY.toInt()) % MINUTES_PER_DAY.toInt()
-
-        if (currentMinuteOfDay == newMinuteOfDay) {
-            this
-        } else {
-            val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
-            val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
-            copy(hour = newHour, minute = newMinute)
-        }
-    }
-}
-
-operator fun Time.plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-
-operator fun Time.plus(secondsToAdd: LongSeconds): Time {
-    return if (secondsToAdd.value == 0L) {
-        this
-    } else {
-        val currentSecondOfDay = secondOfDay
-        val wrappedSeconds = (secondsToAdd.value % SECONDS_PER_DAY).toInt()
-        val newSecondOfDay = (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY.toInt()) % SECONDS_PER_DAY.toInt()
-
-        if (currentSecondOfDay == newSecondOfDay) {
-            this
-        } else {
-            Time.ofSecondOfDay(newSecondOfDay, nanoOfSecond)
-        }
-    }
-}
-
-operator fun Time.plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
-
-operator fun Time.plus(nanosecondsToAdd: LongNanoseconds): Time {
-    return if (nanosecondsToAdd.value == 0L) {
-        this
-    } else {
-        val currentNanoOfDay = nanosecondOfDay
-        val wrappedNanos = nanosecondsToAdd.value % NANOSECONDS_PER_DAY
-        val newNanoOfDay = (wrappedNanos + currentNanoOfDay + NANOSECONDS_PER_DAY) % NANOSECONDS_PER_DAY
-
-        if (currentNanoOfDay == newNanoOfDay) {
-            this
-        } else {
-            Time.ofNanosecondOfDay(newNanoOfDay)
-        }
-    }
-}
-
-operator fun Time.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
-
-operator fun Time.minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
-operator fun Time.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-operator fun Time.minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
-operator fun Time.minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
-operator fun Time.minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-operator fun Time.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-operator fun Time.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
-operator fun Time.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
 fun String.toTime() = toTime(Iso8601.Extended.TIME_PARSER)
 
@@ -243,8 +251,8 @@ internal fun DateTimeParseResult.toTime(): Time? {
     if (hour != null) {
         val minute = this[DateTimeField.MINUTE_OF_HOUR]?.toInt() ?: 0
         val second = this[DateTimeField.SECOND_OF_MINUTE]?.toInt() ?: 0
-        val nanoOfSecond = this[DateTimeField.NANO_OF_SECOND]?.toInt() ?: 0
-        return Time(hour.toInt(), minute, second, nanoOfSecond)
+        val nanosecond = this[DateTimeField.NANOSECOND_OF_SECOND]?.toInt() ?: 0
+        return Time(hour.toInt(), minute, second, nanosecond)
     }
 
     return null
@@ -258,17 +266,17 @@ internal fun StringBuilder.appendTime(time: Time): StringBuilder {
         append(':')
         appendZeroPadded(minute, 2)
 
-        if (second > 0 || nanoOfSecond > 0) {
+        if (second > 0 || nanosecond > 0) {
             append(':')
             appendZeroPadded(second, 2)
 
-            if (nanoOfSecond > 0) {
+            if (nanosecond > 0) {
                 append('.')
 
                 when {
-                    nanoOfSecond % 1_000_000 == 0 -> appendZeroPadded(nanoOfSecond / 1_000_000, 3)
-                    nanoOfSecond % 1_000 == 0 -> appendZeroPadded(nanoOfSecond / 1_000, 6)
-                    else -> appendZeroPadded(nanoOfSecond, 9)
+                    nanosecond % 1_000_000 == 0 -> appendZeroPadded(nanosecond / 1_000_000, 3)
+                    nanosecond % 1_000 == 0 -> appendZeroPadded(nanosecond / 1_000, 6)
+                    else -> appendZeroPadded(nanosecond, 9)
                 }
             }
         }

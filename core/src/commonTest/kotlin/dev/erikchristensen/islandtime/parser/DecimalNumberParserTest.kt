@@ -58,18 +58,18 @@ class DecimalNumberParserTest {
             decimalNumber {
                 onParsed { whole, fraction ->
                     result[DateTimeField.SECOND_OF_MINUTE] = whole
-                    result[DateTimeField.NANO_OF_SECOND] = fraction
+                    result[DateTimeField.NANOSECOND_OF_SECOND] = fraction
                 }
             }
         }
 
         val result1 = parser.parse("0.1")
         assertEquals(0L, result1[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(100_000_000L, result1[DateTimeField.NANO_OF_SECOND])
+        assertEquals(100_000_000L, result1[DateTimeField.NANOSECOND_OF_SECOND])
 
         val result2 = parser.parse("-5.000000001")
         assertEquals(-5L, result2[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(-1L, result2[DateTimeField.NANO_OF_SECOND])
+        assertEquals(-1L, result2[DateTimeField.NANOSECOND_OF_SECOND])
     }
 
     @Test
@@ -100,10 +100,10 @@ class DecimalNumberParserTest {
     fun `fractionScale controls the magnitude of the fractional part`() {
         val parser = dateTimeParser {
             decimalNumber(fractionScale = 3) {
-                onParsed { _, fraction ->  result[DateTimeField.MILLI_OF_SECOND] = fraction }
+                onParsed { _, fraction ->  result[DateTimeField.MILLISECOND_OF_SECOND] = fraction }
             }
         }
 
-        assertEquals(300L, parser.parse("0.3")[DateTimeField.MILLI_OF_SECOND])
+        assertEquals(300L, parser.parse("0.3")[DateTimeField.MILLISECOND_OF_SECOND])
     }
 }

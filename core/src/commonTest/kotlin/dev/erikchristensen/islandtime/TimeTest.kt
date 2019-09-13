@@ -27,7 +27,7 @@ class TimeTest {
     }
 
     @Test
-    fun `throws an exception when constructed with an invalid nanoOfSecond`() {
+    fun `throws an exception when constructed with an invalid nanosecond`() {
         assertFailsWith<DateTimeException> { Time(0, 0, 0, -1) }
         assertFailsWith<DateTimeException> { Time(0, 0, 0, 1_000_000_000) }
     }
@@ -91,7 +91,7 @@ class TimeTest {
         assertEquals(Time(9, 30, 3), Time(9, 30).copy(second = 3))
         assertEquals(
             Time(9, 30, 0, 3),
-            Time(9, 30).copy(nanoOfSecond = 3)
+            Time(9, 30).copy(nanosecond = 3)
         )
     }
 

@@ -33,7 +33,7 @@ internal class DateDayProgressionIterator(
             next += step.toLong()
         }
 
-        return Date.ofUnixEpochDays(value)
+        return Date.fromDaysSinceUnixEpoch(value)
     }
 }
 

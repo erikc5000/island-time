@@ -7,15 +7,15 @@ import kotlin.test.assertTrue
 
 class InstantTest {
     @Test
-    fun `unixEpochMilliseconds property returns the milliseconds since the Unix epoch`() {
+    fun `millisecondsSinceUnixEpoch property returns the milliseconds since the Unix epoch`() {
         assertEquals(
             0L.milliseconds,
-            Instant.UNIX_EPOCH.unixEpochMilliseconds
+            Instant.UNIX_EPOCH.millisecondsSinceUnixEpoch
         )
 
         assertEquals(
             1566256047821L.milliseconds,
-            Instant(1566256047821L.milliseconds).unixEpochMilliseconds
+            Instant(1566256047821L.milliseconds).millisecondsSinceUnixEpoch
         )
     }
 

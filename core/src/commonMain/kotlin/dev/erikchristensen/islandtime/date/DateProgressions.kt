@@ -2,7 +2,6 @@ package dev.erikchristensen.islandtime.date
 
 import dev.erikchristensen.islandtime.internal.MONTHS_IN_YEAR
 import dev.erikchristensen.islandtime.interval.*
-import dev.erikchristensen.islandtime.lastDayIn
 import kotlin.math.abs
 
 open class DateDayProgression protected constructor(
@@ -18,10 +17,10 @@ open class DateDayProgression protected constructor(
         }
     }
 
-    protected val firstUnixEpochDay: LongDays = first.unixEpochDays
+    protected val firstUnixEpochDay: LongDays = first.daysSinceUnixEpoch
     protected val lastUnixEpochDay: LongDays = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
-    val first: Date get() = Date.ofUnixEpochDays(firstUnixEpochDay)
-    val last: Date get() = Date.ofUnixEpochDays(lastUnixEpochDay)
+    val first: Date get() = Date.fromDaysSinceUnixEpoch(firstUnixEpochDay)
+    val last: Date get() = Date.fromDaysSinceUnixEpoch(lastUnixEpochDay)
 
     /** Is the progression empty? */
     open fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
@@ -135,7 +134,7 @@ fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last,
  * Assumes step is non-zero
  */
 private fun getLastDayInProgression(startInDays: LongDays, endDate: Date, step: IntDays): LongDays {
-    val endInDays = endDate.unixEpochDays
+    val endInDays = endDate.daysSinceUnixEpoch
 
     return when {
         step.value > 0L -> if (startInDays >= endInDays) {

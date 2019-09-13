@@ -13,6 +13,41 @@ inline class UtcOffset internal constructor(
 
     val isValid: Boolean get() = totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS
 
+    /**
+     * Is this the UTC offset of +00:00?
+     */
+    inline val isZero get() = this == ZERO
+
+    /**
+     * Break a UTC offset down into components.  The sign will indicate whether the offset is positive or negative while
+     * each component will be positive.
+     */
+    fun <T> toComponents(
+        action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
+    ): T {
+        val sign = if (totalSeconds.isNegative) -1 else 1
+        val absTotalSeconds = totalSeconds.absoluteValue
+        val hours = (absTotalSeconds.value / SECONDS_PER_HOUR.toInt()).hours
+        val minutes = ((absTotalSeconds.value % SECONDS_PER_HOUR.toInt()) / SECONDS_PER_MINUTE.toInt()).minutes
+        val seconds = absTotalSeconds % SECONDS_PER_MINUTE.toInt()
+
+        return action(sign, hours, minutes, seconds)
+    }
+
+    /**
+     * Break a UTC offset down into components.  If the offset is negative, each component will be negative.
+     */
+    fun <T> toComponents(
+        action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
+    ): T {
+        val hours = (totalSeconds.value / SECONDS_PER_HOUR.toInt()).hours
+        val minutes = ((totalSeconds.value % SECONDS_PER_HOUR.toInt()) / SECONDS_PER_MINUTE.toInt()).minutes
+        val seconds = totalSeconds % SECONDS_PER_MINUTE.toInt()
+
+        return action(hours, minutes, seconds)
+    }
+
+
     override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
 
     override fun toString(): String {
@@ -59,40 +94,6 @@ inline class UtcOffset internal constructor(
             return invoke(hours + minutes + seconds)
         }
     }
-}
-
-/**
- * Is this the UTC offset of +00:00?
- */
-inline val UtcOffset.isZero get() = this == UtcOffset.ZERO
-
-/**
- * Break a UTC offset down into components.  The sign will indicate whether the offset is positive or negative while
- * each component will be positive.
- */
-fun <T> UtcOffset.toComponents(
-    action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
-): T {
-    val sign = if (totalSeconds.isNegative) -1 else 1
-    val absTotalSeconds = totalSeconds.absoluteValue
-    val hours = (absTotalSeconds.value / SECONDS_PER_HOUR.toInt()).hours
-    val minutes = ((absTotalSeconds.value % SECONDS_PER_HOUR.toInt()) / SECONDS_PER_MINUTE.toInt()).minutes
-    val seconds = absTotalSeconds % SECONDS_PER_MINUTE.toInt()
-
-    return action(sign, hours, minutes, seconds)
-}
-
-/**
- * Break a UTC offset down into components.  If the offset is negative, each component will be negative.
- */
-fun <T> UtcOffset.toComponents(
-    action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
-): T {
-    val hours = (totalSeconds.value / SECONDS_PER_HOUR.toInt()).hours
-    val minutes = ((totalSeconds.value % SECONDS_PER_HOUR.toInt()) / SECONDS_PER_MINUTE.toInt()).minutes
-    val seconds = totalSeconds % SECONDS_PER_MINUTE.toInt()
-
-    return action(hours, minutes, seconds)
 }
 
 /**

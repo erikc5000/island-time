@@ -2,7 +2,6 @@ package dev.erikchristensen.islandtime.tz
 
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.internal.MILLISECONDS_PER_SECOND
-import dev.erikchristensen.islandtime.interval.seconds
 import platform.Foundation.*
 
 actual object PlatformDefault : TimeZoneRulesProvider {
@@ -72,7 +71,7 @@ private fun DateTime.toDateComponents(nsTimeZone: NSTimeZone? = null): NSDateCom
         hour = this@toDateComponents.hour.toLong()
         minute = this@toDateComponents.minute.toLong()
         second = this@toDateComponents.second.toLong()
-        nanosecond = this@toDateComponents.nanoOfSecond.toLong()
+        nanosecond = this@toDateComponents.nanosecond.toLong()
 
         if (nsTimeZone != null) {
             timeZone = nsTimeZone
@@ -81,5 +80,5 @@ private fun DateTime.toDateComponents(nsTimeZone: NSTimeZone? = null): NSDateCom
 }
 
 private fun Instant.toTimeInterval(): NSTimeInterval {
-    return unixEpochMilliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
+    return millisecondsSinceUnixEpoch.value.toDouble() / MILLISECONDS_PER_SECOND
 }

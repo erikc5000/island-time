@@ -313,7 +313,7 @@ internal fun DateTimeParseResult.toDuration(): Duration {
     val hours = (this[DateTimeField.DURATION_OF_HOURS] ?: 0L).hours
     val minutes = (this[DateTimeField.DURATION_OF_MINUTES] ?: 0L).minutes
     val seconds = (this[DateTimeField.DURATION_OF_SECONDS] ?: 0L).seconds
-    val nanoseconds = (this[DateTimeField.NANO_OF_SECOND] ?: 0L).nanoseconds
+    val nanoseconds = (this[DateTimeField.NANOSECOND_OF_SECOND] ?: 0L).nanoseconds
 
     return durationOf(
         days + hours + minutes + seconds,

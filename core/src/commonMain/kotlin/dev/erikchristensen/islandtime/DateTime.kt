@@ -20,8 +20,8 @@ class DateTime(
         hour: Int,
         minute: Int,
         second: Int = 0,
-        nanoOfSecond: Int = 0
-    ) : this(Date(year, month, day), Time(hour, minute, second, nanoOfSecond))
+        nanosecond: Int = 0
+    ) : this(Date(year, month, day), Time(hour, minute, second, nanosecond))
 
     constructor(
         year: Int,
@@ -30,8 +30,237 @@ class DateTime(
         hour: Int,
         minute: Int,
         second: Int = 0,
-        nanoOfSecond: Int = 0
-    ) : this(year, Month(monthNumber), day, hour, minute, second, nanoOfSecond)
+        nanosecond: Int = 0
+    ) : this(year, Month(monthNumber), day, hour, minute, second, nanosecond)
+
+    /**
+     * The hour of the day
+     */
+    inline val hour: Int get() = time.hour
+
+    /**
+     * The minute within the hour
+     */
+    inline val minute: Int get() = time.minute
+
+    /**
+     * The second within the minute
+     */
+    inline val second: Int get() = time.second
+
+    /**
+     * The nanosecond within the second
+     */
+    inline val nanosecond: Int get() = time.nanosecond
+
+    /**
+     * The month of the year
+     */
+    inline val month: Month get() = date.month
+
+    /**
+     * The day of the week
+     */
+    inline val dayOfWeek: DayOfWeek get() = date.dayOfWeek
+
+    /**
+     * The day of the month
+     */
+    inline val dayOfMonth: Int get() = date.dayOfMonth
+
+    /**
+     * The day of the year
+     */
+    inline val dayOfYear: Int get() = date.dayOfYear
+
+    /**
+     * The year
+     */
+    inline val year: Int get() = date.year
+
+    /**
+     * true if this date falls within a leap year
+     */
+    inline val isInLeapYear: Boolean get() = date.isInLeapYear
+
+    /**
+     * true if this is a leap day
+     */
+    inline val isLeapDay: Boolean get() = date.isLeapDay
+
+    /**
+     * The length of the date's month in days
+     */
+    inline val lengthOfMonth: IntDays get() = date.lengthOfMonth
+
+    /**
+     * The length of the date's year in days
+     */
+    inline val lengthOfYear: IntDays get() = date.lengthOfYear
+
+    /**
+     * Get the year and month of this date
+     */
+    inline val yearMonth: YearMonth get() = date.yearMonth
+
+    operator fun plus(daysToAdd: LongDays): DateTime {
+        return if (daysToAdd == 0L.days) {
+            this
+        } else {
+            copy(date = date + daysToAdd)
+        }
+    }
+
+    operator fun plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
+    operator fun plus(monthsToAdd: LongMonths) = plus(monthsToAdd.toInt())
+
+    operator fun plus(monthsToAdd: IntMonths): DateTime {
+        return if (monthsToAdd == 0.months) {
+            this
+        } else {
+            copy(date = date + monthsToAdd)
+        }
+    }
+
+    operator fun plus(yearsToAdd: LongYears) = plus(yearsToAdd.toInt())
+
+    operator fun plus(yearsToAdd: IntYears): DateTime {
+        return if (yearsToAdd == 0.years) {
+            this
+        } else {
+            copy(date = date + yearsToAdd)
+        }
+    }
+
+    operator fun plus(hoursToAdd: LongHours): DateTime {
+        return if (hoursToAdd.value == 0L) {
+            this
+        } else {
+            var daysToAdd = hoursToAdd.toWholeDays()
+            val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
+            var newHour = time.hour + wrappedHours.value
+
+            if (newHour >= HOURS_PER_DAY.toInt()) {
+                daysToAdd += 1.days
+                newHour -= HOURS_PER_DAY.toInt()
+            } else if (newHour < 0) {
+                daysToAdd -= 1.days
+                newHour += HOURS_PER_DAY.toInt()
+            }
+
+            val newDate = date + daysToAdd
+            val newTime = time.copy(hour = newHour)
+            DateTime(newDate, newTime)
+        }
+    }
+
+    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
+
+    operator fun plus(minutesToAdd: LongMinutes): DateTime {
+        return if (minutesToAdd.value == 0L) {
+            this
+        } else {
+            var daysToAdd = minutesToAdd.toWholeDays()
+            val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR.toInt() + minute
+            val wrappedMinutes = (minutesToAdd % MINUTES_PER_DAY).toInt()
+            var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes.value
+
+            if (newMinuteOfDay >= MINUTES_PER_DAY.toInt()) {
+                daysToAdd += 1.days
+                newMinuteOfDay -= MINUTES_PER_DAY.toInt()
+            } else if (newMinuteOfDay < 0) {
+                daysToAdd -= 1.days
+                newMinuteOfDay += MINUTES_PER_DAY.toInt()
+            }
+
+            val newDate = date + daysToAdd
+
+            val newTime = if (currentMinuteOfDay == newMinuteOfDay) {
+                time
+            } else {
+                val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
+                val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
+                Time(newHour, newMinute, time.second, time.nanosecond)
+            }
+
+            DateTime(newDate, newTime)
+        }
+    }
+
+    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
+
+    operator fun plus(secondsToAdd: LongSeconds): DateTime {
+        return if (secondsToAdd.value == 0L) {
+            this
+        } else {
+            var daysToAdd = secondsToAdd.toWholeDays()
+            val currentSecondOfDay = time.secondOfDay
+            val wrappedSeconds = (secondsToAdd % SECONDS_PER_DAY).toInt()
+            var newSecondOfDay = currentSecondOfDay + wrappedSeconds.value
+
+            if (newSecondOfDay >= SECONDS_PER_DAY.toInt()) {
+                daysToAdd += 1.days
+                newSecondOfDay -= SECONDS_PER_DAY.toInt()
+            } else if (newSecondOfDay < 0) {
+                daysToAdd -= 1.days
+                newSecondOfDay += SECONDS_PER_DAY.toInt()
+            }
+
+            val newDate = date + daysToAdd
+
+            val newTime = if (currentSecondOfDay == newSecondOfDay) {
+                time
+            } else {
+                Time.ofSecondOfDay(newSecondOfDay, time.nanosecond)
+            }
+
+            DateTime(newDate, newTime)
+        }
+    }
+
+    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
+
+    operator fun plus(nanosecondsToAdd: LongNanoseconds): DateTime {
+        return if (nanosecondsToAdd.value == 0L) {
+            this
+        } else {
+            var daysToAdd = nanosecondsToAdd.toWholeDays()
+            val currentNanosecondOfDay = time.nanosecondOfDay
+            val wrappedNanoseconds = nanosecondsToAdd % NANOSECONDS_PER_DAY
+            var newNanosecondOfDay = currentNanosecondOfDay + wrappedNanoseconds.value
+
+            if (newNanosecondOfDay >= NANOSECONDS_PER_DAY) {
+                daysToAdd += 1.days
+                newNanosecondOfDay -= NANOSECONDS_PER_DAY
+            } else if (newNanosecondOfDay < 0) {
+                daysToAdd -= 1.days
+                newNanosecondOfDay += NANOSECONDS_PER_DAY
+            }
+
+            val newDate = date + daysToAdd
+
+            val newTime = if (currentNanosecondOfDay == newNanosecondOfDay) {
+                time
+            } else {
+                Time.ofNanosecondOfDay(newNanosecondOfDay)
+            }
+
+            DateTime(newDate, newTime)
+        }
+    }
+
+    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
+
+    operator fun minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
+    operator fun minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
+    operator fun minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+    operator fun minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
+    operator fun minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
+    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
+    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
     operator fun component1() = date
     operator fun component2() = time
@@ -70,8 +299,8 @@ class DateTime(
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
-        nanoOfSecond: Int = this.nanoOfSecond
-    ) = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanoOfSecond))
+        nanosecond: Int = this.nanosecond
+    ) = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond))
 
     /**
      * Return a new [DateTime], replacing any of the components with new values
@@ -83,8 +312,8 @@ class DateTime(
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
-        nanoOfSecond: Int = this.nanoOfSecond
-    ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanoOfSecond))
+        nanosecond: Int = this.nanosecond
+    ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
      * Return a new [DateTime], replacing any of the components with new values
@@ -96,220 +325,74 @@ class DateTime(
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
-        nanoOfSecond: Int = this.nanoOfSecond
-    ) = DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanoOfSecond)
+        nanosecond: Int = this.nanosecond
+    ) = DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanosecond)
+
+    fun secondsSinceUnixEpochAt(offset: UtcOffset): LongSeconds {
+        return date.daysSinceUnixEpoch + time.secondsSinceStartOfDay - offset.totalSeconds
+    }
+
+    fun millisecondsSinceUnixEpochAt(offset: UtcOffset): LongMilliseconds {
+        return date.daysSinceUnixEpoch +
+            time.secondsSinceStartOfDay +
+            time.nanosecondsSinceStartOfDay.toWholeMilliseconds() -
+            offset.totalSeconds
+    }
 
     companion object {
         val MIN = DateTime(Date.MIN, Time.MIN)
         val MAX = DateTime(Date.MAX, Time.MAX)
 
-        fun ofUnixEpochMilliseconds(unixEpochMilliseconds: LongMilliseconds, offset: UtcOffset): DateTime {
-            val localMilliseconds = unixEpochMilliseconds + offset.totalSeconds
+        fun fromMillisecondsSinceUnixEpoch(
+            millisecondsSinceUnixEpoch: LongMilliseconds,
+            offset: UtcOffset
+        ): DateTime {
+            val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
             val localEpochDays = localMilliseconds.toWholeDays()
             val remainingNanoseconds = (localMilliseconds - localEpochDays).asNanoseconds()
-            val date = Date.ofUnixEpochDays(localEpochDays)
+            val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
             val time = Time.ofNanosecondOfDay(remainingNanoseconds.value)
+            return DateTime(date, time)
+        }
+
+        fun fromSecondsSinceUnixEpoch(
+            seconds: LongSeconds,
+            nanosecondOfSecond: Int,
+            offset: UtcOffset
+        ): DateTime {
+            val localSeconds = seconds + offset.totalSeconds
+            val localEpochDays = localSeconds.toWholeDays()
+            val remainingSeconds = (localSeconds - localEpochDays).toInt()
+            val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
+            val time = Time.ofSecondOfDay(remainingSeconds.value, nanosecondOfSecond)
             return DateTime(date, time)
         }
     }
 }
 
 /**
- * Combine a Time with a Date to create a DateTime
- */
-infix fun Time.on(date: Date) = DateTime(date, this)
-
-/**
- * Combine a Date with a Time to create a DateTime
+ * Combine a Date with a Time to create a [DateTime]
  */
 infix fun Date.at(time: Time) = DateTime(this, time)
 
+/**
+ * Get the [DateTime] at the start of the day
+ */
+fun Date.atStartOfDay() = DateTime(this, Time.MIDNIGHT)
+
+/**
+ * Get the [DateTime] at the end of the day
+ */
+fun Date.atEndOfDay() = DateTime(this, Time.MAX)
+
 fun Instant.toDateTime(offset: UtcOffset): DateTime {
-    return DateTime.ofUnixEpochMilliseconds(unixEpochMilliseconds, offset)
+    return DateTime.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch, offset)
 }
 
 fun Instant.toDateTime(timeZone: TimeZone): DateTime {
     val offset = timeZone.rules.offsetAt(this)
-    return DateTime.ofUnixEpochMilliseconds(unixEpochMilliseconds, offset)
+    return DateTime.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch, offset)
 }
-
-inline val DateTime.hour: Int get() = time.hour
-inline val DateTime.minute: Int get() = time.minute
-inline val DateTime.second: Int get() = time.second
-inline val DateTime.nanoOfSecond: Int get() = time.nanoOfSecond
-inline val DateTime.month: Month get() = date.month
-inline val DateTime.dayOfWeek: DayOfWeek get() = date.dayOfWeek
-inline val DateTime.dayOfMonth: Int get() = date.dayOfMonth
-inline val DateTime.dayOfYear: Int get() = date.dayOfYear
-inline val DateTime.year: Int get() = date.year
-inline val DateTime.isInLeapYear: Boolean get() = date.isInLeapYear
-inline val DateTime.isLeapDay: Boolean get() = date.isLeapDay
-inline val DateTime.lengthOfMonth: IntDays get() = date.lengthOfMonth
-inline val DateTime.lengthOfYear: IntDays get() = date.lengthOfYear
-
-/**
- * Get the year and month of this date
- */
-inline val DateTime.yearMonth: YearMonth get() = date.yearMonth
-
-operator fun DateTime.plus(daysToAdd: LongDays): DateTime {
-    return if (daysToAdd == 0L.days) {
-        this
-    } else {
-        copy(date = date + daysToAdd)
-    }
-}
-
-operator fun DateTime.plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
-operator fun DateTime.plus(monthsToAdd: LongMonths) = plus(monthsToAdd.toInt())
-
-operator fun DateTime.plus(monthsToAdd: IntMonths): DateTime {
-    return if (monthsToAdd == 0.months) {
-        this
-    } else {
-        copy(date = date + monthsToAdd)
-    }
-}
-
-operator fun DateTime.plus(yearsToAdd: LongYears) = plus(yearsToAdd.toInt())
-
-operator fun DateTime.plus(yearsToAdd: IntYears): DateTime {
-    return if (yearsToAdd == 0.years) {
-        this
-    } else {
-        copy(date = date + yearsToAdd)
-    }
-}
-
-operator fun DateTime.plus(hoursToAdd: LongHours): DateTime {
-    return if (hoursToAdd.value == 0L) {
-        this
-    } else {
-        var daysToAdd = hoursToAdd.toWholeDays()
-        val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
-        var newHour = time.hour + wrappedHours.value
-
-        if (newHour >= HOURS_PER_DAY.toInt()) {
-            daysToAdd += 1.days
-            newHour -= HOURS_PER_DAY.toInt()
-        } else if (newHour < 0) {
-            daysToAdd -= 1.days
-            newHour += HOURS_PER_DAY.toInt()
-        }
-
-        val newDate = date + daysToAdd
-        val newTime = time.copy(hour = newHour)
-        DateTime(newDate, newTime)
-    }
-}
-
-operator fun DateTime.plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-
-operator fun DateTime.plus(minutesToAdd: LongMinutes): DateTime {
-    return if (minutesToAdd.value == 0L) {
-        this
-    } else {
-        var daysToAdd = minutesToAdd.toWholeDays()
-        val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR.toInt() + minute
-        val wrappedMinutes = (minutesToAdd % MINUTES_PER_DAY).toInt()
-        var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes.value
-
-        if (newMinuteOfDay >= MINUTES_PER_DAY.toInt()) {
-            daysToAdd += 1.days
-            newMinuteOfDay -= MINUTES_PER_DAY.toInt()
-        } else if (newMinuteOfDay < 0) {
-            daysToAdd -= 1.days
-            newMinuteOfDay += MINUTES_PER_DAY.toInt()
-        }
-
-        val newDate = date + daysToAdd
-
-        val newTime = if (currentMinuteOfDay == newMinuteOfDay) {
-            time
-        } else {
-            val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
-            val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
-            Time(newHour, newMinute, time.second, time.nanoOfSecond)
-        }
-
-        DateTime(newDate, newTime)
-    }
-}
-
-operator fun DateTime.plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-
-operator fun DateTime.plus(secondsToAdd: LongSeconds): DateTime {
-    return if (secondsToAdd.value == 0L) {
-        this
-    } else {
-        var daysToAdd = secondsToAdd.toWholeDays()
-        val currentSecondOfDay = time.secondOfDay
-        val wrappedSeconds = (secondsToAdd % SECONDS_PER_DAY).toInt()
-        var newSecondOfDay = currentSecondOfDay + wrappedSeconds.value
-
-        if (newSecondOfDay >= SECONDS_PER_DAY.toInt()) {
-            daysToAdd += 1.days
-            newSecondOfDay -= SECONDS_PER_DAY.toInt()
-        } else if (newSecondOfDay < 0) {
-            daysToAdd -= 1.days
-            newSecondOfDay += SECONDS_PER_DAY.toInt()
-        }
-
-        val newDate = date + daysToAdd
-
-        val newTime = if (currentSecondOfDay == newSecondOfDay) {
-            time
-        } else {
-            Time.ofSecondOfDay(newSecondOfDay, time.nanoOfSecond)
-        }
-
-        DateTime(newDate, newTime)
-    }
-}
-
-operator fun DateTime.plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
-
-operator fun DateTime.plus(nanosecondsToAdd: LongNanoseconds): DateTime {
-    return if (nanosecondsToAdd.value == 0L) {
-        this
-    } else {
-        var daysToAdd = nanosecondsToAdd.toWholeDays()
-        val currentNanosecondOfDay = time.nanosecondOfDay
-        val wrappedNanoseconds = nanosecondsToAdd % NANOSECONDS_PER_DAY
-        var newNanosecondOfDay = currentNanosecondOfDay + wrappedNanoseconds.value
-
-        if (newNanosecondOfDay >= NANOSECONDS_PER_DAY) {
-            daysToAdd += 1.days
-            newNanosecondOfDay -= NANOSECONDS_PER_DAY
-        } else if (newNanosecondOfDay < 0) {
-            daysToAdd -= 1.days
-            newNanosecondOfDay += NANOSECONDS_PER_DAY
-        }
-
-        val newDate = date + daysToAdd
-
-        val newTime = if (currentNanosecondOfDay == newNanosecondOfDay) {
-            time
-        } else {
-            Time.ofNanosecondOfDay(newNanosecondOfDay)
-        }
-
-        DateTime(newDate, newTime)
-    }
-}
-
-operator fun DateTime.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
-
-operator fun DateTime.minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
-operator fun DateTime.minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
-operator fun DateTime.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
-operator fun DateTime.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-operator fun DateTime.minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
-operator fun DateTime.minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
-operator fun DateTime.minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-operator fun DateTime.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-operator fun DateTime.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
-operator fun DateTime.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
 
 /**
  * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or

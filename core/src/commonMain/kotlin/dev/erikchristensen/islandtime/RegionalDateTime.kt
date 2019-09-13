@@ -1,7 +1,6 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.date.Date
-import dev.erikchristensen.islandtime.date.unixEpochDays
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.DateTimeParseResult
 import dev.erikchristensen.islandtime.parser.DateTimeParser
@@ -22,7 +21,7 @@ class RegionalDateTime private constructor(
     inline val hour: Int get() = dateTime.hour
     inline val minute: Int get() = dateTime.minute
     inline val second: Int get() = dateTime.second
-    inline val nanoOfSecond: Int get() = dateTime.nanoOfSecond
+    inline val nanosecond: Int get() = dateTime.nanosecond
     inline val month: Month get() = dateTime.month
     inline val dayOfWeek: DayOfWeek get() = dateTime.dayOfWeek
     inline val dayOfMonth: Int get() = dateTime.dayOfMonth
@@ -38,16 +37,19 @@ class RegionalDateTime private constructor(
      */
     inline val yearMonth: YearMonth get() = dateTime.yearMonth
 
-    val unixEpochSeconds: LongSeconds
-        get() = date.unixEpochDays.asSeconds() + time.secondOfDay.seconds - offset.totalSeconds
+    inline val secondsSinceUnixEpoch: LongSeconds
+        get() = dateTime.secondsSinceUnixEpochAt(offset)
+
+    inline val millisecondsSinceUnixEpoch: LongMilliseconds
+        get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
     override fun compareTo(other: RegionalDateTime): Int {
-        val secondDiff = unixEpochSeconds.compareTo(other.unixEpochSeconds)
+        val secondDiff = secondsSinceUnixEpoch.compareTo(other.secondsSinceUnixEpoch)
 
         return if (secondDiff != 0) {
             secondDiff
         } else {
-            val nanoDiff = nanoOfSecond - other.nanoOfSecond
+            val nanoDiff = nanosecond - other.nanosecond
 
             if (nanoDiff != 0) {
                 nanoDiff
@@ -130,9 +132,9 @@ class RegionalDateTime private constructor(
             hour: Int,
             minute: Int,
             second: Int,
-            nanoOfSecond: Int,
+            nanosecond: Int,
             timeZone: TimeZone
-        ) = ofLocal(DateTime(year, month, day, hour, minute, second, nanoOfSecond), timeZone)
+        ) = ofLocal(DateTime(year, month, day, hour, minute, second, nanosecond), timeZone)
 
         operator fun invoke(
             year: Int,
@@ -141,9 +143,9 @@ class RegionalDateTime private constructor(
             hour: Int,
             minute: Int,
             second: Int,
-            nanoOfSecond: Int,
+            nanosecond: Int,
             timeZone: TimeZone
-        ) = ofLocal(DateTime(year, monthNumber, day, hour, minute, second, nanoOfSecond), timeZone)
+        ) = ofLocal(DateTime(year, monthNumber, day, hour, minute, second, nanosecond), timeZone)
 
         operator fun invoke(
             year: Int,
@@ -151,9 +153,9 @@ class RegionalDateTime private constructor(
             hour: Int,
             minute: Int,
             second: Int,
-            nanoOfSecond: Int,
+            nanosecond: Int,
             timeZone: TimeZone
-        ) = ofLocal(DateTime(year, dayOfYear, hour, minute, second, nanoOfSecond), timeZone)
+        ) = ofLocal(DateTime(year, dayOfYear, hour, minute, second, nanosecond), timeZone)
 
         operator fun invoke(date: Date, time: Time, timeZone: TimeZone) = ofLocal(DateTime(date, time), timeZone)
 
@@ -161,11 +163,11 @@ class RegionalDateTime private constructor(
 
         operator fun invoke(
             dateTime: DateTime,
-            timeZone: TimeZone,
-            preferredOffset: UtcOffset
-        ) = ofLocal(dateTime, timeZone, preferredOffset)
+            offset: UtcOffset,
+            timeZone: TimeZone
+        ) = ofLocal(dateTime, timeZone, offset)
 
-        private fun ofLocal(
+        fun ofLocal(
             dateTime: DateTime,
             timeZone: TimeZone,
             preferredOffset: UtcOffset? = null
@@ -191,12 +193,22 @@ class RegionalDateTime private constructor(
             }
         }
 
-        internal fun ofInstant(instant: Instant, timeZone: TimeZone): RegionalDateTime {
+        fun ofInstant(instant: Instant, timeZone: TimeZone): RegionalDateTime {
             val offset = timeZone.rules.offsetAt(instant)
             val dateTime = instant.toDateTime(offset)
             return RegionalDateTime(dateTime, timeZone, offset)
         }
+
+        fun ofInstant(dateTime: DateTime, offset: UtcOffset, timeZone: TimeZone): RegionalDateTime {
+            // FIXME: Precision is lost here. Revisit when Instant gets redone with nanosecond precision.
+            val instant = Instant(dateTime.millisecondsSinceUnixEpochAt(offset))
+            return ofInstant(instant, timeZone)
+        }
     }
+}
+
+fun Clock.now(): RegionalDateTime {
+    return instant() at timeZone
 }
 
 /**
@@ -224,11 +236,22 @@ fun Date.atStartOfDay(timeZone: TimeZone): RegionalDateTime {
     }
 }
 
-fun RegionalDateTime.toOffsetDateTime() = OffsetDateTime(dateTime, offset)
+fun Date.atEndOfDay(timeZone: TimeZone): RegionalDateTime {
+    val dateTime = this at Time.MAX
+    val transition = timeZone.rules.transitionAt(dateTime)
 
-fun Clock.now(): RegionalDateTime {
-    return instant() at timeZone
+    if (transition != null) {
+        if (transition.isGap) {
+            return RegionalDateTime(transition.dateTimeBefore, timeZone)
+        } else if (transition.isOverlap) {
+            return RegionalDateTime(dateTime, transition.offsetAfter, timeZone)
+        }
+    }
+
+    return RegionalDateTime(dateTime, timeZone)
 }
+
+fun RegionalDateTime.toOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
 fun String.toRegionalDateTime() = toRegionalDateTime(Iso8601.Extended.REGIONAL_DATE_TIME_PARSER)
 
@@ -239,10 +262,10 @@ fun String.toRegionalDateTime(parser: DateTimeParser): RegionalDateTime {
 
 internal fun DateTimeParseResult.toRegionalDateTime(): RegionalDateTime? {
     val dateTime = this.toDateTime()
-    val utcOffset = this.toUtcOffset()
+    val offset = this.toUtcOffset()
     val regionId = timeZoneRegion
 
-    return if (dateTime != null && utcOffset != null && regionId != null) {
+    return if (dateTime != null && offset != null && regionId != null) {
         val timeZone = TimeZone(regionId)
 
         // TODO: Revisit TimeZone and consider making it non-inline with built-in validation
@@ -250,12 +273,12 @@ internal fun DateTimeParseResult.toRegionalDateTime(): RegionalDateTime? {
             throw DateTimeException("Invalid time zone region '$timeZoneRegion'")
         }
 
-        if (!timeZone.rules.isValidOffset(dateTime, utcOffset)) {
+        if (!timeZone.rules.isValidOffset(dateTime, offset)) {
             // TODO: Check if the offset is valid for the time zone as we understand it and if not, interpret it as
             //  an instant.  Need to do some rework on Instant.
-            RegionalDateTime(dateTime, timeZone, utcOffset)
+            RegionalDateTime(dateTime, offset, timeZone)
         } else {
-            RegionalDateTime(dateTime, timeZone, utcOffset)
+            RegionalDateTime(dateTime, offset, timeZone)
         }
     } else {
         null

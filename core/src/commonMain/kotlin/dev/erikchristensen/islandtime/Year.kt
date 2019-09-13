@@ -17,6 +17,32 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
      */
     val isValid: Boolean get() = isValidYear(value)
 
+    val isLeap: Boolean get() = isLeapYear(value)
+    val length: IntDays get() = lengthOfYear(value)
+    val lastDay: Int get() = lastDayOfYear(value)
+    inline val dayRange: IntRange get() = 1..lastDay
+    inline val dateRange: DateRange get() = DateRange(firstDate, lastDate)
+    inline val firstDate: Date get() = Date(value, Month.JANUARY, 1)
+    inline val lastDate: Date get() = Date(value, Month.DECEMBER, 31)
+
+    operator fun plus(yearsToAdd: LongYears): Year {
+        val newValue = value + yearsToAdd.value
+        checkValidYear(newValue)
+        return Year(newValue.toInt())
+    }
+
+    operator fun plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong())
+
+    operator fun minus(yearsToSubtract: LongYears): Year {
+        return if (yearsToSubtract.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.years + 1L.years
+        } else {
+            plus(-yearsToSubtract)
+        }
+    }
+
+    operator fun minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+
     override fun compareTo(other: Year) = value - other.value
 
     override fun toString(): String {
@@ -39,45 +65,6 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
         }
     }
 }
-
-val Year.isLeap: Boolean
-    get() = isLeapYear(value)
-
-val Year.length: IntDays
-    get() = lengthOfYear(value)
-
-val Year.lastDay: Int
-    get() = lastDayOfYear(value)
-
-val Year.dayRange: IntRange
-    get() = 1..lastDay
-
-val Year.dateRange: DateRange
-    get() = DateRange(firstDate, lastDate)
-
-val Year.firstDate: Date
-    get() = Date(value, Month.JANUARY, 1)
-
-val Year.lastDate: Date
-    get() = Date(value, Month.DECEMBER, 31)
-
-operator fun Year.plus(yearsToAdd: LongYears): Year {
-    val newValue = value + yearsToAdd.value
-    checkValidYear(newValue)
-    return Year(newValue.toInt())
-}
-
-operator fun Year.plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong())
-
-operator fun Year.minus(yearsToSubtract: LongYears): Year {
-    return if (yearsToSubtract.value == Long.MIN_VALUE) {
-        this + Long.MAX_VALUE.years + 1L.years
-    } else {
-        plus(-yearsToSubtract)
-    }
-}
-
-operator fun Year.minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
 
 fun String.toYear() = toYear(Iso8601.YEAR_PARSER)
 

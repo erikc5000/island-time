@@ -13,12 +13,19 @@ enum class DayOfWeek(val number: Int) {
     SATURDAY(6),
     SUNDAY(7);
 
+    operator fun plus(days: IntDays): DayOfWeek {
+        val daysToAdd = days.value % DAYS_IN_WEEK
+        return values()[(ordinal + (daysToAdd + DAYS_IN_WEEK)) % DAYS_IN_WEEK]
+    }
+
+    operator fun minus(days: IntDays) = plus(-days)
+
     companion object {
         val MIN = MONDAY
         val MAX = SUNDAY
 
         operator fun invoke(number: Int): DayOfWeek {
-            if(number !in MIN.number..MAX.number) {
+            if (number !in MIN.number..MAX.number) {
                 throw DateTimeException("'$number' is not a valid day of week number")
             }
 
@@ -26,12 +33,5 @@ enum class DayOfWeek(val number: Int) {
         }
     }
 }
-
-operator fun DayOfWeek.plus(days: IntDays): DayOfWeek {
-    val daysToAdd = days.value % DAYS_IN_WEEK
-    return DayOfWeek.values()[(ordinal + (daysToAdd + DAYS_IN_WEEK)) % DAYS_IN_WEEK]
-}
-
-operator fun DayOfWeek.minus(days: IntDays) = plus(-days)
 
 fun Int.toDayOfWeek() = DayOfWeek(this)
