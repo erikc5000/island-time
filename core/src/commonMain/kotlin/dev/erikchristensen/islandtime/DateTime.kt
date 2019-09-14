@@ -59,6 +59,11 @@ class DateTime(
     inline val month: Month get() = date.month
 
     /**
+     * The ISO month number
+     */
+    inline val monthNumber: Int get() = month.number
+
+    /**
      * The day of the week
      */
     inline val dayOfWeek: DayOfWeek get() = date.dayOfWeek

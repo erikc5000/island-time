@@ -13,7 +13,7 @@ fun java.time.LocalDate.toIslandDate(): Date {
 
 @JvmName("convertToJava")
 fun Date.toJavaLocalDate(): java.time.LocalDate {
-    return java.time.LocalDate.of(year, month.number, dayOfMonth)
+    return java.time.LocalDate.of(year, monthNumber, dayOfMonth)
 }
 
 @JvmName("convertFromJava")
@@ -36,7 +36,7 @@ fun java.time.LocalDateTime.toIslandDateTime(): DateTime {
 
 @JvmName("convertToJava")
 fun DateTime.toJavaLocalDateTime(): java.time.LocalDateTime {
-    return java.time.LocalDateTime.of(year, month.number, dayOfMonth, hour, minute, second, nanosecond)
+    return java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond)
 }
 
 @JvmName("convertFromJava")
@@ -53,7 +53,7 @@ fun java.time.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
 @JvmName("convertToJava")
 fun OffsetDateTime.toJavaOffsetDateTime(): java.time.OffsetDateTime {
     return java.time.OffsetDateTime.of(
-        java.time.LocalDateTime.of(year, month.number, dayOfMonth, hour, minute, second, nanosecond),
+        java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
         java.time.ZoneOffset.ofTotalSeconds(offset.totalSeconds.value)
     )
 }
@@ -95,5 +95,5 @@ fun java.time.YearMonth.toIslandYearMonth(): YearMonth {
 
 @JvmName("convertToJava")
 fun YearMonth.toJavaYearMonth(): java.time.YearMonth {
-    return java.time.YearMonth.of(year, month.number)
+    return java.time.YearMonth.of(year, monthNumber)
 }

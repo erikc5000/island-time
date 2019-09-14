@@ -34,6 +34,11 @@ class Date private constructor(
     val dayOfYear: Int get() = month.firstDayOfYearIn(year) + dayOfMonth - 1
 
     /**
+     * The ISO month number
+     */
+    inline val monthNumber: Int get() = month.number
+
+    /**
      * true if this date falls within a leap year
      */
     val isInLeapYear: Boolean get() = isLeapYear(year)
@@ -75,10 +80,10 @@ class Date private constructor(
                 total -= year / -4 - year / -100 + year / -400
             }
 
-            total += ((367 * month.number - 362) / MONTHS_IN_YEAR)
+            total += ((367 * monthNumber - 362) / MONTHS_IN_YEAR)
             total += dayOfMonth - 1
 
-            if (month.number > 2) {
+            if (monthNumber > 2) {
                 total -= if (isInLeapYear) 1 else 2
             }
 
@@ -347,7 +352,7 @@ internal fun StringBuilder.appendDate(date: Date): StringBuilder {
     with(date) {
         appendZeroPadded(year, 4)
         append('-')
-        appendZeroPadded(month.number, 2)
+        appendZeroPadded(monthNumber, 2)
         append('-')
         appendZeroPadded(dayOfMonth, 2)
     }

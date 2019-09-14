@@ -16,7 +16,6 @@ kotlin {
 //        browser()
 //        nodejs()
 //    }
-
     iosArm64()
     iosX64()
 
@@ -66,6 +65,10 @@ kotlin {
 //        }
         val iosMain by creating {
             dependsOn(commonMain)
+
+            dependencies {
+                implementation("co.touchlab:stately-collections:0.9.3")
+            }
         }
     }
 
@@ -75,10 +78,8 @@ kotlin {
             extraOpts.add("-Xobjc-generics")
         }
 
-        binaries {
-            framework {
-                baseName = "core"
-            }
+        binaries.framework {
+            baseName = "core"
         }
     }
 }
@@ -92,6 +93,7 @@ if (HostManager.hostIsMac) {
 
         doLast {
             val binary = (kotlin.targets["iosX64"] as KotlinNativeTarget).binaries.getTest("DEBUG").outputFile
+
             exec {
                 commandLine("xcrun", "simctl", "spawn", device, binary.absolutePath)
             }

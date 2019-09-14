@@ -10,6 +10,7 @@ import dev.erikchristensen.islandtime.extensions.threetenabp.toJavaLocalDateTime
 import dev.erikchristensen.islandtime.extensions.threetenabp.toJavaZoneOffset
 import dev.erikchristensen.islandtime.interval.IntSeconds
 import dev.erikchristensen.islandtime.interval.minus
+import dev.erikchristensen.islandtime.interval.seconds
 import dev.erikchristensen.islandtime.tz.TimeZoneOffsetTransition
 import dev.erikchristensen.islandtime.tz.TimeZoneRules
 import dev.erikchristensen.islandtime.tz.TimeZoneRulesException
@@ -34,11 +35,16 @@ class ThreeTenAbp(context: Context, assetPath: String = "") : TimeZoneRulesProvi
 
     constructor(application: Application) : this(application as Context)
 
-    override fun getAvailableRegionIds(): Set<String> {
-        return ZoneRulesProvider.getAvailableZoneIds()
-    }
+    override val databaseVersion: String
+        get() = try {
+            ZoneRulesProvider.getVersions("UTC")?.lastEntry()?.key.orEmpty()
+        } catch (e: ZoneRulesException) {
+            throw TimeZoneRulesException(e.message, e)
+        }
 
-    override fun getRules(regionId: String): TimeZoneRules {
+    override val availableRegionIds: Set<String> = ZoneRulesProvider.getAvailableZoneIds()
+
+    override fun rulesFor(regionId: String): TimeZoneRules {
         return try {
             JavaTimeZoneRules(ZoneRulesProvider.getRules(regionId, false))
         } catch (e: ZoneRulesException) {
@@ -77,6 +83,14 @@ private class JavaTimeZoneRules(
     ): Boolean {
         return javaZoneRules.isValidOffset(dateTime.toJavaLocalDateTime(), offset.toJavaZoneOffset())
     }
+
+    override fun isDaylightSavingsAt(instant: Instant): Boolean {
+        return javaZoneRules.isDaylightSavings(org.threeten.bp.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
+    }
+
+    override fun daylightSavingsAt(instant: Instant): IntSeconds {
+        return javaZoneRules.getDaylightSavings(org.threeten.bp.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value)).seconds.toInt().seconds
+    }
 }
 
 private class JavaTimeZoneOffsetTransition(
@@ -95,7 +109,7 @@ private class JavaTimeZoneOffsetTransition(
     override val offsetAfter: UtcOffset
         get() = javaZoneOffsetTransition.offsetAfter.toIslandUtcOffset()
 
-    override val durationInSeconds: IntSeconds
+    override val duration: IntSeconds
         get() = offsetAfter.totalSeconds - offsetBefore.totalSeconds
 
     override val isGap: Boolean

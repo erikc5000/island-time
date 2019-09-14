@@ -6,10 +6,10 @@ import dev.erikchristensen.islandtime.tz.TimeZoneRulesProvider
 inline class TimeZone(val regionId: String) : Comparable<TimeZone> {
 
     val isValid: Boolean
-        get() = TimeZoneRulesProvider.getAvailableRegionIds().contains(regionId)
+        get() = TimeZoneRulesProvider.availableRegionIds.contains(regionId)
 
     val rules: TimeZoneRules
-        get() = TimeZoneRulesProvider.getRules(regionId)
+        get() = TimeZoneRulesProvider.rulesFor(regionId)
 
     override fun compareTo(other: TimeZone): Int {
         return regionId.compareTo(other.regionId)
