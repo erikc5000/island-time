@@ -8,58 +8,58 @@ class DurationTest {
     fun `ZERO returns a duration with a length of zero`() {
         val duration = Duration.ZERO
         assertEquals(0L.seconds, duration.seconds)
-        assertEquals(0.nanoseconds, duration.nanoOfSeconds)
+        assertEquals(0.nanoseconds, duration.nanosecondAdjustment)
     }
 
     @Test
     fun `durationOf() creates durations with positive hours`() {
         val duration = durationOf(1.hours)
         assertEquals(3600L.seconds, duration.seconds)
-        assertEquals(0.nanoseconds, duration.nanoOfSeconds)
+        assertEquals(0.nanoseconds, duration.nanosecondAdjustment)
     }
 
     @Test
     fun `durationOf() creates durations with negative hours`() {
         val duration = durationOf((-1).hours)
         assertEquals((-3600L).seconds, duration.seconds)
-        assertEquals(0.nanoseconds, duration.nanoOfSeconds)
+        assertEquals(0.nanoseconds, duration.nanosecondAdjustment)
     }
 
     @Test
     fun `durationOf() creates durations with positive nanoseconds`() {
         val duration1 = durationOf(5.nanoseconds)
         assertEquals(0L.seconds, duration1.seconds)
-        assertEquals(5.nanoseconds, duration1.nanoOfSeconds)
+        assertEquals(5.nanoseconds, duration1.nanosecondAdjustment)
 
         val duration2 = durationOf(1_500_000_000.nanoseconds)
         assertEquals(1L.seconds, duration2.seconds)
-        assertEquals(500_000_000.nanoseconds, duration2.nanoOfSeconds)
+        assertEquals(500_000_000.nanoseconds, duration2.nanosecondAdjustment)
     }
 
     @Test
     fun `durationOf() creates durations with negative nanoseconds`() {
         val duration1 = durationOf((-5).nanoseconds)
         assertEquals(0L.seconds, duration1.seconds)
-        assertEquals((-5).nanoseconds, duration1.nanoOfSeconds)
+        assertEquals((-5).nanoseconds, duration1.nanosecondAdjustment)
 
         val duration2 = durationOf((-1_500_000_000).nanoseconds)
         assertEquals((-1L).seconds, duration2.seconds)
-        assertEquals((-500_000_000).nanoseconds, duration2.nanoOfSeconds)
+        assertEquals((-500_000_000).nanoseconds, duration2.nanosecondAdjustment)
     }
 
     @Test
     fun `durationOf() creates durations from seconds and nanoseconds components`() {
         val duration1 = durationOf(1.seconds, (-5).nanoseconds)
         assertEquals(0L.seconds, duration1.seconds)
-        assertEquals(999_999_995.nanoseconds, duration1.nanoOfSeconds)
+        assertEquals(999_999_995.nanoseconds, duration1.nanosecondAdjustment)
 
         val duration2 = durationOf((-2).seconds, 1_200_000_000.nanoseconds)
         assertEquals(0L.seconds, duration2.seconds)
-        assertEquals((-800_000_000).nanoseconds, duration2.nanoOfSeconds)
+        assertEquals((-800_000_000).nanoseconds, duration2.nanosecondAdjustment)
 
         val duration3 = durationOf((-1).seconds, 1_500_000_000.nanoseconds)
         assertEquals(0L.seconds, duration3.seconds)
-        assertEquals(500_000_000.nanoseconds, duration3.nanoOfSeconds)
+        assertEquals(500_000_000.nanoseconds, duration3.nanosecondAdjustment)
     }
 
     @Test
@@ -80,7 +80,7 @@ class DurationTest {
     }
 
     @Test
-    fun `isNegative property returns true if nanoOfSeconds is negative`() {
+    fun `isNegative property returns true if nanosecondAdjustment is negative`() {
         assertTrue { durationOf((-1).nanoseconds).isNegative }
     }
 

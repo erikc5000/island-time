@@ -75,7 +75,7 @@ fun org.threeten.bp.Duration.toIslandDuration(): Duration {
 
 @JvmName("convertToJava")
 fun Duration.toJavaDuration(): org.threeten.bp.Duration {
-    return org.threeten.bp.Duration.ofSeconds(seconds.value, nanoOfSeconds.value.toLong())
+    return org.threeten.bp.Duration.ofSeconds(seconds.value, nanosecondAdjustment.value.toLong())
 }
 
 @JvmName("convertFromJava")
