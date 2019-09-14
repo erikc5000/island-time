@@ -2,16 +2,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform") version "1.3.50" apply false
+    id("com.android.library") version "3.5.0" apply false
 }
 
 buildscript {
     repositories {
         mavenCentral()
         google()
-    }
-
-    dependencies {
-        classpath("com.android.tools.build:gradle:3.5.0")
     }
 }
 
