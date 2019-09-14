@@ -28,16 +28,16 @@ class Duration private constructor(
 
     inline val isZero: Boolean get() = this == ZERO
 
-    inline val isPositive: Boolean
+    val isPositive: Boolean
         get() = seconds.value > 0L || nanosecondAdjustment.value > 0
 
-    inline val isNegative: Boolean
+    val isNegative: Boolean
         get() = seconds.value < 0L || nanosecondAdjustment.value < 0
 
     /**
      * Return the absolute value of this duration
      */
-    inline val absoluteValue: Duration
+    val absoluteValue: Duration
         get() = if (isNegative) -this else this
 
     operator fun unaryMinus() = create(-seconds, -nanosecondAdjustment)

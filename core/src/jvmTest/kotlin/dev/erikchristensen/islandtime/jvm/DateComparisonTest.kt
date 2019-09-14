@@ -2,9 +2,6 @@ package dev.erikchristensen.islandtime.jvm
 
 import com.google.common.truth.Truth.assertThat
 import dev.erikchristensen.islandtime.date.*
-import dev.erikchristensen.islandtime.interval.isNegative
-import dev.erikchristensen.islandtime.interval.normalized
-import dev.erikchristensen.islandtime.interval.unaryMinus
 import org.junit.Test
 import java.time.LocalDate
 import java.time.Period
