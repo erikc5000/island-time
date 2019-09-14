@@ -200,11 +200,6 @@ class PeriodTest {
     }
 
     @Test
-    fun `unaryPlus returns the period unchanged`() {
-        assertEquals(periodOf((-1).years, 1.months, 1.days), +periodOf((-1).years, 1.months, 1.days))
-    }
-
-    @Test
     fun `adding a period combines each component individually`() {
         assertEquals(
             periodOf(2.years, 18.months, 35.days),
