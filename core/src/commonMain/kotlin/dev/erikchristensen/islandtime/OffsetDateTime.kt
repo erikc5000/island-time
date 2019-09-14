@@ -55,6 +55,12 @@ class OffsetDateTime(
     inline val second: Int get() = dateTime.second
     inline val nanosecond: Int get() = dateTime.nanosecond
     inline val month: Month get() = dateTime.month
+
+    /**
+     * The ISO month number
+     */
+    inline val monthNumber: Int get() = month.number
+
     inline val dayOfWeek: DayOfWeek get() = dateTime.dayOfWeek
     inline val dayOfMonth: Int get() = dateTime.dayOfMonth
     inline val dayOfYear: Int get() = dateTime.dayOfYear

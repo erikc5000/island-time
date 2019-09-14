@@ -14,7 +14,7 @@ class KotlinSanityTest {
         val javaDate = islandDate.toJavaLocalDate()
 
         assertThat(islandDate.year).isEqualTo(javaDate.year)
-        assertThat(islandDate.month.number).isEqualTo(javaDate.monthValue)
+        assertThat(islandDate.monthNumber).isEqualTo(javaDate.monthValue)
         assertThat(islandDate.dayOfMonth).isEqualTo(javaDate.dayOfMonth)
     }
 
@@ -24,7 +24,7 @@ class KotlinSanityTest {
         val islandDate = javaDate.toIslandDate()
 
         assertThat(javaDate.year).isEqualTo(islandDate.year)
-        assertThat(javaDate.monthValue).isEqualTo(islandDate.month.number)
+        assertThat(javaDate.monthValue).isEqualTo(islandDate.monthNumber)
         assertThat(javaDate.dayOfMonth).isEqualTo(islandDate.dayOfMonth)
     }
 }

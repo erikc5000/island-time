@@ -20,6 +20,11 @@ inline class YearMonth internal constructor(
         get() = Month.values()[monthsSinceYear0.value % MONTHS_IN_YEAR]
 
     /**
+     * The ISO month number
+     */
+    inline val monthNumber: Int get() = month.number
+
+    /**
      * Is this year month within the supported range?
      *
      * Due to the nature of inline classes, it's not possible to guarantee that the value is valid when manipulated
@@ -83,7 +88,7 @@ inline class YearMonth internal constructor(
         return buildString(7) {
             appendZeroPadded(year, 4)
             append('-')
-            appendZeroPadded(month.number, 2)
+            appendZeroPadded(monthNumber, 2)
         }
     }
 

@@ -23,6 +23,12 @@ class RegionalDateTime private constructor(
     inline val second: Int get() = dateTime.second
     inline val nanosecond: Int get() = dateTime.nanosecond
     inline val month: Month get() = dateTime.month
+
+    /**
+     * The ISO month number
+     */
+    inline val monthNumber: Int get() = month.number
+
     inline val dayOfWeek: DayOfWeek get() = dateTime.dayOfWeek
     inline val dayOfMonth: Int get() = dateTime.dayOfMonth
     inline val dayOfYear: Int get() = dateTime.dayOfYear
@@ -179,7 +185,7 @@ class RegionalDateTime private constructor(
                 1 -> RegionalDateTime(dateTime, timeZone, validOffsets[0])
                 0 -> {
                     val transition = rules.transitionAt(dateTime)
-                    val adjustedDateTime = dateTime + transition!!.durationInSeconds
+                    val adjustedDateTime = dateTime + transition!!.duration
                     RegionalDateTime(adjustedDateTime, timeZone, transition.offsetAfter)
                 }
                 else -> {
