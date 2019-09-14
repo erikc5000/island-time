@@ -1,4 +1,5 @@
 @file:JvmName("IslandTimeUtils")
+@file:Suppress("NewApi")
 
 package dev.erikchristensen.islandtime.jvm
 
@@ -75,7 +76,7 @@ fun java.time.Duration.toIslandDuration(): Duration {
 
 @JvmName("convertToJava")
 fun Duration.toJavaDuration(): java.time.Duration {
-    return java.time.Duration.ofSeconds(seconds.value, nanoOfSeconds.value.toLong())
+    return java.time.Duration.ofSeconds(seconds.value, nanosecondAdjustment.value.toLong())
 }
 
 @JvmName("convertFromJava")

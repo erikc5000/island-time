@@ -1,3 +1,5 @@
+@file:Suppress("NewApi")
+
 package dev.erikchristensen.islandtime.tz
 
 import dev.erikchristensen.islandtime.*
@@ -72,7 +74,8 @@ private class JavaTimeZoneRules(
     }
 
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
-        return javaZoneRules.getDaylightSavings(java.time.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value)).seconds.toInt().seconds
+        return javaZoneRules.getDaylightSavings(java.time.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
+            .seconds.toInt().seconds
     }
 }
 

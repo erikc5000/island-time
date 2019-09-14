@@ -353,23 +353,52 @@ class DateTime(
             offset: UtcOffset
         ): DateTime {
             val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
-            val localEpochDays = localMilliseconds.toWholeDays()
-            val remainingNanoseconds = (localMilliseconds - localEpochDays).asNanoseconds()
+            val localEpochDays = (localMilliseconds.value floorDiv MILLISECONDS_PER_DAY).days
+            val nanosecondOfDay =
+                (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.asNanoseconds().value
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
-            val time = Time.ofNanosecondOfDay(remainingNanoseconds.value)
+            val time = Time.ofNanosecondOfDay(nanosecondOfDay)
             return DateTime(date, time)
         }
 
+        /**
+         * Create the [DateTime] that falls a given duration away from the Unix Epoch
+         */
+        fun fromDurationSinceUnixEpoch(
+            duration: Duration,
+            offset: UtcOffset
+        ) = fromSecondsSinceUnixEpoch(duration.seconds, duration.nanosecondAdjustment, offset)
+
+        /**
+         * Create the [DateTime] that falls a given number of seconds relative to the Unix epoch, plus some number of
+         * additional nanoseconds
+         */
         fun fromSecondsSinceUnixEpoch(
             seconds: LongSeconds,
-            nanosecondOfSecond: Int,
+            nanosecondAdjustment: IntNanoseconds,
+            offset: UtcOffset
+        ): DateTime {
+            val adjustedSeconds =
+                seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND.toInt()).seconds
+
+            val nanosecondOfDay = nanosecondAdjustment.value floorMod NANOSECONDS_PER_SECOND.toInt()
+            return fromSecondsSinceUnixEpoch(adjustedSeconds, nanosecondOfDay, offset)
+        }
+
+        /**
+         * Create the [DateTime] that falls a given number of seconds relative to the Unix epoch, plus the nanosecond
+         * of day value.
+         */
+        internal fun fromSecondsSinceUnixEpoch(
+            seconds: LongSeconds,
+            nanosecondOfDay: Int,
             offset: UtcOffset
         ): DateTime {
             val localSeconds = seconds + offset.totalSeconds
-            val localEpochDays = localSeconds.toWholeDays()
-            val remainingSeconds = (localSeconds - localEpochDays).toInt()
+            val localEpochDays = (localSeconds.value floorDiv SECONDS_PER_DAY).days
+            val secondOfDay = (localSeconds.value floorMod SECONDS_PER_DAY).toInt()
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
-            val time = Time.ofSecondOfDay(remainingSeconds.value, nanosecondOfSecond)
+            val time = Time.ofSecondOfDay(secondOfDay, nanosecondOfDay)
             return DateTime(date, time)
         }
     }

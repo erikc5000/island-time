@@ -16,23 +16,128 @@ import kotlin.math.abs
  */
 class Duration private constructor(
     val seconds: LongSeconds,
-    val nanoOfSeconds: IntNanoseconds = 0.nanoseconds
+    val nanosecondAdjustment: IntNanoseconds = 0.nanoseconds
 ) : Comparable<Duration> {
 
     init {
         // TODO: Remove this since ranges should be enforced before getting here
-        require(nanoOfSeconds.value in -999_999_999..999_999_999) { "nanoOfSeconds is out of range" }
+        require(nanosecondAdjustment.value in -999_999_999..999_999_999) {
+            "nanosecondAdjustment is out of range"
+        }
     }
+
+    inline val isZero: Boolean get() = this == ZERO
+
+    inline val isPositive: Boolean
+        get() = seconds.value > 0L || nanosecondAdjustment.value > 0
+
+    inline val isNegative: Boolean
+        get() = seconds.value < 0L || nanosecondAdjustment.value < 0
+
+    /**
+     * Return the absolute value of this duration
+     */
+    inline val absoluteValue: Duration
+        get() = if (isNegative) -this else this
+
+    operator fun unaryMinus() = create(-seconds, -nanosecondAdjustment)
+
+    operator fun plus(other: Duration): Duration {
+        return when {
+            other.isZero -> this
+            this.isZero -> other
+            else -> plus(other.seconds, other.nanosecondAdjustment)
+        }
+    }
+
+    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
+    operator fun plus(hoursToAdd: LongHours) = plus(hoursToAdd.asSeconds())
+
+    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
+    operator fun plus(minutesToAdd: LongMinutes) = plus(minutesToAdd.asSeconds())
+
+    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
+
+    operator fun plus(secondsToAdd: LongSeconds): Duration {
+        return if (secondsToAdd.value == 0L) {
+            this
+        } else {
+            val newSeconds = seconds + secondsToAdd
+            plus(newSeconds, 0.nanoseconds)
+        }
+    }
+
+    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
+
+    operator fun plus(nanosecondsToAdd: LongNanoseconds): Duration {
+        return if (nanosecondsToAdd.value == 0L) {
+            this
+        } else {
+            val secondsToAdd = nanosecondsToAdd.toWholeSeconds()
+            val remainingNanoseconds = (nanosecondsToAdd % NANOSECONDS_PER_SECOND).toInt()
+            plus(secondsToAdd, remainingNanoseconds)
+        }
+    }
+
+    operator fun minus(other: Duration) = plus(-other)
+    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
+    operator fun minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
+    operator fun minus(minutesToSubtracts: IntMinutes) = plus(-minutesToSubtracts)
+    operator fun minus(minutesToSubtracts: LongMinutes) = plus(-minutesToSubtracts)
+    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
+    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+
+    // These may require a multiplatform BigDecimal implementation
+    // operator fun times(scalar: Int): Duration
+    // operator fun div(scalar: Int): Duration
+
+    inline fun <T> toComponents(
+        action: (
+            hours: IntHours,
+            minutes: IntMinutes,
+            seconds: IntSeconds,
+            nanoseconds: IntNanoseconds
+        ) -> T
+    ): T {
+        val hours = seconds.toWholeHours()
+        val minutes = (seconds - hours).toWholeMinutes()
+        val seconds = seconds - hours - minutes
+        return action(hours.toInt(), minutes.toInt(), seconds.toInt(), nanosecondAdjustment)
+    }
+
+    inline fun <T> toComponents(
+        action: (
+            minutes: LongMinutes,
+            seconds: IntSeconds,
+            nanoseconds: IntNanoseconds
+        ) -> T
+    ): T {
+        val minutes = seconds.toWholeMinutes()
+        val seconds = seconds - minutes
+        return action(minutes, seconds.toInt(), nanosecondAdjustment)
+    }
+
+    inline fun <T> toComponents(
+        action: (
+            seconds: LongSeconds,
+            nanoseconds: IntNanoseconds
+        ) -> T
+    ): T {
+        return action(seconds, nanosecondAdjustment)
+    }
+
 
     override fun equals(other: Any?): Boolean {
         return other === this ||
             (other is Duration &&
                 other.seconds.value == seconds.value &&
-                other.nanoOfSeconds.value == nanoOfSeconds.value)
+                other.nanosecondAdjustment.value == nanosecondAdjustment.value)
     }
 
     override fun hashCode(): Int {
-        return 31 * seconds.hashCode() + nanoOfSeconds.hashCode()
+        return 31 * seconds.hashCode() + nanosecondAdjustment.hashCode()
     }
 
     override fun toString(): String {
@@ -49,8 +154,31 @@ class Duration private constructor(
         return if (secondsDiff != 0) {
             secondsDiff
         } else {
-            nanoOfSeconds.value - other.nanoOfSeconds.value
+            nanosecondAdjustment.value - other.nanosecondAdjustment.value
         }
+    }
+
+    private fun plus(secondsToAdd: LongSeconds, nanosecondsToAdd: IntNanoseconds): Duration {
+        var newSeconds = seconds + secondsToAdd
+        var newNanoAdjustment = nanosecondAdjustment unsafeAdd nanosecondsToAdd
+
+        if (newNanoAdjustment.value >= NANOSECONDS_PER_SECOND) {
+            newSeconds += 1L.seconds
+            newNanoAdjustment = newNanoAdjustment unsafeSubtract 1.seconds
+        } else if (newNanoAdjustment.value <= -NANOSECONDS_PER_SECOND) {
+            newSeconds -= 1L.seconds
+            newNanoAdjustment = newNanoAdjustment unsafeAdd 1.seconds
+        }
+
+        if (newNanoAdjustment.value < 0 && newSeconds.value > 0) {
+            newSeconds -= 1L.seconds
+            newNanoAdjustment = (NANOSECONDS_PER_SECOND.toInt() - newNanoAdjustment.value).nanoseconds
+        } else if (newNanoAdjustment.value > 0 && newSeconds.value < 0) {
+            newSeconds += 1L.seconds
+            newNanoAdjustment = (newNanoAdjustment.value - NANOSECONDS_PER_SECOND.toInt()).nanoseconds
+        }
+
+        return create(newSeconds, newNanoAdjustment)
     }
 
     companion object {
@@ -67,122 +195,6 @@ class Duration private constructor(
             }
         }
     }
-}
-
-inline val Duration.isZero: Boolean get() = this == Duration.ZERO
-inline val Duration.isPositive: Boolean get() = seconds.value > 0L || nanoOfSeconds.value > 0
-inline val Duration.isNegative: Boolean get() = seconds.value < 0L || nanoOfSeconds.value < 0
-
-operator fun Duration.unaryPlus() = this
-operator fun Duration.unaryMinus() = create(-seconds, -nanoOfSeconds)
-
-operator fun Duration.plus(other: Duration): Duration {
-    return when {
-        other.isZero -> this
-        this.isZero -> other
-        else -> plus(other.seconds, other.nanoOfSeconds)
-    }
-}
-
-operator fun Duration.plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-operator fun Duration.plus(hoursToAdd: LongHours) = plus(hoursToAdd.asSeconds())
-
-operator fun Duration.plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-operator fun Duration.plus(minutesToAdd: LongMinutes) = plus(minutesToAdd.asSeconds())
-
-operator fun Duration.plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
-
-operator fun Duration.plus(secondsToAdd: LongSeconds): Duration {
-    return if (secondsToAdd.value == 0L) {
-        this
-    } else {
-        val newSeconds = seconds + secondsToAdd
-        plus(newSeconds, 0.nanoseconds)
-    }
-}
-
-operator fun Duration.plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
-
-operator fun Duration.plus(nanosecondsToAdd: LongNanoseconds): Duration {
-    return if (nanosecondsToAdd.value == 0L) {
-        this
-    } else {
-        val secondsToAdd = nanosecondsToAdd.toWholeSeconds()
-        val remainingNanoseconds = (nanosecondsToAdd % NANOSECONDS_PER_SECOND).toInt()
-        plus(secondsToAdd, remainingNanoseconds)
-    }
-}
-
-private fun Duration.plus(secondsToAdd: LongSeconds, nanosecondsToAdd: IntNanoseconds): Duration {
-    var newSeconds = seconds + secondsToAdd
-    var newNanoOfSeconds = nanoOfSeconds unsafeAdd nanosecondsToAdd
-
-    if (newNanoOfSeconds.value >= NANOSECONDS_PER_SECOND) {
-        newSeconds += 1L.seconds
-        newNanoOfSeconds = newNanoOfSeconds unsafeSubtract 1.seconds
-    } else if (newNanoOfSeconds.value <= -NANOSECONDS_PER_SECOND) {
-        newSeconds -= 1L.seconds
-        newNanoOfSeconds = newNanoOfSeconds unsafeAdd 1.seconds
-    }
-
-    if (newNanoOfSeconds.value < 0 && newSeconds.value > 0) {
-        newSeconds -= 1L.seconds
-        newNanoOfSeconds = (NANOSECONDS_PER_SECOND.toInt() - newNanoOfSeconds.value).nanoseconds
-    } else if (newNanoOfSeconds.value > 0 && newSeconds.value < 0) {
-        newSeconds += 1L.seconds
-        newNanoOfSeconds = (newNanoOfSeconds.value - NANOSECONDS_PER_SECOND.toInt()).nanoseconds
-    }
-
-    return create(newSeconds, newNanoOfSeconds)
-}
-
-operator fun Duration.minus(other: Duration) = plus(-other)
-operator fun Duration.minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-operator fun Duration.minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
-operator fun Duration.minus(minutesToSubtracts: IntMinutes) = plus(-minutesToSubtracts)
-operator fun Duration.minus(minutesToSubtracts: LongMinutes) = plus(-minutesToSubtracts)
-operator fun Duration.minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-operator fun Duration.minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-operator fun Duration.minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
-operator fun Duration.minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
-
-// These may require a multiplatform BigDecimal implementation
-// operator fun Duration.times(scalar: Int): Duration
-// operator fun div(scalar: Int): Duration
-
-fun <T> Duration.toComponents(
-    action: (
-        hours: IntHours,
-        minutes: IntMinutes,
-        seconds: IntSeconds,
-        nanoseconds: IntNanoseconds
-    ) -> T
-): T {
-    val hours = seconds.toWholeHours()
-    val minutes = (seconds - hours).toWholeMinutes()
-    val seconds = seconds - hours - minutes
-    return action(hours.toInt(), minutes.toInt(), seconds.toInt(), nanoOfSeconds)
-}
-
-fun <T> Duration.toComponents(
-    action: (
-        minutes: LongMinutes,
-        seconds: IntSeconds,
-        nanoseconds: IntNanoseconds
-    ) -> T
-): T {
-    val minutes = seconds.toWholeMinutes()
-    val seconds = seconds - minutes
-    return action(minutes, seconds.toInt(), nanoOfSeconds)
-}
-
-inline fun <T> Duration.toComponents(
-    action: (
-        seconds: LongSeconds,
-        nanoseconds: IntNanoseconds
-    ) -> T
-): T {
-    return action(seconds, nanoOfSeconds)
 }
 
 fun durationOf(seconds: IntSeconds, nanoseconds: IntNanoseconds) = durationOf(seconds.toLong(), nanoseconds.toLong())
@@ -240,11 +252,6 @@ fun durationOf(nanoseconds: LongNanoseconds): Duration {
 
     return create(seconds, nanoOfSeconds)
 }
-
-/**
- * Return the absolute value of this duration
- */
-val Duration.absoluteValue: Duration get() = if (isNegative) -this else this
 
 /**
  * Return the absolute value of a duration
