@@ -4,7 +4,6 @@ package dev.erikchristensen.islandtime.tz
 
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
-import dev.erikchristensen.islandtime.interval.minus
 import dev.erikchristensen.islandtime.interval.seconds
 import dev.erikchristensen.islandtime.jvm.toIslandDateTime
 import dev.erikchristensen.islandtime.jvm.toIslandUtcOffset

@@ -15,16 +15,16 @@ class Time private constructor(
 ) : Comparable<Time> {
 
     val secondOfDay: Int
-        get() = hour * SECONDS_PER_HOUR.toInt() + minute * SECONDS_PER_MINUTE.toInt() + second
+        get() = hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second
 
     inline val secondsSinceStartOfDay: IntSeconds
         get() = secondOfDay.seconds
 
     val nanosecondOfDay: Long
         get() {
-            return hour * NANOSECONDS_PER_HOUR +
-                minute * NANOSECONDS_PER_MINUTE +
-                second * NANOSECONDS_PER_SECOND +
+            return hour.toLong() * NANOSECONDS_PER_HOUR +
+                minute.toLong() * NANOSECONDS_PER_MINUTE +
+                second.toLong() * NANOSECONDS_PER_SECOND +
                 nanosecond
         }
 
@@ -37,7 +37,7 @@ class Time private constructor(
         return if (wrappedHours.value == 0) {
             this
         } else {
-            val newHour = (wrappedHours.value + hour + HOURS_PER_DAY.toInt()) % HOURS_PER_DAY.toInt()
+            val newHour = (wrappedHours.value + hour + HOURS_PER_DAY) % HOURS_PER_DAY
             return copy(hour = newHour)
         }
     }
@@ -48,16 +48,16 @@ class Time private constructor(
         return if (minutesToAdd.value == 0L) {
             this
         } else {
-            val currentMinuteOfDay = hour * MINUTES_PER_HOUR.toInt() + minute
+            val currentMinuteOfDay = hour * MINUTES_PER_HOUR + minute
             val wrappedMinutes = (minutesToAdd.value % MINUTES_PER_DAY).toInt()
             val newMinuteOfDay =
-                (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY.toInt()) % MINUTES_PER_DAY.toInt()
+                (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY) % MINUTES_PER_DAY
 
             if (currentMinuteOfDay == newMinuteOfDay) {
                 this
             } else {
-                val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
-                val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
+                val newHour = newMinuteOfDay / MINUTES_PER_HOUR
+                val newMinute = newMinuteOfDay % MINUTES_PER_HOUR
                 copy(hour = newHour, minute = newMinute)
             }
         }
@@ -72,7 +72,7 @@ class Time private constructor(
             val currentSecondOfDay = secondOfDay
             val wrappedSeconds = (secondsToAdd.value % SECONDS_PER_DAY).toInt()
             val newSecondOfDay =
-                (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY.toInt()) % SECONDS_PER_DAY.toInt()
+                (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY) % SECONDS_PER_DAY
 
             if (currentSecondOfDay == newSecondOfDay) {
                 this
@@ -215,9 +215,9 @@ class Time private constructor(
                 throw DateTimeException("'$secondOfDay' is not a valid second of the day")
             }
 
-            val hour = secondOfDay / SECONDS_PER_HOUR.toInt()
-            val minute = (secondOfDay / SECONDS_PER_MINUTE.toInt()) % MINUTES_PER_HOUR.toInt()
-            val second = secondOfDay % SECONDS_PER_MINUTE.toInt()
+            val hour = secondOfDay / SECONDS_PER_HOUR
+            val minute = (secondOfDay / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
+            val second = secondOfDay % SECONDS_PER_MINUTE
             return invoke(hour, minute, second, nanosecond)
         }
 
