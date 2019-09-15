@@ -19,8 +19,6 @@ fun DurationUnit.toFileSpec(): FileSpec {
         addHeader("${pluralName}Kt")
         buildClasses().forEach { addType(it) }
         buildExtensionProperties().forEach { addProperty(it) }
-        buildPrimitiveConversionFunctions().forEach { addFunction(it) }
-        buildExtensionFunctions().forEach { addFunction(it) }
     }
 }
 
@@ -34,11 +32,6 @@ fun DurationUnit.buildClasses(): List<TypeSpec> {
 fun DurationUnit.buildExtensionProperties(): List<PropertySpec> {
     return buildExtensionProperties(intClassName, Int::class) +
         buildExtensionProperties(longClassName, Long::class)
-}
-
-fun DurationUnit.buildExtensionFunctions(): List<FunSpec> {
-    return buildExtensionFunctions(intClassName, Int::class) +
-        buildExtensionFunctions(longClassName, Long::class)
 }
 
 fun DurationUnit.buildClass(
@@ -124,29 +117,40 @@ fun DurationUnit.buildClass(
                 }
             }
         )
+        addFunctions(
+            buildOperators(className, primitiveType) +
+                buildUnitConversionFunctions(primitiveType) +
+                buildToComponentsFunctions(primitiveType) +
+                buildPrimitiveConversionFunctions(primitiveType)
+        )
         addProperties(
             listOf(
                 buildPropertySpec("isZero", Boolean::class) {
                     getter(buildGetterFunSpec {
+                        addModifiers(KModifier.INLINE)
                         addStatement("return this.$valueName == ${primitiveType.zero}")
                     })
                 },
                 buildPropertySpec("isNegative", Boolean::class) {
                     getter(buildGetterFunSpec {
+                        addModifiers(KModifier.INLINE)
                         addStatement("return this.$valueName < ${primitiveType.zero}")
                     })
                 },
                 buildPropertySpec("isPositive", Boolean::class) {
                     getter(buildGetterFunSpec {
+                        addModifiers(KModifier.INLINE)
                         addStatement("return this.$valueName > ${primitiveType.zero}")
                     })
                 },
                 buildPropertySpec("absoluteValue", className) {
                     getter(
                         buildGetterFunSpec {
-                            addStatement("return %T(this.$valueName.%T)",
+                            addStatement(
+                                "return %T(this.$valueName.%T)",
                                 className,
-                                ClassName("kotlin.math", "absoluteValue"))
+                                ClassName("kotlin.math", "absoluteValue")
+                            )
                         }
                     )
                 }
@@ -169,17 +173,22 @@ fun DurationUnit.buildClass(
     }
 }
 
-fun DurationUnit.buildPrimitiveConversionFunctions(): List<FunSpec> {
-    return listOf(
-        buildFunSpec("toLong") {
-            receiver(intClassName)
-            addStatement("return %T(this.$valueName.toLong())", longClassName)
-        },
-        buildFunSpec("toInt") {
-            receiver(longClassName)
-            addStatement("return %T(this.$valueName.toInt())", intClassName)
-        }
-    )
+fun DurationUnit.buildPrimitiveConversionFunctions(
+    primitiveType: KClass<*>
+): List<FunSpec> {
+    return when (primitiveType) {
+        Int::class -> listOf(
+            buildFunSpec("toLong") {
+                addStatement("return %T(this.$valueName.toLong())", longClassName)
+            }
+        )
+        Long::class -> listOf(
+            buildFunSpec("toInt") {
+                addStatement("return %T(this.$valueName.toInt())", intClassName)
+            }
+        )
+        else -> throw IllegalArgumentException("Unsupported primitive type: $primitiveType")
+    }
 }
 
 fun DurationUnit.buildExtensionProperties(
@@ -196,22 +205,13 @@ fun DurationUnit.buildExtensionProperties(
     )
 }
 
-fun DurationUnit.buildExtensionFunctions(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return buildExtensionOperators(className, primitiveType) +
-        buildUnitConversionFunctions(className, primitiveType) +
-        buildToComponentsFunctions(className, primitiveType)
-}
-
-fun DurationUnit.buildExtensionOperators(
+fun DurationUnit.buildOperators(
     className: ClassName,
     primitiveType: KClass<*>
 ): List<FunSpec> {
     return buildUnaryOperators(className) +
         buildPlusOperators(className, primitiveType) +
-        buildMinusOperators(className) +
+        buildMinusOperators() +
         buildTimesOperators(className, primitiveType) +
         buildDivOperators(className, primitiveType) +
         buildRemOperators(className, primitiveType)
@@ -219,13 +219,7 @@ fun DurationUnit.buildExtensionOperators(
 
 fun DurationUnit.buildUnaryOperators(className: ClassName): List<FunSpec> {
     return listOf(
-        buildFunSpec("unaryPlus") {
-            receiver(className)
-            addModifiers(KModifier.OPERATOR)
-            addStatement("return this")
-        },
         buildFunSpec("unaryMinus") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addStatement("return %T(-$valueName)", className)
         }
@@ -239,7 +233,6 @@ fun DurationUnit.buildPlusOperators(
     return DurationUnit.values().flatMap { other ->
         listOf(
             buildFunSpec("plus") {
-                receiver(className)
                 addModifiers(KModifier.OPERATOR)
                 addParameter(other.lowerCaseName, other.intClassName)
 
@@ -274,7 +267,6 @@ fun DurationUnit.buildPlusOperators(
                 }
             },
             buildFunSpec("plus") {
-                receiver(className)
                 addModifiers(KModifier.OPERATOR)
                 addParameter(other.lowerCaseName, other.longClassName)
 
@@ -312,17 +304,15 @@ fun DurationUnit.buildPlusOperators(
     }
 }
 
-fun buildMinusOperators(className: ClassName): List<FunSpec> {
+fun buildMinusOperators(): List<FunSpec> {
     return DurationUnit.values().flatMap { other ->
         listOf(
             buildFunSpec("minus") {
-                receiver(className)
                 addModifiers(KModifier.OPERATOR)
                 addParameter(other.lowerCaseName, other.intClassName)
                 addStatement("return plus(-${other.lowerCaseName})")
             },
             buildFunSpec("minus") {
-                receiver(className)
                 addModifiers(KModifier.OPERATOR)
                 addParameter(other.lowerCaseName, other.longClassName)
                 addStatement("return plus(-${other.lowerCaseName})")
@@ -337,7 +327,6 @@ fun DurationUnit.buildTimesOperators(
 ): List<FunSpec> {
     return listOf(
         buildFunSpec("times") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Int::class)
 
@@ -348,7 +337,6 @@ fun DurationUnit.buildTimesOperators(
             }
         },
         buildFunSpec("times") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Long::class)
 
@@ -367,7 +355,6 @@ fun DurationUnit.buildDivOperators(
 ): List<FunSpec> {
     return listOf(
         buildFunSpec("div") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Int::class)
 
@@ -378,7 +365,6 @@ fun DurationUnit.buildDivOperators(
             }
         },
         buildFunSpec("div") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Long::class)
 
@@ -397,7 +383,6 @@ fun DurationUnit.buildRemOperators(
 ): List<FunSpec> {
     return listOf(
         buildFunSpec("rem") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Int::class)
 
@@ -408,7 +393,6 @@ fun DurationUnit.buildRemOperators(
             }
         },
         buildFunSpec("rem") {
-            receiver(className)
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Long::class)
 
@@ -424,7 +408,6 @@ fun DurationUnit.buildRemOperators(
 val DurationConstant.propertyClassName get() = ClassName(INTERNAL_PACKAGE_NAME, propertyName)
 
 fun DurationUnit.buildUnitConversionFunctions(
-    className: ClassName,
     primitiveType: KClass<*>
 ): List<FunSpec> {
     return DurationUnit.values()
@@ -435,39 +418,31 @@ fun DurationUnit.buildUnitConversionFunctions(
             if (it < this) {
                 val functionName = "toWhole${it.pluralName}"
 
-                val conversionString = if (primitiveType == Int::class) {
-                    "%T.toInt()"
-                } else {
-                    "%T"
-                }
-
                 buildFunSpec(functionName) {
-                    receiver(className)
-                    addStatement(
-                        "return (this.$valueName / $conversionString).${it.lowerCaseName}",
-                        conversion.propertyClassName
-                    )
-                }
-            } else {
-                val functionName = "as${it.pluralName}"
-
-                val conversionString = if (!it.forceLongInOperators && primitiveType == Int::class) {
-                    "%T.toInt()"
-                } else {
-                    "%T"
-                }
-
-                buildFunSpec(functionName) {
-                    receiver(className)
-
-                    if (it.forceLongInOperators && primitiveType != Long::class) {
+                    if (primitiveType == Int::class && !conversion.fitsInInt) {
                         addStatement(
-                            "return (this.$valueName.toLong() * $conversionString).${it.lowerCaseName}",
+                            "return (this.$valueName / %T).toInt().${it.lowerCaseName}",
                             conversion.propertyClassName
                         )
                     } else {
                         addStatement(
-                            "return (this.$valueName * $conversionString).${it.lowerCaseName}",
+                            "return (this.$valueName / %T).${it.lowerCaseName}",
+                            conversion.propertyClassName
+                        )
+                    }
+                }
+            } else {
+                val functionName = "as${it.pluralName}"
+
+                buildFunSpec(functionName) {
+                    if (it.forceLongInOperators && primitiveType != Long::class) {
+                        addStatement(
+                            "return (this.$valueName.toLong() * %T).${it.lowerCaseName}",
+                            conversion.propertyClassName
+                        )
+                    } else {
+                        addStatement(
+                            "return (this.$valueName * %T).${it.lowerCaseName}",
                             conversion.propertyClassName
                         )
                     }
@@ -477,7 +452,6 @@ fun DurationUnit.buildUnitConversionFunctions(
 }
 
 fun DurationUnit.buildToComponentsFunctions(
-    className: ClassName,
     primitiveType: KClass<*>
 ): List<FunSpec> {
     return DurationUnit.values()
@@ -488,7 +462,6 @@ fun DurationUnit.buildToComponentsFunctions(
             }
 
             buildFunSpec("toComponents") {
-                receiver(className)
                 addTypeVariable(TypeVariableName("T"))
                 addModifiers(KModifier.INLINE)
                 returns(TypeVariableName("T"))

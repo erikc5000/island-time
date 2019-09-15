@@ -145,12 +145,12 @@ class DateTime(
             val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
             var newHour = time.hour + wrappedHours.value
 
-            if (newHour >= HOURS_PER_DAY.toInt()) {
+            if (newHour >= HOURS_PER_DAY) {
                 daysToAdd += 1.days
-                newHour -= HOURS_PER_DAY.toInt()
+                newHour -= HOURS_PER_DAY
             } else if (newHour < 0) {
                 daysToAdd -= 1.days
-                newHour += HOURS_PER_DAY.toInt()
+                newHour += HOURS_PER_DAY
             }
 
             val newDate = date + daysToAdd
@@ -166,16 +166,16 @@ class DateTime(
             this
         } else {
             var daysToAdd = minutesToAdd.toWholeDays()
-            val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR.toInt() + minute
+            val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR + minute
             val wrappedMinutes = (minutesToAdd % MINUTES_PER_DAY).toInt()
             var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes.value
 
-            if (newMinuteOfDay >= MINUTES_PER_DAY.toInt()) {
+            if (newMinuteOfDay >= MINUTES_PER_DAY) {
                 daysToAdd += 1.days
-                newMinuteOfDay -= MINUTES_PER_DAY.toInt()
+                newMinuteOfDay -= MINUTES_PER_DAY
             } else if (newMinuteOfDay < 0) {
                 daysToAdd -= 1.days
-                newMinuteOfDay += MINUTES_PER_DAY.toInt()
+                newMinuteOfDay += MINUTES_PER_DAY
             }
 
             val newDate = date + daysToAdd
@@ -183,8 +183,8 @@ class DateTime(
             val newTime = if (currentMinuteOfDay == newMinuteOfDay) {
                 time
             } else {
-                val newHour = newMinuteOfDay / MINUTES_PER_HOUR.toInt()
-                val newMinute = newMinuteOfDay % MINUTES_PER_HOUR.toInt()
+                val newHour = newMinuteOfDay / MINUTES_PER_HOUR
+                val newMinute = newMinuteOfDay % MINUTES_PER_HOUR
                 Time(newHour, newMinute, time.second, time.nanosecond)
             }
 
@@ -203,12 +203,12 @@ class DateTime(
             val wrappedSeconds = (secondsToAdd % SECONDS_PER_DAY).toInt()
             var newSecondOfDay = currentSecondOfDay + wrappedSeconds.value
 
-            if (newSecondOfDay >= SECONDS_PER_DAY.toInt()) {
+            if (newSecondOfDay >= SECONDS_PER_DAY) {
                 daysToAdd += 1.days
-                newSecondOfDay -= SECONDS_PER_DAY.toInt()
+                newSecondOfDay -= SECONDS_PER_DAY
             } else if (newSecondOfDay < 0) {
                 daysToAdd -= 1.days
-                newSecondOfDay += SECONDS_PER_DAY.toInt()
+                newSecondOfDay += SECONDS_PER_DAY
             }
 
             val newDate = date + daysToAdd
@@ -379,9 +379,9 @@ class DateTime(
             offset: UtcOffset
         ): DateTime {
             val adjustedSeconds =
-                seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND.toInt()).seconds
+                seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND).seconds
 
-            val nanosecondOfDay = nanosecondAdjustment.value floorRem NANOSECONDS_PER_SECOND.toInt()
+            val nanosecondOfDay = nanosecondAdjustment.value floorRem NANOSECONDS_PER_SECOND
             return fromSecondsSinceUnixEpoch(adjustedSeconds, nanosecondOfDay, offset)
         }
 

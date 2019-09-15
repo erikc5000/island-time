@@ -14,9 +14,16 @@ fun generateConstantsFileSpec(): FileSpec {
                 if (constant.isEmpty) {
                     null
                 } else {
-                    buildPropertySpec(constant.propertyName, Long::class) {
-                        addModifiers(KModifier.CONST, KModifier.INTERNAL)
-                        initializer("${constant.value}L")
+                    if (constant.fitsInInt) {
+                        buildPropertySpec(constant.propertyName, Int::class) {
+                            addModifiers(KModifier.CONST, KModifier.INTERNAL)
+                            initializer("${constant.value}")
+                        }
+                    } else {
+                        buildPropertySpec(constant.propertyName, Long::class) {
+                            addModifiers(KModifier.CONST, KModifier.INTERNAL)
+                            initializer("${constant.value}L")
+                        }
                     }
                 }
             }.forEach { addProperty(it) }

@@ -172,10 +172,10 @@ class Duration private constructor(
 
         if (newNanoAdjustment.value < 0 && newSeconds.value > 0) {
             newSeconds -= 1L.seconds
-            newNanoAdjustment = (NANOSECONDS_PER_SECOND.toInt() - newNanoAdjustment.value).nanoseconds
+            newNanoAdjustment = (NANOSECONDS_PER_SECOND - newNanoAdjustment.value).nanoseconds
         } else if (newNanoAdjustment.value > 0 && newSeconds.value < 0) {
             newSeconds += 1L.seconds
-            newNanoAdjustment = (newNanoAdjustment.value - NANOSECONDS_PER_SECOND.toInt()).nanoseconds
+            newNanoAdjustment = (newNanoAdjustment.value - NANOSECONDS_PER_SECOND).nanoseconds
         }
 
         return create(newSeconds, newNanoAdjustment)
@@ -207,10 +207,10 @@ fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
 
     if (newNanoOfSeconds.value < 0 && adjustedSeconds.value > 0) {
         adjustedSeconds -= 1L.seconds
-        newNanoOfSeconds = (newNanoOfSeconds.value + NANOSECONDS_PER_SECOND.toInt()).nanoseconds
+        newNanoOfSeconds = (newNanoOfSeconds.value + NANOSECONDS_PER_SECOND).nanoseconds
     } else if (newNanoOfSeconds.value > 0 && adjustedSeconds.value < 0) {
         adjustedSeconds += 1L.seconds
-        newNanoOfSeconds = (newNanoOfSeconds.value - NANOSECONDS_PER_SECOND.toInt()).nanoseconds
+        newNanoOfSeconds = (newNanoOfSeconds.value - NANOSECONDS_PER_SECOND).nanoseconds
     }
 
     return create(adjustedSeconds, newNanoOfSeconds)

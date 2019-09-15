@@ -63,4 +63,5 @@ data class DurationConstant(
     val value: Long
 ) {
     val isEmpty: Boolean get() = value == 1L
+    val fitsInInt: Boolean get() = value in Int.MIN_VALUE..Int.MAX_VALUE
 }

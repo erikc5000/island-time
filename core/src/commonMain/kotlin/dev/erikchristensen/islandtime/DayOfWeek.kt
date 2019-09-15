@@ -2,7 +2,6 @@ package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.internal.DAYS_IN_WEEK
 import dev.erikchristensen.islandtime.interval.IntDays
-import dev.erikchristensen.islandtime.interval.unaryMinus
 
 enum class DayOfWeek(val number: Int) {
     MONDAY(1),

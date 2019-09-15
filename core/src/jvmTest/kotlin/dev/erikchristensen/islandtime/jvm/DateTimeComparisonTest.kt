@@ -38,7 +38,7 @@ class DateTimeComparisonTest {
     @Test
     fun `dateTime from seconds since unix epoch`() {
         val epochSecondRange = -2L..2L
-        val nanoRange = 0 until NANOSECONDS_PER_SECOND.toInt()
+        val nanoRange = 0 until NANOSECONDS_PER_SECOND
 
         for (second in epochSecondRange) {
             for (nano in nanoRange step 100_373) {

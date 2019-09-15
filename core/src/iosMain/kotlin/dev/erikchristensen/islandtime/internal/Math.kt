@@ -96,7 +96,7 @@ internal actual infix fun Int.timesExact(other: Int): Int {
     val total = this.toLong() * other.toLong()
 
     if (total !in Int.MIN_VALUE..Int.MAX_VALUE) {
-        throw ArithmeticException("'$this * $other' overflows an Int");
+        throw ArithmeticException("'$this * $other' overflows an Int")
     }
 
     return total.toInt()
