@@ -355,7 +355,7 @@ class DateTime(
             val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
             val localEpochDays = (localMilliseconds.value floorDiv MILLISECONDS_PER_DAY).days
             val nanosecondOfDay =
-                (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.asNanoseconds().value
+                (localMilliseconds.value floorRem MILLISECONDS_PER_DAY).milliseconds.asNanoseconds().value
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
             val time = Time.ofNanosecondOfDay(nanosecondOfDay)
             return DateTime(date, time)
@@ -381,7 +381,7 @@ class DateTime(
             val adjustedSeconds =
                 seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND.toInt()).seconds
 
-            val nanosecondOfDay = nanosecondAdjustment.value floorMod NANOSECONDS_PER_SECOND.toInt()
+            val nanosecondOfDay = nanosecondAdjustment.value floorRem NANOSECONDS_PER_SECOND.toInt()
             return fromSecondsSinceUnixEpoch(adjustedSeconds, nanosecondOfDay, offset)
         }
 
@@ -396,7 +396,7 @@ class DateTime(
         ): DateTime {
             val localSeconds = seconds + offset.totalSeconds
             val localEpochDays = (localSeconds.value floorDiv SECONDS_PER_DAY).days
-            val secondOfDay = (localSeconds.value floorMod SECONDS_PER_DAY).toInt()
+            val secondOfDay = (localSeconds.value floorRem SECONDS_PER_DAY).toInt()
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
             val time = Time.ofSecondOfDay(secondOfDay, nanosecondOfDay)
             return DateTime(date, time)

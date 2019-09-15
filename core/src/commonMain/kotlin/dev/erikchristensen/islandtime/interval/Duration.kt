@@ -160,14 +160,14 @@ class Duration private constructor(
 
     private fun plus(secondsToAdd: LongSeconds, nanosecondsToAdd: IntNanoseconds): Duration {
         var newSeconds = seconds + secondsToAdd
-        var newNanoAdjustment = nanosecondAdjustment unsafeAdd nanosecondsToAdd
+        var newNanoAdjustment = nanosecondAdjustment plusWithOverflow nanosecondsToAdd
 
         if (newNanoAdjustment.value >= NANOSECONDS_PER_SECOND) {
             newSeconds += 1L.seconds
-            newNanoAdjustment = newNanoAdjustment unsafeSubtract 1.seconds
+            newNanoAdjustment = newNanoAdjustment minusWithOverflow 1.seconds
         } else if (newNanoAdjustment.value <= -NANOSECONDS_PER_SECOND) {
             newSeconds -= 1L.seconds
-            newNanoAdjustment = newNanoAdjustment unsafeAdd 1.seconds
+            newNanoAdjustment = newNanoAdjustment plusWithOverflow 1.seconds
         }
 
         if (newNanoAdjustment.value < 0 && newSeconds.value > 0) {
