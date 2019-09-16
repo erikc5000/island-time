@@ -79,7 +79,7 @@ kotlin {
         }
 
         binaries.framework {
-            baseName = "core"
+            baseName = "IslandTimeCore"
         }
     }
 }
