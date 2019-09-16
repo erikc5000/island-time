@@ -2,7 +2,6 @@ package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.interval.days
 import dev.erikchristensen.islandtime.interval.months
-import dev.erikchristensen.islandtime.interval.unaryMinus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

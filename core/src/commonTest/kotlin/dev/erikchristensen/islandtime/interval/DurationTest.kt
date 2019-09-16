@@ -86,9 +86,9 @@ class DurationTest {
 
     @Test
     fun `isNegative property returns false if greater or equal to zero`() {
-        assertFalse{ Duration.ZERO.isNegative }
-        assertFalse{ 1.seconds.asDuration().isNegative }
-        assertFalse{ 1.nanoseconds.asDuration().isNegative }
+        assertFalse { Duration.ZERO.isNegative }
+        assertFalse { 1.seconds.asDuration().isNegative }
+        assertFalse { 1.nanoseconds.asDuration().isNegative }
     }
 
     @Test
@@ -146,10 +146,19 @@ class DurationTest {
     fun `toComponents() executes function with expected arguments`() {
         durationOf(5.hours + 30.minutes + 30.seconds + 500.milliseconds)
             .toComponents { hours, minutes, seconds, nanoseconds ->
-                assertEquals(5.hours, hours)
+                assertEquals(5L.hours, hours)
                 assertEquals(30.minutes, minutes)
                 assertEquals(30.seconds, seconds)
                 assertEquals(500_000_000.nanoseconds, nanoseconds)
+            }
+
+        durationOf((-1).days - 1.hours - 1.minutes - 1.seconds - 800.milliseconds - 50.nanoseconds)
+            .toComponents { days, hours, minutes, seconds, nanoseconds ->
+                assertEquals((-1L).days, days)
+                assertEquals((-1).hours, hours)
+                assertEquals((-1).minutes, minutes)
+                assertEquals((-1).seconds, seconds)
+                assertEquals((-800_000_050).nanoseconds, nanoseconds)
             }
     }
 

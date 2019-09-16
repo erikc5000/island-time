@@ -3,7 +3,6 @@ package dev.erikchristensen.islandtime
 import dev.erikchristensen.islandtime.interval.IntDays
 import dev.erikchristensen.islandtime.interval.IntMonths
 import dev.erikchristensen.islandtime.interval.days
-import dev.erikchristensen.islandtime.interval.unaryMinus
 
 enum class Month(val number: Int) {
     JANUARY(1) {

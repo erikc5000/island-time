@@ -31,7 +31,7 @@ class YearMonthTest {
     @Test
     fun `isValid can be used to check if the YearMonth was initialized with an invalid value`() {
         assertFalse { YearMonth(0.months).isValid }
-        assertFalse { YearMonth(100.centuries.asMonths()).isValid }
+        assertFalse { YearMonth(100.centuries.inMonths).isValid }
     }
 
     @Test
@@ -170,10 +170,10 @@ class YearMonthTest {
     @Test
     fun `throws an exception when adding months puts the YearMonth out of range`() {
         assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.JANUARY) + 8000.years.asMonths()
+            YearMonth(2000, Month.JANUARY) + 8000.years.inMonths
         }
         assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) + (-2000).years.asMonths()
+            YearMonth(2000, Month.DECEMBER) + (-2000).years.inMonths
         }
         assertFailsWith<DateTimeException> {
             YearMonth(2000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).months
@@ -220,10 +220,10 @@ class YearMonthTest {
     @Test
     fun `throws an exception when subtracting months puts the YearMonth out of range`() {
         assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.JANUARY) - 2000.years.asMonths()
+            YearMonth(2000, Month.JANUARY) - 2000.years.inMonths
         }
         assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) - (-8000).years.asMonths()
+            YearMonth(2000, Month.DECEMBER) - (-8000).years.inMonths
         }
         assertFailsWith<DateTimeException> {
             YearMonth(1, Month.DECEMBER) - (Int.MAX_VALUE + 1L).months

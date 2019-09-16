@@ -126,7 +126,7 @@ infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
     return DateMonthProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
-infix fun DateDayProgression.step(step: IntYears) = this.step(step.asMonths())
+infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonths)
 
 fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last, first, -step)
 

@@ -14,7 +14,7 @@ fun generateConstantsFileSpec(): FileSpec {
                 if (constant.isEmpty) {
                     null
                 } else {
-                    if (constant.fitsInInt) {
+                    if (constant.valueFitsInInt) {
                         buildPropertySpec(constant.propertyName, Int::class) {
                             addModifiers(KModifier.CONST, KModifier.INTERNAL)
                             initializer("${constant.value}")

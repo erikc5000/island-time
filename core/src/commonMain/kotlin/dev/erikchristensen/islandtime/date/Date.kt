@@ -19,7 +19,7 @@ class Date private constructor(
      */
     val dayOfWeek: DayOfWeek
         get() {
-            val zeroIndexedDayOfWeek = (daysSinceUnixEpoch.value + 3) floorRem 7
+            val zeroIndexedDayOfWeek = (daysSinceUnixEpoch.value + 3) floorMod 7
             return DayOfWeek.values()[zeroIndexedDayOfWeek.toInt()]
         }
 
@@ -296,14 +296,18 @@ internal fun DateTimeParseResult.toDate(): Date? {
         val month = this[DateTimeField.MONTH_OF_YEAR]
         val dayOfMonth = this[DateTimeField.DAY_OF_MONTH]
 
-        if (month != null && dayOfMonth != null) {
-            return Date(year.toIntExact(), month.toIntExact().toMonth(), dayOfMonth.toIntExact())
-        }
+        try {
+            if (month != null && dayOfMonth != null) {
+                return Date(year.toIntExact(), month.toIntExact().toMonth(), dayOfMonth.toIntExact())
+            }
 
-        val dayOfYear = this[DateTimeField.DAY_OF_YEAR]
+            val dayOfYear = this[DateTimeField.DAY_OF_YEAR]
 
-        if (dayOfYear != null) {
-            return Date(year.toIntExact(), dayOfYear.toIntExact())
+            if (dayOfYear != null) {
+                return Date(year.toIntExact(), dayOfYear.toIntExact())
+            }
+        } catch (e: ArithmeticException) {
+            throw DateTimeException(e.message, e)
         }
     }
 
@@ -343,7 +347,7 @@ fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
 }
 
 fun yearsBetween(start: Date, endExclusive: Date): IntYears {
-    return monthsBetween(start, endExclusive).toWholeYears()
+    return monthsBetween(start, endExclusive).inWholeYears
 }
 
 internal const val MAX_DATE_STRING_LENGTH = 10

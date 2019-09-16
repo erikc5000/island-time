@@ -5,15 +5,15 @@ import kotlin.test.assertEquals
 
 class MinutesTest {
     @Test
-    fun `asSeconds() converts to seconds`() {
-        assertEquals((-300).seconds, (-5).minutes.asSeconds())
-        assertEquals(60L.seconds, 1L.minutes.asSeconds())
+    fun `inSeconds converts to seconds`() {
+        assertEquals((-300).seconds, (-5).minutes.inSeconds)
+        assertEquals(60L.seconds, 1L.minutes.inSeconds)
     }
 
     @Test
-    fun `asMilliseconds() always converts to LongMilliseconds`() {
-        assertEquals((-300_000L).milliseconds, (-5).minutes.asMilliseconds())
-        assertEquals(60_000L.milliseconds, 1L.minutes.asMilliseconds())
+    fun `inMilliseconds always converts to LongMilliseconds`() {
+        assertEquals((-300_000L).milliseconds, (-5).minutes.inMilliseconds)
+        assertEquals(60_000L.milliseconds, 1L.minutes.inMilliseconds)
     }
 
     @Test

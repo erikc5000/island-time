@@ -249,10 +249,14 @@ internal fun DateTimeParseResult.toTime(): Time? {
     val hour = this[DateTimeField.HOUR_OF_DAY]
 
     if (hour != null) {
-        val minute = this[DateTimeField.MINUTE_OF_HOUR]?.toInt() ?: 0
-        val second = this[DateTimeField.SECOND_OF_MINUTE]?.toInt() ?: 0
-        val nanosecond = this[DateTimeField.NANOSECOND_OF_SECOND]?.toInt() ?: 0
-        return Time(hour.toInt(), minute, second, nanosecond)
+        return try {
+            val minute = this[DateTimeField.MINUTE_OF_HOUR]?.toIntExact() ?: 0
+            val second = this[DateTimeField.SECOND_OF_MINUTE]?.toIntExact() ?: 0
+            val nanosecond = this[DateTimeField.NANOSECOND_OF_SECOND]?.toIntExact() ?: 0
+            Time(hour.toIntExact(), minute, second, nanosecond)
+        } catch (e: ArithmeticException) {
+            throw DateTimeException(e.message, e)
+        }
     }
 
     return null

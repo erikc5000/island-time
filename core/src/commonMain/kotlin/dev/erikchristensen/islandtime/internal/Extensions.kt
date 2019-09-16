@@ -1,8 +1,5 @@
 package dev.erikchristensen.islandtime.internal
 
-internal infix fun Long.floorRem(other: Int): Long = this floorRem other.toLong()
-internal infix fun Long.floorDiv(other: Int): Long = this floorDiv other.toLong()
-
 /**
  * Append a number to a string, padding it with zeros as necessary to reach a desired length
  * @param number The number to pad -- must be positive or zero
