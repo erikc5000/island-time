@@ -99,12 +99,12 @@ inline class UtcOffset internal constructor(
 /**
  * Convert a duration of hours into a UTC time offset of the same length
  */
-fun IntHours.asUtcOffset() = UtcOffset(this.asSeconds())
+fun IntHours.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
  * Convert a duration of minutes into a UTC time offset of the same length
  */
-fun IntMinutes.asUtcOffset() = UtcOffset(this.asSeconds())
+fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
  * Convert a duration of seconds into a UTC time offset of the same length

@@ -117,10 +117,16 @@ fun DurationUnit.buildClass(
                 }
             }
         )
+        buildUnitConversionPropertiesAndFunctions(primitiveType).forEach {
+            when (it) {
+                is FunSpec -> addFunction(it)
+                is PropertySpec -> addProperty(it)
+            }
+        }
         addFunctions(
             buildOperators(className, primitiveType) +
-                buildUnitConversionFunctions(primitiveType) +
                 buildToComponentsFunctions(primitiveType) +
+//                buildNonExpandedToComponentsFunctions(primitiveType) +
                 buildPrimitiveConversionFunctions(primitiveType)
         )
         addProperties(
@@ -185,6 +191,12 @@ fun DurationUnit.buildPrimitiveConversionFunctions(
         Long::class -> listOf(
             buildFunSpec("toInt") {
                 addStatement("return %T(this.$valueName.toInt())", intClassName)
+            },
+            buildFunSpec("toIntExact") {
+                addStatement(
+                    "return %T(this.$valueName.%T())", intClassName,
+                    ClassName(INTERNAL_PACKAGE_NAME, "toIntExact")
+                )
             }
         )
         else -> throw IllegalArgumentException("Unsupported primitive type: $primitiveType")
@@ -239,16 +251,16 @@ fun DurationUnit.buildPlusOperators(
                 when {
                     other.ordinal < ordinal -> {
                         if (forceLongInOperators && primitiveType != Long::class) {
-                            addStatement("return this.toLong() + ${other.lowerCaseName}.as$pluralName()")
+                            addStatement("return this.toLong() + ${other.lowerCaseName}.$inUnitPropertyName")
                         } else {
-                            addStatement("return this + ${other.lowerCaseName}.as$pluralName()")
+                            addStatement("return this + ${other.lowerCaseName}.$inUnitPropertyName")
                         }
                     }
                     other.ordinal > ordinal -> {
                         if (forceLongInOperators && primitiveType != Long::class) {
-                            addStatement("return this.toLong().as${other.pluralName}() + ${other.lowerCaseName}.toLong()")
+                            addStatement("return this.toLong().${other.inUnitPropertyName} + ${other.lowerCaseName}.toLong()")
                         } else {
-                            addStatement("return this.as${other.pluralName}() + ${other.lowerCaseName}")
+                            addStatement("return this.${other.inUnitPropertyName} + ${other.lowerCaseName}")
                         }
                     }
                     else -> {
@@ -273,16 +285,16 @@ fun DurationUnit.buildPlusOperators(
                 when {
                     other.ordinal < ordinal -> {
                         if (primitiveType != Long::class) {
-                            addStatement("return this.toLong() + ${other.lowerCaseName}.as$pluralName()")
+                            addStatement("return this.toLong() + ${other.lowerCaseName}.$inUnitPropertyName")
                         } else {
-                            addStatement("return this + ${other.lowerCaseName}.as$pluralName()")
+                            addStatement("return this + ${other.lowerCaseName}.$inUnitPropertyName")
                         }
                     }
                     other.ordinal > ordinal -> {
                         if (primitiveType != Long::class) {
-                            addStatement("return this.toLong().as${other.pluralName}() + ${other.lowerCaseName}")
+                            addStatement("return this.toLong().${other.inUnitPropertyName} + ${other.lowerCaseName}")
                         } else {
-                            addStatement("return this.as${other.pluralName}() + ${other.lowerCaseName}")
+                            addStatement("return this.${other.inUnitPropertyName} + ${other.lowerCaseName}")
                         }
                     }
                     else -> {
@@ -407,46 +419,91 @@ fun DurationUnit.buildRemOperators(
 
 val DurationConstant.propertyClassName get() = ClassName(INTERNAL_PACKAGE_NAME, propertyName)
 
-fun DurationUnit.buildUnitConversionFunctions(
+fun DurationUnit.classNameFor(primitiveType: KClass<*>): ClassName {
+    return when (primitiveType) {
+        Int::class -> intClassName
+        Long::class -> longClassName
+        else -> throw IllegalArgumentException("Unsupported class type")
+    }
+}
+
+fun DurationUnit.operatorReturnClassNameFor(primitiveType: KClass<*>): ClassName {
+    return when (primitiveType) {
+        Int::class -> if (forceLongInOperators) longClassName else intClassName
+        Long::class -> longClassName
+        else -> throw IllegalArgumentException("Unsupported class type")
+    }
+}
+
+fun DurationUnit.buildUnitConversionPropertiesAndFunctions(
     primitiveType: KClass<*>
-): List<FunSpec> {
+): List<Any?> {
     return DurationUnit.values()
         .filter { it != this }
-        .map {
+        .flatMap {
             val conversion = this.per(it)
 
             if (it < this) {
-                val functionName = "toWhole${it.pluralName}"
+                listOf(
+                    buildPropertySpec(it.inWholeUnitPropertyName, it.classNameFor(primitiveType)) {
+                        getter(
+                            buildGetterFunSpec {
+                                val statement = buildString {
+                                    append("return (this.$valueName / %T)")
 
-                buildFunSpec(functionName) {
-                    if (primitiveType == Int::class && !conversion.fitsInInt) {
-                        addStatement(
-                            "return (this.$valueName / %T).toInt().${it.lowerCaseName}",
-                            conversion.propertyClassName
-                        )
-                    } else {
-                        addStatement(
-                            "return (this.$valueName / %T).${it.lowerCaseName}",
-                            conversion.propertyClassName
+                                    if (primitiveType == Int::class && !conversion.valueFitsInInt) {
+                                        append(".toInt()")
+                                    }
+
+                                    append(".${it.lowerCaseName}")
+                                }
+
+                                addStatement(statement, conversion.propertyClassName)
+                            }
                         )
                     }
-                }
+                )
             } else {
-                val functionName = "as${it.pluralName}"
+                val className = it.operatorReturnClassNameFor(primitiveType)
 
-                buildFunSpec(functionName) {
-                    if (it.forceLongInOperators && primitiveType != Long::class) {
-                        addStatement(
-                            "return (this.$valueName.toLong() * %T).${it.lowerCaseName}",
-                            conversion.propertyClassName
-                        )
+                val overflowSafeMethodRequired = primitiveType != Int::class ||
+                    !it.forceLongInOperators ||
+                    conversion.isSafeMultiplicationRequiredForInt
+
+                listOf(
+                    if (overflowSafeMethodRequired) {
+                        buildFunSpec(it.inUnitExactMethodName) {
+                            addStatement(
+                                if (primitiveType == Int::class && it.forceLongInOperators) {
+                                    "return (this.$valueName.toLong() %T %T).${it.lowerCaseName}"
+                                } else {
+                                    "return (this.$valueName %T %T).${it.lowerCaseName}"
+                                },
+                                ClassName(INTERNAL_PACKAGE_NAME, "timesExact"),
+                                conversion.propertyClassName
+                            )
+                        }
                     } else {
-                        addStatement(
-                            "return (this.$valueName * %T).${it.lowerCaseName}",
-                            conversion.propertyClassName
+                        null
+                    },
+                    buildPropertySpec(it.inUnitPropertyName, className) {
+                        getter(
+                            buildGetterFunSpec {
+                                if (primitiveType == Int::class && it.forceLongInOperators) {
+                                    addStatement(
+                                        "return (this.$valueName.toLong() * %T).${it.lowerCaseName}",
+                                        conversion.propertyClassName
+                                    )
+                                } else {
+                                    addStatement(
+                                        "return (this.$valueName * %T).${it.lowerCaseName}",
+                                        conversion.propertyClassName
+                                    )
+                                }
+                            }
                         )
                     }
-                }
+                )
             }
         }
 }
@@ -493,7 +550,7 @@ fun DurationUnit.buildToComponentsFunctions(
                     }
 
                     if (unit != this@buildToComponentsFunctions) {
-                        conversionString = "$conversionString.toWhole${unit.pluralName}()"
+                        conversionString = "$conversionString.${unit.inWholeUnitPropertyName}"
                     }
 
                     addStatement("val ${unit.lowerCaseName} = $conversionString")
@@ -504,3 +561,57 @@ fun DurationUnit.buildToComponentsFunctions(
             }
         }
 }
+
+//fun DurationUnit.buildNonExpandedToComponentsFunctions(
+//    primitiveType: KClass<*>
+//): List<FunSpec> {
+//    return DurationUnit.values()
+//        .filter { it < this }
+//        .map { biggestUnit ->
+//            val allComponentUnits = DurationUnit.values().filter {
+//                (it >= biggestUnit && it <= this && !it.isoPeriodIsFractional) || it == DurationUnit.NANOSECONDS
+//            }
+//
+//            buildFunSpec("toComponents") {
+//                addTypeVariable(TypeVariableName("T"))
+//                addModifiers(KModifier.INLINE)
+//                returns(TypeVariableName("T"))
+//
+//                val lambdaParameters = allComponentUnits.mapIndexed { index, unit ->
+//                    buildParameterSpec(
+//                        unit.lowerCaseName,
+//                        if (index == 0 && primitiveType == Long::class) unit.longClassName else unit.intClassName
+//                    )
+//                }
+//
+//                addParameter(
+//                    "action",
+//                    LambdaTypeName.get(parameters = lambdaParameters, returnType = TypeVariableName("T"))
+//                )
+//
+//                allComponentUnits.forEach { unit ->
+//                    val conversionComponents = listOf("this") +
+//                        allComponentUnits.filter { it < unit }.map { it.lowerCaseName }
+//
+//                    var conversionString = conversionComponents.joinToString(" - ")
+//
+//                    if (conversionComponents.count() > 1) {
+//                        conversionString = "($conversionString)"
+//
+//                        if (forceLongInOperators || primitiveType == Long::class) {
+//                            conversionString = "$conversionString.toInt()"
+//                        }
+//                    }
+//
+//                    if (unit != this@buildNonExpandedToComponentsFunctions) {
+//                        conversionString = "$conversionString.${unit.inWholeUnitPropertyName}"
+//                    }
+//
+//                    addStatement("val ${unit.lowerCaseName} = $conversionString")
+//                }
+//
+//                val allVariableNames = allComponentUnits.joinToString(", ") { it.lowerCaseName }
+//                addStatement("return action($allVariableNames)")
+//            }
+//        }
+//}

@@ -14,7 +14,7 @@ inline class YearMonth internal constructor(
 ) : Comparable<YearMonth> {
 
     val year: Int
-        get() = monthsSinceYear0.toWholeYears().value
+        get() = monthsSinceYear0.inWholeYears.value
 
     val month: Month
         get() = Month.values()[monthsSinceYear0.value % MONTHS_IN_YEAR]
@@ -109,8 +109,8 @@ inline class YearMonth internal constructor(
     }
 
     operator fun plus(monthsToAdd: IntMonths) = plus(monthsToAdd.toLong())
-    operator fun plus(yearsToAdd: LongYears) = plus(yearsToAdd.asMonths())
-    operator fun plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong().asMonths())
+    operator fun plus(yearsToAdd: LongYears) = plus(yearsToAdd.inMonths)
+    operator fun plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong().inMonths)
 
     operator fun minus(monthsToSubtract: LongMonths): YearMonth {
         return if (monthsToSubtract.value == Long.MIN_VALUE) {
@@ -121,8 +121,8 @@ inline class YearMonth internal constructor(
     }
 
     operator fun minus(monthsToSubtract: IntMonths) = minus(monthsToSubtract.toLong())
-    operator fun minus(yearsToSubtract: LongYears) = minus(yearsToSubtract.asMonths())
-    operator fun minus(yearsToSubtract: IntYears) = minus(yearsToSubtract.toLong().asMonths())
+    operator fun minus(yearsToSubtract: LongYears) = minus(yearsToSubtract.inMonths)
+    operator fun minus(yearsToSubtract: IntYears) = minus(yearsToSubtract.toLong().inMonths)
 
     companion object {
         val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)

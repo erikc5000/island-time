@@ -12,6 +12,8 @@ import dev.erikchristensen.islandtime.internal.MINUTES_PER_MICROSECOND
 import dev.erikchristensen.islandtime.internal.MINUTES_PER_MILLISECOND
 import dev.erikchristensen.islandtime.internal.MINUTES_PER_NANOSECOND
 import dev.erikchristensen.islandtime.internal.MINUTES_PER_SECOND
+import dev.erikchristensen.islandtime.internal.timesExact
+import dev.erikchristensen.islandtime.internal.toIntExact
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
@@ -26,6 +28,24 @@ import kotlin.math.absoluteValue
 inline class IntMinutes(
   val value: Int
 ) : Comparable<IntMinutes> {
+  val inWholeDays: IntDays
+    get() = (this.value / MINUTES_PER_DAY).days
+
+  val inWholeHours: IntHours
+    get() = (this.value / MINUTES_PER_HOUR).hours
+
+  val inSeconds: IntSeconds
+    get() = (this.value * MINUTES_PER_SECOND).seconds
+
+  val inMilliseconds: LongMilliseconds
+    get() = (this.value.toLong() * MINUTES_PER_MILLISECOND).milliseconds
+
+  val inMicroseconds: LongMicroseconds
+    get() = (this.value.toLong() * MINUTES_PER_MICROSECOND).microseconds
+
+  val inNanoseconds: LongNanoseconds
+    get() = (this.value.toLong() * MINUTES_PER_NANOSECOND).nanoseconds
+
   val isZero: Boolean
     inline get() = this.value == 0
 
@@ -50,35 +70,39 @@ inline class IntMinutes(
       }
   }
 
+  fun inSecondsExact() = (this.value timesExact MINUTES_PER_SECOND).seconds
+
+  fun inNanosecondsExact() = (this.value.toLong() timesExact MINUTES_PER_NANOSECOND).nanoseconds
+
   operator fun unaryMinus() = IntMinutes(-value)
 
-  operator fun plus(days: IntDays) = this + days.asMinutes()
+  operator fun plus(days: IntDays) = this + days.inMinutes
 
-  operator fun plus(days: LongDays) = this.toLong() + days.asMinutes()
+  operator fun plus(days: LongDays) = this.toLong() + days.inMinutes
 
-  operator fun plus(hours: IntHours) = this + hours.asMinutes()
+  operator fun plus(hours: IntHours) = this + hours.inMinutes
 
-  operator fun plus(hours: LongHours) = this.toLong() + hours.asMinutes()
+  operator fun plus(hours: LongHours) = this.toLong() + hours.inMinutes
 
   operator fun plus(minutes: IntMinutes) = IntMinutes(this.value + minutes.value)
 
   operator fun plus(minutes: LongMinutes) = LongMinutes(this.value.toLong() + minutes.value)
 
-  operator fun plus(seconds: IntSeconds) = this.asSeconds() + seconds
+  operator fun plus(seconds: IntSeconds) = this.inSeconds + seconds
 
-  operator fun plus(seconds: LongSeconds) = this.toLong().asSeconds() + seconds
+  operator fun plus(seconds: LongSeconds) = this.toLong().inSeconds + seconds
 
-  operator fun plus(milliseconds: IntMilliseconds) = this.asMilliseconds() + milliseconds
+  operator fun plus(milliseconds: IntMilliseconds) = this.inMilliseconds + milliseconds
 
-  operator fun plus(milliseconds: LongMilliseconds) = this.toLong().asMilliseconds() + milliseconds
+  operator fun plus(milliseconds: LongMilliseconds) = this.toLong().inMilliseconds + milliseconds
 
-  operator fun plus(microseconds: IntMicroseconds) = this.asMicroseconds() + microseconds
+  operator fun plus(microseconds: IntMicroseconds) = this.inMicroseconds + microseconds
 
-  operator fun plus(microseconds: LongMicroseconds) = this.toLong().asMicroseconds() + microseconds
+  operator fun plus(microseconds: LongMicroseconds) = this.toLong().inMicroseconds + microseconds
 
-  operator fun plus(nanoseconds: IntNanoseconds) = this.asNanoseconds() + nanoseconds
+  operator fun plus(nanoseconds: IntNanoseconds) = this.inNanoseconds + nanoseconds
 
-  operator fun plus(nanoseconds: LongNanoseconds) = this.toLong().asNanoseconds() + nanoseconds
+  operator fun plus(nanoseconds: LongNanoseconds) = this.toLong().inNanoseconds + nanoseconds
 
   operator fun minus(days: IntDays) = plus(-days)
 
@@ -120,31 +144,19 @@ inline class IntMinutes(
 
   operator fun rem(scalar: Long) = this.toLong() % scalar
 
-  fun toWholeDays() = (this.value / MINUTES_PER_DAY).days
-
-  fun toWholeHours() = (this.value / MINUTES_PER_HOUR).hours
-
-  fun asSeconds() = (this.value * MINUTES_PER_SECOND).seconds
-
-  fun asMilliseconds() = (this.value.toLong() * MINUTES_PER_MILLISECOND).milliseconds
-
-  fun asMicroseconds() = (this.value.toLong() * MINUTES_PER_MICROSECOND).microseconds
-
-  fun asNanoseconds() = (this.value.toLong() * MINUTES_PER_NANOSECOND).nanoseconds
-
   inline fun <T> toComponents(action: (
     days: IntDays,
     hours: IntHours,
     minutes: IntMinutes
   ) -> T): T {
-    val days = this.toWholeDays()
-    val hours = (this - days).toWholeHours()
+    val days = this.inWholeDays
+    val hours = (this - days).inWholeHours
     val minutes = (this - days - hours)
     return action(days, hours, minutes)
   }
 
   inline fun <T> toComponents(action: (hours: IntHours, minutes: IntMinutes) -> T): T {
-    val hours = this.toWholeHours()
+    val hours = this.inWholeHours
     val minutes = (this - hours)
     return action(hours, minutes)
   }
@@ -162,6 +174,24 @@ inline class IntMinutes(
 inline class LongMinutes(
   val value: Long
 ) : Comparable<LongMinutes> {
+  val inWholeDays: LongDays
+    get() = (this.value / MINUTES_PER_DAY).days
+
+  val inWholeHours: LongHours
+    get() = (this.value / MINUTES_PER_HOUR).hours
+
+  val inSeconds: LongSeconds
+    get() = (this.value * MINUTES_PER_SECOND).seconds
+
+  val inMilliseconds: LongMilliseconds
+    get() = (this.value * MINUTES_PER_MILLISECOND).milliseconds
+
+  val inMicroseconds: LongMicroseconds
+    get() = (this.value * MINUTES_PER_MICROSECOND).microseconds
+
+  val inNanoseconds: LongNanoseconds
+    get() = (this.value * MINUTES_PER_NANOSECOND).nanoseconds
+
   val isZero: Boolean
     inline get() = this.value == 0L
 
@@ -186,35 +216,43 @@ inline class LongMinutes(
       }
   }
 
+  fun inSecondsExact() = (this.value timesExact MINUTES_PER_SECOND).seconds
+
+  fun inMillisecondsExact() = (this.value timesExact MINUTES_PER_MILLISECOND).milliseconds
+
+  fun inMicrosecondsExact() = (this.value timesExact MINUTES_PER_MICROSECOND).microseconds
+
+  fun inNanosecondsExact() = (this.value timesExact MINUTES_PER_NANOSECOND).nanoseconds
+
   operator fun unaryMinus() = LongMinutes(-value)
 
-  operator fun plus(days: IntDays) = this + days.asMinutes()
+  operator fun plus(days: IntDays) = this + days.inMinutes
 
-  operator fun plus(days: LongDays) = this + days.asMinutes()
+  operator fun plus(days: LongDays) = this + days.inMinutes
 
-  operator fun plus(hours: IntHours) = this + hours.asMinutes()
+  operator fun plus(hours: IntHours) = this + hours.inMinutes
 
-  operator fun plus(hours: LongHours) = this + hours.asMinutes()
+  operator fun plus(hours: LongHours) = this + hours.inMinutes
 
   operator fun plus(minutes: IntMinutes) = LongMinutes(this.value + minutes.value)
 
   operator fun plus(minutes: LongMinutes) = LongMinutes(this.value + minutes.value)
 
-  operator fun plus(seconds: IntSeconds) = this.asSeconds() + seconds
+  operator fun plus(seconds: IntSeconds) = this.inSeconds + seconds
 
-  operator fun plus(seconds: LongSeconds) = this.asSeconds() + seconds
+  operator fun plus(seconds: LongSeconds) = this.inSeconds + seconds
 
-  operator fun plus(milliseconds: IntMilliseconds) = this.asMilliseconds() + milliseconds
+  operator fun plus(milliseconds: IntMilliseconds) = this.inMilliseconds + milliseconds
 
-  operator fun plus(milliseconds: LongMilliseconds) = this.asMilliseconds() + milliseconds
+  operator fun plus(milliseconds: LongMilliseconds) = this.inMilliseconds + milliseconds
 
-  operator fun plus(microseconds: IntMicroseconds) = this.asMicroseconds() + microseconds
+  operator fun plus(microseconds: IntMicroseconds) = this.inMicroseconds + microseconds
 
-  operator fun plus(microseconds: LongMicroseconds) = this.asMicroseconds() + microseconds
+  operator fun plus(microseconds: LongMicroseconds) = this.inMicroseconds + microseconds
 
-  operator fun plus(nanoseconds: IntNanoseconds) = this.asNanoseconds() + nanoseconds
+  operator fun plus(nanoseconds: IntNanoseconds) = this.inNanoseconds + nanoseconds
 
-  operator fun plus(nanoseconds: LongNanoseconds) = this.asNanoseconds() + nanoseconds
+  operator fun plus(nanoseconds: LongNanoseconds) = this.inNanoseconds + nanoseconds
 
   operator fun minus(days: IntDays) = plus(-days)
 
@@ -256,36 +294,26 @@ inline class LongMinutes(
 
   operator fun rem(scalar: Long) = LongMinutes(this.value % scalar)
 
-  fun toWholeDays() = (this.value / MINUTES_PER_DAY).days
-
-  fun toWholeHours() = (this.value / MINUTES_PER_HOUR).hours
-
-  fun asSeconds() = (this.value * MINUTES_PER_SECOND).seconds
-
-  fun asMilliseconds() = (this.value * MINUTES_PER_MILLISECOND).milliseconds
-
-  fun asMicroseconds() = (this.value * MINUTES_PER_MICROSECOND).microseconds
-
-  fun asNanoseconds() = (this.value * MINUTES_PER_NANOSECOND).nanoseconds
-
   inline fun <T> toComponents(action: (
     days: LongDays,
     hours: IntHours,
     minutes: IntMinutes
   ) -> T): T {
-    val days = this.toWholeDays()
-    val hours = (this - days).toInt().toWholeHours()
+    val days = this.inWholeDays
+    val hours = (this - days).toInt().inWholeHours
     val minutes = (this - days - hours).toInt()
     return action(days, hours, minutes)
   }
 
   inline fun <T> toComponents(action: (hours: LongHours, minutes: IntMinutes) -> T): T {
-    val hours = this.toWholeHours()
+    val hours = this.inWholeHours
     val minutes = (this - hours).toInt()
     return action(hours, minutes)
   }
 
   fun toInt() = IntMinutes(this.value.toInt())
+
+  fun toIntExact() = IntMinutes(this.value.toIntExact())
 
   companion object {
     val MIN: LongMinutes = LongMinutes(Long.MIN_VALUE)

@@ -9,6 +9,7 @@ import dev.erikchristensen.islandtime.parser.DateTimeField
 import dev.erikchristensen.islandtime.parser.DateTimeParseResult
 import dev.erikchristensen.islandtime.parser.DateTimeParser
 import dev.erikchristensen.islandtime.parser.Iso8601
+import kotlin.jvm.JvmName
 import kotlin.math.abs
 
 /**
@@ -51,10 +52,10 @@ class Duration private constructor(
     }
 
     operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-    operator fun plus(hoursToAdd: LongHours) = plus(hoursToAdd.asSeconds())
+    operator fun plus(hoursToAdd: LongHours) = plus(hoursToAdd.inSeconds)
 
     operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-    operator fun plus(minutesToAdd: LongMinutes) = plus(minutesToAdd.asSeconds())
+    operator fun plus(minutesToAdd: LongMinutes) = plus(minutesToAdd.inSeconds)
 
     operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
 
@@ -73,7 +74,7 @@ class Duration private constructor(
         return if (nanosecondsToAdd.value == 0L) {
             this
         } else {
-            val secondsToAdd = nanosecondsToAdd.toWholeSeconds()
+            val secondsToAdd = nanosecondsToAdd.inWholeSeconds
             val remainingNanoseconds = (nanosecondsToAdd % NANOSECONDS_PER_SECOND).toInt()
             plus(secondsToAdd, remainingNanoseconds)
         }
@@ -93,18 +94,37 @@ class Duration private constructor(
     // operator fun times(scalar: Int): Duration
     // operator fun div(scalar: Int): Duration
 
+    /**
+     * Break this duration down into components, assuming a 24 hour day
+     */
     inline fun <T> toComponents(
         action: (
+            days: LongDays,
             hours: IntHours,
             minutes: IntMinutes,
             seconds: IntSeconds,
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val hours = seconds.toWholeHours()
-        val minutes = (seconds - hours).toWholeMinutes()
+        val days = seconds.inWholeDays
+        val hours = (seconds - days).inWholeHours
+        val minutes = (seconds - days - hours).inWholeMinutes
+        val seconds = seconds - days - hours - minutes
+        return action(days, hours.toInt(), minutes.toInt(), seconds.toInt(), nanosecondAdjustment)
+    }
+
+    inline fun <T> toComponents(
+        action: (
+            hours: LongHours,
+            minutes: IntMinutes,
+            seconds: IntSeconds,
+            nanoseconds: IntNanoseconds
+        ) -> T
+    ): T {
+        val hours = seconds.inWholeHours
+        val minutes = (seconds - hours).inWholeMinutes
         val seconds = seconds - hours - minutes
-        return action(hours.toInt(), minutes.toInt(), seconds.toInt(), nanosecondAdjustment)
+        return action(hours, minutes.toInt(), seconds.toInt(), nanosecondAdjustment)
     }
 
     inline fun <T> toComponents(
@@ -114,7 +134,7 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val minutes = seconds.toWholeMinutes()
+        val minutes = seconds.inWholeMinutes
         val seconds = seconds - minutes
         return action(minutes, seconds.toInt(), nanosecondAdjustment)
     }
@@ -127,7 +147,6 @@ class Duration private constructor(
     ): T {
         return action(seconds, nanosecondAdjustment)
     }
-
 
     override fun equals(other: Any?): Boolean {
         return other === this ||
@@ -202,7 +221,7 @@ fun durationOf(seconds: LongSeconds, nanoseconds: IntNanoseconds) = durationOf(s
 fun durationOf(seconds: IntSeconds, nanoseconds: LongNanoseconds) = durationOf(seconds.toLong(), nanoseconds)
 
 fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
-    var adjustedSeconds = seconds + nanoseconds.toWholeSeconds()
+    var adjustedSeconds = seconds + nanoseconds.inWholeSeconds
     var newNanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
 
     if (newNanoOfSeconds.value < 0 && adjustedSeconds.value > 0) {
@@ -217,11 +236,11 @@ fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
 }
 
 fun durationOf(days: IntDays) = durationOf(days.toLong())
-fun durationOf(days: LongDays) = durationOf(days.asSeconds())
+fun durationOf(days: LongDays) = durationOf(days.inSeconds)
 fun durationOf(hours: IntHours) = durationOf(hours.toLong())
-fun durationOf(hours: LongHours) = create(hours.asSeconds())
+fun durationOf(hours: LongHours) = create(hours.inSeconds)
 fun durationOf(minutes: IntMinutes) = durationOf(minutes.toLong())
-fun durationOf(minutes: LongMinutes) = create(minutes.asSeconds())
+fun durationOf(minutes: LongMinutes) = create(minutes.inSeconds)
 
 fun durationOf(seconds: IntSeconds) = durationOf(seconds.toLong())
 fun durationOf(seconds: LongSeconds) = create(seconds)
@@ -229,8 +248,8 @@ fun durationOf(seconds: LongSeconds) = create(seconds)
 fun durationOf(milliseconds: IntMilliseconds) = durationOf(milliseconds.toLong())
 
 fun durationOf(milliseconds: LongMilliseconds): Duration {
-    val seconds = milliseconds.toWholeSeconds()
-    val nanoOfSeconds = (milliseconds % MILLISECONDS_PER_SECOND).asNanoseconds().toInt()
+    val seconds = milliseconds.inWholeSeconds
+    val nanoOfSeconds = (milliseconds % MILLISECONDS_PER_SECOND).inNanoseconds.toInt()
 
     return create(seconds, nanoOfSeconds)
 }
@@ -238,8 +257,8 @@ fun durationOf(milliseconds: LongMilliseconds): Duration {
 fun durationOf(microseconds: IntMicroseconds) = durationOf(microseconds.toLong())
 
 fun durationOf(microseconds: LongMicroseconds): Duration {
-    val seconds = microseconds.toWholeSeconds()
-    val nanoOfSeconds = (microseconds % MICROSECONDS_PER_SECOND).asNanoseconds().toInt()
+    val seconds = microseconds.inWholeSeconds
+    val nanoOfSeconds = (microseconds % MICROSECONDS_PER_SECOND).inNanoseconds.toInt()
 
     return create(seconds, nanoOfSeconds)
 }
@@ -247,7 +266,7 @@ fun durationOf(microseconds: LongMicroseconds): Duration {
 fun durationOf(nanoseconds: IntNanoseconds) = durationOf(nanoseconds.toLong())
 
 fun durationOf(nanoseconds: LongNanoseconds): Duration {
-    val seconds = nanoseconds.toWholeSeconds()
+    val seconds = nanoseconds.inWholeSeconds
     val nanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
 
     return create(seconds, nanoOfSeconds)
@@ -276,24 +295,24 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     duration.toComponents { hours, minutes, seconds, nanoseconds ->
         append("PT")
 
-        if (hours.value != 0) {
+        if (!hours.isZero) {
             append(hours.value)
             append('H')
         }
 
-        if (minutes.value != 0) {
+        if (!minutes.isZero) {
             append(minutes.value)
             append('M')
         }
 
-        if (seconds.value != 0 || nanoseconds.value != 0) {
+        if (!seconds.isZero || !nanoseconds.isZero) {
             if (seconds.value == 0 && nanoseconds.value < 0) {
                 append('-')
             }
 
             append(seconds.value)
 
-            if (nanoseconds.value != 0) {
+            if (!nanoseconds.isZero) {
                 append('.')
                 append(
                     abs(nanoseconds.value)

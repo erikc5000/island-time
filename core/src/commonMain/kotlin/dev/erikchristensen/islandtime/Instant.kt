@@ -32,10 +32,7 @@ inline class Instant(val millisecondsSinceUnixEpoch: LongMilliseconds) : Compara
 }
 
 internal fun Instant.asUtcDateTime(): DateTime {
-    val days = millisecondsSinceUnixEpoch.toWholeDays()
-    val remainingMilliseconds = millisecondsSinceUnixEpoch - days
-    val nanosecondOfDay = remainingMilliseconds.asNanoseconds().value
-    return DateTime(Date.fromDaysSinceUnixEpoch(days), Time.ofNanosecondOfDay(nanosecondOfDay))
+    return DateTime.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch, UtcOffset.ZERO)
 }
 
 /**

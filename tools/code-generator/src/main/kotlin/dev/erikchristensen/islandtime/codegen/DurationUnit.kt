@@ -36,6 +36,9 @@ enum class DurationUnit(
     private val singularName: String get() = pluralName.dropLast(1)
     val lowerCaseName: String get() = pluralName.toLowerCase()
     val valueName: String get() = "value"
+    val inUnitPropertyName: String get() = "in$pluralName"
+    val inUnitExactMethodName: String get() = "${inUnitPropertyName}Exact"
+    val inWholeUnitPropertyName: String get() = "inWhole$pluralName"
 
     open val isoPeriodPrefix: String = "PT"
     open val isoPeriodIsFractional: Boolean = false
@@ -63,5 +66,13 @@ data class DurationConstant(
     val value: Long
 ) {
     val isEmpty: Boolean get() = value == 1L
-    val fitsInInt: Boolean get() = value in Int.MIN_VALUE..Int.MAX_VALUE
+    val valueFitsInInt: Boolean get() = value in Int.MIN_VALUE..Int.MAX_VALUE
+
+    val isSafeMultiplicationRequiredForInt: Boolean
+        get() = try {
+            Math.multiplyExact(Int.MIN_VALUE.toLong(), value)
+            false
+        } catch (e: ArithmeticException) {
+            true
+        }
 }

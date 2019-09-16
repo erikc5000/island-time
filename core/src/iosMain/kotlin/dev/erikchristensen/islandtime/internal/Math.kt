@@ -4,13 +4,15 @@ package dev.erikchristensen.islandtime.internal
 // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/jdk8/Jdk8Methods.java
 //
 
-internal actual infix fun Long.floorRem(other: Long): Long {
+internal actual infix fun Long.floorMod(other: Long): Long {
     return ((this % other) + other) % other
 }
 
-internal actual infix fun Int.floorRem(other: Int): Int {
+internal actual infix fun Int.floorMod(other: Int): Int {
     return ((this % other) + other) % other
 }
+
+internal actual infix fun Long.floorMod(other: Int): Long = this floorMod other.toLong()
 
 internal actual infix fun Long.floorDiv(other: Long): Long {
     val result = this / other
@@ -31,6 +33,8 @@ internal actual infix fun Int.floorDiv(other: Int): Int {
         result
     }
 }
+
+internal actual infix fun Long.floorDiv(other: Int): Long = this floorDiv other.toLong()
 
 internal actual infix fun Long.plusExact(other: Long): Long {
     val result = this + other
@@ -101,6 +105,8 @@ internal actual infix fun Int.timesExact(other: Int): Int {
 
     return total.toInt()
 }
+
+internal actual infix fun Long.timesExact(other: Int): Long = this timesExact other.toLong()
 
 internal actual fun Long.toIntExact(): Int {
     if (this !in Int.MIN_VALUE..Int.MAX_VALUE) {

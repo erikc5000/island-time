@@ -32,9 +32,9 @@ class MonthsTest {
     }
 
     @Test
-    fun `toWholeYears() converts months to an equivalent number of full years`() {
-        assertEquals(1.years, 13.months.toWholeYears())
-        assertEquals(1L.years, 13L.months.toWholeYears())
+    fun `inWholeYears converts months to an equivalent number of full years`() {
+        assertEquals(1.years, 13.months.inWholeYears)
+        assertEquals(1L.years, 13L.months.inWholeYears)
     }
 
     @Test

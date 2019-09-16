@@ -169,7 +169,7 @@ class DateTimeTest {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at
                 Time(0, 59, 59, 999_999_999),
-            (Date(1969, Month.DECEMBER, 31) at Time.MAX) + 1.hours.asNanoseconds()
+            (Date(1969, Month.DECEMBER, 31) at Time.MAX) + 1.hours.inNanoseconds
         )
     }
 
