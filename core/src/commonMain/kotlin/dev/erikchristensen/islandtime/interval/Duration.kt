@@ -1,15 +1,16 @@
 package dev.erikchristensen.islandtime.interval
 
+import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.internal.MICROSECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.MILLISECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.toZeroPaddedString
+import dev.erikchristensen.islandtime.interval.Duration.Companion.ZERO
 import dev.erikchristensen.islandtime.interval.Duration.Companion.create
 import dev.erikchristensen.islandtime.parser.DateTimeField
 import dev.erikchristensen.islandtime.parser.DateTimeParseResult
 import dev.erikchristensen.islandtime.parser.DateTimeParser
 import dev.erikchristensen.islandtime.parser.Iso8601
-import kotlin.jvm.JvmName
 import kotlin.math.abs
 
 /**
@@ -51,48 +52,152 @@ class Duration private constructor(
         }
     }
 
-    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-    operator fun plus(hoursToAdd: LongHours) = plus(hoursToAdd.inSeconds)
+    operator fun plus(days: IntDays) = plus(days.toLong().inSeconds, 0.nanoseconds)
+    operator fun plus(days: LongDays) = plus(days.inSecondsExact(), 0.nanoseconds)
 
-    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-    operator fun plus(minutesToAdd: LongMinutes) = plus(minutesToAdd.inSeconds)
+    operator fun plus(hours: IntHours) = plus(hours.toLong().inSeconds, 0.nanoseconds)
+    operator fun plus(hours: LongHours) = plus(hours.inSecondsExact(), 0.nanoseconds)
 
-    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
+    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong().inSeconds, 0.nanoseconds)
+    operator fun plus(minutes: LongMinutes) = plus(minutes.inSecondsExact(), 0.nanoseconds)
 
-    operator fun plus(secondsToAdd: LongSeconds): Duration {
-        return if (secondsToAdd.value == 0L) {
-            this
+    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong(), 0.nanoseconds)
+    operator fun plus(seconds: LongSeconds) = plus(seconds, 0.nanoseconds)
+
+    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.inNanoseconds)
+
+    operator fun plus(milliseconds: LongMilliseconds): Duration {
+        return plus(
+            milliseconds.inWholeSeconds,
+            ((milliseconds.value % MILLISECONDS_PER_SECOND).toInt() * NANOSECONDS_PER_MILLISECOND).nanoseconds
+        )
+    }
+
+    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.inNanoseconds)
+
+    operator fun plus(microseconds: LongMicroseconds): Duration {
+        return plus(
+            microseconds.inWholeSeconds,
+            ((microseconds.value % MICROSECONDS_PER_SECOND).toInt() * NANOSECONDS_PER_MICROSECOND).nanoseconds
+        )
+    }
+
+    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+
+    operator fun plus(nanoseconds: LongNanoseconds): Duration {
+        return plus(
+            nanoseconds.inWholeSeconds,
+            (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
+        )
+    }
+
+    operator fun minus(other: Duration): Duration {
+        return if (other.seconds.value == Long.MIN_VALUE) {
+            plus(Long.MAX_VALUE.seconds, -other.nanosecondAdjustment)
         } else {
-            val newSeconds = seconds + secondsToAdd
-            plus(newSeconds, 0.nanoseconds)
+            plus(-other.seconds, -other.nanosecondAdjustment)
         }
     }
 
-    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
+    operator fun minus(days: IntDays) = plus(-days.toLong())
 
-    operator fun plus(nanosecondsToAdd: LongNanoseconds): Duration {
-        return if (nanosecondsToAdd.value == 0L) {
-            this
+    operator fun minus(days: LongDays): Duration {
+        return if (days.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.days + 1.days
         } else {
-            val secondsToAdd = nanosecondsToAdd.inWholeSeconds
-            val remainingNanoseconds = (nanosecondsToAdd % NANOSECONDS_PER_SECOND).toInt()
-            plus(secondsToAdd, remainingNanoseconds)
+            plus(-days)
         }
     }
 
-    operator fun minus(other: Duration) = plus(-other)
-    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-    operator fun minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
-    operator fun minus(minutesToSubtracts: IntMinutes) = plus(-minutesToSubtracts)
-    operator fun minus(minutesToSubtracts: LongMinutes) = plus(-minutesToSubtracts)
-    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
-    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(hours: IntHours) = plus(-hours.toLong())
 
-    // These may require a multiplatform BigDecimal implementation
-    // operator fun times(scalar: Int): Duration
-    // operator fun div(scalar: Int): Duration
+    operator fun minus(hours: LongHours): Duration {
+        return if (hours.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.hours + 1.hours
+        } else {
+            plus(-hours)
+        }
+    }
+
+    operator fun minus(minutes: IntMinutes) = plus(-minutes.toLong())
+
+    operator fun minus(minutes: LongMinutes): Duration {
+        return if (minutes.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.minutes + 1.minutes
+        } else {
+            plus(-minutes)
+        }
+    }
+
+    operator fun minus(seconds: IntSeconds) = plus(-seconds.toLong())
+
+    operator fun minus(seconds: LongSeconds): Duration {
+        return if (seconds.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.seconds + 1.seconds
+        } else {
+            plus(-seconds)
+        }
+    }
+
+    operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds.toLong())
+
+    operator fun minus(milliseconds: LongMilliseconds): Duration {
+        return if (milliseconds.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.milliseconds + 1.milliseconds
+        } else {
+            plus(-milliseconds)
+        }
+    }
+
+    operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds.toLong())
+
+    operator fun minus(microseconds: LongMicroseconds): Duration {
+        return if (microseconds.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.microseconds + 1.microseconds
+        } else {
+            plus(-microseconds)
+        }
+    }
+
+    operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds.toLong())
+
+    operator fun minus(nanoseconds: LongNanoseconds): Duration {
+        return if (nanoseconds.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.nanoseconds + 1.nanoseconds
+        } else {
+            plus(-nanoseconds)
+        }
+    }
+
+     operator fun times(scalar: Int): Duration {
+         return when (scalar) {
+             0 -> ZERO
+             1 -> this
+             else -> {
+                 // TODO: Revisit this if and when overflow safe operations are fully added to the duration units
+                 var newSeconds = seconds.value timesExact scalar
+                 var newNanoseconds = nanosecondAdjustment.toLong() * scalar
+                 newSeconds = newSeconds plusExact newNanoseconds.inWholeSeconds.value
+                 newNanoseconds %= NANOSECONDS_PER_SECOND
+                 create(newSeconds.seconds, newNanoseconds.toInt())
+             }
+         }
+     }
+
+     operator fun div(scalar: Int): Duration {
+         return when (scalar) {
+             0 -> throw ArithmeticException("Division by zero")
+             1 -> this
+             -1 -> -this
+             else -> {
+                 val fractionalSeconds = seconds.value.toDouble() / scalar
+                 val newSeconds = fractionalSeconds.toLong()
+                 val newNanoseconds = nanosecondAdjustment.value / scalar +
+                     ((fractionalSeconds - newSeconds) * NANOSECONDS_PER_SECOND).toInt()
+                 create(newSeconds.seconds, newNanoseconds.nanoseconds)
+             }
+         }
+    }
 
     /**
      * Break this duration down into components, assuming a 24 hour day
@@ -178,16 +283,14 @@ class Duration private constructor(
     }
 
     private fun plus(secondsToAdd: LongSeconds, nanosecondsToAdd: IntNanoseconds): Duration {
-        var newSeconds = seconds + secondsToAdd
-        var newNanoAdjustment = nanosecondAdjustment plusWithOverflow nanosecondsToAdd
-
-        if (newNanoAdjustment.value >= NANOSECONDS_PER_SECOND) {
-            newSeconds += 1L.seconds
-            newNanoAdjustment = newNanoAdjustment minusWithOverflow 1.seconds
-        } else if (newNanoAdjustment.value <= -NANOSECONDS_PER_SECOND) {
-            newSeconds -= 1L.seconds
-            newNanoAdjustment = newNanoAdjustment plusWithOverflow 1.seconds
+        if (secondsToAdd.value == 0L && nanosecondsToAdd.value == 0) {
+            return this
         }
+
+        var newSeconds = (seconds.value plusExact secondsToAdd.value).seconds
+        var newNanoAdjustment = nanosecondAdjustment plusWithOverflow nanosecondsToAdd
+        newSeconds += newNanoAdjustment.inWholeSeconds
+        newNanoAdjustment = (newNanoAdjustment.value % NANOSECONDS_PER_SECOND).nanoseconds
 
         if (newNanoAdjustment.value < 0 && newSeconds.value > 0) {
             newSeconds -= 1L.seconds
@@ -205,12 +308,12 @@ class Duration private constructor(
 
         internal fun create(
             seconds: LongSeconds,
-            nanoOfSeconds: IntNanoseconds = 0.nanoseconds
+            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds
         ): Duration {
-            return if (seconds.value == 0L && nanoOfSeconds.value == 0) {
+            return if (seconds.value == 0L && nanosecondAdjustment.value == 0) {
                 ZERO
             } else {
-                Duration(seconds, nanoOfSeconds)
+                Duration(seconds, nanosecondAdjustment)
             }
         }
     }
@@ -235,14 +338,48 @@ fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
     return create(adjustedSeconds, newNanoOfSeconds)
 }
 
-fun durationOf(days: IntDays) = durationOf(days.toLong())
-fun durationOf(days: LongDays) = durationOf(days.inSeconds)
-fun durationOf(hours: IntHours) = durationOf(hours.toLong())
-fun durationOf(hours: LongHours) = create(hours.inSeconds)
-fun durationOf(minutes: IntMinutes) = durationOf(minutes.toLong())
-fun durationOf(minutes: LongMinutes) = create(minutes.inSeconds)
+/**
+ * Create a [Duration] of 24-hour days
+ */
+fun durationOf(days: IntDays) = create(days.toLong().inSeconds)
 
-fun durationOf(seconds: IntSeconds) = durationOf(seconds.toLong())
+/**
+ * Create a [Duration] of 24-hour days
+ * @throws ArithmeticException if overflow occurs
+ */
+fun durationOf(days: LongDays) = create(days.inSecondsExact())
+
+/**
+ * Create a [Duration] of hours
+ */
+fun durationOf(hours: IntHours) = create(hours.toLong().inSeconds)
+
+/**
+ * Create a [Duration] of hours
+ * @throws ArithmeticException if overflow occurs
+ */
+fun durationOf(hours: LongHours) = create(hours.inSecondsExact())
+
+/**
+ * Create a [Duration] of minutes
+ */
+fun durationOf(minutes: IntMinutes) = create(minutes.toLong().inSeconds)
+
+/**
+ * Create a [Duration] of minutes
+ * @throws ArithmeticException if overflow occurs
+ */
+fun durationOf(minutes: LongMinutes) = create(minutes.inSecondsExact())
+
+/**
+ * Create a [Duration] of seconds
+ */
+fun durationOf(seconds: IntSeconds) = create(seconds.toLong())
+
+/**
+ * Create a [Duration] of seconds
+ * @throws ArithmeticException if overflow occurs
+ */
 fun durationOf(seconds: LongSeconds) = create(seconds)
 
 fun durationOf(milliseconds: IntMilliseconds) = durationOf(milliseconds.toLong())
@@ -277,6 +414,7 @@ fun durationOf(nanoseconds: LongNanoseconds): Duration {
  */
 fun abs(duration: Duration) = duration.absoluteValue
 
+fun LongDays.asDuration() = durationOf(this)
 fun LongHours.asDuration() = durationOf(this)
 fun LongMinutes.asDuration() = durationOf(this)
 fun LongSeconds.asDuration() = durationOf(this)
@@ -284,12 +422,13 @@ fun LongMilliseconds.asDuration() = durationOf(this)
 fun LongMicroseconds.asDuration() = durationOf(this)
 fun LongNanoseconds.asDuration() = durationOf(this)
 
-fun IntHours.asDuration() = durationOf(this.toLong())
-fun IntMinutes.asDuration() = durationOf(this.toLong())
-fun IntSeconds.asDuration() = durationOf(this.toLong())
-fun IntMilliseconds.asDuration() = durationOf(this.toLong())
-fun IntMicroseconds.asDuration() = durationOf(this.toLong())
-fun IntNanoseconds.asDuration() = durationOf(this.toLong())
+fun IntDays.asDuration() = durationOf(this)
+fun IntHours.asDuration() = durationOf(this)
+fun IntMinutes.asDuration() = durationOf(this)
+fun IntSeconds.asDuration() = durationOf(this)
+fun IntMilliseconds.asDuration() = durationOf(this)
+fun IntMicroseconds.asDuration() = durationOf(this)
+fun IntNanoseconds.asDuration() = durationOf(this)
 
 internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     duration.toComponents { hours, minutes, seconds, nanoseconds ->

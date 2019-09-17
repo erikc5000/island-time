@@ -63,7 +63,7 @@ class FixedClock(
     operator fun minusAssign(milliseconds: IntMilliseconds) = plusAssign(-milliseconds)
 
     override fun instant(): Instant {
-        return Instant(unixEpochMilliseconds)
+        return Instant.fromMillisecondsSinceUnixEpoch(unixEpochMilliseconds)
     }
 }
 

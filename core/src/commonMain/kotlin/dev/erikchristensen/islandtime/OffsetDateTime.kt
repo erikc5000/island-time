@@ -262,7 +262,7 @@ class OffsetDateTime(
 
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTime(offset), offset)
+infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.asDateTimeAt(offset), offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(Iso8601.Extended.OFFSET_DATE_TIME_PARSER)
 
@@ -272,7 +272,7 @@ fun String.toOffsetDateTime(parser: DateTimeParser): OffsetDateTime {
 }
 
 internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {
-    val dateTime = this.toDateTime()
+    val dateTime = this.asDateTimeAt()
     val utcOffset = this.toUtcOffset()
 
     return if (dateTime != null && utcOffset != null) {

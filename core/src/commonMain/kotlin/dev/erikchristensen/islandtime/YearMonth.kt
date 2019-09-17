@@ -43,7 +43,7 @@ inline class YearMonth internal constructor(
     /**
      * Get the range of dates within this year and month
      */
-    val dateRange: DateRange get() = DateRange(firstDate, lastDate)
+    val dateRange: DateRange get() = DateRange(startDate, endDate)
 
     /**
      * Get the length of this year month in days
@@ -73,12 +73,12 @@ inline class YearMonth internal constructor(
     /**
      * Get the [Date] representing the first day in this year and month
      */
-    val firstDate: Date get() = Date(year, month, 1)
+    val startDate: Date get() = Date(year, month, 1)
 
     /**
      * Get the [Date] representing the last day in this year and month
      */
-    val lastDate: Date get() = Date(year, month, month.lastDayIn(year))
+    val endDate: Date get() = Date(year, month, month.lastDayIn(year))
 
     override fun compareTo(other: YearMonth): Int {
         return this.monthsSinceYear0.value - other.monthsSinceYear0.value
