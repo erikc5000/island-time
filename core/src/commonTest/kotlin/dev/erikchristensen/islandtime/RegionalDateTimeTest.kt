@@ -188,7 +188,7 @@ class RegionalDateTimeTest {
                 821_000_000,
                 TimeZone.UTC
             ),
-            Instant(1566256047821L.milliseconds) at TimeZone.UTC
+            Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds) at TimeZone.UTC
         )
 
         assertEquals(
@@ -202,7 +202,8 @@ class RegionalDateTimeTest {
                 821_000_000,
                 TimeZone("America/New_York")
             ),
-            Instant(1566256047821L.milliseconds) at TimeZone("America/New_York")
+            Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds)
+                at TimeZone("America/New_York")
         )
     }
 

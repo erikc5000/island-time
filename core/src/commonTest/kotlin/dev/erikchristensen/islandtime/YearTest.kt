@@ -62,13 +62,13 @@ class YearTest {
     }
 
     @Test
-    fun `firstDate property returns the first date of the year`() {
-        assertEquals(Date(2000, Month.JANUARY, 1), Year(2000).firstDate)
+    fun `startDate property returns the first date of the year`() {
+        assertEquals(Date(2000, Month.JANUARY, 1), Year(2000).startDate)
     }
 
     @Test
-    fun `lastDate property returns the last date of the year`() {
-        assertEquals(Date(2000, Month.DECEMBER, 31), Year(2000).lastDate)
+    fun `endDate property returns the last date of the year`() {
+        assertEquals(Date(2000, Month.DECEMBER, 31), Year(2000).endDate)
     }
 
     @Test

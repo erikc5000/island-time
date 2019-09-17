@@ -7,6 +7,16 @@ import dev.erikchristensen.islandtime.date.Date
 import dev.erikchristensen.islandtime.interval.*
 
 @JvmName("convertFromJava")
+fun org.threeten.bp.Instant.toIslandInstant(): Instant {
+    return Instant.fromSecondsSinceUnixEpoch(epochSecond.seconds, nano.nanoseconds)
+}
+
+@JvmName("convertToJava")
+fun Instant.toJavaInstant(): org.threeten.bp.Instant {
+    return org.threeten.bp.Instant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.toLong().value)
+}
+
+@JvmName("convertFromJava")
 fun org.threeten.bp.LocalDate.toIslandDate(): Date {
     return Date(year, monthValue, dayOfMonth)
 }

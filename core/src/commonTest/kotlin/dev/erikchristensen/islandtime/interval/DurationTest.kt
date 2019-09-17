@@ -143,6 +143,81 @@ class DurationTest {
     }
 
     @Test
+    fun `multiplying by zero returns ZERO`() {
+        assertEquals(Duration.ZERO, 2.hours.asDuration() * 0)
+    }
+
+    @Test
+    fun `multiplying by 1 returns the same duration`() {
+        assertEquals(4.seconds.asDuration(), 4.seconds.asDuration() * 1)
+        assertEquals((-4).seconds.asDuration(), (-4).seconds.asDuration() * 1)
+    }
+
+    @Test
+    fun `multiplying by -1 reverses the sign of the duration`() {
+        assertEquals((-4).seconds.asDuration(), 4.seconds.asDuration() * -1)
+        assertEquals(4.seconds.asDuration(), (-4).seconds.asDuration() * -1)
+    }
+
+    @Test
+    fun `throws an exception when multiplication causes overflow`() {
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE.seconds.asDuration() * -1 }
+        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.hours.asDuration() * Int.MAX_VALUE }
+    }
+
+    @Test
+    fun `multiplication by a positive scalar value`() {
+        assertEquals(
+            (25.hours + 2.seconds + 500.milliseconds).asDuration(),
+            (5.hours + 500.milliseconds).asDuration() * 5
+        )
+    }
+
+    @Test
+    fun `multiplication by a negative scalar value`() {
+        assertEquals(
+            ((-25).hours - 2.seconds - 500.milliseconds).asDuration(),
+            (5.hours + 500.milliseconds).asDuration() * -5
+        )
+    }
+
+    @Test
+    fun `dividing by zero causes an exception`() {
+        assertFailsWith<ArithmeticException> { durationOf(5.hours) / 0 }
+    }
+
+    @Test
+    fun `dividing by 1 returns the same duration`() {
+        assertEquals(1.minutes.asDuration(), 1.minutes.asDuration() / 1)
+    }
+
+    @Test
+    fun `dividing by -1 negates the duration`() {
+        assertEquals(1.minutes.asDuration(), (-1).minutes.asDuration() / -1)
+    }
+
+    @Test
+    fun `division by a positive scalar value`() {
+        assertEquals(
+            111_111_111.nanoseconds.asDuration(),
+            1.seconds.asDuration() / 9
+        )
+
+        assertEquals(
+            durationOf(12.minutes + 1.nanoseconds),
+            durationOf(1.hours + 5.nanoseconds) / 5
+        )
+    }
+
+    @Test
+    fun `division by a negative scalar value`() {
+        assertEquals(
+            (-100).milliseconds.asDuration(),
+            1.seconds.asDuration() / -10
+        )
+    }
+
+    @Test
     fun `toComponents() executes function with expected arguments`() {
         durationOf(5.hours + 30.minutes + 30.seconds + 500.milliseconds)
             .toComponents { hours, minutes, seconds, nanoseconds ->

@@ -8,6 +8,8 @@ internal actual class SystemClock actual constructor() : Clock {
     actual override val timeZone = TimeZone(NSTimeZone.localTimeZone.name)
 
     actual override fun instant(): Instant {
-       return Instant((NSTimeIntervalSince1970 * MILLISECONDS_PER_SECOND).toLong().milliseconds)
+       return Instant.fromMillisecondsSinceUnixEpoch(
+           (NSTimeIntervalSince1970 * MILLISECONDS_PER_SECOND).toLong().milliseconds
+       )
     }
 }

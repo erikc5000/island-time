@@ -8,6 +8,16 @@ import dev.erikchristensen.islandtime.date.Date
 import dev.erikchristensen.islandtime.interval.*
 
 @JvmName("convertFromJava")
+fun java.time.Instant.toIslandInstant(): Instant {
+    return Instant.fromSecondsSinceUnixEpoch(epochSecond.seconds, nano.nanoseconds)
+}
+
+@JvmName("convertToJava")
+fun Instant.toJavaInstant(): java.time.Instant {
+    return java.time.Instant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.toLong().value)
+}
+
+@JvmName("convertFromJava")
 fun java.time.LocalDate.toIslandDate(): Date {
     return Date(year, monthValue, dayOfMonth)
 }

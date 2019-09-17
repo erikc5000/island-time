@@ -65,8 +65,8 @@ class YearMonthTest {
         assertEquals(31, yearMonth1.lastDay)
         assertEquals(1, yearMonth1.firstDayOfYear)
         assertEquals(31, yearMonth1.lastDayOfYear)
-        assertEquals(Date(1970, Month.JANUARY, 1), yearMonth1.firstDate)
-        assertEquals(Date(1970, Month.JANUARY, 31), yearMonth1.lastDate)
+        assertEquals(Date(1970, Month.JANUARY, 1), yearMonth1.startDate)
+        assertEquals(Date(1970, Month.JANUARY, 31), yearMonth1.endDate)
 
         val yearMonth2 = YearMonth(2000, Month.JUNE)
         assertEquals(2000, yearMonth2.year)
@@ -83,8 +83,8 @@ class YearMonthTest {
         assertEquals(30, yearMonth2.lastDay)
         assertEquals(153, yearMonth2.firstDayOfYear)
         assertEquals(182, yearMonth2.lastDayOfYear)
-        assertEquals(Date(2000, Month.JUNE, 1), yearMonth2.firstDate)
-        assertEquals(Date(2000, Month.JUNE, 30), yearMonth2.lastDate)
+        assertEquals(Date(2000, Month.JUNE, 1), yearMonth2.startDate)
+        assertEquals(Date(2000, Month.JUNE, 30), yearMonth2.endDate)
     }
 
     @Test

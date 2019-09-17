@@ -201,14 +201,12 @@ class RegionalDateTime private constructor(
 
         fun ofInstant(instant: Instant, timeZone: TimeZone): RegionalDateTime {
             val offset = timeZone.rules.offsetAt(instant)
-            val dateTime = instant.toDateTime(offset)
+            val dateTime = instant.asDateTimeAt(offset)
             return RegionalDateTime(dateTime, timeZone, offset)
         }
 
         fun ofInstant(dateTime: DateTime, offset: UtcOffset, timeZone: TimeZone): RegionalDateTime {
-            // FIXME: Precision is lost here. Revisit when Instant gets redone with nanosecond precision.
-            val instant = Instant(dateTime.millisecondsSinceUnixEpochAt(offset))
-            return ofInstant(instant, timeZone)
+            return RegionalDateTime(dateTime, timeZone, offset)
         }
     }
 }
@@ -231,7 +229,7 @@ infix fun DateTime.at(timeZone: TimeZone) = RegionalDateTime(this, timeZone)
  */
 infix fun Instant.at(timeZone: TimeZone) = RegionalDateTime.ofInstant(this, timeZone)
 
-fun Date.atStartOfDay(timeZone: TimeZone): RegionalDateTime {
+fun Date.startOfDayAt(timeZone: TimeZone): RegionalDateTime {
     val dateTime = this at Time.MIDNIGHT
     val transition = timeZone.rules.transitionAt(dateTime)
 
@@ -242,7 +240,7 @@ fun Date.atStartOfDay(timeZone: TimeZone): RegionalDateTime {
     }
 }
 
-fun Date.atEndOfDay(timeZone: TimeZone): RegionalDateTime {
+fun Date.endOfDayAt(timeZone: TimeZone): RegionalDateTime {
     val dateTime = this at Time.MAX
     val transition = timeZone.rules.transitionAt(dateTime)
 
@@ -257,7 +255,7 @@ fun Date.atEndOfDay(timeZone: TimeZone): RegionalDateTime {
     return RegionalDateTime(dateTime, timeZone)
 }
 
-fun RegionalDateTime.toOffsetDateTime() = OffsetDateTime(dateTime, offset)
+fun RegionalDateTime.asOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
 fun String.toRegionalDateTime() = toRegionalDateTime(Iso8601.Extended.REGIONAL_DATE_TIME_PARSER)
 
@@ -267,7 +265,7 @@ fun String.toRegionalDateTime(parser: DateTimeParser): RegionalDateTime {
 }
 
 internal fun DateTimeParseResult.toRegionalDateTime(): RegionalDateTime? {
-    val dateTime = this.toDateTime()
+    val dateTime = this.asDateTimeAt()
     val offset = this.toUtcOffset()
     val regionId = timeZoneRegion
 

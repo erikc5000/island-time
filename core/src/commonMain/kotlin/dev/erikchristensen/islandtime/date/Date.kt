@@ -104,10 +104,9 @@ class Date private constructor(
         return if (monthsToAdd.value == 0) {
             this
         } else {
-            val monthsRelativeTo0 = year * MONTHS_IN_YEAR + month.ordinal
-            val newMonthsRelativeTo0 = monthsRelativeTo0 + monthsToAdd.value
-            val newYear = newMonthsRelativeTo0 / MONTHS_IN_YEAR
-            val newMonth = Month.values()[newMonthsRelativeTo0 % MONTHS_IN_YEAR]
+            val newMonthsSinceYear0 = monthsSinceYear0 + monthsToAdd.value
+            val newYear = newMonthsSinceYear0 / MONTHS_IN_YEAR
+            val newMonth = Month.values()[newMonthsSinceYear0 % MONTHS_IN_YEAR]
 
             Date(newYear, newMonth, dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)))
         }
@@ -315,7 +314,7 @@ internal fun DateTimeParseResult.toDate(): Date? {
 }
 
 fun periodBetween(start: Date, endExclusive: Date): Period {
-    var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
+    var totalMonths = endExclusive.monthsSinceYear0.toLong() - start.monthsSinceYear0
     val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
 
     val days = when {
@@ -363,7 +362,7 @@ internal fun StringBuilder.appendDate(date: Date): StringBuilder {
     return this
 }
 
-private val Date.monthsSinceYear0 get() = year * 12L + month.ordinal
+private inline val Date.monthsSinceYear0 get() = year * 12 + month.ordinal
 
 private fun checkValidDayOfMonth(year: Int, month: Month, dayOfMonth: Int) {
     if (dayOfMonth !in month.dayRangeIn(year)) {

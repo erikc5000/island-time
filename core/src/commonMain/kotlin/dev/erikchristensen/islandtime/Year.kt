@@ -21,9 +21,9 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
     val length: IntDays get() = lengthOfYear(value)
     val lastDay: Int get() = lastDayOfYear(value)
     inline val dayRange: IntRange get() = 1..lastDay
-    inline val dateRange: DateRange get() = DateRange(firstDate, lastDate)
-    inline val firstDate: Date get() = Date(value, Month.JANUARY, 1)
-    inline val lastDate: Date get() = Date(value, Month.DECEMBER, 31)
+    inline val dateRange: DateRange get() = DateRange(startDate, endDate)
+    inline val startDate: Date get() = Date(value, Month.JANUARY, 1)
+    inline val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
     operator fun plus(yearsToAdd: LongYears): Year {
         val newValue = value + yearsToAdd.value

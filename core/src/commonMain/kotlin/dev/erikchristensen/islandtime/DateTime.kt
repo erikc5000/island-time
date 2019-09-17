@@ -412,20 +412,20 @@ infix fun Date.at(time: Time) = DateTime(this, time)
 /**
  * Get the [DateTime] at the start of the day
  */
-fun Date.atStartOfDay() = DateTime(this, Time.MIDNIGHT)
+val Date.startOfDay get() = DateTime(this, Time.MIDNIGHT)
 
 /**
  * Get the [DateTime] at the end of the day
  */
-fun Date.atEndOfDay() = DateTime(this, Time.MAX)
+val Date.endOfDay get() = DateTime(this, Time.MAX)
 
-fun Instant.toDateTime(offset: UtcOffset): DateTime {
-    return DateTime.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch, offset)
+fun Instant.asDateTimeAt(offset: UtcOffset): DateTime {
+    return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
 }
 
-fun Instant.toDateTime(timeZone: TimeZone): DateTime {
+fun Instant.asDateTimeAt(timeZone: TimeZone): DateTime {
     val offset = timeZone.rules.offsetAt(this)
-    return DateTime.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch, offset)
+    return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
 }
 
 /**
@@ -439,10 +439,10 @@ fun String.toDateTime() = toDateTime(Iso8601.Extended.CALENDAR_DATE_TIME_PARSER)
  */
 fun String.toDateTime(parser: DateTimeParser): DateTime {
     val result = parser.parse(this)
-    return result.toDateTime() ?: raiseParserFieldResolutionException("DateTime", this)
+    return result.asDateTimeAt() ?: raiseParserFieldResolutionException("DateTime", this)
 }
 
-internal fun DateTimeParseResult.toDateTime(): DateTime? {
+internal fun DateTimeParseResult.asDateTimeAt(): DateTime? {
     val date = this.toDate()
     val time = this.toTime()
 

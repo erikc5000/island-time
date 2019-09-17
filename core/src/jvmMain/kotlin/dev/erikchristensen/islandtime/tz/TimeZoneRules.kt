@@ -5,10 +5,7 @@ package dev.erikchristensen.islandtime.tz
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
 import dev.erikchristensen.islandtime.interval.seconds
-import dev.erikchristensen.islandtime.jvm.toIslandDateTime
-import dev.erikchristensen.islandtime.jvm.toIslandUtcOffset
-import dev.erikchristensen.islandtime.jvm.toJavaLocalDateTime
-import dev.erikchristensen.islandtime.jvm.toJavaZoneOffset
+import dev.erikchristensen.islandtime.jvm.*
 import java.time.zone.ZoneOffsetTransition
 import java.time.zone.ZoneRules
 import java.time.zone.ZoneRulesException
@@ -42,7 +39,7 @@ private class JavaTimeZoneRules(
 ) : TimeZoneRules {
 
     override fun offsetAt(instant: Instant): UtcOffset {
-        val offset = javaZoneRules.getOffset(java.time.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
+        val offset = javaZoneRules.getOffset(instant.toJavaInstant())
         return offset.toIslandUtcOffset()
     }
 
@@ -69,12 +66,11 @@ private class JavaTimeZoneRules(
     }
 
     override fun isDaylightSavingsAt(instant: Instant): Boolean {
-        return javaZoneRules.isDaylightSavings(java.time.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
+        return javaZoneRules.isDaylightSavings(instant.toJavaInstant())
     }
 
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
-        return javaZoneRules.getDaylightSavings(java.time.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
-            .seconds.toInt().seconds
+        return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
     }
 }
 

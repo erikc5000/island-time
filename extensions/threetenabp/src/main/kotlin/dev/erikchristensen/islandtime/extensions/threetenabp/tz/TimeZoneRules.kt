@@ -4,10 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dev.erikchristensen.islandtime.*
-import dev.erikchristensen.islandtime.extensions.threetenabp.toIslandDateTime
-import dev.erikchristensen.islandtime.extensions.threetenabp.toIslandUtcOffset
-import dev.erikchristensen.islandtime.extensions.threetenabp.toJavaLocalDateTime
-import dev.erikchristensen.islandtime.extensions.threetenabp.toJavaZoneOffset
+import dev.erikchristensen.islandtime.extensions.threetenabp.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
 import dev.erikchristensen.islandtime.interval.seconds
 import dev.erikchristensen.islandtime.tz.TimeZoneOffsetTransition
@@ -57,9 +54,8 @@ private class JavaTimeZoneRules(
 ) : TimeZoneRules {
 
     override fun offsetAt(instant: Instant): UtcOffset {
-        val offset = javaZoneRules.getOffset(org.threeten.bp.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
+        val offset = javaZoneRules.getOffset(instant.toJavaInstant())
         return offset.toIslandUtcOffset()
-
     }
 
     override fun offsetAt(dateTime: DateTime): UtcOffset {
@@ -84,11 +80,11 @@ private class JavaTimeZoneRules(
     }
 
     override fun isDaylightSavingsAt(instant: Instant): Boolean {
-        return javaZoneRules.isDaylightSavings(org.threeten.bp.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value))
+        return javaZoneRules.isDaylightSavings(instant.toJavaInstant())
     }
 
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
-        return javaZoneRules.getDaylightSavings(org.threeten.bp.Instant.ofEpochMilli(instant.millisecondsSinceUnixEpoch.value)).seconds.toInt().seconds
+        return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
     }
 }
 
