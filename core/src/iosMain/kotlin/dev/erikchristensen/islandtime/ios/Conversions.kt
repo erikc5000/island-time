@@ -1,8 +1,9 @@
 package dev.erikchristensen.islandtime.ios
 
 import dev.erikchristensen.islandtime.*
-import dev.erikchristensen.islandtime.internal.MILLISECONDS_PER_SECOND
-import dev.erikchristensen.islandtime.interval.milliseconds
+import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_SECOND
+import dev.erikchristensen.islandtime.interval.seconds
+import dev.erikchristensen.islandtime.interval.nanoseconds
 import platform.Foundation.*
 
 fun DateTime.toNSDateComponents(): NSDateComponents {
@@ -17,11 +18,16 @@ fun DateTime.toNSDateComponents(): NSDateComponents {
     }
 }
 
-fun NSDate.toIslandInstant(): Instant = Instant((timeIntervalSince1970 * MILLISECONDS_PER_SECOND).toLong().milliseconds)
+fun NSDate.toIslandInstant(): Instant {
+    val seconds = timeIntervalSince1970.toLong().seconds
+    val nanoseconds = ((timeIntervalSince1970 - seconds.value) * NANOSECONDS_PER_SECOND).toInt().nanoseconds
+
+    return Instant.fromSecondsSinceUnixEpoch(seconds, nanoseconds)
+}
 
 fun Instant.toNSDate(): NSDate {
     return NSDate.dateWithTimeIntervalSince1970(
-        millisecondsSinceUnixEpoch.value.toDouble() / MILLISECONDS_PER_SECOND
+        secondsSinceUnixEpoch.value.toDouble() + nanosecondAdjustment.value.toDouble() / NANOSECONDS_PER_SECOND
     )
 }
 

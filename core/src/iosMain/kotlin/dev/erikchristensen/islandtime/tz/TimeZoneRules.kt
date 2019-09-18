@@ -97,7 +97,7 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
             val offsetBefore = offsetAt(currentDate)
             val offsetAfter = offsetAt(nextTransition)
-            val dateTimeBefore = nextTransition.toIslandInstant().toDateTime(offsetBefore)
+            val dateTimeBefore = nextTransition.toIslandInstant().asDateTimeAt(offsetBefore)
 
             transitionList += IosTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter)
 
