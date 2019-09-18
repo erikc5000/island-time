@@ -25,23 +25,23 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
     inline val startDate: Date get() = Date(value, Month.JANUARY, 1)
     inline val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
-    operator fun plus(yearsToAdd: LongYears): Year {
-        val newValue = value + yearsToAdd.value
+    operator fun plus(years: LongYears): Year {
+        val newValue = value + years.value
         checkValidYear(newValue)
         return Year(newValue.toInt())
     }
 
-    operator fun plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong())
+    operator fun plus(years: IntYears) = plus(years.toLong())
 
-    operator fun minus(yearsToSubtract: LongYears): Year {
-        return if (yearsToSubtract.value == Long.MIN_VALUE) {
+    operator fun minus(years: LongYears): Year {
+        return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
         } else {
-            plus(-yearsToSubtract)
+            plus(-years)
         }
     }
 
-    operator fun minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+    operator fun minus(years: IntYears) = plus(-years.toLong())
 
     override fun compareTo(other: Year) = value - other.value
 
@@ -94,16 +94,18 @@ internal fun lengthOfYear(year: Int): IntDays {
 
 internal fun lastDayOfYear(year: Int): Int = lengthOfYear(year).value
 
-internal fun checkValidYear(year: Int) {
+internal fun checkValidYear(year: Int): Int {
     if (!isValidYear(year)) {
         throw DateTimeException(getInvalidYearMessage(year.toLong()))
     }
+    return year
 }
 
-internal fun checkValidYear(year: Long) {
+internal fun checkValidYear(year: Long): Int {
     if (!isValidYear(year)) {
         throw DateTimeException(getInvalidYearMessage(year))
     }
+    return year.toInt()
 }
 
 internal fun isValidYear(year: Int): Boolean {

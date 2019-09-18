@@ -1,6 +1,7 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.tz.TimeZoneRules
+import dev.erikchristensen.islandtime.tz.TimeZoneRulesException
 import dev.erikchristensen.islandtime.tz.TimeZoneRulesProvider
 
 inline class TimeZone(val regionId: String) : Comparable<TimeZone> {
@@ -17,6 +18,13 @@ inline class TimeZone(val regionId: String) : Comparable<TimeZone> {
 
     override fun toString(): String {
         return regionId
+    }
+
+    fun validated(): TimeZone {
+        if (!isValid) {
+            throw TimeZoneRulesException("'$regionId' is not supported by the current time zone rules provider")
+        }
+        return this
     }
 
     companion object {

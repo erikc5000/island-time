@@ -102,27 +102,34 @@ inline class YearMonth internal constructor(
      */
     fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
 
-    operator fun plus(monthsToAdd: LongMonths): YearMonth {
-        val newValue = monthsSinceYear0 + monthsToAdd
-        checkValid(newValue)
-        return YearMonth(newValue.toInt())
+    operator fun plus(years: IntYears) = plus(years.toLong().inMonths)
+    operator fun plus(years: LongYears) = plus(years.inMonthsExact())
+
+    operator fun plus(months: IntMonths) = plus(months.toLong())
+
+    operator fun plus(months: LongMonths): YearMonth {
+        return YearMonth(checkValid(monthsSinceYear0 + months))
     }
 
-    operator fun plus(monthsToAdd: IntMonths) = plus(monthsToAdd.toLong())
-    operator fun plus(yearsToAdd: LongYears) = plus(yearsToAdd.inMonths)
-    operator fun plus(yearsToAdd: IntYears) = plus(yearsToAdd.toLong().inMonths)
+    operator fun minus(months: IntMonths) = plus(-months.toLong())
 
-    operator fun minus(monthsToSubtract: LongMonths): YearMonth {
-        return if (monthsToSubtract.value == Long.MIN_VALUE) {
+    operator fun minus(months: LongMonths): YearMonth {
+        return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1L.months
         } else {
-            plus(-monthsToSubtract)
+            plus(-months)
         }
     }
 
-    operator fun minus(monthsToSubtract: IntMonths) = minus(monthsToSubtract.toLong())
-    operator fun minus(yearsToSubtract: LongYears) = minus(yearsToSubtract.inMonths)
-    operator fun minus(yearsToSubtract: IntYears) = minus(yearsToSubtract.toLong().inMonths)
+    operator fun minus(years: IntYears) = plus(-years.toLong())
+
+    operator fun minus(years: LongYears): YearMonth {
+        return if (years.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.years + 1L.years
+        } else {
+            plus(-years)
+        }
+    }
 
     companion object {
         val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)
@@ -139,21 +146,21 @@ inline class YearMonth internal constructor(
          * Create a fully validated [YearMonth]
          */
         operator fun invoke(year: Int, month: Month): YearMonth {
-            checkValidYear(year)
-            return YearMonth((year * MONTHS_IN_YEAR + month.ordinal).months)
+            return YearMonth((checkValidYear(year) * MONTHS_IN_YEAR + month.ordinal).months)
         }
 
         private fun isValid(monthsRelativeToYear0: LongMonths): Boolean {
             return monthsRelativeToYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
         }
 
-        private fun checkValid(monthsRelativeToYear0: LongMonths) {
+        private fun checkValid(monthsRelativeToYear0: LongMonths): IntMonths {
             if (!isValid(monthsRelativeToYear0)) {
                 throw DateTimeException(
                     "Year month '$monthsRelativeToYear0' is outside the supported range of " +
                         "${MIN.monthsSinceYear0}..${MAX.monthsSinceYear0}"
                 )
             }
+            return monthsRelativeToYear0.toInt()
         }
     }
 }
