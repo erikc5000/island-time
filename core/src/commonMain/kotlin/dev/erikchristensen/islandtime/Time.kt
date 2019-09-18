@@ -31,8 +31,8 @@ class Time private constructor(
     inline val nanosecondsSinceStartOfDay: LongNanoseconds
         get() = nanosecondOfDay.nanoseconds
 
-    operator fun plus(hoursToAdd: LongHours): Time {
-        val wrappedHours = (hoursToAdd % HOURS_PER_DAY).toInt()
+    operator fun plus(hours: LongHours): Time {
+        val wrappedHours = (hours % HOURS_PER_DAY).toInt()
 
         return if (wrappedHours.value == 0) {
             this
@@ -42,16 +42,15 @@ class Time private constructor(
         }
     }
 
-    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
+    operator fun plus(hours: IntHours) = plus(hours.toLong())
 
-    operator fun plus(minutesToAdd: LongMinutes): Time {
-        return if (minutesToAdd.value == 0L) {
+    operator fun plus(minutes: LongMinutes): Time {
+        return if (minutes.value == 0L) {
             this
         } else {
             val currentMinuteOfDay = hour * MINUTES_PER_HOUR + minute
-            val wrappedMinutes = (minutesToAdd.value % MINUTES_PER_DAY).toInt()
-            val newMinuteOfDay =
-                (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY) % MINUTES_PER_DAY
+            val wrappedMinutes = (minutes.value % MINUTES_PER_DAY).toInt()
+            val newMinuteOfDay = (wrappedMinutes + currentMinuteOfDay + MINUTES_PER_DAY) % MINUTES_PER_DAY
 
             if (currentMinuteOfDay == newMinuteOfDay) {
                 this
@@ -63,53 +62,78 @@ class Time private constructor(
         }
     }
 
-    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
+    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong())
 
-    operator fun plus(secondsToAdd: LongSeconds): Time {
-        return if (secondsToAdd.value == 0L) {
+    operator fun plus(seconds: LongSeconds): Time {
+        return if (seconds.value == 0L) {
             this
         } else {
             val currentSecondOfDay = secondOfDay
-            val wrappedSeconds = (secondsToAdd.value % SECONDS_PER_DAY).toInt()
-            val newSecondOfDay =
-                (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY) % SECONDS_PER_DAY
+            val wrappedSeconds = (seconds.value % SECONDS_PER_DAY).toInt()
+            val newSecondOfDay = (wrappedSeconds + currentSecondOfDay + SECONDS_PER_DAY) % SECONDS_PER_DAY
 
             if (currentSecondOfDay == newSecondOfDay) {
                 this
             } else {
-                ofSecondOfDay(newSecondOfDay, nanosecond)
+                fromSecondOfDay(newSecondOfDay, nanosecond)
             }
         }
     }
 
-    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
+    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong())
+    
+    operator fun plus(milliseconds: LongMilliseconds): Time {
+        return plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
+    }
+    
+    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLong())
 
-    operator fun plus(nanosecondsToAdd: LongNanoseconds): Time {
-        return if (nanosecondsToAdd.value == 0L) {
+    operator fun plus(microseconds: LongMicroseconds): Time {
+        return plusWrapped((microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
+    }
+
+    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLong())
+
+    operator fun plus(nanoseconds: LongNanoseconds): Time {
+        return plusWrapped(nanoseconds % NANOSECONDS_PER_DAY)
+    }
+
+    private fun plusWrapped(wrappedNanos: LongNanoseconds): Time {
+        return if (wrappedNanos.value == 0L) {
             this
         } else {
             val currentNanoOfDay = nanosecondOfDay
-            val wrappedNanos = nanosecondsToAdd.value % NANOSECONDS_PER_DAY
-            val newNanoOfDay = (wrappedNanos + currentNanoOfDay + NANOSECONDS_PER_DAY) % NANOSECONDS_PER_DAY
+            val newNanoOfDay = (wrappedNanos.value + currentNanoOfDay + NANOSECONDS_PER_DAY) % NANOSECONDS_PER_DAY
 
             if (currentNanoOfDay == newNanoOfDay) {
                 this
             } else {
-                ofNanosecondOfDay(newNanoOfDay)
+                fromNanosecondOfDay(newNanoOfDay)
             }
         }
     }
 
-    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
+    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+    operator fun minus(hours: LongHours) = plus(-(hours % HOURS_PER_DAY))
+    operator fun minus(hours: IntHours) = plus(-hours.toLong())
+    operator fun minus(minutes: LongMinutes) = plus(-(minutes % MINUTES_PER_DAY))
+    operator fun minus(minutes: IntMinutes) = plus(-minutes.toLong())
+    operator fun minus(seconds: LongSeconds) = plus(-(seconds % SECONDS_PER_DAY))
+    operator fun minus(seconds: IntSeconds) = plus(-seconds.toLong())
 
-    operator fun minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
-    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-    operator fun minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
-    operator fun minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
-    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
-    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(milliseconds: LongMilliseconds) =
+        plusWrapped(-(milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
+
+    operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds.toLong())
+
+    operator fun minus(microseconds: LongMicroseconds) =
+        plusWrapped(-(microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
+
+    operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds.toLong())
+
+    operator fun minus(nanoseconds: LongNanoseconds) = plusWrapped(-(nanoseconds % NANOSECONDS_PER_DAY))
+
+    operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds.toLong())
 
     operator fun component1() = hour
     operator fun component2() = minute
@@ -168,6 +192,33 @@ class Time private constructor(
         nanosecond: Int = this.nanosecond
     ) = invoke(hour, minute, second, nanosecond)
 
+    /**
+     * Truncate to the [hour] value, replacing all smaller components with zero
+     */
+    fun truncatedToHours() = copy(minute = 0, second = 0, nanosecond = 0)
+
+    /**
+     * Truncate to the [minute] value, replacing all smaller components with zero
+     */
+    fun truncatedToMinutes() = copy(second = 0, nanosecond = 0)
+
+    /**
+     * Truncate to the [second] value, replacing all smaller components with zero
+     */
+    fun truncatedToSeconds() = copy(nanosecond = 0)
+
+    /**
+     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     */
+    fun truncatedToMilliseconds() =
+        copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND)
+
+    /**
+     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     */
+    fun truncatedToMicroseconds() =
+        copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND)
+
     companion object {
         private val HOURS = (0..23).map { hour -> (::Time)(hour, 0, 0, 0) }
 
@@ -178,6 +229,10 @@ class Time private constructor(
 
         /**
          * Create a [Time] representing the provided components
+         * @param hour hour of day
+         * @param minute minute of hour
+         * @param second second of minute
+         * @param nanosecond nanosecond of second
          */
         operator fun invoke(
             hour: Int,
@@ -210,7 +265,7 @@ class Time private constructor(
          * Create the [Time] representing a number of seconds since the start of the day and optionally, the number of
          * nanoseconds within that second
          */
-        fun ofSecondOfDay(secondOfDay: Int, nanosecond: Int = 0): Time {
+        fun fromSecondOfDay(secondOfDay: Int, nanosecond: Int = 0): Time {
             if (secondOfDay !in 0 until SECONDS_PER_DAY) {
                 throw DateTimeException("'$secondOfDay' is not a valid second of the day")
             }
@@ -224,7 +279,7 @@ class Time private constructor(
         /**
          * Create the [Time] representing a number of nanoseconds since the start of the day
          */
-        fun ofNanosecondOfDay(nanosecondOfDay: Long): Time {
+        fun fromNanosecondOfDay(nanosecondOfDay: Long): Time {
             if (nanosecondOfDay !in 0L until NANOSECONDS_PER_DAY) {
                 throw DateTimeException("'$nanosecondOfDay' is not a valid nanosecond of the day")
             }

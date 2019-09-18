@@ -50,54 +50,31 @@ class OffsetTime(
         }
     }
 
-    operator fun plus(hoursToAdd: LongHours): OffsetTime {
-        return if (hoursToAdd == 0L.hours) {
-            this
-        } else {
-            copy(time = time + hoursToAdd)
-        }
-    }
+    operator fun plus(hours: LongHours) = copy(time = time + hours)
+    operator fun plus(hours: IntHours) = plus(hours.toLong())
+    operator fun plus(minutes: LongMinutes) = copy(time = time + minutes)
+    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong())
+    operator fun plus(seconds: LongSeconds) = copy(time = time + seconds)
+    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong())
+    operator fun plus(milliseconds: LongMilliseconds) = copy(time = time + milliseconds)
+    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLong())
+    operator fun plus(microseconds: LongMicroseconds) = copy(time = time + microseconds)
+    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLong())
+    operator fun plus(nanoseconds: LongNanoseconds) = copy(time = time + nanoseconds)
+    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
 
-    operator fun plus(hoursToAdd: IntHours) = plus(hoursToAdd.toLong())
-
-    operator fun plus(minutesToAdd: LongMinutes): OffsetTime {
-        return if (minutesToAdd == 0L.minutes) {
-            this
-        } else {
-            copy(time = time + minutesToAdd)
-        }
-    }
-
-    operator fun plus(minutesToAdd: IntMinutes) = plus(minutesToAdd.toLong())
-
-    operator fun plus(secondsToAdd: LongSeconds): OffsetTime {
-        return if (secondsToAdd == 0L.seconds) {
-            this
-        } else {
-            copy(time = time + secondsToAdd)
-        }
-    }
-
-    operator fun plus(secondsToAdd: IntSeconds) = plus(secondsToAdd.toLong())
-
-    operator fun plus(nanosecondsToAdd: LongNanoseconds): OffsetTime {
-        return if (nanosecondsToAdd == 0L.nanoseconds) {
-            this
-        } else {
-            copy(time = time + nanosecondsToAdd)
-        }
-    }
-
-    operator fun plus(nanosecondsToAdd: IntNanoseconds) = plus(nanosecondsToAdd.toLong())
-
-    operator fun minus(hoursToSubtract: LongHours) = plus(-hoursToSubtract)
-    operator fun minus(hoursToSubtract: IntHours) = plus(-hoursToSubtract)
-    operator fun minus(minutesToSubtract: LongMinutes) = plus(-minutesToSubtract)
-    operator fun minus(minutesToSubtract: IntMinutes) = plus(-minutesToSubtract)
-    operator fun minus(secondsToSubtract: LongSeconds) = plus(-secondsToSubtract)
-    operator fun minus(secondsToSubtract: IntSeconds) = plus(-secondsToSubtract)
-    operator fun minus(nanosecondsToSubtract: LongNanoseconds) = plus(-nanosecondsToSubtract)
-    operator fun minus(nanosecondsToSubtract: IntNanoseconds) = plus(-nanosecondsToSubtract)
+    operator fun minus(hours: LongHours) = copy(time = time - hours)
+    operator fun minus(hours: IntHours) = minus(hours.toLong())
+    operator fun minus(minutes: LongMinutes) = copy(time = time - minutes)
+    operator fun minus(minutes: IntMinutes) = minus(minutes.toLong())
+    operator fun minus(seconds: LongSeconds) = copy(time = time - seconds)
+    operator fun minus(seconds: IntSeconds) = minus(seconds.toLong())
+    operator fun minus(milliseconds: LongMilliseconds) = copy(time = time - milliseconds)
+    operator fun minus(milliseconds: IntMilliseconds) = minus(milliseconds.toLong())
+    operator fun minus(microseconds: LongMicroseconds) = copy(time = time - microseconds)
+    operator fun minus(microseconds: IntMicroseconds) = minus(microseconds.toLong())
+    operator fun minus(nanoseconds: LongNanoseconds) = copy(time = time - nanoseconds)
+    operator fun minus(nanoseconds: IntNanoseconds) = minus(nanoseconds.toLong())
 
     operator fun component1() = time
     operator fun component2() = offset
@@ -146,6 +123,31 @@ class OffsetTime(
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset
     ) = OffsetTime(time.copy(hour, minute, second, nanosecond), offset)
+
+    /**
+     * Truncate to the [hour] value, replacing all smaller components with zero
+     */
+    fun truncatedToHours() = copy(time = time.truncatedToHours())
+
+    /**
+     * Truncate to the [minute] value, replacing all smaller components with zero
+     */
+    fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
+
+    /**
+     * Truncate to the [second] value, replacing all smaller components with zero
+     */
+    fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
+
+    /**
+     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     */
+    fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
+
+    /**
+     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     */
+    fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
     companion object {
         val MIN = Time.MIN at UtcOffset.MAX

@@ -5,7 +5,6 @@ import dev.erikchristensen.islandtime.internal.MICROSECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.MILLISECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.NANOSECONDS_PER_SECOND
 import dev.erikchristensen.islandtime.internal.toZeroPaddedString
-import dev.erikchristensen.islandtime.interval.Duration.Companion.ZERO
 import dev.erikchristensen.islandtime.interval.Duration.Companion.create
 import dev.erikchristensen.islandtime.parser.DateTimeField
 import dev.erikchristensen.islandtime.parser.DateTimeParseResult

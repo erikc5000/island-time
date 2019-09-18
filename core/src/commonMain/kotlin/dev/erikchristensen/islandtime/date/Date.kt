@@ -90,47 +90,70 @@ class Date private constructor(
             return (total - DAYS_FROM_0000_TO_1970).days
         }
 
-    operator fun plus(daysToAdd: LongDays): Date {
-        return if (daysToAdd.value == 0L) {
+    operator fun plus(years: IntYears) = plus(years.toLong())
+
+    operator fun plus(years: LongYears): Date {
+        return if (years.value == 0L) {
             this
         } else {
-            fromDaysSinceUnixEpoch(daysSinceUnixEpoch + daysToAdd)
+            val newYear = checkValidYear(year + years.value)
+            copy(year = newYear, dayOfMonth = dayOfMonth.coerceAtMost(month.lastDayIn(newYear)))
         }
     }
 
-    operator fun plus(daysToAdd: IntDays) = plus(daysToAdd.toLong())
+    operator fun plus(months: IntMonths) = plus(months.toLong())
 
-    operator fun plus(monthsToAdd: IntMonths): Date {
-        return if (monthsToAdd.value == 0) {
+    operator fun plus(months: LongMonths): Date {
+        return if (months.value == 0L) {
             this
         } else {
-            val newMonthsSinceYear0 = monthsSinceYear0 + monthsToAdd.value
-            val newYear = newMonthsSinceYear0 / MONTHS_IN_YEAR
-            val newMonth = Month.values()[newMonthsSinceYear0 % MONTHS_IN_YEAR]
+            val newMonthsSinceYear0 = monthsSinceYear0 + months.value
+            val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_IN_YEAR)
+            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_IN_YEAR).toInt()]
 
             Date(newYear, newMonth, dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)))
         }
     }
 
-    operator fun plus(monthsToAdd: LongMonths) = plus(monthsToAdd.toInt())
+    operator fun plus(days: IntDays) = plus(days.toLong())
 
-    operator fun plus(yearsToAdd: IntYears): Date {
-        return if (yearsToAdd.value == 0) {
+    operator fun plus(days: LongDays): Date {
+        return if (days.value == 0L) {
             this
         } else {
-            val newYear = year + yearsToAdd.value
-            copy(year = newYear, dayOfMonth = dayOfMonth.coerceAtMost(month.lastDayIn(newYear)))
+            fromDaysSinceUnixEpoch((daysSinceUnixEpoch.value plusExact days.value).days)
         }
     }
 
-    operator fun plus(yearsToAdd: LongYears) = plus(yearsToAdd.toInt())
+    operator fun minus(years: IntYears) = plus(-years.toLong())
 
-    operator fun minus(daysToSubtract: LongDays) = plus(-daysToSubtract)
-    operator fun minus(daysToSubtract: IntDays) = plus(-(daysToSubtract.toLong()))
-    operator fun minus(monthsToSubtract: LongMonths) = plus(-monthsToSubtract)
-    operator fun minus(monthsToSubtract: IntMonths) = plus(-monthsToSubtract)
-    operator fun minus(yearsToSubtract: LongYears) = plus(-yearsToSubtract)
-    operator fun minus(yearsToSubtract: IntYears) = plus(-yearsToSubtract)
+    operator fun minus(years: LongYears): Date {
+        return if (years.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.years + 1.years
+        } else {
+            plus(-years)
+        }
+    }
+
+    operator fun minus(months: IntMonths) = plus(-months.toLong())
+
+    operator fun minus(months: LongMonths): Date {
+        return if (months.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.months + 1.months
+        } else {
+            plus(-months)
+        }
+    }
+
+    operator fun minus(days: IntDays) = plus(-days.toLong())
+
+    operator fun minus(days: LongDays): Date {
+        return if (days.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.days + 1.days
+        } else {
+            plus(-days)
+        }
+    }
 
     operator fun rangeTo(other: Date) = DateRange(this, other)
 
@@ -175,6 +198,15 @@ class Date private constructor(
         month: Month = this.month,
         dayOfMonth: Int = this.day
     ) = invoke(year, month, dayOfMonth)
+
+    /**
+     * Return a new [Date], replacing the year, month, and day of month with new values, as desired
+     */
+    fun copy(
+        year: Int = this.year,
+        monthNumber: Int,
+        dayOfMonth: Int = this.day
+    ) = invoke(year, monthNumber, dayOfMonth)
 
     /**
      * Return a new [Date], replacing the year and day of the year with new values, as desired
@@ -364,13 +396,14 @@ internal fun StringBuilder.appendDate(date: Date): StringBuilder {
 
 private inline val Date.monthsSinceYear0 get() = year * 12 + month.ordinal
 
-private fun checkValidDayOfMonth(year: Int, month: Month, dayOfMonth: Int) {
+private fun checkValidDayOfMonth(year: Int, month: Month, dayOfMonth: Int): Int {
     if (dayOfMonth !in month.dayRangeIn(year)) {
         throw DateTimeException("The day '$dayOfMonth' doesn't exist in $month of $year")
     }
+    return dayOfMonth
 }
 
-private fun checkValidDayOfYear(year: Int, dayOfYear: Int) {
+private fun checkValidDayOfYear(year: Int, dayOfYear: Int): Int {
     if (dayOfYear !in 1..lastDayOfYear(year)) {
         if (dayOfYear == 366) {
             throw DateTimeException("Day of year '$dayOfYear' is invalid since '$year' isn't a leap year")
@@ -378,4 +411,5 @@ private fun checkValidDayOfYear(year: Int, dayOfYear: Int) {
             throw DateTimeException("'$dayOfYear' is not a valid day of the year")
         }
     }
+    return dayOfYear
 }
