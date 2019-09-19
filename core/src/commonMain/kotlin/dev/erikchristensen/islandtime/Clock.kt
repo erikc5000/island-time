@@ -66,8 +66,3 @@ class FixedClock(
         return Instant.fromMillisecondsSinceUnixEpoch(unixEpochMilliseconds)
     }
 }
-
-// fun Clock.localDateTime(): DateTime
-// fun Clock.localTime(): Time
-// fun Clock.localDate(): Date
-// fun Clock.now(): RegionalDateTime

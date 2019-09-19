@@ -8,7 +8,7 @@ import dev.erikchristensen.islandtime.parser.Iso8601
 import dev.erikchristensen.islandtime.tz.*
 import kotlin.test.*
 
-class RegionalDateTimeTest {
+class ZonedDateTimeTest {
 
 //    object TestTimeZoneRulesProvider : TimeZoneRulesProvider {
 //        override fun getRules(regionId: String): TimeZoneRules {
@@ -73,7 +73,7 @@ class RegionalDateTimeTest {
     @Test
     fun `throws an exception when constructed with a TimeZone that has no rules`() {
         assertFailsWith<TimeZoneRulesException> {
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 5, 30, 18, 0),
                 TimeZone("America/Boston")
             )
@@ -82,7 +82,7 @@ class RegionalDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that falls in an overlap, the earlier offset is used by default`() {
-        val actual = RegionalDateTime(
+        val actual = ZonedDateTime(
             DateTime(2019, 11, 3, 1, 0),
             TimeZone("America/New_York")
         )
@@ -94,7 +94,7 @@ class RegionalDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that falls in an overlap, a preferred offset may be provided`() {
-        val actual = RegionalDateTime.ofLocal(
+        val actual = ZonedDateTime.ofLocal(
             DateTime(2019, 11, 3, 1, 0),
             TimeZone("America/New_York"),
             UtcOffset((-5).hours)
@@ -107,7 +107,7 @@ class RegionalDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that falls in an overlap, an invalid preferred offset is ignored`() {
-        val actual = RegionalDateTime.ofLocal(
+        val actual = ZonedDateTime.ofLocal(
             DateTime(2019, 11, 3, 1, 0),
             TimeZone("America/New_York"),
             UtcOffset((-8).hours)
@@ -120,7 +120,7 @@ class RegionalDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that doesn't fall in an overlap, the preferred offset is ignored`() {
-        val actual = RegionalDateTime.ofLocal(
+        val actual = ZonedDateTime.ofLocal(
             DateTime(2019, 11, 3, 2, 0),
             TimeZone("America/New_York"),
             UtcOffset((-4).hours)
@@ -133,7 +133,7 @@ class RegionalDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that falls during a gap, the DateTime is adjusted by the gap's length`() {
-        val actual = RegionalDateTime(
+        val actual = ZonedDateTime(
             DateTime(2019, 3, 10, 2, 30),
             TimeZone("America/New_York")
         )
@@ -144,9 +144,9 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `at infix creates a RegionalDateTime from a DateTime`() {
+    fun `at infix creates a ZonedDateTime from a DateTime`() {
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 2019,
                 3,
                 3,
@@ -160,7 +160,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 2019,
                 3,
                 3,
@@ -176,9 +176,9 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `at infix creates a RegionalDateTime from an instant`() {
+    fun `at infix creates a ZonedDateTime from an instant`() {
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 2019,
                 8,
                 19,
@@ -192,7 +192,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 2019,
                 8,
                 19,
@@ -210,12 +210,12 @@ class RegionalDateTimeTest {
     @Test
     fun `equality is based on date-time, time zone, and offset`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
@@ -223,12 +223,12 @@ class RegionalDateTimeTest {
         )
 
         assertNotEquals(
-            RegionalDateTime.ofLocal(
+            ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 0),
                 TimeZone("America/New_York"),
                 UtcOffset((-4).hours)
             ),
-            RegionalDateTime.ofLocal(
+            ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 0),
                 TimeZone("America/New_York"),
                 UtcOffset((-5).hours)
@@ -236,11 +236,11 @@ class RegionalDateTimeTest {
         )
 
         assertNotEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 5, 0),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 7, 0),
                 TimeZone("America/New_York")
             )
@@ -248,9 +248,9 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `Date_atStartOfDayIn() creates a RegionalDateTime at the start of the day in a particular time zone`() {
+    fun `Date_atStartOfDayIn() creates a ZonedDateTime at the start of the day in a particular time zone`() {
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 5, 20, 0, 0),
                 TimeZone("America/New_York")
             ),
@@ -261,16 +261,16 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `Date_atEndOfDayIn() creates a RegionalDateTime at the end of the day in a particular time zone`() {
+    fun `Date_atEndOfDayIn() creates a ZonedDateTime at the end of the day in a particular time zone`() {
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),
                 TimeZone("America/New_York")
             ),
             Date(2019, 5, 20).atEndOfDayIn("America/New_York".toTimeZone())
         )
 
-        RegionalDateTime.now().yearMonth.startDate
+        ZonedDateTime.now().yearMonth.startDate
 
         // TODO: Add tests where transitions occur during midnight
     }
@@ -278,12 +278,12 @@ class RegionalDateTimeTest {
     @Test
     fun `copy() ignores changes to the offset if it isn't valid for the time zone`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 3, 3, 7, 0),
                 UtcOffset((-7).hours),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 7, 0),
                 TimeZone("America/New_York")
             ).copy(
@@ -297,12 +297,12 @@ class RegionalDateTimeTest {
     @Test
     fun `copy() adjusts components forward when rendered invalid due to gaps`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 3, 10, 3, 3),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 3, 10, 7, 0),
                 TimeZone("America/New_York")
             ).copy(hour = 2, minute = 3)
@@ -312,12 +312,12 @@ class RegionalDateTimeTest {
     @Test
     fun `copy() replaces components directly with new values when it's possible to do so`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2018, 3, 10, 3, 0),
                 UtcOffset((-5).hours),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 3, 10, 7, 5),
                 TimeZone("America/New_York")
             ).copy(hour = 3, minute = 0, year = 2018)
@@ -327,12 +327,12 @@ class RegionalDateTimeTest {
     @Test
     fun `withEarlierOffsetAtOverlap() returns the same DateTime with the earlier offset when there's a DST overlap`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime.ofLocal(
+            ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 30),
                 TimeZone("America/New_York"),
                 UtcOffset((-5).hours)
@@ -341,13 +341,13 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `withEarlierOffsetAtOverlap() returns the same RegionalDateTime when there's no overlap`() {
+    fun `withEarlierOffsetAtOverlap() returns the same ZonedDateTime when there's no overlap`() {
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
                 TimeZone("America/New_York")
             ).withEarlierOffsetAtOverlap()
@@ -357,12 +357,12 @@ class RegionalDateTimeTest {
     @Test
     fun `withLaterOffsetAtOverlap() returns the same DateTime with the later offset when there's a DST overlap`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-5).hours),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
@@ -371,13 +371,13 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `withLaterOffsetAtOverlap() returns the same RegionalDateTime when there's no overlap`() {
+    fun `withLaterOffsetAtOverlap() returns the same ZonedDateTime when there's no overlap`() {
         assertEquals(
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
                 TimeZone("America/New_York")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
                 TimeZone("America/New_York")
             ).withLaterOffsetAtOverlap()
@@ -388,12 +388,12 @@ class RegionalDateTimeTest {
     fun `adjustedTo() converts to a different time zone while preserving the instant during overlap`() {
         // New York in overlap, Denver not in overlap
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 0, 30),
                 UtcOffset((-6).hours),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime.ofLocal(
+            ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 30),
                 TimeZone("America/New_York"),
                 UtcOffset((-5).hours)
@@ -402,12 +402,12 @@ class RegionalDateTimeTest {
 
         // New York no longer in overlap, Denver in earlier offset at overlap
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-6).hours),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime.ofLocal(
+            ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 2, 30),
                 TimeZone("America/New_York"),
                 UtcOffset((-5).hours)
@@ -416,12 +416,12 @@ class RegionalDateTimeTest {
 
         // New York not in overlap, Denver in later offset at overlap
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-7).hours),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime.ofLocal(
+            ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 3, 30),
                 TimeZone("America/New_York"),
                 UtcOffset((-5).hours)
@@ -433,12 +433,12 @@ class RegionalDateTimeTest {
     fun `adjustedTo() converts to a different time zone while preserving the instant during gaps`() {
         // New York in DST, Denver not yet
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 3, 10, 1, 30),
                 UtcOffset((-7).hours),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 3, 10, 4, 30),
                 TimeZone("America/New_York")
             ).adjustedTo("America/Denver".toTimeZone())
@@ -446,12 +446,12 @@ class RegionalDateTimeTest {
 
         // New York and Denver both in DST
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 3, 10, 3, 30),
                 UtcOffset((-6).hours),
                 TimeZone("America/Denver")
             ),
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 3, 10, 5, 30),
                 TimeZone("America/New_York")
             ).adjustedTo("America/Denver".toTimeZone())
@@ -462,7 +462,7 @@ class RegionalDateTimeTest {
     fun `toString() returns an ISO-8601 extended offset date-time along with a non-standard region ID`() {
         assertEquals(
             "2019-11-03T01:30Z[Etc/UTC]",
-            RegionalDateTime(
+            ZonedDateTime(
                 DateTime(2019, 11, 3, 1, 30),
                 TimeZone.UTC
             ).toString()
@@ -470,7 +470,7 @@ class RegionalDateTimeTest {
 
         assertEquals(
             "2019-11-03T01:30-05:00[America/New_York]",
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-5).hours),
                 TimeZone("America/New_York")
@@ -479,64 +479,64 @@ class RegionalDateTimeTest {
     }
 
     @Test
-    fun `String_toRegionalDateTime() throws an exception when the string is empty`() {
-        assertFailsWith<DateTimeParseException> { "".toRegionalDateTime() }
+    fun `String_toZonedDateTime() throws an exception when the string is empty`() {
+        assertFailsWith<DateTimeParseException> { "".toZonedDateTime() }
     }
 
     @Test
-    fun `String_toRegionalDateTime() throws an exception when the format is unexpected`() {
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00America/New_York".toRegionalDateTime() }
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00[America/New_York".toRegionalDateTime() }
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00[]".toRegionalDateTime() }
+    fun `String_toZonedDateTime() throws an exception when the format is unexpected`() {
+        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00America/New_York".toZonedDateTime() }
+        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00[America/New_York".toZonedDateTime() }
+        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00[]".toZonedDateTime() }
         assertFailsWith<DateTimeParseException> {
-            "2019-12-05T12:00+01:00[America/New_York/one_more/characters/than_supported]".toRegionalDateTime()
+            "2019-12-05T12:00+01:00[America/New_York/one_more/characters/than_supported]".toZonedDateTime()
         }
     }
 
     @Test
-    fun `String_toRegionalDateTime() throws an exception when fields are out of range`() {
-        assertFailsWith<DateTimeException> { "2000-01-01T24:00Z[Etc/Utc]".toRegionalDateTime() }
-        assertFailsWith<DateTimeException> { "2000-01-01T08:60-01:00[GMT+1]".toRegionalDateTime() }
-        assertFailsWith<DateTimeException> { "2000-13-01T08:59-01:00[GMT+1]".toRegionalDateTime() }
-        assertFailsWith<DateTimeException> { "2000-01-32T08:59-01:00[GMT+1]".toRegionalDateTime() }
+    fun `String_toZonedDateTime() throws an exception when fields are out of range`() {
+        assertFailsWith<DateTimeException> { "2000-01-01T24:00Z[Etc/Utc]".toZonedDateTime() }
+        assertFailsWith<DateTimeException> { "2000-01-01T08:60-01:00[GMT+1]".toZonedDateTime() }
+        assertFailsWith<DateTimeException> { "2000-13-01T08:59-01:00[GMT+1]".toZonedDateTime() }
+        assertFailsWith<DateTimeException> { "2000-01-32T08:59-01:00[GMT+1]".toZonedDateTime() }
     }
 
     @Test
-    fun `String_toRegionalDateTime() throws an exception when the region is invalid`() {
-        assertFailsWith<DateTimeException> { "2000-01-01T23:00+01:00[America/Boston]".toRegionalDateTime() }
-        assertFailsWith<DateTimeException> { "2000-01-01T23:00+01:00[Etc/GMT-20]".toRegionalDateTime() }
+    fun `String_toZonedDateTime() throws an exception when the region is invalid`() {
+        assertFailsWith<DateTimeException> { "2000-01-01T23:00+01:00[America/Boston]".toZonedDateTime() }
+        assertFailsWith<DateTimeException> { "2000-01-01T23:00+01:00[Etc/GMT-20]".toZonedDateTime() }
     }
 
     @Test
-    fun `String_toRegionalDateTime() parses ISO-8601 calendar date time strings in extended format by default`() {
+    fun `String_toZonedDateTime() parses ISO-8601 calendar date time strings in extended format by default`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
             ),
-            "2019-05-05T12:00-04:00[America/New_York]".toRegionalDateTime()
+            "2019-05-05T12:00-04:00[America/New_York]".toZonedDateTime()
         )
 
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-5).hours),
                 TimeZone("America/New_York")
             ),
-            "2019-11-03T01:00-05:00[America/New_York]".toRegionalDateTime()
+            "2019-11-03T01:00-05:00[America/New_York]".toZonedDateTime()
         )
     }
 
     @Test
-    fun `String_toRegionalDateTime() parses valid ISO-8601 strings with explicit parser`() {
+    fun `String_toZonedDateTime() parses valid ISO-8601 strings with explicit parser`() {
         assertEquals(
-            RegionalDateTime.create(
+            ZonedDateTime.create(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
                 UtcOffset((-4).hours),
                 TimeZone("America/New_York")
             ),
-            "20190505 1200-04[America/New_York]".toRegionalDateTime(Iso8601.REGIONAL_DATE_TIME_PARSER)
+            "20190505 1200-04[America/New_York]".toZonedDateTime(Iso8601.ZONED_DATE_TIME_PARSER)
         )
     }
 }
