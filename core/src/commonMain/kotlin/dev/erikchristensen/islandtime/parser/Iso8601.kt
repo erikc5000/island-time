@@ -78,8 +78,8 @@ object Iso8601 {
         anyOf(Basic.OFFSET_DATE_TIME_PARSER, Extended.OFFSET_DATE_TIME_PARSER)
     }
 
-    val REGIONAL_DATE_TIME_PARSER = dateTimeParser {
-        anyOf(Basic.REGIONAL_DATE_TIME_PARSER, Extended.REGIONAL_DATE_TIME_PARSER)
+    val ZONED_DATE_TIME_PARSER = dateTimeParser {
+        anyOf(Basic.ZONED_DATE_TIME_PARSER, Extended.ZONED_DATE_TIME_PARSER)
     }
 
     val YEAR_MONTH_PARSER = Extended.YEAR_MONTH_PARSER
@@ -222,7 +222,7 @@ object Iso8601 {
             subParser(UTC_OFFSET_PARSER)
         }
 
-        val REGIONAL_DATE_TIME_PARSER = dateTimeParser {
+        val ZONED_DATE_TIME_PARSER = dateTimeParser {
             subParser(CALENDAR_DATE_TIME_PARSER)
             subParser(UTC_OFFSET_PARSER)
             +'['
@@ -333,7 +333,7 @@ object Iso8601 {
             subParser(UTC_OFFSET_PARSER)
         }
 
-        val REGIONAL_DATE_TIME_PARSER = dateTimeParser {
+        val ZONED_DATE_TIME_PARSER = dateTimeParser {
             subParser(CALENDAR_DATE_TIME_PARSER)
             subParser(UTC_OFFSET_PARSER)
             +'['
