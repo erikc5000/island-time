@@ -152,7 +152,21 @@ class OffsetTime(
     companion object {
         val MIN = Time.MIN at UtcOffset.MAX
         val MAX = Time.MAX at UtcOffset.MIN
+
+        fun now() = now(systemClock())
+
+        fun now(clock: Clock): OffsetTime {
+            return clock.instant().toOffsetTimeAt(clock.timeZone)
+        }
     }
+}
+
+fun Instant.toOffsetTimeAt(offset: UtcOffset): OffsetTime {
+    return OffsetTime(this.toTimeAt(offset), offset)
+}
+
+fun Instant.toOffsetTimeAt(zone: TimeZone): OffsetTime {
+    return this.toOffsetTimeAt(zone.rules.offsetAt(this))
 }
 
 /**

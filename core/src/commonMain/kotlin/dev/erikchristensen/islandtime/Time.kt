@@ -290,8 +290,41 @@ class Time private constructor(
             val nanosecond = (nanosecondOfDay % NANOSECONDS_PER_SECOND).toInt()
             return invoke(hour, minute, second, nanosecond)
         }
+
+        fun now() = now(systemClock())
+        fun now(clock: Clock) = clock.instant().toTimeAt(clock.timeZone)
     }
 }
+
+fun Instant.toTimeAt(offset: UtcOffset): Time {
+    // TODO: Double check this...
+    val nanosecondsSinceStartOfDay = (
+        (secondsSinceUnixEpoch % SECONDS_PER_DAY) +
+            offset.totalSeconds +
+            nanosecondAdjustment +
+            NANOSECONDS_PER_DAY.seconds
+        ) % NANOSECONDS_PER_DAY
+
+    return Time.fromNanosecondOfDay(nanosecondsSinceStartOfDay.value)
+}
+
+fun Instant.toTimeAt(zone: TimeZone): Time {
+    return this.toTimeAt(zone.rules.offsetAt(this))
+}
+
+//fun timeOf(nanosecondsSinceStartOfDay: LongNanoseconds) = Time.fromNanosecondOfDay(nanosecondsSinceStartOfDay.value)
+//
+//fun timeOf(
+//    secondOfDay: Int,
+//    nanosecondOfSecond: Int = 0
+//) = Time.fromSecondOfDay(secondOfDay, nanosecondOfSecond)
+//
+//fun timeOf(
+//    hour: Int,
+//    minute: Int,
+//    second: Int = 0,
+//    nanosecond: Int = 0
+//) = Time(hour, minute, second, nanosecond)
 
 fun String.toTime() = toTime(Iso8601.Extended.TIME_PARSER)
 

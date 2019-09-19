@@ -137,5 +137,9 @@ inline class Instant internal constructor(
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds): Instant {
             return fromDurationSinceUnixEpoch(milliseconds.asDuration())
         }
+
+        fun now() = now(systemClock())
+
+        fun now(clock: Clock) = clock.instant()
     }
 }

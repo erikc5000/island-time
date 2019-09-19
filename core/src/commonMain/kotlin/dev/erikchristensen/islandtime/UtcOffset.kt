@@ -76,24 +76,25 @@ inline class UtcOffset internal constructor(
 
             return UtcOffset(totalSeconds)
         }
-
-        /**
-         * Create a UTC time offset of hours, minutes, and seconds. Each component must be within its valid range and
-         * without any mixed positive and negative values.
-         * @param hours hours to offset by, within +/-18
-         * @param minutes minutes to offset by, within +/-59
-         * @param seconds seconds to offset by, within +/-59
-         * @return a [UtcOffset]
-         */
-        operator fun invoke(
-            hours: IntHours,
-            minutes: IntMinutes = 0.minutes,
-            seconds: IntSeconds = 0.seconds
-        ): UtcOffset {
-            validateUtcOffsetComponents(hours, minutes, seconds)
-            return invoke(hours + minutes + seconds)
-        }
     }
+}
+
+/**
+ * Create a UTC time offset of hours, minutes, and seconds. Each component must be within its valid range and
+ * without any mixed positive and negative values.
+ * @param hours hours to offset by, within +/-18
+ * @param minutes minutes to offset by, within +/-59
+ * @param seconds seconds to offset by, within +/-59
+ * @return a [UtcOffset]
+ */
+@Suppress("FunctionName")
+fun UtcOffset(
+    hours: IntHours,
+    minutes: IntMinutes = 0.minutes,
+    seconds: IntSeconds = 0.seconds
+): UtcOffset {
+    validateUtcOffsetComponents(hours, minutes, seconds)
+    return UtcOffset(hours + minutes + seconds)
 }
 
 /**

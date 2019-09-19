@@ -13,7 +13,7 @@ import dev.erikchristensen.islandtime.parser.raiseParserFieldResolutionException
 class RegionalDateTime private constructor(
     val dateTime: DateTime,
     val offset: UtcOffset,
-    val timeZone: TimeZone
+    val zone: TimeZone
 ) : Comparable<RegionalDateTime> {
 
     /**
@@ -73,7 +73,7 @@ class RegionalDateTime private constructor(
                 if (dateTimeDiff != 0) {
                     dateTimeDiff
                 } else {
-                    timeZone.compareTo(timeZone)
+                    zone.compareTo(zone)
                 }
             }
         }
@@ -82,13 +82,13 @@ class RegionalDateTime private constructor(
     override fun equals(other: Any?): Boolean {
         return this === other || (other is RegionalDateTime &&
             dateTime == other.dateTime &&
-            timeZone == other.timeZone &&
+            zone == other.zone &&
             offset == other.offset)
     }
 
     override fun hashCode(): Int {
         var result = dateTime.hashCode()
-        result = 31 * result + timeZone.hashCode()
+        result = 31 * result + zone.hashCode()
         result = 31 * result + offset.hashCode()
         return result
     }
@@ -147,8 +147,8 @@ class RegionalDateTime private constructor(
     fun copy(
         dateTime: DateTime = this.dateTime,
         offset: UtcOffset = this.offset,
-        timeZone: TimeZone = this.timeZone
-    ) = ofLocal(dateTime, timeZone, offset)
+        zone: TimeZone = this.zone
+    ) = ofLocal(dateTime, zone, offset)
 
     /**
      * Return a new [RegionalDateTime], replacing any of the components with new values.
@@ -161,8 +161,8 @@ class RegionalDateTime private constructor(
         date: Date = this.date,
         time: Time = this.time,
         offset: UtcOffset = this.offset,
-        timeZone: TimeZone = this.timeZone
-    ) = ofLocal(dateTime.copy(date, time), timeZone, offset)
+        zone: TimeZone = this.zone
+    ) = ofLocal(dateTime.copy(date, time), zone, offset)
 
     /**
      * Return a new [RegionalDateTime], replacing any of the components with new values.
@@ -179,13 +179,13 @@ class RegionalDateTime private constructor(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset,
-        timeZone: TimeZone = this.timeZone
+        zone: TimeZone = this.zone
     ) = ofLocal(
         dateTime.copy(
             date.copy(year, dayOfYear),
             time.copy(hour, minute, second, nanosecond)
         ),
-        timeZone,
+        zone,
         offset
     )
 
@@ -205,13 +205,13 @@ class RegionalDateTime private constructor(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset,
-        timeZone: TimeZone = this.timeZone
+        zone: TimeZone = this.zone
     ) = ofLocal(
         dateTime.copy(
             date.copy(year, month, dayOfMonth),
             time.copy(hour, minute, second, nanosecond)
         ),
-        timeZone,
+        zone,
         offset
     )
 
@@ -224,20 +224,20 @@ class RegionalDateTime private constructor(
      */
     fun copy(
         year: Int = this.year,
-        monthNumber: Int = this.monthNumber,
+        monthNumber: Int,
         dayOfMonth: Int = this.dayOfMonth,
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset,
-        timeZone: TimeZone = this.timeZone
+        zone: TimeZone = this.zone
     ) = ofLocal(
         dateTime.copy(
             date.copy(year, monthNumber, dayOfMonth),
             time.copy(hour, minute, second, nanosecond)
         ),
-        timeZone,
+        zone,
         offset
     )
 
@@ -267,26 +267,26 @@ class RegionalDateTime private constructor(
     fun truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
 
     fun withEarlierOffsetAtOverlap(): RegionalDateTime {
-        val transition = timeZone.rules.transitionAt(dateTime)
+        val transition = zone.rules.transitionAt(dateTime)
 
         if (transition?.isOverlap == true) {
             val earlierOffset = transition.offsetBefore
 
             if (earlierOffset != offset) {
-                return RegionalDateTime(dateTime, earlierOffset, timeZone)
+                return RegionalDateTime(dateTime, earlierOffset, zone)
             }
         }
         return this
     }
 
     fun withLaterOffsetAtOverlap(): RegionalDateTime {
-        val transition = timeZone.rules.transitionAt(dateTime)
+        val transition = zone.rules.transitionAt(dateTime)
 
         if (transition?.isOverlap == true) {
             val laterOffset = transition.offsetAfter
 
             if (laterOffset != offset) {
-                return RegionalDateTime(dateTime, laterOffset, timeZone)
+                return RegionalDateTime(dateTime, laterOffset, zone)
             }
         }
         return this
@@ -297,14 +297,14 @@ class RegionalDateTime private constructor(
      * represented by it remains the same
      */
     fun adjustedTo(newTimeZone: TimeZone): RegionalDateTime {
-        return if (newTimeZone == timeZone) {
+        return if (newTimeZone == zone) {
             this
         } else {
             ofInstant(instant, newTimeZone)
         }
     }
 
-    private fun resolveInstant(newDateTime: DateTime) = ofInstant(newDateTime, offset, timeZone)
+    private fun resolveInstant(newDateTime: DateTime) = ofInstant(newDateTime, offset, zone)
 
     companion object {
 
@@ -316,8 +316,8 @@ class RegionalDateTime private constructor(
             minute: Int,
             second: Int,
             nanosecond: Int,
-            timeZone: TimeZone
-        ) = ofLocal(DateTime(year, month, day, hour, minute, second, nanosecond), timeZone)
+            zone: TimeZone
+        ) = ofLocal(DateTime(year, month, day, hour, minute, second, nanosecond), zone)
 
         operator fun invoke(
             year: Int,
@@ -327,8 +327,8 @@ class RegionalDateTime private constructor(
             minute: Int,
             second: Int,
             nanosecond: Int,
-            timeZone: TimeZone
-        ) = ofLocal(DateTime(year, monthNumber, day, hour, minute, second, nanosecond), timeZone)
+            zone: TimeZone
+        ) = ofLocal(DateTime(year, monthNumber, day, hour, minute, second, nanosecond), zone)
 
         operator fun invoke(
             year: Int,
@@ -337,27 +337,27 @@ class RegionalDateTime private constructor(
             minute: Int,
             second: Int,
             nanosecond: Int,
-            timeZone: TimeZone
-        ) = ofLocal(DateTime(year, dayOfYear, hour, minute, second, nanosecond), timeZone)
+            zone: TimeZone
+        ) = ofLocal(DateTime(year, dayOfYear, hour, minute, second, nanosecond), zone)
 
-        operator fun invoke(date: Date, time: Time, timeZone: TimeZone) = ofLocal(DateTime(date, time), timeZone)
+        operator fun invoke(date: Date, time: Time, zone: TimeZone) = ofLocal(DateTime(date, time), zone)
 
-        operator fun invoke(dateTime: DateTime, timeZone: TimeZone) = ofLocal(dateTime, timeZone)
+        operator fun invoke(dateTime: DateTime, zone: TimeZone) = ofLocal(dateTime, zone)
 
         fun ofLocal(
             dateTime: DateTime,
-            timeZone: TimeZone,
+            zone: TimeZone,
             preferredOffset: UtcOffset? = null
         ): RegionalDateTime {
-            val rules = timeZone.rules
+            val rules = zone.rules
             val validOffsets = rules.validOffsetsAt(dateTime)
 
             return when (validOffsets.size) {
-                1 -> RegionalDateTime(dateTime, validOffsets[0], timeZone)
+                1 -> RegionalDateTime(dateTime, validOffsets[0], zone)
                 0 -> {
                     val transition = rules.transitionAt(dateTime)
                     val adjustedDateTime = dateTime + transition!!.duration
-                    RegionalDateTime(adjustedDateTime, transition.offsetAfter, timeZone)
+                    RegionalDateTime(adjustedDateTime, transition.offsetAfter, zone)
                 }
                 else -> {
                     val offset = if (preferredOffset != null && validOffsets.contains(preferredOffset)) {
@@ -365,32 +365,32 @@ class RegionalDateTime private constructor(
                     } else {
                         validOffsets[0]
                     }
-                    RegionalDateTime(dateTime, offset, timeZone)
+                    RegionalDateTime(dateTime, offset, zone)
                 }
             }
         }
 
-        fun ofInstant(dateTime: DateTime, offset: UtcOffset, timeZone: TimeZone): RegionalDateTime {
-            return ofInstant(dateTime.instantAt(offset), timeZone)
+        fun ofInstant(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): RegionalDateTime {
+            return ofInstant(dateTime.instantAt(offset), zone)
         }
 
-        fun ofInstant(instant: Instant, timeZone: TimeZone): RegionalDateTime {
-            val offset = timeZone.rules.offsetAt(instant)
-            val dateTime = instant.asDateTimeAt(offset)
-            return RegionalDateTime(dateTime, offset, timeZone)
+        fun ofInstant(instant: Instant, zone: TimeZone): RegionalDateTime {
+            val offset = zone.rules.offsetAt(instant)
+            val dateTime = instant.toDateTimeAt(offset)
+            return RegionalDateTime(dateTime, offset, zone)
         }
 
         /**
          * Create a [RegionalDateTime] with no additional validation
          */
-        internal fun create(dateTime: DateTime, offset: UtcOffset, timeZone: TimeZone): RegionalDateTime {
-            return RegionalDateTime(dateTime, offset, timeZone)
+        internal fun create(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): RegionalDateTime {
+            return RegionalDateTime(dateTime, offset, zone)
         }
 
         fun now() = now(systemClock())
 
         fun now(clock: Clock): RegionalDateTime {
-            return ofInstant(clock.instant(), clock.timeZone)
+            return clock.instant() at clock.timeZone
         }
     }
 }
@@ -402,7 +402,7 @@ class RegionalDateTime private constructor(
  * gap, it will adjusted forward by the length of the gap. If it falls within an overlap, the earlier offset will be
  * used.
  */
-infix fun DateTime.at(timeZone: TimeZone) = RegionalDateTime.ofLocal(this, timeZone, null)
+infix fun DateTime.at(zone: TimeZone) = RegionalDateTime.ofLocal(this, zone, null)
 
 /**
  * Get the [RegionalDateTime] corresponding to a local date, time, and offset in a particular time zone. The offset
@@ -412,48 +412,48 @@ infix fun DateTime.at(timeZone: TimeZone) = RegionalDateTime.ofLocal(this, timeZ
  * gap, it will adjusted forward by the length of the gap. If it falls within an overlap, the earlier offset will be
  * used.
  */
-fun OffsetDateTime.atSimilarLocalTimeIn(timeZone: TimeZone): RegionalDateTime {
-    return RegionalDateTime.ofLocal(dateTime, timeZone, offset)
+fun OffsetDateTime.atSimilarLocalTimeIn(zone: TimeZone): RegionalDateTime {
+    return RegionalDateTime.ofLocal(dateTime, zone, offset)
 }
 
 /**
  * Get the [RegionalDateTime] corresponding to the same instant represented by an [OffsetDateTime] in a particular
  * time zone
  */
-fun OffsetDateTime.atSameInstantIn(timeZone: TimeZone): RegionalDateTime {
-    return RegionalDateTime.ofInstant(dateTime, offset, timeZone)
+fun OffsetDateTime.atSameInstantIn(zone: TimeZone): RegionalDateTime {
+    return RegionalDateTime.ofInstant(dateTime, offset, zone)
 }
 
 /**
  * Get the [RegionalDateTime] corresponding to an instant in a particular time zone
  */
-infix fun Instant.at(timeZone: TimeZone) = RegionalDateTime.ofInstant(this, timeZone)
+infix fun Instant.at(zone: TimeZone) = RegionalDateTime.ofInstant(this, zone)
 
-fun Date.atStartOfDayIn(timeZone: TimeZone): RegionalDateTime {
+fun Date.atStartOfDayIn(zone: TimeZone): RegionalDateTime {
     val dateTime = this at Time.MIDNIGHT
-    val transition = timeZone.rules.transitionAt(dateTime)
+    val transition = zone.rules.transitionAt(dateTime)
 
     return if (transition?.isGap == true) {
-        transition.dateTimeAfter at timeZone
+        transition.dateTimeAfter at zone
     } else {
-        dateTime at timeZone
+        dateTime at zone
     }
 }
 
-fun Date.atEndOfDayIn(timeZone: TimeZone): RegionalDateTime {
+fun Date.atEndOfDayIn(zone: TimeZone): RegionalDateTime {
     val dateTime = this at Time.MAX
-    val rules = timeZone.rules
+    val rules = zone.rules
     val validOffsets = rules.validOffsetsAt(dateTime)
 
     return if (validOffsets.size == 1) {
-        RegionalDateTime.create(dateTime, validOffsets[0], timeZone)
+        RegionalDateTime.create(dateTime, validOffsets[0], zone)
     } else {
         val transition = rules.transitionAt(dateTime)
 
         if (validOffsets.isEmpty()) {
-            RegionalDateTime.create(transition!!.dateTimeBefore, transition.offsetBefore, timeZone)
+            RegionalDateTime.create(transition!!.dateTimeBefore, transition.offsetBefore, zone)
         } else {
-            RegionalDateTime.create(dateTime, transition!!.offsetAfter, timeZone)
+            RegionalDateTime.create(dateTime, transition!!.offsetAfter, zone)
         }
     }
 }
@@ -471,13 +471,13 @@ internal fun DateTimeParseResult.toRegionalDateTime(): RegionalDateTime? {
     val regionId = timeZoneRegion
 
     return if (dateTime != null && offset != null && regionId != null) {
-        val timeZone = regionId.toTimeZone().validated()
+        val zone = regionId.toTimeZone().validated()
 
         // Check if the offset is valid for the time zone as we understand it and if not, interpret it as an instant
-        if (!timeZone.rules.isValidOffset(dateTime, offset)) {
-            dateTime.instantAt(offset).at(timeZone)
+        if (!zone.rules.isValidOffset(dateTime, offset)) {
+            dateTime.instantAt(offset).at(zone)
         } else {
-            RegionalDateTime.create(dateTime, offset, timeZone)
+            RegionalDateTime.create(dateTime, offset, zone)
         }
     } else {
         null
@@ -492,7 +492,7 @@ internal fun StringBuilder.appendRegionalDateTime(regionalDateTime: RegionalDate
         appendDateTime(dateTime)
         appendUtcOffset(offset)
         append('[')
-        append(timeZone)
+        append(zone)
         append(']')
     }
     return this
