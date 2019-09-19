@@ -248,12 +248,19 @@ class OffsetDateTime(
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
         val MAX = DateTime.MAX at UtcOffset.MIN
+
+        fun now() = now(systemClock())
+
+        fun now(clock: Clock): OffsetDateTime {
+            val instant = clock.instant()
+            return instant at clock.timeZone.rules.offsetAt(instant)
+        }
     }
 }
 
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.asDateTimeAt(offset), offset)
+infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(Iso8601.Extended.OFFSET_DATE_TIME_PARSER)
 

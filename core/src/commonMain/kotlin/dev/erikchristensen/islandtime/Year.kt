@@ -26,9 +26,8 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
     inline val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
     operator fun plus(years: LongYears): Year {
-        val newValue = value + years.value
-        checkValidYear(newValue)
-        return Year(newValue.toInt())
+        val newValue = checkValidYear(value + years.value)
+        return Year(newValue)
     }
 
     operator fun plus(years: IntYears) = plus(years.toLong())
@@ -63,6 +62,9 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
             checkValidYear(value)
             return Year(value)
         }
+
+        fun now() = now(systemClock())
+        fun now(clock: Clock) = Date.now(clock).year
     }
 }
 

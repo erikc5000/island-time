@@ -135,19 +135,8 @@ inline class YearMonth internal constructor(
         val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)
         val MAX = YearMonth(Year.MAX_VALUE, Month.MAX)
 
-        /**
-         * Create a fully validated [YearMonth]
-         */
-        operator fun invoke(year: Int, monthNumber: Int): YearMonth {
-            return YearMonth(year, Month(monthNumber))
-        }
-
-        /**
-         * Create a fully validated [YearMonth]
-         */
-        operator fun invoke(year: Int, month: Month): YearMonth {
-            return YearMonth((checkValidYear(year) * MONTHS_IN_YEAR + month.ordinal).months)
-        }
+        fun now() = now(systemClock())
+        fun now(clock: Clock) = Date.now(clock).yearMonth
 
         private fun isValid(monthsRelativeToYear0: LongMonths): Boolean {
             return monthsRelativeToYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
@@ -163,6 +152,22 @@ inline class YearMonth internal constructor(
             return monthsRelativeToYear0.toInt()
         }
     }
+}
+
+/**
+ * Create a fully validated [YearMonth]
+ */
+@Suppress("FunctionName")
+fun YearMonth(year: Int, monthNumber: Int): YearMonth {
+    return YearMonth(year, Month(monthNumber))
+}
+
+/**
+ * Create a fully validated [YearMonth]
+ */
+@Suppress("FunctionName")
+fun YearMonth(year: Int, month: Month): YearMonth {
+    return YearMonth((checkValidYear(year) * MONTHS_IN_YEAR + month.ordinal).months)
 }
 
 /**

@@ -1,6 +1,7 @@
 package dev.erikchristensen.islandtime.date
 
 import dev.erikchristensen.islandtime.*
+import dev.erikchristensen.islandtime.date.Date.Companion.fromDaysSinceUnixEpoch
 import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
@@ -310,7 +311,28 @@ class Date private constructor(
 
             return invoke(yearEst.toInt(), Month(month), dom)
         }
+
+        fun now() = now(systemClock())
+
+        fun now(clock: Clock): Date {
+            return clock.instant().toDateAt(clock.timeZone)
+        }
     }
+}
+
+fun Instant.toDateAt(offset: UtcOffset): Date {
+    var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
+
+    if (nanosecondAdjustment.isNegative) {
+        adjustedSeconds -= 1.seconds
+    }
+
+    val daysSinceUnixEpoch = (adjustedSeconds.value floorDiv SECONDS_PER_DAY).days
+    return fromDaysSinceUnixEpoch(daysSinceUnixEpoch)
+}
+
+fun Instant.toDateAt(zone: TimeZone): Date {
+    return this.toDateAt(zone.rules.offsetAt(this))
 }
 
 fun String.toDate() = toDate(Iso8601.Extended.CALENDAR_DATE_PARSER)

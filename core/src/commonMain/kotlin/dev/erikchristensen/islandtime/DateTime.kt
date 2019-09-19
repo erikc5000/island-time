@@ -508,6 +508,12 @@ class DateTime(
             val time = Time.fromSecondOfDay(secondOfDay, nanosecondOfDay)
             return DateTime(date, time)
         }
+
+        fun now() = now(systemClock())
+
+        fun now(clock: Clock): DateTime {
+            return clock.instant().toDateTimeAt(clock.timeZone)
+        }
     }
 }
 
@@ -526,12 +532,12 @@ val Date.startOfDay get() = DateTime(this, Time.MIDNIGHT)
  */
 val Date.endOfDay get() = DateTime(this, Time.MAX)
 
-fun Instant.asDateTimeAt(offset: UtcOffset): DateTime {
+fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
 }
 
-fun Instant.asDateTimeAt(timeZone: TimeZone): DateTime {
-    val offset = timeZone.rules.offsetAt(this)
+fun Instant.toDateTimeAt(zone: TimeZone): DateTime {
+    val offset = zone.rules.offsetAt(this)
     return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
 }
 

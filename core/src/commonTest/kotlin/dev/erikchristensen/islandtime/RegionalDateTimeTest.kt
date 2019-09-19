@@ -88,7 +88,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.timeZone)
+        assertEquals(TimeZone("America/New_York"), actual.zone)
         assertEquals(UtcOffset((-4).hours), actual.offset)
     }
 
@@ -101,7 +101,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.timeZone)
+        assertEquals(TimeZone("America/New_York"), actual.zone)
         assertEquals(UtcOffset((-5).hours), actual.offset)
     }
 
@@ -114,7 +114,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.timeZone)
+        assertEquals(TimeZone("America/New_York"), actual.zone)
         assertEquals(UtcOffset((-4).hours), actual.offset)
     }
 
@@ -127,7 +127,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(DateTime(2019, 11, 3, 2, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.timeZone)
+        assertEquals(TimeZone("America/New_York"), actual.zone)
         assertEquals(UtcOffset((-5).hours), actual.offset)
     }
 
@@ -139,7 +139,7 @@ class RegionalDateTimeTest {
         )
 
         assertEquals(DateTime(2019, 3, 10, 3, 30), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.timeZone)
+        assertEquals(TimeZone("America/New_York"), actual.zone)
         assertEquals(UtcOffset((-4).hours), actual.offset)
     }
 
@@ -289,7 +289,7 @@ class RegionalDateTimeTest {
             ).copy(
                 monthNumber = 3,
                 offset = (-4).hours.asUtcOffset(),
-                timeZone = "America/Denver".toTimeZone()
+                zone = "America/Denver".toTimeZone()
             )
         )
     }
