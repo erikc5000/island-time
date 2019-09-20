@@ -48,10 +48,6 @@ object Iso8601 {
                         utcOffsetSeconds(2) {
                             enforceSignStyle(SignStyle.NEVER)
                         }
-                        optional {
-                            decimalSeparator()
-                            nanosecondOfSecond()
-                        }
                     }
                 })
             }
@@ -80,6 +76,10 @@ object Iso8601 {
 
     val ZONED_DATE_TIME_PARSER = dateTimeParser {
         anyOf(Basic.ZONED_DATE_TIME_PARSER, Extended.ZONED_DATE_TIME_PARSER)
+    }
+
+    val INSTANT_PARSER = dateTimeParser {
+        anyOf(Basic.INSTANT_PARSER, Extended.INSTANT_PARSER)
     }
 
     val YEAR_MONTH_PARSER = Extended.YEAR_MONTH_PARSER
@@ -229,6 +229,11 @@ object Iso8601 {
             timeZoneRegion()
             +']'
         }
+
+        val INSTANT_PARSER = dateTimeParser {
+            subParser(CALENDAR_DATE_TIME_PARSER)
+            utcOffsetZero()
+        }
     }
 
     object Extended {
@@ -339,6 +344,11 @@ object Iso8601 {
             +'['
             timeZoneRegion()
             +']'
+        }
+
+        val INSTANT_PARSER = dateTimeParser {
+            subParser(CALENDAR_DATE_TIME_PARSER)
+            utcOffsetZero()
         }
 
         val YEAR_MONTH_PARSER = dateTimeParser {

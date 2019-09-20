@@ -1,6 +1,7 @@
 package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.interval.*
+import dev.erikchristensen.islandtime.parser.*
 
 /**
  * An instant in time with nanosecond precision
@@ -8,17 +9,43 @@ import dev.erikchristensen.islandtime.interval.*
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class Instant internal constructor(
     val durationSinceUnixEpoch: Duration
-): Comparable<Instant> {
+) : Comparable<Instant> {
 
+    /**
+     * The number of seconds since the Unix epoch of 1970-01-01T00:00Z
+     */
     inline val secondsSinceUnixEpoch: LongSeconds
         get() = durationSinceUnixEpoch.seconds
 
+    /**
+     * The number of additional nanoseconds on top of the seconds since the Unix epoch
+     */
     inline val nanosecondAdjustment: IntNanoseconds
         get() = durationSinceUnixEpoch.nanosecondAdjustment
 
-    // Think about whether a truncated representation like this should be part of the API
-//    val millisecondsSinceUnixEpoch: LongMilliseconds
-//        get() = durationSinceUnixEpoch.seconds + durationSinceUnixEpoch.nanosecondAdjustment.inWholeMilliseconds
+    /**
+     * The number of milliseconds since the Unix epoch of 1970-01-01T00:00Z
+     */
+    val millisecondsSinceUnixEpoch: LongMilliseconds
+        get() = secondsSinceUnixEpoch.inMillisecondsExact() plusExact nanosecondAdjustment.inWholeMilliseconds.toLong()
+
+    /**
+     * The second of the Unix epoch
+     */
+    inline val unixEpochSecond: Long
+        get() = secondsSinceUnixEpoch.value
+
+    /**
+     * The nanosecond of the second of the Unix epoch
+     */
+    inline val unixEpochNanoOfSecond: Int
+        get() = nanosecondAdjustment.value
+
+    /**
+     * The millisecond of the Unix epoch
+     */
+    inline val unixEpochMillisecond: Long
+        get() = millisecondsSinceUnixEpoch.value
 
     operator fun plus(days: IntDays) =
         fromDurationSinceUnixEpoch(durationSinceUnixEpoch + days)
@@ -104,12 +131,14 @@ inline class Instant internal constructor(
     operator fun minus(nanoseconds: LongNanoseconds) =
         fromDurationSinceUnixEpoch(durationSinceUnixEpoch - nanoseconds)
 
+    operator fun rangeTo(other: Instant) = InstantRange(this, other)
+
     override fun compareTo(other: Instant): Int {
         return durationSinceUnixEpoch.compareTo(other.durationSinceUnixEpoch)
     }
 
     override fun toString(): String {
-        val dateTime = DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, UtcOffset.ZERO)
+        val dateTime = this.toDateTimeAt(UtcOffset.ZERO)
 
         return buildString(MAX_DATE_TIME_STRING_LENGTH + 1) {
             appendDateTime(dateTime)
@@ -118,28 +147,134 @@ inline class Instant internal constructor(
     }
 
     companion object {
-        val MAX = Instant(DateTime.MAX.secondsSinceUnixEpochAt(UtcOffset.ZERO).asDuration())
-        val MIN = Instant(DateTime.MIN.secondsSinceUnixEpochAt(UtcOffset.ZERO).asDuration())
+        val MIN = Instant(Duration.MIN)
+        val MAX = Instant(Duration.MAX)
         val UNIX_EPOCH = Instant(Duration.ZERO)
 
+        /**
+         * Create an [Instant] from a [Duration] relative to the Unix epoch of 1970-01-01T00:00Z
+         */
         fun fromDurationSinceUnixEpoch(duration: Duration): Instant {
-            if (duration !in MIN.durationSinceUnixEpoch..MAX.durationSinceUnixEpoch) {
-                throw DateTimeException("'$duration' exceeds the supported Instant range")
-            }
-
             return Instant(duration)
         }
 
-        fun fromSecondsSinceUnixEpoch(seconds: LongSeconds, nanosecondAdjustment: IntNanoseconds): Instant {
+        /**
+         * Create the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z
+         */
+        fun fromSecondsSinceUnixEpoch(
+            seconds: LongSeconds,
+            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds
+        ): Instant {
             return fromDurationSinceUnixEpoch(durationOf(seconds, nanosecondAdjustment))
         }
 
+        /**
+         * Create the [Instant] represented by a number of milliseconds relative to the Unix epoch of 1970-01-01T00:00Z
+         */
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds): Instant {
             return fromDurationSinceUnixEpoch(milliseconds.asDuration())
         }
 
-        fun now() = now(systemClock())
+        /**
+         * Create an [Instant] from the second of the Unix epoch
+         */
+        fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int = 0): Instant {
+            return fromSecondsSinceUnixEpoch(second.seconds, nanoOfSecond.nanoseconds)
+        }
 
-        fun now(clock: Clock) = clock.instant()
+        /**
+         * Create an [Instant] from the millisecond of the Unix epoch
+         */
+        fun fromUnixEpochMillisecond(millisecond: Long): Instant {
+            return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds)
+        }
     }
+}
+
+fun String.toInstant() = toInstant(Iso8601.Extended.INSTANT_PARSER)
+
+fun String.toInstant(parser: DateTimeParser): Instant {
+    val result = parser.parse(this)
+    return result.toInstant() ?: raiseParserFieldResolutionException("Instant", this)
+}
+
+internal fun DateTimeParseResult.toInstant(): Instant? {
+    val dateTime = this.toDateTime()
+    val offset = this.toUtcOffset()
+
+    return if (dateTime != null && offset != null) {
+        dateTime.instantAt(offset)
+    } else {
+        null
+    }
+}
+
+/**
+ * Get the [Duration] between two instants
+ */
+fun durationBetween(start: Instant, endExclusive: Instant): Duration {
+    return endExclusive.durationSinceUnixEpoch - start.durationSinceUnixEpoch
+}
+
+/**
+ * Get the number of 24-hour days between two instants
+ */
+fun daysBetween(start: Instant, endExclusive: Instant): LongDays {
+    return secondsBetween(start, endExclusive).inWholeDays
+}
+
+/**
+ * Get the number of whole hours between two instants
+ */
+fun hoursBetween(start: Instant, endExclusive: Instant): LongHours {
+    return secondsBetween(start, endExclusive).inWholeHours
+}
+
+/**
+ * Get the number of whole minutes between two instants
+ */
+fun minutesBetween(start: Instant, endExclusive: Instant): LongMinutes {
+    return secondsBetween(start, endExclusive).inWholeMinutes
+}
+
+/**
+ * Get the number of whole seconds between two instants
+ * @throws ArithmeticException if the result overflows
+ */
+fun secondsBetween(start: Instant, endExclusive: Instant): LongSeconds {
+    val secondDiff = endExclusive.secondsSinceUnixEpoch minusExact start.secondsSinceUnixEpoch
+    val nanoDiff = endExclusive.nanosecondAdjustment minusWithOverflow start.nanosecondAdjustment
+
+    return when {
+        secondDiff.value > 0 && nanoDiff.value < 0 -> secondDiff - 1.seconds
+        secondDiff.value < 0 && nanoDiff.value > 0 -> secondDiff + 1.seconds
+        else -> secondDiff
+    }
+}
+
+/**
+ * Get the number of whole milliseconds between two instants
+ * @throws ArithmeticException if the result overflows
+ */
+fun millisecondsBetween(start: Instant, endExclusive: Instant): LongMilliseconds {
+    return (endExclusive.secondsSinceUnixEpoch minusExact start.secondsSinceUnixEpoch).inMillisecondsExact() plusExact
+        (endExclusive.nanosecondAdjustment - start.nanosecondAdjustment).inWholeMilliseconds
+}
+
+/**
+ * Get the number of whole microseconds between two instants
+ *  @throws ArithmeticException if the result overflows
+ */
+fun microsecondsBetween(start: Instant, endExclusive: Instant): LongMicroseconds {
+    return (endExclusive.secondsSinceUnixEpoch minusExact start.secondsSinceUnixEpoch).inMicrosecondsExact() plusExact
+        (endExclusive.nanosecondAdjustment - start.nanosecondAdjustment).inWholeMicroseconds
+}
+
+/**
+ * Get the number of nanoseconds between two instants
+ * @throws ArithmeticException if the result overflows
+ */
+fun nanosecondsBetween(start: Instant, endExclusive: Instant): LongNanoseconds {
+    return (endExclusive.secondsSinceUnixEpoch minusExact start.secondsSinceUnixEpoch).inNanosecondsExact() plusExact
+        (endExclusive.nanosecondAdjustment - start.nanosecondAdjustment)
 }
