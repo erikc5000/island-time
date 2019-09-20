@@ -1,8 +1,8 @@
 package dev.erikchristensen.islandtime
 
 import co.touchlab.stately.concurrency.AtomicReference
-import dev.erikchristensen.islandtime.tz.TimeZoneRulesException
-import dev.erikchristensen.islandtime.tz.TimeZoneRulesProvider
+import dev.erikchristensen.islandtime.zone.TimeZoneRulesException
+import dev.erikchristensen.islandtime.zone.TimeZoneRulesProvider
 
 object IslandTime {
     internal val timeZoneRulesProvider = AtomicReference<TimeZoneRulesProvider?>(null)

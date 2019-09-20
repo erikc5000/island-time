@@ -1,8 +1,8 @@
 package dev.erikchristensen.islandtime
 
-import dev.erikchristensen.islandtime.tz.TimeZoneRules
-import dev.erikchristensen.islandtime.tz.TimeZoneRulesException
-import dev.erikchristensen.islandtime.tz.TimeZoneRulesProvider
+import dev.erikchristensen.islandtime.zone.TimeZoneRules
+import dev.erikchristensen.islandtime.zone.TimeZoneRulesException
+import dev.erikchristensen.islandtime.zone.TimeZoneRulesProvider
 
 inline class TimeZone(val regionId: String) : Comparable<TimeZone> {
 

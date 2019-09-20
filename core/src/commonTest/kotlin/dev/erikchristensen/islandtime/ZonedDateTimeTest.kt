@@ -5,7 +5,7 @@ import dev.erikchristensen.islandtime.interval.hours
 import dev.erikchristensen.islandtime.interval.milliseconds
 import dev.erikchristensen.islandtime.parser.DateTimeParseException
 import dev.erikchristensen.islandtime.parser.Iso8601
-import dev.erikchristensen.islandtime.tz.*
+import dev.erikchristensen.islandtime.zone.*
 import kotlin.test.*
 
 class ZonedDateTimeTest {

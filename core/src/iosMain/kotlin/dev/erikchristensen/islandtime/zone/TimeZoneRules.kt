@@ -1,4 +1,4 @@
-package dev.erikchristensen.islandtime.tz
+package dev.erikchristensen.islandtime.zone
 
 import co.touchlab.stately.collections.SharedHashMap
 import dev.erikchristensen.islandtime.*
