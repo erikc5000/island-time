@@ -1,19 +1,42 @@
 package dev.erikchristensen.islandtime.date
 
 import dev.erikchristensen.islandtime.*
-import dev.erikchristensen.islandtime.date.Date.Companion.fromDaysSinceUnixEpoch
 import dev.erikchristensen.islandtime.internal.*
 import dev.erikchristensen.islandtime.interval.*
 import dev.erikchristensen.islandtime.parser.*
 
 /**
  * A date in an arbitrary region
+ * @constructor Create a [Date] from a year, month, and day of month
+ * @param year the year
+ * @param month the month
+ * @param day the day of the month
+ * @throws DateTimeException if the year or day is invalid
  */
-class Date private constructor(
+class Date(
     val year: Int,
     val month: Month,
     private val day: Int
 ) : Comparable<Date> {
+
+    init {
+        checkValidYear(year)
+        checkValidDayOfMonth(year, month, day)
+    }
+
+    /**
+     * Create a [Date] from a year, ISO month number, and day of month
+     * @param year the year
+     * @param monthNumber the ISO-8601 month number
+     * @param day the day of the month
+     * @return a new [Date]
+     * @throws DateTimeException if the year, month, or day is invalid
+     */
+    constructor(
+        year: Int,
+        monthNumber: Int,
+        day: Int
+    ): this(year, Month(monthNumber), day)
 
     /**
      * The day of the week
@@ -71,7 +94,12 @@ class Date private constructor(
     /**
      * Get the number of days away from the Unix epoch that this date falls
      */
-    val daysSinceUnixEpoch: LongDays
+    val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
+
+    /**
+     * The Unix epoch day representing this date
+     */
+    val unixEpochDay: Long
         get() {
             var total = DAYS_IN_COMMON_YEAR * year
 
@@ -88,7 +116,7 @@ class Date private constructor(
                 total -= if (isInLeapYear) 1 else 2
             }
 
-            return (total - DAYS_FROM_0000_TO_1970).days
+            return total - DAYS_FROM_0000_TO_1970
         }
 
     operator fun plus(years: IntYears) = plus(years.toLong())
@@ -122,7 +150,7 @@ class Date private constructor(
         return if (days.value == 0L) {
             this
         } else {
-            fromDaysSinceUnixEpoch((daysSinceUnixEpoch.value plusExact days.value).days)
+            fromDaysSinceUnixEpoch(daysSinceUnixEpoch plusExact days)
         }
     }
 
@@ -198,7 +226,7 @@ class Date private constructor(
         year: Int = this.year,
         month: Month = this.month,
         dayOfMonth: Int = this.day
-    ) = invoke(year, month, dayOfMonth)
+    ) = Date(year, month, dayOfMonth)
 
     /**
      * Return a new [Date], replacing the year, month, and day of month with new values, as desired
@@ -207,7 +235,7 @@ class Date private constructor(
         year: Int = this.year,
         monthNumber: Int,
         dayOfMonth: Int = this.day
-    ) = invoke(year, monthNumber, dayOfMonth)
+    ) = Date(year, monthNumber, dayOfMonth)
 
     /**
      * Return a new [Date], replacing the year and day of the year with new values, as desired
@@ -215,61 +243,20 @@ class Date private constructor(
     fun copy(
         year: Int = this.year,
         dayOfYear: Int = this.dayOfYear
-    ) = invoke(year, dayOfYear)
+    ) = Date(year, dayOfYear)
 
     companion object {
         val MIN = Date(Year.MIN_VALUE, 1)
         val MAX = Date(Year.MAX_VALUE, Year.MAX.lastDay)
 
         /**
-         * Create a [Date] from a year, ISO month number, and day of month
-         * @param year the year
-         * @param monthNumber the ISO-8601 month number
-         * @param day the day of the month
+         * Create the [Date] that falls a certain number of days from the Unix epoch of 1970-01-01
+         * @param days the number of days relative to the Unix epoch
          * @return a new [Date]
-         * @throws DateTimeException if the year, month, or day is invalid
+         * @throws DateTimeException if outside of the supported date range
          */
-        operator fun invoke(
-            year: Int,
-            monthNumber: Int,
-            day: Int
-        ): Date = invoke(year, Month(monthNumber), day)
-
-        /**
-         * Create a [Date] from a year, month, and day of month
-         * @param year the year
-         * @param month the month
-         * @param day the day of the month
-         * @return a new [Date]
-         * @throws DateTimeException if the year or day is invalid
-         */
-        operator fun invoke(
-            year: Int,
-            month: Month,
-            day: Int
-        ): Date {
-            checkValidYear(year)
-            checkValidDayOfMonth(year, month, day)
-
-            return Date(year, month, day)
-        }
-
-        /**
-         * Create a [Date] from a year and day of year
-         * @param year the year
-         * @param dayOfYear the day of the calendar year
-         * @return a new [Date]
-         * @throws DateTimeException if the year or day of year are invalid
-         */
-        operator fun invoke(year: Int, dayOfYear: Int): Date {
-            checkValidYear(year)
-            checkValidDayOfYear(year, dayOfYear)
-
-            val testMonth = ((dayOfYear - 1) / 31 + 1).toMonth()
-            val month = if (dayOfYear > testMonth.lastDayOfYearIn(year)) testMonth + 1.months else testMonth
-            val dayOfMonth = dayOfYear - month.firstDayOfYearIn(year) + 1
-
-            return Date(year, month, dayOfMonth)
+        fun fromDaysSinceUnixEpoch(days: LongDays): Date {
+            return fromUnixEpochDay(days.value)
         }
 
         //
@@ -277,13 +264,13 @@ class Date private constructor(
         //
 
         /**
-         * Create the [Date] that falls a certain number of days from the Unix epoch of 1970-01-01
-         * @param daysSinceUnixEpoch the number of days relative to the Unix epoch
+         * Create a [Date] from the day of the Unix epoch
+         * @param day the day of the Unix epoch
          * @return a new [Date]
          * @throws DateTimeException if outside of the supported date range
          */
-        fun fromDaysSinceUnixEpoch(daysSinceUnixEpoch: LongDays): Date {
-            var zeroDay = daysSinceUnixEpoch.value + DAYS_FROM_0000_TO_1970
+        fun fromUnixEpochDay(day: Long): Date {
+            var zeroDay = day + DAYS_FROM_0000_TO_1970
             // find the march-based year
             zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four year cycle
             var adjust: Long = 0
@@ -309,7 +296,7 @@ class Date private constructor(
             val dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
             yearEst += (marchMonth0 / 10).toLong()
 
-            return invoke(yearEst.toInt(), Month(month), dom)
+            return Date(yearEst.toInt(), Month(month), dom)
         }
 
         fun now() = now(systemClock())
@@ -320,6 +307,25 @@ class Date private constructor(
     }
 }
 
+/**
+ * Create a [Date] from a year and day of year
+ * @param year the year
+ * @param dayOfYear the day of the calendar year
+ * @return a new [Date]
+ * @throws DateTimeException if the year or day of year are invalid
+ */
+@Suppress("FunctionName")
+fun Date(year: Int, dayOfYear: Int): Date {
+    checkValidYear(year)
+    checkValidDayOfYear(year, dayOfYear)
+
+    val testMonth = ((dayOfYear - 1) / 31 + 1).toMonth()
+    val month = if (dayOfYear > testMonth.lastDayOfYearIn(year)) testMonth + 1.months else testMonth
+    val dayOfMonth = dayOfYear - month.firstDayOfYearIn(year) + 1
+
+    return Date(year, month, dayOfMonth)
+}
+
 fun Instant.toDateAt(offset: UtcOffset): Date {
     var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
 
@@ -327,8 +333,8 @@ fun Instant.toDateAt(offset: UtcOffset): Date {
         adjustedSeconds -= 1.seconds
     }
 
-    val daysSinceUnixEpoch = (adjustedSeconds.value floorDiv SECONDS_PER_DAY).days
-    return fromDaysSinceUnixEpoch(daysSinceUnixEpoch)
+    val unixEpochDay = adjustedSeconds.value floorDiv SECONDS_PER_DAY
+    return Date.fromUnixEpochDay(unixEpochDay)
 }
 
 fun Instant.toDateAt(zone: TimeZone): Date {
@@ -367,6 +373,19 @@ internal fun DateTimeParseResult.toDate(): Date? {
     return null
 }
 
+internal const val MAX_DATE_STRING_LENGTH = 10
+
+internal fun StringBuilder.appendDate(date: Date): StringBuilder {
+    with(date) {
+        appendZeroPadded(year, 4)
+        append('-')
+        appendZeroPadded(monthNumber, 2)
+        append('-')
+        appendZeroPadded(dayOfMonth, 2)
+    }
+    return this
+}
+
 fun periodBetween(start: Date, endExclusive: Date): Period {
     var totalMonths = endExclusive.monthsSinceYear0.toLong() - start.monthsSinceYear0
     val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
@@ -401,19 +420,6 @@ fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
 
 fun yearsBetween(start: Date, endExclusive: Date): IntYears {
     return monthsBetween(start, endExclusive).inWholeYears
-}
-
-internal const val MAX_DATE_STRING_LENGTH = 10
-
-internal fun StringBuilder.appendDate(date: Date): StringBuilder {
-    with(date) {
-        appendZeroPadded(year, 4)
-        append('-')
-        appendZeroPadded(monthNumber, 2)
-        append('-')
-        appendZeroPadded(dayOfMonth, 2)
-    }
-    return this
 }
 
 private inline val Date.monthsSinceYear0 get() = year * 12 + month.ordinal
