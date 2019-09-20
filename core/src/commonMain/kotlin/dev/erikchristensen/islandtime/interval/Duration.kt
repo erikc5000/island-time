@@ -20,13 +20,6 @@ class Duration private constructor(
     val nanosecondAdjustment: IntNanoseconds = 0.nanoseconds
 ) : Comparable<Duration> {
 
-    init {
-        // TODO: Remove this since ranges should be enforced before getting here
-        require(nanosecondAdjustment.value in -999_999_999..999_999_999) {
-            "nanosecondAdjustment is out of range"
-        }
-    }
-
     inline val isZero: Boolean get() = this == ZERO
 
     val isPositive: Boolean
@@ -36,7 +29,7 @@ class Duration private constructor(
         get() = seconds.value < 0L || nanosecondAdjustment.value < 0
 
     /**
-     * Return the absolute value of this duration
+     * The absolute value of this duration
      */
     val absoluteValue: Duration
         get() = if (isNegative) -this else this
@@ -168,34 +161,34 @@ class Duration private constructor(
         }
     }
 
-     operator fun times(scalar: Int): Duration {
-         return when (scalar) {
-             0 -> ZERO
-             1 -> this
-             else -> {
-                 // TODO: Revisit this if and when overflow safe operations are fully added to the duration units
-                 var newSeconds = seconds.value timesExact scalar
-                 var newNanoseconds = nanosecondAdjustment.toLong() * scalar
-                 newSeconds = newSeconds plusExact newNanoseconds.inWholeSeconds.value
-                 newNanoseconds %= NANOSECONDS_PER_SECOND
-                 create(newSeconds.seconds, newNanoseconds.toInt())
-             }
-         }
-     }
+    operator fun times(scalar: Int): Duration {
+        return when (scalar) {
+            0 -> ZERO
+            1 -> this
+            else -> {
+                // TODO: Revisit this if and when overflow safe operations are fully added to the duration units
+                var newSeconds = seconds.value timesExact scalar
+                var newNanoseconds = nanosecondAdjustment.toLong() * scalar
+                newSeconds = newSeconds plusExact newNanoseconds.inWholeSeconds.value
+                newNanoseconds %= NANOSECONDS_PER_SECOND
+                create(newSeconds.seconds, newNanoseconds.toInt())
+            }
+        }
+    }
 
-     operator fun div(scalar: Int): Duration {
-         return when (scalar) {
-             0 -> throw ArithmeticException("Division by zero")
-             1 -> this
-             -1 -> -this
-             else -> {
-                 val fractionalSeconds = seconds.value.toDouble() / scalar
-                 val newSeconds = fractionalSeconds.toLong()
-                 val newNanoseconds = nanosecondAdjustment.value / scalar +
-                     ((fractionalSeconds - newSeconds) * NANOSECONDS_PER_SECOND).toInt()
-                 create(newSeconds.seconds, newNanoseconds.nanoseconds)
-             }
-         }
+    operator fun div(scalar: Int): Duration {
+        return when (scalar) {
+            0 -> throw ArithmeticException("Division by zero")
+            1 -> this
+            -1 -> -this
+            else -> {
+                val fractionalSeconds = seconds.value.toDouble() / scalar
+                val newSeconds = fractionalSeconds.toLong()
+                val newNanoseconds = nanosecondAdjustment.value / scalar +
+                    ((fractionalSeconds - newSeconds) * NANOSECONDS_PER_SECOND).toInt()
+                create(newSeconds.seconds, newNanoseconds.nanoseconds)
+            }
+        }
     }
 
     /**
@@ -282,27 +275,19 @@ class Duration private constructor(
     }
 
     private fun plus(secondsToAdd: LongSeconds, nanosecondsToAdd: IntNanoseconds): Duration {
-        if (secondsToAdd.value == 0L && nanosecondsToAdd.value == 0) {
-            return this
+        return if (secondsToAdd.value == 0L && nanosecondsToAdd.value == 0) {
+            this
+        } else {
+            durationOf(
+                seconds plusExact secondsToAdd,
+                nanosecondAdjustment plusWithOverflow nanosecondsToAdd
+            )
         }
-
-        var newSeconds = (seconds.value plusExact secondsToAdd.value).seconds
-        var newNanoAdjustment = nanosecondAdjustment plusWithOverflow nanosecondsToAdd
-        newSeconds += newNanoAdjustment.inWholeSeconds
-        newNanoAdjustment = (newNanoAdjustment.value % NANOSECONDS_PER_SECOND).nanoseconds
-
-        if (newNanoAdjustment.value < 0 && newSeconds.value > 0) {
-            newSeconds -= 1L.seconds
-            newNanoAdjustment = (NANOSECONDS_PER_SECOND - newNanoAdjustment.value).nanoseconds
-        } else if (newNanoAdjustment.value > 0 && newSeconds.value < 0) {
-            newSeconds += 1L.seconds
-            newNanoAdjustment = (newNanoAdjustment.value - NANOSECONDS_PER_SECOND).nanoseconds
-        }
-
-        return create(newSeconds, newNanoAdjustment)
     }
 
     companion object {
+        val MIN = Duration(Long.MIN_VALUE.seconds, (-999_999_999).nanoseconds)
+        val MAX = Duration(Long.MAX_VALUE.seconds, 999_999_999.nanoseconds)
         val ZERO = Duration(0L.seconds)
 
         internal fun create(
@@ -323,7 +308,7 @@ fun durationOf(seconds: LongSeconds, nanoseconds: IntNanoseconds) = durationOf(s
 fun durationOf(seconds: IntSeconds, nanoseconds: LongNanoseconds) = durationOf(seconds.toLong(), nanoseconds)
 
 fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
-    var adjustedSeconds = seconds + nanoseconds.inWholeSeconds
+    var adjustedSeconds = seconds plusExact nanoseconds.inWholeSeconds
     var newNanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
 
     if (newNanoOfSeconds.value < 0 && adjustedSeconds.value > 0) {
