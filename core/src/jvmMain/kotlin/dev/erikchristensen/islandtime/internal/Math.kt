@@ -20,4 +20,7 @@ internal actual infix fun Long.timesExact(other: Long): Long = Math.multiplyExac
 internal actual infix fun Int.timesExact(other: Int): Int = Math.multiplyExact(this, other)
 internal actual infix fun Long.timesExact(other: Int): Long = this timesExact other.toLong()
 
+internal actual fun Int.negateExact(): Int = Math.negateExact(this)
+internal actual fun Long.negateExact(): Long = Math.negateExact(this)
+
 internal actual fun Long.toIntExact(): Int = Math.toIntExact(this)

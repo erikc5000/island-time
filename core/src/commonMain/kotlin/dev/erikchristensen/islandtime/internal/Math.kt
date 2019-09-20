@@ -18,4 +18,7 @@ internal expect infix fun Long.timesExact(other: Long): Long
 internal expect infix fun Int.timesExact(other: Int): Int
 internal expect infix fun Long.timesExact(other: Int): Long
 
+internal expect fun Int.negateExact(): Int
+internal expect fun Long.negateExact(): Long
+
 internal expect fun Long.toIntExact(): Int
