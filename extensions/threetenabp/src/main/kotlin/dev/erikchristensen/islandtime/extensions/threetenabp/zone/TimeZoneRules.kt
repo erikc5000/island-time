@@ -1,4 +1,4 @@
-package dev.erikchristensen.islandtime.extensions.threetenabp.tz
+package dev.erikchristensen.islandtime.extensions.threetenabp.zone
 
 import android.app.Application
 import android.content.Context
@@ -7,10 +7,10 @@ import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.extensions.threetenabp.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
 import dev.erikchristensen.islandtime.interval.seconds
-import dev.erikchristensen.islandtime.tz.TimeZoneOffsetTransition
-import dev.erikchristensen.islandtime.tz.TimeZoneRules
-import dev.erikchristensen.islandtime.tz.TimeZoneRulesException
-import dev.erikchristensen.islandtime.tz.TimeZoneRulesProvider
+import dev.erikchristensen.islandtime.zone.TimeZoneOffsetTransition
+import dev.erikchristensen.islandtime.zone.TimeZoneRules
+import dev.erikchristensen.islandtime.zone.TimeZoneRulesException
+import dev.erikchristensen.islandtime.zone.TimeZoneRulesProvider
 import org.threeten.bp.zone.ZoneOffsetTransition
 import org.threeten.bp.zone.ZoneRules
 import org.threeten.bp.zone.ZoneRulesException

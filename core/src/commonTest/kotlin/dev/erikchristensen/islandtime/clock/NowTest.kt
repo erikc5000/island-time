@@ -2,7 +2,7 @@ package dev.erikchristensen.islandtime
 
 import dev.erikchristensen.islandtime.date.Date
 import dev.erikchristensen.islandtime.interval.milliseconds
-import dev.erikchristensen.islandtime.tz.PlatformDefault
+import dev.erikchristensen.islandtime.zone.PlatformDefault
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

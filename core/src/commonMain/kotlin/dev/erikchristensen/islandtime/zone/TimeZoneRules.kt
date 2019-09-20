@@ -1,4 +1,4 @@
-package dev.erikchristensen.islandtime.tz
+package dev.erikchristensen.islandtime.zone
 
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
