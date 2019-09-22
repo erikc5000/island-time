@@ -62,9 +62,6 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
             checkValidYear(value)
             return Year(value)
         }
-
-        fun now() = now(systemClock())
-        fun now(clock: Clock) = Date.now(clock).year
     }
 }
 

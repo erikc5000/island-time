@@ -270,8 +270,6 @@ class ZonedDateTimeTest {
             Date(2019, 5, 20).atEndOfDayIn("America/New_York".toTimeZone())
         )
 
-        ZonedDateTime.now().yearMonth.startDate
-
         // TODO: Add tests where transitions occur during midnight
     }
 

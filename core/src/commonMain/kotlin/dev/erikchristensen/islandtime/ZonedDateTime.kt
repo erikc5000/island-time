@@ -54,8 +54,9 @@ class ZonedDateTime private constructor(
     inline val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
-    inline val instant: Instant
-        get() = Instant.fromSecondsSinceUnixEpoch(secondsSinceUnixEpoch, nanosecond.nanoseconds)
+    inline val unixEpochSecond: Long get() = dateTime.unixEpochSecondAt(offset)
+    inline val unixEpochMillisecond: Long get() = dateTime.unixEpochMillisecondAt(offset)
+    inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     override fun compareTo(other: ZonedDateTime): Int {
         val secondDiff = secondsSinceUnixEpoch.compareTo(other.secondsSinceUnixEpoch)
@@ -380,17 +381,17 @@ class ZonedDateTime private constructor(
             return ZonedDateTime(dateTime, offset, zone)
         }
 
+        fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, zone: TimeZone): ZonedDateTime {
+            val offset = zone.rules.offsetAt(milliseconds)
+            val dateTime = DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset)
+            return ZonedDateTime(dateTime, offset, zone)
+        }
+
         /**
          * Create a [ZonedDateTime] with no additional validation
          */
         internal fun create(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): ZonedDateTime {
             return ZonedDateTime(dateTime, offset, zone)
-        }
-
-        fun now() = now(systemClock())
-
-        fun now(clock: Clock): ZonedDateTime {
-            return clock.instant() at clock.timeZone
         }
     }
 }

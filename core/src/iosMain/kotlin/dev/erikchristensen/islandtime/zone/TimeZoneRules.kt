@@ -3,6 +3,7 @@ package dev.erikchristensen.islandtime.zone
 import co.touchlab.stately.collections.SharedHashMap
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
+import dev.erikchristensen.islandtime.interval.LongMilliseconds
 import dev.erikchristensen.islandtime.interval.minus
 import dev.erikchristensen.islandtime.interval.seconds
 import dev.erikchristensen.islandtime.ios.toIslandInstant
@@ -42,6 +43,10 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
             ?: throw IllegalStateException("Failed to convert '$dateTime' to an NSDate")
 
         return offsetAt(date)
+    }
+
+    override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun offsetAt(instant: Instant) = offsetAt(instant.toNSDate())

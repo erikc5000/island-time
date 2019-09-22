@@ -6,11 +6,13 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.extensions.threetenabp.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
+import dev.erikchristensen.islandtime.interval.LongMilliseconds
 import dev.erikchristensen.islandtime.interval.seconds
 import dev.erikchristensen.islandtime.zone.TimeZoneOffsetTransition
 import dev.erikchristensen.islandtime.zone.TimeZoneRules
 import dev.erikchristensen.islandtime.zone.TimeZoneRulesException
 import dev.erikchristensen.islandtime.zone.TimeZoneRulesProvider
+import org.threeten.bp.Instant as JavaInstant
 import org.threeten.bp.zone.ZoneOffsetTransition
 import org.threeten.bp.zone.ZoneRules
 import org.threeten.bp.zone.ZoneRulesException
@@ -52,6 +54,11 @@ class ThreeTenAbp(context: Context, assetPath: String = "") : TimeZoneRulesProvi
 private class JavaTimeZoneRules(
     private val javaZoneRules: ZoneRules
 ) : TimeZoneRules {
+
+    override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
+        val offset = javaZoneRules.getOffset(JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value))
+        return offset.toIslandUtcOffset()
+    }
 
     override fun offsetAt(instant: Instant): UtcOffset {
         val offset = javaZoneRules.getOffset(instant.toJavaInstant())

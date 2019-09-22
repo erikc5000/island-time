@@ -87,8 +87,9 @@ class OffsetDateTime(
     inline val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
-    inline val instant: Instant
-        get() = Instant.fromSecondsSinceUnixEpoch(secondsSinceUnixEpoch, nanosecond.nanoseconds)
+    inline val unixEpochSecond: Long get() = dateTime.unixEpochSecondAt(offset)
+    inline val unixEpochMillisecond: Long get() = dateTime.unixEpochMillisecondAt(offset)
+    inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     /**
      * Change the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
@@ -248,13 +249,6 @@ class OffsetDateTime(
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
         val MAX = DateTime.MAX at UtcOffset.MIN
-
-        fun now() = now(systemClock())
-
-        fun now(clock: Clock): OffsetDateTime {
-            val instant = clock.instant()
-            return instant at clock.timeZone.rules.offsetAt(instant)
-        }
     }
 }
 

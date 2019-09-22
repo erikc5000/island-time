@@ -135,9 +135,6 @@ inline class YearMonth internal constructor(
         val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)
         val MAX = YearMonth(Year.MAX_VALUE, Month.MAX)
 
-        fun now() = now(systemClock())
-        fun now(clock: Clock) = Date.now(clock).yearMonth
-
         private fun isValid(monthsRelativeToYear0: LongMonths): Boolean {
             return monthsRelativeToYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
         }
