@@ -2,10 +2,10 @@ package io.islandtime.zone
 
 import co.touchlab.stately.collections.SharedHashMap
 import io.islandtime.*
-import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.interval.IntSeconds
 import io.islandtime.interval.LongMilliseconds
 import io.islandtime.interval.seconds
+import io.islandtime.ios.fromMillisecondsSinceUnixEpoch
 import io.islandtime.ios.toIslandInstant
 import io.islandtime.ios.toNSDate
 import io.islandtime.ios.toNSDateComponents
@@ -46,10 +46,7 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     }
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
-        val date = NSDate.dateWithTimeIntervalSince1970(
-            millisecondsSinceUnixEpoch.value.toDouble() / MILLISECONDS_PER_SECOND
-        )
-        return offsetAt(date)
+        return offsetAt(NSDate.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch))
     }
 
     override fun offsetAt(instant: Instant) = offsetAt(instant.toNSDate())
@@ -128,7 +125,6 @@ private class IosTimeZoneOffsetTransition(
         require(dateTimeBefore.nanosecond == 0) { "Nanosecond must be zero" }
     }
 
-    val secondsSinceUnixEpoch get() = dateTimeBefore.secondsSinceUnixEpochAt(offsetBefore)
     override val dateTimeAfter get() = dateTimeBefore + duration
     override val duration get() = offsetAfter.totalSeconds - offsetBefore.totalSeconds
     override val isGap get() = offsetAfter > offsetBefore
