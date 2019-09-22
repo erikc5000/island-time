@@ -29,6 +29,6 @@ allprojects {
         }
     }
 
-    group = "dev.erikchristensen.islandtime"
+    group = "io.islandtime"
     version = "0.1.0-SNAPSHOT"
 }
