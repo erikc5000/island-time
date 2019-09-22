@@ -2,6 +2,7 @@ package dev.erikchristensen.islandtime.zone
 
 import dev.erikchristensen.islandtime.*
 import dev.erikchristensen.islandtime.interval.IntSeconds
+import dev.erikchristensen.islandtime.interval.LongMilliseconds
 
 class TimeZoneRulesException(
     message: String? = null,
@@ -50,6 +51,7 @@ interface TimeZoneOffsetTransition {
 }
 
 interface TimeZoneRules {
+    fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset
     fun offsetAt(instant: Instant): UtcOffset
     fun offsetAt(dateTime: DateTime): UtcOffset
     fun validOffsetsAt(dateTime: DateTime): List<UtcOffset>

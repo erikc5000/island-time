@@ -447,8 +447,11 @@ class DateTime(
             offset.totalSeconds
     }
 
+    fun unixEpochSecondAt(offset: UtcOffset): Long = secondsSinceUnixEpochAt(offset).value
+    fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
+
     fun instantAt(offset: UtcOffset): Instant {
-        return Instant.fromSecondsSinceUnixEpoch(secondsSinceUnixEpochAt(offset), nanosecond.nanoseconds)
+        return Instant.fromUnixEpochSecond(unixEpochSecondAt(offset), nanosecond)
     }
 
     companion object {
@@ -485,9 +488,7 @@ class DateTime(
             nanosecondAdjustment: IntNanoseconds,
             offset: UtcOffset
         ): DateTime {
-            val adjustedSeconds =
-                seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND).seconds
-
+            val adjustedSeconds = seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND).seconds
             val nanosecondOfDay = nanosecondAdjustment.value floorMod NANOSECONDS_PER_SECOND
             return fromSecondsSinceUnixEpoch(adjustedSeconds, nanosecondOfDay, offset)
         }
@@ -496,7 +497,7 @@ class DateTime(
          * Create the [DateTime] that falls a given number of seconds relative to the Unix epoch, plus the nanosecond
          * of day value.
          */
-        internal fun fromSecondsSinceUnixEpoch(
+        private fun fromSecondsSinceUnixEpoch(
             seconds: LongSeconds,
             nanosecondOfDay: Int,
             offset: UtcOffset
@@ -507,12 +508,6 @@ class DateTime(
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
             val time = Time.fromSecondOfDay(secondOfDay, nanosecondOfDay)
             return DateTime(date, time)
-        }
-
-        fun now() = now(systemClock())
-
-        fun now(clock: Clock): DateTime {
-            return clock.instant().toDateTimeAt(clock.timeZone)
         }
     }
 }
@@ -533,11 +528,6 @@ val Date.startOfDay get() = DateTime(this, Time.MIDNIGHT)
 val Date.endOfDay get() = DateTime(this, Time.MAX)
 
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
-    return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
-}
-
-fun Instant.toDateTimeAt(zone: TimeZone): DateTime {
-    val offset = zone.rules.offsetAt(this)
     return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
 }
 

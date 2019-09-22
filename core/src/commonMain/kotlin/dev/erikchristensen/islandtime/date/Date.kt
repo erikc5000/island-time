@@ -298,12 +298,6 @@ class Date(
 
             return Date(yearEst.toInt(), Month(month), dom)
         }
-
-        fun now() = now(systemClock())
-
-        fun now(clock: Clock): Date {
-            return clock.instant().toDateAt(clock.timeZone)
-        }
     }
 }
 
