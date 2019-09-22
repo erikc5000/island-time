@@ -9,11 +9,11 @@ dependencies {
 }
 
 application {
-    mainClassName = "dev.erikchristensen.islandtime.codegen.MainKt"
+    mainClassName = "io.islandtime.codegen.MainKt"
 }
 
 tasks.named<Jar>("jar") {
     manifest {
-        attributes("Main-Class" to "dev.erikchristensen.islandtime.codegen.MainKt")
+        attributes("Main-Class" to "io.islandtime.codegen.MainKt")
     }
 }
