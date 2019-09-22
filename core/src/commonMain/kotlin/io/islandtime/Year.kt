@@ -6,20 +6,20 @@ import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.interval.*
 import io.islandtime.parser.*
 
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-inline class Year internal constructor(val value: Int) : Comparable<Year> {
+inline class Year(val value: Int) : Comparable<Year> {
 
     /**
      * Is this year within the supported range?
-     *
-     * Due to the nature of inline classes, it's not possible to guarantee that the value is valid when manipulated
-     * via Java code, but the validity can be checked via this property.
      */
-    val isValid: Boolean get() = isValidYear(value)
+    val isValid: Boolean get() = value in MIN_VALUE..MAX_VALUE
 
-    val isLeap: Boolean get() = isLeapYear(value)
-    val length: IntDays get() = lengthOfYear(value)
-    val lastDay: Int get() = lastDayOfYear(value)
+    val isLeap: Boolean
+        get() = value % 4 == 0 && (value % 100 != 0 || value % 400 == 0)
+
+    val length: IntDays
+        get() = if (isLeap) 366.days else 365.days
+
+    val lastDay: Int get() = length.value
     inline val dayRange: IntRange get() = 1..lastDay
     inline val dateRange: DateRange get() = DateRange(startDate, endDate)
     inline val startDate: Date get() = Date(value, Month.JANUARY, 1)
@@ -42,6 +42,13 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
 
     operator fun minus(years: IntYears) = plus(-years.toLong())
 
+    fun validated(): Year {
+        if (!isValid) {
+            throw DateTimeException(getInvalidYearMessage(value.toLong()))
+        }
+        return this
+    }
+
     override fun compareTo(other: Year) = value - other.value
 
     override fun toString(): String {
@@ -54,14 +61,6 @@ inline class Year internal constructor(val value: Int) : Comparable<Year> {
 
         val MIN = Year(MIN_VALUE)
         val MAX = Year(MAX_VALUE)
-
-        /**
-         * Create a [Year]
-         */
-        operator fun invoke(value: Int): Year {
-            checkValidYear(value)
-            return Year(value)
-        }
     }
 }
 
@@ -76,39 +75,22 @@ internal fun DateTimeParseResult.toYear(): Year? {
     val value = this[DateTimeField.YEAR]
 
     return if (value != null) {
-        checkValidYear(value)
-        Year(value.toInt())
+        Year(checkValidYear(value))
     } else {
         null
     }
 }
 
-internal fun isLeapYear(year: Int): Boolean {
-    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
-}
-
-internal fun lengthOfYear(year: Int): IntDays {
-    return if (isLeapYear(year)) 366.days else 365.days
-}
-
-internal fun lastDayOfYear(year: Int): Int = lengthOfYear(year).value
-
-internal fun checkValidYear(year: Int): Int {
-    if (!isValidYear(year)) {
-        throw DateTimeException(getInvalidYearMessage(year.toLong()))
-    }
-    return year
-}
+internal fun isLeapYear(year: Int) = Year(year).isLeap
+internal fun lengthOfYear(year: Int) = Year(year).length
+internal fun lastDayOfYear(year: Int): Int = Year(year).lastDay
+internal fun checkValidYear(year: Int) = Year(year).validated().value
 
 internal fun checkValidYear(year: Long): Int {
     if (!isValidYear(year)) {
         throw DateTimeException(getInvalidYearMessage(year))
     }
     return year.toInt()
-}
-
-internal fun isValidYear(year: Int): Boolean {
-    return year in Year.MIN_VALUE..Year.MAX_VALUE
 }
 
 internal fun isValidYear(year: Long): Boolean {
