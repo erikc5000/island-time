@@ -17,9 +17,9 @@ class YearTest {
     }
 
     @Test
-    fun `throws an exception when initializing a year that is invalid`() {
-        assertFailsWith<DateTimeException> { Year.invoke(0) }
-        assertFailsWith<DateTimeException> { Year.invoke(10_000) }
+    fun `validated() throws an exception if the current value is invalid`() {
+        assertFailsWith<DateTimeException> { Year(0).validated() }
+        assertFailsWith<DateTimeException> { Year(10_000).validated() }
     }
 
     @Test
