@@ -81,7 +81,8 @@ private class JavaTimeZoneRules(
     }
 
     override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
-        return JavaTimeZoneOffsetTransition(javaZoneRules.getTransition(dateTime.toJavaLocalDateTime()))
+        val transition = javaZoneRules.getTransition(dateTime.toJavaLocalDateTime())
+        return if (transition != null) JavaTimeZoneOffsetTransition(transition) else null
     }
 
     override fun isValidOffset(
