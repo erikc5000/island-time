@@ -1,4 +1,4 @@
-package io.islandtime.interval
+package io.islandtime.measures
 
 import io.islandtime.internal.*
 import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND

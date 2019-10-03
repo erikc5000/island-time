@@ -1,8 +1,8 @@
 package io.islandtime
 
 import io.islandtime.ranges.DateRange
-import io.islandtime.interval.days
-import io.islandtime.interval.years
+import io.islandtime.measures.days
+import io.islandtime.measures.years
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.dateTimeParser
 import io.islandtime.parser.monthOfYear

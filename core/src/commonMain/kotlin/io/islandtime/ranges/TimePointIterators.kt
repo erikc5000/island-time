@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.TimePoint
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 abstract class TimePointIterator<T : TimePoint<T>> : Iterator<T> {
     override fun next() = nextTimePoint()

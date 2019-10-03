@@ -1,8 +1,8 @@
 package io.islandtime.ranges
 
 import io.islandtime.DateTime
-import io.islandtime.interval.IntDays
-import io.islandtime.interval.IntMonths
+import io.islandtime.measures.IntDays
+import io.islandtime.measures.IntMonths
 
 abstract class DateTimeIterator : Iterator<DateTime> {
     override fun next() = nextDateTime()

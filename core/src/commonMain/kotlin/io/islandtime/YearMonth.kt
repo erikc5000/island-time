@@ -3,7 +3,7 @@ package io.islandtime
 import io.islandtime.internal.MONTHS_IN_YEAR
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 

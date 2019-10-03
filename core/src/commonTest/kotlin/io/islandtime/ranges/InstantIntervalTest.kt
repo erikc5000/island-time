@@ -3,7 +3,7 @@ package io.islandtime.ranges
 import io.islandtime.Instant
 import io.islandtime.OffsetDateTime
 import io.islandtime.UtcOffset
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import kotlin.test.*
 
 class InstantIntervalTest {

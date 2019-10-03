@@ -1,9 +1,9 @@
 package io.islandtime
 
-import io.islandtime.interval.days
-import io.islandtime.interval.hours
-import io.islandtime.interval.minutes
-import io.islandtime.interval.seconds
+import io.islandtime.measures.days
+import io.islandtime.measures.hours
+import io.islandtime.measures.minutes
+import io.islandtime.measures.seconds
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.Iso8601
 import kotlin.test.*

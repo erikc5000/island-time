@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.internal.*
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.parser.*
 
 /**

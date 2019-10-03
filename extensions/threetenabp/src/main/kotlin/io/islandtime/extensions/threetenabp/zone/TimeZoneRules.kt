@@ -5,7 +5,7 @@ import android.content.Context
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.islandtime.*
 import io.islandtime.extensions.threetenabp.*
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.zone.TimeZoneOffsetTransition
 import io.islandtime.zone.TimeZoneRules
 import io.islandtime.zone.TimeZoneRulesException

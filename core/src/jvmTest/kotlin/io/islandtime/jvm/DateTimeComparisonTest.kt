@@ -4,9 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import io.islandtime.DateTime
 import io.islandtime.UtcOffset
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.interval.milliseconds
-import io.islandtime.interval.nanoseconds
-import io.islandtime.interval.seconds
+import io.islandtime.measures.milliseconds
+import io.islandtime.measures.nanoseconds
+import io.islandtime.measures.seconds
 import org.junit.Test
 import java.time.*
 

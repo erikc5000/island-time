@@ -2,7 +2,7 @@ package io.islandtime.clock
 
 import io.islandtime.Instant
 import io.islandtime.TimeZone
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 interface Clock {
     /**

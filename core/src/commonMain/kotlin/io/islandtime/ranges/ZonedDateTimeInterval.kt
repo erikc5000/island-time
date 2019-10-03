@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import kotlin.random.Random
 
 /**

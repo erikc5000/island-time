@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.interval.days
+import io.islandtime.measures.days
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

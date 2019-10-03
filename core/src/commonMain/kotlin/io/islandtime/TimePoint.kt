@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 /**
  * An object that can be placed exactly on a timeline

@@ -3,7 +3,7 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.jvm.*
 import java.time.Instant as JavaInstant
 import java.time.zone.ZoneOffsetTransition

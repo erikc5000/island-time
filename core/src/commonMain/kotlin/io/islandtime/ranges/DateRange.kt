@@ -4,7 +4,7 @@ import io.islandtime.Date
 import io.islandtime.MAX_DATE_STRING_LENGTH
 import io.islandtime.appendDate
 import io.islandtime.internal.MONTHS_IN_YEAR
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.monthsSinceYear0
 import kotlin.random.Random
 import kotlin.random.nextLong

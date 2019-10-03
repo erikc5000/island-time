@@ -4,7 +4,7 @@
 @file:JvmMultifileClass
 @file:JvmName("NanosecondsKt")
 
-package io.islandtime.interval
+package io.islandtime.measures
 
 import io.islandtime.internal.NANOSECONDS_PER_DAY
 import io.islandtime.internal.NANOSECONDS_PER_HOUR

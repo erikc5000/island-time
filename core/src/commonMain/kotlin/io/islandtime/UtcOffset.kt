@@ -3,7 +3,7 @@ package io.islandtime
 import io.islandtime.internal.SECONDS_PER_HOUR
 import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.parser.*
 
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")

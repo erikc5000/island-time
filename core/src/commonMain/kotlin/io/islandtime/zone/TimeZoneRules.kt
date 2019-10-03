@@ -1,10 +1,10 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.interval.IntNanoseconds
-import io.islandtime.interval.IntSeconds
-import io.islandtime.interval.LongMilliseconds
-import io.islandtime.interval.LongSeconds
+import io.islandtime.measures.IntNanoseconds
+import io.islandtime.measures.IntSeconds
+import io.islandtime.measures.LongMilliseconds
+import io.islandtime.measures.LongSeconds
 
 class TimeZoneRulesException(
     message: String? = null,

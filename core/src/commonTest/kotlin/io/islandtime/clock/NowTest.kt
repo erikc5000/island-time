@@ -1,9 +1,9 @@
 package io.islandtime.clock
 
 import io.islandtime.*
-import io.islandtime.interval.days
-import io.islandtime.interval.hours
-import io.islandtime.interval.milliseconds
+import io.islandtime.measures.days
+import io.islandtime.measures.hours
+import io.islandtime.measures.milliseconds
 import io.islandtime.zone.PlatformDefault
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest

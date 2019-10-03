@@ -1,7 +1,7 @@
 package io.islandtime
 
-import io.islandtime.interval.hours
-import io.islandtime.interval.milliseconds
+import io.islandtime.measures.hours
+import io.islandtime.measures.milliseconds
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.Iso8601
 import io.islandtime.zone.*

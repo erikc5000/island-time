@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.Instant
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

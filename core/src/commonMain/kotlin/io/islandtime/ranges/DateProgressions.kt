@@ -2,7 +2,7 @@ package io.islandtime.ranges
 
 import io.islandtime.Date
 import io.islandtime.internal.MONTHS_IN_YEAR
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import kotlin.math.abs
 
 open class DateDayProgression protected constructor(

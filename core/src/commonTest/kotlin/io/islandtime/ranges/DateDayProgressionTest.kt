@@ -2,8 +2,8 @@ package io.islandtime.ranges
 
 import io.islandtime.Date
 import io.islandtime.Month
-import io.islandtime.interval.days
-import io.islandtime.interval.weeks
+import io.islandtime.measures.days
+import io.islandtime.measures.weeks
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

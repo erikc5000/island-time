@@ -2,7 +2,7 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.MAX_DATE_TIME_STRING_LENGTH
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 /**
  * An interval between two date-times, assumed to be in the same time zone

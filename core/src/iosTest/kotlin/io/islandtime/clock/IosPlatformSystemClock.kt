@@ -1,6 +1,6 @@
 package io.islandtime.clock
 
-import io.islandtime.interval.milliseconds
+import io.islandtime.measures.milliseconds
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
