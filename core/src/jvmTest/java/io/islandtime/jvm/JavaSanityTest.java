@@ -1,7 +1,7 @@
 package io.islandtime.jvm;
 
+import io.islandtime.Date;
 import io.islandtime.Month;
-import io.islandtime.date.Date;
 import org.junit.Test;
 
 import java.time.LocalDate;

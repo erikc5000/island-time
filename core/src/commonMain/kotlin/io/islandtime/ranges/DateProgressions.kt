@@ -1,5 +1,6 @@
-package io.islandtime.date
+package io.islandtime.ranges
 
+import io.islandtime.Date
 import io.islandtime.internal.MONTHS_IN_YEAR
 import io.islandtime.interval.*
 import kotlin.math.abs
@@ -27,7 +28,7 @@ open class DateDayProgression protected constructor(
 
     override fun iterator(): DateIterator = DateDayProgressionIterator(firstUnixEpochDay, lastUnixEpochDay, step)
 
-    override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $ last step ${-step}"
+    override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $last step ${-step}"
 
     override fun equals(other: Any?): Boolean {
         return other is DateDayProgression &&
@@ -72,7 +73,7 @@ class DateMonthProgression private constructor(
 
     override fun iterator(): DateIterator = DateMonthProgressionIterator(first, last, step)
 
-    override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $ last step ${-step}"
+    override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $last step ${-step}"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -113,7 +114,6 @@ fun DateDayProgression.reversed() = DateDayProgression.fromClosedRange(last, fir
  */
 infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
     require(step.value > 0) { "step must be positive" }
-
     return DateDayProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
@@ -122,11 +122,10 @@ infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
  */
 infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
     require(step > 0.months) { "step must be positive" }
-
     return DateMonthProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
-infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonths)
+infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonthsExact())
 
 fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last, first, -step)
 
@@ -167,7 +166,7 @@ private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): D
  * the usual [monthsBetween] since it tries to use the same day as the start date while stepping months, coercing that
  * day as needed to fit the number of days in the current month.
  */
-private fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths {
+internal fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths {
     val yearsBetween = endInclusive.year - start.year
     val monthsBetween = yearsBetween * MONTHS_IN_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
 

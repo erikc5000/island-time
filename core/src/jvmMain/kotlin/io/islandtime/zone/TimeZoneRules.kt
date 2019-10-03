@@ -3,9 +3,7 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.interval.IntSeconds
-import io.islandtime.interval.LongMilliseconds
-import io.islandtime.interval.seconds
+import io.islandtime.interval.*
 import io.islandtime.jvm.*
 import java.time.Instant as JavaInstant
 import java.time.zone.ZoneOffsetTransition
@@ -20,7 +18,7 @@ actual object PlatformDefault : TimeZoneRulesProvider {
 
     override val databaseVersion: String
         get() = try {
-            ZoneRulesProvider.getVersions("UTC")?.lastEntry()?.key.orEmpty()
+            ZoneRulesProvider.getVersions("Etc/UTC")?.lastEntry()?.key.orEmpty()
         } catch (e: ZoneRulesException) {
             throw TimeZoneRulesException(e.message, e)
         }
@@ -42,6 +40,13 @@ private class JavaTimeZoneRules(
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
         val offset = javaZoneRules.getOffset(JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value))
+        return offset.toIslandUtcOffset()
+    }
+
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+        val offset = javaZoneRules.getOffset(
+            JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.value.toLong())
+        )
         return offset.toIslandUtcOffset()
     }
 

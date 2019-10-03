@@ -1,9 +1,9 @@
-package io.islandtime.date
+package io.islandtime
 
-import io.islandtime.*
 import io.islandtime.internal.*
 import io.islandtime.interval.*
 import io.islandtime.parser.*
+import io.islandtime.ranges.DateRange
 
 /**
  * A date in an arbitrary region
@@ -36,7 +36,7 @@ class Date(
         year: Int,
         monthNumber: Int,
         day: Int
-    ): this(year, Month(monthNumber), day)
+    ) : this(year, Month(monthNumber), day)
 
     /**
      * The day of the week
@@ -323,7 +323,7 @@ fun Date(year: Int, dayOfYear: Int): Date {
 fun Instant.toDateAt(offset: UtcOffset): Date {
     var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
 
-    if (nanosecondAdjustment.isNegative) {
+    if (nanoOfSecondsSinceUnixEpoch.isNegative) {
         adjustedSeconds -= 1.seconds
     }
 
@@ -334,6 +334,8 @@ fun Instant.toDateAt(offset: UtcOffset): Date {
 fun Instant.toDateAt(zone: TimeZone): Date {
     return this.toDateAt(zone.rules.offsetAt(this))
 }
+
+fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
 fun String.toDate() = toDate(Iso8601.Extended.CALENDAR_DATE_PARSER)
 
@@ -380,43 +382,7 @@ internal fun StringBuilder.appendDate(date: Date): StringBuilder {
     return this
 }
 
-fun periodBetween(start: Date, endExclusive: Date): Period {
-    var totalMonths = endExclusive.monthsSinceYear0.toLong() - start.monthsSinceYear0
-    val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
-
-    val days = when {
-        totalMonths > 0 && dayDiff.value < 0 -> {
-            totalMonths--
-            val testDate = start + totalMonths.months
-            daysBetween(testDate, endExclusive).toInt()
-        }
-        totalMonths < 0 && dayDiff.value > 0 -> {
-            totalMonths++
-            dayDiff - endExclusive.lengthOfMonth
-        }
-        else -> dayDiff
-    }
-    val years = (totalMonths / MONTHS_IN_YEAR).years.toInt()
-    val months = (totalMonths % MONTHS_IN_YEAR).months.toInt()
-
-    return periodOf(years, months, days)
-}
-
-fun daysBetween(start: Date, endExclusive: Date): LongDays {
-    return endExclusive.daysSinceUnixEpoch - start.daysSinceUnixEpoch
-}
-
-fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
-    val startDays = start.monthsSinceYear0 * 32L + start.dayOfMonth
-    val endDays = endExclusive.monthsSinceYear0 * 32L + endExclusive.dayOfMonth
-    return ((endDays - startDays) / 32).toInt().months
-}
-
-fun yearsBetween(start: Date, endExclusive: Date): IntYears {
-    return monthsBetween(start, endExclusive).inWholeYears
-}
-
-private inline val Date.monthsSinceYear0 get() = year * 12 + month.ordinal
+internal inline val Date.monthsSinceYear0 get() = year * 12 + month.ordinal
 
 private fun checkValidDayOfMonth(year: Int, month: Month, dayOfMonth: Int): Int {
     if (dayOfMonth !in month.dayRangeIn(year)) {

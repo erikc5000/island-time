@@ -131,8 +131,8 @@ class PeriodTest {
 
     @Test
     fun `totalMonths property combines years and months components`() {
-        assertEquals(15.months, periodOf(1.years, 3.months, 15.days).totalMonths)
-        assertEquals(15.months, periodOf((-1).years, 27.months, (-1).days).totalMonths)
+        assertEquals(15L.months, periodOf(1.years, 3.months, 15.days).totalMonths)
+        assertEquals(15L.months, periodOf((-1).years, 27.months, (-1).days).totalMonths)
     }
 
     @Test

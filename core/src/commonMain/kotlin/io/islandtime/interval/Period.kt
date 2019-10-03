@@ -22,7 +22,7 @@ class Period private constructor(
     /**
      * The total number of months in this period, including years
      */
-    val totalMonths: IntMonths get() = years + months
+    val totalMonths: LongMonths get() = years.toLong() + months.toLong()
 
     /**
      * true if this period has no length
@@ -94,9 +94,14 @@ class Period private constructor(
      */
     fun normalized(): Period {
         val monthTotal = totalMonths
-        val newYears = monthTotal.inWholeYears
-        val newMonths = monthTotal % MONTHS_IN_YEAR
-        return create(newYears, newMonths, days)
+        val newYears = monthTotal.inWholeYears.toIntExact()
+        val newMonths = (monthTotal % MONTHS_IN_YEAR).toInt()
+
+        return if (newYears == years && newMonths == months) {
+            this
+        } else {
+            create(newYears, newMonths, days)
+        }
     }
 
     override fun equals(other: Any?): Boolean {
@@ -204,24 +209,37 @@ fun periodOf(days: IntDays): Period {
 }
 
 /**
- * Convert a [IntYears] into a [Period] with the same number of years
+ * Convert [IntYears] into a [Period] with the same number of years
  */
 fun IntYears.asPeriod() = Period.create(years = this)
 
 /**
- * Convert a [IntMonths] into a [Period] with the same number of months
+ * Convert [IntMonths] into a [Period] with the same number of months
  */
 fun IntMonths.asPeriod() = Period.create(months = this)
 
 /**
- * Convert a [IntDays] into a [Period] with the same number of days
+ * Convert [IntDays] into a [Period] with the same number of days
  */
 fun IntDays.asPeriod() = Period.create(days = this)
 
-// TODO: Revisit including these since it may be better to make the conversion explicit
-fun LongYears.asPeriod() = this.toInt().asPeriod()
-fun LongMonths.asPeriod() = this.toInt().asPeriod()
-fun LongDays.asPeriod() = this.toInt().asPeriod()
+/**
+ * Convert [LongYears] into a [Period] with the same number of years
+ * @throws ArithmeticException if the resulting [Period] would overflow
+ */
+fun LongYears.asPeriod() = this.toIntExact().asPeriod()
+
+/**
+ * Convert [LongMonths] into a [Period] with the same number of months
+ * @throws ArithmeticException if the resulting [Period] would overflow
+ */
+fun LongMonths.asPeriod() = this.toIntExact().asPeriod()
+
+/**
+ * Convert [LongDays] into a [Period] with the same number of days
+ * @throws ArithmeticException if the resulting [Period] would overflow
+ */
+fun LongDays.asPeriod() = this.toIntExact().asPeriod()
 
 operator fun IntYears.plus(period: Period) = period.copy(years = this + period.years)
 operator fun IntMonths.plus(period: Period) = period.copy(months = this + period.months)

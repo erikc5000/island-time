@@ -1,6 +1,5 @@
 package io.islandtime
 
-import io.islandtime.date.Date
 import io.islandtime.interval.hours
 import io.islandtime.interval.milliseconds
 import io.islandtime.parser.DateTimeParseException
@@ -245,6 +244,45 @@ class ZonedDateTimeTest {
                 TimeZone("America/New_York")
             )
         )
+    }
+
+    @Test
+    fun `DEFAULT_SORT_ORDER compares based on instant, then date and time, and then zone`() {
+        assertTrue {
+            ZonedDateTime.DEFAULT_SORT_ORDER.compare(
+                Date(1969, 365) at Time(23, 0) at TimeZone("America/Chicago"),
+                Date(1970, 1) at Time(0, 0) at TimeZone("America/New_York")
+            ) < 0
+        }
+
+        assertTrue {
+            ZonedDateTime.DEFAULT_SORT_ORDER.compare(
+                Date(1970, 1) at Time(0, 0) at TimeZone("Etc/GMT+5"),
+                Date(1970, 1) at Time(0, 0) at TimeZone("America/New_York")
+            ) > 0
+        }
+
+        assertTrue {
+            ZonedDateTime.DEFAULT_SORT_ORDER.compare(
+                Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5"),
+                Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5")
+            ) == 0
+        }
+    }
+
+    @Test
+    fun `TIMELINE_ORDER compares based on instant only`() {
+        assertTrue {
+            OffsetDateTime.TIMELINE_ORDER.compare(
+                Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+            ) == 0
+        }
+
+        assertTrue {
+            Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+        }
     }
 
     @Test

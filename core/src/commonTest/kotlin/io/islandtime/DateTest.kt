@@ -1,6 +1,5 @@
-package io.islandtime.date
+package io.islandtime
 
-import io.islandtime.*
 import io.islandtime.interval.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.Iso8601
@@ -29,9 +28,17 @@ class DateTest {
     }
 
     @Test
-    fun `creates dates from year and day of year`() {
+    fun `dates can be constructed from year and day of year`() {
         assertEquals(Date(2019, Month.DECEMBER, 1), Date(2019, 335))
         assertEquals(Date(2020, Month.DECEMBER, 1), Date(2020, 336))
+    }
+
+    @Test
+    fun `YearMonth_atDay() constructs a Date from a YearMonth and day of month`() {
+        assertEquals(
+            Date(2018, Month.MAY, 30),
+            YearMonth(2018, Month.MAY).atDay(30)
+        )
     }
 
     @Test
@@ -494,151 +501,5 @@ class DateTest {
         assertEquals(Date(2000, Month.FEBRUARY, 29), "20000229".toDate(Iso8601.DATE_PARSER))
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-060".toDate(Iso8601.DATE_PARSER))
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000060".toDate(Iso8601.DATE_PARSER))
-    }
-
-    @Test
-    fun `periodBetween() returns a zeroed period when the start and end dates are the same`() {
-        assertEquals(
-            Period.ZERO,
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
-        )
-    }
-
-    @Test
-    fun `periodBetween() returns the period between two dates in positive progression`() {
-        assertEquals(
-            periodOf(1.months, 2.days),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
-        )
-
-        assertEquals(
-            periodOf(1.months, 8.days),
-            periodBetween(Date(2019, Month.MAY, 25), Date(2019, Month.JULY, 3))
-        )
-
-        assertEquals(
-            periodOf(2.years, 29.days),
-            periodBetween(Date(2018, Month.JANUARY, 31), Date(2020, Month.FEBRUARY, 29))
-        )
-    }
-
-    @Test
-    fun `periodBetween() returns the period between two dates in negative progression`() {
-        assertEquals(
-            periodOf((-28).days),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 3))
-        )
-
-        assertEquals(
-            periodOf((-1).months),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 1))
-        )
-
-        assertEquals(
-            periodOf((-1).years, (-10).months, (-21).days),
-            periodBetween(Date(2019, Month.MAY, 25), Date(2017, Month.JULY, 4))
-        )
-    }
-
-    @Test
-    fun `daysBetween() returns zero days when the start and end date are the same`() {
-        assertEquals(
-            0L.days,
-            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
-        )
-    }
-
-    @Test
-    fun `daysBetween() returns the number of days between two dates in positive progression`() {
-        assertEquals(
-            33L.days,
-            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
-        )
-    }
-
-    @Test
-    fun `daysBetween() returns the number of days between two dates in negative progression`() {
-        assertEquals(
-            (-16L).days,
-            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 15))
-        )
-    }
-
-    @Test
-    fun `monthsBetween() returns zero when the start and end date are the same`() {
-        assertEquals(
-            0.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `monthsBetween() returns the months between two dates in positive progression`() {
-        assertEquals(
-            0.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.AUGUST, 14))
-        )
-
-        assertEquals(
-            1.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.AUGUST, 15))
-        )
-
-        assertEquals(
-            13.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.AUGUST, 15))
-        )
-    }
-
-    @Test
-    fun `monthsBetween() returns the months between two dates in negative progression`() {
-        assertEquals(
-            0.months,
-            monthsBetween(Date(2019, Month.AUGUST, 14), Date(2019, Month.JULY, 15))
-        )
-
-        assertEquals(
-            (-1).months,
-            monthsBetween(Date(2019, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
-        )
-
-        assertEquals(
-            (-13).months,
-            monthsBetween(Date(2020, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `yearsBetween() returns zero when the start and end date are the same`() {
-        assertEquals(
-            0.years,
-            yearsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `yearsBetween() returns the years between two dates in positive progression`() {
-        assertEquals(
-            0.years,
-            yearsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.JULY, 14))
-        )
-
-        assertEquals(
-            1.years,
-            yearsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `yearsBetween() returns the years between two dates in negative progression`() {
-        assertEquals(
-            0.years,
-            yearsBetween(Date(2020, Month.JULY, 15), Date(2019, Month.JULY, 16))
-        )
-
-        assertEquals(
-            (-1).years,
-            yearsBetween(Date(2020, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
-        )
     }
 }

@@ -1,5 +1,6 @@
-package io.islandtime.date
+package io.islandtime.ranges
 
+import io.islandtime.Date
 import io.islandtime.interval.*
 
 abstract class DateIterator : Iterator<Date> {
@@ -30,7 +31,7 @@ internal class DateDayProgressionIterator(
 
             hasNext = false
         } else {
-            next += step.toLong()
+            next += step
         }
 
         return Date.fromDaysSinceUnixEpoch(value)

@@ -60,13 +60,13 @@ class UtcOffsetTest {
     }
 
     @Test
-    fun `time offsets can be compared`() {
+    fun `offsets can be compared`() {
         assertTrue { 30.minutes.asUtcOffset() > UtcOffset.ZERO }
         assertTrue { (-12).hours.asUtcOffset() < (-200).seconds.asUtcOffset() }
     }
 
     @Test
-    fun `toComponents() breaks a time offset down into hours, minutes, and seconds`() {
+    fun `toComponents() breaks an offset down into hours, minutes, and seconds`() {
         UtcOffset((-1).hours, (-30).minutes).toComponents { hours, minutes, seconds ->
             assertEquals((-1).hours, hours)
             assertEquals((-30).minutes, minutes)

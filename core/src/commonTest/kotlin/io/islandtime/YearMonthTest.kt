@@ -1,7 +1,6 @@
 package io.islandtime
 
-import io.islandtime.date.Date
-import io.islandtime.date.DateRange
+import io.islandtime.ranges.DateRange
 import io.islandtime.interval.*
 import io.islandtime.parser.DateTimeParseException
 import kotlin.test.*

@@ -13,7 +13,7 @@ import io.islandtime.parser.Iso8601
 import kotlin.math.abs
 
 /**
- * An exact measurement of time
+ * A potentially large duration of time at nanosecond precision
  */
 class Duration private constructor(
     val seconds: LongSeconds,
