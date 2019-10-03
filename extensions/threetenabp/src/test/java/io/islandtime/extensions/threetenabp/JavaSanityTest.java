@@ -1,7 +1,7 @@
 package io.islandtime.extensions.threetenabp;
 
 import io.islandtime.Month;
-import io.islandtime.date.Date;
+import io.islandtime.Date;
 import org.junit.Test;
 import org.threeten.bp.LocalDate;
 

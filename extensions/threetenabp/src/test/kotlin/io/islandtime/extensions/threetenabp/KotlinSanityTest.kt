@@ -2,7 +2,7 @@ package io.islandtime.extensions.threetenabp
 
 import com.google.common.truth.Truth.assertThat
 import io.islandtime.Month
-import io.islandtime.date.Date
+import io.islandtime.Date
 import org.threeten.bp.LocalDate
 import kotlin.test.Test
 
