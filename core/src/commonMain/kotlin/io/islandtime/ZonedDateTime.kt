@@ -52,7 +52,7 @@ class ZonedDateTime private constructor(
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
-    inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
+    fun toInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
