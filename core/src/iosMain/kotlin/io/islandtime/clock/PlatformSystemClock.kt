@@ -2,6 +2,8 @@ package io.islandtime.clock
 
 import io.islandtime.TimeZone
 import io.islandtime.measures.LongMilliseconds
+import io.islandtime.measures.microseconds
+import io.islandtime.measures.seconds
 import kotlinx.cinterop.*
 import platform.Foundation.*
 import platform.posix.gettimeofday
