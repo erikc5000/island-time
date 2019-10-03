@@ -2,9 +2,9 @@ package io.islandtime.ranges
 
 import io.islandtime.Date
 import io.islandtime.Month
-import io.islandtime.interval.decades
-import io.islandtime.interval.months
-import io.islandtime.interval.years
+import io.islandtime.measures.decades
+import io.islandtime.measures.months
+import io.islandtime.measures.years
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

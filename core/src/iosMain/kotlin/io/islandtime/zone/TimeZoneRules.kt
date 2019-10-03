@@ -3,10 +3,10 @@ package io.islandtime.zone
 import co.touchlab.stately.collections.SharedHashMap
 import io.islandtime.*
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.interval.IntNanoseconds
-import io.islandtime.interval.IntSeconds
-import io.islandtime.interval.LongMilliseconds
-import io.islandtime.interval.LongSeconds
+import io.islandtime.measures.IntNanoseconds
+import io.islandtime.measures.IntSeconds
+import io.islandtime.measures.LongMilliseconds
+import io.islandtime.measures.LongSeconds
 import io.islandtime.ios.toNSDate
 import io.islandtime.ios.toNSDateComponents
 import platform.Foundation.*

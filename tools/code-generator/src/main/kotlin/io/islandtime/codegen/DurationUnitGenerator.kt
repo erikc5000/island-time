@@ -4,8 +4,8 @@ import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import kotlin.reflect.KClass
 
-val DurationUnit.intClassName get() = ClassName(INTERVAL_PACKAGE_NAME, intName)
-val DurationUnit.longClassName get() = ClassName(INTERVAL_PACKAGE_NAME, longName)
+val DurationUnit.intClassName get() = ClassName(MEASURES_PACKAGE_NAME, intName)
+val DurationUnit.longClassName get() = ClassName(MEASURES_PACKAGE_NAME, longName)
 
 fun generateDurationUnitFileSpecs(): List<FileSpec> {
     return DurationUnit.values().map { it.toFileSpec() }
@@ -13,7 +13,7 @@ fun generateDurationUnitFileSpecs(): List<FileSpec> {
 
 fun DurationUnit.toFileSpec(): FileSpec {
     return buildFileSpec(
-        INTERVAL_PACKAGE_NAME,
+        MEASURES_PACKAGE_NAME,
         "_$pluralName"
     ) {
         addHeader("${pluralName}Kt")

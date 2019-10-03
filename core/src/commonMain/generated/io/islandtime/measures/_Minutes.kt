@@ -4,7 +4,7 @@
 @file:JvmMultifileClass
 @file:JvmName("MinutesKt")
 
-package io.islandtime.interval
+package io.islandtime.measures
 
 import io.islandtime.internal.MINUTES_PER_DAY
 import io.islandtime.internal.MINUTES_PER_HOUR

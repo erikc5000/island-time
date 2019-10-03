@@ -3,7 +3,7 @@
 package io.islandtime.extensions.threetenabp
 
 import io.islandtime.*
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 @JvmName("convertFromJava")
 fun org.threeten.bp.Instant.toIslandInstant(): Instant {

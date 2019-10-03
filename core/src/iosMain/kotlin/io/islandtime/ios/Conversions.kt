@@ -2,7 +2,7 @@ package io.islandtime.ios
 
 import io.islandtime.*
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.interval.LongMilliseconds
+import io.islandtime.measures.LongMilliseconds
 import platform.Foundation.*
 
 fun DateTime.toNSDateComponents(): NSDateComponents {

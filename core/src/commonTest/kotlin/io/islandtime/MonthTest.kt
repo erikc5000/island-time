@@ -1,7 +1,7 @@
 package io.islandtime
 
-import io.islandtime.interval.days
-import io.islandtime.interval.months
+import io.islandtime.measures.days
+import io.islandtime.measures.months
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

@@ -1,4 +1,4 @@
-package io.islandtime.interval
+package io.islandtime.measures
 
 import io.islandtime.internal.MONTHS_IN_YEAR
 import io.islandtime.internal.timesExact

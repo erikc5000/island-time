@@ -1,4 +1,4 @@
-package io.islandtime.interval
+package io.islandtime.measures
 
 import io.islandtime.internal.DAYS_IN_WEEK
 import io.islandtime.internal.timesExact

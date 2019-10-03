@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
 import io.islandtime.parser.Iso8601

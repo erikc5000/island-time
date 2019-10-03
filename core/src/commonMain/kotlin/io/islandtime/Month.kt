@@ -1,8 +1,8 @@
 package io.islandtime
 
-import io.islandtime.interval.IntDays
-import io.islandtime.interval.IntMonths
-import io.islandtime.interval.days
+import io.islandtime.measures.IntDays
+import io.islandtime.measures.IntMonths
+import io.islandtime.measures.days
 
 enum class Month(val number: Int) {
     JANUARY(1) {

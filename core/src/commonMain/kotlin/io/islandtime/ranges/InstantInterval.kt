@@ -3,7 +3,7 @@ package io.islandtime.ranges
 import io.islandtime.Instant
 import io.islandtime.MAX_INSTANT_STRING_LENGTH
 import io.islandtime.appendInstant
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 import kotlin.random.Random
 
 /**

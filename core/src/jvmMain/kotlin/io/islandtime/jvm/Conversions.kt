@@ -4,7 +4,7 @@
 package io.islandtime.jvm
 
 import io.islandtime.*
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 @JvmName("convertFromJava")
 fun java.time.Instant.toIslandInstant(): Instant {

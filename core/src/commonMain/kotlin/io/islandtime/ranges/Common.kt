@@ -1,9 +1,9 @@
 package io.islandtime.ranges
 
-import io.islandtime.interval.*
-import io.islandtime.interval.minusExact
-import io.islandtime.interval.minusWithOverflow
-import io.islandtime.interval.plusExact
+import io.islandtime.measures.*
+import io.islandtime.measures.minusExact
+import io.islandtime.measures.minusWithOverflow
+import io.islandtime.measures.plusExact
 
 internal fun secondsBetween(
     startSeconds: LongSeconds,

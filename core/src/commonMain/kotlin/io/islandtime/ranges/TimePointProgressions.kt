@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.TimePoint
-import io.islandtime.interval.*
+import io.islandtime.measures.*
 
 /**
  * A time point progression builder

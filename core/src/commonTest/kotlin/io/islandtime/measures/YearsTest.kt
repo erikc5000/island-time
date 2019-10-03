@@ -1,4 +1,4 @@
-package io.islandtime.interval
+package io.islandtime.measures
 
 import kotlin.math.roundToLong
 import kotlin.test.Test

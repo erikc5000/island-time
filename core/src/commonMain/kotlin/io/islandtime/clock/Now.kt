@@ -6,7 +6,7 @@ import io.islandtime.internal.MILLISECONDS_PER_DAY
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.SECONDS_PER_DAY
 import io.islandtime.internal.floorDiv
-import io.islandtime.interval.nanoseconds
+import io.islandtime.measures.nanoseconds
 
 fun Instant.Companion.now() = now(SystemClock.UTC)
 fun Instant.Companion.now(clock: Clock) = clock.instant()

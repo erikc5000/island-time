@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.internal.DAYS_IN_WEEK
-import io.islandtime.interval.IntDays
+import io.islandtime.measures.IntDays
 
 enum class DayOfWeek(val number: Int) {
     MONDAY(1),
