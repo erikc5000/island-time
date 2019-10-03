@@ -80,7 +80,7 @@ private class JavaTimeZoneRules(
         return offsets.map { it.toIslandUtcOffset() }
     }
 
-    override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition {
+    override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
         return JavaTimeZoneOffsetTransition(javaZoneRules.getTransition(dateTime.toJavaLocalDateTime()))
     }
 
