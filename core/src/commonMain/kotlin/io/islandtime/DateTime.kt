@@ -1,12 +1,12 @@
 package io.islandtime
 
-import io.islandtime.date.*
 import io.islandtime.internal.*
 import io.islandtime.interval.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
 import io.islandtime.parser.Iso8601
 import io.islandtime.parser.raiseParserFieldResolutionException
+import io.islandtime.ranges.DateTimeInterval
 
 class DateTime(
     val date: Date,
@@ -348,6 +348,8 @@ class DateTime(
     operator fun component1() = date
     operator fun component2() = time
 
+    operator fun rangeTo(other: DateTime) = DateTimeInterval.withInclusiveEnd(this, other)
+
     override fun compareTo(other: DateTime): Int {
         val dateDiff = date.compareTo(other.date)
 
@@ -458,6 +460,10 @@ class DateTime(
         val MIN = DateTime(Date.MIN, Time.MIN)
         val MAX = DateTime(Date.MAX, Time.MAX)
 
+        fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): DateTime {
+            return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, offset)
+        }
+
         fun fromMillisecondsSinceUnixEpoch(
             millisecondsSinceUnixEpoch: LongMilliseconds,
             offset: UtcOffset
@@ -471,13 +477,9 @@ class DateTime(
             return DateTime(date, time)
         }
 
-        /**
-         * Create the [DateTime] that falls a given duration away from the Unix Epoch
-         */
-        fun fromDurationSinceUnixEpoch(
-            duration: Duration,
-            offset: UtcOffset
-        ) = fromSecondsSinceUnixEpoch(duration.seconds, duration.nanosecondAdjustment, offset)
+        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int = 0, offset: UtcOffset): DateTime {
+            return fromSecondsSinceUnixEpoch(second.seconds, nanosecondAdjustment.nanoseconds, offset)
+        }
 
         /**
          * Create the [DateTime] that falls a given number of seconds relative to the Unix epoch, plus some number of
@@ -485,24 +487,12 @@ class DateTime(
          */
         fun fromSecondsSinceUnixEpoch(
             seconds: LongSeconds,
-            nanosecondAdjustment: IntNanoseconds,
+            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds,
             offset: UtcOffset
         ): DateTime {
             val adjustedSeconds = seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND).seconds
             val nanosecondOfDay = nanosecondAdjustment.value floorMod NANOSECONDS_PER_SECOND
-            return fromSecondsSinceUnixEpoch(adjustedSeconds, nanosecondOfDay, offset)
-        }
-
-        /**
-         * Create the [DateTime] that falls a given number of seconds relative to the Unix epoch, plus the nanosecond
-         * of day value.
-         */
-        private fun fromSecondsSinceUnixEpoch(
-            seconds: LongSeconds,
-            nanosecondOfDay: Int,
-            offset: UtcOffset
-        ): DateTime {
-            val localSeconds = seconds + offset.totalSeconds
+            val localSeconds = adjustedSeconds + offset.totalSeconds
             val localEpochDays = (localSeconds.value floorDiv SECONDS_PER_DAY).days
             val secondOfDay = (localSeconds.value floorMod SECONDS_PER_DAY).toInt()
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
@@ -528,7 +518,7 @@ val Date.startOfDay get() = DateTime(this, Time.MIDNIGHT)
 val Date.endOfDay get() = DateTime(this, Time.MAX)
 
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
-    return DateTime.fromDurationSinceUnixEpoch(durationSinceUnixEpoch, offset)
+    return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
 /**

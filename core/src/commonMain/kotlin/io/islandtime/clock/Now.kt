@@ -1,7 +1,6 @@
 package io.islandtime.clock
 
 import io.islandtime.*
-import io.islandtime.date.Date
 import io.islandtime.internal.*
 import io.islandtime.internal.MILLISECONDS_PER_DAY
 import io.islandtime.internal.MILLISECONDS_PER_SECOND

@@ -1,6 +1,5 @@
 package io.islandtime
 
-import io.islandtime.date.Date
 import io.islandtime.interval.days
 import io.islandtime.interval.hours
 import io.islandtime.interval.minutes
@@ -15,24 +14,6 @@ class OffsetDateTimeTest {
     )
 
     @Test
-    fun `compareTo() compares based on date and time when the offset for both times is the same`() {
-        assertTrue {
-            Date(1970, Month.JANUARY, 1) at Time(0, 0) at UtcOffset.ZERO <
-                Date(1970, Month.JANUARY, 1) at
-                Time(0, 0, 0, 1) at
-                UtcOffset.ZERO
-        }
-    }
-
-    @Test
-    fun `compareTo() compares based on instant, then date and time when there are differing offsets`() {
-        assertTrue {
-            Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours) <
-                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
-        }
-    }
-
-    @Test
     fun `equality is based on date, time, and offset`() {
         assertFalse {
             Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours) ==
@@ -40,6 +21,51 @@ class OffsetDateTimeTest {
         }
         assertTrue {
             Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO ==
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+        }
+    }
+
+    @Test
+    fun `compareTo() compares based on instant only`() {
+        assertTrue {
+            (Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours))
+                .compareTo(Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO) == 0
+        }
+
+        assertTrue {
+            Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+        }
+    }
+
+    @Test
+    fun `DEFAULT_SORT_ORDER compares based on instant, then date and time when there are differing offsets`() {
+        assertTrue {
+            OffsetDateTime.DEFAULT_SORT_ORDER.compare(
+                Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+            ) < 0
+        }
+
+        assertTrue {
+            OffsetDateTime.DEFAULT_SORT_ORDER.compare(
+                Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
+                Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours)
+            ) == 0
+        }
+    }
+
+    @Test
+    fun `TIMELINE_ORDER compares based on instant only`() {
+        assertTrue {
+            OffsetDateTime.TIMELINE_ORDER.compare(
+                Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+            ) == 0
+        }
+
+        assertTrue {
+            Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
         }
     }

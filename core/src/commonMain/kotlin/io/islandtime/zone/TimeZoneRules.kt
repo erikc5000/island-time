@@ -1,8 +1,10 @@
 package io.islandtime.zone
 
 import io.islandtime.*
+import io.islandtime.interval.IntNanoseconds
 import io.islandtime.interval.IntSeconds
 import io.islandtime.interval.LongMilliseconds
+import io.islandtime.interval.LongSeconds
 
 class TimeZoneRulesException(
     message: String? = null,
@@ -26,11 +28,12 @@ interface TimeZoneRulesProvider {
     fun rulesFor(regionId: String): TimeZoneRules
 
     companion object : TimeZoneRulesProvider {
-        private val provider get() = IslandTime.timeZoneRulesProvider.get()
+        private val provider
+            get() = IslandTime.timeZoneRulesProvider.get()
                 ?: throw TimeZoneRulesException("No time zone rules provider has been initialized")
 
-        override val databaseVersion = provider.databaseVersion
-        override val availableRegionIds = provider.availableRegionIds
+        override val databaseVersion get() = provider.databaseVersion
+        override val availableRegionIds get() = provider.availableRegionIds
         override fun rulesFor(regionId: String) = provider.rulesFor(regionId)
     }
 }
@@ -52,6 +55,7 @@ interface TimeZoneOffsetTransition {
 
 interface TimeZoneRules {
     fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset
+    fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset
     fun offsetAt(instant: Instant): UtcOffset
     fun offsetAt(dateTime: DateTime): UtcOffset
     fun validOffsetsAt(dateTime: DateTime): List<UtcOffset>

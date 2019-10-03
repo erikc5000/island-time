@@ -2,7 +2,6 @@ package io.islandtime.jvm
 
 import com.google.common.truth.Truth.assertThat
 import io.islandtime.*
-import io.islandtime.date.Date
 import java.time.LocalDate
 import kotlin.test.Test
 

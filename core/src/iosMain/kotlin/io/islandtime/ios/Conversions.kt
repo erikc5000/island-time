@@ -1,12 +1,8 @@
 package io.islandtime.ios
 
 import io.islandtime.*
-import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.interval.LongMilliseconds
-import io.islandtime.interval.milliseconds
-import io.islandtime.interval.seconds
-import io.islandtime.interval.nanoseconds
 import platform.Foundation.*
 
 fun DateTime.toNSDateComponents(): NSDateComponents {
@@ -37,7 +33,7 @@ fun NSDate.Companion.fromMillisecondsSinceUnixEpoch(milliseconds: LongMillisecon
 
 fun Instant.toNSDate(): NSDate {
     return NSDate.dateWithTimeIntervalSince1970(
-        secondsSinceUnixEpoch.value.toDouble() + nanosecondAdjustment.value.toDouble() / NANOSECONDS_PER_SECOND
+        secondsSinceUnixEpoch.value.toDouble() + nanoOfSecondsSinceUnixEpoch.value.toDouble() / NANOSECONDS_PER_SECOND
     )
 }
 

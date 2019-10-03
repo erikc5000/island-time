@@ -3,17 +3,16 @@
 package io.islandtime.extensions.threetenabp
 
 import io.islandtime.*
-import io.islandtime.date.Date
 import io.islandtime.interval.*
 
 @JvmName("convertFromJava")
 fun org.threeten.bp.Instant.toIslandInstant(): Instant {
-    return Instant.fromSecondsSinceUnixEpoch(epochSecond.seconds, nano.nanoseconds)
+    return Instant.fromUnixEpochSecond(epochSecond, nano)
 }
 
 @JvmName("convertToJava")
 fun Instant.toJavaInstant(): org.threeten.bp.Instant {
-    return org.threeten.bp.Instant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.toLong().value)
+    return org.threeten.bp.Instant.ofEpochSecond(unixEpochSecond, unixEpochNanoOfSecond.toLong())
 }
 
 @JvmName("convertFromJava")

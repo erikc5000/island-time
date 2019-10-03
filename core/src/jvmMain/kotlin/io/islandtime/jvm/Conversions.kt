@@ -4,17 +4,16 @@
 package io.islandtime.jvm
 
 import io.islandtime.*
-import io.islandtime.date.Date
 import io.islandtime.interval.*
 
 @JvmName("convertFromJava")
 fun java.time.Instant.toIslandInstant(): Instant {
-    return Instant.fromSecondsSinceUnixEpoch(epochSecond.seconds, nano.nanoseconds)
+    return Instant.fromUnixEpochSecond(epochSecond, nano)
 }
 
 @JvmName("convertToJava")
 fun Instant.toJavaInstant(): java.time.Instant {
-    return java.time.Instant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.toLong().value)
+    return java.time.Instant.ofEpochSecond(unixEpochSecond, unixEpochNanoOfSecond.toLong())
 }
 
 @JvmName("convertFromJava")

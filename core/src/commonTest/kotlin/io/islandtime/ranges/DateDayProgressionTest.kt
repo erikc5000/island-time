@@ -1,5 +1,6 @@
-package io.islandtime.date
+package io.islandtime.ranges
 
+import io.islandtime.Date
 import io.islandtime.Month
 import io.islandtime.interval.days
 import io.islandtime.interval.weeks

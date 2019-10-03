@@ -2,11 +2,11 @@ package io.islandtime.zone
 
 import co.touchlab.stately.collections.SharedHashMap
 import io.islandtime.*
+import io.islandtime.internal.NANOSECONDS_PER_SECOND
+import io.islandtime.interval.IntNanoseconds
 import io.islandtime.interval.IntSeconds
 import io.islandtime.interval.LongMilliseconds
-import io.islandtime.interval.seconds
-import io.islandtime.ios.fromMillisecondsSinceUnixEpoch
-import io.islandtime.ios.toIslandInstant
+import io.islandtime.interval.LongSeconds
 import io.islandtime.ios.toNSDate
 import io.islandtime.ios.toNSDateComponents
 import platform.Foundation.*
@@ -42,6 +42,13 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
         val date = dateTime.toNSDateOrNull(calendar)
             ?: throw IllegalStateException("Failed to convert '$dateTime' to an NSDate")
 
+        return offsetAt(date)
+    }
+
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+        val date = NSDate.dateWithTimeIntervalSince1970(
+            secondsSinceUnixEpoch.value.toDouble() + nanosecondAdjustment.value.toDouble() / NANOSECONDS_PER_SECOND
+        )
         return offsetAt(date)
     }
 

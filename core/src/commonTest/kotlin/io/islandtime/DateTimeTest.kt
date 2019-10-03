@@ -1,6 +1,5 @@
 package io.islandtime
 
-import io.islandtime.date.Date
 import io.islandtime.interval.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.Iso8601

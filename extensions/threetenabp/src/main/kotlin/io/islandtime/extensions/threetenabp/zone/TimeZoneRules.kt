@@ -5,9 +5,7 @@ import android.content.Context
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.islandtime.*
 import io.islandtime.extensions.threetenabp.*
-import io.islandtime.interval.IntSeconds
-import io.islandtime.interval.LongMilliseconds
-import io.islandtime.interval.seconds
+import io.islandtime.interval.*
 import io.islandtime.zone.TimeZoneOffsetTransition
 import io.islandtime.zone.TimeZoneRules
 import io.islandtime.zone.TimeZoneRulesException
@@ -57,6 +55,13 @@ private class JavaTimeZoneRules(
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
         val offset = javaZoneRules.getOffset(JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value))
+        return offset.toIslandUtcOffset()
+    }
+
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+        val offset = javaZoneRules.getOffset(
+            JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.value.toLong())
+        )
         return offset.toIslandUtcOffset()
     }
 
