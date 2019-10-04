@@ -119,6 +119,21 @@ class Date(
             return total - DAYS_FROM_0000_TO_1970
         }
 
+    /**
+     * Return a [Date] with [period] added to it.
+     *
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
+     * defined in ISO-8601-2.
+     */
+    operator fun plus(period: Period): Date {
+        return if (period.isZero) {
+            this
+        } else {
+            return this + period.years + period.months + period.days
+        }
+    }
+
     operator fun plus(years: IntYears) = plus(years.toLong())
 
     operator fun plus(years: LongYears): Date {
@@ -153,6 +168,15 @@ class Date(
             fromDaysSinceUnixEpoch(daysSinceUnixEpoch plusExact days)
         }
     }
+
+    /**
+     * Return a [Date] with [period] subtracted from it.
+     *
+     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
+     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
+     * addition as defined in ISO-8601-2.
+     */
+    operator fun minus(period: Period) = plus(-period)
 
     operator fun minus(years: IntYears) = plus(-years.toLong())
 

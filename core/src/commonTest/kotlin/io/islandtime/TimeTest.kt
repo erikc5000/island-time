@@ -35,7 +35,7 @@ class TimeTest {
     @Test
     fun `Time_fromSecondOfDay() creates a Time from a second of the day value`() {
         assertEquals(
-            Time(1,1,1,1),
+            Time(1, 1, 1, 1),
             Time.fromSecondOfDay(3661, 1)
         )
     }
@@ -65,12 +65,12 @@ class TimeTest {
 
     @Test
     fun `secondsSinceStartOfDay property`() {
-        assertEquals(1.seconds, Time(0,0,1,1).secondsSinceStartOfDay)
+        assertEquals(1.seconds, Time(0, 0, 1, 1).secondsSinceStartOfDay)
     }
 
     @Test
     fun `nanosecondsSinceStartOfDay property`() {
-        assertEquals(1L.nanoseconds, Time(0,0,0,1).nanosecondsSinceStartOfDay)
+        assertEquals(1L.nanoseconds, Time(0, 0, 0, 1).nanosecondsSinceStartOfDay)
     }
 
     @Test
@@ -125,7 +125,7 @@ class TimeTest {
     fun `truncatedToHours() removes components smaller than hours`() {
         assertEquals(
             Time(1, 0),
-            Time(1,2,3,4).truncatedToHours()
+            Time(1, 2, 3, 4).truncatedToHours()
         )
     }
 
@@ -133,7 +133,7 @@ class TimeTest {
     fun `truncatedToMinutes() removes components smaller than minutes`() {
         assertEquals(
             Time(1, 2),
-            Time(1,2,3,4).truncatedToMinutes()
+            Time(1, 2, 3, 4).truncatedToMinutes()
         )
     }
 
@@ -141,7 +141,7 @@ class TimeTest {
     fun `truncatedToSeconds() removes components smaller than seconds`() {
         assertEquals(
             Time(1, 2, 3),
-            Time(1,2,3,4).truncatedToSeconds()
+            Time(1, 2, 3, 4).truncatedToSeconds()
         )
     }
 
@@ -149,7 +149,7 @@ class TimeTest {
     fun `truncatedToMilliseconds() removes components smaller than milliseconds`() {
         assertEquals(
             Time(1, 2, 3, 444_000_000),
-            Time(1,2,3,444_555_666).truncatedToMilliseconds()
+            Time(1, 2, 3, 444_555_666).truncatedToMilliseconds()
         )
     }
 
@@ -157,44 +157,74 @@ class TimeTest {
     fun `truncatedToMicroseconds() removes components smaller than microseconds`() {
         assertEquals(
             Time(1, 2, 3, 444_555_000),
-            Time(1,2,3,444_555_666).truncatedToMicroseconds()
+            Time(1, 2, 3, 444_555_666).truncatedToMicroseconds()
+        )
+    }
+
+    @Test
+    fun `adding a duration of zero doesn't affect the time`() {
+        val time = Time(1, 1, 1, 1)
+        assertEquals(time, time + Duration.ZERO)
+    }
+
+    @Test
+    fun `add a duration`() {
+        assertEquals(
+            Time(0,0,0,2),
+            Time(23,0,0,1) +
+                durationOf(2.days + 1.hours + 1.nanoseconds)
+        )
+    }
+
+    @Test
+    fun `subtracting a duration of zero doesn't affect the time`() {
+        val time = Time(1, 1, 1, 1)
+        assertEquals(time, time - Duration.ZERO)
+    }
+
+    @Test
+    fun `subtract a duration`() {
+        assertEquals(
+            Time(22,0,0,0),
+            Time(23,0,0,1) -
+                durationOf(2.days + 1.hours + 1.nanoseconds)
         )
     }
 
     @Test
     fun `adding zero of any unit doesn't affect the time`() {
+        val time = Time(1, 1, 1, 1)
+
         assertEquals(
-            Time(1, 1,1,1),
-            Time(1, 1, 1, 1) +
-                0.hours + 0.minutes + 0.seconds + 0.milliseconds + 0.microseconds + 0.nanoseconds
+            time,
+            time + 0.hours + 0.minutes + 0.seconds + 0.milliseconds + 0.microseconds + 0.nanoseconds
         )
 
         assertEquals(
-            Time(1, 1,1,1),
-            Time(1, 1, 1, 1) +
-                0L.hours + 0L.minutes + 0L.seconds + 0L.milliseconds + 0L.microseconds + 0L.nanoseconds
+            time,
+            time + 0L.hours + 0L.minutes + 0L.seconds + 0L.milliseconds + 0L.microseconds + 0L.nanoseconds
         )
     }
 
     @Test
     fun `subtracting zero of any unit doesn't affect the time`() {
+        val time = Time(1, 1, 1, 1)
+
         assertEquals(
-            Time(1, 1,1,1),
-            Time(1, 1, 1, 1) -
-                0.hours - 0.minutes - 0.seconds - 0.milliseconds - 0.microseconds - 0.nanoseconds
+            time,
+            time - 0.hours - 0.minutes - 0.seconds - 0.milliseconds - 0.microseconds - 0.nanoseconds
         )
 
         assertEquals(
-            Time(1, 1,1,1),
-            Time(1, 1, 1, 1) -
-                0L.hours - 0L.minutes - 0L.seconds - 0L.milliseconds - 0L.microseconds - 0L.nanoseconds
+            time,
+            time - 0L.hours - 0L.minutes - 0L.seconds - 0L.milliseconds - 0L.microseconds - 0L.nanoseconds
         )
     }
 
     @Test
     fun `add positive hours`() {
         assertEquals(Time(1, 0), Time(23, 0) + 2.hours)
-        assertEquals(Time(8,0), Time(1, 0) + Long.MAX_VALUE.hours)
+        assertEquals(Time(8, 0), Time(1, 0) + Long.MAX_VALUE.hours)
     }
 
     @Test
@@ -212,7 +242,7 @@ class TimeTest {
     @Test
     fun `subtract negative hours`() {
         assertEquals(Time(1, 0), Time(23, 0) - (-2).hours)
-        assertEquals(Time(9,0), Time(1, 0) - Long.MIN_VALUE.hours)
+        assertEquals(Time(9, 0), Time(1, 0) - Long.MIN_VALUE.hours)
     }
 
     @Test
@@ -282,7 +312,7 @@ class TimeTest {
     @Test
     fun `add positive milliseconds`() {
         assertEquals(
-            Time(0,0,0, 100_111_111),
+            Time(0, 0, 0, 100_111_111),
             Time(23, 59, 59, 900_111_111) + 200.milliseconds
         )
 
@@ -296,7 +326,7 @@ class TimeTest {
     fun `add negative milliseconds`() {
         assertEquals(
             Time(23, 59, 59, 900_111_111),
-            Time(0,0,0, 100_111_111) + (-200).milliseconds
+            Time(0, 0, 0, 100_111_111) + (-200).milliseconds
         )
 
         assertEquals(
@@ -309,7 +339,7 @@ class TimeTest {
     fun `subtract positive milliseconds`() {
         assertEquals(
             Time(23, 59, 59, 900_111_111),
-            Time(0,0,0, 100_111_111) - 200.milliseconds
+            Time(0, 0, 0, 100_111_111) - 200.milliseconds
         )
 
         assertEquals(
@@ -321,7 +351,7 @@ class TimeTest {
     @Test
     fun `subtract negative milliseconds`() {
         assertEquals(
-            Time(0,0,0, 100_111_111),
+            Time(0, 0, 0, 100_111_111),
             Time(23, 59, 59, 900_111_111) - (-200).milliseconds
         )
 
@@ -334,7 +364,7 @@ class TimeTest {
     @Test
     fun `add positive microseconds`() {
         assertEquals(
-            Time(0,0,0, 100_111),
+            Time(0, 0, 0, 100_111),
             Time(23, 59, 59, 999_900_111) + 200.microseconds
         )
     }
@@ -343,7 +373,7 @@ class TimeTest {
     fun `add negative microseconds`() {
         assertEquals(
             Time(23, 59, 59, 999_900_111),
-            Time(0,0,0, 100_111) + (-200).microseconds
+            Time(0, 0, 0, 100_111) + (-200).microseconds
         )
     }
 
@@ -351,14 +381,14 @@ class TimeTest {
     fun `subtract positive microseconds`() {
         assertEquals(
             Time(23, 59, 59, 999_900_111),
-            Time(0,0,0, 100_111) - 200.microseconds
+            Time(0, 0, 0, 100_111) - 200.microseconds
         )
     }
 
     @Test
     fun `subtract negative microseconds`() {
         assertEquals(
-            Time(0,0,0, 100_111),
+            Time(0, 0, 0, 100_111),
             Time(23, 59, 59, 999_900_111) - (-200).microseconds
         )
     }
@@ -366,7 +396,7 @@ class TimeTest {
     @Test
     fun `add positive nanoseconds`() {
         assertEquals(
-            Time(0,0,0, 100),
+            Time(0, 0, 0, 100),
             Time(23, 59, 59, 999_999_900) + 200.nanoseconds
         )
     }
@@ -375,7 +405,7 @@ class TimeTest {
     fun `add negative nanoseconds`() {
         assertEquals(
             Time(23, 59, 59, 999_999_900),
-            Time(0,0,0, 100) + (-200).nanoseconds
+            Time(0, 0, 0, 100) + (-200).nanoseconds
         )
     }
 
@@ -383,14 +413,14 @@ class TimeTest {
     fun `subtract positive nanoseconds`() {
         assertEquals(
             Time(23, 59, 59, 999_999_900),
-            Time(0,0,0, 100) - 200.nanoseconds
+            Time(0, 0, 0, 100) - 200.nanoseconds
         )
     }
 
     @Test
     fun `subtract negative nanoseconds`() {
         assertEquals(
-            Time(0,0,0, 100),
+            Time(0, 0, 0, 100),
             Time(23, 59, 59, 999_999_900) - (-200).nanoseconds
         )
     }

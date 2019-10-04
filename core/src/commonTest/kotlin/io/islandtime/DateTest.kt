@@ -164,6 +164,48 @@ class DateTest {
     }
 
     @Test
+    fun `add period of zero`() {
+        assertEquals(
+            Date(2016, Month.FEBRUARY, 29),
+            Date(2016, Month.FEBRUARY, 29) + Period.ZERO
+        )
+    }
+
+    @Test
+    fun `adding a period first adds years, then months, then days`() {
+        assertEquals(
+            Date(2017, Month.MARCH, 29),
+            Date(2016, Month.FEBRUARY, 29) + periodOf(1.years, 1.months, 1.days)
+        )
+
+        assertEquals(
+            Date(2015, Month.JANUARY, 27),
+            Date(2016, Month.FEBRUARY, 29) + periodOf((-1).years, (-1).months, (-1).days)
+        )
+    }
+
+    @Test
+    fun `subtract period of zero`() {
+        assertEquals(
+            Date(2016, Month.FEBRUARY, 29),
+            Date(2016, Month.FEBRUARY, 29) - Period.ZERO
+        )
+    }
+
+    @Test
+    fun `subtracting a period first subtracts years, then months, then days`() {
+        assertEquals(
+            Date(2017, Month.MARCH, 29),
+            Date(2016, Month.FEBRUARY, 29) - periodOf((-1).years, (-1).months, (-1).days)
+        )
+
+        assertEquals(
+            Date(2015, Month.JANUARY, 27),
+            Date(2016, Month.FEBRUARY, 29) - periodOf(1.years, 1.months, 1.days)
+        )
+    }
+
+    @Test
     fun `add zero days`() {
         assertEquals(
             Date(2019, Month.JANUARY, 1),
