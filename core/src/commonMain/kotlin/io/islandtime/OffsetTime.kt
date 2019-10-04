@@ -50,6 +50,7 @@ class OffsetTime(
         }
     }
 
+    operator fun plus(duration: Duration) = copy(time = time + duration)
     operator fun plus(hours: LongHours) = copy(time = time + hours)
     operator fun plus(hours: IntHours) = plus(hours.toLong())
     operator fun plus(minutes: LongMinutes) = copy(time = time + minutes)
@@ -63,6 +64,7 @@ class OffsetTime(
     operator fun plus(nanoseconds: LongNanoseconds) = copy(time = time + nanoseconds)
     operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
 
+    operator fun minus(duration: Duration) = copy(time = time - duration)
     operator fun minus(hours: LongHours) = copy(time = time - hours)
     operator fun minus(hours: IntHours) = minus(hours.toLong())
     operator fun minus(minutes: LongMinutes) = copy(time = time - minutes)

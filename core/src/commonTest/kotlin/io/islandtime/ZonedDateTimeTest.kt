@@ -1,13 +1,15 @@
 package io.islandtime
 
-import io.islandtime.measures.hours
-import io.islandtime.measures.milliseconds
+import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.Iso8601
 import io.islandtime.zone.*
 import kotlin.test.*
 
 class ZonedDateTimeTest {
+
+    private val nyZone = TimeZone("America/New_York")
+    private val denverZone = TimeZone("America/Denver")
 
 //    object TestTimeZoneRulesProvider : TimeZoneRulesProvider {
 //        override fun getRules(regionId: String): TimeZoneRules {
@@ -83,11 +85,11 @@ class ZonedDateTimeTest {
     fun `when constructed from a DateTime that falls in an overlap, the earlier offset is used by default`() {
         val actual = ZonedDateTime(
             DateTime(2019, 11, 3, 1, 0),
-            TimeZone("America/New_York")
+            nyZone
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.zone)
+        assertEquals(nyZone, actual.zone)
         assertEquals(UtcOffset((-4).hours), actual.offset)
     }
 
@@ -95,12 +97,12 @@ class ZonedDateTimeTest {
     fun `when constructed from a DateTime that falls in an overlap, a preferred offset may be provided`() {
         val actual = ZonedDateTime.ofLocal(
             DateTime(2019, 11, 3, 1, 0),
-            TimeZone("America/New_York"),
+            nyZone,
             UtcOffset((-5).hours)
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.zone)
+        assertEquals(nyZone, actual.zone)
         assertEquals(UtcOffset((-5).hours), actual.offset)
     }
 
@@ -108,12 +110,12 @@ class ZonedDateTimeTest {
     fun `when constructed from a DateTime that falls in an overlap, an invalid preferred offset is ignored`() {
         val actual = ZonedDateTime.ofLocal(
             DateTime(2019, 11, 3, 1, 0),
-            TimeZone("America/New_York"),
+            nyZone,
             UtcOffset((-8).hours)
         )
 
         assertEquals(DateTime(2019, 11, 3, 1, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.zone)
+        assertEquals(nyZone, actual.zone)
         assertEquals(UtcOffset((-4).hours), actual.offset)
     }
 
@@ -121,12 +123,12 @@ class ZonedDateTimeTest {
     fun `when constructed from a DateTime that doesn't fall in an overlap, the preferred offset is ignored`() {
         val actual = ZonedDateTime.ofLocal(
             DateTime(2019, 11, 3, 2, 0),
-            TimeZone("America/New_York"),
+            nyZone,
             UtcOffset((-4).hours)
         )
 
         assertEquals(DateTime(2019, 11, 3, 2, 0), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.zone)
+        assertEquals(nyZone, actual.zone)
         assertEquals(UtcOffset((-5).hours), actual.offset)
     }
 
@@ -134,11 +136,11 @@ class ZonedDateTimeTest {
     fun `when constructed from a DateTime that falls during a gap, the DateTime is adjusted by the gap's length`() {
         val actual = ZonedDateTime(
             DateTime(2019, 3, 10, 2, 30),
-            TimeZone("America/New_York")
+            nyZone
         )
 
         assertEquals(DateTime(2019, 3, 10, 3, 30), actual.dateTime)
-        assertEquals(TimeZone("America/New_York"), actual.zone)
+        assertEquals(nyZone, actual.zone)
         assertEquals(UtcOffset((-4).hours), actual.offset)
     }
 
@@ -167,10 +169,10 @@ class ZonedDateTimeTest {
                 0,
                 0,
                 0,
-                TimeZone("America/New_York")
+                nyZone
             ),
             DateTime(2019, 3, 3, 1, 0) at
-                TimeZone("America/New_York")
+                nyZone
         )
     }
 
@@ -199,10 +201,10 @@ class ZonedDateTimeTest {
                 7,
                 27,
                 821_000_000,
-                TimeZone("America/New_York")
+                nyZone
             ),
             Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds)
-                at TimeZone("America/New_York")
+                at nyZone
         )
     }
 
@@ -212,24 +214,24 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             )
         )
 
         assertNotEquals(
             ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
+                nyZone,
                 UtcOffset((-4).hours)
             ),
             ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 0),
-                TimeZone("America/New_York"),
+                nyZone,
                 UtcOffset((-5).hours)
             )
         )
@@ -237,11 +239,11 @@ class ZonedDateTimeTest {
         assertNotEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 3, 5, 0),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime(
                 DateTime(2019, 11, 3, 7, 0),
-                TimeZone("America/New_York")
+                nyZone
             )
         )
     }
@@ -251,14 +253,14 @@ class ZonedDateTimeTest {
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
                 Date(1969, 365) at Time(23, 0) at TimeZone("America/Chicago"),
-                Date(1970, 1) at Time(0, 0) at TimeZone("America/New_York")
+                Date(1970, 1) at Time(0, 0) at nyZone
             ) < 0
         }
 
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
                 Date(1970, 1) at Time(0, 0) at TimeZone("Etc/GMT+5"),
-                Date(1970, 1) at Time(0, 0) at TimeZone("America/New_York")
+                Date(1970, 1) at Time(0, 0) at nyZone
             ) > 0
         }
 
@@ -271,14 +273,17 @@ class ZonedDateTimeTest {
     }
 
     @Test
-    fun `TIMELINE_ORDER compares based on instant only`() {
+    fun `TIMELINE_ORDER compare based on instant only`() {
         assertTrue {
             OffsetDateTime.TIMELINE_ORDER.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
             ) == 0
         }
+    }
 
+    @Test
+    fun `compareTo() compares based on instant only`() {
         assertTrue {
             Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
@@ -290,9 +295,9 @@ class ZonedDateTimeTest {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 5, 20, 0, 0),
-                TimeZone("America/New_York")
+                nyZone
             ),
-            Date(2019, 5, 20).atStartOfDayIn("America/New_York".toTimeZone())
+            Date(2019, 5, 20).atStartOfDayIn(nyZone)
         )
 
         // TODO: Add tests where transitions occur during midnight
@@ -303,9 +308,9 @@ class ZonedDateTimeTest {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),
-                TimeZone("America/New_York")
+                nyZone
             ),
-            Date(2019, 5, 20).atEndOfDayIn("America/New_York".toTimeZone())
+            Date(2019, 5, 20).atEndOfDayIn(nyZone)
         )
 
         // TODO: Add tests where transitions occur during midnight
@@ -317,15 +322,15 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 3, 3, 7, 0),
                 UtcOffset((-7).hours),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime(
                 DateTime(2019, 11, 3, 7, 0),
-                TimeZone("America/New_York")
+                nyZone
             ).copy(
                 monthNumber = 3,
                 offset = (-4).hours.asUtcOffset(),
-                zone = "America/Denver".toTimeZone()
+                zone = denverZone
             )
         )
     }
@@ -336,11 +341,11 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 3, 10, 3, 3),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime(
                 DateTime(2019, 3, 10, 7, 0),
-                TimeZone("America/New_York")
+                nyZone
             ).copy(hour = 2, minute = 3)
         )
     }
@@ -351,11 +356,11 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2018, 3, 10, 3, 0),
                 UtcOffset((-5).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime(
                 DateTime(2019, 3, 10, 7, 5),
-                TimeZone("America/New_York")
+                nyZone
             ).copy(hour = 3, minute = 0, year = 2018)
         )
     }
@@ -366,11 +371,11 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
+                nyZone,
                 UtcOffset((-5).hours)
             ).withEarlierOffsetAtOverlap()
         )
@@ -381,11 +386,11 @@ class ZonedDateTimeTest {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
-                TimeZone("America/New_York")
+                nyZone
             ).withEarlierOffsetAtOverlap()
         )
     }
@@ -396,12 +401,12 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-5).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             ).withLaterOffsetAtOverlap()
         )
     }
@@ -411,11 +416,11 @@ class ZonedDateTimeTest {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
-                TimeZone("America/New_York")
+                nyZone
             ),
             ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
-                TimeZone("America/New_York")
+                nyZone
             ).withLaterOffsetAtOverlap()
         )
     }
@@ -427,13 +432,13 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 0, 30),
                 UtcOffset((-6).hours),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone("America/New_York"),
+                nyZone,
                 UtcOffset((-5).hours)
-            ).adjustedTo("America/Denver".toTimeZone())
+            ).adjustedTo(denverZone)
         )
 
         // New York no longer in overlap, Denver in earlier offset at overlap
@@ -441,13 +446,13 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-6).hours),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 2, 30),
-                TimeZone("America/New_York"),
+                nyZone,
                 UtcOffset((-5).hours)
-            ).adjustedTo("America/Denver".toTimeZone())
+            ).adjustedTo(denverZone)
         )
 
         // New York not in overlap, Denver in later offset at overlap
@@ -455,13 +460,13 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-7).hours),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime.ofLocal(
                 DateTime(2019, 11, 3, 3, 30),
-                TimeZone("America/New_York"),
+                nyZone,
                 UtcOffset((-5).hours)
-            ).adjustedTo("America/Denver".toTimeZone())
+            ).adjustedTo(denverZone)
         )
     }
 
@@ -472,12 +477,12 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 3, 10, 1, 30),
                 UtcOffset((-7).hours),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime(
                 DateTime(2019, 3, 10, 4, 30),
-                TimeZone("America/New_York")
-            ).adjustedTo("America/Denver".toTimeZone())
+                nyZone
+            ).adjustedTo(denverZone)
         )
 
         // New York and Denver both in DST
@@ -485,12 +490,54 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 3, 10, 3, 30),
                 UtcOffset((-6).hours),
-                TimeZone("America/Denver")
+                denverZone
             ),
             ZonedDateTime(
                 DateTime(2019, 3, 10, 5, 30),
-                TimeZone("America/New_York")
-            ).adjustedTo("America/Denver".toTimeZone())
+                nyZone
+            ).adjustedTo(denverZone)
+        )
+    }
+
+    @Test
+    fun `add period of zero`() {
+        val zonedDateTime = DateTime(2016, Month.FEBRUARY, 29, 13, 0) at nyZone
+        assertEquals(zonedDateTime, zonedDateTime + Period.ZERO)
+    }
+
+    @Test
+    fun `adding a period first adds years, then months, then days`() {
+        assertEquals(
+            DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
+            (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
+                periodOf(1.years, 1.months, 1.days)
+        )
+
+        assertEquals(
+            DateTime(2015, Month.JANUARY, 27, 9, 0) at nyZone,
+            (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
+                periodOf((-1).years, (-1).months, (-1).days)
+        )
+    }
+
+    @Test
+    fun `subtract period of zero`() {
+        val zonedDateTime = DateTime(2016, Month.FEBRUARY, 29, 13, 0) at nyZone
+        assertEquals(zonedDateTime, zonedDateTime - Period.ZERO)
+    }
+
+    @Test
+    fun `subtracting a period first subtracts years, then months, then days`() {
+        assertEquals(
+            DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
+            (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
+                periodOf((-1).years, (-1).months, (-1).days)
+        )
+
+        assertEquals(
+            DateTime(2015, Month.JANUARY, 27, 9, 0) at nyZone,
+            (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
+                periodOf(1.years, 1.months, 1.days)
         )
     }
 
@@ -509,7 +556,7 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
                 UtcOffset((-5).hours),
-                TimeZone("America/New_York")
+                nyZone
             ).toString()
         )
     }
@@ -549,7 +596,7 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             "2019-05-05T12:00-04:00[America/New_York]".toZonedDateTime()
         )
@@ -558,7 +605,7 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-5).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             "2019-11-03T01:00-05:00[America/New_York]".toZonedDateTime()
         )
@@ -570,7 +617,7 @@ class ZonedDateTimeTest {
             ZonedDateTime.create(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
                 UtcOffset((-4).hours),
-                TimeZone("America/New_York")
+                nyZone
             ),
             "20190505 1200-04[America/New_York]".toZonedDateTime(Iso8601.ZONED_DATE_TIME_PARSER)
         )

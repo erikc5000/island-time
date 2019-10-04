@@ -74,6 +74,17 @@ class ZonedDateTime private constructor(
         }
     }
 
+    /**
+     * Return a [ZonedDateTime] with [period] added to it.
+     *
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
+     * defined in ISO-8601-2.
+     */
+    operator fun plus(period: Period) = copy(dateTime = dateTime + period)
+
+    operator fun plus(duration: Duration) = resolveInstant(dateTime + duration)
+
     operator fun plus(years: IntYears) = copy(dateTime = dateTime + years)
     operator fun plus(years: LongYears) = copy(dateTime = dateTime + years)
     operator fun plus(months: IntMonths) = copy(dateTime = dateTime + months)
@@ -92,6 +103,17 @@ class ZonedDateTime private constructor(
     override operator fun plus(microseconds: LongMicroseconds) = resolveInstant(dateTime + microseconds)
     override operator fun plus(nanoseconds: IntNanoseconds) = resolveInstant(dateTime + nanoseconds)
     override operator fun plus(nanoseconds: LongNanoseconds) = resolveInstant(dateTime + nanoseconds)
+
+    /**
+     * Return a [ZonedDateTime] with [period] subtracted from it.
+     *
+     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
+     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
+     * addition as defined in ISO-8601-2.
+     */
+    operator fun minus(period: Period) = copy(dateTime = dateTime - period)
+
+    operator fun minus(duration: Duration) = resolveInstant(dateTime - duration)
 
     operator fun minus(years: IntYears) = copy(dateTime = dateTime - years)
     operator fun minus(years: LongYears) = copy(dateTime = dateTime - years)

@@ -75,6 +75,81 @@ class DateTimeTest {
     }
 
     @Test
+    fun `add period of zero`() {
+        assertEquals(
+            DateTime(2016, Month.FEBRUARY, 29, 13, 0),
+            DateTime(2016, Month.FEBRUARY, 29, 13, 0) + Period.ZERO
+        )
+    }
+
+    @Test
+    fun `adding a period first adds years, then months, then days`() {
+        assertEquals(
+            DateTime(2017, Month.MARCH, 29, 9, 0),
+            DateTime(2016, Month.FEBRUARY, 29, 9, 0) +
+                periodOf(1.years, 1.months, 1.days)
+        )
+
+        assertEquals(
+            DateTime(2015, Month.JANUARY, 27, 9, 0),
+            DateTime(2016, Month.FEBRUARY, 29, 9, 0) +
+                periodOf((-1).years, (-1).months, (-1).days)
+        )
+    }
+
+    @Test
+    fun `subtract period of zero`() {
+        assertEquals(
+            DateTime(2016, Month.FEBRUARY, 29, 13, 0),
+            DateTime(2016, Month.FEBRUARY, 29, 13, 0) - Period.ZERO
+        )
+    }
+
+    @Test
+    fun `subtracting a period first subtracts years, then months, then days`() {
+        assertEquals(
+            DateTime(2017, Month.MARCH, 29, 9, 0),
+            DateTime(2016, Month.FEBRUARY, 29, 9, 0) -
+                periodOf((-1).years, (-1).months, (-1).days)
+        )
+
+        assertEquals(
+            DateTime(2015, Month.JANUARY, 27, 9, 0),
+            DateTime(2016, Month.FEBRUARY, 29, 9, 0) -
+                periodOf(1.years, 1.months, 1.days)
+        )
+    }
+
+    @Test
+    fun `add duration of zero`() {
+        val dateTime = Date(2010, Month.JULY, 4) at Time(18, 0)
+        assertEquals(dateTime, dateTime + Duration.ZERO)
+    }
+
+    @Test
+    fun `add a duration`() {
+        assertEquals(
+            Date(2010, Month.JULY, 4) at Time(18, 0),
+            (Date(2010, Month.JULY, 3) at Time.MAX) + durationOf(18.hours + 1.nanoseconds)
+        )
+    }
+
+    @Test
+    fun `subtract duration of zero`() {
+        val dateTime = Date(2010, Month.JULY, 4) at Time(18, 0)
+        assertEquals(dateTime, dateTime - Duration.ZERO)
+    }
+
+    @Test
+    fun `subtract a duration`() {
+        assertEquals(
+            Date(2010, Month.JULY, 4) at Time(18, 0),
+            (Date(2010, Month.JULY, 5) at Time(1, 0, 0, 1)) -
+                durationOf(7.hours + 1.nanoseconds)
+        )
+    }
+
+    @Test
     fun `add zero hours`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.hours)

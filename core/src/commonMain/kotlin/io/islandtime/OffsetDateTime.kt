@@ -105,6 +105,17 @@ class OffsetDateTime(
         }
     }
 
+    /**
+     * Return an [OffsetDateTime] with [period] added to it.
+     *
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
+     * defined in ISO-8601-2.
+     */
+    operator fun plus(period: Period) = copy(dateTime = dateTime + period)
+
+    operator fun plus(duration: Duration) = copy(dateTime = dateTime + duration)
+
     operator fun plus(years: LongYears) = copy(dateTime = dateTime + years)
     operator fun plus(years: IntYears) = plus(years.toLong())
     operator fun plus(months: LongMonths) = copy(dateTime = dateTime + months)
@@ -123,6 +134,17 @@ class OffsetDateTime(
     override operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLong())
     override operator fun plus(nanoseconds: LongNanoseconds) = copy(dateTime = dateTime + nanoseconds)
     override operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+
+    /**
+     * Return an [OffsetDateTime] with [period] subtracted from it.
+     *
+     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
+     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
+     * addition as defined in ISO-8601-2.
+     */
+    operator fun minus(period: Period) = copy(dateTime = dateTime - period)
+
+    operator fun minus(duration: Duration) = copy(dateTime = dateTime - duration)
 
     operator fun minus(years: LongYears) = copy(dateTime = dateTime - years)
     operator fun minus(years: IntYears) = minus(years.toLong())

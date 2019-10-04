@@ -31,6 +31,10 @@ class Time private constructor(
     inline val nanosecondsSinceStartOfDay: LongNanoseconds
         get() = nanosecondOfDay.nanoseconds
 
+    operator fun plus(duration: Duration): Time {
+        return this + duration.seconds + duration.nanosecondAdjustment
+    }
+
     operator fun plus(hours: LongHours): Time {
         val wrappedHours = (hours % HOURS_PER_DAY).toInt()
 
@@ -114,6 +118,11 @@ class Time private constructor(
     }
 
     operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+
+    operator fun minus(duration: Duration): Time {
+        return this - duration.seconds - duration.nanosecondAdjustment
+    }
+
     operator fun minus(hours: LongHours) = plus(-(hours % HOURS_PER_DAY))
     operator fun minus(hours: IntHours) = plus(-hours.toLong())
     operator fun minus(minutes: LongMinutes) = plus(-(minutes % MINUTES_PER_DAY))
