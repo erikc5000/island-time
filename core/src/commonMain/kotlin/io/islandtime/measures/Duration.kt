@@ -34,7 +34,56 @@ class Duration private constructor(
     val absoluteValue: Duration
         get() = if (isNegative) -this else this
 
-    operator fun unaryMinus() = create(-seconds, -nanosecondAdjustment)
+    inline val inDays: LongDays get() = seconds.inWholeDays
+    inline val inHours: LongHours get() = seconds.inWholeHours
+    inline val inMinutes: LongMinutes get() = seconds.inWholeMinutes
+
+    val inMilliseconds
+        get() = seconds.inMillisecondsExact() plusExact nanosecondAdjustment.inWholeMilliseconds.toLong()
+
+    val inMicroseconds
+        get() = seconds.inMicrosecondsExact() plusExact nanosecondAdjustment.inWholeMicroseconds.toLong()
+
+    val inNanoseconds
+        get() = seconds.inNanosecondsExact() plusExact nanosecondAdjustment.toLong()
+
+    /**
+     * Truncate to the number of 24-hour days, replacing all smaller components with zero
+     */
+    fun truncatedToDays() = create(seconds / SECONDS_PER_DAY * SECONDS_PER_DAY, 0.nanoseconds)
+
+    /**
+     * Truncate to the number of whole hours, replacing all smaller components with zero
+     */
+    fun truncatedToHours() = create(seconds / SECONDS_PER_HOUR * SECONDS_PER_HOUR, 0.nanoseconds)
+
+    /**
+     * Truncate to the number of whole minutes, replacing all smaller components with zero
+     */
+    fun truncatedToMinutes() = create(seconds / SECONDS_PER_MINUTE * SECONDS_PER_MINUTE, 0.nanoseconds)
+
+    /**
+     * Truncate to the [second] value, replacing all smaller components with zero
+     */
+    fun truncatedToSeconds() = create(seconds, 0.nanoseconds)
+
+    /**
+     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     */
+    fun truncatedToMilliseconds() = create(
+        seconds,
+        (nanosecondAdjustment.value / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND).nanoseconds
+    )
+
+    /**
+     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     */
+    fun truncatedToMicroseconds() = create(
+        seconds,
+        (nanosecondAdjustment.value / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND).nanoseconds
+    )
+
+    operator fun unaryMinus() = create(seconds.value.negateExact().seconds, -nanosecondAdjustment)
 
     operator fun plus(other: Duration): Duration {
         return when {

@@ -90,6 +90,66 @@ class DurationTest {
         assertFalse { 1.seconds.asDuration().isNegative }
         assertFalse { 1.nanoseconds.asDuration().isNegative }
     }
+    
+    @Test
+    fun `inDays property returns the number of whole days`() {
+        assertEquals(1L.days, durationOf(1.days).inDays)
+        assertEquals((-1L).days, durationOf((-1).days).inDays)
+        assertEquals(0L.days, durationOf(1.days - 1.nanoseconds).inDays)
+    }
+    
+    @Test
+    fun `inHours property returns the number of whole hours`() {
+        assertEquals(1L.hours, durationOf(1.hours).inHours)
+        assertEquals((-1L).hours, durationOf((-1).hours).inHours)
+        assertEquals(0L.hours, durationOf(1.hours - 1.nanoseconds).inHours)
+    }
+
+    @Test
+    fun `inMinutes property returns the number of whole minutes`() {
+        assertEquals(1L.minutes, durationOf(1.minutes).inMinutes)
+        assertEquals((-1L).minutes, durationOf((-1).minutes).inMinutes)
+        assertEquals(0L.minutes, durationOf(1.minutes - 1.nanoseconds).inMinutes)
+    }
+
+    @Test
+    fun `inMilliseconds property returns the number of whole milliseconds`() {
+        assertEquals(1L.milliseconds, durationOf(1.milliseconds).inMilliseconds)
+        assertEquals((-1L).milliseconds, durationOf((-1).milliseconds).inMilliseconds)
+        assertEquals(1L.milliseconds, durationOf(1.milliseconds + 1.nanoseconds).inMilliseconds)
+        assertEquals(0L.milliseconds, durationOf(1.milliseconds - 1.nanoseconds).inMilliseconds)
+    }
+
+    @Test
+    fun `inMilliseconds property throws an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { durationOf(Long.MAX_VALUE.seconds).inMilliseconds }
+    }
+
+    @Test
+    fun `inMicroseconds property returns the number of whole microseconds`() {
+        assertEquals(1L.microseconds, durationOf(1.microseconds).inMicroseconds)
+        assertEquals((-1L).microseconds, durationOf((-1).microseconds).inMicroseconds)
+        assertEquals(1L.microseconds, durationOf(1.microseconds + 1.nanoseconds).inMicroseconds)
+        assertEquals(0L.microseconds, durationOf(1.microseconds - 1.nanoseconds).inMicroseconds)
+    }
+
+    @Test
+    fun `inMicroseconds property throws an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { durationOf(365.days * 300_000).inMicroseconds }
+    }
+
+    @Test
+    fun `inNanoseconds property returns the number of whole nanoseconds`() {
+        assertEquals(1L.nanoseconds, durationOf(1.nanoseconds).inNanoseconds)
+        assertEquals((-1L).nanoseconds, durationOf((-1).nanoseconds).inNanoseconds)
+        assertEquals(1_000_000_001L.nanoseconds, durationOf(1.seconds, 1.nanoseconds).inNanoseconds)
+        assertEquals(0L.nanoseconds, Duration.ZERO.inNanoseconds)
+    }
+
+    @Test
+    fun `inNanoseconds property throws an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { durationOf(365.days * 300).inNanoseconds }
+    }
 
     @Test
     fun `unary minus negates both the seconds and nanoOfSecond`() {
@@ -102,6 +162,11 @@ class DurationTest {
             durationOf(1.seconds + 1.nanoseconds),
             -durationOf((-1).seconds - 1.nanoseconds)
         )
+    }
+
+    @Test
+    fun `unary minus throws an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { -durationOf(Long.MIN_VALUE.seconds) }
     }
 
     @Test
@@ -239,6 +304,126 @@ class DurationTest {
                 assertEquals((-1).seconds, seconds)
                 assertEquals((-800_000_050).nanoseconds, nanoseconds)
             }
+    }
+
+    @Test
+    fun `truncatedToDays() truncates the precision to 24-hour days`() {
+        assertEquals(
+            1.days.asDuration(),
+            durationOf(1.days + 1.hours + 1.nanoseconds).truncatedToDays()
+        )
+        assertEquals(
+            (-1).days.asDuration(),
+            durationOf((-1).days - 1.hours - 1.nanoseconds).truncatedToDays()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf(1.days - 1.nanoseconds).truncatedToDays()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf((-1).days + 1.nanoseconds).truncatedToDays()
+        )
+    }
+
+    @Test
+    fun `truncatedToHours() truncates the precision to hours`() {
+        assertEquals(
+            1.hours.asDuration(),
+            durationOf(1.hours + 1.minutes + 1.nanoseconds).truncatedToHours()
+        )
+        assertEquals(
+            (-1).hours.asDuration(),
+            durationOf((-1).hours - 1.minutes - 1.nanoseconds).truncatedToHours()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf(1.hours - 1.nanoseconds).truncatedToHours()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf((-1).hours + 1.nanoseconds).truncatedToHours()
+        )
+    }
+
+    @Test
+    fun `truncatedToMinutes() truncates the precision to minutes`() {
+        assertEquals(
+            1.minutes.asDuration(),
+            durationOf(1.minutes + 1.seconds + 1.nanoseconds).truncatedToMinutes()
+        )
+        assertEquals(
+            (-1).minutes.asDuration(),
+            durationOf((-1).minutes - 1.seconds - 1.nanoseconds).truncatedToMinutes()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf(1.minutes - 1.nanoseconds).truncatedToMinutes()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf((-1).minutes + 1.nanoseconds).truncatedToMinutes()
+        )
+    }
+
+    @Test
+    fun `truncatedToSeconds() truncates the precision to seconds`() {
+        assertEquals(
+            1.seconds.asDuration(),
+            durationOf(1.seconds + 1.nanoseconds).truncatedToSeconds()
+        )
+        assertEquals(
+            (-1).seconds.asDuration(),
+            durationOf((-1).seconds - 1.nanoseconds).truncatedToSeconds()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf(1.seconds - 1.nanoseconds).truncatedToSeconds()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf((-1).seconds + 1.nanoseconds).truncatedToSeconds()
+        )
+    }
+
+    @Test
+    fun `truncatedToMilliseconds() truncates the precision to milliseconds`() {
+        assertEquals(
+            1.milliseconds.asDuration(),
+            durationOf(1.milliseconds + 1.nanoseconds).truncatedToMilliseconds()
+        )
+        assertEquals(
+            (-1).milliseconds.asDuration(),
+            durationOf((-1).milliseconds - 1.nanoseconds).truncatedToMilliseconds()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf(1.milliseconds - 1.nanoseconds).truncatedToMilliseconds()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf((-1).milliseconds + 1.nanoseconds).truncatedToMilliseconds()
+        )
+    }
+
+    @Test
+    fun `truncatedToMicroseconds() truncates the precision to microseconds`() {
+        assertEquals(
+            1.microseconds.asDuration(),
+            durationOf(1.microseconds + 1.nanoseconds).truncatedToMicroseconds()
+        )
+        assertEquals(
+            (-1).microseconds.asDuration(),
+            durationOf((-1).microseconds - 1.nanoseconds).truncatedToMicroseconds()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf(1.microseconds - 1.nanoseconds).truncatedToMicroseconds()
+        )
+        assertEquals(
+            Duration.ZERO,
+            durationOf((-1).microseconds + 1.nanoseconds).truncatedToMicroseconds()
+        )
     }
 
     @Test
