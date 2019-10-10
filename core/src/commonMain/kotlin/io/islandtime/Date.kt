@@ -43,7 +43,7 @@ class Date(
      */
     val dayOfWeek: DayOfWeek
         get() {
-            val zeroIndexedDayOfWeek = (daysSinceUnixEpoch.value + 3) floorMod 7
+            val zeroIndexedDayOfWeek = (unixEpochDay + 3) floorMod 7
             return DayOfWeek.values()[zeroIndexedDayOfWeek.toInt()]
         }
 

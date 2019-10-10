@@ -535,19 +535,26 @@ class DateTime(
 }
 
 /**
- * Combine a Date with a Time to create a [DateTime]
+ * Combine a [Date] with a [Time] to create a [DateTime]
  */
 infix fun Date.at(time: Time) = DateTime(this, time)
 
 /**
+ * Combine a [Date] with a time to create a [DateTime]
+ */
+fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): DateTime {
+    return DateTime(this, Time(hour, minute, second, nanosecond))
+}
+
+/**
  * Get the [DateTime] at the start of the day
  */
-val Date.startOfDay get() = DateTime(this, Time.MIDNIGHT)
+fun Date.startOfDay() = DateTime(this, Time.MIDNIGHT)
 
 /**
  * Get the [DateTime] at the end of the day
  */
-val Date.endOfDay get() = DateTime(this, Time.MAX)
+fun Date.endOfDay() = DateTime(this, Time.MAX)
 
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)

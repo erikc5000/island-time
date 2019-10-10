@@ -248,8 +248,8 @@ class ZonedDateTimeIntervalTest {
     @Test
     fun years() {
         val zone = "America/New_York".toTimeZone()
-        val then = Date(2019, 3, 10).atStartOfDayIn(zone)
-        val now = Date(2020, 3, 10).atStartOfDayIn(zone)
+        val then = Date(2019, 3, 10).startOfDayAt(zone)
+        val now = Date(2020, 3, 10).startOfDayAt(zone)
 
         assertEquals(1.years, yearsBetween(then, now))
         assertEquals(0.years, yearsBetween(then, now - 1.nanoseconds))
@@ -260,8 +260,8 @@ class ZonedDateTimeIntervalTest {
     @Test
     fun `months during daylight savings gap`() {
         val zone = "America/New_York".toTimeZone()
-        val then = Date(2019, 3, 10).atStartOfDayIn(zone)
-        val now = Date(2019, 4, 10).atStartOfDayIn(zone)
+        val then = Date(2019, 3, 10).startOfDayAt(zone)
+        val now = Date(2019, 4, 10).startOfDayAt(zone)
 
         assertEquals(1.months, monthsBetween(then, now))
         assertEquals(0.months, monthsBetween(then, now - 1.nanoseconds))
@@ -272,8 +272,8 @@ class ZonedDateTimeIntervalTest {
     @Test
     fun `days during daylight savings gap`() {
         val zone = "America/New_York".toTimeZone()
-        val then = Date(2019, 3, 10).atStartOfDayIn(zone)
-        val now = Date(2019, 3, 11).atStartOfDayIn(zone)
+        val then = Date(2019, 3, 10).startOfDayAt(zone)
+        val now = Date(2019, 3, 11).startOfDayAt(zone)
 
         assertEquals(1L.days, daysBetween(then, now))
         assertEquals(0L.days, daysBetween(then, now - 1.nanoseconds))
@@ -284,7 +284,7 @@ class ZonedDateTimeIntervalTest {
     @Test
     fun `hours during daylight savings gap`() {
         val zone = "America/New_York".toTimeZone()
-        val then = Date(2019, 3, 10).atStartOfDayIn(zone)
+        val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 10) at Time(5, 0) at zone
 
         assertEquals(4L.hours, hoursBetween(then, now))

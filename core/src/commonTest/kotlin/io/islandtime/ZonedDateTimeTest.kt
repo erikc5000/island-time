@@ -291,26 +291,26 @@ class ZonedDateTimeTest {
     }
 
     @Test
-    fun `Date_atStartOfDayIn() creates a ZonedDateTime at the start of the day in a particular time zone`() {
+    fun `Date_startOfDayAt() creates a ZonedDateTime at the start of the day in a particular time zone`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 5, 20, 0, 0),
                 nyZone
             ),
-            Date(2019, 5, 20).atStartOfDayIn(nyZone)
+            Date(2019, 5, 20).startOfDayAt(nyZone)
         )
 
         // TODO: Add tests where transitions occur during midnight
     }
 
     @Test
-    fun `Date_atEndOfDayIn() creates a ZonedDateTime at the end of the day in a particular time zone`() {
+    fun `Date_endOfDayAt() creates a ZonedDateTime at the end of the day in a particular time zone`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),
                 nyZone
             ),
-            Date(2019, 5, 20).atEndOfDayIn(nyZone)
+            Date(2019, 5, 20).endOfDayAt(nyZone)
         )
 
         // TODO: Add tests where transitions occur during midnight

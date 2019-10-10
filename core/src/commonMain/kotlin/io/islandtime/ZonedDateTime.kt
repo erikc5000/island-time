@@ -463,7 +463,7 @@ fun OffsetDateTime.atSameInstantIn(zone: TimeZone): ZonedDateTime {
  */
 infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
 
-fun Date.atStartOfDayIn(zone: TimeZone): ZonedDateTime {
+fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
     val dateTime = this at Time.MIDNIGHT
     val transition = zone.rules.transitionAt(dateTime)
 
@@ -474,7 +474,7 @@ fun Date.atStartOfDayIn(zone: TimeZone): ZonedDateTime {
     }
 }
 
-fun Date.atEndOfDayIn(zone: TimeZone): ZonedDateTime {
+fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
     val dateTime = this at Time.MAX
     val rules = zone.rules
     val validOffsets = rules.validOffsetsAt(dateTime)
