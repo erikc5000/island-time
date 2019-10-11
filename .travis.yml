@@ -1,0 +1,26 @@
+os:
+  - linux
+  - osx
+
+osx_image: xcode9.4
+dist: trusty
+language: android
+
+jdk:
+  - oraclejdk8
+
+android:
+  components:
+    - build-tools-29.0.2
+    - android-29
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.konan/
+    - $HOME/.android/build-cache
