@@ -20,6 +20,7 @@ matrix:
       osx_image: xcode10.1
       language: java
       jdk: openjdk11
+      install: ./gradlew core:assemble
       script: ./gradlew core:build
 
 before_cache:
