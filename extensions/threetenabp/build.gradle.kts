@@ -30,7 +30,6 @@ android {
     sourceSets {
         getByName("main").java.srcDirs("src/main/kotlin")
         getByName("test").java.srcDirs("src/test/java", "src/test/kotlin")
-        getByName("androidTest").java.srcDirs("src/test/kotlin")
     }
 }
 
@@ -51,11 +50,6 @@ project.afterEvaluate {
             create<MavenPublication>("release") {
                 from(components.getByName("release"))
                 artifactId = "threetenabp-extensions"
-            }
-
-            create<MavenPublication>("debug") {
-                from(components.getByName("debug"))
-                artifactId = "threetenabp-extensions-debug"
             }
         }
     }
