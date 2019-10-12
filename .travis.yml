@@ -8,6 +8,7 @@ matrix:
         components:
           - tools
           - platform-tools
+          - extra-google-m2repository
           - build-tools-29.0.2
           - android-29
       before_install:
