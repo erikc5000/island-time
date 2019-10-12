@@ -48,9 +48,14 @@ dependencies {
 project.afterEvaluate {
     publishing {
         publications {
-            create<MavenPublication>("mavenAar") {
+            create<MavenPublication>("release") {
+                from(components.getByName("release"))
                 artifactId = "threetenabp-extensions"
-                artifact(tasks.getByName("bundleReleaseAar"))
+            }
+
+            create<MavenPublication>("debug") {
+                from(components.getByName("debug"))
+                artifactId = "threetenabp-extensions-debug"
             }
         }
     }
