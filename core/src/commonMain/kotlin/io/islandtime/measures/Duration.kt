@@ -48,27 +48,27 @@ class Duration private constructor(
         get() = seconds.inNanosecondsExact() plusExact nanosecondAdjustment.toLong()
 
     /**
-     * Truncate to the number of 24-hour days, replacing all smaller components with zero
+     * Truncate to the number of 24-hour days, replacing the rest with zero
      */
     fun truncatedToDays() = create(seconds / SECONDS_PER_DAY * SECONDS_PER_DAY, 0.nanoseconds)
 
     /**
-     * Truncate to the number of whole hours, replacing all smaller components with zero
+     * Truncate to the number of whole hours, replacing the rest with zero
      */
     fun truncatedToHours() = create(seconds / SECONDS_PER_HOUR * SECONDS_PER_HOUR, 0.nanoseconds)
 
     /**
-     * Truncate to the number of whole minutes, replacing all smaller components with zero
+     * Truncate to the number of whole minutes, replacing the rest with zero
      */
     fun truncatedToMinutes() = create(seconds / SECONDS_PER_MINUTE * SECONDS_PER_MINUTE, 0.nanoseconds)
 
     /**
-     * Truncate to the [second] value, replacing all smaller components with zero
+     * Truncate to the number of whole seconds, replacing the nanoseconds component with zero
      */
     fun truncatedToSeconds() = create(seconds, 0.nanoseconds)
 
     /**
-     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     * Truncate to the number of whole milliseconds, replacing the rest with zero
      */
     fun truncatedToMilliseconds() = create(
         seconds,
@@ -76,7 +76,7 @@ class Duration private constructor(
     )
 
     /**
-     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     * Truncate to the number of whole microseconds, replacing the rest with zero
      */
     fun truncatedToMicroseconds() = create(
         seconds,

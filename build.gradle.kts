@@ -1,20 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-plugins {
-    kotlin("multiplatform") version "1.3.50" apply false
-    id("com.android.library") version "3.6.0-beta01" apply false
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-        google()
-    }
-}
-
 allprojects {
     repositories {
-        mavenCentral()
+        jcenter()
     }
 
     tasks.withType<JavaCompile>().configureEach {
@@ -28,7 +16,4 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
-
-    group = "io.islandtime"
-    version = "0.1.0-SNAPSHOT"
 }
