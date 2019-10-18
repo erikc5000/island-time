@@ -14,12 +14,22 @@ matrix:
         - touch $HOME/.android/repositories.cfg
         - yes | sdkmanager "platforms;android-28"
         - yes | sdkmanager "build-tools;28.0.3"
+      deploy:
+        provider: script
+        script: ./gradlew extensions:threetenabp:publishAllPublicationsToMavenRepository
+        on:
+          branch: master
 
     - os: osx
       osx_image: xcode10.2
       language: java
       install: ./gradlew core:assemble
       script: ./gradlew core:build
+      deploy:
+        provider: script
+        script: ./gradlew core:publishAllPublicationsToMavenRepository
+        on:
+          branch: master
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
