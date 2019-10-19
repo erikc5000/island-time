@@ -209,7 +209,7 @@ Currently, only the ISO calendar system is supported and the year range is limit
 
 ## Notes on kotlin.time
 
-An experimental time API has recently been added to the Kotlin standard library. Unfortunately, its design does't agree well with Island Time -- at least currently.
+An [experimental time API](https://github.com/Kotlin/KEEP/issues/190) has recently been added to the Kotlin standard library. Unfortunately, its design does't agree well with Island Time -- at least currently.
 
 The Kotlin `Duration` class is based on a floating point number, which we steer clear of to avoid any accuracy issues that might come about during manipulation of floating point values and offer a fixed nanosecond precision across the entire supported time range. We also opt to preserve unit granularity. For example, `1.seconds` translates to `IntSeconds` rather than `Duration`. This allows you to specify a particular unit granularity in your code when required.
 
