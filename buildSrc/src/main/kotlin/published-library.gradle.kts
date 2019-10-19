@@ -6,7 +6,7 @@ plugins {
     signing
 }
 
-val Project.isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
+val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
 
 val dokka by tasks.existing(DokkaTask::class) {
     outputDirectory = "$buildDir/dokka"
@@ -21,12 +21,14 @@ val javadocJar by tasks.registering(Jar::class) {
 
 @Suppress("UnstableApiUsage")
 signing {
-    setRequired { isReleaseBuild && gradle.taskGraph.hasTask("uploadArchives") }
-
     val signingKey: String? by project
     val signingPassword: String? by project
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
+}
+
+tasks.withType<Sign>().configureEach {
+    onlyIf { isReleaseBuild }
 }
 
 afterEvaluate {
