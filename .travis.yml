@@ -17,6 +17,7 @@ matrix:
       deploy:
         provider: script
         script: ./gradlew extensions:threetenabp:publishAllPublicationsToMavenRepository
+        skip_cleanup: true
         on:
           branch: master
 
@@ -28,6 +29,7 @@ matrix:
       deploy:
         provider: script
         script: ./gradlew core:publishAllPublicationsToMavenRepository
+        skip_cleanup: true
         on:
           branch: master
 
