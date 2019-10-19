@@ -89,7 +89,7 @@ afterEvaluate {
     }
 }
 
-fun Project.registerIosTestTask(iosTargetName: String) {
+fun registerIosTestTask(iosTargetName: String) {
     val iosTest by tasks.registering(RunIosTestsTask::class) {
         val kotlinNativeTarget = kotlin.targets[iosTargetName] as KotlinNativeTarget
         val testBinariesTaskName = kotlinNativeTarget.compilations[SourceSet.TEST_SOURCE_SET_NAME].binariesTaskName
