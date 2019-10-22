@@ -22,7 +22,7 @@ kotlin {
     val iosTargets = if (ideaActive) {
         listOf(iosX64("ios"))
     } else {
-        listOf(iosArm64(), iosX64())
+        listOf(iosArm64(), iosX64(), macosX64())
     }
 
     sourceSets {
