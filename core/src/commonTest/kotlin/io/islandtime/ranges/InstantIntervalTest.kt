@@ -4,6 +4,7 @@ import io.islandtime.Instant
 import io.islandtime.OffsetDateTime
 import io.islandtime.UtcOffset
 import io.islandtime.measures.*
+import io.islandtime.parser.DateTimeParseException
 import kotlin.test.*
 
 class InstantIntervalTest {
@@ -73,6 +74,67 @@ class InstantIntervalTest {
         assertEquals(start, range.start)
         assertEquals(Instant(2.days, (-1).nanoseconds), range.last)
         assertEquals(Instant(2.days), range.endExclusive)
+    }
+
+    @Test
+    fun `toString() returns an ISO-8601 time interval representation`() {
+        assertEquals(
+            "1969-12-31T00:00Z/1970-01-02T00:00Z",
+            (Instant((-1).days) until Instant(1.days)).toString()
+        )
+
+        assertEquals(
+            "../1970-01-02T00:00Z",
+            (Instant.MIN until Instant(1.days)).toString()
+        )
+
+        assertEquals(
+            "1969-12-31T00:00Z/..",
+            (Instant((-1).days) until Instant.MAX).toString()
+        )
+
+        assertEquals(
+            "1969-12-31T00:00Z/..",
+            (Instant((-1).days)..Instant.MAX).toString()
+        )
+
+        assertEquals(
+            "../..",
+            (Instant.MIN until Instant.MAX).toString()
+        )
+
+        assertEquals(
+            "../..",
+            InstantInterval.UNBOUNDED.toString()
+        )
+
+        assertEquals(
+            "",
+            InstantInterval.EMPTY.toString()
+        )
+    }
+
+    @Test
+    fun `String_toInstantInterval() converts an empty string to an empty interval`() {
+        assertEquals(InstantInterval.EMPTY, "".toInstantInterval())
+    }
+
+    @Test
+    fun `String_toInstantInterval() throws an exception when the format is invalid`() {
+        assertFailsWith<DateTimeParseException> { "1970-01-01/1970-01-01".toInstantInterval() }
+        assertFailsWith<DateTimeParseException> { "1970-01-01T00:00Z/19700101T00Z".toInstantInterval() }
+    }
+
+    @Test
+    fun `String_toInstantInterval() parses ISO-8601 time interval strings in extended format by default`() {
+        assertEquals(
+            Instant((-1).days) until Instant(1.days),
+            "1969-12-31T00:00Z/1970-01-02T00:00Z".toInstantInterval()
+        )
+        assertEquals(Instant.MIN until Instant(1.days), "../1970-01-02T00:00Z".toInstantInterval())
+        assertEquals(Instant((-1).days) until Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
+        assertEquals(Instant((-1).days)..Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
+        assertEquals(InstantInterval.UNBOUNDED, "../..".toInstantInterval())
     }
 
     @Test

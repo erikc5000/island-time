@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -428,7 +428,7 @@ class TimeTest {
     @Test
     fun `String_toTime() throws an exception when given an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toTime() }
-        assertFailsWith<DateTimeParseException> { "".toTime(Iso8601.TIME_PARSER) }
+        assertFailsWith<DateTimeParseException> { "".toTime(DateTimeParsers.Iso.TIME) }
     }
 
     @Test
@@ -441,12 +441,12 @@ class TimeTest {
 
     @Test
     fun `String_toTime() parses valid strings with explicit parser`() {
-        assertEquals(Time(2, 0), "02".toTime(Iso8601.Basic.TIME_PARSER))
-        assertEquals(Time(23, 0), "2300".toTime(Iso8601.Basic.TIME_PARSER))
-        assertEquals(Time(23, 30, 5), "233005".toTime(Iso8601.Basic.TIME_PARSER))
+        assertEquals(Time(2, 0), "02".toTime(DateTimeParsers.Iso.Basic.TIME))
+        assertEquals(Time(23, 0), "2300".toTime(DateTimeParsers.Iso.Basic.TIME))
+        assertEquals(Time(23, 30, 5), "233005".toTime(DateTimeParsers.Iso.Basic.TIME))
         assertEquals(
             Time(23, 30, 5, 100_000),
-            "233005.0001".toTime(Iso8601.Basic.TIME_PARSER)
+            "233005.0001".toTime(DateTimeParsers.Iso.Basic.TIME)
         )
     }
 }

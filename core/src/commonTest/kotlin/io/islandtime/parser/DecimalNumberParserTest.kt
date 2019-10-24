@@ -1,5 +1,6 @@
 package io.islandtime.parser
 
+import io.islandtime.DateTimeField
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -57,19 +58,19 @@ class DecimalNumberParserTest {
         val parser = dateTimeParser {
             decimalNumber {
                 onParsed { whole, fraction ->
-                    result[DateTimeField.SECOND_OF_MINUTE] = whole
-                    result[DateTimeField.NANOSECOND_OF_SECOND] = fraction
+                    fields[DateTimeField.SECOND_OF_MINUTE] = whole
+                    fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
                 }
             }
         }
 
         val result1 = parser.parse("0.1")
-        assertEquals(0L, result1[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(100_000_000L, result1[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(0L, result1.fields[DateTimeField.SECOND_OF_MINUTE])
+        assertEquals(100_000_000L, result1.fields[DateTimeField.NANOSECOND_OF_SECOND])
 
         val result2 = parser.parse("-5.000000001")
-        assertEquals(-5L, result2[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(-1L, result2[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(-5L, result2.fields[DateTimeField.SECOND_OF_MINUTE])
+        assertEquals(-1L, result2.fields[DateTimeField.NANOSECOND_OF_SECOND])
     }
 
     @Test
@@ -100,10 +101,10 @@ class DecimalNumberParserTest {
     fun `fractionScale controls the magnitude of the fractional part`() {
         val parser = dateTimeParser {
             decimalNumber(fractionScale = 3) {
-                onParsed { _, fraction ->  result[DateTimeField.MILLISECOND_OF_SECOND] = fraction }
+                onParsed { _, fraction ->  fields[DateTimeField.MILLISECOND_OF_SECOND] = fraction }
             }
         }
 
-        assertEquals(300L, parser.parse("0.3")[DateTimeField.MILLISECOND_OF_SECOND])
+        assertEquals(300L, parser.parse("0.3").fields[DateTimeField.MILLISECOND_OF_SECOND])
     }
 }

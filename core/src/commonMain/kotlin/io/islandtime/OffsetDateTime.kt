@@ -3,8 +3,8 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.Iso8601
-import io.islandtime.parser.raiseParserFieldResolutionException
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
 
 /**
@@ -85,7 +85,7 @@ class OffsetDateTime(
         get() = dateTime.secondsSinceUnixEpochAt(offset)
 
     override val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
-        get() = nanosecond.nanoseconds
+        get() = dateTime.nanoOfSecondsSinceUnixEpoch
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
@@ -299,11 +299,11 @@ infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
 infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
 
-fun String.toOffsetDateTime() = toOffsetDateTime(Iso8601.Extended.OFFSET_DATE_TIME_PARSER)
+fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
 fun String.toOffsetDateTime(parser: DateTimeParser): OffsetDateTime {
     val result = parser.parse(this)
-    return result.toOffsetDateTime() ?: raiseParserFieldResolutionException("OffsetDateTime", this)
+    return result.toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTime>(this)
 }
 
 internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {

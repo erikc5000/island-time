@@ -1,10 +1,10 @@
 package io.islandtime.measures
 
+import io.islandtime.DateTimeField
 import io.islandtime.internal.MONTHS_IN_YEAR
-import io.islandtime.parser.DateTimeField
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 
 /**
  * A date-based period of time, such as "2 years, 5 months, 16 days". Unlike [Duration], which uses exact increments,
@@ -285,7 +285,7 @@ operator fun LongDays.minus(period: Period) = Period.create(
     (this - period.days.toLong()).toInt()
 )
 
-fun String.toPeriod() = toPeriod(Iso8601.PERIOD_PARSER)
+fun String.toPeriod() = toPeriod(DateTimeParsers.Iso.PERIOD)
 
 fun String.toPeriod(parser: DateTimeParser): Period {
     val result = parser.parse(this)
@@ -293,9 +293,9 @@ fun String.toPeriod(parser: DateTimeParser): Period {
 }
 
 internal fun DateTimeParseResult.toPeriod(): Period {
-    val years = (this[DateTimeField.PERIOD_OF_YEARS]?.toInt() ?: 0).years
-    val months = (this[DateTimeField.PERIOD_OF_MONTHS]?.toInt() ?: 0).months
-    val days = (this[DateTimeField.PERIOD_OF_DAYS]?.toInt() ?: 0).days
+    val years = (fields[DateTimeField.PERIOD_OF_YEARS]?.toInt() ?: 0).years
+    val months = (fields[DateTimeField.PERIOD_OF_MONTHS]?.toInt() ?: 0).months
+    val days = (fields[DateTimeField.PERIOD_OF_DAYS]?.toInt() ?: 0).days
 
     return periodOf(years, months, days)
 }

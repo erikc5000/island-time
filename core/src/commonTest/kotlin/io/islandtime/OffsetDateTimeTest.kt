@@ -5,7 +5,7 @@ import io.islandtime.measures.hours
 import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.test.*
 
 class OffsetDateTimeTest {
@@ -205,7 +205,7 @@ class OffsetDateTimeTest {
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
                 5.hours.asUtcOffset()
             ),
-            "20190505 1200+05".toOffsetDateTime(Iso8601.OFFSET_DATE_TIME_PARSER)
+            "20190505 1200+05".toOffsetDateTime(DateTimeParsers.Iso.OFFSET_DATE_TIME)
         )
 
         assertEquals(
@@ -213,7 +213,7 @@ class OffsetDateTimeTest {
                 DateTime(Date(2019, Month.MAY, 5), Time(5, 0, 3, 500)),
                 UtcOffset(2.hours, 30.minutes, 23.seconds)
             ),
-            "20190505T050003.0000005+023023".toOffsetDateTime(Iso8601.OFFSET_DATE_TIME_PARSER)
+            "20190505T050003.0000005+023023".toOffsetDateTime(DateTimeParsers.Iso.OFFSET_DATE_TIME)
         )
     }
 }

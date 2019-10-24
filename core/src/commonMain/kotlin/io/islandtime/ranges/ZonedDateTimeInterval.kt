@@ -2,6 +2,11 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.measures.*
+import io.islandtime.parser.*
+import io.islandtime.parser.expectingGroupCount
+import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 
 /**
@@ -52,9 +57,9 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Get the number of days in the range. As a range is inclusive, if the start and end date are the same, the
-     * result will be one day. Daylight savings time differences are taken into account when calculating the number of
-     * days.
+     * Get the number of whole days in the interval.
+     *
+     * Daylight savings time differences are taken into account when calculating the number of days.
      */
     override val days
         get() = when {
@@ -95,15 +100,29 @@ class ZonedDateTimeInterval(
     }
 }
 
-//infix fun <T : DayBased<T>> DayInterval<T>.step(step: IntMonths): MonthProgression<T> {
-//    require(step > 0.months) { "step must be positive" }
-//    return MonthProgression.fromClosedRange(start, endInclusive, step)
-//}
-//
-//infix fun <T : DayBased<T>> DayInterval<T>.step(step: IntYears): MonthProgression<T> {
-//    require(step > 0.years) { "step must be positive" }
-//    return MonthProgression.fromClosedRange(start, endInclusive, step.inMonthsExact())
-//}
+fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+
+fun String.toZonedDateTimeInterval(parser: GroupedDateTimeParser): ZonedDateTimeInterval {
+    val results = parser.parse(this).expectingGroupCount<ZonedDateTimeInterval>(2, this)
+
+    val start = when {
+        results[0].isEmpty() -> null
+        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.start
+        else -> results[0].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+    }
+
+    val end = when {
+        results[1].isEmpty() -> null
+        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.endExclusive
+        else -> results[1].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+    }
+
+    return when {
+        start != null && end != null -> start until end
+        start == null && end == null -> ZonedDateTimeInterval.EMPTY
+        else -> throw DateTimeParseException("Intervals with unknown start or end are not supported")
+    }
+}
 
 /**
  * Return a random date-time within the range using the default random number generator

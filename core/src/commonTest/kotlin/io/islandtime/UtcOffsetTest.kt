@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.test.*
 
 class UtcOffsetTest {
@@ -142,22 +142,22 @@ class UtcOffsetTest {
     fun `String_toUtcOffset() parses valid ISO-8601 basic time offsets with explicit parser`() {
         assertEquals(
             UtcOffset(1.hours),
-            "+01".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
+            "+01".toUtcOffset(DateTimeParsers.Iso.UTC_OFFSET)
         )
 
         assertEquals(
             UtcOffset(1.hours),
-            "+0100".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
+            "+0100".toUtcOffset(DateTimeParsers.Iso.UTC_OFFSET)
         )
 
         assertEquals(
             UtcOffset(1.hours),
-            "+010000".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
+            "+010000".toUtcOffset(DateTimeParsers.Iso.UTC_OFFSET)
         )
 
         assertEquals(
             UtcOffset((-4).hours, (-30).minutes),
-            "-0430".toUtcOffset(Iso8601.UTC_OFFSET_PARSER)
+            "-0430".toUtcOffset(DateTimeParsers.Iso.UTC_OFFSET)
         )
     }
 }

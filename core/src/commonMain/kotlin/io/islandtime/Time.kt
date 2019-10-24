@@ -302,21 +302,22 @@ class Time private constructor(
     }
 }
 
-fun String.toTime() = toTime(Iso8601.Extended.TIME_PARSER)
+fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
 
 fun String.toTime(parser: DateTimeParser): Time {
     val result = parser.parse(this)
-    return result.toTime() ?: raiseParserFieldResolutionException("Time", this)
+    return result.toTime() ?: throwParserFieldResolutionException<Time>(this)
 }
 
 internal fun DateTimeParseResult.toTime(): Time? {
-    val hour = this[DateTimeField.HOUR_OF_DAY]
+    val hour = fields[DateTimeField.HOUR_OF_DAY]
 
+    // TODO: Add support for SECOND_OF_DAY, NANOSECOND_OF_DAY, and so forth
     if (hour != null) {
         return try {
-            val minute = this[DateTimeField.MINUTE_OF_HOUR]?.toIntExact() ?: 0
-            val second = this[DateTimeField.SECOND_OF_MINUTE]?.toIntExact() ?: 0
-            val nanosecond = this[DateTimeField.NANOSECOND_OF_SECOND]?.toIntExact() ?: 0
+            val minute = fields[DateTimeField.MINUTE_OF_HOUR]?.toIntExact() ?: 0
+            val second = fields[DateTimeField.SECOND_OF_MINUTE]?.toIntExact() ?: 0
+            val nanosecond = fields[DateTimeField.NANOSECOND_OF_SECOND]?.toIntExact() ?: 0
             Time(hour.toIntExact(), minute, second, nanosecond)
         } catch (e: ArithmeticException) {
             throw DateTimeException(e.message, e)

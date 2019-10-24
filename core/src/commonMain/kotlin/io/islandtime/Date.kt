@@ -361,26 +361,27 @@ fun Instant.toDateAt(zone: TimeZone): Date {
 
 fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
-fun String.toDate() = toDate(Iso8601.Extended.CALENDAR_DATE_PARSER)
+fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
 
 fun String.toDate(parser: DateTimeParser): Date {
     val result = parser.parse(this)
-    return result.toDate() ?: raiseParserFieldResolutionException("Date", this)
+    return result.toDate() ?: throwParserFieldResolutionException<Date>(this)
 }
 
 internal fun DateTimeParseResult.toDate(): Date? {
-    val year = this[DateTimeField.YEAR]
+    val year = fields[DateTimeField.YEAR]
 
+    // TODO: Add suport for
     if (year != null) {
-        val month = this[DateTimeField.MONTH_OF_YEAR]
-        val dayOfMonth = this[DateTimeField.DAY_OF_MONTH]
+        val month = fields[DateTimeField.MONTH_OF_YEAR]
+        val dayOfMonth = fields[DateTimeField.DAY_OF_MONTH]
 
         try {
             if (month != null && dayOfMonth != null) {
                 return Date(year.toIntExact(), month.toIntExact().toMonth(), dayOfMonth.toIntExact())
             }
 
-            val dayOfYear = this[DateTimeField.DAY_OF_YEAR]
+            val dayOfYear = fields[DateTimeField.DAY_OF_YEAR]
 
             if (dayOfYear != null) {
                 return Date(year.toIntExact(), dayOfYear.toIntExact())

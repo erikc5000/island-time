@@ -1,9 +1,13 @@
 package io.islandtime.ranges
 
-import io.islandtime.Instant
+import io.islandtime.*
 import io.islandtime.MAX_INSTANT_STRING_LENGTH
 import io.islandtime.appendInstant
 import io.islandtime.measures.*
+import io.islandtime.parser.*
+import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.toInstant
+import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -45,6 +49,30 @@ class InstantInterval(
     }
 }
 
+fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
+
+fun String.toInstantInterval(parser: GroupedDateTimeParser): InstantInterval {
+    val results = parser.parse(this).expectingGroupCount<InstantInterval>(2, this)
+
+    val start = when {
+        results[0].isEmpty() -> null
+        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> InstantInterval.UNBOUNDED.start
+        else -> results[0].toInstant() ?: throwParserFieldResolutionException<InstantInterval>(this)
+    }
+
+    val end = when {
+        results[1].isEmpty() -> null
+        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> InstantInterval.UNBOUNDED.endExclusive
+        else -> results[1].toInstant() ?: throwParserFieldResolutionException<InstantInterval>(this)
+    }
+
+    return when {
+        start != null && end != null -> start until end
+        start == null && end == null -> InstantInterval.EMPTY
+        else -> throw DateTimeParseException("Intervals with unknown start or end are not supported")
+    }
+}
+
 /**
  * Return a random instant within the range using the default random number generator
  */
@@ -68,3 +96,19 @@ fun InstantInterval.random(random: Random): Instant {
  * Get a range containing all of the representable instants up to, but not including [to]
  */
 infix fun Instant.until(to: Instant) = InstantInterval(this, to)
+
+infix fun InstantInterval.intersect(other: InstantInterval): InstantInterval {
+    return if (other.start >= endExclusive || other.endExclusive <= start) {
+        InstantInterval.EMPTY
+    } else {
+        InstantInterval(maxOf(start, other.start), minOf(endExclusive, other.endExclusive))
+    }
+}
+
+//infix fun InstantInterval.union(other: InstantInterval): InstantInterval {
+//    if (other.start >= endExclusive || other.endExclusive <= start) {
+//        InstantInterval.EMPTY
+//    } else
+//        InstantInterval(maxOf(start, other.start), minOf(endExclusive, other.endExclusive))
+//    }
+//}

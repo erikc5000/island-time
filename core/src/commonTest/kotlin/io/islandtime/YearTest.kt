@@ -5,7 +5,7 @@ import io.islandtime.measures.days
 import io.islandtime.measures.years
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.dateTimeParser
-import io.islandtime.parser.monthOfYear
+import io.islandtime.parser.monthNumber
 import kotlin.test.*
 
 class YearTest {
@@ -158,7 +158,7 @@ class YearTest {
 
     @Test
     fun `String_toYear() throws an exception when the parser fails to supply the YEAR field`() {
-        val customParser = dateTimeParser { monthOfYear(2) }
+        val customParser = dateTimeParser { monthNumber(2) }
         assertFailsWith<DateTimeParseException> { "12".toYear(customParser) }
     }
 }

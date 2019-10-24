@@ -3,6 +3,7 @@ package io.islandtime
 import io.islandtime.internal.SECONDS_PER_HOUR
 import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
+import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 
@@ -115,14 +116,14 @@ fun IntSeconds.asUtcOffset() = UtcOffset(this)
 /**
  * Convert an ISO-8601 time offset string in extended format into a [UtcOffset]
  */
-fun String.toUtcOffset() = toUtcOffset(Iso8601.Extended.UTC_OFFSET_PARSER)
+fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
 
 /**
  * Convert an ISO-8601 time offset string into a [UtcOffset] using a specific parser
  */
 fun String.toUtcOffset(parser: DateTimeParser): UtcOffset {
     val result = parser.parse(this)
-    return result.toUtcOffset() ?: raiseParserFieldResolutionException("UtcOffset", this)
+    return result.toUtcOffset() ?: throwParserFieldResolutionException<UtcOffset>(this)
 }
 
 /**
@@ -133,18 +134,18 @@ fun String.toUtcOffset(parser: DateTimeParser): UtcOffset {
  * [DateTimeField.UTC_OFFSET_SECONDS].
  */
 internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
-    val isZero = this[DateTimeField.UTC_OFFSET_ZERO] != null
+    val totalSeconds = fields[DateTimeField.UTC_OFFSET_TOTAL_SECONDS]
 
-    if (isZero) {
-        return UtcOffset.ZERO
+    if (totalSeconds != null) {
+        return UtcOffset(totalSeconds.toIntExact().seconds)
     }
 
-    val sign = this[DateTimeField.UTC_OFFSET_SIGN]
+    val sign = fields[DateTimeField.UTC_OFFSET_SIGN]
 
     if (sign != null) {
-        val hours = (this[DateTimeField.UTC_OFFSET_HOURS]?.toInt() ?: 0).hours
-        val minutes = (this[DateTimeField.UTC_OFFSET_MINUTES]?.toInt() ?: 0).minutes
-        val seconds = (this[DateTimeField.UTC_OFFSET_SECONDS]?.toInt() ?: 0).seconds
+        val hours = (fields[DateTimeField.UTC_OFFSET_HOURS]?.toIntExact() ?: 0).hours
+        val minutes = (fields[DateTimeField.UTC_OFFSET_MINUTES]?.toIntExact() ?: 0).minutes
+        val seconds = (fields[DateTimeField.UTC_OFFSET_SECONDS]?.toIntExact() ?: 0).seconds
 
         return if (sign < 0L) {
             UtcOffset(-hours, -minutes, -seconds)

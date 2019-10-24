@@ -1,15 +1,15 @@
 package io.islandtime.measures
 
+import io.islandtime.DateTimeField
 import io.islandtime.internal.*
 import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.Duration.Companion.create
-import io.islandtime.parser.DateTimeField
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.math.abs
 
 /**
@@ -37,6 +37,7 @@ class Duration private constructor(
     inline val inDays: LongDays get() = seconds.inWholeDays
     inline val inHours: LongHours get() = seconds.inWholeHours
     inline val inMinutes: LongMinutes get() = seconds.inWholeMinutes
+    inline val inSeconds: LongSeconds get() = seconds
 
     val inMilliseconds
         get() = seconds.inMillisecondsExact() plusExact nanosecondAdjustment.inWholeMilliseconds.toLong()
@@ -499,7 +500,7 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     return this
 }
 
-fun String.toDuration() = toDuration(Iso8601.DURATION_PARSER)
+fun String.toDuration() = toDuration(DateTimeParsers.Iso.DURATION)
 
 fun String.toDuration(parser: DateTimeParser): Duration {
     val result = parser.parse(this)
@@ -507,11 +508,11 @@ fun String.toDuration(parser: DateTimeParser): Duration {
 }
 
 internal fun DateTimeParseResult.toDuration(): Duration {
-    val days = (this[DateTimeField.PERIOD_OF_DAYS] ?: 0L).days
-    val hours = (this[DateTimeField.DURATION_OF_HOURS] ?: 0L).hours
-    val minutes = (this[DateTimeField.DURATION_OF_MINUTES] ?: 0L).minutes
-    val seconds = (this[DateTimeField.DURATION_OF_SECONDS] ?: 0L).seconds
-    val nanoseconds = (this[DateTimeField.NANOSECOND_OF_SECOND] ?: 0L).nanoseconds
+    val days = (fields[DateTimeField.PERIOD_OF_DAYS] ?: 0L).days
+    val hours = (fields[DateTimeField.DURATION_OF_HOURS] ?: 0L).hours
+    val minutes = (fields[DateTimeField.DURATION_OF_MINUTES] ?: 0L).minutes
+    val seconds = (fields[DateTimeField.DURATION_OF_SECONDS] ?: 0L).seconds
+    val nanoseconds = (fields[DateTimeField.NANOSECOND_OF_SECOND] ?: 0L).nanoseconds
 
     return durationOf(
         days + hours + minutes + seconds,

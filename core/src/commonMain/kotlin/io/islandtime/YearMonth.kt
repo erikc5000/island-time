@@ -169,19 +169,19 @@ fun YearMonth(year: Int, month: Month): YearMonth {
 /**
  * Convert an ISO-8601 year-month in extended format into a [YearMonth]
  */
-fun String.toYearMonth() = toYearMonth(Iso8601.Extended.YEAR_MONTH_PARSER)
+fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.Extended.YEAR_MONTH)
 
 /**
  * Convert a string into a [YearMonth] using a specific parser
  */
 fun String.toYearMonth(parser: DateTimeParser): YearMonth {
     val result = parser.parse(this)
-    return result.toYearMonth() ?: raiseParserFieldResolutionException("YearMonth", this)
+    return result.toYearMonth() ?: throwParserFieldResolutionException<YearMonth>(this)
 }
 
 internal fun DateTimeParseResult.toYearMonth(): YearMonth? {
-    val year = this[DateTimeField.YEAR]
-    val month = this[DateTimeField.MONTH_OF_YEAR]
+    val year = fields[DateTimeField.YEAR]
+    val month = fields[DateTimeField.MONTH_OF_YEAR]
 
     return if (year != null && month != null) {
         try {

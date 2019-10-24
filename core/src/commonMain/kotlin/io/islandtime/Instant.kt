@@ -175,11 +175,11 @@ fun Instant(milliseconds: LongMilliseconds): Instant {
     return Instant(milliseconds.asDuration())
 }
 
-fun String.toInstant() = toInstant(Iso8601.Extended.INSTANT_PARSER)
+fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
 
 fun String.toInstant(parser: DateTimeParser): Instant {
     val result = parser.parse(this)
-    return result.toInstant() ?: raiseParserFieldResolutionException("Instant", this)
+    return result.toInstant() ?: throwParserFieldResolutionException<Instant>(this)
 }
 
 internal fun DateTimeParseResult.toInstant(): Instant? {
@@ -187,7 +187,7 @@ internal fun DateTimeParseResult.toInstant(): Instant? {
     val offset = this.toUtcOffset()
 
     return if (dateTime != null && offset != null) {
-        dateTime.instantAt(offset)
+        dateTime.toInstantAt(offset)
     } else {
         null
     }

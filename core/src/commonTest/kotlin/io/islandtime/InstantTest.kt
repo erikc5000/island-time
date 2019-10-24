@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -50,7 +50,7 @@ class InstantTest {
     @Test
     fun `String_toInstant() throws an exception when parsing an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toInstant() }
-        assertFailsWith<DateTimeParseException> { "".toInstant(Iso8601.INSTANT_PARSER) }
+        assertFailsWith<DateTimeParseException> { "".toInstant(DateTimeParsers.Iso.INSTANT) }
     }
 
     @Test
@@ -85,12 +85,12 @@ class InstantTest {
     fun `String_toInstant() parses ISO-8601 calendar date time strings in basic format with explicit parser`() {
         assertEquals(
             Instant.fromUnixEpochMillisecond(0L),
-            "19700101 0000Z".toInstant(Iso8601.INSTANT_PARSER)
+            "19700101 0000Z".toInstant(DateTimeParsers.Iso.INSTANT)
         )
 
         assertEquals(
             Instant.fromUnixEpochMillisecond(1566256047821L),
-            "20190819T230727.821Z".toInstant(Iso8601.INSTANT_PARSER)
+            "20190819T230727.821Z".toInstant(DateTimeParsers.Iso.INSTANT)
         )
     }
 }

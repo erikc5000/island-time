@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import io.islandtime.zone.*
 import kotlin.test.*
 
@@ -619,7 +619,7 @@ class ZonedDateTimeTest {
                 UtcOffset((-4).hours),
                 nyZone
             ),
-            "20190505 1200-04[America/New_York]".toZonedDateTime(Iso8601.ZONED_DATE_TIME_PARSER)
+            "20190505 1200-04[America/New_York]".toZonedDateTime(DateTimeParsers.Iso.ZONED_DATE_TIME)
         )
     }
 }
