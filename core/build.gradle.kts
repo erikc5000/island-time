@@ -13,6 +13,7 @@ kotlin {
 
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                implementation(kotlin("reflect"))
                 implementation("co.touchlab:stately:0.9.3")
             }
         }

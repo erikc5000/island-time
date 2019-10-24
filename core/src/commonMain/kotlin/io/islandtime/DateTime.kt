@@ -4,8 +4,8 @@ import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.Iso8601
-import io.islandtime.parser.raiseParserFieldResolutionException
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.DateTimeInterval
 
 class DateTime(
@@ -470,9 +470,25 @@ class DateTime(
      */
     fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
+    /**
+     * Get the number of whole seconds relative to the Unix Epoch of 1970-01-01T00:00Z.
+     *
+     * @param offset the offset from UTC
+     * @see nanoOfSecondsSinceUnixEpoch
+     * @see unixEpochSecondAt
+     */
     fun secondsSinceUnixEpochAt(offset: UtcOffset): LongSeconds {
         return date.daysSinceUnixEpoch + time.secondsSinceStartOfDay - offset.totalSeconds
     }
+
+    /**
+     * Get the number of additional nanoseconds that should be applied on top of the number of seconds since the Unix
+     * Epoch returned by [secondsSinceUnixEpochAt].
+     * @see secondsSinceUnixEpochAt
+     * @see unixEpochNanoOfSecond
+     */
+    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
+        get() = nanosecond.nanoseconds
 
     fun millisecondsSinceUnixEpochAt(offset: UtcOffset): LongMilliseconds {
         return date.daysSinceUnixEpoch +
@@ -481,10 +497,25 @@ class DateTime(
             offset.totalSeconds
     }
 
+    /**
+     * Get the second of the Unix Epoch.
+     *
+     * @param offset the offset from UTC
+     * @see nanoOfSecondsSinceUnixEpoch
+     * @see unixEpochSecondAt
+     */
     fun unixEpochSecondAt(offset: UtcOffset): Long = secondsSinceUnixEpochAt(offset).value
+
+    /**
+     * Get the nanosecond of the second of the Unix Epoch.
+     * @see nanoOfSecondsSinceUnixEpoch
+     * @see unixEpochSecondAt
+     */
+    val unixEpochNanoOfSecond: Int get() = nanosecond
+
     fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
-    fun instantAt(offset: UtcOffset): Instant {
+    fun toInstantAt(offset: UtcOffset): Instant {
         return Instant.fromUnixEpochSecond(unixEpochSecondAt(offset), nanosecond)
     }
 
@@ -564,14 +595,14 @@ fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
  * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or
  * "2019-08-22 18:00:30.123456789"
  */
-fun String.toDateTime() = toDateTime(Iso8601.Extended.CALENDAR_DATE_TIME_PARSER)
+fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.CALENDAR_DATE_TIME)
 
 /**
  * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the necessary fields
  */
 fun String.toDateTime(parser: DateTimeParser): DateTime {
     val result = parser.parse(this)
-    return result.toDateTime() ?: raiseParserFieldResolutionException("DateTime", this)
+    return result.toDateTime() ?: throwParserFieldResolutionException<DateTime>(this)
 }
 
 internal fun DateTimeParseResult.toDateTime(): DateTime? {

@@ -63,15 +63,15 @@ inline class Year(val value: Int) : Comparable<Year> {
     }
 }
 
-fun String.toYear() = toYear(Iso8601.YEAR_PARSER)
+fun String.toYear() = toYear(DateTimeParsers.Iso.YEAR)
 
 fun String.toYear(parser: DateTimeParser): Year {
     val result = parser.parse(this)
-    return result.toYear() ?: raiseParserFieldResolutionException("Year", this)
+    return result.toYear() ?: throwParserFieldResolutionException<Year>(this)
 }
 
 internal fun DateTimeParseResult.toYear(): Year? {
-    val value = this[DateTimeField.YEAR]
+    val value = fields[DateTimeField.YEAR]
 
     return if (value != null) {
         Year(checkValidYear(value))

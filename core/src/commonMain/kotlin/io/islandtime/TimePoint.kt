@@ -3,7 +3,10 @@ package io.islandtime
 import io.islandtime.measures.*
 
 /**
- * An object that can be placed exactly on a timeline
+ * An object that can be placed exactly in time.
+ *
+ * An implementor of this interface contains enough information to represent an instant in time. As such, any time
+ * point can be compared to another on the timeline and duration units can be added or subtracted.
  */
 interface TimePoint<T> {
     /**
@@ -12,7 +15,7 @@ interface TimePoint<T> {
     val secondsSinceUnixEpoch: LongSeconds
 
     /**
-     * The number of additional nanoseconds on top of the seconds since the Unix epoch
+     * The number of additional nanoseconds on top of [secondsSinceUnixEpoch]
      */
     val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
 
@@ -46,9 +49,9 @@ interface TimePoint<T> {
 
     /**
      * Time points can be compared to other time points based on timeline order, but aren't required to implement the
-     * [Comparable] interface since they don't necessarily have a natural order that's consistent with equals,
+     * [Comparable] interface since they don't necessarily have a natural order that's consistent with equals.
      */
-    operator fun <U> compareTo(other: TimePoint<U>): Int {
+    operator fun compareTo(other: TimePoint<*>): Int {
         val second = unixEpochSecond
         val otherSecond = other.unixEpochSecond
 
@@ -88,51 +91,6 @@ interface TimePoint<T> {
     operator fun minus(nanoseconds: LongNanoseconds): T
 
     companion object {
-        val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.unixEpochSecond }
-            .thenBy { it.unixEpochNanoOfSecond }
+        val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.unixEpochSecond }.thenBy { it.unixEpochNanoOfSecond }
     }
 }
-
-/**
- * A day-based measure of time
- */
-//interface DayBased<T> {
-//    val year: Int
-//    val month: Month
-//    val dayOfMonth: Int
-//
-//    operator fun compareTo(other: DayBased<T>): Int {
-//        val yearDiff = year - other.year
-//
-//        return if (yearDiff != 0) {
-//            yearDiff
-//        } else {
-//            val monthDiff = month.ordinal - other.month.ordinal
-//
-//            if (monthDiff != 0) {
-//                monthDiff
-//            } else {
-//                dayOfMonth - other.dayOfMonth
-//            }
-//        }
-//    }
-//
-//    operator fun plus(years: IntYears): T
-//    operator fun plus(years: LongYears): T
-//    operator fun plus(months: IntMonths): T
-//    operator fun plus(months: LongMonths): T
-//    operator fun plus(days: IntDays): T
-//    operator fun plus(days: LongDays): T
-//
-//    operator fun minus(years: IntYears): T
-//    operator fun minus(years: LongYears): T
-//    operator fun minus(months: IntMonths): T
-//    operator fun minus(months: LongMonths): T
-//    operator fun minus(days: IntDays): T
-//    operator fun minus(days: LongDays): T
-//
-////    val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
-////    val unixEpochDay: Long
-//}
-
-//internal inline val BaseDate.monthsSinceYear0 get() = year * 12 + month.ordinal

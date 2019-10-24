@@ -1,11 +1,14 @@
 package io.islandtime.ranges
 
-import io.islandtime.Date
+import io.islandtime.*
 import io.islandtime.MAX_DATE_STRING_LENGTH
 import io.islandtime.appendDate
 import io.islandtime.internal.MONTHS_IN_YEAR
 import io.islandtime.measures.*
 import io.islandtime.monthsSinceYear0
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.GroupedDateTimeParser
+import io.islandtime.parser.throwParserFieldResolutionException
 import kotlin.random.Random
 import kotlin.random.nextLong
 
@@ -95,6 +98,20 @@ class DateRange(
          * A range containing zero days
          */
         val EMPTY = DateRange(Date.fromUnixEpochDay(1L), Date.fromUnixEpochDay(0L))
+    }
+}
+
+fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
+
+fun String.toDateRange(parser: GroupedDateTimeParser): DateRange {
+    val results = parser.parse(this)
+    val start = results[0].toDate()
+    val end = results[1].toDate()
+
+    return if (start != null && end != null) {
+        start..end
+    } else {
+        throwParserFieldResolutionException<DateRange>(this)
     }
 }
 

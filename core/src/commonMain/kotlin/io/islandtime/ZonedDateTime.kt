@@ -3,8 +3,8 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.Iso8601
-import io.islandtime.parser.raiseParserFieldResolutionException
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.ZonedDateTimeInterval
 
 /**
@@ -47,7 +47,7 @@ class ZonedDateTime private constructor(
         get() = dateTime.secondsSinceUnixEpochAt(offset)
 
     override val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
-        get() = nanosecond.nanoseconds
+        get() = dateTime.nanoOfSecondsSinceUnixEpoch
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
@@ -492,24 +492,24 @@ fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
     }
 }
 
-fun String.toZonedDateTime() = toZonedDateTime(Iso8601.Extended.ZONED_DATE_TIME_PARSER)
+fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME)
 
 fun String.toZonedDateTime(parser: DateTimeParser): ZonedDateTime {
     val result = parser.parse(this)
-    return result.toZonedDateTime() ?: raiseParserFieldResolutionException("ZonedDateTime", this)
+    return result.toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTime>(this)
 }
 
 internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
-    val regionId = timeZoneRegion
+    val regionId = timeZoneId
 
     return if (dateTime != null && offset != null && regionId != null) {
         val zone = regionId.toTimeZone().validated()
 
         // Check if the offset is valid for the time zone as we understand it and if not, interpret it as an instant
         if (!zone.rules.isValidOffset(dateTime, offset)) {
-            dateTime.instantAt(offset).at(zone)
+            dateTime.toInstantAt(offset).at(zone)
         } else {
             ZonedDateTime.create(dateTime, offset, zone)
         }

@@ -1,9 +1,10 @@
-package io.islandtime.ranges
+package io.islandtime.ranges.internal
 
 import io.islandtime.measures.*
 import io.islandtime.measures.minusExact
 import io.islandtime.measures.minusWithOverflow
 import io.islandtime.measures.plusExact
+import io.islandtime.ranges.TimeInterval
 
 internal fun secondsBetween(
     startSeconds: LongSeconds,

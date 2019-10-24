@@ -59,7 +59,7 @@ dependencies {
 
 ## Initialization
 
-Prior to using Island Time, it must first be initialized with an approriate `TimeZoneRulesProvider`. If you fail to do that, you're likely to see a `TimeZoneRulesException` the first time you perform an operation that requires access to the time zone database (ie. `Date.now()`).
+Prior to using Island Time, it must first be initialized with an appropriate `TimeZoneRulesProvider`. If you fail to do that, you're likely to see a `TimeZoneRulesException` the first time you perform an operation that requires access to the time zone database (ie. `Date.now()`).
 
 On iOS and JVM, `PlatformDefault` should be used. Note that the need to explicitly initialize the platform default provider may be removed in the near future.
 
@@ -83,6 +83,7 @@ As Island Time draws heavily from the java.time library design, many of the clas
 | `LocalTime` | `Time` | A time of day in arbitrary region |
 | `LocalDateTime` | `DateTime` | A combined date and time of day in arbitrary region |
 | `Instant` | `Instant` | An instant in time, represented by the number of seconds/nanoseconds relative to the Unix epoch (1970-01-01T00:00Z) |
+| `OffsetTime` | `OffsetTime` | A time of day with UTC offset |
 | `OffsetDateTime` | `OffsetDateTime` | A date and time of day with fixed UTC offset |
 | `ZonedDateTime` | `ZonedDateTime` | A date and time of day in a particular time zone region |
 | `ZoneOffset` | `UtcOffset` | An offset from UTC |
@@ -110,7 +111,7 @@ val anotherDuration: Duration = 5.hours.asDuration() + 50.microseconds
 
 // Durations (and each unit measure) can be broken down into individual unit components
 duration.toComponents { hours, minutes, seconds, nanoseconds ->
-    ...
+    // ...
 }
 ```
 
@@ -148,11 +149,11 @@ val isoDuration = durationOf(5.hours + 4.seconds).toString()
 val offsetDateTime = "2001-08-09T12:45+04:00".toOffsetDateTime()
 
 // Built-in parsers are also available for basic and basic/extended formats
-val dateTime = "20000101 0909".toDateTime(Iso8601.Basic.DATE_TIME_PARSER)
+val dateTime = "20000101 0909".toDateTime(DateTimeParsers.Iso.Basic.DATE_TIME)
 
 // Custom parsers can also be defined, but must supply a combination of DateTimeFields that the type can interpret
 val customParser = dateTimeParser {
-    monthOfYear(2)
+    monthNumber(2)
     anyOf({ +'-' }, { +' ' })
     dayOfMonth(2)
     anyOf({ +'-' }, { +' ' })
@@ -185,6 +186,17 @@ val totalDays: IntDays = (today until today + 6.months).days
 val period: Period = (today..today + 1.months).asPeriod()
 ```
 
+### Open Time Intervals
+
+```kotlin
+val instantInterval = "2008-09-01T04:00Z/..".toInstantInterval()
+
+val isBounded = instantInterval.isBounded // false
+val hasUnboundedEnd = instantInterval.hasUnboundedEnd // true
+val duration = instantInterval.asDuration() // throws DateTimeException
+```
+
+
 ### Daylight Savings Changes
 
 ```kotlin
@@ -203,9 +215,43 @@ val plus30Mins = zonedDateTime + 1.hours
 val nextDay = zonedDateTime + 1.days // 2019-03-11T01:30-04:00[America/New_York] (1 day = 23 hours in this case)
 ```
 
+### Interop
+
+java.time / ThreeTenABP:
+```kotlin
+val javaLocalDate = Date(2019, OCTOBER, 24).toJavaLocalDate()
+val islandDate = LocalDate(2019, OCTOBER, 24).toIslandDate()
+```
+
+iOS:
+```kotlin
+val nsDate = Instant.now().toNSDate()
+val islandInstant = NSDate().toIslandInstant()
+```
+
 ## Limitations
 
-Currently, only the ISO calendar system is supported and the year range is limited to 1-9999. There's also no support for custom/localized date-time formats or week fields, so it's likely necessary to convert to a platform-specific type for presentation purposes -- addressing this is high on the priority list.
+Currently, only the ISO calendar system is supported and the year range is limited to 1-9999. There's also no support for custom/localized date-time formats or week fields, so it's likely necessary to convert to a platform-specific type for presentation purposes. Addressing the ability to customize at least non-localized formats is high on the priority list.
+
+## Differences from java.time
+
+Everything is very much in flux right now, but here are a few notable design differences.
+
+##### OffsetDateTime and ZoneDateTime don't implement `Comparable`
+In java.time, the decision was made to have these types implement `Comparable` so as to be [consistent with equals](https://blog.joda.org/2012/11/pitfalls-of-consistent-with-equals.html). The problem is that the "natural order" for these types isn't the same as the "timeline order", so using `<` or `>` to compare them is usually not what you want to do and can be a source of subtle bugs. To avoid this situation, we don't implement `Comparable`, but do offer a `compareTo()` operator -- a feature enabled by Kotlin. This allows both types to be compared based on timeline order when using `<` or `>`, but when using a sorted container for example, you must explicitly specify a `Comparator`, such as the predefined `NATURAL_ORDER`.
+
+##### More "extension-oriented"
+We've tried to take advantage of Kotlin features like extension functions to create a design that's modular and flexible without being quite as heavy on the OO abstractions. Some seemingly simple operations can be confusing when getting started with the java.time library -- like getting the next Sunday from a date.
+
+```kotlin
+val adjustedDate = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SUNDAY))
+```
+
+You need to know to use `with()` and that there are predefined implementations of `TemporalAdjuster` that you can statically import. This is only one example, but due to the layers of abstraction that have been inserted, sometimes IDE discoverability just isn't great. Improving on this and creating a more "Kotlin" API is one of our goals.
+
+##### DSL-based parsers (and in the future, formatters)
+
+Along the same lines, we opt for a DSL approach to specifying custom date-time formats since it offers improved IDE discoverability and better maintainability than the usual format strings, where different libraries give different meanings to each character and you're almost guaranteed a trip to the documentation website to write or decipher one. Should it be "YYYY" or "uuuu"? Or is it "yyyy"?
 
 ## Notes on kotlin.time
 
@@ -219,4 +265,4 @@ Currently, Kotlin's `WallClock` isn't available and doesn't offer time zone supp
 
 The goal of this project is not just to port the java.time library over to Kotlin Multiplatform, but to take full advantage of Kotlin language features to create a date-time DSL that feels natural to users of the language and encourages best practices where possible. To that end, any and all feedback would be much appreciated in helping to iron out the API.
 
-If you're interested in contributing or have ideas on areas that can be improved (there are definitely many right now), please feel free to initiate a dialog by opening design-related issues or submiting pull requests.
+If you're interested in contributing or have ideas on areas that can be improved (there are definitely many right now), please feel free to initiate a dialog by opening design-related issues or submitting pull requests.

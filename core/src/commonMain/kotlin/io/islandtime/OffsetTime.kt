@@ -3,8 +3,8 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.Iso8601
-import io.islandtime.parser.raiseParserFieldResolutionException
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.throwParserFieldResolutionException
 
 /**
  * A time of day combined with a specific UTC offset
@@ -162,11 +162,11 @@ class OffsetTime(
  */
 infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 
-fun String.toOffsetTime() = toOffsetTime(Iso8601.Extended.OFFSET_TIME_PARSER)
+fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
 
 fun String.toOffsetTime(parser: DateTimeParser): OffsetTime {
     val result = parser.parse(this)
-    return result.toOffsetTime() ?: raiseParserFieldResolutionException("OffsetTime", this)
+    return result.toOffsetTime() ?: throwParserFieldResolutionException<OffsetTime>(this)
 }
 
 internal fun DateTimeParseResult.toOffsetTime(): OffsetTime? {

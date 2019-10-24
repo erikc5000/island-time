@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.test.*
 
 class DateTest {
@@ -539,9 +539,9 @@ class DateTest {
 
     @Test
     fun `String_toDate() parses valid strings with explicit parser`() {
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate(Iso8601.DATE_PARSER))
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "20000229".toDate(Iso8601.DATE_PARSER))
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-060".toDate(Iso8601.DATE_PARSER))
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000060".toDate(Iso8601.DATE_PARSER))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate(DateTimeParsers.Iso.DATE))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "20000229".toDate(DateTimeParsers.Iso.DATE))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-060".toDate(DateTimeParsers.Iso.DATE))
+        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000060".toDate(DateTimeParsers.Iso.DATE))
     }
 }

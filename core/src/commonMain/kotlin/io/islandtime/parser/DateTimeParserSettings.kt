@@ -1,5 +1,8 @@
 package io.islandtime.parser
 
+/**
+ * Settings that control the parsing behavior during a particular operation.
+ */
 data class DateTimeParserSettings(
     val chars: Chars = Chars.DEFAULT,
     val numberConverter: NumberConverter = NumberConverter.Default

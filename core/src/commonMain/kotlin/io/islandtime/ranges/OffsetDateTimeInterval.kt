@@ -2,6 +2,11 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.measures.*
+import io.islandtime.parser.*
+import io.islandtime.parser.expectingGroupCount
+import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 
 /**
@@ -80,6 +85,30 @@ class OffsetDateTimeInterval(
 
             return OffsetDateTimeInterval(start, endExclusive)
         }
+    }
+}
+
+fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
+
+fun String.toOffsetDateTimeInterval(parser: GroupedDateTimeParser): OffsetDateTimeInterval {
+    val results = parser.parse(this).expectingGroupCount<OffsetDateTimeInterval>(2, this)
+
+    val start = when {
+        results[0].isEmpty() -> null
+        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.start
+        else -> results[0].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+    }
+
+    val end = when {
+        results[1].isEmpty() -> null
+        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.endExclusive
+        else -> results[1].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+    }
+
+    return when {
+        start != null && end != null -> start until end
+        start == null && end == null -> OffsetDateTimeInterval.EMPTY
+        else -> throw DateTimeParseException("Intervals with unknown start or end are not supported")
     }
 }
 

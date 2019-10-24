@@ -3,9 +3,15 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.MAX_DATE_TIME_STRING_LENGTH
 import io.islandtime.measures.*
+import io.islandtime.parser.*
+import io.islandtime.ranges.internal.*
+import kotlin.random.Random
 
 /**
- * An interval between two date-times, assumed to be in the same time zone
+ * An interval between two arbitrary date-times.
+ *
+ * As no UTC offset or time zone is associated with either date-time, it's up to the application to interpret the
+ * meaning
  */
 class DateTimeInterval(
     override val start: DateTime = UNBOUNDED.start,
@@ -44,7 +50,7 @@ class DateTimeInterval(
     }
 
     /**
-     * Get the period between the date-times in the interval
+     * Get the period between the date-times in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asPeriod(): Period {
@@ -81,7 +87,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of whole days in the interval
+     * Get the number of whole days in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val days: LongDays
@@ -92,7 +98,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of whole hours in the interval
+     * Get the number of whole hours in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val hours: LongHours
@@ -103,7 +109,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of whole minutes in the interval
+     * Get the number of whole minutes in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val minutes: LongMinutes
@@ -114,7 +120,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of whole seconds in the interval
+     * Get the number of whole seconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val seconds: LongSeconds
@@ -125,7 +131,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of whole milliseconds in the interval
+     * Get the number of whole milliseconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val milliseconds: LongMilliseconds
@@ -136,7 +142,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of whole microseconds in the interval
+     * Get the number of whole microseconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val microseconds: LongMicroseconds
@@ -147,7 +153,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Get the number of nanoseconds in the interval
+     * Get the number of nanoseconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val nanoseconds: LongNanoseconds
@@ -159,7 +165,7 @@ class DateTimeInterval(
 
     companion object {
         /**
-         * An empty interval
+         * An empty interval.
          */
         val EMPTY = DateTimeInterval(
             DateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO),
@@ -167,7 +173,7 @@ class DateTimeInterval(
         )
 
         /**
-         * An unbounded (ie. infinite) interval
+         * An unbounded (ie. infinite) interval.
          */
         val UNBOUNDED = DateTimeInterval(DateTime.MIN, DateTime.MAX)
 
@@ -183,8 +189,57 @@ class DateTimeInterval(
     }
 }
 
+fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
+
+fun String.toDateTimeInterval(parser: GroupedDateTimeParser): DateTimeInterval {
+    val results = parser.parse(this).expectingGroupCount<DateTimeInterval>(2, this)
+
+    val start = when {
+        results[0].isEmpty() -> null
+        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.start
+        else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
+    }
+
+    val end = when {
+        results[1].isEmpty() -> null
+        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.endExclusive
+        else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
+    }
+
+    return when {
+        start != null && end != null -> start until end
+        start == null && end == null -> DateTimeInterval.EMPTY
+        else -> throw DateTimeParseException("Intervals with unknown start or end are not supported")
+    }
+}
+
 /**
- * Get the [Period] between two date-times, assuming they're in the same time zone
+ * Return a random date-time within the interval using the default random number generator
+ */
+fun DateTimeInterval.random(): DateTime = random(Random)
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator
+ */
+fun DateTimeInterval.random(random: Random): DateTime {
+    try {
+        return DateTime.fromUnixEpochSecond(
+            random.nextLong(start.unixEpochSecondAt(UtcOffset.ZERO), endExclusive.unixEpochSecondAt(UtcOffset.ZERO)),
+            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
+            UtcOffset.ZERO
+        )
+    } catch (e: IllegalArgumentException) {
+        throw NoSuchElementException(e.message)
+    }
+}
+
+/**
+ * Get an interval containing all of the date-times up to, but not including the nanosecond represented by [to].
+ */
+infix fun DateTime.until(to: DateTime) = DateTimeInterval(this, to)
+
+/**
+ * Get the [Period] between two date-times, assuming they're in the same time zone.
  */
 fun periodBetween(start: DateTime, endExclusive: DateTime): Period {
     return periodBetween(start.date, adjustedEndDate(start, endExclusive))
@@ -212,7 +267,7 @@ fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
 }
 
 /**
- * Get the [Duration] between two date-times, assuming they're in the same time zone. In general, it's more appropriate
+ * Get the [Duration] between two date-times, assuming they have the same UTC offset. In general, it's more appropriate
  * to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken into account
  * when working with [DateTime] directly.
  */
@@ -220,12 +275,12 @@ fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) minusExact
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
 
-    val nanoDiff = endExclusive.nanosecond.nanoseconds minusWithOverflow start.nanosecond.nanoseconds
+    val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
     return durationOf(secondDiff, nanoDiff)
 }
 
 /**
- * Get the number of whole hours between two date-times, assuming they're in the same time zone. In general, it's more
+ * Get the number of whole hours between two date-times, assuming they have the same UTC offset. In general, it's more
  * appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken
  * into account when working with [DateTime] directly.
  */
@@ -234,7 +289,7 @@ fun hoursBetween(start: DateTime, endExclusive: DateTime): LongHours {
 }
 
 /**
- * Get the number of whole minutes between two date-times, assuming they're in the same time zone. In general, it's more
+ * Get the number of whole minutes between two date-times, assuming they have the same UTC offset. In general, it's more
  * appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken
  * into account when working with [DateTime] directly.
  */
@@ -243,62 +298,66 @@ fun minutesBetween(start: DateTime, endExclusive: DateTime): LongMinutes {
 }
 
 /**
- * Get the number of whole seconds between two date-times, assuming they're in the same time zone. In general, it's more
+ * Get the number of whole seconds between two date-times, assuming they have the same UTC offset. In general, it's more
  * appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken
  * into account when working with [DateTime] directly.
+ *
  * @throws ArithmeticException if the result overflows
  */
 fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
     return secondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanosecond.nanoseconds,
+        start.nanoOfSecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanosecond.nanoseconds
+        endExclusive.nanoOfSecondsSinceUnixEpoch
     )
 }
 
 /**
- * Get the number of whole milliseconds between two date-times, assuming they're in the same time zone. In general, it's
+ * Get the number of whole milliseconds between two date-times, assuming they have the same UTC offset. In general, it's
  * more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be
  * taken into account when working with [DateTime] directly.
+ *
  * @throws ArithmeticException if the result overflows
  */
 fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMilliseconds {
     return millisecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanosecond.nanoseconds,
+        start.nanoOfSecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanosecond.nanoseconds
+        endExclusive.nanoOfSecondsSinceUnixEpoch
     )
 }
 
 /**
- * Get the number of whole microseconds between two date-times, assuming they're in the same time zone. In general, it's
+ * Get the number of whole microseconds between two date-times, assuming they have the same UTC offset. In general, it's
  * more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be
  * taken into account when working with [DateTime] directly.
+ *
  *  @throws ArithmeticException if the result overflows
  */
 fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicroseconds {
     return microsecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanosecond.nanoseconds,
+        start.nanoOfSecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanosecond.nanoseconds
+        endExclusive.nanoOfSecondsSinceUnixEpoch
     )
 }
 
 /**
- * Get the number of nanoseconds between two date-times, assuming they're in the same time zone. In general, it's more
+ * Get the number of nanoseconds between two date-times, assuming they have the same UTC offset. In general, it's more
  * appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken
  * into account when working with [DateTime] directly.
+ *
  * @throws ArithmeticException if the result overflows
  */
 fun nanosecondsBetween(start: DateTime, endExclusive: DateTime): LongNanoseconds {
     return nanosecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanosecond.nanoseconds,
+        start.nanoOfSecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanosecond.nanoseconds
+        endExclusive.nanoOfSecondsSinceUnixEpoch
     )
 }
 

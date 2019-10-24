@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.Iso8601
+import io.islandtime.parser.DateTimeParsers
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -141,11 +141,11 @@ class OffsetTimeTest {
     fun `String_toOffsetTime() parses valid ISO-8601 basic time and offset strings with explicit parser`() {
         assertEquals(
             Time(23, 1, 1, 1) at UtcOffset(1.hours),
-            "230101.000000001+01".toOffsetTime(Iso8601.Basic.OFFSET_TIME_PARSER)
+            "230101.000000001+01".toOffsetTime(DateTimeParsers.Iso.Basic.OFFSET_TIME)
         )
         assertEquals(
             Time(0, 0) at UtcOffset.ZERO,
-            "00Z".toOffsetTime(Iso8601.Basic.OFFSET_TIME_PARSER)
+            "00Z".toOffsetTime(DateTimeParsers.Iso.Basic.OFFSET_TIME)
         )
     }
 

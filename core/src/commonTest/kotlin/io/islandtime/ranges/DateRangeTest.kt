@@ -51,6 +51,14 @@ class DateRangeTest {
     }
 
     @Test
+    fun `toString() returns an ISO-8601 time interval representation`() {
+        assertEquals(
+            "1969-12-03/1970-02-03",
+            (Date(1969, 12, 3)..Date(1970, 2, 3)).toString()
+        )
+    }
+
+    @Test
     fun `random() returns a date within range`() {
         val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 25)
         val randomDate = range.random()
