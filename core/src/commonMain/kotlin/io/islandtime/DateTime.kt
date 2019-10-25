@@ -163,7 +163,7 @@ class DateTime(
         return if (hours.value == 0L) {
             this
         } else {
-            var daysToAdd = hours.inWholeDays
+            var daysToAdd = hours.inDays
             val wrappedHours = (hours % HOURS_PER_DAY).toInt()
             var newHour = time.hour + wrappedHours.value
             daysToAdd += (newHour floorDiv HOURS_PER_DAY).days
@@ -181,7 +181,7 @@ class DateTime(
         return if (minutes.value == 0L) {
             this
         } else {
-            var daysToAdd = minutes.inWholeDays
+            var daysToAdd = minutes.inDays
             val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR + minute
             val wrappedMinutes = (minutes % MINUTES_PER_DAY).toInt()
             var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes.value
@@ -208,7 +208,7 @@ class DateTime(
         return if (seconds.value == 0L) {
             this
         } else {
-            var daysToAdd = seconds.inWholeDays
+            var daysToAdd = seconds.inDays
             val currentSecondOfDay = time.secondOfDay
             val wrappedSeconds = (seconds % SECONDS_PER_DAY).toInt()
             var newSecondOfDay = currentSecondOfDay + wrappedSeconds.value
@@ -233,7 +233,7 @@ class DateTime(
         return if (milliseconds.value == 0L) {
             this
         } else {
-            plus(milliseconds.inWholeDays, (milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
+            plus(milliseconds.inDays, (milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
         }
     }
 
@@ -243,7 +243,7 @@ class DateTime(
         return if (microseconds.value == 0L) {
             this
         } else {
-            plus(microseconds.inWholeDays, (microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
+            plus(microseconds.inDays, (microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
         }
     }
 
@@ -253,7 +253,7 @@ class DateTime(
         return if (nanoseconds.value == 0L) {
             this
         } else {
-            plus(nanoseconds.inWholeDays, nanoseconds % NANOSECONDS_PER_DAY)
+            plus(nanoseconds.inDays, nanoseconds % NANOSECONDS_PER_DAY)
         }
     }
 
@@ -493,7 +493,7 @@ class DateTime(
     fun millisecondsSinceUnixEpochAt(offset: UtcOffset): LongMilliseconds {
         return date.daysSinceUnixEpoch +
             time.secondsSinceStartOfDay +
-            time.nanosecondsSinceStartOfDay.inWholeMilliseconds -
+            time.nanosecondsSinceStartOfDay.inMilliseconds -
             offset.totalSeconds
     }
 

@@ -61,9 +61,9 @@ class DateRange(
 
     /**
      * Get the number of years in a range of dates. A year is considered to have passed if twelve full months have
-     * passed between the start date and end date, according to the definition of 'month' in [months].
+     * passed between the start date and end date, according to the definition of 'month' in [lengthInMonths].
      */
-    val years
+    val lengthInYears
         get() = if (isEmpty()) {
             0.years
         } else {
@@ -74,7 +74,7 @@ class DateRange(
      * Get the number of months in a range of dates. A month is considered to have passed if the day of the end month is
      * greater than or equal to the day of the start month minus one (as a range is inclusive).
      */
-    val months
+    val lengthInMonths
         get() = if (isEmpty()) {
             0.months
         } else {
@@ -85,7 +85,7 @@ class DateRange(
      * Get the number of days in a range of dates. As a range is inclusive, if the start and end date are the same, the
      * result will be one day.
      */
-    val days
+    val lengthInDays
         get() = if (isEmpty()) {
             0L.days
         } else {
@@ -160,7 +160,7 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
 }
 
 fun yearsBetween(start: Date, endExclusive: Date): IntYears {
-    return monthsBetween(start, endExclusive).inWholeYears
+    return monthsBetween(start, endExclusive).inYears
 }
 
 fun monthsBetween(start: Date, endExclusive: Date): IntMonths {

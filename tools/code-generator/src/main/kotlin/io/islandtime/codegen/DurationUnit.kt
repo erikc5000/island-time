@@ -38,7 +38,7 @@ enum class DurationUnit(
     val valueName: String get() = "value"
     val inUnitPropertyName: String get() = "in$pluralName"
     val inUnitExactMethodName: String get() = "${inUnitPropertyName}Exact"
-    val inWholeUnitPropertyName: String get() = "inWhole$pluralName"
+    val inWholeUnitPropertyName: String get() = "in$pluralName"
 
     open val isoPeriodPrefix: String = "PT"
     open val isoPeriodIsFractional: Boolean = false

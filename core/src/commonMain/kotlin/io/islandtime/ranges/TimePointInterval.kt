@@ -59,7 +59,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of 24-hour days in a range of time points
      */
-    open val days: LongDays
+    open val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
             isBounded -> daysBetween(_start, _endExclusive)
@@ -69,7 +69,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of hours in a range of time points
      */
-    val hours: LongHours
+    val lengthInHours: LongHours
         get() = when {
             isEmpty() -> 0L.hours
             isBounded -> hoursBetween(_start, _endExclusive)
@@ -79,7 +79,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of hours in a range of time points
      */
-    val minutes: LongMinutes
+    val lengthInMinutes: LongMinutes
         get() = when {
             isEmpty() -> 0L.minutes
             isBounded -> minutesBetween(_start, _endExclusive)
@@ -89,7 +89,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of seconds in a range of time points
      */
-    val seconds: LongSeconds
+    val lengthInSeconds: LongSeconds
         get() = when {
             isEmpty() -> 0L.seconds
             isBounded -> secondsBetween(_start, _endExclusive)
@@ -99,7 +99,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of milliseconds in a range of time points
      */
-    val milliseconds: LongMilliseconds
+    val lengthInMilliseconds: LongMilliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
             isBounded -> millisecondsBetween(_start, _endExclusive)
@@ -109,7 +109,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of microseconds in a range of time points
      */
-    val microseconds: LongMicroseconds
+    val lengthInMicroseconds: LongMicroseconds
         get() = when {
             isEmpty() -> 0L.microseconds
             isBounded -> microsecondsBetween(_start, _endExclusive)
@@ -119,7 +119,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * Get the number of nanoseconds in a range of time points
      */
-    val nanoseconds: LongNanoseconds
+    val lengthInNanoseconds: LongNanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
             isBounded -> nanosecondsBetween(_start, _endExclusive)
@@ -140,21 +140,21 @@ fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>):
  * Get the number of 24-hour days between two time points.
  */
 fun <T1, T2> daysBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongDays {
-    return secondsBetween(start, endExclusive).inWholeDays
+    return secondsBetween(start, endExclusive).inDays
 }
 
 /**
  * Get the number of whole hours between two time points.
  */
 fun <T1, T2> hoursBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongHours {
-    return secondsBetween(start, endExclusive).inWholeHours
+    return secondsBetween(start, endExclusive).inHours
 }
 
 /**
  * Get the number of whole minutes between two time points.
  */
 fun <T1, T2> minutesBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongMinutes {
-    return secondsBetween(start, endExclusive).inWholeMinutes
+    return secondsBetween(start, endExclusive).inMinutes
 }
 
 /**

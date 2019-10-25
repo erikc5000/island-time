@@ -36,9 +36,9 @@ class OffsetDateTimeInterval(
 
     /**
      * Get the number of years the range. A year is considered to have passed if twelve full months have passed between
-     * the start date and end date, according to the definition of 'month' in [months].
+     * the start date and end date, according to the definition of 'month' in [lengthInMonths].
      */
-    val years
+    val lengthInYears
         get() = when {
             isEmpty() -> 0.years
             isBounded -> yearsBetween(start, endExclusive)
@@ -49,7 +49,7 @@ class OffsetDateTimeInterval(
      * Get the number of months in the range. A month is considered to have passed if the day of the end month is
      * greater than or equal to the day of the start month minus one (as a range is inclusive).
      */
-    val months
+    val lengthInMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded -> monthsBetween(start, endExclusive)

@@ -28,10 +28,10 @@ import kotlin.math.absoluteValue
 inline class IntMinutes(
   val value: Int
 ) : Comparable<IntMinutes> {
-  val inWholeDays: IntDays
+  val inDays: IntDays
     get() = (this.value / MINUTES_PER_DAY).days
 
-  val inWholeHours: IntHours
+  val inHours: IntHours
     get() = (this.value / MINUTES_PER_HOUR).hours
 
   val inSeconds: IntSeconds
@@ -149,14 +149,14 @@ inline class IntMinutes(
     hours: IntHours,
     minutes: IntMinutes
   ) -> T): T {
-    val days = this.inWholeDays
-    val hours = (this - days).inWholeHours
+    val days = this.inDays
+    val hours = (this - days).inHours
     val minutes = (this - days - hours)
     return action(days, hours, minutes)
   }
 
   inline fun <T> toComponents(action: (hours: IntHours, minutes: IntMinutes) -> T): T {
-    val hours = this.inWholeHours
+    val hours = this.inHours
     val minutes = (this - hours)
     return action(hours, minutes)
   }
@@ -174,10 +174,10 @@ inline class IntMinutes(
 inline class LongMinutes(
   val value: Long
 ) : Comparable<LongMinutes> {
-  val inWholeDays: LongDays
+  val inDays: LongDays
     get() = (this.value / MINUTES_PER_DAY).days
 
-  val inWholeHours: LongHours
+  val inHours: LongHours
     get() = (this.value / MINUTES_PER_HOUR).hours
 
   val inSeconds: LongSeconds
@@ -299,14 +299,14 @@ inline class LongMinutes(
     hours: IntHours,
     minutes: IntMinutes
   ) -> T): T {
-    val days = this.inWholeDays
-    val hours = (this - days).toInt().inWholeHours
+    val days = this.inDays
+    val hours = (this - days).toInt().inHours
     val minutes = (this - days - hours).toInt()
     return action(days, hours, minutes)
   }
 
   inline fun <T> toComponents(action: (hours: LongHours, minutes: IntMinutes) -> T): T {
-    val hours = this.inWholeHours
+    val hours = this.inHours
     val minutes = (this - hours).toInt()
     return action(hours, minutes)
   }

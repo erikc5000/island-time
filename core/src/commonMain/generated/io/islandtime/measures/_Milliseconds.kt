@@ -29,16 +29,16 @@ import kotlin.math.absoluteValue
 inline class IntMilliseconds(
   val value: Int
 ) : Comparable<IntMilliseconds> {
-  val inWholeDays: IntDays
+  val inDays: IntDays
     get() = (this.value / MILLISECONDS_PER_DAY).days
 
-  val inWholeHours: IntHours
+  val inHours: IntHours
     get() = (this.value / MILLISECONDS_PER_HOUR).hours
 
-  val inWholeMinutes: IntMinutes
+  val inMinutes: IntMinutes
     get() = (this.value / MILLISECONDS_PER_MINUTE).minutes
 
-  val inWholeSeconds: IntSeconds
+  val inSeconds: IntSeconds
     get() = (this.value / MILLISECONDS_PER_SECOND).seconds
 
   val inMicroseconds: LongMicroseconds
@@ -160,10 +160,10 @@ inline class IntMilliseconds(
     seconds: IntSeconds,
     milliseconds: IntMilliseconds
   ) -> T): T {
-    val days = this.inWholeDays
-    val hours = (this - days).toInt().inWholeHours
-    val minutes = (this - days - hours).toInt().inWholeMinutes
-    val seconds = (this - days - hours - minutes).toInt().inWholeSeconds
+    val days = this.inDays
+    val hours = (this - days).toInt().inHours
+    val minutes = (this - days - hours).toInt().inMinutes
+    val seconds = (this - days - hours - minutes).toInt().inSeconds
     val milliseconds = (this - days - hours - minutes - seconds).toInt()
     return action(days, hours, minutes, seconds, milliseconds)
   }
@@ -174,9 +174,9 @@ inline class IntMilliseconds(
     seconds: IntSeconds,
     milliseconds: IntMilliseconds
   ) -> T): T {
-    val hours = this.inWholeHours
-    val minutes = (this - hours).toInt().inWholeMinutes
-    val seconds = (this - hours - minutes).toInt().inWholeSeconds
+    val hours = this.inHours
+    val minutes = (this - hours).toInt().inMinutes
+    val seconds = (this - hours - minutes).toInt().inSeconds
     val milliseconds = (this - hours - minutes - seconds).toInt()
     return action(hours, minutes, seconds, milliseconds)
   }
@@ -186,15 +186,15 @@ inline class IntMilliseconds(
     seconds: IntSeconds,
     milliseconds: IntMilliseconds
   ) -> T): T {
-    val minutes = this.inWholeMinutes
-    val seconds = (this - minutes).toInt().inWholeSeconds
+    val minutes = this.inMinutes
+    val seconds = (this - minutes).toInt().inSeconds
     val milliseconds = (this - minutes - seconds).toInt()
     return action(minutes, seconds, milliseconds)
   }
 
   inline fun <T> toComponents(action: (seconds: IntSeconds, milliseconds: IntMilliseconds) -> T):
       T {
-    val seconds = this.inWholeSeconds
+    val seconds = this.inSeconds
     val milliseconds = (this - seconds).toInt()
     return action(seconds, milliseconds)
   }
@@ -212,16 +212,16 @@ inline class IntMilliseconds(
 inline class LongMilliseconds(
   val value: Long
 ) : Comparable<LongMilliseconds> {
-  val inWholeDays: LongDays
+  val inDays: LongDays
     get() = (this.value / MILLISECONDS_PER_DAY).days
 
-  val inWholeHours: LongHours
+  val inHours: LongHours
     get() = (this.value / MILLISECONDS_PER_HOUR).hours
 
-  val inWholeMinutes: LongMinutes
+  val inMinutes: LongMinutes
     get() = (this.value / MILLISECONDS_PER_MINUTE).minutes
 
-  val inWholeSeconds: LongSeconds
+  val inSeconds: LongSeconds
     get() = (this.value / MILLISECONDS_PER_SECOND).seconds
 
   val inMicroseconds: LongMicroseconds
@@ -345,10 +345,10 @@ inline class LongMilliseconds(
     seconds: IntSeconds,
     milliseconds: IntMilliseconds
   ) -> T): T {
-    val days = this.inWholeDays
-    val hours = (this - days).toInt().inWholeHours
-    val minutes = (this - days - hours).toInt().inWholeMinutes
-    val seconds = (this - days - hours - minutes).toInt().inWholeSeconds
+    val days = this.inDays
+    val hours = (this - days).toInt().inHours
+    val minutes = (this - days - hours).toInt().inMinutes
+    val seconds = (this - days - hours - minutes).toInt().inSeconds
     val milliseconds = (this - days - hours - minutes - seconds).toInt()
     return action(days, hours, minutes, seconds, milliseconds)
   }
@@ -359,9 +359,9 @@ inline class LongMilliseconds(
     seconds: IntSeconds,
     milliseconds: IntMilliseconds
   ) -> T): T {
-    val hours = this.inWholeHours
-    val minutes = (this - hours).toInt().inWholeMinutes
-    val seconds = (this - hours - minutes).toInt().inWholeSeconds
+    val hours = this.inHours
+    val minutes = (this - hours).toInt().inMinutes
+    val seconds = (this - hours - minutes).toInt().inSeconds
     val milliseconds = (this - hours - minutes - seconds).toInt()
     return action(hours, minutes, seconds, milliseconds)
   }
@@ -371,15 +371,15 @@ inline class LongMilliseconds(
     seconds: IntSeconds,
     milliseconds: IntMilliseconds
   ) -> T): T {
-    val minutes = this.inWholeMinutes
-    val seconds = (this - minutes).toInt().inWholeSeconds
+    val minutes = this.inMinutes
+    val seconds = (this - minutes).toInt().inSeconds
     val milliseconds = (this - minutes - seconds).toInt()
     return action(minutes, seconds, milliseconds)
   }
 
   inline fun <T> toComponents(action: (seconds: LongSeconds, milliseconds: IntMilliseconds) -> T):
       T {
-    val seconds = this.inWholeSeconds
+    val seconds = this.inSeconds
     val milliseconds = (this - seconds).toInt()
     return action(seconds, milliseconds)
   }
