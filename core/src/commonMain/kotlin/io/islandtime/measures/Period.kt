@@ -94,7 +94,7 @@ class Period private constructor(
      */
     fun normalized(): Period {
         val monthTotal = totalMonths
-        val newYears = monthTotal.inWholeYears.toIntExact()
+        val newYears = monthTotal.inYears.toIntExact()
         val newMonths = (monthTotal % MONTHS_IN_YEAR).toInt()
 
         return if (newYears == years && newMonths == months) {

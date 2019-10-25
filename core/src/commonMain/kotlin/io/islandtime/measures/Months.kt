@@ -21,7 +21,7 @@ inline class IntMonths internal constructor(val value: Int) : Comparable<IntMont
     /**
      * The number of whole years that fit within this span of months
      */
-    val inWholeYears get() = IntYears(value / MONTHS_IN_YEAR)
+    val inYears get() = IntYears(value / MONTHS_IN_YEAR)
 
     fun toLong() = LongMonths(value.toLong())
 
@@ -83,7 +83,7 @@ inline class LongMonths internal constructor(val value: Long) : Comparable<LongM
     /**
      * The number of whole years that fit within this span of months
      */
-    val inWholeYears get() = LongYears(value / MONTHS_IN_YEAR)
+    val inYears get() = LongYears(value / MONTHS_IN_YEAR)
 
     operator fun unaryMinus() = LongMonths(-value)
 

@@ -65,7 +65,7 @@ class DateTimeInterval(
      * Get the number of whole years in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val years
+    val lengthInYears
         get() = when {
             isEmpty() -> 0.years
             isBounded -> yearsBetween(start, endExclusive)
@@ -79,7 +79,7 @@ class DateTimeInterval(
      * month and the time of day of the end date-time is greater than or equal to that of the start date-time.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val months
+    val lengthInMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded -> monthsBetween(start, endExclusive)
@@ -90,7 +90,7 @@ class DateTimeInterval(
      * Get the number of whole days in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val days: LongDays
+    val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
             isBounded -> daysBetween(start, endExclusive)
@@ -101,7 +101,7 @@ class DateTimeInterval(
      * Get the number of whole hours in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val hours: LongHours
+    val lengthInHours: LongHours
         get() = when {
             isEmpty() -> 0L.hours
             isBounded -> hoursBetween(start, endExclusive)
@@ -112,7 +112,7 @@ class DateTimeInterval(
      * Get the number of whole minutes in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val minutes: LongMinutes
+    val lengthInMinutes: LongMinutes
         get() = when {
             isEmpty() -> 0L.minutes
             isBounded -> minutesBetween(start, endExclusive)
@@ -123,7 +123,7 @@ class DateTimeInterval(
      * Get the number of whole seconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val seconds: LongSeconds
+    val lengthInSeconds: LongSeconds
         get() = when {
             isEmpty() -> 0L.seconds
             isBounded -> secondsBetween(start, endExclusive)
@@ -134,7 +134,7 @@ class DateTimeInterval(
      * Get the number of whole milliseconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val milliseconds: LongMilliseconds
+    val lengthInMilliseconds: LongMilliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
             isBounded -> millisecondsBetween(start, endExclusive)
@@ -145,7 +145,7 @@ class DateTimeInterval(
      * Get the number of whole microseconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val microseconds: LongMicroseconds
+    val lengthInMicroseconds: LongMicroseconds
         get() = when {
             isEmpty() -> 0L.microseconds
             isBounded -> microsecondsBetween(start, endExclusive)
@@ -156,7 +156,7 @@ class DateTimeInterval(
      * Get the number of nanoseconds in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val nanoseconds: LongNanoseconds
+    val lengthInNanoseconds: LongNanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
             isBounded -> nanosecondsBetween(start, endExclusive)
@@ -263,7 +263,7 @@ fun monthsBetween(start: DateTime, endExclusive: DateTime): IntMonths {
  * Get the number whole days between two date-times, assuming they're in the same time zone.
  */
 fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
-    return secondsBetween(start, endExclusive).inWholeDays
+    return secondsBetween(start, endExclusive).inDays
 }
 
 /**
@@ -285,7 +285,7 @@ fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
  * into account when working with [DateTime] directly.
  */
 fun hoursBetween(start: DateTime, endExclusive: DateTime): LongHours {
-    return secondsBetween(start, endExclusive).inWholeHours
+    return secondsBetween(start, endExclusive).inHours
 }
 
 /**
@@ -294,7 +294,7 @@ fun hoursBetween(start: DateTime, endExclusive: DateTime): LongHours {
  * into account when working with [DateTime] directly.
  */
 fun minutesBetween(start: DateTime, endExclusive: DateTime): LongMinutes {
-    return secondsBetween(start, endExclusive).inWholeMinutes
+    return secondsBetween(start, endExclusive).inMinutes
 }
 
 /**

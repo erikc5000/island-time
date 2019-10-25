@@ -66,49 +66,49 @@ class DateRangeTest {
     }
 
     @Test
-    fun `days property returns 0 when range is empty`() {
-        assertEquals(0L.days, DateRange.EMPTY.days)
+    fun `lengthInDays property returns 0 when range is empty`() {
+        assertEquals(0L.days, DateRange.EMPTY.lengthInDays)
     }
 
     @Test
-    fun `days property returns 1 when the start and end date are the same`() {
+    fun `lengthInDays property returns 1 when the start and end date are the same`() {
         val date = Date(2019, Month.JUNE, 1)
-        assertEquals(1L.days, (date..date).days)
+        assertEquals(1L.days, (date..date).lengthInDays)
     }
 
     @Test
-    fun `days property returns the expected number of days in a non-empty range`() {
+    fun `lengthInDays property returns the expected number of days in a non-empty range`() {
         val start = Date(2018, Month.FEBRUARY, 1)
         val end = Date(2018, Month.FEBRUARY, 28)
-        assertEquals(28L.days, (start..end).days)
+        assertEquals(28L.days, (start..end).lengthInDays)
     }
 
     @Test
-    fun `months property returns 0 when range is empty`() {
-        assertEquals(0.months, DateRange.EMPTY.months)
+    fun `lengthInlengthInMonths property returns 0 when range is empty`() {
+        assertEquals(0.months, DateRange.EMPTY.lengthInMonths)
     }
 
     @Test
-    fun `months property returns the expected number of months in a non-empty range`() {
+    fun `lengthInMonths property returns the expected number of months in a non-empty range`() {
         val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 18)
-        assertEquals(0.months, range1.months)
+        assertEquals(0.months, range1.lengthInMonths)
 
         val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 19)
-        assertEquals(1.months, range2.months)
+        assertEquals(1.months, range2.lengthInMonths)
     }
 
     @Test
-    fun `years property returns 0 when range is empty`() {
-        assertEquals(0.years, DateRange.EMPTY.years)
+    fun `lengthInYears property returns 0 when range is empty`() {
+        assertEquals(0.years, DateRange.EMPTY.lengthInYears)
     }
 
     @Test
-    fun `years property returns the expected number of years in a non-empty range`() {
+    fun `lengthInYears property returns the expected number of years in a non-empty range`() {
         val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 18)
-        assertEquals(0.years, range1.years)
+        assertEquals(0.years, range1.lengthInYears)
 
         val range2 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 19)
-        assertEquals(1.years, range2.years)
+        assertEquals(1.years, range2.lengthInYears)
     }
 
     @Test

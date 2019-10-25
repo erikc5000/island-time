@@ -21,7 +21,7 @@ inline class Instant(
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = secondsSinceUnixEpoch.inMillisecondsExact() plusExact
-            nanoOfSecondsSinceUnixEpoch.inWholeMilliseconds.toLong()
+            nanoOfSecondsSinceUnixEpoch.inMilliseconds.toLong()
 
     override val unixEpochSecond: Long
         get() = secondsSinceUnixEpoch.value

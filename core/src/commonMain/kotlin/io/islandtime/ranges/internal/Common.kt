@@ -29,7 +29,7 @@ internal fun millisecondsBetween(
     endExclusiveNanoseconds: IntNanoseconds
 ): LongMilliseconds {
     return (endExclusiveSeconds minusExact startSeconds).inMillisecondsExact() plusExact
-        (endExclusiveNanoseconds - startNanoseconds).inWholeMilliseconds
+        (endExclusiveNanoseconds - startNanoseconds).inMilliseconds
 }
 
 /**
@@ -43,7 +43,7 @@ internal fun microsecondsBetween(
     endExclusiveNanoseconds: IntNanoseconds
 ): LongMicroseconds {
     return (endExclusiveSeconds minusExact startSeconds).inMicrosecondsExact() plusExact
-        (endExclusiveNanoseconds - startNanoseconds).inWholeMicroseconds
+        (endExclusiveNanoseconds - startNanoseconds).inMicroseconds
 }
 
 /**

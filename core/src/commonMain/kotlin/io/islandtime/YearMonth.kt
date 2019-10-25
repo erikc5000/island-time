@@ -13,7 +13,7 @@ inline class YearMonth internal constructor(
 ) : Comparable<YearMonth> {
 
     val year: Int
-        get() = monthsSinceYear0.inWholeYears.value
+        get() = monthsSinceYear0.inYears.value
 
     val month: Month
         get() = Month.values()[monthsSinceYear0.value % MONTHS_IN_YEAR]

@@ -107,79 +107,79 @@ class ZonedDateTimeIntervalTest {
     }
 
     @Test
-    fun `days property returns 0 when range is empty`() {
-        assertEquals(0L.days, ZonedDateTimeInterval.EMPTY.days)
+    fun `lengthInDays property returns 0 when range is empty`() {
+        assertEquals(0L.days, ZonedDateTimeInterval.EMPTY.lengthInDays)
     }
 
     @Test
-    fun `days property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.days }
+    fun `lengthInDays property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInDays }
     }
 
     @Test
-    fun `hours property returns 0 when range is empty`() {
-        assertEquals(0L.hours, ZonedDateTimeInterval.EMPTY.hours)
+    fun `lengthInHours property returns 0 when range is empty`() {
+        assertEquals(0L.hours, ZonedDateTimeInterval.EMPTY.lengthInHours)
     }
 
     @Test
-    fun `hours property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.hours }
+    fun `lengthInHours property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInHours }
     }
 
     @Test
-    fun `minutes property returns 0 when range is empty`() {
-        assertEquals(0L.minutes, ZonedDateTimeInterval.EMPTY.minutes)
+    fun `lengthInMinutes property returns 0 when range is empty`() {
+        assertEquals(0L.minutes, ZonedDateTimeInterval.EMPTY.lengthInMinutes)
     }
 
     @Test
-    fun `minutes property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.minutes }
+    fun `lengthInMinutes property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInMinutes }
     }
 
     @Test
-    fun `seconds property returns 0 when range is empty`() {
-        assertEquals(0L.seconds, ZonedDateTimeInterval.EMPTY.seconds)
+    fun `lengthInSeconds property returns 0 when range is empty`() {
+        assertEquals(0L.seconds, ZonedDateTimeInterval.EMPTY.lengthInSeconds)
     }
 
     @Test
-    fun `seconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.seconds }
+    fun `lengthInSeconds property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInSeconds }
     }
 
     @Test
-    fun `milliseconds property returns 0 when range is empty`() {
-        assertEquals(0L.milliseconds, ZonedDateTimeInterval.EMPTY.milliseconds)
+    fun `lengthInMilliseconds property returns 0 when range is empty`() {
+        assertEquals(0L.milliseconds, ZonedDateTimeInterval.EMPTY.lengthInMilliseconds)
     }
 
     @Test
-    fun `milliseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.milliseconds }
+    fun `lengthInMilliseconds property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInMilliseconds }
     }
 
     @Test
-    fun `microseconds property returns 0 when range is empty`() {
-        assertEquals(0L.microseconds, ZonedDateTimeInterval.EMPTY.microseconds)
+    fun `lengthInMicroseconds property returns 0 when range is empty`() {
+        assertEquals(0L.microseconds, ZonedDateTimeInterval.EMPTY.lengthInMicroseconds)
     }
 
     @Test
-    fun `microseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.microseconds }
+    fun `lengthInMicroseconds property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInMicroseconds }
     }
 
     @Test
-    fun `nanoseconds property returns 0 when range is empty`() {
-        assertEquals(0L.nanoseconds, ZonedDateTimeInterval.EMPTY.nanoseconds)
+    fun `lengthInNanoseconds property returns 0 when range is empty`() {
+        assertEquals(0L.nanoseconds, ZonedDateTimeInterval.EMPTY.lengthInNanoseconds)
     }
 
     @Test
-    fun `nanoseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.nanoseconds }
+    fun `lengthInNanoseconds property throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInNanoseconds }
     }
 
     @Test
-    fun `nanoseconds property returns 1 when the start and end instant are the same`() {
+    fun `lengthInNanoseconds property returns 1 when the start and end instant are the same`() {
         val instant = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
-        assertEquals(1L.nanoseconds, (instant..instant).nanoseconds)
+        assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }
 
     @Test
@@ -246,51 +246,51 @@ class ZonedDateTimeIntervalTest {
     }
 
     @Test
-    fun years() {
+    fun `lengthInYears property`() {
         val zone = "America/New_York".toTimeZone()
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2020, 3, 10).startOfDayAt(zone)
 
         assertEquals(1.years, yearsBetween(then, now))
         assertEquals(0.years, yearsBetween(then, now - 1.nanoseconds))
-        assertEquals(1.years, (then until now).years)
-        assertEquals(0.years, (then until now - 1.nanoseconds).years)
+        assertEquals(1.years, (then until now).lengthInYears)
+        assertEquals(0.years, (then until now - 1.nanoseconds).lengthInYears)
     }
 
     @Test
-    fun `months during daylight savings gap`() {
+    fun `lengthInMonths property during daylight savings gap`() {
         val zone = "America/New_York".toTimeZone()
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 4, 10).startOfDayAt(zone)
 
         assertEquals(1.months, monthsBetween(then, now))
         assertEquals(0.months, monthsBetween(then, now - 1.nanoseconds))
-        assertEquals(1.months, (then until now).months)
-        assertEquals(0.months, (then until now - 1.nanoseconds).months)
+        assertEquals(1.months, (then until now).lengthInMonths)
+        assertEquals(0.months, (then until now - 1.nanoseconds).lengthInMonths)
     }
 
     @Test
-    fun `days during daylight savings gap`() {
+    fun `lengthInDays property during daylight savings gap`() {
         val zone = "America/New_York".toTimeZone()
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 11).startOfDayAt(zone)
 
         assertEquals(1L.days, daysBetween(then, now))
         assertEquals(0L.days, daysBetween(then, now - 1.nanoseconds))
-        assertEquals(1L.days, (then until now).days)
-        assertEquals(0L.days, (then until now - 1.nanoseconds).days)
+        assertEquals(1L.days, (then until now).lengthInDays)
+        assertEquals(0L.days, (then until now - 1.nanoseconds).lengthInDays)
     }
 
     @Test
-    fun `hours during daylight savings gap`() {
+    fun `lengthInHours property during daylight savings gap`() {
         val zone = "America/New_York".toTimeZone()
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 10) at Time(5, 0) at zone
 
         assertEquals(4L.hours, hoursBetween(then, now))
         assertEquals(3L.hours, hoursBetween(then, now - 1.nanoseconds))
-        assertEquals(4L.hours, (then until now).hours)
-        assertEquals(3L.hours, (then until now - 1.nanoseconds).hours)
+        assertEquals(4L.hours, (then until now).lengthInHours)
+        assertEquals(3L.hours, (then until now - 1.nanoseconds).lengthInHours)
     }
 
 //    @Test

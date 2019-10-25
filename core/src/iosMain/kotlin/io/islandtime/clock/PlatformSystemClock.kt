@@ -16,7 +16,7 @@ internal actual object PlatformSystemClock {
         return memScoped {
             val posixTime = alloc<timeval>()
             gettimeofday(posixTime.ptr, null)
-            posixTime.tv_sec.seconds + posixTime.tv_usec.microseconds.inWholeMilliseconds
+            posixTime.tv_sec.seconds + posixTime.tv_usec.microseconds.inMilliseconds
         }
     }
 }
