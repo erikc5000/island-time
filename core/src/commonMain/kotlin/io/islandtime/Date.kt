@@ -87,14 +87,14 @@ class Date(
      */
     inline val yearMonth: YearMonth get() = YearMonth(year, month)
 
-    //
-    // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
-    //
-
     /**
      * Get the number of days away from the Unix epoch that this date falls
      */
-    val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
+    inline val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
+
+    //
+    // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
+    //
 
     /**
      * The Unix epoch day representing this date
@@ -371,7 +371,6 @@ fun String.toDate(parser: DateTimeParser): Date {
 internal fun DateTimeParseResult.toDate(): Date? {
     val year = fields[DateTimeField.YEAR]
 
-    // TODO: Add suport for
     if (year != null) {
         val month = fields[DateTimeField.MONTH_OF_YEAR]
         val dayOfMonth = fields[DateTimeField.DAY_OF_MONTH]
