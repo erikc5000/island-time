@@ -1,10 +1,9 @@
-package io.islandtime.extensions.threetenabp.zone
+package io.islandtime.extensions.threetenabp
 
 import android.app.Application
 import android.content.Context
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.islandtime.*
-import io.islandtime.extensions.threetenabp.*
 import io.islandtime.measures.*
 import io.islandtime.zone.TimeZoneOffsetTransition
 import io.islandtime.zone.TimeZoneRules
@@ -17,10 +16,9 @@ import org.threeten.bp.zone.ZoneRulesException
 import org.threeten.bp.zone.ZoneRulesProvider
 
 /**
- * A time zone rules provider that draws from the DB packaged with ThreeTenAbp
+ * A time zone rules provider that draws from the DB packaged with ThreeTenABP.
  */
-class ThreeTenAbp(context: Context, assetPath: String = "") : TimeZoneRulesProvider {
-
+class AndroidThreeTenProvider(context: Context, assetPath: String) : TimeZoneRulesProvider {
     init {
         if (assetPath.isNotEmpty()) {
             AndroidThreeTen.init(context, assetPath)
@@ -29,11 +27,12 @@ class ThreeTenAbp(context: Context, assetPath: String = "") : TimeZoneRulesProvi
         }
     }
 
+    constructor(context: Context) : this(context, "")
     constructor(application: Application) : this(application as Context)
 
     override val databaseVersion: String
         get() = try {
-            ZoneRulesProvider.getVersions("UTC")?.lastEntry()?.key.orEmpty()
+            ZoneRulesProvider.getVersions("Etc/UTC")?.lastEntry()?.key.orEmpty()
         } catch (e: ZoneRulesException) {
             throw TimeZoneRulesException(e.message, e)
         }

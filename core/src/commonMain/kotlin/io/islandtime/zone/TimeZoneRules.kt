@@ -11,26 +11,30 @@ class TimeZoneRulesException(
     cause: Throwable? = null
 ) : DateTimeException(message, cause)
 
+/**
+ * An abstraction that allows time zone rules to be supplied from any source.
+ *
+ * The set of supported region IDs is expected to vary depending on the source, but the IDs themselves should be valid
+ * IANA Time Zone Database region IDs.
+ */
 interface TimeZoneRulesProvider {
     /**
-     * The time zone database version, or an empty string if unavailable
+     * The time zone database version, or an empty string if unavailable.
      */
     val databaseVersion: String get() = ""
 
     /**
-     * The available time zone region IDs
+     * The available time zone region IDs.
      */
     val availableRegionIds: Set<String>
 
     /**
-     * Get the rules associated with a particular region ID
+     * Get the rules associated with a particular region ID.
      */
     fun rulesFor(regionId: String): TimeZoneRules
 
     companion object : TimeZoneRulesProvider {
-        private val provider
-            get() = IslandTime.timeZoneRulesProvider.get()
-                ?: throw TimeZoneRulesException("No time zone rules provider has been initialized")
+        private val provider get() = IslandTime.timeZoneRulesProvider
 
         override val databaseVersion get() = provider.databaseVersion
         override val availableRegionIds get() = provider.availableRegionIds
@@ -38,8 +42,14 @@ interface TimeZoneRulesProvider {
     }
 }
 
-expect object PlatformDefault : TimeZoneRulesProvider
+/**
+ * The default time zone rules provider implementation for the current platform.
+ */
+expect object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider
 
+/**
+ * A discontinuity in the local timeline, usually caused by daylight savings time changes.
+ */
 interface TimeZoneOffsetTransition {
     val dateTimeBefore: DateTime
     val dateTimeAfter: DateTime
@@ -53,6 +63,9 @@ interface TimeZoneOffsetTransition {
         get() = if (isGap) emptyList() else listOf(offsetBefore, offsetAfter)
 }
 
+/**
+ * The set of rules for a particular time zone.
+ */
 interface TimeZoneRules {
     fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset
     fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset

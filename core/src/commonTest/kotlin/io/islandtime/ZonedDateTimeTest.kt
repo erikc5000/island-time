@@ -63,12 +63,12 @@ class ZonedDateTimeTest {
 
     @BeforeTest
     fun setUp() {
-        IslandTime.initialize(PlatformDefault)
+        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
     }
 
     @AfterTest
     fun tearDown() {
-        IslandTime.tearDown()
+        IslandTime.reset()
     }
 
     @Test

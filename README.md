@@ -59,19 +59,16 @@ dependencies {
 
 ## Initialization
 
-Prior to using Island Time, it must first be initialized with an appropriate `TimeZoneRulesProvider`. If you fail to do that, you're likely to see a `TimeZoneRulesException` the first time you perform an operation that requires access to the time zone database (ie. `Date.now()`).
+Prior to using Island Time, it may be initialized with a custom `TimeZoneRulesProvider`. The platform default provider will be used if this isn't specified explicitly.
 
-On iOS and JVM, `PlatformDefault` should be used. Note that the need to explicitly initialize the platform default provider may be removed in the near future.
-
-```kotlin
-IslandTime.initialize(PlatformDefault)
-```
-
-On Android, the `PlatformDefault` provider will fail when targeting an API version below 26. The `ThreetenAbp` provider in threetenabp-extensions can be used instead. Note that it requires access to a `context`. Generally, initialization should be performed during `Application.onCreate()`. For further information, see https://github.com/JakeWharton/ThreeTenABP.
+On Android, using the default provider will trigger an exception at runtime when targeting an API version below 26 since it uses the java.time library internally. The `AndroidThreeTenProvider` in threetenabp-extensions can be used instead. Generally, initialization should be performed during `Application.onCreate()`.
 
 ```kotlin
-IslandTime.initialize(ThreetenAbp(context))
+// Note that it isn't necessary to call AndroidThreeTen.init() separately
+IslandTime.initializeWith(AndroidThreeTenProvider(context))
 ```
+
+For further information, see https://github.com/JakeWharton/ThreeTenABP. Once java.time desugaring is available, this step should no longer be required.
 
 ## The Basics
 
@@ -220,7 +217,7 @@ val nextDay = zonedDateTime + 1.days // 2019-03-11T01:30-04:00[America/New_York]
 java.time / ThreeTenABP:
 ```kotlin
 val javaLocalDate = Date(2019, OCTOBER, 24).toJavaLocalDate()
-val islandDate = LocalDate(2019, OCTOBER, 24).toIslandDate()
+val islandDate = LocalDate.of(2019, OCTOBER, 24).toIslandDate()
 ```
 
 iOS:
@@ -232,26 +229,6 @@ val islandInstant = NSDate().toIslandInstant()
 ## Limitations
 
 Currently, only the ISO calendar system is supported and the year range is limited to 1-9999. There's also no support for custom/localized date-time formats or week fields, so it's likely necessary to convert to a platform-specific type for presentation purposes. Addressing the ability to customize at least non-localized formats is high on the priority list.
-
-## Differences from java.time
-
-Everything is very much in flux right now, but here are a few notable design differences.
-
-##### OffsetDateTime and ZoneDateTime don't implement `Comparable`
-In java.time, the decision was made to have these types implement `Comparable` so as to be [consistent with equals](https://blog.joda.org/2012/11/pitfalls-of-consistent-with-equals.html). The problem is that the "natural order" for these types isn't the same as the "timeline order", so using `<` or `>` to compare them is usually not what you want to do and can be a source of subtle bugs. To avoid this situation, we don't implement `Comparable`, but do offer a `compareTo()` operator -- a feature enabled by Kotlin. This allows both types to be compared based on timeline order when using `<` or `>`, but when using a sorted container for example, you must explicitly specify a `Comparator`, such as the predefined `NATURAL_ORDER`.
-
-##### More "extension-oriented"
-We've tried to take advantage of Kotlin features like extension functions to create a design that's modular and flexible without being quite as heavy on the OO abstractions. Some seemingly simple operations can be confusing when getting started with the java.time library -- like getting the next Sunday from a date.
-
-```kotlin
-val adjustedDate = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SUNDAY))
-```
-
-You need to know to use `with()` and that there are predefined implementations of `TemporalAdjuster` that you can statically import. This is only one example, but due to the layers of abstraction that have been inserted, sometimes IDE discoverability just isn't great. Improving on this and creating a more "Kotlin" API is one of our goals.
-
-##### DSL-based parsers (and in the future, formatters)
-
-Along the same lines, we opt for a DSL approach to specifying custom date-time formats since it offers improved IDE discoverability and better maintainability than the usual format strings, where different libraries give different meanings to each character and you're almost guaranteed a trip to the documentation website to write or decipher one. Should it be "YYYY" or "uuuu"? Or is it "yyyy"?
 
 ## Notes on kotlin.time
 

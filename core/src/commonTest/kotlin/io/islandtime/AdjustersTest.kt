@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.hours
-import io.islandtime.zone.PlatformDefault
+import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -13,12 +13,12 @@ class AdjustersTest {
 
     @BeforeTest
     fun setUp() {
-        IslandTime.initialize(PlatformDefault)
+        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
     }
 
     @AfterTest
     fun tearDown() {
-        IslandTime.tearDown()
+        IslandTime.reset()
     }
 
     @Test
