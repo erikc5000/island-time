@@ -125,6 +125,22 @@ class YearTest {
     }
 
     @Test
+    fun `contains YearMonth`() {
+        assertTrue { YearMonth(2019, Month.JANUARY) in Year(2019) }
+        assertTrue { YearMonth(2019, Month.DECEMBER) in Year(2019) }
+        assertFalse { YearMonth(2020, Month.JANUARY) in Year(2019) }
+        assertFalse { YearMonth(2018, Month.DECEMBER) in Year(2019) }
+    }
+
+    @Test
+    fun `contains Date`() {
+        assertTrue { Date(2019, Month.JANUARY, 1) in Year(2019) }
+        assertTrue { Date(2019, Month.DECEMBER, 31) in Year(2019) }
+        assertFalse { Date(2020, Month.JANUARY, 1) in Year(2019) }
+        assertFalse { Date(2018, Month.DECEMBER, 31) in Year(2019) }
+    }
+
+    @Test
     fun `toString() returns the year with a minimum of 4 digits as required by ISO-8601`() {
         assertEquals("2008", Year(2008).toString())
         assertEquals("0001", Year(1).toString())

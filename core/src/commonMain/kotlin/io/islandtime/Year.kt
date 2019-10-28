@@ -41,6 +41,9 @@ inline class Year(val value: Int) : Comparable<Year> {
 
     operator fun minus(years: IntYears) = plus(-years.toLong())
 
+    operator fun contains(yearMonth: YearMonth) = yearMonth.year == value
+    operator fun contains(date: Date) = date.year == value
+
     fun validated(): Year {
         if (!isValid) {
             throw DateTimeException(getInvalidYearMessage(value.toLong()))

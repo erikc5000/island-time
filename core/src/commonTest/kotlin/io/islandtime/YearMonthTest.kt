@@ -346,6 +346,17 @@ class YearMonthTest {
     }
 
     @Test
+    fun `contains Date`() {
+        val yearMonth = YearMonth(2019, Month.JANUARY)
+
+        assertTrue { Date(2019, Month.JANUARY, 1) in yearMonth }
+        assertTrue { Date(2019, Month.JANUARY, 31) in yearMonth }
+        assertFalse { Date(2019, Month.FEBRUARY, 1) in yearMonth }
+        assertFalse { Date(2020, Month.JANUARY, 1) in yearMonth}
+        assertFalse { Date(2018, Month.DECEMBER, 31) in yearMonth }
+    }
+
+    @Test
     fun `toString() returns an ISO-8601 extended year month representation`() {
         assertEquals(
             "2000-02",
