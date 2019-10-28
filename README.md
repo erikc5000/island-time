@@ -132,11 +132,11 @@ val startOfMonth = today.startOfMonth()
 val endOfMonth = today.endOfMonth()
 ```
 
-### ISO-8601 Strings
+### ISO-8601 Representation
 
 ```kotlin
-val isoTimestamp = Instant.now().toString()
-val isoDuration = durationOf(5.hours + 4.seconds).toString()
+val isoTimestamp = Instant.now().toString() // 2019-10-28T08:34:03.389Z
+val isoDuration = durationOf(5.hours + 4.seconds).toString() // PT5H4S
 ```
 
 ### Parsing
@@ -179,7 +179,7 @@ for (date in today until today + 1.years step 1.months) {
 }
 
 val randomDate = (today..today + 1.months).random()
-val totalDays: IntDays = (today until today + 6.months).days
+val totalDays: IntDays = (today until today + 6.months).lengthInDays
 val period: Period = (today..today + 1.months).asPeriod()
 ```
 
