@@ -86,7 +86,7 @@ fun OffsetDateTime.toJavaOffsetDateTime(): java.time.OffsetDateTime {
 
 @JvmName("convertToIslandZonedDateTime")
 fun java.time.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
-    return ZonedDateTime.ofLocal(
+    return ZonedDateTime.fromLocal(
         DateTime(
             Date(year, monthValue, dayOfMonth),
             Time(hour, minute, second, nano)

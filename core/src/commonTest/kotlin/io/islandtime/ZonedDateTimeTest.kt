@@ -95,7 +95,7 @@ class ZonedDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that falls in an overlap, a preferred offset may be provided`() {
-        val actual = ZonedDateTime.ofLocal(
+        val actual = ZonedDateTime.fromLocal(
             DateTime(2019, 11, 3, 1, 0),
             nyZone,
             UtcOffset((-5).hours)
@@ -108,7 +108,7 @@ class ZonedDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that falls in an overlap, an invalid preferred offset is ignored`() {
-        val actual = ZonedDateTime.ofLocal(
+        val actual = ZonedDateTime.fromLocal(
             DateTime(2019, 11, 3, 1, 0),
             nyZone,
             UtcOffset((-8).hours)
@@ -121,7 +121,7 @@ class ZonedDateTimeTest {
 
     @Test
     fun `when constructed from a DateTime that doesn't fall in an overlap, the preferred offset is ignored`() {
-        val actual = ZonedDateTime.ofLocal(
+        val actual = ZonedDateTime.fromLocal(
             DateTime(2019, 11, 3, 2, 0),
             nyZone,
             UtcOffset((-4).hours)
@@ -224,12 +224,12 @@ class ZonedDateTimeTest {
         )
 
         assertNotEquals(
-            ZonedDateTime.ofLocal(
+            ZonedDateTime.fromLocal(
                 DateTime(2019, 11, 3, 1, 0),
                 nyZone,
                 UtcOffset((-4).hours)
             ),
-            ZonedDateTime.ofLocal(
+            ZonedDateTime.fromLocal(
                 DateTime(2019, 11, 3, 1, 0),
                 nyZone,
                 UtcOffset((-5).hours)
@@ -373,7 +373,7 @@ class ZonedDateTimeTest {
                 UtcOffset((-4).hours),
                 nyZone
             ),
-            ZonedDateTime.ofLocal(
+            ZonedDateTime.fromLocal(
                 DateTime(2019, 11, 3, 1, 30),
                 nyZone,
                 UtcOffset((-5).hours)
@@ -434,7 +434,7 @@ class ZonedDateTimeTest {
                 UtcOffset((-6).hours),
                 denverZone
             ),
-            ZonedDateTime.ofLocal(
+            ZonedDateTime.fromLocal(
                 DateTime(2019, 11, 3, 1, 30),
                 nyZone,
                 UtcOffset((-5).hours)
@@ -448,7 +448,7 @@ class ZonedDateTimeTest {
                 UtcOffset((-6).hours),
                 denverZone
             ),
-            ZonedDateTime.ofLocal(
+            ZonedDateTime.fromLocal(
                 DateTime(2019, 11, 3, 2, 30),
                 nyZone,
                 UtcOffset((-5).hours)
@@ -462,7 +462,7 @@ class ZonedDateTimeTest {
                 UtcOffset((-7).hours),
                 denverZone
             ),
-            ZonedDateTime.ofLocal(
+            ZonedDateTime.fromLocal(
                 DateTime(2019, 11, 3, 3, 30),
                 nyZone,
                 UtcOffset((-5).hours)
