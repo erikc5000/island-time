@@ -147,7 +147,7 @@ class ZonedDateTime private constructor(
         dateTime: DateTime = this.dateTime,
         offset: UtcOffset = this.offset,
         zone: TimeZone = this.zone
-    ) = ofLocal(dateTime, zone, offset)
+    ) = fromLocal(dateTime, zone, offset)
 
     /**
      * Return a new [ZonedDateTime], replacing any of the components with new values.
@@ -161,7 +161,7 @@ class ZonedDateTime private constructor(
         time: Time = this.time,
         offset: UtcOffset = this.offset,
         zone: TimeZone = this.zone
-    ) = ofLocal(dateTime.copy(date, time), zone, offset)
+    ) = fromLocal(dateTime.copy(date, time), zone, offset)
 
     /**
      * Return a new [ZonedDateTime], replacing any of the components with new values.
@@ -179,7 +179,7 @@ class ZonedDateTime private constructor(
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset,
         zone: TimeZone = this.zone
-    ) = ofLocal(
+    ) = fromLocal(
         dateTime.copy(
             date.copy(year, dayOfYear),
             time.copy(hour, minute, second, nanosecond)
@@ -205,7 +205,7 @@ class ZonedDateTime private constructor(
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset,
         zone: TimeZone = this.zone
-    ) = ofLocal(
+    ) = fromLocal(
         dateTime.copy(
             date.copy(year, month, dayOfMonth),
             time.copy(hour, minute, second, nanosecond)
@@ -231,7 +231,7 @@ class ZonedDateTime private constructor(
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset,
         zone: TimeZone = this.zone
-    ) = ofLocal(
+    ) = fromLocal(
         dateTime.copy(
             date.copy(year, monthNumber, dayOfMonth),
             time.copy(hour, minute, second, nanosecond)
@@ -272,7 +272,7 @@ class ZonedDateTime private constructor(
             val earlierOffset = transition.offsetBefore
 
             if (earlierOffset != offset) {
-                return ZonedDateTime(dateTime, earlierOffset, zone)
+                return create(dateTime, earlierOffset, zone)
             }
         }
         return this
@@ -285,7 +285,7 @@ class ZonedDateTime private constructor(
             val laterOffset = transition.offsetAfter
 
             if (laterOffset != offset) {
-                return ZonedDateTime(dateTime, laterOffset, zone)
+                return create(dateTime, laterOffset, zone)
             }
         }
         return this
@@ -308,7 +308,7 @@ class ZonedDateTime private constructor(
      */
     fun toOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
-    private fun resolveInstant(newDateTime: DateTime) = ofInstant(newDateTime, offset, zone)
+    private fun resolveInstant(newDateTime: DateTime) = fromInstant(newDateTime, offset, zone)
 
     companion object {
         val DEFAULT_SORT_ORDER = compareBy<ZonedDateTime> { it.unixEpochSecond }
@@ -316,9 +316,9 @@ class ZonedDateTime private constructor(
             .thenBy { it.dateTime }
             .thenBy { it.zone }
 
-        val TIMELINE_ORDER = TimePoint.TIMELINE_ORDER
+        val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
-        fun ofLocal(
+        fun fromLocal(
             dateTime: DateTime,
             zone: TimeZone,
             preferredOffset: UtcOffset? = null
@@ -327,11 +327,11 @@ class ZonedDateTime private constructor(
             val validOffsets = rules.validOffsetsAt(dateTime)
 
             return when (validOffsets.size) {
-                1 -> ZonedDateTime(dateTime, validOffsets[0], zone)
+                1 -> create(dateTime, validOffsets[0], zone)
                 0 -> {
                     val transition = rules.transitionAt(dateTime)
                     val adjustedDateTime = dateTime + transition!!.duration
-                    ZonedDateTime(adjustedDateTime, transition.offsetAfter, zone)
+                    create(adjustedDateTime, transition.offsetAfter, zone)
                 }
                 else -> {
                     val offset = if (preferredOffset != null && validOffsets.contains(preferredOffset)) {
@@ -339,12 +339,12 @@ class ZonedDateTime private constructor(
                     } else {
                         validOffsets[0]
                     }
-                    ZonedDateTime(dateTime, offset, zone)
+                    create(dateTime, offset, zone)
                 }
             }
         }
 
-        fun ofInstant(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): ZonedDateTime {
+        fun fromInstant(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): ZonedDateTime {
             return fromUnixEpochSecond(
                 dateTime.unixEpochSecondAt(offset),
                 dateTime.nanosecond,
@@ -355,7 +355,7 @@ class ZonedDateTime private constructor(
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, zone: TimeZone): ZonedDateTime {
             val offset = zone.rules.offsetAt(milliseconds)
             val dateTime = DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset)
-            return ZonedDateTime(dateTime, offset, zone)
+            return create(dateTime, offset, zone)
         }
 
         fun fromSecondsSinceUnixEpoch(
@@ -365,7 +365,7 @@ class ZonedDateTime private constructor(
         ): ZonedDateTime {
             val offset = zone.rules.offsetAt(seconds, nanosecondAdjustment)
             val dateTime = DateTime.fromSecondsSinceUnixEpoch(seconds, nanosecondAdjustment, offset)
-            return ZonedDateTime(dateTime, offset, zone)
+            return create(dateTime, offset, zone)
         }
 
         fun fromUnixEpochMillisecond(millisecond: Long, zone: TimeZone): ZonedDateTime {
@@ -377,10 +377,7 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] with no additional validation
-         */
-        /**
-         * Create a [ZonedDateTime] with no additional validation
+         * Create a [ZonedDateTime] with no additional validation.
          */
         internal fun create(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): ZonedDateTime {
             return ZonedDateTime(dateTime, offset, zone)
@@ -398,7 +395,7 @@ fun ZonedDateTime(
     second: Int,
     nanosecond: Int,
     zone: TimeZone
-) = ZonedDateTime.ofLocal(DateTime(year, month, day, hour, minute, second, nanosecond), zone)
+) = ZonedDateTime.fromLocal(DateTime(year, month, day, hour, minute, second, nanosecond), zone)
 
 @Suppress("FunctionName")
 fun ZonedDateTime(
@@ -410,7 +407,7 @@ fun ZonedDateTime(
     second: Int,
     nanosecond: Int,
     zone: TimeZone
-) = ZonedDateTime.ofLocal(DateTime(year, monthNumber, day, hour, minute, second, nanosecond), zone)
+) = ZonedDateTime.fromLocal(DateTime(year, monthNumber, day, hour, minute, second, nanosecond), zone)
 
 @Suppress("FunctionName")
 fun ZonedDateTime(
@@ -421,13 +418,13 @@ fun ZonedDateTime(
     second: Int,
     nanosecond: Int,
     zone: TimeZone
-) = ZonedDateTime.ofLocal(DateTime(year, dayOfYear, hour, minute, second, nanosecond), zone)
+) = ZonedDateTime.fromLocal(DateTime(year, dayOfYear, hour, minute, second, nanosecond), zone)
 
 @Suppress("FunctionName")
-fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.ofLocal(DateTime(date, time), zone)
+fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLocal(DateTime(date, time), zone)
 
 @Suppress("FunctionName")
-fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.ofLocal(dateTime, zone)
+fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(dateTime, zone)
 
 /**
  * Get the [ZonedDateTime] corresponding to the local date and time in a particular time zone.
@@ -436,7 +433,7 @@ fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.ofLocal(da
  * gap, it will adjusted forward by the length of the gap. If it falls within an overlap, the earlier offset will be
  * used.
  */
-infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.ofLocal(this, zone, null)
+infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
 
 /**
  * Get the [ZonedDateTime] corresponding to a local date, time, and offset in a particular time zone. The offset
@@ -447,7 +444,7 @@ infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.ofLocal(this, zone, null)
  * used.
  */
 fun OffsetDateTime.atSimilarLocalTimeIn(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.ofLocal(dateTime, zone, offset)
+    return ZonedDateTime.fromLocal(dateTime, zone, offset)
 }
 
 /**
@@ -455,7 +452,7 @@ fun OffsetDateTime.atSimilarLocalTimeIn(zone: TimeZone): ZonedDateTime {
  * time zone
  */
 fun OffsetDateTime.atSameInstantIn(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.ofInstant(dateTime, offset, zone)
+    return ZonedDateTime.fromInstant(dateTime, offset, zone)
 }
 
 /**

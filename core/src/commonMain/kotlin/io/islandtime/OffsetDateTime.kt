@@ -259,7 +259,7 @@ class OffsetDateTime(
             .thenBy { it.unixEpochNanoOfSecond }
             .thenBy { it.dateTime }
 
-        val TIMELINE_ORDER = TimePoint.TIMELINE_ORDER
+        val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): OffsetDateTime {
             return OffsetDateTime(
