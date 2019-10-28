@@ -130,6 +130,8 @@ inline class YearMonth internal constructor(
         }
     }
 
+    operator fun contains(date: Date) = date.year == year && date.month == month
+
     companion object {
         val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)
         val MAX = YearMonth(Year.MAX_VALUE, Month.MAX)
