@@ -14,7 +14,7 @@ import java.time.zone.ZoneRulesProvider
 /**
  * A time zone rules provider that draws from the database built into the java.time library
  */
-actual object PlatformDefault : TimeZoneRulesProvider {
+actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
 
     override val databaseVersion: String
         get() = try {

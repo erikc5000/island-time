@@ -4,7 +4,7 @@ import io.islandtime.*
 import io.islandtime.measures.days
 import io.islandtime.measures.hours
 import io.islandtime.measures.milliseconds
-import io.islandtime.zone.PlatformDefault
+import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -13,12 +13,12 @@ import kotlin.test.assertEquals
 class NowTest {
     @BeforeTest
     fun setUp() {
-        IslandTime.initialize(PlatformDefault)
+        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
     }
 
     @AfterTest
     fun tearDown() {
-        IslandTime.tearDown()
+        IslandTime.reset()
     }
 
     @Test

@@ -3,18 +3,18 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
-import io.islandtime.zone.PlatformDefault
+import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import kotlin.test.*
 
 class ZonedDateTimeIntervalTest {
     @BeforeTest
     fun setUp() {
-        IslandTime.initialize(PlatformDefault)
+        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
     }
 
     @AfterTest
     fun tearDown() {
-        IslandTime.tearDown()
+        IslandTime.reset()
     }
 
     @Test

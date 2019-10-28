@@ -10,7 +10,7 @@ import io.islandtime.ios.toNSDateComponents
 import io.islandtime.measures.*
 import platform.Foundation.*
 
-actual object PlatformDefault : TimeZoneRulesProvider {
+actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     private val timeZoneRules = SharedHashMap<String, TimeZoneRules>()
 
     @Suppress("UNCHECKED_CAST")
