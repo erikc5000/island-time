@@ -85,7 +85,7 @@ fun OffsetDateTime.toJavaOffsetDateTime(): org.threeten.bp.OffsetDateTime {
 
 @JvmName("convertToIslandZonedDateTime")
 fun org.threeten.bp.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
-    return ZonedDateTime.ofLocal(
+    return ZonedDateTime.fromLocal(
         DateTime(
             Date(year, monthValue, dayOfMonth),
             Time(hour, minute, second, nano)
