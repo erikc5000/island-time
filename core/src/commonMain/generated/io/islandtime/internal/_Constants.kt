@@ -8,89 +8,132 @@ package io.islandtime.internal
 
 import kotlin.Int
 import kotlin.Long
+import kotlin.PublishedApi
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
+@PublishedApi
 internal const val DAYS_PER_HOUR: Int = 24
 
+@PublishedApi
 internal const val DAYS_PER_MINUTE: Int = 1440
 
+@PublishedApi
 internal const val DAYS_PER_SECOND: Int = 86400
 
+@PublishedApi
 internal const val DAYS_PER_MILLISECOND: Int = 86400000
 
+@PublishedApi
 internal const val DAYS_PER_MICROSECOND: Long = 86400000000L
 
+@PublishedApi
 internal const val DAYS_PER_NANOSECOND: Long = 86400000000000L
 
+@PublishedApi
 internal const val HOURS_PER_DAY: Int = 24
 
+@PublishedApi
 internal const val HOURS_PER_MINUTE: Int = 60
 
+@PublishedApi
 internal const val HOURS_PER_SECOND: Int = 3600
 
+@PublishedApi
 internal const val HOURS_PER_MILLISECOND: Int = 3600000
 
+@PublishedApi
 internal const val HOURS_PER_MICROSECOND: Long = 3600000000L
 
+@PublishedApi
 internal const val HOURS_PER_NANOSECOND: Long = 3600000000000L
 
+@PublishedApi
 internal const val MINUTES_PER_DAY: Int = 1440
 
+@PublishedApi
 internal const val MINUTES_PER_HOUR: Int = 60
 
+@PublishedApi
 internal const val MINUTES_PER_SECOND: Int = 60
 
+@PublishedApi
 internal const val MINUTES_PER_MILLISECOND: Int = 60000
 
+@PublishedApi
 internal const val MINUTES_PER_MICROSECOND: Int = 60000000
 
+@PublishedApi
 internal const val MINUTES_PER_NANOSECOND: Long = 60000000000L
 
+@PublishedApi
 internal const val SECONDS_PER_DAY: Int = 86400
 
+@PublishedApi
 internal const val SECONDS_PER_HOUR: Int = 3600
 
+@PublishedApi
 internal const val SECONDS_PER_MINUTE: Int = 60
 
+@PublishedApi
 internal const val SECONDS_PER_MILLISECOND: Int = 1000
 
+@PublishedApi
 internal const val SECONDS_PER_MICROSECOND: Int = 1000000
 
+@PublishedApi
 internal const val SECONDS_PER_NANOSECOND: Int = 1000000000
 
+@PublishedApi
 internal const val MILLISECONDS_PER_DAY: Int = 86400000
 
+@PublishedApi
 internal const val MILLISECONDS_PER_HOUR: Int = 3600000
 
+@PublishedApi
 internal const val MILLISECONDS_PER_MINUTE: Int = 60000
 
+@PublishedApi
 internal const val MILLISECONDS_PER_SECOND: Int = 1000
 
+@PublishedApi
 internal const val MILLISECONDS_PER_MICROSECOND: Int = 1000
 
+@PublishedApi
 internal const val MILLISECONDS_PER_NANOSECOND: Int = 1000000
 
+@PublishedApi
 internal const val MICROSECONDS_PER_DAY: Long = 86400000000L
 
+@PublishedApi
 internal const val MICROSECONDS_PER_HOUR: Long = 3600000000L
 
+@PublishedApi
 internal const val MICROSECONDS_PER_MINUTE: Int = 60000000
 
+@PublishedApi
 internal const val MICROSECONDS_PER_SECOND: Int = 1000000
 
+@PublishedApi
 internal const val MICROSECONDS_PER_MILLISECOND: Int = 1000
 
+@PublishedApi
 internal const val MICROSECONDS_PER_NANOSECOND: Int = 1000
 
+@PublishedApi
 internal const val NANOSECONDS_PER_DAY: Long = 86400000000000L
 
+@PublishedApi
 internal const val NANOSECONDS_PER_HOUR: Long = 3600000000000L
 
+@PublishedApi
 internal const val NANOSECONDS_PER_MINUTE: Long = 60000000000L
 
+@PublishedApi
 internal const val NANOSECONDS_PER_SECOND: Int = 1000000000
 
+@PublishedApi
 internal const val NANOSECONDS_PER_MILLISECOND: Int = 1000000
 
+@PublishedApi
 internal const val NANOSECONDS_PER_MICROSECOND: Int = 1000
