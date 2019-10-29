@@ -369,18 +369,13 @@ fun DurationUnit.buildDivOperators(
         buildFunSpec("div") {
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Int::class)
-
-            if (forceLongInOperators && primitiveType != Long::class) {
-                addStatement("return this.toLong() / scalar")
-            } else {
-                addStatement("return %T(this.$valueName / scalar)", className)
-            }
+            addStatement("return %T(this.$valueName / scalar)", className)
         },
         buildFunSpec("div") {
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Long::class)
 
-            if (primitiveType != Long::class) {
+            if (primitiveType == Int::class) {
                 addStatement("return this.toLong() / scalar")
             } else {
                 addStatement("return %T(this.$valueName / scalar)", className)
@@ -397,18 +392,13 @@ fun DurationUnit.buildRemOperators(
         buildFunSpec("rem") {
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Int::class)
-
-            if (forceLongInOperators && primitiveType != Long::class) {
-                addStatement("return this.toLong() %% scalar")
-            } else {
-                addStatement("return %T(this.$valueName %% scalar)", className)
-            }
+            addStatement("return %T(this.$valueName %% scalar)", className)
         },
         buildFunSpec("rem") {
             addModifiers(KModifier.OPERATOR)
             addParameter("scalar", Long::class)
 
-            if (primitiveType != Long::class) {
+            if (primitiveType == Int::class) {
                 addStatement("return this.toLong() %% scalar")
             } else {
                 addStatement("return %T(this.$valueName %% scalar)", className)

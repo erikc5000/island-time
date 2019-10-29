@@ -145,11 +145,11 @@ inline class IntMilliseconds(
 
   operator fun times(scalar: Long) = this.toLong() * scalar
 
-  operator fun div(scalar: Int) = this.toLong() / scalar
+  operator fun div(scalar: Int) = IntMilliseconds(this.value / scalar)
 
   operator fun div(scalar: Long) = this.toLong() / scalar
 
-  operator fun rem(scalar: Int) = this.toLong() % scalar
+  operator fun rem(scalar: Int) = IntMilliseconds(this.value % scalar)
 
   operator fun rem(scalar: Long) = this.toLong() % scalar
 
