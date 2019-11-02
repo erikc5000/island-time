@@ -60,7 +60,7 @@ internal fun nanosecondsBetween(
         (endExclusiveNanoseconds - startNanoseconds)
 }
 
-internal fun <T> TimeInterval<T>.buildIsoString(
+internal inline fun <T> TimeInterval<T>.buildIsoString(
     baseCapacity: Int,
     appendFunction: StringBuilder.(T) -> StringBuilder
 ): String {
