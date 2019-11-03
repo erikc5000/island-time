@@ -6,10 +6,10 @@ import io.islandtime.parser.DateTimeParsers
 import io.islandtime.zone.*
 import kotlin.test.*
 
-class ZonedDateTimeTest {
+class ZonedDateTimeTest : AbstractIslandTimeTest() {
 
-    private val nyZone = TimeZone("America/New_York")
-    private val denverZone = TimeZone("America/Denver")
+    private val nyZone = "America/New_York".toTimeZone()
+    private val denverZone = "America/Denver".toTimeZone()
 
 //    object TestTimeZoneRulesProvider : TimeZoneRulesProvider {
 //        override fun getRules(regionId: String): TimeZoneRules {
@@ -61,22 +61,12 @@ class ZonedDateTimeTest {
 //        }
 //    }
 
-    @BeforeTest
-    fun setUp() {
-        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
-    }
-
-    @AfterTest
-    fun tearDown() {
-        IslandTime.reset()
-    }
-
     @Test
     fun `throws an exception when constructed with a TimeZone that has no rules`() {
         assertFailsWith<TimeZoneRulesException> {
             ZonedDateTime(
                 DateTime(2019, 5, 30, 18, 0),
-                TimeZone("America/Boston")
+                "America/Boston".toTimeZone()
             )
         }
     }
@@ -172,7 +162,7 @@ class ZonedDateTimeTest {
                 nyZone
             ),
             DateTime(2019, 3, 3, 1, 0) at
-                nyZone
+                    nyZone
         )
     }
 
@@ -204,7 +194,7 @@ class ZonedDateTimeTest {
                 nyZone
             ),
             Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds)
-                at nyZone
+                    at nyZone
         )
     }
 
@@ -252,22 +242,22 @@ class ZonedDateTimeTest {
     fun `DEFAULT_SORT_ORDER compares based on instant, then date and time, and then zone`() {
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
-                Date(1969, 365) at Time(23, 0) at TimeZone("America/Chicago"),
+                Date(1969, 365) at Time(23, 0) at "America/Chicago".toTimeZone(),
                 Date(1970, 1) at Time(0, 0) at nyZone
             ) < 0
         }
 
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
-                Date(1970, 1) at Time(0, 0) at TimeZone("Etc/GMT+5"),
+                Date(1970, 1) at Time(0, 0) at "Etc/GMT+5".toTimeZone(),
                 Date(1970, 1) at Time(0, 0) at nyZone
             ) > 0
         }
 
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
-                Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5"),
-                Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5")
+                Date(1969, 365) at Time(23, 0) at "Etc/GMT+5".toTimeZone(),
+                Date(1969, 365) at Time(23, 0) at "Etc/GMT+5".toTimeZone()
             ) == 0
         }
     }
@@ -286,7 +276,7 @@ class ZonedDateTimeTest {
     fun `compareTo() compares based on instant only`() {
         assertTrue {
             Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
-                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+                    Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
         }
     }
 
@@ -426,6 +416,34 @@ class ZonedDateTimeTest {
     }
 
     @Test
+    fun `withFixedOffsetZone() returns the same ZonedDateTime if it already has a fixed zone`() {
+        assertEquals(
+            ZonedDateTime(
+                DateTime(2019, 11, 4, 8, 30),
+                UtcOffset((-5).hours).toTimeZone()
+            ),
+            ZonedDateTime(
+                DateTime(2019, 11, 4, 8, 30),
+                UtcOffset((-5).hours).toTimeZone()
+            ).withFixedOffsetZone()
+        )
+    }
+
+    @Test
+    fun `withFixedOffsetZone() returns a ZonedDateTime with a fixed offset zone when region-based`() {
+        assertEquals(
+            ZonedDateTime(
+                DateTime(2019, 11, 4, 8, 30),
+                UtcOffset((-5).hours).toTimeZone()
+            ),
+            ZonedDateTime(
+                DateTime(2019, 11, 4, 8, 30),
+                nyZone
+            ).withFixedOffsetZone()
+        )
+    }
+
+    @Test
     fun `adjustedTo() converts to a different time zone while preserving the instant during overlap`() {
         // New York in overlap, Denver not in overlap
         assertEquals(
@@ -510,13 +528,13 @@ class ZonedDateTimeTest {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
-                periodOf(1.years, 1.months, 1.days)
+                    periodOf(1.years, 1.months, 1.days)
         )
 
         assertEquals(
             DateTime(2015, Month.JANUARY, 27, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
-                periodOf((-1).years, (-1).months, (-1).days)
+                    periodOf((-1).years, (-1).months, (-1).days)
         )
     }
 
@@ -531,13 +549,13 @@ class ZonedDateTimeTest {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
-                periodOf((-1).years, (-1).months, (-1).days)
+                    periodOf((-1).years, (-1).months, (-1).days)
         )
 
         assertEquals(
             DateTime(2015, Month.JANUARY, 27, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
-                periodOf(1.years, 1.months, 1.days)
+                    periodOf(1.years, 1.months, 1.days)
         )
     }
 
@@ -547,7 +565,7 @@ class ZonedDateTimeTest {
             "2019-11-03T01:30Z[Etc/UTC]",
             ZonedDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                TimeZone.UTC
+                "Etc/UTC".toTimeZone()
             ).toString()
         )
 
@@ -568,26 +586,37 @@ class ZonedDateTimeTest {
 
     @Test
     fun `String_toZonedDateTime() throws an exception when the format is unexpected`() {
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00America/New_York".toZonedDateTime() }
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00[America/New_York".toZonedDateTime() }
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+01:00[]".toZonedDateTime() }
-        assertFailsWith<DateTimeParseException> {
-            "2019-12-05T12:00+01:00[America/New_York/one_more/characters/than_supported]".toZonedDateTime()
+        listOf(
+            "2019-12-05T12:00+01:00[America/New_York ]",
+            "2019-12-05T12:00+01:00America/New_York",
+            "2019-12-05T12:00+01:00[America/New_York",
+            "2019-12-05T12:00+01:00[]",
+            "2019-12-05T12:00+01:00[America/New_York/one_more/characters/than_supported]"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toZonedDateTime() }
         }
     }
 
     @Test
     fun `String_toZonedDateTime() throws an exception when fields are out of range`() {
-        assertFailsWith<DateTimeException> { "2000-01-01T24:00Z[Etc/Utc]".toZonedDateTime() }
-        assertFailsWith<DateTimeException> { "2000-01-01T08:60-01:00[GMT+1]".toZonedDateTime() }
-        assertFailsWith<DateTimeException> { "2000-13-01T08:59-01:00[GMT+1]".toZonedDateTime() }
-        assertFailsWith<DateTimeException> { "2000-01-32T08:59-01:00[GMT+1]".toZonedDateTime() }
+        listOf(
+            "2000-01-01T24:00Z[Etc/Utc]",
+            "2000-01-01T08:60-01:00[GMT+1]",
+            "2000-13-01T08:59-01:00[GMT+1]",
+            "2000-01-32T08:59-01:00[GMT+1]"
+        ).forEach {
+            assertFailsWith<DateTimeException> { it.toZonedDateTime() }
+        }
     }
 
     @Test
-    fun `String_toZonedDateTime() throws an exception when the region is invalid`() {
-        assertFailsWith<DateTimeException> { "2000-01-01T23:00+01:00[America/Boston]".toZonedDateTime() }
-        assertFailsWith<DateTimeException> { "2000-01-01T23:00+01:00[Etc/GMT-20]".toZonedDateTime() }
+    fun `String_toZonedDateTime() throws an exception if the parsed zone isn't valid`() {
+        listOf(
+            "2000-01-01T23:00+01:00[America/Boston]",
+            "2000-01-01T23:00+01:00[Etc/GMT-20]"
+        ).forEach {
+            assertFailsWith<DateTimeException> { it.toZonedDateTime() }
+        }
     }
 
     @Test

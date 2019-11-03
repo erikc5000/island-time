@@ -2,24 +2,11 @@ package io.islandtime
 
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.hours
-import io.islandtime.zone.PlatformTimeZoneRulesProvider
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AdjustersTest {
-    private val nyZone = TimeZone("America/New_York")
-
-    @BeforeTest
-    fun setUp() {
-        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
-    }
-
-    @AfterTest
-    fun tearDown() {
-        IslandTime.reset()
-    }
+class AdjustersTest : AbstractIslandTimeTest() {
+    private val nyZone = "America/New_York".toTimeZone()
 
     @Test
     fun `Date_next() returns the next date with a particular day of week`() {

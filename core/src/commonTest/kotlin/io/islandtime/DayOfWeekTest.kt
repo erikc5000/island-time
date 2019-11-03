@@ -5,7 +5,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DayOfWeekTest {
+class DayOfWeekTest : AbstractIslandTimeTest() {
     @Test
     fun `DayOfWeek() returns the day of the week by number, starting with Monday`() {
         assertEquals(DayOfWeek.WEDNESDAY, DayOfWeek(3))

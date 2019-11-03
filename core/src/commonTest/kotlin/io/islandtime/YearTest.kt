@@ -8,7 +8,7 @@ import io.islandtime.parser.dateTimeParser
 import io.islandtime.parser.monthNumber
 import kotlin.test.*
 
-class YearTest {
+class YearTest : AbstractIslandTimeTest() {
     @Test
     fun `isValid can be used to check if the Year was initialized with an invalid value`() {
         assertFalse { Year(0).isValid }

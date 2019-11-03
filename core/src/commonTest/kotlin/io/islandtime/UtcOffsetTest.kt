@@ -5,7 +5,7 @@ import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import kotlin.test.*
 
-class UtcOffsetTest {
+class UtcOffsetTest : AbstractIslandTimeTest() {
     @Test
     fun `UtcOffset() requires all values to have the same sign`() {
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes) }
@@ -38,8 +38,18 @@ class UtcOffsetTest {
     }
 
     @Test
+    fun `IntHours_asUtcOffset() throws an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.hours.asUtcOffset() }
+    }
+
+    @Test
     fun `IntMinutes_asUtcOffset() creates a time offset from a duration of minutes`() {
         assertEquals((-12_000).seconds, (-200).minutes.asUtcOffset().totalSeconds)
+    }
+
+    @Test
+    fun `IntMinutes_asUtcOffset() throws an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.minutes.asUtcOffset() }
     }
 
     @Test
@@ -57,6 +67,18 @@ class UtcOffsetTest {
     fun `isValid property returns false if offset is outside of +-18_00`() {
         assertFalse { UtcOffset(UtcOffset.MAX_TOTAL_SECONDS + 1.seconds).isValid }
         assertFalse { UtcOffset(UtcOffset.MIN_TOTAL_SECONDS - 1.seconds).isValid }
+    }
+
+    @Test
+    fun `validated() returns the unmodified offset when within the valid range`() {
+        assertEquals(UtcOffset.MAX, UtcOffset.MAX.validated())
+        assertEquals(UtcOffset.MIN, UtcOffset.MIN.validated())
+    }
+
+    @Test
+    fun `validated() throws an exception if the offset is outside the valid range`() {
+        assertFailsWith<DateTimeException> { UtcOffset(UtcOffset.MAX_TOTAL_SECONDS + 1.seconds).validated() }
+        assertFailsWith<DateTimeException> { UtcOffset(UtcOffset.MIN_TOTAL_SECONDS - 1.seconds).validated() }
     }
 
     @Test

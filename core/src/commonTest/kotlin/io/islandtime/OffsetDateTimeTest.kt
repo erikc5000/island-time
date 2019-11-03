@@ -8,7 +8,7 @@ import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import kotlin.test.*
 
-class OffsetDateTimeTest {
+class OffsetDateTimeTest : AbstractIslandTimeTest() {
     private val testOffset = OffsetDateTime(
         2019, Month.FEBRUARY, 1, 1, 2, 3, 4, UtcOffset.MIN
     )

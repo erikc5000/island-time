@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class InstantTest {
+class InstantTest : AbstractIslandTimeTest() {
     @Test
     fun `millisecond properties return expected values`() {
         assertEquals(0L, Instant.UNIX_EPOCH.unixEpochMillisecond)

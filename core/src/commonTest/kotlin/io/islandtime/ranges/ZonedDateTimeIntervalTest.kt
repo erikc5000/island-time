@@ -3,20 +3,9 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
-import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import kotlin.test.*
 
-class ZonedDateTimeIntervalTest {
-    @BeforeTest
-    fun setUp() {
-        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
-    }
-
-    @AfterTest
-    fun tearDown() {
-        IslandTime.reset()
-    }
-
+class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `EMPTY returns an empty interval`() {
         assertTrue { ZonedDateTimeInterval.EMPTY.isEmpty() }

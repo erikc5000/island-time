@@ -9,12 +9,17 @@ import io.islandtime.parser.*
 
 /**
  * The time shift between a local time and UTC.
+ *
+ * To ensure that the offset is within the valid supported range, you must explicitly call [validated].
+ *
+ * @param totalSeconds the total number of seconds to offset by
+ * @see validated
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-inline class UtcOffset internal constructor(
-    val totalSeconds: IntSeconds
-) : Comparable<UtcOffset> {
+inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
 
+    /**
+     * Check if this offset is within the supported range.
+     */
     val isValid: Boolean get() = totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS
 
     /**
@@ -62,6 +67,24 @@ inline class UtcOffset internal constructor(
         }
     }
 
+    /**
+     * Check if the offset is valid and throw an exception if it isn't.
+     * @throws DateTimeException if the offset is outside the supported range
+     * @see isValid
+     */
+    fun validate() {
+        if (!isValid) {
+            throw DateTimeException("'$totalSeconds' is outside the valid offset range of +/-18:00")
+        }
+    }
+
+    /**
+     * Ensure that the offset is valid, throwing an exception if it isn't.
+     * @throws DateTimeException if the offset is outside the supported range
+     * @see isValid
+     */
+    fun validated(): UtcOffset = apply { validate() }
+
     companion object {
         val MAX_TOTAL_SECONDS = (18 * SECONDS_PER_HOUR).seconds
         val MIN_TOTAL_SECONDS = (-18 * SECONDS_PER_HOUR).seconds
@@ -69,17 +92,6 @@ inline class UtcOffset internal constructor(
         val MIN = UtcOffset(MAX_TOTAL_SECONDS)
         val MAX = UtcOffset(MIN_TOTAL_SECONDS)
         val ZERO = UtcOffset(0.seconds)
-
-        /**
-         * Create a UTC time offset from the total number of seconds to offset by.
-         */
-        operator fun invoke(totalSeconds: IntSeconds): UtcOffset {
-            if (totalSeconds !in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {
-                throw DateTimeException("'$totalSeconds' is outside the valid offset range of +/-18:00")
-            }
-
-            return UtcOffset(totalSeconds)
-        }
     }
 }
 
@@ -89,6 +101,7 @@ inline class UtcOffset internal constructor(
  * @param hours hours to offset by, within +/-18
  * @param minutes minutes to offset by, within +/-59
  * @param seconds seconds to offset by, within +/-59
+ * @throws DateTimeException if any of the individual components is outside the valid range
  * @return a [UtcOffset]
  */
 @Suppress("FunctionName")
@@ -103,13 +116,15 @@ fun UtcOffset(
 
 /**
  * Convert a duration of hours into a UTC time offset of the same length.
+ * @throws ArithmeticException if overflow occurs
  */
-fun IntHours.asUtcOffset() = UtcOffset(this.inSeconds)
+fun IntHours.asUtcOffset() = UtcOffset(this.inSecondsExact())
 
 /**
  * Convert a duration of minutes into a UTC time offset of the same length.
+ * @throws ArithmeticException if overflow occurs
  */
-fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
+fun IntMinutes.asUtcOffset() = UtcOffset(this.inSecondsExact())
 
 /**
  * Convert a duration of seconds into a UTC time offset of the same length.
@@ -130,7 +145,7 @@ fun String.toUtcOffset(parser: DateTimeParser): UtcOffset {
 }
 
 /**
- * Resolve a parser result into a [UtcOffset]
+ * Resolve a parser result into a [UtcOffset].
  *
  * Required fields are [DateTimeField.UTC_OFFSET_TOTAL_SECONDS] or [DateTimeField.UTC_OFFSET_SIGN] in conjunction with
  * any combination of [DateTimeField.UTC_OFFSET_HOURS], [DateTimeField.UTC_OFFSET_MINUTES], and
@@ -140,7 +155,7 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
     val totalSeconds = fields[DateTimeField.UTC_OFFSET_TOTAL_SECONDS]
 
     if (totalSeconds != null) {
-        return UtcOffset(totalSeconds.toIntExact().seconds)
+        return UtcOffset(totalSeconds.toIntExact().seconds).validated()
     }
 
     val sign = fields[DateTimeField.UTC_OFFSET_SIGN]
@@ -151,9 +166,9 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
         val seconds = (fields[DateTimeField.UTC_OFFSET_SECONDS]?.toIntExact() ?: 0).seconds
 
         return if (sign < 0L) {
-            UtcOffset(-hours, -minutes, -seconds)
+            UtcOffset(-hours, -minutes, -seconds).validated()
         } else {
-            UtcOffset(hours, minutes, seconds)
+            UtcOffset(hours, minutes, seconds).validated()
         }
     }
 
@@ -162,11 +177,11 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
 
 internal const val MAX_UTC_OFFSET_STRING_LENGTH = 9
 
-internal fun StringBuilder.appendUtcOffset(utcOffset: UtcOffset): StringBuilder {
-    if (utcOffset.isZero) {
+internal fun StringBuilder.appendUtcOffset(offset: UtcOffset): StringBuilder {
+    if (offset.isZero) {
         append('Z')
     } else {
-        utcOffset.toComponents { sign, hours, minutes, seconds ->
+        offset.toComponents { sign, hours, minutes, seconds ->
             append(if (sign < 0) '-' else '+')
             appendZeroPadded(hours.value, 2)
             append(':')

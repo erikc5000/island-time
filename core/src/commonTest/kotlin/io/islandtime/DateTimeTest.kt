@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class DateTimeTest {
+class DateTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `at infix combines date with time`() {
         val today = Date(2019, Month.JANUARY, 1)

@@ -1,6 +1,6 @@
 package io.islandtime.clock
 
-import io.islandtime.TimeZone
+import io.islandtime.ios.toIslandTimeZone
 import io.islandtime.measures.LongMilliseconds
 import io.islandtime.measures.microseconds
 import io.islandtime.measures.seconds
@@ -10,7 +10,7 @@ import platform.posix.gettimeofday
 import platform.posix.timeval
 
 internal actual object PlatformSystemClock {
-    actual fun currentZone() = TimeZone(NSTimeZone.localTimeZone.name)
+    actual fun currentZone() = NSTimeZone.localTimeZone.toIslandTimeZone()
 
     actual fun read(): LongMilliseconds {
         return memScoped {

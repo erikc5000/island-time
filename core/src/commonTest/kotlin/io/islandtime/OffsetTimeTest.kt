@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class OffsetTimeTest {
+class OffsetTimeTest : AbstractIslandTimeTest() {
     private val time1234 = Time(1, 2, 3, 4) at UtcOffset.MAX
 
     @Test
