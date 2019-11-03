@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class MonthTest {
+class MonthTest : AbstractIslandTimeTest() {
     @Test
     fun `Month() returns a month by ISO number`() {
         assertEquals(Month.APRIL, Month(4))

@@ -2,9 +2,9 @@ package io.islandtime.zone
 
 import co.touchlab.stately.collections.SharedHashMap
 import io.islandtime.*
+import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.ios.fromMillisecondsSinceUnixEpoch
-import io.islandtime.ios.toIslandInstant
+import io.islandtime.ios.toIslandDateTimeAt
 import io.islandtime.ios.toNSDate
 import io.islandtime.ios.toNSDateComponents
 import io.islandtime.measures.*
@@ -17,7 +17,8 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     private val cachedRegionIds = (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
 
     override val databaseVersion: String get() = NSTimeZone.timeZoneDataVersion
-    override val availableRegionIds = cachedRegionIds
+    override val availableRegionIds get() = cachedRegionIds
+    override fun hasRulesFor(regionId: String) = NSTimeZone.timeZoneWithName(regionId) != null
 
     override fun rulesFor(regionId: String): TimeZoneRules {
         return timeZoneRules.getOrPut(regionId) {
@@ -84,6 +85,9 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
         return timeZone.daylightSavingTimeOffsetForDate(instant.toNSDate()).toInt().seconds
     }
 
+    override val hasFixedOffset: Boolean
+        get() = timeZone.nextDaylightSavingTimeTransitionAfterDate(Instant.MIN.toNSDate()) == null
+
     private fun offsetAt(date: NSDate): UtcOffset {
         return timeZone.secondsFromGMTForDate(date).toInt().seconds.asUtcOffset()
     }
@@ -108,7 +112,7 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
             val offsetBefore = offsetAt(currentDate)
             val offsetAfter = offsetAt(nextTransition)
-            val dateTimeBefore = nextTransition.toIslandInstant().toDateTimeAt(offsetBefore)
+            val dateTimeBefore = nextTransition.toIslandDateTimeAt(offsetBefore)
 
             transitionList += IosTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter)
 
@@ -149,6 +153,10 @@ private class IosTimeZoneOffsetTransition(
         result = 31 * result + offsetAfter.hashCode()
         return result
     }
+}
+
+private fun NSDate.Companion.fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds): NSDate {
+    return NSDate.dateWithTimeIntervalSince1970(milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND)
 }
 
 private fun DateTime.toNSDateOrNull(calendar: NSCalendar) = calendar.dateFromComponents(toNSDateComponents())

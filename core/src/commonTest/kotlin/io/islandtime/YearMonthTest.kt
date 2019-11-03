@@ -5,7 +5,7 @@ import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import kotlin.test.*
 
-class YearMonthTest {
+class YearMonthTest : AbstractIslandTimeTest() {
     @Test
     fun at_infix_combines_Year_and_Month() {
         assertEquals(

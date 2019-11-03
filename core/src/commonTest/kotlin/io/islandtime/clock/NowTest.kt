@@ -4,23 +4,10 @@ import io.islandtime.*
 import io.islandtime.measures.days
 import io.islandtime.measures.hours
 import io.islandtime.measures.milliseconds
-import io.islandtime.zone.PlatformTimeZoneRulesProvider
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class NowTest {
-    @BeforeTest
-    fun setUp() {
-        IslandTime.initializeWith(PlatformTimeZoneRulesProvider)
-    }
-
-    @AfterTest
-    fun tearDown() {
-        IslandTime.reset()
-    }
-
+class NowTest : AbstractIslandTimeTest() {
     @Test
     fun `Year_now()`() {
         val clock = FixedClock((-1L).milliseconds)

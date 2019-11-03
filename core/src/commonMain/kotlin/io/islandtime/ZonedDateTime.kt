@@ -52,13 +52,16 @@ class ZonedDateTime private constructor(
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
+    /**
+     * Convert to an [Instant] representing the same time point.
+     */
     fun toInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
-            dateTime == other.dateTime &&
-            zone == other.zone &&
-            offset == other.offset)
+                dateTime == other.dateTime &&
+                zone == other.zone &&
+                offset == other.offset)
     }
 
     override fun hashCode(): Int {
@@ -292,8 +295,16 @@ class ZonedDateTime private constructor(
     }
 
     /**
+     * If this date-time uses a region-based time zone, return a copy with a fixed offset. Otherwise, return this
+     * date-time, unchanged.
+     */
+    fun withFixedOffsetZone(): ZonedDateTime {
+        return if (zone is TimeZone.FixedOffset) this else create(dateTime, offset, offset.toTimeZone())
+    }
+
+    /**
      * Change the time zone of a [ZonedDateTime], adjusting the date, time, and offset such that the instant
-     * represented by it remains the same
+     * represented by it remains the same.
      */
     fun adjustedTo(newTimeZone: TimeZone): ZonedDateTime {
         return if (newTimeZone == zone) {
@@ -304,7 +315,7 @@ class ZonedDateTime private constructor(
     }
 
     /**
-     * Convert to an [OffsetDateTime] representing the current date, time, and offset
+     * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
      */
     fun toOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
@@ -443,7 +454,7 @@ infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
  * gap, it will adjusted forward by the length of the gap. If it falls within an overlap, the earlier offset will be
  * used.
  */
-fun OffsetDateTime.atSimilarLocalTimeIn(zone: TimeZone): ZonedDateTime {
+fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
     return ZonedDateTime.fromLocal(dateTime, zone, offset)
 }
 
@@ -451,8 +462,15 @@ fun OffsetDateTime.atSimilarLocalTimeIn(zone: TimeZone): ZonedDateTime {
  * Get the [ZonedDateTime] corresponding to the same instant represented by an [OffsetDateTime] in a particular
  * time zone
  */
-fun OffsetDateTime.atSameInstantIn(zone: TimeZone): ZonedDateTime {
+fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
     return ZonedDateTime.fromInstant(dateTime, offset, zone)
+}
+
+/**
+ * Convert to a [ZonedDateTime] with a fixed time zone.
+ */
+fun OffsetDateTime.toZonedDateTime(): ZonedDateTime {
+    return ZonedDateTime.fromLocal(dateTime, offset.toTimeZone(), offset)
 }
 
 /**
@@ -499,14 +517,14 @@ fun String.toZonedDateTime(parser: DateTimeParser): ZonedDateTime {
 internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
-    val regionId = timeZoneId
 
-    return if (dateTime != null && offset != null && regionId != null) {
-        val zone = regionId.toTimeZone().validated()
+    return if (dateTime != null && offset != null) {
+        val zone = timeZoneId?.toTimeZone() ?: offset.toTimeZone()
 
-        // Check if the offset is valid for the time zone as we understand it and if not, interpret it as an instant
+        // Check if the offset is valid for the time zone as we understand it and if not, adjust the date-time and
+        // offset to valid values while preserving the instant of the parsed value
         if (!zone.rules.isValidOffset(dateTime, offset)) {
-            dateTime.toInstantAt(offset).at(zone)
+            ZonedDateTime.fromInstant(dateTime, offset, zone)
         } else {
             ZonedDateTime.create(dateTime, offset, zone)
         }
@@ -522,9 +540,12 @@ internal fun StringBuilder.appendZonedDateTime(zonedDateTime: ZonedDateTime): St
     with(zonedDateTime) {
         appendDateTime(dateTime)
         appendUtcOffset(offset)
-        append('[')
-        append(zone)
-        append(']')
+
+        if (zone !is TimeZone.FixedOffset) {
+            append('[')
+            append(zone)
+            append(']')
+        }
     }
     return this
 }

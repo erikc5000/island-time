@@ -15,6 +15,10 @@ class OffsetDateTime(
     val offset: UtcOffset
 ) : TimePoint<OffsetDateTime> {
 
+    init {
+        offset.validate()
+    }
+
     /**
      * Create an [OffsetDateTime]
      */
@@ -51,11 +55,6 @@ class OffsetDateTime(
     inline val date: Date get() = dateTime.date
     inline val time: Time get() = dateTime.time
 
-    /**
-     * Get the [OffsetTime] representing the current time and offset
-     */
-    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
-
     inline val hour: Int get() = dateTime.hour
     inline val minute: Int get() = dateTime.minute
     inline val second: Int get() = dateTime.second
@@ -90,6 +89,14 @@ class OffsetDateTime(
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
+    /**
+     * Convert to an [OffsetTime] with the same time of day and offset.
+     */
+    fun toOffsetTime() = OffsetTime(time, offset)
+
+    /**
+     * Convert to an [Instant] representing the same time point.
+     */
     fun toInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     /**

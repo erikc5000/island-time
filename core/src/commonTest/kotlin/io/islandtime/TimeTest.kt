@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class TimeTest {
+class TimeTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when constructed with an invalid hour`() {
         assertFailsWith<DateTimeException> { Time(-1, 0) }

@@ -72,3 +72,5 @@ fun ZonedDateTime.Companion.now() = now(SystemClock())
 fun ZonedDateTime.Companion.now(clock: Clock): ZonedDateTime {
     return fromMillisecondsSinceUnixEpoch(clock.read(), clock.zone)
 }
+
+fun TimeZone.Companion.systemDefault() = SystemClock.currentZone()

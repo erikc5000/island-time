@@ -2,6 +2,7 @@ package io.islandtime.clock
 
 import io.islandtime.Instant
 import io.islandtime.TimeZone
+import io.islandtime.measures.milliseconds
 import io.islandtime.toTimeZone
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,22 +11,29 @@ import kotlin.test.assertTrue
 
 class ClockTest {
     @Test
-    fun `SystemClock_Utc instant()`() {
-        assertTrue { SystemClock.UTC.instant() > Instant.UNIX_EPOCH }
+    fun `UTC SystemClock`() {
+        val clock = SystemClock.UTC
+
+        assertTrue { clock.read() > 0L.milliseconds }
+        assertTrue { clock.instant() > Instant.UNIX_EPOCH }
+        assertEquals(TimeZone.UTC, clock.zone)
     }
 
     @Test
-    fun `SystemClock_Utc timeZone`() {
-        assertEquals(TimeZone.UTC, SystemClock.UTC.zone)
+    fun `SystemClock() without zone`() {
+        val clock = SystemClock()
+
+        assertTrue { clock.read() > 0L.milliseconds }
+        assertTrue { clock.instant() > Instant.UNIX_EPOCH }
+        assertNotEquals("", clock.zone.id)
     }
 
     @Test
-    fun `SystemClock_Default() timeZone`() {
-        assertNotEquals("", SystemClock().zone.regionId)
-    }
+    fun `SystemClock() with zone`() {
+        val clock = SystemClock("America/Denver".toTimeZone())
 
-    @Test
-    fun `SystemClock_Zoned() timeZone`() {
-        assertEquals("America/Denver".toTimeZone(), SystemClock("America/Denver".toTimeZone()).zone)
+        assertTrue { clock.read() > 0L.milliseconds }
+        assertTrue { clock.instant() > Instant.UNIX_EPOCH }
+        assertEquals("America/Denver".toTimeZone(), clock.zone)
     }
 }

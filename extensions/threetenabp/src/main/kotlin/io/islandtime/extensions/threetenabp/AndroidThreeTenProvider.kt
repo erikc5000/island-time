@@ -37,7 +37,12 @@ class AndroidThreeTenProvider(context: Context, assetPath: String) : TimeZoneRul
             throw TimeZoneRulesException(e.message, e)
         }
 
-    override val availableRegionIds: Set<String> = ZoneRulesProvider.getAvailableZoneIds()
+    override val availableRegionIds: Set<String>
+        get() = ZoneRulesProvider.getAvailableZoneIds()
+
+    override fun hasRulesFor(regionId: String): Boolean {
+        return availableRegionIds.contains(regionId)
+    }
 
     override fun rulesFor(regionId: String): TimeZoneRules {
         return try {
@@ -98,6 +103,8 @@ private class JavaTimeZoneRules(
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
         return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
     }
+
+    override val hasFixedOffset: Boolean get() = javaZoneRules.isFixedOffset
 }
 
 private class JavaTimeZoneOffsetTransition(

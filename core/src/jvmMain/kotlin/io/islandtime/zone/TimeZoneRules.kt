@@ -12,7 +12,7 @@ import java.time.zone.ZoneRulesException
 import java.time.zone.ZoneRulesProvider
 
 /**
- * A time zone rules provider that draws from the database built into the java.time library
+ * A time zone rules provider that draws from the database built into the java.time library.
  */
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
 
@@ -23,7 +23,12 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
             throw TimeZoneRulesException(e.message, e)
         }
 
-    override val availableRegionIds: Set<String> = ZoneRulesProvider.getAvailableZoneIds()
+    override val availableRegionIds: Set<String>
+        get() = ZoneRulesProvider.getAvailableZoneIds()
+
+    override fun hasRulesFor(regionId: String): Boolean {
+        return availableRegionIds.contains(regionId)
+    }
 
     override fun rulesFor(regionId: String): TimeZoneRules {
         return try {
@@ -34,9 +39,9 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     }
 }
 
-private class JavaTimeZoneRules(
-    private val javaZoneRules: ZoneRules
-) : TimeZoneRules {
+private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZoneRules {
+
+    override val hasFixedOffset: Boolean get() = javaZoneRules.isFixedOffset
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
         val offset = javaZoneRules.getOffset(JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value))

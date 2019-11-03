@@ -1,10 +1,7 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.measures.IntNanoseconds
-import io.islandtime.measures.IntSeconds
-import io.islandtime.measures.LongMilliseconds
-import io.islandtime.measures.LongSeconds
+import io.islandtime.measures.*
 
 class TimeZoneRulesException(
     message: String? = null,
@@ -12,10 +9,10 @@ class TimeZoneRulesException(
 ) : DateTimeException(message, cause)
 
 /**
- * An abstraction that allows time zone rules to be supplied from any source.
+ * An abstraction that allows time zone rules to be supplied from any data source.
  *
- * The set of supported region IDs is expected to vary depending on the source, but the IDs themselves should be valid
- * IANA Time Zone Database region IDs.
+ * The set of supported identifiers is expected to vary depending on the source, but should typically represent regions
+ * defined in the IANA Time Zone Database.
  */
 interface TimeZoneRulesProvider {
     /**
@@ -24,22 +21,26 @@ interface TimeZoneRulesProvider {
     val databaseVersion: String get() = ""
 
     /**
-     * The available time zone region IDs.
+     * The available time zone region IDs, as reported by the the provider.
+     *
+     * In some cases, this may be only a subset of those actually supported. To check if a particular region ID can be
+     * handled, use [hasRulesFor].
+     * @see hasRulesFor
      */
     val availableRegionIds: Set<String>
 
     /**
+     * Check if [regionId] has rules associated with it.
+     */
+    fun hasRulesFor(regionId: String): Boolean
+
+    /**
      * Get the rules associated with a particular region ID.
+     * @throws TimeZoneRulesException if the region ID isn't supported
      */
     fun rulesFor(regionId: String): TimeZoneRules
 
-    companion object : TimeZoneRulesProvider {
-        private val provider get() = IslandTime.timeZoneRulesProvider
-
-        override val databaseVersion get() = provider.databaseVersion
-        override val availableRegionIds get() = provider.availableRegionIds
-        override fun rulesFor(regionId: String) = provider.rulesFor(regionId)
-    }
+    companion object : TimeZoneRulesProvider by IslandTime.timeZoneRulesProvider
 }
 
 /**
@@ -51,14 +52,44 @@ expect object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider
  * A discontinuity in the local timeline, usually caused by daylight savings time changes.
  */
 interface TimeZoneOffsetTransition {
+    /**
+     * The date and time of day at the start of the transition.
+     */
     val dateTimeBefore: DateTime
+
+    /**
+     * The date and time of day at the end of the transition.
+     */
     val dateTimeAfter: DateTime
+
+    /**
+     * Check if this is a gap, meaning that there are clock times that go "missing".
+     */
     val isGap: Boolean
+
+    /**
+     * Check if this is an overlap, meaning that there are clock times that exist twice.
+     */
     val isOverlap: Boolean
+
+    /**
+     * The UTC offset before the transition.
+     */
     val offsetBefore: UtcOffset
+
+    /**
+     * The UTC offset after the transition.
+     */
     val offsetAfter: UtcOffset
+
+    /**
+     * The duration of the transition period in seconds.
+     */
     val duration: IntSeconds
 
+    /**
+     * Get a list of the valid offsets during this transition. If it is gap,
+     */
     val validOffsets: List<UtcOffset>
         get() = if (isGap) emptyList() else listOf(offsetBefore, offsetAfter)
 }
@@ -67,6 +98,11 @@ interface TimeZoneOffsetTransition {
  * The set of rules for a particular time zone.
  */
 interface TimeZoneRules {
+    /**
+     * Check if the time zone has a fixed offset from UTC.
+     */
+    val hasFixedOffset: Boolean
+
     fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset
     fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset
     fun offsetAt(instant: Instant): UtcOffset
@@ -75,6 +111,35 @@ interface TimeZoneRules {
     fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition?
     fun isValidOffset(dateTime: DateTime, offset: UtcOffset): Boolean = validOffsetsAt(dateTime).contains(offset)
 
+    /**
+     * Check if daylight savings time is in effect at a particular instant.
+     */
     fun isDaylightSavingsAt(instant: Instant): Boolean
+
+    /**
+     * Get the amount of daylight savings time in effect at a particular instant. This is the amount of time added to
+     * the standard offset.
+     */
     fun daylightSavingsAt(instant: Instant): IntSeconds
+}
+
+/**
+ * A time zone rules implementation for a fixed offset from UTC.
+ */
+internal class FixedTimeZoneRules(private val offset: UtcOffset) : TimeZoneRules {
+    override val hasFixedOffset: Boolean get() = true
+
+    override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds) = offset
+
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+        return offset
+    }
+
+    override fun offsetAt(instant: Instant) = offset
+    override fun offsetAt(dateTime: DateTime) = offset
+    override fun validOffsetsAt(dateTime: DateTime) = listOf(offset)
+    override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? = null
+    override fun isValidOffset(dateTime: DateTime, offset: UtcOffset) = offset == this.offset
+    override fun isDaylightSavingsAt(instant: Instant) = false
+    override fun daylightSavingsAt(instant: Instant) = 0.seconds
 }

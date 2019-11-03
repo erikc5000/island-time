@@ -5,7 +5,7 @@ import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import kotlin.test.*
 
-class DateTest {
+class DateTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when constructed with an invalid year`() {
         assertFailsWith<DateTimeException> { Date(-1, Month.JANUARY, 1) }
