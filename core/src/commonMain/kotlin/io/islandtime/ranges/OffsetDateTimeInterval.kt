@@ -73,7 +73,7 @@ class OffsetDateTimeInterval(
             DateTime.MAX at UtcOffset.ZERO
         )
 
-        fun withInclusiveEnd(
+        internal fun withInclusiveEnd(
             start: OffsetDateTime,
             endInclusive: OffsetDateTime
         ): OffsetDateTimeInterval {
@@ -87,6 +87,9 @@ class OffsetDateTimeInterval(
         }
     }
 }
+
+fun emptyOffsetDateTimeInterval() = OffsetDateTimeInterval.EMPTY
+fun unboundedOffsetDateTimeInterval() = OffsetDateTimeInterval.UNBOUNDED
 
 fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
 

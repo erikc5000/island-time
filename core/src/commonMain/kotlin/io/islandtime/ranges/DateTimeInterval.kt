@@ -177,7 +177,7 @@ class DateTimeInterval(
          */
         val UNBOUNDED = DateTimeInterval(DateTime.MIN, DateTime.MAX)
 
-        fun withInclusiveEnd(start: DateTime, endInclusive: DateTime): DateTimeInterval {
+        internal fun withInclusiveEnd(start: DateTime, endInclusive: DateTime): DateTimeInterval {
             val endExclusive = if (endInclusive == DateTime.MAX) {
                 endInclusive
             } else {
@@ -188,6 +188,9 @@ class DateTimeInterval(
         }
     }
 }
+
+fun emptyDateTimeInterval() = DateTimeInterval.EMPTY
+fun unboundedDateTimeInterval() = DateTimeInterval.UNBOUNDED
 
 fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
 

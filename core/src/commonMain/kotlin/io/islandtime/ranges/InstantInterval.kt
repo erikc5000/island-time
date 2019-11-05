@@ -34,7 +34,7 @@ class InstantInterval(
          */
         val UNBOUNDED = InstantInterval(Instant.MIN, Instant.MAX)
 
-        fun withInclusiveEnd(
+        internal fun withInclusiveEnd(
             start: Instant,
             endInclusive: Instant
         ): InstantInterval {
@@ -48,6 +48,9 @@ class InstantInterval(
         }
     }
 }
+
+fun emptyInstantInterval() = InstantInterval.EMPTY
+fun unboundedInstantInterval() = InstantInterval.UNBOUNDED
 
 fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
 

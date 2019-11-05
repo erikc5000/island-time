@@ -85,7 +85,7 @@ class ZonedDateTimeInterval(
             DateTime.MAX at TimeZone.UTC
         )
 
-        fun withInclusiveEnd(
+        internal fun withInclusiveEnd(
             start: ZonedDateTime,
             endInclusive: ZonedDateTime
         ): ZonedDateTimeInterval {
@@ -99,6 +99,9 @@ class ZonedDateTimeInterval(
         }
     }
 }
+
+fun emptyZonedDateTimeInterval() = ZonedDateTimeInterval.EMPTY
+fun unboundedZonedDateTimeInterval() = ZonedDateTimeInterval.UNBOUNDED
 
 fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
 
