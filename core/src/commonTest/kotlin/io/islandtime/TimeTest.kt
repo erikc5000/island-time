@@ -3,6 +3,7 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -170,8 +171,8 @@ class TimeTest : AbstractIslandTimeTest() {
     @Test
     fun `add a duration`() {
         assertEquals(
-            Time(0,0,0,2),
-            Time(23,0,0,1) +
+            Time(0, 0, 0, 2),
+            Time(23, 0, 0, 1) +
                 durationOf(2.days + 1.hours + 1.nanoseconds)
         )
     }
@@ -185,8 +186,8 @@ class TimeTest : AbstractIslandTimeTest() {
     @Test
     fun `subtract a duration`() {
         assertEquals(
-            Time(22,0,0,0),
-            Time(23,0,0,1) -
+            Time(22, 0, 0, 0),
+            Time(23, 0, 0, 1) -
                 durationOf(2.days + 1.hours + 1.nanoseconds)
         )
     }

@@ -2,6 +2,7 @@ package io.islandtime.ios
 
 import io.islandtime.*
 import io.islandtime.measures.seconds
+import io.islandtime.test.AbstractIslandTimeTest
 import platform.Foundation.*
 import kotlin.test.*
 

@@ -6,6 +6,7 @@ import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class OffsetDateTimeTest : AbstractIslandTimeTest() {

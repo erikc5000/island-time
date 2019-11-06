@@ -1,5 +1,6 @@
-package io.islandtime
+package io.islandtime.test
 
+import io.islandtime.IslandTime
 import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import io.islandtime.zone.TimeZoneRulesProvider
 import kotlin.test.AfterTest
