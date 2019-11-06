@@ -3,6 +3,7 @@ package io.islandtime
 import io.islandtime.ranges.DateRange
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class YearMonthTest : AbstractIslandTimeTest() {
@@ -352,7 +353,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
         assertTrue { Date(2019, Month.JANUARY, 1) in yearMonth }
         assertTrue { Date(2019, Month.JANUARY, 31) in yearMonth }
         assertFalse { Date(2019, Month.FEBRUARY, 1) in yearMonth }
-        assertFalse { Date(2020, Month.JANUARY, 1) in yearMonth}
+        assertFalse { Date(2020, Month.JANUARY, 1) in yearMonth }
         assertFalse { Date(2018, Month.DECEMBER, 31) in yearMonth }
     }
 

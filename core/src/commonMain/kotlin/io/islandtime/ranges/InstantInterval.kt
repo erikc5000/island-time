@@ -7,7 +7,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.toInstant
-import kotlin.math.min
 import kotlin.random.Random
 
 /**
@@ -99,19 +98,3 @@ fun InstantInterval.random(random: Random): Instant {
  * Get a range containing all of the representable instants up to, but not including [to]
  */
 infix fun Instant.until(to: Instant) = InstantInterval(this, to)
-
-infix fun InstantInterval.intersect(other: InstantInterval): InstantInterval {
-    return if (other.start >= endExclusive || other.endExclusive <= start) {
-        InstantInterval.EMPTY
-    } else {
-        InstantInterval(maxOf(start, other.start), minOf(endExclusive, other.endExclusive))
-    }
-}
-
-//infix fun InstantInterval.union(other: InstantInterval): InstantInterval {
-//    if (other.start >= endExclusive || other.endExclusive <= start) {
-//        InstantInterval.EMPTY
-//    } else
-//        InstantInterval(maxOf(start, other.start), minOf(endExclusive, other.endExclusive))
-//    }
-//}

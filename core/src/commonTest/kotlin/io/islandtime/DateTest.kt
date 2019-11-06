@@ -3,6 +3,7 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class DateTest : AbstractIslandTimeTest() {
@@ -67,28 +68,16 @@ class DateTest : AbstractIslandTimeTest() {
     @Test
     fun `dayOfWeek returns the expected day`() {
         assertEquals(
-            DayOfWeek.THURSDAY, Date(
-                1970,
-                Month.JANUARY, 1
-            ).dayOfWeek
+            DayOfWeek.THURSDAY, Date(1970, Month.JANUARY, 1).dayOfWeek
         )
         assertEquals(
-            DayOfWeek.FRIDAY, Date(
-                1970,
-                Month.JANUARY, 2
-            ).dayOfWeek
+            DayOfWeek.FRIDAY, Date(1970, Month.JANUARY, 2).dayOfWeek
         )
         assertEquals(
-            DayOfWeek.WEDNESDAY, Date(
-                1969,
-                Month.DECEMBER, 31
-            ).dayOfWeek
+            DayOfWeek.WEDNESDAY, Date(1969, Month.DECEMBER, 31).dayOfWeek
         )
         assertEquals(
-            DayOfWeek.SATURDAY, Date(
-                2019,
-                Month.JULY, 27
-            ).dayOfWeek
+            DayOfWeek.SATURDAY, Date(2019, Month.JULY, 27).dayOfWeek
         )
     }
 
@@ -506,15 +495,21 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDate() throws an exception when the format is not an ISO-8601 extended date`() {
-        assertFailsWith<DateTimeParseException> { "1".toDate() }
-        assertFailsWith<DateTimeParseException> { "--".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010-".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010--".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010-10-".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010-10-2".toDate() }
-        assertFailsWith<DateTimeParseException> { "999-10-20".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010/10/20".toDate() }
+        listOf(
+            "1",
+            "--",
+            "2010",
+            "2010-",
+            "2010--",
+            "2010-10-",
+            "2010-10-2",
+            "999-10-20",
+            "2010/10/20",
+            "2010-10-20-",
+            "2010-10-20 "
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toDate() }
+        }
     }
 
     @Test

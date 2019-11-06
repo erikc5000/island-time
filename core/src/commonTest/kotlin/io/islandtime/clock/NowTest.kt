@@ -4,6 +4,7 @@ import io.islandtime.*
 import io.islandtime.measures.days
 import io.islandtime.measures.hours
 import io.islandtime.measures.milliseconds
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

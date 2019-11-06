@@ -3,6 +3,7 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.zone.*
 import kotlin.test.*
 
@@ -162,7 +163,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 nyZone
             ),
             DateTime(2019, 3, 3, 1, 0) at
-                    nyZone
+                nyZone
         )
     }
 
@@ -194,7 +195,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 nyZone
             ),
             Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds)
-                    at nyZone
+                at nyZone
         )
     }
 
@@ -276,7 +277,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     fun `compareTo() compares based on instant only`() {
         assertTrue {
             Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
-                    Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
+                Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
         }
     }
 
@@ -528,13 +529,13 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
-                    periodOf(1.years, 1.months, 1.days)
+                periodOf(1.years, 1.months, 1.days)
         )
 
         assertEquals(
             DateTime(2015, Month.JANUARY, 27, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
-                    periodOf((-1).years, (-1).months, (-1).days)
+                periodOf((-1).years, (-1).months, (-1).days)
         )
     }
 
@@ -549,13 +550,13 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
-                    periodOf((-1).years, (-1).months, (-1).days)
+                periodOf((-1).years, (-1).months, (-1).days)
         )
 
         assertEquals(
             DateTime(2015, Month.JANUARY, 27, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
-                    periodOf(1.years, 1.months, 1.days)
+                periodOf(1.years, 1.months, 1.days)
         )
     }
 

@@ -2,6 +2,7 @@ package io.islandtime
 
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.hours
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
