@@ -595,7 +595,7 @@ fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
  * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or
  * "2019-08-22 18:00:30.123456789"
  */
-fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.CALENDAR_DATE_TIME)
+fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
 
 /**
  * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the necessary fields

@@ -591,7 +591,12 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             "2019-12-05T12:00+01:00America/New_York",
             "2019-12-05T12:00+01:00[America/New_York",
             "2019-12-05T12:00+01:00[]",
-            "2019-12-05T12:00+01:00[America/New_York/one_more/characters/than_supported]"
+            "2019-12-05T12:00+01:00[America/New_York/one_more/characters/than_supported]",
+            "2019-12-05T12:00+01:00:00[America/New_York ]",
+            "2019-12-05T12:00+01:00:00America/New_York",
+            "2019-12-05T12:00+01:00:00[America/New_York",
+            "2019-12-05T12:00+01:00:00[]",
+            "2019-12-05T12:00+01:00:00[America/New_York/one_more/characters/than_supported]"
         ).forEach {
             assertFailsWith<DateTimeParseException> { it.toZonedDateTime() }
         }
@@ -637,6 +642,15 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 nyZone
             ),
             "2019-11-03T01:00-05:00[America/New_York]".toZonedDateTime()
+        )
+
+        assertEquals(
+            ZonedDateTime.create(
+                DateTime(2019, 11, 3, 1, 0),
+                UtcOffset((-5).hours),
+                UtcOffset((-5).hours).toTimeZone()
+            ),
+            "2019-11-03T01:00-05:00".toZonedDateTime()
         )
     }
 
