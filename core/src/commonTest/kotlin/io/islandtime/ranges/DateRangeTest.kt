@@ -3,10 +3,9 @@ package io.islandtime.ranges
 import io.islandtime.Date
 import io.islandtime.Month
 import io.islandtime.measures.*
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.DateTimeParsers
+import kotlin.test.*
 
 class DateRangeTest {
     @Test
@@ -24,8 +23,14 @@ class DateRangeTest {
         val startDate = Date(2018, Month.DECEMBER, 25)
         val endDate = Date(2019, Month.JANUARY, 12)
 
-        assertFalse { Date(2018, Month.DECEMBER, 24) in startDate..endDate }
-        assertFalse { Date(2019, Month.JANUARY, 13) in startDate..endDate }
+        listOf(
+            Date(2018, Month.DECEMBER, 24),
+            Date(2019, Month.JANUARY, 13),
+            Date.MIN,
+            Date.MAX
+        ).forEach {
+            assertFalse { it in startDate..endDate }
+        }
     }
 
     @Test
@@ -34,6 +39,21 @@ class DateRangeTest {
         val endDate = Date(2019, Month.JANUARY, 12)
 
         assertFalse { null in startDate..endDate }
+    }
+
+    @Test
+    fun `isEmpty() returns true when the start is greater than the end`() {
+        assertTrue { (Date(2018, 45)..Date(2018, 44)).isEmpty() }
+    }
+
+    @Test
+    fun `isEmpty() returns true when the end is negative infinity or start is positive infinity`() {
+        listOf(
+            Date.MIN..Date.MIN,
+            Date.MAX..Date.MAX
+        ).forEach {
+            assertTrue { it.isEmpty() }
+        }
     }
 
     @Test
@@ -48,6 +68,12 @@ class DateRangeTest {
         assertEquals(Date(2019, Month.JANUARY, 27), range.endInclusive)
         assertEquals(1.days, range.step)
         assertEquals(7, range.count())
+        assertTrue { range.isBounded }
+        assertFalse { range.isUnbounded }
+        assertTrue { range.hasBoundedStart }
+        assertTrue { range.hasBoundedEnd }
+        assertFalse { range.hasUnboundedStart }
+        assertFalse { range.hasUnboundedEnd }
     }
 
     @Test
@@ -56,6 +82,102 @@ class DateRangeTest {
             "1969-12-03/1970-02-03",
             (Date(1969, 12, 3)..Date(1970, 2, 3)).toString()
         )
+
+        assertEquals(
+            "../1970-02-03",
+            (Date.MIN..Date(1970, 2, 3)).toString()
+        )
+
+        assertEquals(
+            "1969-12-03/..",
+            (Date(1969, 12, 3)..Date.MAX).toString()
+        )
+
+        assertEquals(
+            "../..",
+            DateRange.UNBOUNDED.toString()
+        )
+
+        assertEquals(
+            "",
+            DateRange.EMPTY.toString()
+        )
+
+        assertEquals(
+            "",
+            (Date(1934, 1)..Date(1932, 234)).toString()
+        )
+    }
+
+    @Test
+    fun `String_toDateRange() returns an empty range when the string is empty`() {
+        assertEquals(DateRange.EMPTY, "".toDateRange())
+    }
+
+    @Test
+    fun `String_toDateRange() parses ISO-8601 time interval strings with dates in extended format`() {
+        assertEquals(DateRange.UNBOUNDED, "../..".toDateRange())
+
+        assertEquals(
+            Date(1950, 11, 9)..Date(1989, 6, 2),
+            "1950-11-09/1989-06-02".toDateRange()
+        )
+
+        // Ordinal dates allowed too by default
+        assertEquals(
+            Date(1950, 11, 9)..Date(1989, 56),
+            "1950-11-09/1989-056".toDateRange()
+        )
+
+        assertEquals(
+            Date(1950, 11, 9)..Date.MAX,
+            "1950-11-09/..".toDateRange()
+        )
+
+        assertEquals(
+            Date.MIN..Date(1989, 6, 2),
+            "../1989-06-02".toDateRange()
+        )
+    }
+
+    @Test
+    fun `String_toDateRange throws an exception when parsing invalid formats`() {
+        listOf(
+            " ",
+            "/",
+            "2019-10-06/", // We don't support unknown end
+            "/2019-10-05", // We don't support unknown start
+            "2019-05-06--2019-05-06",
+            "2015/2016-10-10",
+            "2015-05-05/2016-10",
+            "2015-05-05/2016-10-10 ",
+            "2015-05-05/2016-10-10/",
+            " 2015-05-05/2016-10-10",
+            "/2015-05-05/2016-10-10",
+            "2015-05-05/2016-10-10/2019-11-10"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toDateRange() }
+        }
+    }
+
+    @Test
+    fun `String_toDateRange throws an exception when parsing mixed basic and extended formats`() {
+        listOf(
+            " ",
+            "/",
+            "2019-10-06/", // We don't support unknown end
+            "/2019-10-05", // We don't support unknown start
+            "20190506/2019-05-06",
+            "2015/2016-10-10",
+            "2015-05-05/2016-10",
+            "2015-05-05/2016-10-10 ",
+            "2015-05-05/2016-10-10/",
+            " 2015-05-05/2016-10-10",
+            "/2015-05-05/2016-10-10",
+            "2015-05-05/2016-10-10/2019-11-10"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toDateRange(DateTimeParsers.Iso.DATE_RANGE) }
+        }
     }
 
     @Test
@@ -63,6 +185,20 @@ class DateRangeTest {
         val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 25)
         val randomDate = range.random()
         assertTrue { randomDate in range }
+    }
+
+    @Test
+    fun `length properties throw an exception when the range isn't bounded`() {
+        listOf(
+            DateRange.UNBOUNDED,
+            Date(2019, Month.JUNE, 1)..Date.MAX,
+            Date.MIN..Date(2019, Month.JUNE, 1)
+        ).forEach {
+            assertFailsWith<UnsupportedOperationException> { it.asPeriod() }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInDays }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInMonths }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInYears }
+        }
     }
 
     @Test
@@ -84,7 +220,7 @@ class DateRangeTest {
     }
 
     @Test
-    fun `lengthInlengthInMonths property returns 0 when range is empty`() {
+    fun `lengthInMonths property returns 0 when range is empty`() {
         assertEquals(0.months, DateRange.EMPTY.lengthInMonths)
     }
 
