@@ -3,6 +3,7 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.dateTimeParser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -296,20 +297,32 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `String_toDateTime() parses valid ISO-8601 basic calendar date strings`() {
         assertEquals(
             DateTime(2019, Month.MARCH, 23, 2, 30),
-            "20190323T0230".toDateTime(DateTimeParsers.Iso.Basic.CALENDAR_DATE_TIME)
+            "20190323T0230".toDateTime(DateTimeParsers.Iso.Basic.DATE_TIME)
         )
     }
 
     @Test
-    fun `String_toDateTime() parses valid ISO-8601 ordinal date strings`() {
+    fun `String_toDateTime() parses valid ISO-8601 ordinal date strings with custom parser`() {
+        val parser = dateTimeParser {
+            anyOf({
+                childParser(DateTimeParsers.Iso.Basic.DATE)
+                anyOf({ +'T' }, { +' ' })
+                childParser(DateTimeParsers.Iso.Basic.TIME)
+            }, {
+                childParser(DateTimeParsers.Iso.Extended.DATE)
+                anyOf({ +'T' }, { +' ' })
+                childParser(DateTimeParsers.Iso.Extended.TIME)
+            })
+        }
+
         assertEquals(
             DateTime(2019, Month.JANUARY, 1, 2, 30),
-            "2019001 0230".toDateTime(DateTimeParsers.Iso.DATE_TIME)
+            "2019001 0230".toDateTime(parser)
         )
 
         assertEquals(
             DateTime(2019, Month.JANUARY, 1, 2, 30),
-            "2019-001T02:30".toDateTime(DateTimeParsers.Iso.DATE_TIME)
+            "2019-001T02:30".toDateTime(parser)
         )
     }
 }

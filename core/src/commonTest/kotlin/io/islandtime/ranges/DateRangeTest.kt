@@ -123,12 +123,6 @@ class DateRangeTest {
             "1950-11-09/1989-06-02".toDateRange()
         )
 
-        // Ordinal dates allowed too by default
-        assertEquals(
-            Date(1950, 11, 9)..Date(1989, 56),
-            "1950-11-09/1989-056".toDateRange()
-        )
-
         assertEquals(
             Date(1950, 11, 9)..Date.MAX,
             "1950-11-09/..".toDateRange()
@@ -154,7 +148,8 @@ class DateRangeTest {
             "2015-05-05/2016-10-10/",
             " 2015-05-05/2016-10-10",
             "/2015-05-05/2016-10-10",
-            "2015-05-05/2016-10-10/2019-11-10"
+            "2015-05-05/2016-10-10/2019-11-10",
+            "1950-11-09/1989-056" // Ordinal dates not supported by default
         ).forEach {
             assertFailsWith<DateTimeParseException> { it.toDateRange() }
         }

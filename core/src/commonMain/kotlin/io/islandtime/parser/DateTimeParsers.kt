@@ -73,14 +73,6 @@ object DateTimeParsers {
             })
         }
 
-        val CALENDAR_DATE_TIME = dateTimeParser {
-            anyOf(Basic.CALENDAR_DATE_TIME, Extended.CALENDAR_DATE_TIME)
-        }
-
-        val ORDINAL_DATE_TIME = dateTimeParser {
-            anyOf(Basic.ORDINAL_DATE_TIME, Extended.ORDINAL_DATE_TIME)
-        }
-
         val DATE_TIME = dateTimeParser {
             anyOf(Basic.DATE_TIME, Extended.DATE_TIME)
         }
@@ -253,20 +245,8 @@ object DateTimeParsers {
                 })
             }
 
-            val CALENDAR_DATE_TIME = dateTimeParser {
-                childParser(CALENDAR_DATE)
-                anyOf({ +'T' }, { +' ' })
-                childParser(TIME)
-            }
-
-            val ORDINAL_DATE_TIME = dateTimeParser {
-                childParser(ORDINAL_DATE)
-                anyOf({ +'T' }, { +' ' })
-                childParser(TIME)
-            }
-
             val DATE_TIME = dateTimeParser {
-                childParser(DATE)
+                childParser(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
                 childParser(TIME)
             }
@@ -277,24 +257,26 @@ object DateTimeParsers {
             }
 
             val OFFSET_DATE_TIME = dateTimeParser {
-                childParser(CALENDAR_DATE_TIME)
+                childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
             }
 
             val ZONED_DATE_TIME = dateTimeParser {
-                childParser(CALENDAR_DATE_TIME)
+                childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
-                +'['
-                timeZoneId()
-                +']'
+                optional {
+                    +'['
+                    timeZoneId()
+                    +']'
+                }
             }
 
             val INSTANT = dateTimeParser {
-                childParser(CALENDAR_DATE_TIME)
+                childParser(DATE_TIME)
                 utcDesignator()
             }
 
-            val DATE_RANGE = buildIsoIntervalParser(DATE)
+            val DATE_RANGE = buildIsoIntervalParser(CALENDAR_DATE)
             val DATE_TIME_INTERVAL = buildIsoIntervalParser(DATE_TIME)
             val OFFSET_DATE_TIME_INTERVAL = buildIsoIntervalParser(OFFSET_DATE_TIME)
             val ZONED_DATE_TIME_INTERVAL = buildIsoIntervalParser(ZONED_DATE_TIME)
@@ -371,20 +353,8 @@ object DateTimeParsers {
                 })
             }
 
-            val CALENDAR_DATE_TIME = dateTimeParser {
-                childParser(CALENDAR_DATE)
-                anyOf({ +'T' }, { +' ' })
-                childParser(TIME)
-            }
-
-            val ORDINAL_DATE_TIME = dateTimeParser {
-                childParser(ORDINAL_DATE)
-                anyOf({ +'T' }, { +' ' })
-                childParser(TIME)
-            }
-
             val DATE_TIME = dateTimeParser {
-                childParser(DATE)
+                childParser(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
                 childParser(TIME)
             }
@@ -395,20 +365,22 @@ object DateTimeParsers {
             }
 
             val OFFSET_DATE_TIME = dateTimeParser {
-                childParser(CALENDAR_DATE_TIME)
+                childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
             }
 
             val ZONED_DATE_TIME = dateTimeParser {
-                childParser(CALENDAR_DATE_TIME)
+                childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
-                +'['
-                timeZoneId()
-                +']'
+                optional {
+                    +'['
+                    timeZoneId()
+                    +']'
+                }
             }
 
             val INSTANT = dateTimeParser {
-                childParser(CALENDAR_DATE_TIME)
+                childParser(DATE_TIME)
                 utcDesignator()
             }
 
@@ -422,7 +394,7 @@ object DateTimeParsers {
                 }
             }
 
-            val DATE_RANGE = buildIsoIntervalParser(DATE)
+            val DATE_RANGE = buildIsoIntervalParser(CALENDAR_DATE)
             val DATE_TIME_INTERVAL = buildIsoIntervalParser(DATE_TIME)
             val OFFSET_DATE_TIME_INTERVAL = buildIsoIntervalParser(OFFSET_DATE_TIME)
             val ZONED_DATE_TIME_INTERVAL = buildIsoIntervalParser(ZONED_DATE_TIME)
