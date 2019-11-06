@@ -5,14 +5,38 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 
 /**
- * A time of day
- */
-class Time private constructor(
+ * A time of day in an arbitrary region.
+ *
+ * @param hour hour of day
+ * @param minute minute of hour
+ * @param second second of minute
+ * @param nanosecond nanosecond of second
+*/
+
+class Time(
     val hour: Int,
     val minute: Int,
-    val second: Int,
-    val nanosecond: Int
+    val second: Int = 0,
+    val nanosecond: Int = 0
 ) : Comparable<Time> {
+
+    init {
+        if (hour !in 0 until HOURS_PER_DAY) {
+            throw DateTimeException("'$hour' is not a valid hour")
+        }
+
+        if (minute !in 0 until MINUTES_PER_HOUR) {
+            throw DateTimeException("'$minute' is not a valid minute")
+        }
+
+        if (second !in 0 until SECONDS_PER_MINUTE) {
+            throw DateTimeException("'$second' is not a valid second")
+        }
+
+        if (nanosecond !in 0 until NANOSECONDS_PER_SECOND) {
+            throw DateTimeException("'$nanosecond' is not a valid nanosecond")
+        }
+    }
 
     val secondOfDay: Int
         get() = hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second
@@ -199,7 +223,7 @@ class Time private constructor(
         minute: Int = this.minute,
         second: Int = this.second,
         nanosecond: Int = this.nanosecond
-    ) = invoke(hour, minute, second, nanosecond)
+    ) = Time(hour, minute, second, nanosecond)
 
     /**
      * Truncate to the [hour] value, replacing all smaller components with zero
@@ -229,46 +253,10 @@ class Time private constructor(
         copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND)
 
     companion object {
-        private val HOURS = (0..23).map { hour -> (::Time)(hour, 0, 0, 0) }
-
-        val MIN = HOURS[0]
+        val MIN = Time(0, 0)
         val MAX = Time(23, 59, 59, 999_999_999)
-        val MIDNIGHT = HOURS[0]
-        val NOON = HOURS[12]
-
-        /**
-         * Create a [Time] representing the provided components
-         * @param hour hour of day
-         * @param minute minute of hour
-         * @param second second of minute
-         * @param nanosecond nanosecond of second
-         */
-        operator fun invoke(
-            hour: Int,
-            minute: Int,
-            second: Int = 0,
-            nanosecond: Int = 0
-        ): Time {
-            if (hour !in 0 until HOURS_PER_DAY) {
-                throw DateTimeException("'$hour' is not a valid hour")
-            }
-
-            return if (minute or second or nanosecond == 0) {
-                HOURS[hour]
-            } else {
-                if (minute !in 0 until MINUTES_PER_HOUR) {
-                    throw DateTimeException("'$minute' is not a valid minute")
-                }
-                if (second !in 0 until SECONDS_PER_MINUTE) {
-                    throw DateTimeException("'$second' is not a valid second")
-                }
-                if (nanosecond !in 0 until NANOSECONDS_PER_SECOND) {
-                    throw DateTimeException("'$nanosecond' is not a valid nanosecond")
-                }
-
-                Time(hour, minute, second, nanosecond)
-            }
-        }
+        val MIDNIGHT = Time(0, 0)
+        val NOON = Time(12, 0)
 
         /**
          * Create the [Time] representing a number of seconds since the start of the day and optionally, the number of
@@ -282,7 +270,7 @@ class Time private constructor(
             val hour = secondOfDay / SECONDS_PER_HOUR
             val minute = (secondOfDay / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
             val second = secondOfDay % SECONDS_PER_MINUTE
-            return invoke(hour, minute, second, nanosecond)
+            return Time(hour, minute, second, nanosecond)
         }
 
         /**
@@ -297,7 +285,7 @@ class Time private constructor(
             val minute = ((nanosecondOfDay / NANOSECONDS_PER_MINUTE) % MINUTES_PER_HOUR).toInt()
             val second = ((nanosecondOfDay / NANOSECONDS_PER_SECOND) % SECONDS_PER_MINUTE).toInt()
             val nanosecond = (nanosecondOfDay % NANOSECONDS_PER_SECOND).toInt()
-            return invoke(hour, minute, second, nanosecond)
+            return Time(hour, minute, second, nanosecond)
         }
     }
 }
