@@ -294,67 +294,11 @@ object DateTimeParsers {
                 utcDesignator()
             }
 
-            val DATE_RANGE = groupedDateTimeParser {
-                group { childParser(DATE) }
-                +'/'
-                group { childParser(DATE) }
-            }
-
-            val DATE_TIME_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(DATE_TIME) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(DATE_TIME) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
-
-            val OFFSET_DATE_TIME_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(OFFSET_DATE_TIME) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(OFFSET_DATE_TIME) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
-
-            val ZONED_DATE_TIME_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(ZONED_DATE_TIME) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(ZONED_DATE_TIME) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
-
-            val INSTANT_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(INSTANT) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(INSTANT) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
+            val DATE_RANGE = buildIsoIntervalParser(DATE)
+            val DATE_TIME_INTERVAL = buildIsoIntervalParser(DATE_TIME)
+            val OFFSET_DATE_TIME_INTERVAL = buildIsoIntervalParser(OFFSET_DATE_TIME)
+            val ZONED_DATE_TIME_INTERVAL = buildIsoIntervalParser(ZONED_DATE_TIME)
+            val INSTANT_INTERVAL = buildIsoIntervalParser(INSTANT)
         }
 
         object Extended {
@@ -478,67 +422,27 @@ object DateTimeParsers {
                 }
             }
 
-            val DATE_RANGE = groupedDateTimeParser {
-                group { childParser(DATE) }
-                +'/'
-                group { childParser(DATE) }
-            }
-
-            val DATE_TIME_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(DATE_TIME) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(DATE_TIME) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
-
-            val OFFSET_DATE_TIME_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(OFFSET_DATE_TIME) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(OFFSET_DATE_TIME) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
-
-            val ZONED_DATE_TIME_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(ZONED_DATE_TIME) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(ZONED_DATE_TIME) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
-
-            val INSTANT_INTERVAL = groupedDateTimeParser {
-                anyOf({
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(INSTANT) })
-                    }
-                    +'/'
-                    group {
-                        anyOf({ unboundedDesignator() }, { childParser(INSTANT) })
-                    }
-                }, {
-                    groups(2) {}
-                })
-            }
+            val DATE_RANGE = buildIsoIntervalParser(DATE)
+            val DATE_TIME_INTERVAL = buildIsoIntervalParser(DATE_TIME)
+            val OFFSET_DATE_TIME_INTERVAL = buildIsoIntervalParser(OFFSET_DATE_TIME)
+            val ZONED_DATE_TIME_INTERVAL = buildIsoIntervalParser(ZONED_DATE_TIME)
+            val INSTANT_INTERVAL = buildIsoIntervalParser(INSTANT)
         }
+    }
+}
+
+private fun buildIsoIntervalParser(elementParser: DateTimeParser): GroupedDateTimeParser {
+    return groupedDateTimeParser {
+        anyOf({
+            group {
+                anyOf({ unboundedDesignator() }, { childParser(elementParser) })
+            }
+            +'/'
+            group {
+                anyOf({ unboundedDesignator() }, { childParser(elementParser) })
+            }
+        }, {
+            groups(2) {}
+        })
     }
 }
