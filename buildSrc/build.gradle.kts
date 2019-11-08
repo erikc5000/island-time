@@ -10,7 +10,7 @@ plugins {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.50")
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:0.10.0")
-    implementation("com.android.tools.build:gradle:3.6.0-beta02")
+    implementation("com.android.tools.build:gradle:3.6.0-beta03")
 }
 
 kotlinDslPluginOptions {
