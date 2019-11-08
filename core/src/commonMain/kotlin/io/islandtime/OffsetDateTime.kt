@@ -97,7 +97,7 @@ class OffsetDateTime(
     /**
      * Convert to an [Instant] representing the same time point.
      */
-    fun toInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
+    fun asInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     /**
      * Change the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
@@ -304,7 +304,7 @@ class OffsetDateTime(
 
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
+infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.asDateTimeAt(offset), offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 

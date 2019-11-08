@@ -185,12 +185,12 @@ class ConversionsTest : AbstractIslandTimeTest() {
     @Test
     fun `convert NSDate to DateTime`() {
         assertEquals(
-            Instant.UNIX_EPOCH.toDateTimeAt(UtcOffset.MAX),
+            Instant.UNIX_EPOCH.asDateTimeAt(UtcOffset.MAX),
             NSDate.dateWithTimeIntervalSince1970(0.0).toIslandDateTimeAt(UtcOffset.MAX)
         )
 
         assertEquals(
-            Instant(1572546943.seconds).toDateTimeAt(UtcOffset((-14400).seconds)),
+            Instant(1572546943.seconds).asDateTimeAt(UtcOffset((-14400).seconds)),
             NSDate.dateWithTimeIntervalSince1970(1572546943.0)
                 .toIslandDateTimeAt(NSTimeZone.timeZoneForSecondsFromGMT(-14400))
         )
