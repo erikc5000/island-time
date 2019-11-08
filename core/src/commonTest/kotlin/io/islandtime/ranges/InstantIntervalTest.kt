@@ -1,8 +1,6 @@
 package io.islandtime.ranges
 
-import io.islandtime.Instant
-import io.islandtime.OffsetDateTime
-import io.islandtime.UtcOffset
+import io.islandtime.*
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import kotlin.test.*
@@ -218,6 +216,121 @@ class InstantIntervalTest {
     fun `lengthInNanoseconds property returns 1 when the start and end instant are the same`() {
         val instant = Instant(2.days)
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
+    }
+
+    @Test
+    fun `convert empty DateRange to InstantInterval`() {
+        assertEquals(InstantInterval.EMPTY, DateRange.EMPTY.asInstantIntervalAt(TimeZone.UTC))
+    }
+
+    @Test
+    fun `convert unbounded DateRange to InstantInterval`() {
+        assertEquals(InstantInterval.UNBOUNDED, DateRange.UNBOUNDED.asInstantIntervalAt(TimeZone.UTC))
+    }
+
+    @Test
+    fun `convert half-bounded DateRange to InstantInterval`() {
+        val dateRange1 = Date(1968, 10, 5)..Date.MAX
+
+        assertEquals(
+            "1968-10-05T05:00Z".toInstant() until Instant.MAX,
+            dateRange1.asInstantIntervalAt((-5).hours.asUtcOffset().toTimeZone())
+        )
+
+        val dateRange2 = Date.MIN..Date(2000, 1, 3)
+
+        assertEquals(
+            Instant.MIN until "2000-01-04T05:00Z".toInstant(),
+            dateRange2.asInstantIntervalAt((-5).hours.asUtcOffset().toTimeZone())
+        )
+    }
+
+    @Test
+    fun `convert bounded DateRange to InstantInterval`() {
+        val dateRange = Date(1968, 10, 5)..Date(2000, 1, 3)
+
+        assertEquals(
+            "1968-10-05T05:00Z".toInstant() until "2000-01-04T05:00Z".toInstant(),
+            dateRange.asInstantIntervalAt((-5).hours.asUtcOffset().toTimeZone())
+        )
+    }
+
+    @Test
+    fun `convert empty OffsetDateTimeInterval to InstantInterval`() {
+        assertEquals(InstantInterval.EMPTY, OffsetDateTimeInterval.EMPTY.asInstantInterval())
+    }
+
+    @Test
+    fun `convert unbounded OffsetDateTimeInterval to InstantInterval`() {
+        assertEquals(InstantInterval.UNBOUNDED, OffsetDateTimeInterval.UNBOUNDED.asInstantInterval())
+    }
+
+    @Test
+    fun `convert half-bounded OffsetDateTimeInterval to InstantInterval`() {
+        val offsetDateTimeInterval1 = "1968-10-05T05:00-05:00".toOffsetDateTime() until OffsetDateTime.MAX
+
+        assertEquals(
+            "1968-10-05T10:00Z".toInstant() until Instant.MAX,
+            offsetDateTimeInterval1.asInstantInterval()
+        )
+
+        val offsetDateTimeInterval2 = OffsetDateTime.MIN until "2000-01-03T10:00-05:00".toOffsetDateTime()
+
+        assertEquals(
+            Instant.MIN until "2000-01-03T15:00Z".toInstant(),
+            offsetDateTimeInterval2.asInstantInterval()
+        )
+    }
+
+    @Test
+    fun `convert bounded OffsetDateTimeInterval to InstantInterval`() {
+        val offsetDateTimeInterval =
+            "1968-10-05T05:00-05:00".toOffsetDateTime() until "2000-01-03T10:00-05:00".toOffsetDateTime()
+
+        assertEquals(
+            "1968-10-05T10:00Z".toInstant() until "2000-01-03T15:00Z".toInstant(),
+            offsetDateTimeInterval.asInstantInterval()
+        )
+    }
+
+    @Test
+    fun `convert empty ZonedDateTimeInterval to InstantInterval`() {
+        assertEquals(InstantInterval.EMPTY, ZonedDateTimeInterval.EMPTY.asInstantInterval())
+    }
+
+    @Test
+    fun `convert unbounded ZonedDateTimeInterval to InstantInterval`() {
+        assertEquals(InstantInterval.UNBOUNDED, ZonedDateTimeInterval.UNBOUNDED.asInstantInterval())
+    }
+
+    @Test
+    fun `convert half-bounded ZonedDateTimeInterval to InstantInterval`() {
+        val zonedDateTimeInterval1 =
+            "1968-10-05T05:00-05:00".toZonedDateTime() until ZonedDateTimeInterval.UNBOUNDED.endExclusive
+
+        assertEquals(
+            "1968-10-05T10:00Z".toInstant() until Instant.MAX,
+            zonedDateTimeInterval1.asInstantInterval()
+        )
+
+        val zonedDateTimeInterval2 =
+            ZonedDateTimeInterval.UNBOUNDED.start until "2000-01-03T10:00-05:00".toZonedDateTime()
+
+        assertEquals(
+            Instant.MIN until "2000-01-03T15:00Z".toInstant(),
+            zonedDateTimeInterval2.asInstantInterval()
+        )
+    }
+
+    @Test
+    fun `convert bounded ZonedDateTimeInterval to InstantInterval`() {
+        val zonedDateTimeInterval =
+            "1968-10-05T05:00-05:00".toZonedDateTime() until "2000-01-03T10:00-05:00".toZonedDateTime()
+
+        assertEquals(
+            "1968-10-05T10:00Z".toInstant() until "2000-01-03T15:00Z".toInstant(),
+            zonedDateTimeInterval.asInstantInterval()
+        )
     }
 
     @Test

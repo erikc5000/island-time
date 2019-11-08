@@ -13,8 +13,8 @@ import kotlin.random.Random
  * A half-open interval of instants
  */
 class InstantInterval(
-    start: Instant = UNBOUNDED.start,
-    endExclusive: Instant = UNBOUNDED.endExclusive
+    start: Instant = Instant.MIN,
+    endExclusive: Instant = Instant.MAX
 ) : TimePointInterval<Instant>(start, endExclusive) {
 
     override val hasUnboundedStart: Boolean get() = start == Instant.MIN
@@ -48,11 +48,14 @@ class InstantInterval(
     }
 }
 
-fun emptyInstantInterval() = InstantInterval.EMPTY
-fun unboundedInstantInterval() = InstantInterval.UNBOUNDED
-
+/**
+ * Convert an ISO-8601 time interval between two UTC date-times in extended format into an [InstantInterval].
+ */
 fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
 
+/**
+ * Convert a string into an [InstantInterval] using the provided parser.
+ */
 fun String.toInstantInterval(parser: GroupedDateTimeParser): InstantInterval {
     val results = parser.parse(this).expectingGroupCount<InstantInterval>(2, this)
 
@@ -76,12 +79,12 @@ fun String.toInstantInterval(parser: GroupedDateTimeParser): InstantInterval {
 }
 
 /**
- * Return a random instant within the range using the default random number generator
+ * Return a random instant within the interval using the default random number generator.
  */
 fun InstantInterval.random(): Instant = random(Random)
 
 /**
- * Return a random instant within the range using the supplied random number generator
+ * Return a random instant within the interval using the supplied random number generator.
  */
 fun InstantInterval.random(random: Random): Instant {
     try {
@@ -95,6 +98,52 @@ fun InstantInterval.random(random: Random): Instant {
 }
 
 /**
- * Get a range containing all of the representable instants up to, but not including [to]
+ * Get an interval containing all of the instants up to, but not including [to].
  */
 infix fun Instant.until(to: Instant) = InstantInterval(this, to)
+
+/**
+ * Convert a range of dates into an [InstantInterval] between the starting and ending instants in a particular time
+ * zone.
+ */
+fun DateRange.asInstantIntervalAt(zone: TimeZone): InstantInterval {
+    return when {
+        isEmpty() -> InstantInterval.EMPTY
+        isUnbounded -> InstantInterval.UNBOUNDED
+        else -> {
+            val start = if (hasUnboundedStart) Instant.MIN else start.startOfDayAt(zone).asInstant()
+            val end = if (hasUnboundedEnd) Instant.MAX else endInclusive.endOfDayAt(zone).asInstant()
+            start..end
+        }
+    }
+}
+
+/**
+ * Convert an [OffsetDateTimeInterval] into an [InstantInterval].
+ */
+fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval {
+    return when {
+        isEmpty() -> InstantInterval.EMPTY
+        isUnbounded -> InstantInterval.UNBOUNDED
+        else -> {
+            val startInstant = if (hasUnboundedStart) Instant.MIN else start.asInstant()
+            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.asInstant()
+            startInstant until endInstant
+        }
+    }
+}
+
+/**
+ * Convert a [ZonedDateTimeInterval] until an [InstantInterval].
+ */
+fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval {
+    return when {
+        isEmpty() -> InstantInterval.EMPTY
+        isUnbounded -> InstantInterval.UNBOUNDED
+        else -> {
+            val startInstant = if (hasUnboundedStart) Instant.MIN else start.asInstant()
+            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.asInstant()
+            startInstant until endInstant
+        }
+    }
+}

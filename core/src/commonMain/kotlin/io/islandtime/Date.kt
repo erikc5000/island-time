@@ -344,7 +344,7 @@ fun Date(year: Int, dayOfYear: Int): Date {
     return Date(year, month, dayOfMonth)
 }
 
-fun Instant.toDateAt(offset: UtcOffset): Date {
+fun Instant.asDateAt(offset: UtcOffset): Date {
     var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
 
     if (nanoOfSecondsSinceUnixEpoch.isNegative) {
@@ -355,8 +355,8 @@ fun Instant.toDateAt(offset: UtcOffset): Date {
     return Date.fromUnixEpochDay(unixEpochDay)
 }
 
-fun Instant.toDateAt(zone: TimeZone): Date {
-    return this.toDateAt(zone.rules.offsetAt(this))
+fun Instant.asDateAt(zone: TimeZone): Date {
+    return this.asDateAt(zone.rules.offsetAt(this))
 }
 
 fun YearMonth.atDay(day: Int) = Date(year, month, day)

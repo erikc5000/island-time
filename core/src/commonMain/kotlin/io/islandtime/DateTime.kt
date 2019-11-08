@@ -515,7 +515,7 @@ class DateTime(
 
     fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
-    fun toInstantAt(offset: UtcOffset): Instant {
+    fun asInstantAt(offset: UtcOffset): Instant {
         return Instant.fromUnixEpochSecond(unixEpochSecondAt(offset), nanosecond)
     }
 
@@ -587,7 +587,7 @@ fun Date.startOfDay() = DateTime(this, Time.MIDNIGHT)
  */
 fun Date.endOfDay() = DateTime(this, Time.MAX)
 
-fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
+fun Instant.asDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 

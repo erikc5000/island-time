@@ -55,7 +55,7 @@ class ZonedDateTime private constructor(
     /**
      * Convert to an [Instant] representing the same time point.
      */
-    fun toInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
+    fun asInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
