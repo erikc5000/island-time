@@ -11,6 +11,7 @@ import io.islandtime.parser.*
  * @param minute The minute of the hour
  * @param second The second of the minute
  * @param nanosecond The nanosecond of the second
+ * @throws DateTimeException if the time is invalid
 */
 class Time(
     val hour: Int,
@@ -230,6 +231,8 @@ class Time(
 
     /**
      * Return a copy of this [Time], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting time is invalid
      */
     fun copy(
         hour: Int = this.hour,
@@ -280,6 +283,8 @@ class Time(
         /**
          * Create the [Time] representing a number of seconds since the start of the day and optionally, the number of
          * nanoseconds within that second.
+         *
+         * @throws DateTimeException if the time is invalid
          */
         fun fromSecondOfDay(secondOfDay: Int, nanosecond: Int = 0): Time {
             if (secondOfDay !in 0 until SECONDS_PER_DAY) {
@@ -294,6 +299,8 @@ class Time(
 
         /**
          * Create the [Time] representing a number of nanoseconds since the start of the day.
+         *
+         * @throws DateTimeException if the time is invalid
          */
         fun fromNanosecondOfDay(nanosecondOfDay: Long): Time {
             if (nanosecondOfDay !in 0L until NANOSECONDS_PER_DAY) {
@@ -314,6 +321,9 @@ class Time(
  *
  * The string is assumed to be an ISO-8601 time representation in extended format. For example, `05`, `05:30`,
  * `05:30:00`, or `05:30:00.123456789`. The output of [Time.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
 
@@ -321,6 +331,9 @@ fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
  * Convert a string to a [Time] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toTime(parser: DateTimeParser): Time {
     val result = parser.parse(this)
