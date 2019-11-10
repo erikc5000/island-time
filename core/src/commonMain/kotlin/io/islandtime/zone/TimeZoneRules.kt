@@ -16,15 +16,16 @@ class TimeZoneRulesException(
  */
 interface TimeZoneRulesProvider {
     /**
-     * The time zone database version, or an empty string if unavailable.
+     * The time zone database version or an empty string if unavailable.
      */
     val databaseVersion: String get() = ""
 
     /**
-     * The available time zone region IDs, as reported by the the provider.
+     * The available time zone region IDs as reported by the underlying provider.
      *
      * In some cases, this may be only a subset of those actually supported. To check if a particular region ID can be
      * handled, use [hasRulesFor].
+     *
      * @see hasRulesFor
      */
     val availableRegionIds: Set<String>
@@ -88,7 +89,8 @@ interface TimeZoneOffsetTransition {
     val duration: IntSeconds
 
     /**
-     * Get a list of the valid offsets during this transition. If it is gap,
+     * Get a list of the valid offsets during this transition. If this is gap, the list will be empty. If this is an
+     * overlap, the list will contain both the earlier and later offsets.
      */
     val validOffsets: List<UtcOffset>
         get() = if (isGap) emptyList() else listOf(offsetBefore, offsetAfter)
@@ -103,12 +105,39 @@ interface TimeZoneRules {
      */
     val hasFixedOffset: Boolean
 
+    /**
+     * Get the offset in effect at a certain number of milliseconds since the Unix epoch.
+     */
     fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset
-    fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset
+
+    /**
+     * Get the offset in effect at a certain number of seconds since the Unix epoch.
+     */
+    fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset
+
+    /**
+     * Get the offset in effect at a particular instant.
+     */
     fun offsetAt(instant: Instant): UtcOffset
+
+    /**
+     * Get the offset in effect at a particular date and time.
+     */
     fun offsetAt(dateTime: DateTime): UtcOffset
+
+    /**
+     * Get a list of the valid offsets at a particular date and time.
+     */
     fun validOffsetsAt(dateTime: DateTime): List<UtcOffset>
+
+    /**
+     * Get the transition at a particular date and time, if one exists.
+     */
     fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition?
+
+    /**
+     * Check if [offset] is valid at particular date and time.
+     */
     fun isValidOffset(dateTime: DateTime, offset: UtcOffset): Boolean = validOffsetsAt(dateTime).contains(offset)
 
     /**
@@ -131,7 +160,7 @@ internal class FixedTimeZoneRules(private val offset: UtcOffset) : TimeZoneRules
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds) = offset
 
-    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
         return offset
     }
 
