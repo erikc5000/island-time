@@ -16,10 +16,10 @@ class TimeZoneTest : AbstractIslandTimeTest() {
 
     @Test
     fun `can be created from a fixed offset id`() {
-        assertEquals(UtcOffset(18.hours).toTimeZone(), TimeZone("+18:00"))
-        assertEquals(UtcOffset.ZERO.toTimeZone(), TimeZone("-00:00"))
-        assertEquals(UtcOffset.ZERO.toTimeZone(), TimeZone("+00:00"))
-        assertEquals(UtcOffset((-18).hours).toTimeZone(), TimeZone("-18:00"))
+        assertEquals(UtcOffset(18.hours).asTimeZone(), TimeZone("+18:00"))
+        assertEquals(UtcOffset.ZERO.asTimeZone(), TimeZone("-00:00"))
+        assertEquals(UtcOffset.ZERO.asTimeZone(), TimeZone("+00:00"))
+        assertEquals(UtcOffset((-18).hours).asTimeZone(), TimeZone("-18:00"))
     }
 
     @Test
