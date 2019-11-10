@@ -169,7 +169,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     @Test
     fun `convert Instant to NSDate`() {
         assertEquals(0.0, Instant.UNIX_EPOCH.toNSDate().timeIntervalSince1970)
-        assertEquals(NSDate.dateWithTimeIntervalSince1970(1572546943.0), Instant(1572546943.seconds).toNSDate())
+        assertEquals(NSDate.dateWithTimeIntervalSince1970(1572546943.0), Instant(1572546943L.seconds).toNSDate())
     }
 
     @Test
@@ -177,7 +177,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
         assertEquals(Instant.UNIX_EPOCH, NSDate.dateWithTimeIntervalSince1970(0.0).toIslandInstant())
 
         assertEquals(
-            Instant(1572546943.seconds),
+            Instant(1572546943L.seconds),
             NSDate.dateWithTimeIntervalSince1970(1572546943.0).toIslandInstant()
         )
     }
@@ -190,7 +190,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
         )
 
         assertEquals(
-            Instant(1572546943.seconds).asDateTimeAt(UtcOffset((-14400).seconds)),
+            Instant(1572546943L.seconds).asDateTimeAt(UtcOffset((-14400).seconds)),
             NSDate.dateWithTimeIntervalSince1970(1572546943.0)
                 .toIslandDateTimeAt(NSTimeZone.timeZoneForSecondsFromGMT(-14400))
         )
@@ -204,7 +204,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
         )
 
         assertEquals(
-            Instant(1572546943.seconds) at UtcOffset((-14400).seconds),
+            Instant(1572546943L.seconds) at UtcOffset((-14400).seconds),
             NSDate.dateWithTimeIntervalSince1970(1572546943.0)
                 .toIslandOffsetDateTimeAt(NSTimeZone.timeZoneForSecondsFromGMT(-14400))
         )
@@ -220,7 +220,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
         )
 
         assertEquals(
-            Instant(1572546943.seconds) at zone,
+            Instant(1572546943L.seconds) at zone,
             NSDate.dateWithTimeIntervalSince1970(1572546943.0)
                 .toIslandZonedDateTimeAt(NSTimeZone.timeZoneWithName("America/New_York")!!)
         )
