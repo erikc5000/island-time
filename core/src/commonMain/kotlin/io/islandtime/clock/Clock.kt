@@ -18,7 +18,7 @@ interface Clock {
     /**
      * Get the current instant
      */
-    fun instant(): Instant = Instant.fromMillisecondsSinceUnixEpoch(read())
+    fun instant(): Instant = Instant(read())
 }
 
 class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
@@ -37,7 +37,7 @@ class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
         /**
          * Get the current system time zone
          */
-        fun currentZone() = PlatformSystemClock.currentZone()
+        fun currentZone(): TimeZone = PlatformSystemClock.currentZone()
     }
 }
 

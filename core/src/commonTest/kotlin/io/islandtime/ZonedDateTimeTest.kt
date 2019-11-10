@@ -180,7 +180,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 821_000_000,
                 TimeZone.UTC
             ),
-            Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds) at TimeZone.UTC
+            Instant(1566256047821L.milliseconds) at TimeZone.UTC
         )
 
         assertEquals(
@@ -194,7 +194,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 821_000_000,
                 nyZone
             ),
-            Instant.fromMillisecondsSinceUnixEpoch(1566256047821L.milliseconds)
+            Instant(1566256047821L.milliseconds)
                 at nyZone
         )
     }
@@ -421,11 +421,11 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 4, 8, 30),
-                UtcOffset((-5).hours).toTimeZone()
+                UtcOffset((-5).hours).asTimeZone()
             ),
             ZonedDateTime(
                 DateTime(2019, 11, 4, 8, 30),
-                UtcOffset((-5).hours).toTimeZone()
+                UtcOffset((-5).hours).asTimeZone()
             ).withFixedOffsetZone()
         )
     }
@@ -435,7 +435,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 4, 8, 30),
-                UtcOffset((-5).hours).toTimeZone()
+                UtcOffset((-5).hours).asTimeZone()
             ),
             ZonedDateTime(
                 DateTime(2019, 11, 4, 8, 30),
@@ -649,7 +649,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
                 UtcOffset((-5).hours),
-                UtcOffset((-5).hours).toTimeZone()
+                UtcOffset((-5).hours).asTimeZone()
             ),
             "2019-11-03T01:00-05:00".toZonedDateTime()
         )

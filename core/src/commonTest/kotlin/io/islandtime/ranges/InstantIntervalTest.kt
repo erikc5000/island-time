@@ -30,8 +30,8 @@ class InstantIntervalTest {
 
     @Test
     fun `contains() returns true for dates within bounded range`() {
-        val start = Instant((-2).days)
-        val end = Instant(2.days)
+        val start = Instant((-2L).days.inSeconds)
+        val end = Instant(2L.days.inSeconds)
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -41,7 +41,7 @@ class InstantIntervalTest {
 
     @Test
     fun `contains() returns true for dates within range with unbounded end`() {
-        val start = Instant((-2).days)
+        val start = Instant((-2L).days.inSeconds)
         val end = Instant.MAX
 
         assertTrue { start in start..end }
@@ -52,11 +52,11 @@ class InstantIntervalTest {
 
     @Test
     fun `contains() returns false for out of range dates`() {
-        val start = Instant((-2).days)
-        val end = Instant(2.days)
+        val start = Instant((-2L).days.inSeconds)
+        val end = Instant(2L.days.inSeconds)
 
-        assertFalse { Instant(3.days, (-1).nanoseconds) in start..end }
-        assertFalse { Instant((-3).days, 1.nanoseconds) in start..end }
+        assertFalse { Instant(3L.days.inSeconds, (-1).nanoseconds) in start..end }
+        assertFalse { Instant((-3L).days.inSeconds, 1.nanoseconds) in start..end }
         assertFalse {
             OffsetDateTime.fromSecondsSinceUnixEpoch(2L.days.inSeconds, 1.nanoseconds, UtcOffset.ZERO) in start..end
         }
@@ -64,36 +64,36 @@ class InstantIntervalTest {
 
     @Test
     fun `until infix operator constructs a range with non-inclusive end`() {
-        val start = Instant((-2).days)
-        val end = Instant(2.days)
+        val start = Instant((-2L).days.inSeconds)
+        val end = Instant(2L.days.inSeconds)
         val range = start until end
 
         assertEquals(start, range.first)
         assertEquals(start, range.start)
-        assertEquals(Instant(2.days, (-1).nanoseconds), range.last)
-        assertEquals(Instant(2.days), range.endExclusive)
+        assertEquals(Instant(2L.days.inSeconds, (-1).nanoseconds), range.last)
+        assertEquals(Instant(2L.days.inSeconds), range.endExclusive)
     }
 
     @Test
     fun `toString() returns an ISO-8601 time interval representation`() {
         assertEquals(
             "1969-12-31T00:00Z/1970-01-02T00:00Z",
-            (Instant((-1).days) until Instant(1.days)).toString()
+            (Instant((-1L).days.inSeconds) until Instant(1L.days.inSeconds)).toString()
         )
 
         assertEquals(
             "../1970-01-02T00:00Z",
-            (Instant.MIN until Instant(1.days)).toString()
+            (Instant.MIN until Instant(1L.days.inSeconds)).toString()
         )
 
         assertEquals(
             "1969-12-31T00:00Z/..",
-            (Instant((-1).days) until Instant.MAX).toString()
+            (Instant((-1L).days.inSeconds) until Instant.MAX).toString()
         )
 
         assertEquals(
             "1969-12-31T00:00Z/..",
-            (Instant((-1).days)..Instant.MAX).toString()
+            (Instant((-1L).days.inSeconds)..Instant.MAX).toString()
         )
 
         assertEquals(
@@ -126,18 +126,18 @@ class InstantIntervalTest {
     @Test
     fun `String_toInstantInterval() parses ISO-8601 time interval strings in extended format by default`() {
         assertEquals(
-            Instant((-1).days) until Instant(1.days),
+            Instant((-1L).days.inSeconds) until Instant(1L.days.inSeconds),
             "1969-12-31T00:00Z/1970-01-02T00:00Z".toInstantInterval()
         )
-        assertEquals(Instant.MIN until Instant(1.days), "../1970-01-02T00:00Z".toInstantInterval())
-        assertEquals(Instant((-1).days) until Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
-        assertEquals(Instant((-1).days)..Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
+        assertEquals(Instant.MIN until Instant(1L.days.inSeconds), "../1970-01-02T00:00Z".toInstantInterval())
+        assertEquals(Instant((-1L).days.inSeconds) until Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
+        assertEquals(Instant((-1L).days.inSeconds)..Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
         assertEquals(InstantInterval.UNBOUNDED, "../..".toInstantInterval())
     }
 
     @Test
     fun `random() returns an instant within range`() {
-        val range = Instant((-2).days)..Instant(2.days)
+        val range = Instant((-2L).days.inSeconds)..Instant(2L.days.inSeconds)
         val randomInstant = range.random()
         assertTrue { randomInstant in range }
     }
@@ -214,7 +214,7 @@ class InstantIntervalTest {
 
     @Test
     fun `lengthInNanoseconds property returns 1 when the start and end instant are the same`() {
-        val instant = Instant(2.days)
+        val instant = Instant(2L.days.inSeconds)
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }
 
@@ -234,14 +234,14 @@ class InstantIntervalTest {
 
         assertEquals(
             "1968-10-05T05:00Z".toInstant() until Instant.MAX,
-            dateRange1.asInstantIntervalAt((-5).hours.asUtcOffset().toTimeZone())
+            dateRange1.asInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
         )
 
         val dateRange2 = Date.MIN..Date(2000, 1, 3)
 
         assertEquals(
             Instant.MIN until "2000-01-04T05:00Z".toInstant(),
-            dateRange2.asInstantIntervalAt((-5).hours.asUtcOffset().toTimeZone())
+            dateRange2.asInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
         )
     }
 
@@ -251,7 +251,7 @@ class InstantIntervalTest {
 
         assertEquals(
             "1968-10-05T05:00Z".toInstant() until "2000-01-04T05:00Z".toInstant(),
-            dateRange.asInstantIntervalAt((-5).hours.asUtcOffset().toTimeZone())
+            dateRange.asInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
         )
     }
 

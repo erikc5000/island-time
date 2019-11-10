@@ -57,6 +57,11 @@ class ZonedDateTime private constructor(
      */
     fun asInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
+    /**
+     * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
+     */
+    fun asOffsetDateTime() = OffsetDateTime(dateTime, offset)
+
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
                 dateTime == other.dateTime &&
@@ -299,7 +304,7 @@ class ZonedDateTime private constructor(
      * date-time, unchanged.
      */
     fun withFixedOffsetZone(): ZonedDateTime {
-        return if (zone is TimeZone.FixedOffset) this else create(dateTime, offset, offset.toTimeZone())
+        return if (zone is TimeZone.FixedOffset) this else create(dateTime, offset, offset.asTimeZone())
     }
 
     /**
@@ -313,11 +318,6 @@ class ZonedDateTime private constructor(
             fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, newTimeZone)
         }
     }
-
-    /**
-     * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
-     */
-    fun toOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
     private fun resolveInstant(newDateTime: DateTime) = fromInstant(newDateTime, offset, zone)
 
@@ -469,8 +469,8 @@ fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
 /**
  * Convert to a [ZonedDateTime] with a fixed time zone.
  */
-fun OffsetDateTime.toZonedDateTime(): ZonedDateTime {
-    return ZonedDateTime.fromLocal(dateTime, offset.toTimeZone(), offset)
+fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
+    return ZonedDateTime.fromLocal(dateTime, offset.asTimeZone(), offset)
 }
 
 /**
@@ -519,7 +519,7 @@ internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
     val offset = this.toUtcOffset()
 
     return if (dateTime != null && offset != null) {
-        val zone = timeZoneId?.toTimeZone() ?: offset.toTimeZone()
+        val zone = timeZoneId?.toTimeZone() ?: offset.asTimeZone()
 
         // Check if the offset is valid for the time zone as we understand it and if not, adjust the date-time and
         // offset to valid values while preserving the instant of the parsed value

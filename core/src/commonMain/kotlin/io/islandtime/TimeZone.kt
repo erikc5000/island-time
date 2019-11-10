@@ -157,7 +157,7 @@ fun TimeZone(id: String): TimeZone {
 /**
  * Convert a UTC offset into a [TimeZone] with a fixed offset.
  */
-fun UtcOffset.toTimeZone(): TimeZone = TimeZone.FixedOffset(this)
+fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
 
 /**
  * Convert a string to a [TimeZone].

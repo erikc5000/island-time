@@ -11,6 +11,37 @@ import kotlin.test.assertTrue
 
 class InstantTest : AbstractIslandTimeTest() {
     @Test
+    fun `throws an exception when constructed with values outside the supported range`() {
+        listOf(
+            -31557014167219201L,
+            31556889864403200L
+        ).forEach {
+            assertFailsWith<DateTimeException> { Instant.fromUnixEpochSecond(it) }
+            assertFailsWith<DateTimeException> { Instant.fromUnixEpochSecond(it, 0) }
+            assertFailsWith<DateTimeException> { Instant.fromUnixEpochSecond(it, 0L) }
+            assertFailsWith<DateTimeException> { Instant(it.seconds) }
+            assertFailsWith<DateTimeException> { Instant(it.seconds, 0.nanoseconds) }
+            assertFailsWith<DateTimeException> { Instant(it.seconds, 0L.nanoseconds) }
+        }
+
+        assertFailsWith<DateTimeException> {
+            Instant.fromUnixEpochSecond(-31557014167219200L, -1)
+        }
+
+        assertFailsWith<DateTimeException> {
+            Instant.fromUnixEpochSecond(-31557014167219200L, -1L)
+        }
+
+        assertFailsWith<DateTimeException> {
+            Instant.fromUnixEpochSecond(31556889864403199L, 1_000_000_000)
+        }
+
+        assertFailsWith<DateTimeException> {
+            Instant.fromUnixEpochSecond(31556889864403199L, 1_000_000_000L)
+        }
+    }
+
+    @Test
     fun `millisecond properties return expected values`() {
         assertEquals(0L, Instant.UNIX_EPOCH.unixEpochMillisecond)
         assertEquals(0L.milliseconds, Instant.UNIX_EPOCH.millisecondsSinceUnixEpoch)
@@ -23,6 +54,152 @@ class InstantTest : AbstractIslandTimeTest() {
     @Test
     fun `instants can be compared to each other`() {
         assertTrue { Instant.UNIX_EPOCH < Instant.fromUnixEpochMillisecond(1566256047821L) }
+    }
+
+    @Test
+    fun `adding zero has no effect`() {
+        val instant = Instant(1566256047821L.seconds)
+        assertEquals(instant, instant + 0.days)
+        assertEquals(instant, instant + 0.hours)
+        assertEquals(instant, instant + 0.minutes)
+        assertEquals(instant, instant + 0.seconds)
+        assertEquals(instant, instant + 0.milliseconds)
+        assertEquals(instant, instant + 0.microseconds)
+        assertEquals(instant, instant + 0.nanoseconds)
+        assertEquals(instant, instant + 0L.days)
+        assertEquals(instant, instant + 0L.hours)
+        assertEquals(instant, instant + 0L.minutes)
+        assertEquals(instant, instant + 0L.seconds)
+        assertEquals(instant, instant + 0L.milliseconds)
+        assertEquals(instant, instant + 0L.microseconds)
+        assertEquals(instant, instant + 0L.nanoseconds)
+    }
+
+    @Test
+    fun `subtracting zero has no effect`() {
+        val instant = Instant(1566256047821L.seconds)
+        assertEquals(instant, instant - 0.days)
+        assertEquals(instant, instant - 0.hours)
+        assertEquals(instant, instant - 0.minutes)
+        assertEquals(instant, instant - 0.seconds)
+        assertEquals(instant, instant - 0.milliseconds)
+        assertEquals(instant, instant - 0.microseconds)
+        assertEquals(instant, instant - 0.nanoseconds)
+        assertEquals(instant, instant - 0L.days)
+        assertEquals(instant, instant - 0L.hours)
+        assertEquals(instant, instant - 0L.minutes)
+        assertEquals(instant, instant - 0L.seconds)
+        assertEquals(instant, instant - 0L.milliseconds)
+        assertEquals(instant, instant - 0L.microseconds)
+        assertEquals(instant, instant - 0L.nanoseconds)
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting days would cause overflow`() {
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) + Long.MAX_VALUE.days }
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) + Long.MIN_VALUE.days }
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) - Long.MAX_VALUE.days }
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) - Long.MIN_VALUE.days }
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting hours would cause overflow`() {
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) + Long.MAX_VALUE.hours }
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) + Long.MIN_VALUE.hours }
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) - Long.MAX_VALUE.hours }
+        assertFailsWith<ArithmeticException> { Instant(1L.seconds) - Long.MIN_VALUE.hours }
+    }
+
+    @Test
+    fun `add seconds`() {
+        assertEquals(
+            Instant(1L.seconds, 1.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) + 1.seconds
+        )
+
+        assertEquals(
+            Instant(1L.seconds, 1.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) + 1L.seconds
+        )
+
+        assertEquals(
+            Instant((-2L).seconds, 1.nanoseconds),
+            Instant((-1L).seconds, 1.nanoseconds) + (-1).seconds
+        )
+
+        assertEquals(
+            Instant((-2L).seconds, 1.nanoseconds),
+            Instant((-1L).seconds, 1.nanoseconds) + (-1L).seconds
+        )
+    }
+
+    @Test
+    fun `subtract seconds`() {
+        assertEquals(
+            Instant(1L.seconds, 1.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) - (-1).seconds
+        )
+
+        assertEquals(
+            Instant(1L.seconds, 1.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) - (-1L).seconds
+        )
+
+        assertEquals(
+            Instant((-2L).seconds, 1.nanoseconds),
+            Instant((-1L).seconds, 1.nanoseconds) - 1.seconds
+        )
+
+        assertEquals(
+            Instant((-2L).seconds, 1.nanoseconds),
+            Instant((-1L).seconds, 1.nanoseconds) - 1L.seconds
+        )
+    }
+
+    @Test
+    fun `add nanoseconds`() {
+        assertEquals(
+            Instant(0L.seconds, 2.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) + 1.nanoseconds
+        )
+
+        assertEquals(
+            Instant(0L.seconds, 2.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) + 1L.nanoseconds
+        )
+
+        assertEquals(
+            Instant((-1L).seconds, 999_999_999.nanoseconds),
+            Instant(0L.seconds, 0.nanoseconds) + (-1).nanoseconds
+        )
+
+        assertEquals(
+            Instant((-1L).seconds, 999_999_999.nanoseconds),
+            Instant(0L.seconds, 0.nanoseconds) + (-1L).nanoseconds
+        )
+    }
+
+    @Test
+    fun `subtract nanoseconds`() {
+        assertEquals(
+            Instant(0L.seconds, 2.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) - (-1).nanoseconds
+        )
+
+        assertEquals(
+            Instant(0L.seconds, 2.nanoseconds),
+            Instant(0L.seconds, 1.nanoseconds) - (-1L).nanoseconds
+        )
+
+        assertEquals(
+            Instant((-1L).seconds, 999_999_999.nanoseconds),
+            Instant(0L.seconds, 0.nanoseconds) - 1.nanoseconds
+        )
+
+        assertEquals(
+            Instant((-1L).seconds, 999_999_999.nanoseconds),
+            Instant(0L.seconds, 0.nanoseconds) - 1L.nanoseconds
+        )
     }
 
     @Test
@@ -56,17 +233,25 @@ class InstantTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toInstant() throws an exception when format is unexpected`() {
-        assertFailsWith<DateTimeParseException> { "20191205 0304".toInstant() }
-        assertFailsWith<DateTimeParseException> { "2019-12-05T03:04".toInstant() }
-        assertFailsWith<DateTimeParseException> { "2019-12-05T12:00+00".toInstant() }
+        listOf(
+            "20191205 0304",
+            "2019-12-05T03:04",
+            "2019-12-05T12:00+00"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toInstant() }
+        }
     }
 
     @Test
     fun `String_toInstant() throws an exception when fields are out of range`() {
-        assertFailsWith<DateTimeException> { "2000-01-01T24:00Z".toInstant() }
-        assertFailsWith<DateTimeException> { "2000-01-01T08:60Z".toInstant() }
-        assertFailsWith<DateTimeException> { "2000-13-01T08:59Z".toInstant() }
-        assertFailsWith<DateTimeException> { "2000-01-32T08:59Z".toInstant() }
+        listOf(
+            "2000-01-01T24:00Z",
+            "2000-01-01T08:60Z",
+            "2000-13-01T08:59Z",
+            "2000-01-32T08:59Z"
+        ).forEach {
+            assertFailsWith<DateTimeException> { it.toInstant() }
+        }
     }
 
     @Test
