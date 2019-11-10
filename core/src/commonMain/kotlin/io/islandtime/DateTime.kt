@@ -527,11 +527,8 @@ class DateTime(
             return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, offset)
         }
 
-        fun fromMillisecondsSinceUnixEpoch(
-            millisecondsSinceUnixEpoch: LongMilliseconds,
-            offset: UtcOffset
-        ): DateTime {
-            val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
+        fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): DateTime {
+            val localMilliseconds = milliseconds + offset.totalSeconds
             val localEpochDays = (localMilliseconds.value floorDiv MILLISECONDS_PER_DAY).days
             val nanosecondOfDay =
                 (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.inNanoseconds.value

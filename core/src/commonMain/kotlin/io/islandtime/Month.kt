@@ -4,6 +4,9 @@ import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntMonths
 import io.islandtime.measures.days
 
+/**
+ * A month of the year.
+ */
 enum class Month(val number: Int) {
     JANUARY(1) {
         override val lengthInCommonYear = 31.days
@@ -55,13 +58,29 @@ enum class Month(val number: Int) {
         override val firstDayOfCommonYear = 335
     };
 
+    /**
+     * The number of days in the month in a common year.
+     */
     abstract val lengthInCommonYear: IntDays
 
+    /**
+     * The number of days in the month in a leap month.
+     */
     open val lengthInLeapYear: IntDays
         get() = lengthInCommonYear
 
+    /**
+     * The day of the year corresponding to the month's first day in a common year.
+     *
+     * For example, the first day of [MARCH] is the 60th day of a common year.
+     */
     abstract val firstDayOfCommonYear: Int
 
+    /**
+     * The day of the year corresponding to the month's first day in a leap year.
+     *
+     * For example, the first day of [MARCH] is the 61st day of a leap year.
+     */
     val firstDayOfLeapYear: Int
         get() = when (this) {
             JANUARY, FEBRUARY -> firstDayOfCommonYear
@@ -69,7 +88,7 @@ enum class Month(val number: Int) {
         }
 
     /**
-     * The number of days in the month for a particular year
+     * Get the number of days in the month for a particular year.
      * @param year Retrieve the length of the month within this year
      */
     fun lengthIn(year: Int): IntDays {
@@ -80,7 +99,7 @@ enum class Month(val number: Int) {
     }
 
     /**
-     * The last day of the month
+     * The last day of the month in a particular year.
      */
     fun lastDayIn(year: Int) = lengthIn(year).value
 
@@ -113,13 +132,16 @@ enum class Month(val number: Int) {
     }
 
     /**
-     * Add a given number of months to this month.
+     * Add months to this month, wrapping when the beginning or end of the year is reached.
      */
     operator fun plus(months: IntMonths): Month {
         val monthsToAdd = months.value % 12
         return values()[(ordinal + (monthsToAdd + 12)) % 12]
     }
 
+    /**
+     * Subtract months from this month, wrapping when the beginning or end of the year is reached.
+     */
     operator fun minus(months: IntMonths) = plus(-months)
 
     companion object {
