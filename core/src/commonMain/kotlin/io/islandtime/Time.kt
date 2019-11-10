@@ -7,12 +7,11 @@ import io.islandtime.parser.*
 /**
  * A time of day in an arbitrary region.
  *
- * @param hour hour of day
- * @param minute minute of hour
- * @param second second of minute
- * @param nanosecond nanosecond of second
+ * @param hour The hour of day
+ * @param minute The minute of the hour
+ * @param second The second of the minute
+ * @param nanosecond The nanosecond of the second
 */
-
 class Time(
     val hour: Int,
     val minute: Int,
@@ -38,12 +37,21 @@ class Time(
         }
     }
 
+    /**
+     * The second of the day.
+     */
     val secondOfDay: Int
         get() = hour * SECONDS_PER_HOUR + minute * SECONDS_PER_MINUTE + second
 
+    /**
+     * The number of seconds since the start of the day.
+     */
     inline val secondsSinceStartOfDay: IntSeconds
         get() = secondOfDay.seconds
 
+    /**
+     * The nanosecond of the day.
+     */
     val nanosecondOfDay: Long
         get() {
             return hour.toLong() * NANOSECONDS_PER_HOUR +
@@ -52,6 +60,9 @@ class Time(
                 nanosecond
         }
 
+    /**
+     * The number of nanoseconds since the start of the day.
+     */
     inline val nanosecondsSinceStartOfDay: LongNanoseconds
         get() = nanosecondOfDay.nanoseconds
 
@@ -212,11 +223,13 @@ class Time(
         }
     }
 
+    /**
+     * Convert this time to a string in ISO-8601 extended format.
+     */
     override fun toString() = buildString(MAX_TIME_STRING_LENGTH) { appendTime(this@Time) }
 
     /**
-     * Return a [Time] that replaces components with new values, as desired. If unchanged, the returned object may be
-     * the same.
+     * Return a copy of this [Time], replacing individual components with new values as desired.
      */
     fun copy(
         hour: Int = this.hour,
@@ -226,28 +239,34 @@ class Time(
     ) = Time(hour, minute, second, nanosecond)
 
     /**
-     * Truncate to the [hour] value, replacing all smaller components with zero
+     * Return a copy this time, truncated to the [hour] value.
+     *
+     * All smaller components will be replaced with zero.
      */
     fun truncatedToHours() = copy(minute = 0, second = 0, nanosecond = 0)
 
     /**
-     * Truncate to the [minute] value, replacing all smaller components with zero
+     * Return a copy this time, truncated to the [minute] value.
+     *
+     * All smaller components will be replaced with zero.
      */
     fun truncatedToMinutes() = copy(second = 0, nanosecond = 0)
 
     /**
-     * Truncate to the [second] value, replacing all smaller components with zero
+     * Return a copy this time, truncated to the [second] value.
+     *
+     * All smaller components will be replaced with zero.
      */
     fun truncatedToSeconds() = copy(nanosecond = 0)
 
     /**
-     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     * Return a copy of this time, truncating the [nanosecond] value to milliseconds.
      */
     fun truncatedToMilliseconds() =
         copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND)
 
     /**
-     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     * Return a copy of this time, truncating the [nanosecond] value to microseconds.
      */
     fun truncatedToMicroseconds() =
         copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND)
@@ -260,7 +279,7 @@ class Time(
 
         /**
          * Create the [Time] representing a number of seconds since the start of the day and optionally, the number of
-         * nanoseconds within that second
+         * nanoseconds within that second.
          */
         fun fromSecondOfDay(secondOfDay: Int, nanosecond: Int = 0): Time {
             if (secondOfDay !in 0 until SECONDS_PER_DAY) {
@@ -274,7 +293,7 @@ class Time(
         }
 
         /**
-         * Create the [Time] representing a number of nanoseconds since the start of the day
+         * Create the [Time] representing a number of nanoseconds since the start of the day.
          */
         fun fromNanosecondOfDay(nanosecondOfDay: Long): Time {
             if (nanosecondOfDay !in 0L until NANOSECONDS_PER_DAY) {
@@ -290,8 +309,19 @@ class Time(
     }
 }
 
+/**
+ * Convert a string to a [Time].
+ *
+ * The string is assumed to be an ISO-8601 time representation in extended format. For example, `05`, `05:30`,
+ * `05:30:00`, or `05:30:00.123456789`. The output of [Time.toString] can be safely parsed using this method.
+ */
 fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
 
+/**
+ * Convert a string to a [Time] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ */
 fun String.toTime(parser: DateTimeParser): Time {
     val result = parser.parse(this)
     return result.toTime() ?: throwParserFieldResolutionException<Time>(this)
