@@ -22,6 +22,10 @@ internal fun secondsBetween(
     }
 }
 
+/**
+ * Get the number of whole milliseconds between two instants
+ * @throws ArithmeticException if the result overflows
+ */
 internal fun millisecondsBetween(
     startSeconds: LongSeconds,
     startNanoseconds: IntNanoseconds,
@@ -34,7 +38,7 @@ internal fun millisecondsBetween(
 
 /**
  * Get the number of whole microseconds between two instants
- *  @throws ArithmeticException if the result overflows
+ * @throws ArithmeticException if the result overflows
  */
 internal fun microsecondsBetween(
     startSeconds: LongSeconds,

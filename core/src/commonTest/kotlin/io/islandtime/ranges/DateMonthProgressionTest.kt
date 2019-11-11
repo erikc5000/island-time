@@ -5,11 +5,12 @@ import io.islandtime.Month
 import io.islandtime.measures.decades
 import io.islandtime.measures.months
 import io.islandtime.measures.years
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DateMonthProgressionTest {
+class DateMonthProgressionTest : AbstractIslandTimeTest() {
     @Test
     fun `empty when end comes before start`() {
         val startDate = Date(2019, Month.JANUARY, 29)

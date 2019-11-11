@@ -11,6 +11,10 @@ import kotlin.random.Random
 
 /**
  * A half-open interval of zoned date-times based on timeline order.
+ *
+ * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end. A
+ * [ZonedDateTime] with either as the date-time component will be treated accordingly, regardless of the offset or
+ * time zone.
  */
 class ZonedDateTimeInterval(
     start: ZonedDateTime = UNBOUNDED.start,
@@ -20,11 +24,14 @@ class ZonedDateTimeInterval(
     override val hasUnboundedStart: Boolean get() = start.dateTime == DateTime.MIN
     override val hasUnboundedEnd: Boolean get() = endExclusive.dateTime == DateTime.MAX
 
+    /**
+     * Convert this interval to a string in ISO-8601 extended format.
+     */
     override fun toString() = buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
 
     /**
-     * Convert the range into a period containing each day in the range. As a range is inclusive, if the start and end
-     * date are the same, the resulting period will contain one day.
+     * Convert the interval into a [Period] of the same length.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asPeriod(): Period {
         return when {
@@ -35,8 +42,9 @@ class ZonedDateTimeInterval(
     }
 
     /**
-     * Get the number of years the range. A year is considered to have passed if twelve full months have passed between
-     * the start date and end date, according to the definition of 'month' in [lengthInMonths].
+     * Get the number of years between the start and end of the interval. A year is considered to have passed if twelve
+     * full months have passed between the start date and end date.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInYears
         get() = when {
@@ -46,8 +54,9 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Get the number of months in the range. A month is considered to have passed if the day of the end month is
-     * greater than or equal to the day of the start month.
+     * Get the number of months between the start and end of the interval. A month is considered to have passed if the
+     * day of the end month is greater than or equal to the day of the start month.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMonths
         get() = when {
@@ -58,8 +67,7 @@ class ZonedDateTimeInterval(
 
     /**
      * Get the number of whole days in the interval.
-     *
-     * Daylight savings time differences are taken into account when calculating the number of days.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     override val lengthInDays
         get() = when {
@@ -70,7 +78,7 @@ class ZonedDateTimeInterval(
 
     companion object {
         /**
-         * An empty interval
+         * An empty interval.
          */
         val EMPTY = ZonedDateTimeInterval(
             Instant.UNIX_EPOCH at TimeZone.UTC,
@@ -78,7 +86,7 @@ class ZonedDateTimeInterval(
         )
 
         /**
-         * An unbounded (ie. infinite) interval
+         * An unbounded (ie. infinite) interval.
          */
         val UNBOUNDED = ZonedDateTimeInterval(
             DateTime.MIN at TimeZone.UTC,
@@ -100,11 +108,32 @@ class ZonedDateTimeInterval(
     }
 }
 
-fun emptyZonedDateTimeInterval() = ZonedDateTimeInterval.EMPTY
-fun unboundedZonedDateTimeInterval() = ZonedDateTimeInterval.UNBOUNDED
-
+/**
+ * Convert a string to a [ZonedDateTimeInterval].
+ *
+ * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
+ * [ZonedDateTimeInterval.toString] can be safely parsed using this method.
+ *
+ * Examples:
+ * - `1990-01-04T03-05[America/New_York]/1991-08-30T15:30:05.123-04:00`
+ * - `../1991-08-30T15:30:05.123-04:00`
+ * - `1990-01-04T03-05[Europe/London]/..`
+ * - `../..`
+ * - (empty string)
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
 
+/**
+ * Convert a string to a [ZonedDateTimeInterval] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toZonedDateTimeInterval(parser: GroupedDateTimeParser): ZonedDateTimeInterval {
     val results = parser.parse(this).expectingGroupCount<ZonedDateTimeInterval>(2, this)
 
@@ -128,12 +157,12 @@ fun String.toZonedDateTimeInterval(parser: GroupedDateTimeParser): ZonedDateTime
 }
 
 /**
- * Return a random date-time within the range using the default random number generator
+ * Return a random date-time within the interval using the default random number generator.
  */
 fun ZonedDateTimeInterval.random(): ZonedDateTime = random(Random)
 
 /**
- * Return a random date-time within the range using the supplied random number generator
+ * Return a random date-time within the interval using the supplied random number generator.
  */
 fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
     try {
@@ -148,24 +177,69 @@ fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
 }
 
 /**
- * Get an interval containing all of the representable time points up to, but not including [to]. If the start and end
- * date-times are in different time zones, the end will be adjusted to match the starting zone while preserving the
- * instant.
+ * Get an interval containing all of the representable time points up to, but not including [to].
  */
 infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, to)
 
+/**
+ * Convert a range of dates into a [ZonedDateTimeInterval] between the starting and ending instants in a particular
+ * time zone.
+ */
+fun DateRange.asZonedDateTimeIntervalAt(zone: TimeZone): ZonedDateTimeInterval {
+    return when {
+        isEmpty() -> ZonedDateTimeInterval.EMPTY
+        isUnbounded -> ZonedDateTimeInterval.UNBOUNDED
+        start == endInclusive -> {
+            val zonedStart = start.startOfDayAt(zone)
+            val zonedEnd = zonedStart + 1.days
+            zonedStart until zonedEnd
+        }
+        else -> {
+            val start = if (hasUnboundedStart) {
+                DateTime.MIN at zone
+            } else {
+                start.startOfDayAt(zone)
+            }
+
+            val end = if (hasUnboundedEnd) {
+                DateTime.MAX at zone
+            } else {
+                endInclusive.endOfDayAt(zone)
+            }
+
+            start..end
+        }
+    }
+}
+
+/**
+ * Get the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the
+ * starting date-time.
+ */
 fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period {
     return periodBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }
 
+/**
+ * Get the number of whole years between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
+ * match the starting date-time.
+ */
 fun yearsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntYears {
     return yearsBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }
 
+/**
+ * Get the number of whole months between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
+ * to match the starting date-time.
+ */
 fun monthsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntMonths {
     return monthsBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }
 
+/**
+ * Get the number of whole days between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
+ * match the starting date-time.
+ */
 fun daysBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): LongDays {
     return daysBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }

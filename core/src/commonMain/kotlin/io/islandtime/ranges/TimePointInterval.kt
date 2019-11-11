@@ -11,8 +11,7 @@ import kotlin.jvm.JvmName
 abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     private val _start: T,
     private val _endExclusive: T
-) : TimeInterval<T>,
-    TimePointProgressionBuilder<T> {
+) : TimeInterval<T> {
 
     override val start: T get() = _start
 
@@ -22,8 +21,6 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val endInclusive: T get() = if (hasUnboundedEnd) _endExclusive else _endExclusive - 1.nanoseconds
 
     override val endExclusive: T get() = _endExclusive
-    override val first: T get() = _start
-    override val last: T get() = endInclusive
 
     override fun equals(other: Any?): Boolean {
         return other is TimePointInterval<*> && (isEmpty() && other.isEmpty() ||
@@ -46,7 +43,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     override fun isEmpty(): Boolean = _start >= _endExclusive
 
     /**
-     * Convert an interval of time points into the duration between the start and end points.
+     * Convert the interval into a [Duration] of the same length.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asDuration(): Duration {
         return when {
@@ -57,7 +55,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     }
 
     /**
-     * Get the number of 24-hour days in a range of time points
+     * Get the number of 24-hour days in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     open val lengthInDays: LongDays
         get() = when {
@@ -67,7 +66,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of hours in a range of time points
+     * Get the number of whole hours in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInHours: LongHours
         get() = when {
@@ -77,7 +77,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of hours in a range of time points
+     * Get the number of whole minutes in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMinutes: LongMinutes
         get() = when {
@@ -87,7 +88,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of seconds in a range of time points
+     * Get the number of whole seconds in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInSeconds: LongSeconds
         get() = when {
@@ -97,7 +99,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of milliseconds in a range of time points
+     * Get the number of whole milliseconds in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMilliseconds: LongMilliseconds
         get() = when {
@@ -107,7 +110,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of microseconds in a range of time points
+     * Get the number of whole microseconds in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMicroseconds: LongMicroseconds
         get() = when {
@@ -117,7 +121,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of nanoseconds in a range of time points
+     * Get the number of whole nanoseconds in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInNanoseconds: LongNanoseconds
         get() = when {
