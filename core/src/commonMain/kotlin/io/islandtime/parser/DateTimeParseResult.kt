@@ -3,7 +3,7 @@ package io.islandtime.parser
 import io.islandtime.DateTimeField
 
 /**
- * The result of parsing operation.
+ * The result of a parsing operation.
  */
 data class DateTimeParseResult(
     val fields: MutableMap<DateTimeField, Long> = hashMapOf(),

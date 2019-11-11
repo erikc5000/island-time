@@ -1,43 +1,43 @@
 package io.islandtime.parser
 
 /**
- * A set of predefined parsers
+ * A set of predefined parsers.
  */
 object DateTimeParsers {
     /**
-     * ISO-8601 parsers
+     * ISO-8601 parsers.
      */
     object Iso {
         /**
-         * Parse ISO-8601 calendar dates in either basic or extended format
+         * Parse ISO-8601 calendar dates in either basic or extended format.
          */
         val CALENDAR_DATE = dateTimeParser {
             anyOf(Basic.CALENDAR_DATE, Extended.CALENDAR_DATE)
         }
 
         /**
-         * Parse ISO-8601 ordinal dates in either basic or extended format
+         * Parse ISO-8601 ordinal dates in either basic or extended format.
          */
         val ORDINAL_DATE = dateTimeParser {
             anyOf(Basic.ORDINAL_DATE, Extended.ORDINAL_DATE)
         }
 
         /**
-         * Parse ISO-8601 calendar or ordinal dates in either basic or extended format
+         * Parse ISO-8601 calendar or ordinal dates in either basic or extended format.
          */
         val DATE = dateTimeParser {
             anyOf(CALENDAR_DATE, ORDINAL_DATE)
         }
 
         /**
-         * Parse an ISO-8601 time of day in either basic or extended format
+         * Parse an ISO-8601 time of day in either basic or extended format.
          */
         val TIME = dateTimeParser {
             anyOf(Basic.TIME, Extended.TIME)
         }
 
         /**
-         * Parse an ISO-8601 time shift in either basic or extended format
+         * Parse an ISO-8601 time shift in either basic or extended format.
          */
         val UTC_OFFSET = dateTimeParser {
             anyOf({
@@ -73,18 +73,41 @@ object DateTimeParsers {
             })
         }
 
+        /**
+         * Parse an ISO-8601 date and time of day in either basic or extended format.
+         */
         val DATE_TIME = dateTimeParser {
             anyOf(Basic.DATE_TIME, Extended.DATE_TIME)
         }
 
+        /**
+         * Parse an ISO-8601 time of day and UTC offset in either basic or extended format.
+         */
         val OFFSET_TIME = dateTimeParser {
             anyOf(Basic.OFFSET_TIME, Extended.OFFSET_TIME)
         }
 
+        /**
+         * Parse an ISO-8601 date, time of day, and UTC offset in either basic or extended format.
+         *
+         * Examples:
+         * - `2008-09-01T18:30-4:00`
+         * - `2008-09-01 18:30:00Z`
+         * - `20080901 1830-04`
+         */
         val OFFSET_DATE_TIME = dateTimeParser {
             anyOf(Basic.OFFSET_DATE_TIME, Extended.OFFSET_DATE_TIME)
         }
 
+        /**
+         * Parse an ISO-8601 date, time of day, UTC offset, and optionally, a non-standard region ID in either basic or
+         * extended format.
+         *
+         * Examples:
+         * - `2008-09-01T18:30-4:00[America/New_York]`
+         * - `2008-09-01 18:30:00Z`
+         * - `20080901 1830-04[America/New_York]`
+         */
         val ZONED_DATE_TIME = dateTimeParser {
             anyOf(Basic.ZONED_DATE_TIME, Extended.ZONED_DATE_TIME)
         }
@@ -93,20 +116,21 @@ object DateTimeParsers {
          * Parse an ISO-8601 date-time with the zero UTC offset designator in either basic or extended format.
          *
          * Examples:
-         * - 2001-05-10T00:24:00.00000Z
-         * - 2001-05-10T00:24Z
-         * - 20010510 0024Z
+         * - `2001-05-10T00:24:00.00000Z`
+         * - `2001-05-10T00:24Z`
+         * - `20010510 0024Z`
          */
         val INSTANT = dateTimeParser {
             anyOf(Basic.INSTANT, Extended.INSTANT)
         }
 
         /**
-         * Parse an ISO-8601 year-month.
+         * Parse an ISO-8601 year-month. The standard supports only extended format.
          *
-         * The standard supports only extended format.
+         * Example:
+         * - `2008-09`
          */
-        val YEAR_MONTH = Extended.YEAR_MONTH
+        val YEAR_MONTH get() = Extended.YEAR_MONTH
 
         /**
          * Parse an ISO-8601 year.
@@ -118,7 +142,12 @@ object DateTimeParsers {
         }
 
         /**
-         * Parse an ISO-8601 period without any time components
+         * Parse an ISO-8601 period without any time components.
+         *
+         * Examples:
+         * - `P5Y16M3D`
+         * - `P5M-15D`
+         * - `P0D`
          */
         val PERIOD = dateTimeParser {
             +'P'
@@ -137,7 +166,12 @@ object DateTimeParsers {
         }
 
         /**
-         * Parse an ISO-8601 period containing only the day and time components
+         * Parse an ISO-8601 period containing only the day and time components.
+         *
+         * Examples:
+         * - `P1DT5H6.123S`
+         * - `PT15H20M`
+         * - `PT0S`
          */
         val DURATION = dateTimeParser {
             +'P'
@@ -162,6 +196,16 @@ object DateTimeParsers {
             }
         }
 
+        /**
+         * Parse an ISO-8601 time interval between two dates in either basic or extended format.
+         *
+         * Examples:
+         * - `1990-01-04/1991-08-30`
+         * - `../19910830`
+         * - `19900104/..`
+         * - `../..`
+         * - (empty string)
+         */
         val DATE_RANGE = groupedDateTimeParser {
             anyOf(Basic.DATE_RANGE, Extended.DATE_RANGE)
         }
@@ -245,6 +289,14 @@ object DateTimeParsers {
                 })
             }
 
+            /**
+             * Parse an ISO-8601 date and time of day in basic format.
+             *
+             * Examples:
+             * - `20080901T1830`
+             * - `20080901 183000`
+             * - `20080901 1830`
+             */
             val DATE_TIME = dateTimeParser {
                 childParser(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
@@ -256,11 +308,28 @@ object DateTimeParsers {
                 childParser(UTC_OFFSET)
             }
 
+            /**
+             * Parse an ISO-8601 date, time of day, and UTC offset in basic format.
+             *
+             * Examples:
+             * - `20080901T1830-400`
+             * - `20080901 183000Z`
+             * - `20080901 1830-04`
+             */
             val OFFSET_DATE_TIME = dateTimeParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
             }
 
+            /**
+             * Parse an ISO-8601 date, time of day, UTC offset, and optionally, a non-standard region ID in basic
+             * format.
+             *
+             * Examples:
+             * - `20080901T1830-400[America/New_York]`
+             * - `20080901 183000Z`
+             * - `20080901 1830-04[America/New_York]`
+             */
             val ZONED_DATE_TIME = dateTimeParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
@@ -271,12 +340,31 @@ object DateTimeParsers {
                 }
             }
 
+            /**
+             * Parse an ISO-8601 date-time with the zero UTC offset designator in basic format.
+             *
+             * Examples:
+             * - `20010510T002400.00000Z`
+             * - `20010510T0024Z`
+             * - `20010510 0024Z`
+             */
             val INSTANT = dateTimeParser {
                 childParser(DATE_TIME)
                 utcDesignator()
             }
 
+            /**
+             * Parse an ISO-8601 time interval between two dates in basic format.
+             *
+             * Examples:
+             * - `19900104/19910830`
+             * - `../19910830`
+             * - `19900104/..`
+             * - `../..`
+             * - (empty string)
+             */
             val DATE_RANGE = buildIsoIntervalParser(CALENDAR_DATE)
+
             val DATE_TIME_INTERVAL = buildIsoIntervalParser(DATE_TIME)
             val OFFSET_DATE_TIME_INTERVAL = buildIsoIntervalParser(OFFSET_DATE_TIME)
             val ZONED_DATE_TIME_INTERVAL = buildIsoIntervalParser(ZONED_DATE_TIME)
@@ -353,6 +441,14 @@ object DateTimeParsers {
                 })
             }
 
+            /**
+             * Parse an ISO-8601 date and time of day in extended format.
+             *
+             * Examples:
+             * - `2008-09-01T18:30`
+             * - `2008-09-01 18:30:00`
+             * - `2008-09-01 18:30`
+             */
             val DATE_TIME = dateTimeParser {
                 childParser(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
@@ -364,11 +460,27 @@ object DateTimeParsers {
                 childParser(UTC_OFFSET)
             }
 
+            /**
+             * Parse an ISO-8601 date, time of day, and UTC offset in extended format.
+             *
+             * Examples:
+             * - `2008-09-01T18:30-4:00`
+             * - `2008-09-01 18:30:00Z`
+             * - `2008-09-01 18:30-04`
+             */
             val OFFSET_DATE_TIME = dateTimeParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
             }
 
+            /**
+             * Parse an ISO-8601 date, time of day, UTC offset, and optionally, a non-standard region ID in extended
+             * format.
+             *
+             * Examples:
+             * - `2008-09-01T18:30-4:00[America/New_York]`
+             * - `2008-09-01 18:30:00Z`
+             */
             val ZONED_DATE_TIME = dateTimeParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
@@ -379,11 +491,24 @@ object DateTimeParsers {
                 }
             }
 
+            /**
+             * Parse an ISO-8601 date-time with the zero UTC offset designator in extended format.
+             *
+             * Examples:
+             * - `2001-05-10T00:24:00.00000Z`
+             * - `2001-05-10T00:24Z`
+             */
             val INSTANT = dateTimeParser {
                 childParser(DATE_TIME)
                 utcDesignator()
             }
 
+            /**
+             * Parse an ISO-8601 year-month. The standard supports only extended format.
+             *
+             * Example:
+             * - `2008-09`
+             */
             val YEAR_MONTH = dateTimeParser {
                 year(4) {
                     enforceSignStyle(SignStyle.NEVER)
@@ -394,7 +519,18 @@ object DateTimeParsers {
                 }
             }
 
+            /**
+             * Parse an ISO-8601 time interval between two dates in extended format.
+             *
+             * Examples:
+             * - `1990-01-04/1991-08-30`
+             * - `../1991-08-30`
+             * - `1990-01-04/..`
+             * - `../..`
+             * - (empty string)
+             */
             val DATE_RANGE = buildIsoIntervalParser(CALENDAR_DATE)
+
             val DATE_TIME_INTERVAL = buildIsoIntervalParser(DATE_TIME)
             val OFFSET_DATE_TIME_INTERVAL = buildIsoIntervalParser(OFFSET_DATE_TIME)
             val ZONED_DATE_TIME_INTERVAL = buildIsoIntervalParser(ZONED_DATE_TIME)
