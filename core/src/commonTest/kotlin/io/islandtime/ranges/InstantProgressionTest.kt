@@ -2,12 +2,13 @@ package io.islandtime.ranges
 
 import io.islandtime.Instant
 import io.islandtime.measures.*
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 
-class InstantProgressionTest {
+class InstantProgressionTest : AbstractIslandTimeTest() {
     @Test
     fun `negative step causes an exception`() {
         val interval = Instant.UNIX_EPOCH..Instant(1L.days.inSeconds)

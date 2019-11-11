@@ -31,8 +31,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within bounded range`() {
-        val start = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH,12) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -42,7 +42,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within range with unbounded end`() {
-        val start = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
         val end = DateTime.MAX at "America/New_York".toTimeZone()
 
         assertTrue { start in start..end }
@@ -54,7 +54,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `contains() returns true for dates within range with unbounded start`() {
         val start = DateTime.MIN at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val end = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -65,8 +65,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns false for out of range dates`() {
-        val start = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH,12) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()
 
         assertFalse { start - 1.nanoseconds in start..end }
         assertFalse { end + 1.nanoseconds in start..end }
@@ -76,20 +76,19 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `until infix operator constructs an interval with non-inclusive end`() {
-        val start = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH,12) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()
         val range = start until end
 
-        assertEquals(start, range.first)
         assertEquals(start, range.start)
-        assertEquals(end - 1.nanoseconds, range.last)
+        assertEquals(end - 1.nanoseconds, range.endInclusive)
         assertEquals(end, range.endExclusive)
     }
 
     @Test
     fun `random() returns a zoned date-time within range`() {
-        val start = Date(2019, Month.NOVEMBER,1) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.NOVEMBER,20) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at "America/New_York".toTimeZone()
+        val end = Date(2019, Month.NOVEMBER, 20) at MIDNIGHT at "America/New_York".toTimeZone()
         val range = start..end
         val randomInstant = range.random()
         assertTrue { randomInstant in range }
@@ -168,7 +167,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInNanoseconds property returns 1 when the start and end instant are the same`() {
-        val instant = Date(2019, Month.MARCH,10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val instant = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }
 
@@ -282,45 +281,4 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         assertEquals(4L.hours, (then until now).lengthInHours)
         assertEquals(3L.hours, (then until now - 1.nanoseconds).lengthInHours)
     }
-
-//    @Test
-//    fun `day progression`() {
-//        val zone = "America/New_York".toTimeZone()
-//        val then = Date(2019, 3, 10) at MIDNIGHT at zone
-//        val now = Date(2019, 3, 11) at Time(0, 0, 0, 1) at zone
-//
-//        val progression = then until now step 1.days
-//        assertEquals(then, progression.first)
-//        assertEquals(
-//            Date(2019, 3, 11) at MIDNIGHT at zone,
-//            progression.last
-//        )
-//        assertFalse { progression.isEmpty() }
-//        assertEquals(2, progression.count())
-//    }
-
-//    @Test
-//    fun `month progression with positive step`() {
-//        val zone = "America/New_York".toTimeZone()
-//        val then = Date(2019, 3, 10) at MIDNIGHT at zone
-//        val now = Date(2019, 5, 10) at MIDNIGHT at zone
-//
-//        val progression1 = then..now step 1.months
-//        assertEquals(then, progression1.first)
-//        assertEquals(
-//            Date(2019, 5, 10) at MIDNIGHT at zone,
-//            progression1.last
-//        )
-//        assertFalse { progression1.isEmpty() }
-//        assertEquals(3, progression1.count())
-//
-//        val progression2 = then until now step 1.months
-//        assertEquals(then, progression2.first)
-//        assertEquals(
-//            Date(2019, 4, 10) at MIDNIGHT at zone,
-//            progression2.last
-//        )
-//        assertFalse { progression2.isEmpty() }
-//        assertEquals(2, progression2.count())
-//    }
 }

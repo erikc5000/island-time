@@ -3,9 +3,10 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
-class InstantIntervalTest {
+class InstantIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `EMPTY returns an empty interval`() {
         assertTrue { InstantInterval.EMPTY.isEmpty() }

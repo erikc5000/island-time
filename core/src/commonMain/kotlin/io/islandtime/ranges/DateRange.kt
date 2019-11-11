@@ -15,6 +15,8 @@ import kotlin.random.nextLong
 
 /**
  * An inclusive range of dates.
+ *
+ * [Date.MIN] and [Date.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
 class DateRange(
     start: Date = Date.MIN,
@@ -37,6 +39,9 @@ class DateRange(
         return firstUnixEpochDay > lastUnixEpochDay || endInclusive == Date.MIN || start == Date.MAX
     }
 
+    /**
+     * Convert this interval to a string in ISO-8601 extended format.
+     */
     override fun toString(): String {
         return if (isEmpty()) {
             ""
@@ -131,8 +136,32 @@ class DateRange(
     }
 }
 
+/**
+ * Convert a string to a [DateRange].
+ *
+ * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
+ * [DateRange.toString] can be safely parsed using this method.
+ *
+ * Examples:
+ * - `1990-01-04/1991-08-30`
+ * - `../1991-08-30`
+ * - `1990-01-04/..`
+ * - `../..`
+ * - (empty string)
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
 
+/**
+ * Convert a string to a [DateRange] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toDateRange(parser: GroupedDateTimeParser): DateRange {
     val results = parser.parse(this).expectingGroupCount<DateTimeInterval>(2, this)
 

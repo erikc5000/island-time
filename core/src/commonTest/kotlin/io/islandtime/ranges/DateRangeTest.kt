@@ -5,9 +5,10 @@ import io.islandtime.Month
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
-class DateRangeTest {
+class DateRangeTest : AbstractIslandTimeTest() {
     @Test
     fun `contains() returns true for dates within range`() {
         val startDate = Date(2018, Month.DECEMBER, 25)

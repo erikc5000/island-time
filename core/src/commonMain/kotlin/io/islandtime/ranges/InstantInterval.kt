@@ -10,26 +10,35 @@ import io.islandtime.toInstant
 import kotlin.random.Random
 
 /**
- * A half-open interval of instants
+ * A half-open interval between two instants.
+ *
+ * [Instant.MIN] and [Instant.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
 class InstantInterval(
     start: Instant = Instant.MIN,
     endExclusive: Instant = Instant.MAX
-) : TimePointInterval<Instant>(start, endExclusive) {
+) : TimePointInterval<Instant>(start, endExclusive),
+    TimePointProgressionBuilder<Instant> {
 
     override val hasUnboundedStart: Boolean get() = start == Instant.MIN
     override val hasUnboundedEnd: Boolean get() = endExclusive == Instant.MAX
 
+    override val first: Instant get() = start
+    override val last: Instant get() = endInclusive
+
+    /**
+     * Convert this interval to a string in ISO-8601 extended format.
+     */
     override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
 
     companion object {
         /**
-         * An empty interval
+         * An empty interval.
          */
         val EMPTY = InstantInterval(Instant.UNIX_EPOCH, Instant.UNIX_EPOCH)
 
         /**
-         * An unbounded (ie. infinite) interval
+         * An unbounded (ie. infinite) interval.
          */
         val UNBOUNDED = InstantInterval(Instant.MIN, Instant.MAX)
 
@@ -49,12 +58,30 @@ class InstantInterval(
 }
 
 /**
- * Convert an ISO-8601 time interval between two UTC date-times in extended format into an [InstantInterval].
+ * Convert a string to an [InstantInterval].
+ *
+ * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
+ * [InstantInterval.toString] can be safely parsed using this method.
+ *
+ * Examples:
+ * - `1990-01-04T03Z/1991-08-30T15:30:05.123Z`
+ * - `../1991-08-30T15:30:05.123Z`
+ * - `1990-01-04T03Z/..`
+ * - `../..`
+ * - (empty string)
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
 
 /**
- * Convert a string into an [InstantInterval] using the provided parser.
+ * Convert a string to an [InstantInterval] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toInstantInterval(parser: GroupedDateTimeParser): InstantInterval {
     val results = parser.parse(this).expectingGroupCount<InstantInterval>(2, this)

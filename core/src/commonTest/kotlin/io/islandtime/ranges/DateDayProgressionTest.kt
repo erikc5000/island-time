@@ -4,11 +4,12 @@ import io.islandtime.Date
 import io.islandtime.Month
 import io.islandtime.measures.days
 import io.islandtime.measures.weeks
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class DateDayProgressionTest {
+class DateDayProgressionTest : AbstractIslandTimeTest() {
     @Test
     fun `empty when end comes before start`() {
         val startDate = Date(2019, Month.JANUARY, 29)

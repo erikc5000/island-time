@@ -11,7 +11,9 @@ import kotlin.random.Random
  * An interval between two arbitrary date-times.
  *
  * As no UTC offset or time zone is associated with either date-time, it's up to the application to interpret the
- * meaning
+ * meaning.
+ *
+ * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
 class DateTimeInterval(
     override val start: DateTime = UNBOUNDED.start,
@@ -22,7 +24,7 @@ class DateTimeInterval(
     override val hasUnboundedEnd: Boolean get() = endExclusive == DateTime.MAX
 
     /**
-     * Check if this interval contains the given value
+     * Check if this interval contains the given value.
      * @param value a date-time, assumed to be in the same time zone
      */
     override fun contains(value: DateTime): Boolean {
@@ -33,12 +35,16 @@ class DateTimeInterval(
         return start >= endExclusive
     }
 
+    /**
+     * Convert this interval to a string in ISO-8601 extended format.
+     */
     override fun toString() = buildIsoString(MAX_DATE_TIME_STRING_LENGTH, StringBuilder::appendDateTime)
 
     /**
      * Get the [Duration] between the start and end date-time, assuming they're in the same time zone. In general, it's
      * more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be
      * taken into account when working with [DateTime] directly.
+     *
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asDuration(): Duration {
@@ -50,7 +56,7 @@ class DateTimeInterval(
     }
 
     /**
-     * Get the period between the date-times in the interval.
+     * Convert the interval into a [Period] of the same length.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asPeriod(): Period {
@@ -77,6 +83,7 @@ class DateTimeInterval(
      *
      * A month is considered to have passed if the day of the end month is greater than or equal to the day of the start
      * month and the time of day of the end date-time is greater than or equal to that of the start date-time.
+     *
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMonths
@@ -189,11 +196,32 @@ class DateTimeInterval(
     }
 }
 
-fun emptyDateTimeInterval() = DateTimeInterval.EMPTY
-fun unboundedDateTimeInterval() = DateTimeInterval.UNBOUNDED
-
+/**
+ * Convert a string to a [DateTimeInterval].
+ *
+ * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
+ * [DateTimeInterval.toString] can be safely parsed using this method.
+ *
+ * Examples:
+ * - `1990-01-04T03/1991-08-30T15:30:05.123`
+ * - `../1991-08-30T15:30:05.123`
+ * - `1990-01-04T03/..`
+ * - `../..`
+ * - (empty string)
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
 
+/**
+ * Convert a string to a [DateTimeInterval] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toDateTimeInterval(parser: GroupedDateTimeParser): DateTimeInterval {
     val results = parser.parse(this).expectingGroupCount<DateTimeInterval>(2, this)
 
@@ -217,12 +245,12 @@ fun String.toDateTimeInterval(parser: GroupedDateTimeParser): DateTimeInterval {
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator
+ * Return a random date-time within the interval using the default random number generator.
  */
 fun DateTimeInterval.random(): DateTime = random(Random)
 
 /**
- * Return a random date-time within the interval using the supplied random number generator
+ * Return a random date-time within the interval using the supplied random number generator.
  */
 fun DateTimeInterval.random(random: Random): DateTime {
     try {

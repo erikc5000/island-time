@@ -4,9 +4,9 @@ import io.islandtime.TimePoint
 import io.islandtime.measures.*
 
 /**
- * A time point progression builder
+ * A time point progression builder.
  *
- * Without a step, a time point progression can't be created. This interface represents an intermediate state in the
+ * Without a step, a time-based progression can't be created. This interface represents an intermediate state in the
  * process of creating a time point progression.
  */
 interface TimePointProgressionBuilder<T : TimePoint<T>> {
@@ -15,7 +15,7 @@ interface TimePointProgressionBuilder<T : TimePoint<T>> {
 }
 
 /**
- * Progression builder that stores just the first and last elements
+ * Progression builder that stores just the first and last elements.
  */
 private class DefaultTimePointProgressionBuilder<T : TimePoint<T>>(
     override val first: T,
@@ -143,7 +143,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
 }
 
 /**
- * A get progression of time points in descending order
+ * Get a progression of time points in descending order.
  */
 infix fun <T : TimePoint<T>> T.downTo(to: T): TimePointProgressionBuilder<T> {
     return DefaultTimePointProgressionBuilder(this, to)

@@ -10,7 +10,10 @@ import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 
 /**
- * A half-open interval of offset date-times based on timeline order
+ * A half-open interval between two offset date-times based on timeline order.
+ *
+ * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end. An
+ * [OffsetDateTime] with either as the date-time component will be treated accordingly, regardless of the offset.
  */
 class OffsetDateTimeInterval(
     start: OffsetDateTime = UNBOUNDED.start,
@@ -20,11 +23,14 @@ class OffsetDateTimeInterval(
     override val hasUnboundedStart: Boolean get() = start.dateTime == DateTime.MIN
     override val hasUnboundedEnd: Boolean get() = endExclusive.dateTime == DateTime.MAX
 
+    /**
+     * Convert this interval to a string in ISO-8601 extended format.
+     */
     override fun toString() = buildIsoString(MAX_OFFSET_DATE_TIME_STRING_LENGTH, StringBuilder::appendOffsetDateTime)
 
     /**
-     * Convert the range into a period containing each day in the range. As a range is inclusive, if the start and end
-     * date are the same, the resulting period will contain one day.
+     * Convert the interval into a [Period] of the same length.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asPeriod(): Period {
         return when {
@@ -35,8 +41,9 @@ class OffsetDateTimeInterval(
     }
 
     /**
-     * Get the number of years the range. A year is considered to have passed if twelve full months have passed between
-     * the start date and end date, according to the definition of 'month' in [lengthInMonths].
+     * Get the number of years between the start and end of the interval. A year is considered to have passed if twelve
+     * full months have passed between the start date and end date.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInYears
         get() = when {
@@ -46,8 +53,9 @@ class OffsetDateTimeInterval(
         }
 
     /**
-     * Get the number of months in the range. A month is considered to have passed if the day of the end month is
-     * greater than or equal to the day of the start month minus one (as a range is inclusive).
+     * Get the number of months between the start and end of the interval. A month is considered to have passed if the
+     * day of the end month is greater than or equal to the day of the start month.
+     * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMonths
         get() = when {
@@ -58,7 +66,7 @@ class OffsetDateTimeInterval(
 
     companion object {
         /**
-         * An empty interval
+         * An empty interval.
          */
         val EMPTY = OffsetDateTimeInterval(
             Instant.UNIX_EPOCH at UtcOffset.ZERO,
@@ -66,7 +74,7 @@ class OffsetDateTimeInterval(
         )
 
         /**
-         * An unbounded (ie. infinite) interval
+         * An unbounded (ie. infinite) interval.
          */
         val UNBOUNDED = OffsetDateTimeInterval(
             DateTime.MIN at UtcOffset.ZERO,
@@ -88,11 +96,32 @@ class OffsetDateTimeInterval(
     }
 }
 
-fun emptyOffsetDateTimeInterval() = OffsetDateTimeInterval.EMPTY
-fun unboundedOffsetDateTimeInterval() = OffsetDateTimeInterval.UNBOUNDED
-
+/**
+ * Convert a string to an [OffsetDateTimeInterval].
+ *
+ * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
+ * [OffsetDateTimeInterval.toString] can be safely parsed using this method.
+ *
+ * Examples:
+ * - `1990-01-04T03-05/1991-08-30T15:30:05.123-04:00`
+ * - `../1991-08-30T15:30:05.123-04:00`
+ * - `1990-01-04T03-05/..`
+ * - `../..`
+ * - (empty string)
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
 
+/**
+ * Convert a string to an [OffsetDateTimeInterval] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toOffsetDateTimeInterval(parser: GroupedDateTimeParser): OffsetDateTimeInterval {
     val results = parser.parse(this).expectingGroupCount<OffsetDateTimeInterval>(2, this)
 
@@ -116,12 +145,12 @@ fun String.toOffsetDateTimeInterval(parser: GroupedDateTimeParser): OffsetDateTi
 }
 
 /**
- * Return a random date-time within the range using the default random number generator
+ * Return a random date-time within the range using the default random number generator.
  */
 fun OffsetDateTimeInterval.random(): OffsetDateTime = random(Random)
 
 /**
- * Return a random date-time within the range using the supplied random number generator
+ * Return a random date-time within the range using the supplied random number generator.
  */
 fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
     try {
@@ -136,32 +165,27 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
 }
 
 /**
- * Get a range containing all of the representable date-times up to, but not including [to]. If the start and end
- * date-times have different offsets, the end will be adjusted to match the starting offset while preserving the
- * instant.
+ * Create an interval containing all of the representable date-times from up to, but not including [to].
  */
 infix fun OffsetDateTime.until(to: OffsetDateTime) = OffsetDateTimeInterval(this, to)
 
 /**
- * Get the [Period] between two offset date-times. If the start and end have different offsets, the end will be
- * adjusted to match the starting offset while preserving the instant.
+ * Get the [Period] between two date-times, ignoring the offsets.
  */
 fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
-    return periodBetween(start.dateTime, endExclusive.adjustedTo(start.offset).dateTime)
+    return periodBetween(start.dateTime, endExclusive.dateTime)
 }
 
 /**
- * Get the number of whole years between two offset date-times. If the start and end have different offsets, the end
- * will be adjusted to match the starting offset while preserving the instant.
+ * Get the number of whole years between two date-times, ignoring the offsets.
  */
 fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears {
-    return yearsBetween(start.dateTime, endExclusive.adjustedTo(start.offset).dateTime)
+    return yearsBetween(start.dateTime, endExclusive.dateTime)
 }
 
 /**
- * Get the number of whole months between two offset date-times. If the start and end have different offsets, the end
- * will be adjusted to match the starting offset while preserving the instant.
+ * Get the number of whole months between two date-times, ignoring the offsets.
  */
 fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonths {
-    return monthsBetween(start.dateTime, endExclusive.adjustedTo(start.offset).dateTime)
+    return monthsBetween(start.dateTime, endExclusive.dateTime)
 }
