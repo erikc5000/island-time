@@ -9,11 +9,6 @@ import kotlin.test.assertFailsWith
 
 class MonthTest : AbstractIslandTimeTest() {
     @Test
-    fun `Month() returns a month by ISO number`() {
-        assertEquals(Month.APRIL, Month(4))
-    }
-
-    @Test
     fun `Int_toMonth() throws an exception when the value isn't a valid ISO month number`() {
         assertFailsWith<DateTimeException> { 0.toMonth() }
         assertFailsWith<DateTimeException> { 13.toMonth() }
@@ -22,6 +17,7 @@ class MonthTest : AbstractIslandTimeTest() {
     @Test
     fun `Int_toMonth() gets a Month from an ISO month number when it's in range`() {
         assertEquals(Month.JANUARY, 1.toMonth())
+        assertEquals(Month.APRIL, 4.toMonth())
         assertEquals(Month.DECEMBER, 12.toMonth())
     }
 

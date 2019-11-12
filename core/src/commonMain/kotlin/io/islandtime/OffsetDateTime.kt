@@ -50,7 +50,7 @@ class OffsetDateTime(
         second: Int,
         nanosecond: Int,
         offset: UtcOffset
-    ) : this(DateTime(year, Month(monthNumber), dayOfMonth, hour, minute, second, nanosecond), offset)
+    ) : this(DateTime(year, monthNumber.toMonth(), dayOfMonth, hour, minute, second, nanosecond), offset)
 
     inline val date: Date get() = dateTime.date
     inline val time: Time get() = dateTime.time
