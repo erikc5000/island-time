@@ -4,23 +4,36 @@ import io.islandtime.Instant
 import io.islandtime.TimeZone
 import io.islandtime.measures.*
 
+/**
+ * A time source.
+ */
 interface Clock {
     /**
-     * The clock's time zone, set during initialization of the clock
+     * The clock's time zone.
      */
     val zone: TimeZone
 
     /**
-     * Get the current number of milliseconds since the Unix epoch of 1970-01-01T00:00 in UTC
+     * Get the current number of milliseconds since the Unix epoch of 1970-01-01T00:00 in UTC.
      */
     fun read(): LongMilliseconds
 
     /**
-     * Get the current instant
+     * Get the current [Instant].
      */
     fun instant(): Instant = Instant(read())
 }
 
+/**
+ * A clock that provides the time from the current system.
+ *
+ * The time zone is treated as an immutable property of the clock, set when it is created. If you wish to follow
+ * changes to the system clock's configured time zone, you must create a new [SystemClock] in response to any time zone
+ * changes.
+ *
+ * @constructor Create a [SystemClock] with a specific time zone, defaulting to the system's current zone.
+ * @see currentZone
+ */
 class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
     override fun read() = PlatformSystemClock.read()
 
@@ -32,10 +45,13 @@ class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
     override fun toString(): String = "SystemClock[$zone]"
 
     companion object {
+        /**
+         * A system clock in the UTC time zone.
+         */
         val UTC = SystemClock(TimeZone.UTC)
 
         /**
-         * Get the current system time zone
+         * Get the current system time zone.
          */
         fun currentZone(): TimeZone = PlatformSystemClock.currentZone()
     }
@@ -50,7 +66,7 @@ internal expect object PlatformSystemClock {
 }
 
 /**
- * A clock with fixed time, suitable for testing
+ * A clock with fixed time, suitable for testing.
  */
 class FixedClock(
     private var millisecondsSinceUnixEpoch: LongMilliseconds = 0L.milliseconds,
