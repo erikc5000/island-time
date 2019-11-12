@@ -31,7 +31,7 @@ class DateTime(
         minute: Int,
         second: Int = 0,
         nanosecond: Int = 0
-    ) : this(year, Month(monthNumber), day, hour, minute, second, nanosecond)
+    ) : this(year, monthNumber.toMonth(), day, hour, minute, second, nanosecond)
 
     /**
      * The hour of the day

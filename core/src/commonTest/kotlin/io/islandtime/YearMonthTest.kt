@@ -16,7 +16,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
         assertEquals(
             YearMonth(2018, Month.APRIL),
-            Year(2018) at Month(4)
+            Year(2018) at 4.toMonth()
         )
     }
 

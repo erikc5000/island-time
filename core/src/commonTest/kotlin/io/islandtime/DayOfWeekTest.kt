@@ -8,11 +8,6 @@ import kotlin.test.assertFailsWith
 
 class DayOfWeekTest : AbstractIslandTimeTest() {
     @Test
-    fun `DayOfWeek() returns the day of the week by number, starting with Monday`() {
-        assertEquals(DayOfWeek.WEDNESDAY, DayOfWeek(3))
-    }
-
-    @Test
     fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {
         assertFailsWith<DateTimeException> { 0.toDayOfWeek() }
         assertFailsWith<DateTimeException> { 8.toDayOfWeek() }
@@ -22,6 +17,7 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     @Test
     fun `Int_toDayOfWeek() returns the correct day`() {
         assertEquals(DayOfWeek.MONDAY, 1.toDayOfWeek())
+        assertEquals(DayOfWeek.WEDNESDAY, 3.toDayOfWeek())
         assertEquals(DayOfWeek.SUNDAY, 7.toDayOfWeek())
     }
 

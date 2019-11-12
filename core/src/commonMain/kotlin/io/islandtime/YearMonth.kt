@@ -157,7 +157,7 @@ inline class YearMonth internal constructor(
  */
 @Suppress("FunctionName")
 fun YearMonth(year: Int, monthNumber: Int): YearMonth {
-    return YearMonth(year, Month(monthNumber))
+    return YearMonth(year, monthNumber.toMonth())
 }
 
 /**
@@ -204,4 +204,4 @@ infix fun Year.at(month: Month) = YearMonth(value, month)
 /**
  * Combine a year and month number to get a [YearMonth]
  */
-fun Year.atMonth(number: Int) = YearMonth(value, Month(number))
+fun Year.atMonth(number: Int) = YearMonth(value, number.toMonth())

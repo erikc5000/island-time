@@ -36,7 +36,7 @@ class Date(
         year: Int,
         monthNumber: Int,
         day: Int
-    ) : this(year, Month(monthNumber), day)
+    ) : this(year, monthNumber.toMonth(), day)
 
     /**
      * The day of the week
@@ -320,7 +320,7 @@ class Date(
             val dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
             yearEst += (marchMonth0 / 10).toLong()
 
-            return Date(yearEst.toInt(), Month(month), dom)
+            return Date(yearEst.toInt(), month, dom)
         }
     }
 }

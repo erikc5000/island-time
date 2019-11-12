@@ -7,56 +7,62 @@ import io.islandtime.measures.days
 /**
  * A month of the year.
  */
-enum class Month(val number: Int) {
-    JANUARY(1) {
+enum class Month {
+    JANUARY {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 1
     },
-    FEBRUARY(2) {
+    FEBRUARY {
         override val lengthInCommonYear = 28.days
         override val lengthInLeapYear = 29.days
         override val firstDayOfCommonYear = 32
     },
-    MARCH(3) {
+    MARCH {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 60
     },
-    APRIL(4) {
+    APRIL {
         override val lengthInCommonYear = 30.days
         override val firstDayOfCommonYear = 91
     },
-    MAY(5) {
+    MAY {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 121
     },
-    JUNE(6) {
+    JUNE {
         override val lengthInCommonYear = 30.days
         override val firstDayOfCommonYear = 152
     },
-    JULY(7) {
+    JULY {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 182
     },
-    AUGUST(8) {
+    AUGUST {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 213
     },
-    SEPTEMBER(9) {
+    SEPTEMBER {
         override val lengthInCommonYear = 30.days
         override val firstDayOfCommonYear = 244
     },
-    OCTOBER(10) {
+    OCTOBER {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 272
     },
-    NOVEMBER(11) {
+    NOVEMBER {
         override val lengthInCommonYear = 30.days
         override val firstDayOfCommonYear = 305
     },
-    DECEMBER(12) {
+    DECEMBER {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 335
     };
+
+
+    /**
+     * Get the ISO month number, from 1-12.
+     */
+    val number: Int get() = ordinal + 1
 
     /**
      * The number of days in the month in a common year.
@@ -147,15 +153,16 @@ enum class Month(val number: Int) {
     companion object {
         val MIN = JANUARY
         val MAX = DECEMBER
-
-        operator fun invoke(number: Int): Month {
-            if (number !in MIN.number..MAX.number) {
-                throw DateTimeException("'$number' is not a valid month of the year")
-            }
-
-            return values()[number - 1]
-        }
     }
 }
 
-fun Int.toMonth() = Month(this)
+/**
+ * Convert an ISO month number (from 1-12) to a [Month].
+ */
+fun Int.toMonth(): Month {
+    if (this !in Month.MIN.number..Month.MAX.number) {
+        throw DateTimeException("'this' is not a valid month of the year")
+    }
+
+    return Month.values()[this - 1]
+}
