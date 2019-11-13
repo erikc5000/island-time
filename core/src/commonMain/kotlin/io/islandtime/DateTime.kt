@@ -8,11 +8,24 @@ import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.DateTimeInterval
 
+/**
+ * A date and time of day in an arbitrary region.
+ *
+ * @constructor Create a [DateTime] by combining a [Date] and [Time].
+ * @param date the date
+ * @param time the time
+ */
 class DateTime(
+    /** The date. */
     val date: Date,
+    /** The time of day. */
     val time: Time
 ) : Comparable<DateTime> {
 
+    /**
+     * Create a [DateTime].
+     * @throws DateTimeException if the date-time is invalid
+     */
     constructor(
         year: Int,
         month: Month,
@@ -23,6 +36,10 @@ class DateTime(
         nanosecond: Int = 0
     ) : this(Date(year, month, day), Time(hour, minute, second, nanosecond))
 
+    /**
+     * Create a [DateTime].
+     * @throws DateTimeException if the date-time is invalid
+     */
     constructor(
         year: Int,
         monthNumber: Int,
@@ -34,77 +51,77 @@ class DateTime(
     ) : this(year, monthNumber.toMonth(), day, hour, minute, second, nanosecond)
 
     /**
-     * The hour of the day
+     * The hour of the day.
      */
     inline val hour: Int get() = time.hour
 
     /**
-     * The minute within the hour
+     * The minute of the hour.
      */
     inline val minute: Int get() = time.minute
 
     /**
-     * The second within the minute
+     * The second of the minute.
      */
     inline val second: Int get() = time.second
 
     /**
-     * The nanosecond within the second
+     * The nanosecond of the second.
      */
     inline val nanosecond: Int get() = time.nanosecond
 
     /**
-     * The month of the year
+     * The month of the year.
      */
     inline val month: Month get() = date.month
 
     /**
-     * The ISO month number
+     * The ISO month number, from 1-12.
      */
     inline val monthNumber: Int get() = month.number
 
     /**
-     * The day of the week
+     * The day of the week.
      */
     inline val dayOfWeek: DayOfWeek get() = date.dayOfWeek
 
     /**
-     * The day of the month
+     * The day of the month.
      */
     inline val dayOfMonth: Int get() = date.dayOfMonth
 
     /**
-     * The day of the year
+     * The day of the year -- also known as the ordinal date in ISO-8601.
      */
     inline val dayOfYear: Int get() = date.dayOfYear
 
     /**
-     * The year
+     * The year.
      */
     inline val year: Int get() = date.year
 
     /**
-     * true if this date falls within a leap year
+     * Check if this date falls within a leap year.
      */
     inline val isInLeapYear: Boolean get() = date.isInLeapYear
 
     /**
-     * true if this is a leap day
+     * Check if this is a leap day.
      */
     inline val isLeapDay: Boolean get() = date.isLeapDay
 
     /**
-     * The length of the date's month in days
+     * The length of the date's month in days.
      */
     inline val lengthOfMonth: IntDays get() = date.lengthOfMonth
 
     /**
-     * The length of the date's year in days
+     * The length of the date's year in days.
      */
     inline val lengthOfYear: IntDays get() = date.lengthOfYear
 
     /**
-     * Get the year and month of this date
+     * The combined year and month.
      */
     inline val yearMonth: YearMonth get() = date.yearMonth
 
@@ -408,7 +425,9 @@ class DateTime(
     ) = DateTime(date, time)
 
     /**
-     * Return a new [DateTime], replacing any of the components with new values
+     * Return a copy of this [DateTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -420,7 +439,9 @@ class DateTime(
     ) = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Return a new [DateTime], replacing any of the components with new values
+     * Return a copy of this [DateTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -433,7 +454,9 @@ class DateTime(
     ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Return a new [DateTime], replacing any of the components with new values
+     * Return a copy of this [DateTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -515,7 +538,7 @@ class DateTime(
 
     fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
-    fun asInstantAt(offset: UtcOffset): Instant {
+    fun instantAt(offset: UtcOffset): Instant {
         return Instant.fromUnixEpochSecond(unixEpochSecondAt(offset), nanosecond)
     }
 
@@ -575,16 +598,16 @@ fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): D
 }
 
 /**
- * Get the [DateTime] at the start of the day
+ * The [DateTime] at the start of the day
  */
-fun Date.startOfDay() = DateTime(this, Time.MIDNIGHT)
+val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
 
 /**
- * Get the [DateTime] at the end of the day
+ * The [DateTime] at the end of the day
  */
-fun Date.endOfDay() = DateTime(this, Time.MAX)
+val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 
-fun Instant.asDateTimeAt(offset: UtcOffset): DateTime {
+fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 

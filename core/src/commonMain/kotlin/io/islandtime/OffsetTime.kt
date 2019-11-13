@@ -7,15 +7,22 @@ import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.throwParserFieldResolutionException
 
 /**
- * A time of day combined with a specific UTC offset
+ * A time of day with an offset from UTC.
  */
 class OffsetTime(
+    /** The time of day. */
     val time: Time,
+    /** The offset from UTC. */
     val offset: UtcOffset
 ) : Comparable<OffsetTime> {
 
+    init {
+        offset.validate()
+    }
+
     /**
-     * Create an [OffsetTime]
+     * Create an [OffsetTime].
+     * @throws DateTimeException if the time or offset is invalid
      */
     constructor(
         hour: Int,
@@ -25,21 +32,36 @@ class OffsetTime(
         offset: UtcOffset
     ) : this(Time(hour, minute, second, nanosecond), offset)
 
+    /**
+     * The hour of the day.
+     */
     inline val hour: Int get() = time.hour
+
+    /**
+     * The minute of the hour.
+     */
     inline val minute: Int get() = time.minute
+
+    /**
+     * The second of the minute.
+     */
     inline val second: Int get() = time.second
+
+    /**
+     * The nanosecond of the second.
+     */
     inline val nanosecond: Int get() = time.nanosecond
 
     /**
      * The number of nanoseconds since the start of the day, but normalized to a UTC offset of zero, allowing
-     * [OffsetTime] objects with different offsets to be compared
+     * [OffsetTime] objects with different offsets to be compared.
      */
     val nanosecondsSinceStartOfUtcDay: LongNanoseconds
         get() = time.nanosecondsSinceStartOfDay - offset.totalSeconds
 
     /**
-     * Change the offset of an [OffsetTime], adjusting the time component such that the instant represented by it
-     * remains the same
+     * Return an [OffsetTime] with the offset changed to [newOffset], adjusting the time component such that the instant
+     * remains the same.
      */
     fun adjustedTo(newOffset: UtcOffset): OffsetTime {
         return if (newOffset == offset) {
@@ -78,9 +100,6 @@ class OffsetTime(
     operator fun minus(nanoseconds: LongNanoseconds) = copy(time = time - nanoseconds)
     operator fun minus(nanoseconds: IntNanoseconds) = minus(nanoseconds.toLong())
 
-    operator fun component1() = time
-    operator fun component2() = offset
-
     override fun compareTo(other: OffsetTime): Int {
         return if (offset == other.offset) {
             time.compareTo(other.time)
@@ -108,7 +127,9 @@ class OffsetTime(
     }
 
     /**
-     * Return an [OffsetTime] that replaces components with new values, as desired
+     * Return a copy of this [OffsetTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting time or offset is invalid
      */
     fun copy(
         time: Time = this.time,
@@ -116,7 +137,9 @@ class OffsetTime(
     ) = OffsetTime(time, offset)
 
     /**
-     * Return an [OffsetTime] that replaces components with new values, as desired
+     * Return a copy of this [OffsetTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting time or offset is invalid
      */
     fun copy(
         hour: Int = this.hour,

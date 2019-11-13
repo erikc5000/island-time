@@ -15,6 +15,17 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     )
 
     @Test
+    fun `throws an exception if constructed with an offset that's invalid`() {
+        assertFailsWith<DateTimeException> {
+            DateTime(2018, 1, 8, 1, 0) at UtcOffset(19.hours)
+        }
+
+        assertFailsWith<DateTimeException> {
+            DateTime(2018, 1, 8, 1, 0) at UtcOffset((-19).hours)
+        }
+    }
+
+    @Test
     fun `equality is based on date, time, and offset`() {
         assertFalse {
             Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours) ==
@@ -72,17 +83,6 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `can be destructured into date-time and offset components`() {
-        val (dateTime, offset) = testOffset
-
-        assertEquals(
-            DateTime(2019, Month.FEBRUARY, 1, 1, 2, 3, 4),
-            dateTime
-        )
-        assertEquals(UtcOffset.MIN, offset)
-    }
-
-    @Test
     fun `copy() can be used to replace individual date or time components`() {
         assertEquals(
             (Date(2019, Month.FEBRUARY, 1) at Time.NOON at UtcOffset.ZERO),
@@ -120,6 +120,19 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
         assertEquals(2, testOffset.minute)
         assertEquals(3, testOffset.second)
         assertEquals(4, testOffset.nanosecond)
+    }
+
+    @Test
+    fun `instant property returns an equivalent Instant`() {
+        assertEquals(
+            "1970-01-01T00:00Z".toInstant(),
+            "1970-01-01T00:00Z".toOffsetDateTime().instant
+        )
+
+        assertEquals(
+            "2017-02-28T21:00:00.123456789Z".toInstant(),
+            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().instant
+        )
     }
 
     @Test

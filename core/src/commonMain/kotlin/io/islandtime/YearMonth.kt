@@ -12,11 +12,14 @@ import io.islandtime.ranges.DateRange
  * A month in a particular year.
  *
  * @constructor Create a [YearMonth].
- * @param year The year
- * @param month The month of the year
+ * @param year the year
+ * @param month the month of the year
+ * @throws DateTimeException if the year is outside the supported range
  */
 class YearMonth(
+    /** The year. */
     val year: Int,
+    /** The month of the year. */
     val month: Month
 ) : Comparable<YearMonth> {
 
@@ -26,58 +29,62 @@ class YearMonth(
 
     /**
      * Create a [YearMonth].
+     * @throws DateTimeException if the year or month is invalid
      */
     constructor(year: Int, monthNumber: Int) : this(year, monthNumber.toMonth())
 
     /**
-     * The ISO month number
+     * The ISO month number, from 1-12.
      */
     inline val monthNumber: Int get() = month.number
 
+    /**
+     * Check if this year-month falls within a leap year.
+     */
     val isInLeapYear: Boolean get() = isLeapYear(year)
 
     /**
-     * Get the range of days within this year and month
+     * The range of days within this year-month.
      */
     val dayRange: IntRange get() = month.dayRangeIn(year)
 
     /**
-     * Get the range of dates within this year and month
+     * The range of dates within this year-month.
      */
     val dateRange: DateRange get() = DateRange(startDate, endDate)
 
     /**
-     * Get the length of this year month in days
+     * The length of the year-month in days.
      */
     val lengthOfMonth: IntDays get() = month.lengthIn(year)
 
     /**
-     * Get the length of the year in days
+     * The length of the year in days.
      */
     val lengthOfYear: IntDays get() = lengthOfYear(year)
 
     /**
-     * Get the last day of the year month
+     * The last day of the year-month.
      */
     val lastDay: Int get() = month.lastDayIn(year)
 
     /**
-     * Get the ordinal date corresponding to the first day of this year month
+     * The ordinal date corresponding to the first day of this year-month.
      */
     val firstDayOfYear: Int get() = month.firstDayOfYearIn(year)
 
     /**
-     * Get the ordinal date corresponding to the last day of this year month
+     * The ordinal date corresponding to the last day of this year-month.
      */
     val lastDayOfYear: Int get() = month.lastDayOfYearIn(year)
 
     /**
-     * Get the [Date] representing the first day in this year and month
+     * The [Date] representing the first day in this year-month.
      */
     val startDate: Date get() = Date(year, month, 1)
 
     /**
-     * Get the [Date] representing the last day in this year and month
+     * The [Date] representing the last day in this year-month.
      */
     val endDate: Date get() = Date(year, month, month.lastDayIn(year))
 
@@ -221,11 +228,11 @@ internal fun DateTimeParseResult.toYearMonth(): YearMonth? {
 }
 
 /**
- * Combine a year and month to get a [YearMonth]
+ * Combine a year and month to get a [YearMonth].
  */
 infix fun Year.at(month: Month) = YearMonth(value, month)
 
 /**
- * Combine a year and month number to get a [YearMonth]
+ * Combine a year and month number to get a [YearMonth].
  */
 fun Year.atMonth(number: Int) = YearMonth(value, number.toMonth())
