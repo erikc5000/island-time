@@ -263,7 +263,7 @@ class Instant private constructor(
 internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
 
 internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
-    val dateTime = instant.asDateTimeAt(UtcOffset.ZERO)
+    val dateTime = instant.toDateTimeAt(UtcOffset.ZERO)
     appendDateTime(dateTime)
     append('Z')
     return this
@@ -331,7 +331,7 @@ internal fun DateTimeParseResult.toInstant(): Instant? {
     val offset = this.toUtcOffset()
 
     return if (dateTime != null && offset != null) {
-        dateTime.asInstantAt(offset)
+        dateTime.instantAt(offset)
     } else {
         null
     }

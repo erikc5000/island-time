@@ -221,12 +221,12 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `convert empty DateRange to InstantInterval`() {
-        assertEquals(InstantInterval.EMPTY, DateRange.EMPTY.asInstantIntervalAt(TimeZone.UTC))
+        assertEquals(InstantInterval.EMPTY, DateRange.EMPTY.toInstantIntervalAt(TimeZone.UTC))
     }
 
     @Test
     fun `convert unbounded DateRange to InstantInterval`() {
-        assertEquals(InstantInterval.UNBOUNDED, DateRange.UNBOUNDED.asInstantIntervalAt(TimeZone.UTC))
+        assertEquals(InstantInterval.UNBOUNDED, DateRange.UNBOUNDED.toInstantIntervalAt(TimeZone.UTC))
     }
 
     @Test
@@ -235,14 +235,14 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
 
         assertEquals(
             "1968-10-05T05:00Z".toInstant() until Instant.MAX,
-            dateRange1.asInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
+            dateRange1.toInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
         )
 
         val dateRange2 = Date.MIN..Date(2000, 1, 3)
 
         assertEquals(
             Instant.MIN until "2000-01-04T05:00Z".toInstant(),
-            dateRange2.asInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
+            dateRange2.toInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
         )
     }
 
@@ -252,7 +252,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
 
         assertEquals(
             "1968-10-05T05:00Z".toInstant() until "2000-01-04T05:00Z".toInstant(),
-            dateRange.asInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
+            dateRange.toInstantIntervalAt((-5).hours.asUtcOffset().asTimeZone())
         )
     }
 

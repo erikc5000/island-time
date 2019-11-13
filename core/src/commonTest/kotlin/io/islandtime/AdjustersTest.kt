@@ -225,7 +225,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `Date_startOfYear() returns the date at the start of this date's year`() {
         assertEquals(
             Date(2019, Month.JANUARY, 1),
-            Date(2019, Month.AUGUST, 27).startOfYear()
+            Date(2019, Month.AUGUST, 27).startOfYear
         )
     }
 
@@ -233,7 +233,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `DateTime_startOfYear() returns the date-time at the start of this date-time's year`() {
         assertEquals(
             DateTime(2019, Month.JANUARY, 1, 0, 0),
-            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).startOfYear()
+            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).startOfYear
         )
     }
 
@@ -244,7 +244,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset())
-                .startOfYear()
+                .startOfYear
         )
     }
 
@@ -255,7 +255,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(nyZone)
-                .startOfYear()
+                .startOfYear
         )
     }
 
@@ -263,7 +263,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `Date_startOfMonth() returns the date at the start of this date's year`() {
         assertEquals(
             Date(2019, Month.AUGUST, 1),
-            Date(2019, Month.AUGUST, 27).startOfMonth()
+            Date(2019, Month.AUGUST, 27).startOfMonth
         )
     }
 
@@ -271,7 +271,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `DateTime_startOfMonth() returns the date-time at the start of this date-time's year`() {
         assertEquals(
             DateTime(2019, Month.AUGUST, 1, 0, 0),
-            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).startOfMonth()
+            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).startOfMonth
         )
     }
 
@@ -282,7 +282,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset())
-                .startOfMonth()
+                .startOfMonth
         )
     }
 
@@ -293,7 +293,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(nyZone)
-                .startOfMonth()
+                .startOfMonth
         )
     }
 
@@ -301,7 +301,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `Date_startOfWeek() returns the date at the start of this date's ISO week`() {
         assertEquals(
             Date(2019, Month.AUGUST, 26),
-            Date(2019, Month.AUGUST, 27).startOfWeek()
+            Date(2019, Month.AUGUST, 27).startOfWeek
         )
     }
 
@@ -309,7 +309,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `DateTime_startOfWeek() returns the date-time at the start of this date-time's ISO week`() {
         assertEquals(
             DateTime(2019, Month.AUGUST, 26, 0, 0),
-            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).startOfWeek()
+            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).startOfWeek
         )
     }
 
@@ -320,7 +320,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset())
-                .startOfWeek()
+                .startOfWeek
         )
     }
 
@@ -331,7 +331,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(nyZone)
-                .startOfWeek()
+                .startOfWeek
         )
     }
 
@@ -339,7 +339,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `Date_endOfYear() returns the date at the start of this date's year`() {
         assertEquals(
             Date(2019, Month.DECEMBER, 31),
-            Date(2019, Month.AUGUST, 27).endOfYear()
+            Date(2019, Month.AUGUST, 27).endOfYear
         )
     }
 
@@ -347,7 +347,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `DateTime_endOfYear() returns the date-time at the start of this date-time's year`() {
         assertEquals(
             Date(2019, Month.DECEMBER, 31) at Time.MAX,
-            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).endOfYear()
+            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).endOfYear
         )
     }
 
@@ -358,7 +358,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset())
-                .endOfYear()
+                .endOfYear
         )
     }
 
@@ -369,7 +369,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(nyZone)
-                .endOfYear()
+                .endOfYear
         )
     }
 
@@ -377,7 +377,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `Date_endOfMonth() returns the date at the start of this date's year`() {
         assertEquals(
             Date(2019, Month.AUGUST, 31),
-            Date(2019, Month.AUGUST, 27).endOfMonth()
+            Date(2019, Month.AUGUST, 27).endOfMonth
         )
     }
 
@@ -385,7 +385,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `DateTime_endOfMonth() returns the date-time at the start of this date-time's year`() {
         assertEquals(
             Date(2019, Month.AUGUST, 31) at Time.MAX,
-            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).endOfMonth()
+            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).endOfMonth
         )
     }
 
@@ -396,7 +396,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset())
-                .endOfMonth()
+                .endOfMonth
         )
     }
 
@@ -407,7 +407,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(nyZone)
-                .endOfMonth()
+                .endOfMonth
         )
     }
 
@@ -415,7 +415,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `Date_endOfWeek() returns the date at the start of this date's ISO week`() {
         assertEquals(
             Date(2019, Month.SEPTEMBER, 1),
-            Date(2019, Month.AUGUST, 27).endOfWeek()
+            Date(2019, Month.AUGUST, 27).endOfWeek
         )
     }
 
@@ -423,7 +423,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
     fun `DateTime_endOfWeek() returns the date-time at the start of this date-time's ISO week`() {
         assertEquals(
             Date(2019, Month.SEPTEMBER, 1) at Time.MAX,
-            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).endOfWeek()
+            DateTime(2019, Month.AUGUST, 27, 1, 1, 1, 1).endOfWeek
         )
     }
 
@@ -434,7 +434,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset())
-                .endOfWeek()
+                .endOfWeek
         )
     }
 
@@ -445,7 +445,7 @@ class AdjustersTest : AbstractIslandTimeTest() {
             Date(2019, Month.AUGUST, 27)
                 .atTime( 1, 1, 1, 1)
                 .at(nyZone)
-                .endOfWeek()
+                .endOfWeek
         )
     }
 }

@@ -8,59 +8,8 @@ import io.islandtime.zone.*
 import kotlin.test.*
 
 class ZonedDateTimeTest : AbstractIslandTimeTest() {
-
     private val nyZone = "America/New_York".toTimeZone()
     private val denverZone = "America/Denver".toTimeZone()
-
-//    object TestTimeZoneRulesProvider : TimeZoneRulesProvider {
-//        override fun getRules(regionId: String): TimeZoneRules {
-//            return when (regionId) {
-//                "Etc/UTC" -> UtcRules
-//                "America/New_York" -> UtcRules //NewYorkRules
-//                else -> throw TimeZoneRulesException("Region ID not found")
-//            }
-//        }
-//
-//        override fun getAvailableRegionIds(): Set<String> {
-//            return setOf(
-//                "Etc/UTC",
-//                "America/New_York"
-//            )
-//        }
-
-//        object UtcRules : TimeZoneRules {
-//            override fun isValidOffset(dateTime: DateTime, offset: UtcOffset): Boolean {
-//                return offset == UtcOffset.ZERO
-//            }
-//
-//            override fun offsetAt(instant: Instant) = UtcOffset.ZERO
-//            override fun offsetAt(dateTime: DateTime) = UtcOffset.ZERO
-//            override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? = null
-//            override fun validOffsetsAt(dateTime: DateTime) = listOf(UtcOffset.ZERO)
-//        }
-
-//        object NewYorkRules : TimeZoneRules {
-//            override fun isValidOffset(dateTime: DateTime, offset: UtcOffset): Boolean {
-//                return offset == UtcOffset.ZERO
-//            }
-//
-//            override fun offsetAt(instant: Instant): UtcOffset {
-//
-//            }
-//
-//            override fun offsetAt(dateTime: DateTime): UtcOffset {
-//                if (dateTime.month >= Month.MARCH && dateTime.dayOfWeek == DayOfWeek.SUNDAY)
-//            }
-//
-//            override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
-//                if (dateTime.month >= Month.MARCH && dateTime.dayOfWeek == DayOfWeek.SUNDAY)
-//            }
-//
-//            override fun validOffsetsAt(dateTime: DateTime): List<UtcOffset> {
-//                if (dateTime.month >= Month.MARCH && dateTime.dayOfWeek == DayOfWeek.SUNDAY)
-//            }
-//        }
-//    }
 
     @Test
     fun `throws an exception when constructed with a TimeZone that has no rules`() {
@@ -519,6 +468,32 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `instant property returns an equivalent Instant`() {
+        assertEquals(
+            "1970-01-01T00:00Z".toInstant(),
+            "1970-01-01T00:00Z".toZonedDateTime().instant
+        )
+
+        assertEquals(
+            "2017-02-28T21:00:00.123456789Z".toInstant(),
+            "2017-02-28T14:00:00.123456789-07:00[America/Denver]".toZonedDateTime().instant
+        )
+    }
+
+    @Test
+    fun `asOffsetDateTime() converts to an equivalent OffsetDateTime`() {
+        assertEquals(
+            "1970-01-01T00:00Z".toOffsetDateTime(),
+            "1970-01-01T00:00Z".toZonedDateTime().asOffsetDateTime()
+        )
+
+        assertEquals(
+            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime(),
+            "2017-02-28T14:00:00.123456789-07:00[America/Denver]".toZonedDateTime().asOffsetDateTime()
+        )
+    }
+
+    @Test
     fun `add period of zero`() {
         val zonedDateTime = DateTime(2016, Month.FEBRUARY, 29, 13, 0) at nyZone
         assertEquals(zonedDateTime, zonedDateTime + Period.ZERO)
@@ -664,6 +639,27 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 nyZone
             ),
             "20190505 1200-04[America/New_York]".toZonedDateTime(DateTimeParsers.Iso.ZONED_DATE_TIME)
+        )
+    }
+
+    @Test
+    fun `OffsetDateTime_asZonedDateTime() converts to a ZonedDateTime with fixed offset zone`() {
+        assertEquals(
+            ZonedDateTime.create(
+                DateTime(1970, 1, 1, 0, 0, 0, 0),
+                UtcOffset.ZERO,
+                TimeZone.UTC
+            ),
+            "1970-01-01T00:00Z".toOffsetDateTime().asZonedDateTime()
+        )
+
+        assertEquals(
+            ZonedDateTime.create(
+                DateTime(2017, 2, 28, 14, 0, 0, 123456789),
+                UtcOffset((-7).hours),
+                UtcOffset((-7).hours).asTimeZone()
+            ),
+            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().asZonedDateTime()
         )
     }
 }

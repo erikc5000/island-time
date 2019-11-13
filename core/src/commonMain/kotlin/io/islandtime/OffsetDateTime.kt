@@ -8,10 +8,21 @@ import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
 
 /**
- * A date and time of day combined with a fixed UTC offset
+ * A date and time of day with an offset from UTC.
+ *
+ * `OffsetDateTime` is intended to be used primarily for use cases involving persistence or network transfer where the
+ * application of time zone rules may be undesirable. For most applications, [ZonedDateTime] is a better choice since
+ * it takes time zone rules into account when performing calendrical calculations.
+ *
+ * @constructor Create an [OffsetDateTime] by combining a [DateTime] and [UtcOffset].
+ * @param dateTime the local date and time of day
+ * @param offset the offset from UTC
+ * @throws DateTimeException if the offset is invalid
  */
 class OffsetDateTime(
+    /** The local date and time of day. */
     val dateTime: DateTime,
+    /** The offset from UTC. */
     val offset: UtcOffset
 ) : TimePoint<OffsetDateTime> {
 
@@ -20,12 +31,14 @@ class OffsetDateTime(
     }
 
     /**
-     * Create an [OffsetDateTime]
+     * Create an [OffsetDateTime].
+     * @throws DateTimeException if the offset is invalid
      */
     constructor(date: Date, time: Time, offset: UtcOffset) : this(DateTime(date, time), offset)
 
     /**
-     * Create an [OffsetDateTime]
+     * Create an [OffsetDateTime].
+     * @throws DateTimeException if the date-time or offset is invalid
      */
     constructor(
         year: Int,
@@ -39,7 +52,8 @@ class OffsetDateTime(
     ) : this(DateTime(year, month, dayOfMonth, hour, minute, second, nanosecond), offset)
 
     /**
-     * Create an [OffsetDateTime]
+     * Create an [OffsetDateTime].
+     * @throws DateTimeException if the date-time or offset is invalid
      */
     constructor(
         year: Int,
@@ -52,33 +66,100 @@ class OffsetDateTime(
         offset: UtcOffset
     ) : this(DateTime(year, monthNumber.toMonth(), dayOfMonth, hour, minute, second, nanosecond), offset)
 
+    /**
+     * The local date.
+     */
     inline val date: Date get() = dateTime.date
+
+    /**
+     * The local time of day.
+     */
     inline val time: Time get() = dateTime.time
 
+    /**
+     * The hour of the day.
+     */
     inline val hour: Int get() = dateTime.hour
+
+    /**
+     * The minute of the hour.
+     */
     inline val minute: Int get() = dateTime.minute
+
+    /**
+     * The second of the minute.
+     */
     inline val second: Int get() = dateTime.second
+
+    /**
+     * The nanosecond of the second.
+     */
     inline val nanosecond: Int get() = dateTime.nanosecond
+
+    /**
+     * The month of the year.
+     */
     inline val month: Month get() = dateTime.month
 
     /**
-     * The ISO month number
+     * The ISO month number, from 1-12.
      */
     inline val monthNumber: Int get() = month.number
 
+    /**
+     * The day of the week.
+     */
     inline val dayOfWeek: DayOfWeek get() = dateTime.dayOfWeek
+
+    /**
+     * The day of the month.
+     */
     inline val dayOfMonth: Int get() = dateTime.dayOfMonth
+
+    /**
+     * The day of the year -- also known as the ordinal date in ISO-8601.
+     */
     inline val dayOfYear: Int get() = dateTime.dayOfYear
+
+    /**
+     * The year.
+     */
     inline val year: Int get() = dateTime.year
+
+    /**
+     * Check if this date falls within a leap year.
+     */
     inline val isInLeapYear: Boolean get() = dateTime.isInLeapYear
+
+    /**
+     * Check if this is a leap day.
+     */
     inline val isLeapDay: Boolean get() = dateTime.isLeapDay
+
+    /**
+     * The length of this date's month in days.
+     */
     inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
+
+    /**
+     * The length of this date's year in days.
+     */
     inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
 
     /**
-     * Get the year month of this date
+     * The combined year and month.
      */
     inline val yearMonth: YearMonth get() = dateTime.yearMonth
+
+    /**
+     * The combined time of day and offset.
+     */
+    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
+
+    /**
+     * The [Instant] representing the same time point.
+     */
+    inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
@@ -88,16 +169,6 @@ class OffsetDateTime(
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
-
-    /**
-     * Convert to an [OffsetTime] with the same time of day and offset.
-     */
-    fun toOffsetTime() = OffsetTime(time, offset)
-
-    /**
-     * Convert to an [Instant] representing the same time point.
-     */
-    fun asInstant() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
 
     /**
      * Change the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
@@ -173,9 +244,6 @@ class OffsetDateTime(
     override operator fun minus(nanoseconds: IntNanoseconds) = minus(nanoseconds.toLong())
 
     operator fun rangeTo(other: OffsetDateTime) = OffsetDateTimeInterval.withInclusiveEnd(this, other)
-
-    operator fun component1() = dateTime
-    operator fun component2() = offset
 
     override fun toString() = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
         appendOffsetDateTime(this@OffsetDateTime)
@@ -304,7 +372,7 @@ class OffsetDateTime(
 
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.asDateTimeAt(offset), offset)
+infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 

@@ -7,16 +7,21 @@ import io.islandtime.parser.*
 /**
  * A time of day in an arbitrary region.
  *
- * @param hour The hour of day
- * @param minute The minute of the hour
- * @param second The second of the minute
- * @param nanosecond The nanosecond of the second
+ * @constructor Create a [Time] from its individual components.
+ * @param hour the hour of day
+ * @param minute the minute of the hour
+ * @param second the second of the minute
+ * @param nanosecond the nanosecond of the second
  * @throws DateTimeException if the time is invalid
 */
 class Time(
+    /** The hour of the day. */
     val hour: Int,
+    /** The minute of the hour. */
     val minute: Int,
+    /** The second of the minute. */
     val second: Int = 0,
+    /** The nanosecond of the second. */
     val nanosecond: Int = 0
 ) : Comparable<Time> {
 

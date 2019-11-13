@@ -35,13 +35,6 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `can be destructured into time and offset components`() {
-        val (time, offset) = time1234
-        assertEquals(Time(1, 2, 3, 4), time)
-        assertEquals(UtcOffset.MAX, offset)
-    }
-
-    @Test
     fun `unixEpochNanoseconds property returns the time with offset relative to 1970-01-01Z`() {
         assertEquals(
             1.hours + 2.minutes + 3.seconds + 4.nanoseconds - UtcOffset.MAX.totalSeconds,

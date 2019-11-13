@@ -185,7 +185,7 @@ infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, t
  * Convert a range of dates into a [ZonedDateTimeInterval] between the starting and ending instants in a particular
  * time zone.
  */
-fun DateRange.asZonedDateTimeIntervalAt(zone: TimeZone): ZonedDateTimeInterval {
+fun DateRange.toZonedDateTimeIntervalAt(zone: TimeZone): ZonedDateTimeInterval {
     return when {
         isEmpty() -> ZonedDateTimeInterval.EMPTY
         isUnbounded -> ZonedDateTimeInterval.UNBOUNDED

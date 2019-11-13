@@ -6,15 +6,18 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 
 /**
- * A date in an arbitrary region
- * @constructor Create a [Date] from a year, month, and day of month
+ * A date in an arbitrary region.
+ *
+ * @constructor Create a [Date] from a year, month, and day of month.
  * @param year the year
  * @param month the month
  * @param day the day of the month
  * @throws DateTimeException if the year or day is invalid
  */
 class Date(
+    /** The year. */
     val year: Int,
+    /** The month of the year. */
     val month: Month,
     private val day: Int
 ) : Comparable<Date> {
@@ -25,11 +28,10 @@ class Date(
     }
 
     /**
-     * Create a [Date] from a year, ISO month number, and day of month
+     * Create a [Date] from a year, ISO month number, and day of month.
      * @param year the year
-     * @param monthNumber the ISO-8601 month number
+     * @param monthNumber the ISO month number, from 1-12
      * @param day the day of the month
-     * @return a new [Date]
      * @throws DateTimeException if the year, month, or day is invalid
      */
     constructor(
@@ -39,7 +41,7 @@ class Date(
     ) : this(year, monthNumber.toMonth(), day)
 
     /**
-     * The day of the week
+     * The day of the week.
      */
     val dayOfWeek: DayOfWeek
         get() {
@@ -48,47 +50,47 @@ class Date(
         }
 
     /**
-     * The day of the month
+     * The day of the month.
      */
     val dayOfMonth: Int get() = day
 
     /**
-     * The day of the year
+     * The day of the year -- also known as the ordinal date in ISO-8601.
      */
     val dayOfYear: Int get() = month.firstDayOfYearIn(year) + dayOfMonth - 1
 
     /**
-     * The ISO month number
+     * The ISO month number, from 1-12.
      */
     inline val monthNumber: Int get() = month.number
 
     /**
-     * true if this date falls within a leap year
+     * Check if this date falls within a leap year.
      */
     val isInLeapYear: Boolean get() = isLeapYear(year)
 
     /**
-     * true if this is a leap day
+     * Check if this is a leap day.
      */
     val isLeapDay: Boolean get() = month == Month.FEBRUARY && dayOfMonth == 29
 
     /**
-     * The length of this date's month in days
+     * The length of this date's month in days.
      */
     val lengthOfMonth: IntDays get() = month.lengthIn(year)
 
     /**
-     * The length of this date's year in days
+     * The length of this date's year in days.
      */
     val lengthOfYear: IntDays get() = lengthOfYear(year)
 
     /**
-     * Get the year and month of this date
+     * The combined year and month.
      */
     inline val yearMonth: YearMonth get() = YearMonth(year, month)
 
     /**
-     * Get the number of days away from the Unix epoch that this date falls
+     * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
      */
     inline val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
 
@@ -97,7 +99,7 @@ class Date(
     //
 
     /**
-     * The Unix epoch day representing this date
+     * The day of the Unix epoch.
      */
     val unixEpochDay: Long
         get() {
@@ -244,7 +246,9 @@ class Date(
     }
 
     /**
-     * Return a new [Date], replacing the year, month, and day of month with new values, as desired
+     * Return a copy of this [Date], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -253,7 +257,9 @@ class Date(
     ) = Date(year, month, dayOfMonth)
 
     /**
-     * Return a new [Date], replacing the year, month, and day of month with new values, as desired
+     * Return a copy of this [Date], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -262,7 +268,9 @@ class Date(
     ) = Date(year, monthNumber, dayOfMonth)
 
     /**
-     * Return a new [Date], replacing the year and day of the year with new values, as desired
+     * Return a copy of this [Date], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -344,7 +352,7 @@ fun Date(year: Int, dayOfYear: Int): Date {
     return Date(year, month, dayOfMonth)
 }
 
-fun Instant.asDateAt(offset: UtcOffset): Date {
+fun Instant.toDateAt(offset: UtcOffset): Date {
     var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
 
     if (nanoOfSecondsSinceUnixEpoch.isNegative) {
@@ -355,8 +363,8 @@ fun Instant.asDateAt(offset: UtcOffset): Date {
     return Date.fromUnixEpochDay(unixEpochDay)
 }
 
-fun Instant.asDateAt(zone: TimeZone): Date {
-    return this.asDateAt(zone.rules.offsetAt(this))
+fun Instant.toDateAt(zone: TimeZone): Date {
+    return this.toDateAt(zone.rules.offsetAt(this))
 }
 
 fun YearMonth.atDay(day: Int) = Date(year, month, day)

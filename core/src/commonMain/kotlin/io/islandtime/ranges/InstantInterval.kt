@@ -133,13 +133,13 @@ infix fun Instant.until(to: Instant) = InstantInterval(this, to)
  * Convert a range of dates into an [InstantInterval] between the starting and ending instants in a particular time
  * zone.
  */
-fun DateRange.asInstantIntervalAt(zone: TimeZone): InstantInterval {
+fun DateRange.toInstantIntervalAt(zone: TimeZone): InstantInterval {
     return when {
         isEmpty() -> InstantInterval.EMPTY
         isUnbounded -> InstantInterval.UNBOUNDED
         else -> {
-            val start = if (hasUnboundedStart) Instant.MIN else start.startOfDayAt(zone).asInstant()
-            val end = if (hasUnboundedEnd) Instant.MAX else endInclusive.endOfDayAt(zone).asInstant()
+            val start = if (hasUnboundedStart) Instant.MIN else start.startOfDayAt(zone).instant
+            val end = if (hasUnboundedEnd) Instant.MAX else endInclusive.endOfDayAt(zone).instant
             start..end
         }
     }
@@ -153,8 +153,8 @@ fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval {
         isEmpty() -> InstantInterval.EMPTY
         isUnbounded -> InstantInterval.UNBOUNDED
         else -> {
-            val startInstant = if (hasUnboundedStart) Instant.MIN else start.asInstant()
-            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.asInstant()
+            val startInstant = if (hasUnboundedStart) Instant.MIN else start.instant
+            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.instant
             startInstant until endInstant
         }
     }
@@ -168,8 +168,8 @@ fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval {
         isEmpty() -> InstantInterval.EMPTY
         isUnbounded -> InstantInterval.UNBOUNDED
         else -> {
-            val startInstant = if (hasUnboundedStart) Instant.MIN else start.asInstant()
-            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.asInstant()
+            val startInstant = if (hasUnboundedStart) Instant.MIN else start.instant
+            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.instant
             startInstant until endInstant
         }
     }

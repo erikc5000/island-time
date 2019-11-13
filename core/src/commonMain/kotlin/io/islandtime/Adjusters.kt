@@ -3,41 +3,41 @@ package io.islandtime
 import io.islandtime.measures.days
 
 /**
- * Return the date at the start of the year that this date falls in.
+ * The date at the start of the year that this date falls in.
  */
-fun Date.startOfYear() = Year(year).startDate
+val Date.startOfYear: Date get() = Date(year, Month.JANUARY, 1)
 
 /**
- * Return the date at the end of the year that this date falls in.
+ * The date at the end of the year that this date falls in.
  */
-fun Date.endOfYear() = Year(year).endDate
+val Date.endOfYear: Date get() = Date(year, Month.DECEMBER, 31)
 
 /**
- * Return the date at the start of the month that this date falls in.
+ * The date at the start of the month that this date falls in.
  */
-fun Date.startOfMonth() = copy(dayOfMonth = 1)
+val Date.startOfMonth: Date get() = copy(dayOfMonth = 1)
 
 /**
- * Return the date at the end of the month that this date falls in.
+ * The date at the end of the month that this date falls in.
  */
-fun Date.endOfMonth() = copy(dayOfMonth = month.lastDayIn(year))
+val Date.endOfMonth: Date get() = copy(dayOfMonth = month.lastDayIn(year))
 
 /**
- * Return the date at the start of the ISO week that this date falls in.
+ * The date at the start of the ISO week that this date falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun Date.startOfWeek() = previousOrSame(DayOfWeek.MIN)
+val Date.startOfWeek: Date get() = previousOrSame(DayOfWeek.MIN)
 
 /**
- * Return the date at the end of the ISO week that this date falls in.
+ * The date at the end of the ISO week that this date falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun Date.endOfWeek() = nextOrSame(DayOfWeek.MAX)
+val Date.endOfWeek: Date get() = nextOrSame(DayOfWeek.MAX)
 
 /**
- * Return the next date after this one that falls on a particular day of the week.
+ * The next date after this one that falls on a particular day of the week.
  */
 fun Date.next(dayOfWeek: DayOfWeek): Date {
     val dayDiff = this.dayOfWeek.ordinal - dayOfWeek.ordinal
@@ -50,7 +50,7 @@ fun Date.next(dayOfWeek: DayOfWeek): Date {
 }
 
 /**
- * Return the next date that falls on a particular day of the week, or this one if it falls on the same day.
+ * The next date that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun Date.nextOrSame(dayOfWeek: DayOfWeek): Date {
     return if (dayOfWeek == this.dayOfWeek) {
@@ -61,7 +61,7 @@ fun Date.nextOrSame(dayOfWeek: DayOfWeek): Date {
 }
 
 /**
- * Return the last date before this one that falls on a particular day of the week.
+ * The last date before this one that falls on a particular day of the week.
  */
 fun Date.previous(dayOfWeek: DayOfWeek): Date {
     val dayDiff = dayOfWeek.ordinal - this.dayOfWeek.ordinal
@@ -74,7 +74,7 @@ fun Date.previous(dayOfWeek: DayOfWeek): Date {
 }
 
 /**
- * Return the last date that falls on a particular day of the week, or this one if it falls on the same day.
+ * The last date that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun Date.previousOrSame(dayOfWeek: DayOfWeek): Date {
     return if (dayOfWeek == this.dayOfWeek) {
@@ -85,163 +85,163 @@ fun Date.previousOrSame(dayOfWeek: DayOfWeek): Date {
 }
 
 /**
- * Return the date-time at the first instant of the year that this date-time falls in.
+ * The date-time at the first instant of the year that this date-time falls in.
  */
-fun DateTime.startOfYear() = copy(date = date.startOfYear(), time = Time.MIDNIGHT)
+val DateTime.startOfYear: DateTime get() = copy(date = date.startOfYear, time = Time.MIDNIGHT)
 
 /**
- * Return the date-time at the last representable instant of the year that this date-time falls in.
+ * The date-time at the last representable instant of the year that this date-time falls in.
  */
-fun DateTime.endOfYear() = copy(date = date.endOfYear(), time = Time.MAX)
+val DateTime.endOfYear: DateTime get() = copy(date = date.endOfYear, time = Time.MAX)
 
 /**
- * Return the date-time at the first instant of the month that this date-time falls in.
+ * The date-time at the first instant of the month that this date-time falls in.
  */
-fun DateTime.startOfMonth() = copy(date = date.startOfMonth(), time = Time.MIDNIGHT)
+val DateTime.startOfMonth: DateTime get() = copy(date = date.startOfMonth, time = Time.MIDNIGHT)
 
 /**
- * Return the date-time at the last representable instant of the month that this date-time falls in.
+ * The date-time at the last representable instant of the month that this date-time falls in.
  */
-fun DateTime.endOfMonth() = copy(date = date.endOfMonth(), time = Time.MAX)
+val DateTime.endOfMonth: DateTime get() = copy(date = date.endOfMonth, time = Time.MAX)
 
 /**
- * Return the date-time at the first instant of the ISO week that this date-time falls in.
+ * The date-time at the first instant of the ISO week that this date-time falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun DateTime.startOfWeek() = copy(date = date.previousOrSame(DayOfWeek.MIN), time = Time.MIDNIGHT)
+val DateTime.startOfWeek: DateTime get() = copy(date = date.previousOrSame(DayOfWeek.MIN), time = Time.MIDNIGHT)
 
 /**
- * Return the date-time at the last representable instant of the ISO week that this date-time falls in.
+ * The date-time at the last representable instant of the ISO week that this date-time falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun DateTime.endOfWeek() = copy(date = date.nextOrSame(DayOfWeek.MAX), time = Time.MAX)
+val DateTime.endOfWeek: DateTime get() = copy(date = date.nextOrSame(DayOfWeek.MAX), time = Time.MAX)
 
 /**
- * Return the next date-time after this one that falls on a particular day of the week.
+ * The next date-time after this one that falls on a particular day of the week.
  */
 fun DateTime.next(dayOfWeek: DayOfWeek) = copy(date = date.next(dayOfWeek))
 
 /**
- * Return the next date-time that falls on a particular day of the week, or this one if it falls on the same day.
+ * The next date-time that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun DateTime.nextOrSame(dayOfWeek: DayOfWeek) = copy(date = date.nextOrSame(dayOfWeek))
 
 /**
- * Return the last date-time before this one that falls on a particular day of the week.
+ * The last date-time before this one that falls on a particular day of the week.
  */
 fun DateTime.previous(dayOfWeek: DayOfWeek) = copy(date = date.previous(dayOfWeek))
 
 /**
- * Return the last date-time that falls on a particular day of the week, or this one if it falls on the same day.
+ * The last date-time that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun DateTime.previousOrSame(dayOfWeek: DayOfWeek) = copy(date = date.previousOrSame(dayOfWeek))
 
 /**
- * Return the date-time at the first instant of the year that this date-time falls in.
+ * The date-time at the first instant of the year that this date-time falls in.
  */
-fun OffsetDateTime.startOfYear() = copy(dateTime = dateTime.startOfYear())
+val OffsetDateTime.startOfYear: OffsetDateTime get() = copy(dateTime = dateTime.startOfYear)
 
 /**
- * Return the date-time at the last representable instant of the year that this date-time falls in.
+ * The date-time at the last representable instant of the year that this date-time falls in.
  */
-fun OffsetDateTime.endOfYear() = copy(dateTime = dateTime.endOfYear())
+val OffsetDateTime.endOfYear: OffsetDateTime get() = copy(dateTime = dateTime.endOfYear)
 
 /**
- * Return the date-time at the first instant of the month that this date-time falls in.
+ * The date-time at the first instant of the month that this date-time falls in.
  */
-fun OffsetDateTime.startOfMonth() = copy(dateTime = dateTime.startOfMonth())
+val OffsetDateTime.startOfMonth: OffsetDateTime get() = copy(dateTime = dateTime.startOfMonth)
 
 /**
- * Return the date-time at the last representable instant of the month that this date-time falls in.
+ * The date-time at the last representable instant of the month that this date-time falls in.
  */
-fun OffsetDateTime.endOfMonth() = copy(dateTime = dateTime.endOfMonth())
+val OffsetDateTime.endOfMonth: OffsetDateTime get() = copy(dateTime = dateTime.endOfMonth)
 
 /**
- * Return the date-time at the first instant of the ISO week that this date-time falls in.
+ * The date-time at the first instant of the ISO week that this date-time falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun OffsetDateTime.startOfWeek() = copy(dateTime = dateTime.startOfWeek())
+val OffsetDateTime.startOfWeek: OffsetDateTime get() = copy(dateTime = dateTime.startOfWeek)
 
 /**
- * Return the date-time at the last representable instant of the ISO week that this date-time falls in.
+ * The date-time at the last representable instant of the ISO week that this date-time falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun OffsetDateTime.endOfWeek() = copy(dateTime = dateTime.endOfWeek())
+val OffsetDateTime.endOfWeek: OffsetDateTime get() = copy(dateTime = dateTime.endOfWeek)
 
 /**
- * Return the next date-time after this one that falls on a particular day of the week.
+ * The next date-time after this one that falls on a particular day of the week.
  */
 fun OffsetDateTime.next(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.next(dayOfWeek))
 
 /**
- * Return the next date-time that falls on a particular day of the week, or this one if it falls on the same day.
+ * The next date-time that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun OffsetDateTime.nextOrSame(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.nextOrSame(dayOfWeek))
 
 /**
- * Return the last date-time before this one that falls on a particular day of the week.
+ * The last date-time before this one that falls on a particular day of the week.
  */
 fun OffsetDateTime.previous(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.previous(dayOfWeek))
 
 /**
- * Return the last date-time that falls on a particular day of the week, or this one if it falls on the same day.
+ * The last date-time that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun OffsetDateTime.previousOrSame(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.previousOrSame(dayOfWeek))
 
 /**
- * Return the date-time at the first instant of the year that this date-time falls in.
+ * The date-time at the first instant of the year that this date-time falls in.
  */
-fun ZonedDateTime.startOfYear() = date.startOfYear().startOfDayAt(zone)
+val ZonedDateTime.startOfYear: ZonedDateTime get() = date.startOfYear.startOfDayAt(zone)
 
 /**
- * Return the date-time at the last representable instant of the year that this date-time falls in.
+ * The date-time at the last representable instant of the year that this date-time falls in.
  */
-fun ZonedDateTime.endOfYear() = date.endOfYear().endOfDayAt(zone)
+val ZonedDateTime.endOfYear: ZonedDateTime get() = date.endOfYear.endOfDayAt(zone)
 
 /**
- * Return the date-time at the first instant of the month that this date-time falls in.
+ * The date-time at the first instant of the month that this date-time falls in.
  */
-fun ZonedDateTime.startOfMonth() = date.startOfMonth().startOfDayAt(zone)
+val ZonedDateTime.startOfMonth: ZonedDateTime get() = date.startOfMonth.startOfDayAt(zone)
 
 /**
- * Return the date-time at the last representable instant of the month that this date-time falls in.
+ * The date-time at the last representable instant of the month that this date-time falls in.
  */
-fun ZonedDateTime.endOfMonth() = date.endOfMonth().endOfDayAt(zone)
+val ZonedDateTime.endOfMonth: ZonedDateTime get() = date.endOfMonth.endOfDayAt(zone)
 
 /**
- * Return the date-time at the first instant of the ISO week that this date-time falls in.
+ * The date-time at the first instant of the ISO week that this date-time falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun ZonedDateTime.startOfWeek() = date.previousOrSame(DayOfWeek.MIN).startOfDayAt(zone)
+val ZonedDateTime.startOfWeek: ZonedDateTime get() = date.previousOrSame(DayOfWeek.MIN).startOfDayAt(zone)
 
 /**
- * Return the date-time at the last representable instant of the ISO week that this date-time falls in.
+ * The date-time at the last representable instant of the ISO week that this date-time falls in.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-fun ZonedDateTime.endOfWeek() = date.nextOrSame(DayOfWeek.MAX).endOfDayAt(zone)
+val ZonedDateTime.endOfWeek: ZonedDateTime get() = date.nextOrSame(DayOfWeek.MAX).endOfDayAt(zone)
 
 /**
- * Return the next date-time after this one that falls on a particular day of the week.
+ * The next date-time after this one that falls on a particular day of the week.
  */
 fun ZonedDateTime.next(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.next(dayOfWeek))
 
 /**
- * Return the next date-time that falls on a particular day of the week, or this one if it falls on the same day.
+ * The next date-time that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun ZonedDateTime.nextOrSame(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.nextOrSame(dayOfWeek))
 
 /**
- * Return the last date-time before this one that falls on a particular day of the week.
+ * The last date-time before this one that falls on a particular day of the week.
  */
 fun ZonedDateTime.previous(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.previous(dayOfWeek))
 
 /**
- * Return the last date-time that falls on a particular day of the week, or this one if it falls on the same day.
+ * The last date-time that falls on a particular day of the week, or this one if it falls on the same day.
  */
 fun ZonedDateTime.previousOrSame(dayOfWeek: DayOfWeek) = copy(dateTime = dateTime.previousOrSame(dayOfWeek))
