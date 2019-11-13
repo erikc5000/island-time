@@ -2,6 +2,7 @@ package io.islandtime
 
 import io.islandtime.internal.DAYS_IN_WEEK
 import io.islandtime.measures.IntDays
+import io.islandtime.measures.LongDays
 
 /**
  * A day of the week.
@@ -22,16 +23,18 @@ enum class DayOfWeek {
      */
     val number: Int get() = ordinal + 1
 
-    operator fun plus(days: IntDays): DayOfWeek {
-        val daysToAdd = days.value % DAYS_IN_WEEK
+    operator fun plus(days: IntDays) = plus(days.value % DAYS_IN_WEEK)
+    operator fun plus(days: LongDays) = plus((days.value % DAYS_IN_WEEK).toInt())
+    operator fun minus(days: IntDays) = plus(-(days.value % DAYS_IN_WEEK))
+    operator fun minus(days: LongDays) = plus(-(days.value % DAYS_IN_WEEK).toInt())
+
+    private fun plus(daysToAdd: Int): DayOfWeek {
         return values()[(ordinal + (daysToAdd + DAYS_IN_WEEK)) % DAYS_IN_WEEK]
     }
 
-    operator fun minus(days: IntDays) = plus(-days)
-
     companion object {
-        val MIN = MONDAY
-        val MAX = SUNDAY
+        inline val MIN get() = MONDAY
+        inline val MAX get() = SUNDAY
     }
 }
 

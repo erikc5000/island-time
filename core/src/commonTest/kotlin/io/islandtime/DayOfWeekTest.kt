@@ -30,34 +30,56 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     @Test
     fun `adds zero days`() {
         assertEquals(DayOfWeek.TUESDAY, DayOfWeek.TUESDAY + 0.days)
+        assertEquals(DayOfWeek.TUESDAY, DayOfWeek.TUESDAY + 0L.days)
     }
 
     @Test
     fun `adds positive days`() {
         assertEquals(DayOfWeek.MONDAY, DayOfWeek.SUNDAY + 1.days)
         assertEquals(DayOfWeek.TUESDAY, DayOfWeek.TUESDAY + 7.days)
+        assertEquals(DayOfWeek.TUESDAY, DayOfWeek.MONDAY + Int.MAX_VALUE.days)
+
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.SUNDAY + 1L.days)
+        assertEquals(DayOfWeek.TUESDAY, DayOfWeek.TUESDAY + 7L.days)
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY + Long.MAX_VALUE.days)
     }
 
     @Test
     fun `adds negative days`() {
         assertEquals(DayOfWeek.SATURDAY, DayOfWeek.MONDAY + (-2).days)
         assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY + (-7).days)
+        assertEquals(DayOfWeek.SATURDAY, DayOfWeek.MONDAY + Int.MIN_VALUE.days)
+
+        assertEquals(DayOfWeek.SATURDAY, DayOfWeek.MONDAY + (-2L).days)
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY + (-7L).days)
+        assertEquals(DayOfWeek.SUNDAY, DayOfWeek.MONDAY + Long.MIN_VALUE.days)
     }
 
     @Test
     fun `subtracts zero days`() {
         assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY - 0.days)
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY - 0L.days)
     }
 
     @Test
     fun `subtracts positive days`() {
         assertEquals(DayOfWeek.SATURDAY, DayOfWeek.MONDAY - 2.days)
         assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY - 7.days)
+        assertEquals(DayOfWeek.SUNDAY, DayOfWeek.MONDAY - Int.MAX_VALUE.days)
+
+        assertEquals(DayOfWeek.SATURDAY, DayOfWeek.MONDAY - 2L.days)
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY - 7L.days)
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.MONDAY - Long.MAX_VALUE.days)
     }
 
     @Test
     fun `subtracts negative days`() {
         assertEquals(DayOfWeek.MONDAY, DayOfWeek.SUNDAY - (-1).days)
         assertEquals(DayOfWeek.TUESDAY, DayOfWeek.TUESDAY - (-7).days)
+        assertEquals(DayOfWeek.WEDNESDAY, DayOfWeek.MONDAY - Int.MIN_VALUE.days)
+
+        assertEquals(DayOfWeek.MONDAY, DayOfWeek.SUNDAY - (-1L).days)
+        assertEquals(DayOfWeek.TUESDAY, DayOfWeek.TUESDAY - (-7L).days)
+        assertEquals(DayOfWeek.TUESDAY, DayOfWeek.MONDAY - Long.MIN_VALUE.days)
     }
 }

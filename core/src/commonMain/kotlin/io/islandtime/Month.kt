@@ -2,6 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntMonths
+import io.islandtime.measures.LongMonths
 import io.islandtime.measures.days
 
 /**
@@ -140,19 +141,30 @@ enum class Month {
     /**
      * Add months to this month, wrapping when the beginning or end of the year is reached.
      */
-    operator fun plus(months: IntMonths): Month {
-        val monthsToAdd = months.value % 12
-        return values()[(ordinal + (monthsToAdd + 12)) % 12]
-    }
+    operator fun plus(months: IntMonths) = plus(months.value % 12)
+
+    /**
+     * Add months to this month, wrapping when the beginning or end of the year is reached.
+     */
+    operator fun plus(months: LongMonths) = plus((months.value % 12).toInt())
 
     /**
      * Subtract months from this month, wrapping when the beginning or end of the year is reached.
      */
-    operator fun minus(months: IntMonths) = plus(-months)
+    operator fun minus(months: IntMonths) = plus(-(months.value % 12))
+
+    /**
+     * Subtract months from this month, wrapping when the beginning or end of the year is reached.
+     */
+    operator fun minus(months: LongMonths) = plus(-(months.value % 12).toInt())
+
+    private fun plus(monthsToAdd: Int): Month {
+        return values()[(ordinal + (monthsToAdd + 12)) % 12]
+    }
 
     companion object {
-        val MIN = JANUARY
-        val MAX = DECEMBER
+        inline val MIN get() = JANUARY
+        inline val MAX get() = DECEMBER
     }
 }
 

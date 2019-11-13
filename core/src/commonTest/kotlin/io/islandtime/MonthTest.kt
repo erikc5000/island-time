@@ -83,6 +83,7 @@ class MonthTest : AbstractIslandTimeTest() {
     @Test
     fun `adding zero months has no effect`() {
         assertEquals(Month.JUNE, Month.JUNE + 0.months)
+        assertEquals(Month.JUNE, Month.JUNE + 0L.months)
     }
 
     @Test
@@ -91,28 +92,51 @@ class MonthTest : AbstractIslandTimeTest() {
         assertEquals(Month.FEBRUARY, Month.NOVEMBER + 3.months)
         assertEquals(Month.JANUARY, Month.JANUARY + 12.months)
         assertEquals(Month.MAY, Month.JANUARY + 16.months)
+        assertEquals(Month.SEPTEMBER, Month.FEBRUARY + Int.MAX_VALUE.months)
+
+        assertEquals(Month.JULY, Month.JUNE + 1L.months)
+        assertEquals(Month.FEBRUARY, Month.NOVEMBER + 3L.months)
+        assertEquals(Month.JANUARY, Month.JANUARY + 12L.months)
+        assertEquals(Month.MAY, Month.JANUARY + 16L.months)
+        assertEquals(Month.SEPTEMBER, Month.FEBRUARY + Long.MAX_VALUE.months)
     }
 
     @Test
     fun `add negative months`() {
         assertEquals(Month.DECEMBER, Month.JANUARY + (-1).months)
         assertEquals(Month.DECEMBER, Month.JANUARY + -(13.months))
+        assertEquals(Month.JUNE, Month.FEBRUARY + Int.MIN_VALUE.months)
+
+        assertEquals(Month.DECEMBER, Month.JANUARY + (-1L).months)
+        assertEquals(Month.DECEMBER, Month.JANUARY + -(13L.months))
+        assertEquals(Month.JUNE, Month.FEBRUARY + Long.MIN_VALUE.months)
     }
 
     @Test
     fun `subtracting zero months has no effect`() {
         assertEquals(Month.MAY, Month.MAY - 0.months)
+        assertEquals(Month.MAY, Month.MAY - 0L.months)
     }
 
     @Test
     fun `subtract positive months`() {
         assertEquals(Month.NOVEMBER, Month.JANUARY - 2.months)
         assertEquals(Month.JANUARY, Month.MAY - 16.months)
+        assertEquals(Month.JULY, Month.FEBRUARY - Int.MAX_VALUE.months)
+
+        assertEquals(Month.NOVEMBER, Month.JANUARY - 2L.months)
+        assertEquals(Month.JANUARY, Month.MAY - 16L.months)
+        assertEquals(Month.JULY, Month.FEBRUARY - Long.MAX_VALUE.months)
     }
 
     @Test
     fun `subtract negative months`() {
         assertEquals(Month.JANUARY, Month.NOVEMBER - (-2).months)
         assertEquals(Month.MAY, Month.MAY - -(12.months))
+        assertEquals(Month.OCTOBER, Month.FEBRUARY - Int.MIN_VALUE.months)
+
+        assertEquals(Month.JANUARY, Month.NOVEMBER - (-2L).months)
+        assertEquals(Month.MAY, Month.MAY - -(12L.months))
+        assertEquals(Month.OCTOBER, Month.FEBRUARY - Long.MIN_VALUE.months)
     }
 }
