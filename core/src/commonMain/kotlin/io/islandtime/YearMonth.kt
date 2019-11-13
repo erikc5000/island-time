@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.internal.*
 import io.islandtime.internal.MONTHS_IN_YEAR
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
@@ -7,30 +8,31 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-inline class YearMonth internal constructor(
-    private val monthsSinceYear0: IntMonths
+/**
+ * A month in a particular year.
+ *
+ * @constructor Create a [YearMonth].
+ * @param year The year
+ * @param month The month of the year
+ */
+class YearMonth(
+    val year: Int,
+    val month: Month
 ) : Comparable<YearMonth> {
 
-    val year: Int
-        get() = monthsSinceYear0.inYears.value
+    init {
+        checkValidYear(year)
+    }
 
-    val month: Month
-        get() = Month.values()[monthsSinceYear0.value % MONTHS_IN_YEAR]
+    /**
+     * Create a [YearMonth].
+     */
+    constructor(year: Int, monthNumber: Int) : this(year, monthNumber.toMonth())
 
     /**
      * The ISO month number
      */
     inline val monthNumber: Int get() = month.number
-
-    /**
-     * Is this year month within the supported range?
-     *
-     * Due to the nature of inline classes, it's not possible to guarantee that the value is valid when manipulated
-     * via Java code, but the validity can be checked via this property.
-     */
-    val isValid: Boolean
-        get() = this.monthsSinceYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
 
     val isInLeapYear: Boolean get() = isLeapYear(year)
 
@@ -80,9 +82,26 @@ inline class YearMonth internal constructor(
     val endDate: Date get() = Date(year, month, month.lastDayIn(year))
 
     override fun compareTo(other: YearMonth): Int {
-        return this.monthsSinceYear0.value - other.monthsSinceYear0.value
+        val yearDiff = year - other.year
+
+        return if (yearDiff == 0) {
+            month.ordinal - other.month.ordinal
+        } else {
+            yearDiff
+        }
     }
 
+    override fun equals(other: Any?): Boolean {
+        return this === other || (other is YearMonth && year == other.year && month == other.month)
+    }
+
+    override fun hashCode(): Int {
+        return 31 * year + month.hashCode()
+    }
+
+    /**
+     * Convert this year-month to a string in ISO-8601 extended format.
+     */
     override fun toString(): String {
         return buildString(7) {
             appendZeroPadded(year, 4)
@@ -102,12 +121,27 @@ inline class YearMonth internal constructor(
     fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
 
     operator fun plus(years: IntYears) = plus(years.toLong().inMonths)
-    operator fun plus(years: LongYears) = plus(years.inMonthsExact())
+
+    operator fun plus(years: LongYears): YearMonth {
+        return if (years.value == 0L) {
+            this
+        } else {
+            val newYear = checkValidYear(year + years.value)
+            copy(year = newYear)
+        }
+    }
 
     operator fun plus(months: IntMonths) = plus(months.toLong())
 
     operator fun plus(months: LongMonths): YearMonth {
-        return YearMonth(checkValid(monthsSinceYear0 + months))
+        return if (months.value == 0L) {
+            this
+        } else {
+            val newMonthsSinceYear0 = year.toLong() * MONTHS_IN_YEAR + month.ordinal + months.value
+            val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_IN_YEAR)
+            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_IN_YEAR).toInt()]
+            YearMonth(newYear, newMonth)
+        }
     }
 
     operator fun minus(months: IntMonths) = plus(-months.toLong())
@@ -133,48 +167,38 @@ inline class YearMonth internal constructor(
     operator fun contains(date: Date) = date.year == year && date.month == month
 
     companion object {
+        /**
+         * The earliest supported [YearMonth], which may be used to indicate the "far past".
+         */
         val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)
+
+        /**
+         * The latest supported [YearMonth], which may be used to indicate the "far future".
+         */
         val MAX = YearMonth(Year.MAX_VALUE, Month.MAX)
-
-        private fun isValid(monthsRelativeToYear0: LongMonths): Boolean {
-            return monthsRelativeToYear0.value in MIN.monthsSinceYear0.value..MAX.monthsSinceYear0.value
-        }
-
-        private fun checkValid(monthsRelativeToYear0: LongMonths): IntMonths {
-            if (!isValid(monthsRelativeToYear0)) {
-                throw DateTimeException(
-                    "Year month '$monthsRelativeToYear0' is outside the supported range of " +
-                        "${MIN.monthsSinceYear0}..${MAX.monthsSinceYear0}"
-                )
-            }
-            return monthsRelativeToYear0.toInt()
-        }
     }
 }
 
 /**
- * Create a fully validated [YearMonth]
- */
-@Suppress("FunctionName")
-fun YearMonth(year: Int, monthNumber: Int): YearMonth {
-    return YearMonth(year, monthNumber.toMonth())
-}
-
-/**
- * Create a fully validated [YearMonth]
- */
-@Suppress("FunctionName")
-fun YearMonth(year: Int, month: Month): YearMonth {
-    return YearMonth((checkValidYear(year) * MONTHS_IN_YEAR + month.ordinal).months)
-}
-
-/**
- * Convert an ISO-8601 year-month in extended format into a [YearMonth]
+ * Convert a string to a [YearMonth].
+ *
+ * The string is assumed to be an ISO-8601 year-month in extended format. For example, `2010-05` or `1960-12`. The
+ * output of [YearMonth.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.Extended.YEAR_MONTH)
 
 /**
- * Convert a string into a [YearMonth] using a specific parser
+ * Convert a string to a [YearMonth] using a specific parser.
+ *
+ * The parser must be capable of supplying [DateTimeField.YEAR] and [DateTimeField.MONTH_OF_YEAR].
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toYearMonth(parser: DateTimeParser): YearMonth {
     val result = parser.parse(this)

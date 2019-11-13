@@ -8,7 +8,7 @@ import kotlin.test.*
 
 class YearMonthTest : AbstractIslandTimeTest() {
     @Test
-    fun at_infix_combines_Year_and_Month() {
+    fun `at infix combines Year and Month`() {
         assertEquals(
             YearMonth(2018, Month.DECEMBER),
             Year(2018) at Month.DECEMBER
@@ -21,17 +21,11 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun atMonth_combines_Year_and_Month() {
+    fun `atMonth() combines Year and Month`() {
         assertEquals(
             YearMonth(2018, Month.APRIL),
             Year(2018).atMonth(4)
         )
-    }
-
-    @Test
-    fun `isValid can be used to check if the YearMonth was initialized with an invalid value`() {
-        assertFalse { YearMonth(0.months).isValid }
-        assertFalse { YearMonth(100.centuries.inMonths).isValid }
     }
 
     @Test
@@ -53,7 +47,6 @@ class YearMonthTest : AbstractIslandTimeTest() {
         val yearMonth1 = YearMonth(1970, Month.JANUARY)
         assertEquals(1970, yearMonth1.year)
         assertEquals(Month.JANUARY, yearMonth1.month)
-        assertTrue { yearMonth1.isValid }
         assertFalse { yearMonth1.isInLeapYear }
         assertEquals(IntRange(1, 31), yearMonth1.dayRange)
         assertEquals(
@@ -71,7 +64,6 @@ class YearMonthTest : AbstractIslandTimeTest() {
         val yearMonth2 = YearMonth(2000, Month.JUNE)
         assertEquals(2000, yearMonth2.year)
         assertEquals(Month.JUNE, yearMonth2.month)
-        assertTrue { yearMonth2.isValid }
         assertTrue { yearMonth2.isInLeapYear }
         assertEquals(IntRange(1, 30), yearMonth2.dayRange)
         assertEquals(
@@ -286,10 +278,9 @@ class YearMonthTest : AbstractIslandTimeTest() {
         assertFailsWith<DateTimeException> {
             YearMonth(2000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).years
         }
-        // TODO: Consider throwing exceptions on overflow
-//        assertFailsWith<DateTimeException> {
-//            YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.years
-//        }
+        assertFailsWith<DateTimeException> {
+            YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.years
+        }
     }
 
     @Test
@@ -337,13 +328,12 @@ class YearMonthTest : AbstractIslandTimeTest() {
         assertFailsWith<DateTimeException> {
             YearMonth(1, Month.DECEMBER) - (Int.MAX_VALUE + 1L).years
         }
-        // TODO: Consider throwing exceptions on overflow
-//        assertFailsWith<DateTimeException> {
-//            YearMonth(1, Month.DECEMBER) - Long.MAX_VALUE.years
-//        }
-//        assertFailsWith<DateTimeException> {
-//            YearMonth(9999, Month.DECEMBER) - Long.MIN_VALUE.years
-//        }
+        assertFailsWith<DateTimeException> {
+            YearMonth(1, Month.DECEMBER) - Long.MAX_VALUE.years
+        }
+        assertFailsWith<DateTimeException> {
+            YearMonth(9999, Month.DECEMBER) - Long.MIN_VALUE.years
+        }
     }
 
     @Test
@@ -382,13 +372,17 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYearMonth() throws an exception when parsing an invalid ISO-8601 extended string`() {
-        assertFailsWith<DateTimeParseException> { "2012-05-01".toYearMonth() }
-        assertFailsWith<DateTimeParseException> { "201205".toYearMonth() }
-        assertFailsWith<DateTimeParseException> { " 2012-05".toYearMonth() }
-        assertFailsWith<DateTimeParseException> { "2012-05-".toYearMonth() }
-        assertFailsWith<DateTimeParseException> { "12-05".toYearMonth() }
-        assertFailsWith<DateTimeParseException> { "10000-01".toYearMonth() }
-        assertFailsWith<DateTimeException> { "0000-01".toYearMonth() }
+        listOf(
+            "2012-05-01",
+            "201205",
+            " 2012-05",
+            "2012-05-",
+            "12-05",
+            "10000-01",
+            "+0001-01"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toYearMonth() }
+        }
     }
 
     @Test
@@ -398,7 +392,9 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYearMonth() throws an exception when the month is out of range`() {
-        assertFailsWith<DateTimeException> { "0001-13".toYearMonth() }
+        listOf("0001-13", "0001-00").forEach {
+            assertFailsWith<DateTimeException> { it.toYearMonth() }
+        }
     }
 
     @Test
