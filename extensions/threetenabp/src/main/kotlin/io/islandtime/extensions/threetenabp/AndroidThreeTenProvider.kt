@@ -62,9 +62,9 @@ private class JavaTimeZoneRules(
         return offset.toIslandUtcOffset()
     }
 
-    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
         val offset = javaZoneRules.getOffset(
-            JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.value.toLong())
+            JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanoOfSeconds.value.toLong())
         )
         return offset.toIslandUtcOffset()
     }
