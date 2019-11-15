@@ -64,6 +64,17 @@ class OffsetDateTimeInterval(
             else -> throwUnboundedIntervalException()
         }
 
+    /**
+     * Get the number of whole weeks in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
+     */
+    val lengthInWeeks
+        get() = when {
+            isEmpty() -> 0L.weeks
+            isBounded -> weeksBetween(start, endExclusive)
+            else -> throwUnboundedIntervalException()
+        }
+
     companion object {
         /**
          * An empty interval.
@@ -188,4 +199,11 @@ fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears 
  */
 fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonths {
     return monthsBetween(start.dateTime, endExclusive.dateTime)
+}
+
+/**
+ * Get the number whole weeks between two date-times, ignoring the offsets.
+ */
+fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongWeeks {
+    return daysBetween(start, endExclusive).inWeeks
 }

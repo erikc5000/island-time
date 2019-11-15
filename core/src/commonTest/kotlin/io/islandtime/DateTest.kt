@@ -283,6 +283,102 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `adding zero weeks has no effect`() {
+        assertEquals(
+            Date(1930, Month.JANUARY, 28),
+            Date(1930, Month.JANUARY, 28) + 0.weeks
+        )
+
+        assertEquals(
+            Date(2030, Month.JANUARY, 28),
+            Date(2030, Month.JANUARY, 28) + 0L.weeks
+        )
+    }
+
+    @Test
+    fun `subtracting zero weeks has no effect`() {
+        assertEquals(
+            Date(1930, Month.JANUARY, 28),
+            Date(1930, Month.JANUARY, 28) - 0.weeks
+        )
+
+        assertEquals(
+            Date(2030, Month.JANUARY, 28),
+            Date(2030, Month.JANUARY, 28) - 0L.weeks
+        )
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting weeks causes overflow`() {
+        assertFailsWith<ArithmeticException> { Date(2019, Month.NOVEMBER, 10) + Long.MAX_VALUE.weeks }
+        assertFailsWith<ArithmeticException> { Date(2019, Month.NOVEMBER, 10) + Long.MIN_VALUE.weeks }
+        assertFailsWith<ArithmeticException> { Date(2019, Month.NOVEMBER, 10) - Long.MAX_VALUE.weeks }
+        assertFailsWith<ArithmeticException> { Date(2019, Month.NOVEMBER, 10) - Long.MIN_VALUE.weeks }
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting weeks puts the date out of range`() {
+        assertFailsWith<DateTimeException> { Date.MAX + 1.weeks }
+        assertFailsWith<DateTimeException> { Date.MIN - 1.weeks }
+        assertFailsWith<DateTimeException> { Date(1000, Month.JANUARY, 28) + Int.MAX_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(6000, Month.JANUARY, 28) + Int.MIN_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Int.MAX_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Int.MIN_VALUE.weeks }
+    }
+
+    @Test
+    fun `add positive weeks`() {
+        assertEquals(
+            Date(2019, Month.FEBRUARY, 4),
+            Date(2019, Month.JANUARY, 28) + 1.weeks
+        )
+
+        assertEquals(
+            Date(2019, Month.FEBRUARY, 4),
+            Date(2019, Month.JANUARY, 28) + 1L.weeks
+        )
+    }
+
+    @Test
+    fun `add negative weeks`() {
+        assertEquals(
+            Date(2019, Month.JANUARY, 21),
+            Date(2019, Month.JANUARY, 28) + (-1).weeks
+        )
+
+        assertEquals(
+            Date(2019, Month.JANUARY, 21),
+            Date(2019, Month.JANUARY, 28) + (-1L).weeks
+        )
+    }
+
+    @Test
+    fun `subtract positive weeks`() {
+        assertEquals(
+            Date(2019, Month.JANUARY, 21),
+            Date(2019, Month.JANUARY, 28) - 1.weeks
+        )
+
+        assertEquals(
+            Date(2019, Month.JANUARY, 21),
+            Date(2019, Month.JANUARY, 28) - 1L.weeks
+        )
+    }
+
+    @Test
+    fun `subtract negative weeks`() {
+        assertEquals(
+            Date(2019, Month.FEBRUARY, 4),
+            Date(2019, Month.JANUARY, 28) - (-1).weeks
+        )
+
+        assertEquals(
+            Date(2019, Month.FEBRUARY, 4),
+            Date(2019, Month.JANUARY, 28) - (-1L).weeks
+        )
+    }
+
+    @Test
     fun `add zero months`() {
         assertEquals(
             Date(2019, Month.JANUARY, 28),

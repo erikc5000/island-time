@@ -7,9 +7,6 @@ import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
 internal const val DAYS_IN_COMMON_YEAR = 365L
-internal const val MONTHS_IN_YEAR = 12
-internal const val DAYS_IN_WEEK = 7
-
 internal const val DAYS_PER_400_YEAR_CYCLE = 146_097
 internal const val NUMBER_OF_400_YEAR_CYCLES_FROM_0000_TO_1970 = 5L
 internal const val LEAP_YEARS_FROM_1970_TO_2000 = 7L

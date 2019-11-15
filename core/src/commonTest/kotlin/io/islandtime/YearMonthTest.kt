@@ -300,7 +300,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
         assertEquals(
             YearMonth(1910, Month.APRIL),
-            YearMonth(2010, Month.APRIL) - 1L.centuries
+            YearMonth(2010, Month.APRIL) - 100L.years
         )
     }
 

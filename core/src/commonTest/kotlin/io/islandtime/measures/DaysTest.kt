@@ -37,7 +37,7 @@ class DaysTest {
     @Test
     fun `IntDays_toString() converts to ISO-8601 period representation`() {
         assertEquals("P1D", 1.days.toString())
-        assertEquals("P-1D", (-1).days.toString())
+        assertEquals("-P1D", (-1).days.toString())
     }
 
     @Test
@@ -48,6 +48,6 @@ class DaysTest {
     @Test
     fun `LongDays_toString() converts to ISO-8601 period representation`() {
         assertEquals("P1D", 1L.days.toString())
-        assertEquals("P-1D", (-1L).days.toString())
+        assertEquals("-P1D", (-1L).days.toString())
     }
 }

@@ -1,7 +1,6 @@
 package io.islandtime
 
 import io.islandtime.internal.*
-import io.islandtime.internal.MONTHS_IN_YEAR
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
@@ -127,7 +126,7 @@ class YearMonth(
      */
     fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
 
-    operator fun plus(years: IntYears) = plus(years.toLong().inMonths)
+    operator fun plus(years: IntYears) = plus(years.toLong())
 
     operator fun plus(years: LongYears): YearMonth {
         return if (years.value == 0L) {
@@ -144,20 +143,10 @@ class YearMonth(
         return if (months.value == 0L) {
             this
         } else {
-            val newMonthsSinceYear0 = year.toLong() * MONTHS_IN_YEAR + month.ordinal + months.value
-            val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_IN_YEAR)
-            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_IN_YEAR).toInt()]
+            val newMonthsSinceYear0 = year.toLong() * MONTHS_PER_YEAR + month.ordinal + months.value
+            val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_PER_YEAR)
+            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_PER_YEAR).toInt()]
             YearMonth(newYear, newMonth)
-        }
-    }
-
-    operator fun minus(months: IntMonths) = plus(-months.toLong())
-
-    operator fun minus(months: LongMonths): YearMonth {
-        return if (months.value == Long.MIN_VALUE) {
-            this + Long.MAX_VALUE.months + 1L.months
-        } else {
-            plus(-months)
         }
     }
 
@@ -168,6 +157,16 @@ class YearMonth(
             this + Long.MAX_VALUE.years + 1L.years
         } else {
             plus(-years)
+        }
+    }
+
+    operator fun minus(months: IntMonths) = plus(-months.toLong())
+
+    operator fun minus(months: LongMonths): YearMonth {
+        return if (months.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.months + 1L.months
+        } else {
+            plus(-months)
         }
     }
 

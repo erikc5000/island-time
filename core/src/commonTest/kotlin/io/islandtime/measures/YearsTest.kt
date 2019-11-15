@@ -22,25 +22,6 @@ class YearsTest {
     }
 
     @Test
-    fun `LongYears can be compared to IntYears`() {
-        assertTrue { (Int.MAX_VALUE + 1L).years > Int.MAX_VALUE.years }
-        assertTrue { (Int.MIN_VALUE - 1L).years < Int.MIN_VALUE.years }
-        assertTrue { Int.MAX_VALUE.years < (Int.MAX_VALUE + 1L).years }
-        assertTrue { Int.MIN_VALUE.years > (Int.MIN_VALUE - 1L).years }
-
-        // Can't override equals() yet
-//        assertTrue { 0L.years == 0.years }
-    }
-
-    @Test
-    fun `IntYears can be compared to IntMonths`() {
-        assertTrue { 1.years > 11.months }
-        assertTrue { 0.years < 1.months }
-        assertTrue { (Int.MAX_VALUE / 12.0).roundToLong().years > Int.MAX_VALUE.months }
-        assertTrue { (Int.MIN_VALUE / 12.0).roundToLong().years < Int.MIN_VALUE.months }
-    }
-
-    @Test
     fun `adding months to years produces months`() {
         assertEquals(15.months, 1.years + 3.months)
         assertEquals(15L.months, 1L.years + 3L.months)
@@ -78,5 +59,15 @@ class YearsTest {
     fun `toIntExact() converts LongYears to IntYears when there's no overflow`() {
         assertEquals(Int.MAX_VALUE.years, Int.MAX_VALUE.toLong().years.toIntExact())
         assertEquals(Int.MIN_VALUE.years, Int.MIN_VALUE.toLong().years.toIntExact())
+    }
+
+    @Test
+    fun `toString() returns an ISO duration string`() {
+        assertEquals("P0Y", 0.years.toString())
+        assertEquals("P0Y", 0L.years.toString())
+        assertEquals("P1Y", 1.years.toString())
+        assertEquals("P1Y", 1L.years.toString())
+        assertEquals("-P1Y", (-1).years.toString())
+        assertEquals("-P1Y", (-1L).years.toString())
     }
 }

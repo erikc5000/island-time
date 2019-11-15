@@ -111,7 +111,7 @@ class Date(
                 total -= year / -4 - year / -100 + year / -400
             }
 
-            total += ((367 * monthNumber - 362) / MONTHS_IN_YEAR)
+            total += ((367 * monthNumber - 362) / MONTHS_PER_YEAR)
             total += dayOfMonth - 1
 
             if (monthNumber > 2) {
@@ -154,12 +154,15 @@ class Date(
             this
         } else {
             val newMonthsSinceYear0 = monthsSinceYear0 + months.value
-            val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_IN_YEAR)
-            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_IN_YEAR).toInt()]
+            val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_PER_YEAR)
+            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_PER_YEAR).toInt()]
 
             Date(newYear, newMonth, dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)))
         }
     }
+
+    operator fun plus(weeks: IntWeeks) = plus(weeks.toLong().inDays)
+    operator fun plus(weeks: LongWeeks) = plus(weeks.inDaysExact())
 
     operator fun plus(days: IntDays) = plus(days.toLong())
 
@@ -197,6 +200,16 @@ class Date(
             this + Long.MAX_VALUE.months + 1.months
         } else {
             plus(-months)
+        }
+    }
+
+    operator fun minus(weeks: IntWeeks) = plus(-weeks.toLong().inDays)
+
+    operator fun minus(weeks: LongWeeks): Date {
+        return if (weeks.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.days + 1.weeks
+        } else {
+            plus(-weeks)
         }
     }
 

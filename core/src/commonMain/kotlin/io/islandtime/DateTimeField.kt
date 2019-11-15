@@ -148,6 +148,11 @@ enum class DateTimeField {
     UTC_OFFSET_TOTAL_SECONDS,
 
     /**
+     * The sign of the period, -1 (negative) or 1 (positive).
+     */
+    PERIOD_SIGN,
+
+    /**
      * A period of years.
      */
     PERIOD_OF_YEARS,

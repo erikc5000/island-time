@@ -32,6 +32,15 @@ class PeriodTest {
     }
 
     @Test
+    fun `periodOf() constructs periods of weeks with equivalent days`() {
+        val period = periodOf((-1).weeks)
+
+        assertEquals(0.years, period.years)
+        assertEquals(0.months, period.months)
+        assertEquals((-7).days, period.days)
+    }
+
+    @Test
     fun `periodOf() constructs periods of days`() {
         val period = periodOf(100.days)
 
@@ -56,6 +65,19 @@ class PeriodTest {
         assertEquals(0.years, period.years)
         assertEquals(15.months, period.months)
         assertEquals(0.days, period.days)
+    }
+
+    @Test
+    fun `asPeriod() converts weeks to a period with similar days`() {
+        val period1 = 1.weeks.asPeriod()
+        assertEquals(0.years, period1.years)
+        assertEquals(0.months, period1.months)
+        assertEquals(7.days, period1.days)
+
+        val period2 = 1L.weeks.asPeriod()
+        assertEquals(0.years, period2.years)
+        assertEquals(0.months, period2.months)
+        assertEquals(7.days, period2.days)
     }
 
     @Test
@@ -100,11 +122,20 @@ class PeriodTest {
 
     @Test
     fun `toString() returns a valid ISO8601 period representation of non-zero periods`() {
-        assertEquals("P10Y", periodOf(10.years).toString())
-        assertEquals("P10Y-12M4D", periodOf(10.years, (-12).months, 4.days).toString())
-        assertEquals("P-100D", periodOf((-100).days).toString())
-        assertEquals("P1M", periodOf(1.months).toString())
-        assertEquals("P1D", periodOf(1.days).toString())
+        listOf(
+            periodOf(1.years) to "P1Y",
+            periodOf((-1).years) to "P-1Y",
+            periodOf(1.months) to "P1M",
+            periodOf((-1).months) to "P-1M",
+            periodOf(1.days) to "P1D",
+            periodOf((-1).days) to "P-1D",
+            periodOf(1.weeks) to "P7D",
+            periodOf(10.years) to "P10Y",
+            periodOf(10.years, (-12).months, 4.days) to "P10Y-12M4D",
+            periodOf((-100).days) to "P-100D"
+        ).forEach {
+            assertEquals(it.second, it.first.toString())
+        }
     }
 
     @Test
@@ -119,14 +150,29 @@ class PeriodTest {
 
     @Test
     fun `String_toPeriod() parses valid ISO-8601 period strings`() {
-        assertEquals(periodOf(1.years, 13.months, 6.days), "P1Y13M6D".toPeriod())
-        assertEquals(periodOf((-1).months, 10.days), "P-1M10D".toPeriod())
-        assertEquals(periodOf(1.days), "P1D".toPeriod())
+        listOf(
+            "P1Y13M6D" to periodOf(1.years, 13.months, 6.days),
+            "P-1M10D" to periodOf((-1).months, 10.days),
+            "P1D" to periodOf(1.days),
+            "P1W" to periodOf(1.weeks),
+            "-P1W" to periodOf((-1).weeks)
+        ).forEach {
+            assertEquals(it.second, it.first.toPeriod())
+        }
     }
 
     @Test
-    fun `String_toPeriod() throws an exception when string contains duration components`() {
-        assertFailsWith<DateTimeParseException> { "PT4S".toPeriod() }
+    fun `String_toPeriod() throws an exception when the string contains duration components`() {
+        listOf(
+            "PT0S",
+            "P1DT1H",
+            "-P1DT1H",
+            "PT1H",
+            "-PT1H",
+            "PT4S"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toPeriod() }
+        }
     }
 
     @Test
@@ -137,7 +183,6 @@ class PeriodTest {
 
     @Test
     fun `isZero property returns true for zeroed-out periods`() {
-        assertTrue { Period.ZERO.isZero }
         assertTrue { Period.ZERO.isZero }
     }
 
@@ -248,18 +293,34 @@ class PeriodTest {
     }
 
     @Test
+    fun `adding weeks affects only days component`() {
+        assertEquals(
+            periodOf(1.years, 1.months, 6.days),
+            periodOf(1.years, 1.months, (-1).days) + 1.weeks
+        )
+    }
+
+    @Test
+    fun `subtracting weeks affects only days component`() {
+        assertEquals(
+            periodOf(1.years, 1.months, (-6).days),
+            periodOf(1.years, 1.months, 1.days) - 1.weeks
+        )
+    }
+
+    @Test
     fun `adding days affects only days component`() {
         assertEquals(
-            periodOf(1.months, 1.days),
-            periodOf(1.months, (-1).days) + 2.days
+            periodOf(1.years, 1.months, 1.days),
+            periodOf(1.years, 1.months, (-1).days) + 2.days
         )
     }
 
     @Test
     fun `subtracting days affects only days component`() {
         assertEquals(
-            periodOf(1.months),
-            periodOf(1.months, 1.days) - 1.days
+            periodOf(1.years, 1.months),
+            periodOf(1.years, 1.months, 1.days) - 1.days
         )
     }
 
@@ -294,6 +355,19 @@ class PeriodTest {
         assertEquals(
             periodOf(3.months, 4.days),
             (-2).months + periodOf(5.months, 4.days)
+        )
+    }
+
+    @Test
+    fun `adding a period to weeks returns a new period with adjusted days`() {
+        assertEquals(
+            periodOf(1.years, 33.days),
+            5.weeks + periodOf(1.years, (-2).days)
+        )
+
+        assertEquals(
+            periodOf(1.years, (-37).days),
+            (-5L).weeks + periodOf(1.years, (-2).days)
         )
     }
 
@@ -333,6 +407,19 @@ class PeriodTest {
         assertEquals(
             periodOf((-4).days),
             2L.months - periodOf(2.months, 4.days)
+        )
+    }
+
+    @Test
+    fun `subtracting a period from weeks returns a new period with adjusted days`() {
+        assertEquals(
+            periodOf((-1).years, 37.days),
+            5.weeks - periodOf(1.years, (-2).days)
+        )
+
+        assertEquals(
+            periodOf((-1).years, (-33).days),
+            (-5L).weeks - periodOf(1.years, (-2).days)
         )
     }
 

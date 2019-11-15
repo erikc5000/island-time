@@ -21,24 +21,24 @@ class HoursTest {
     }
 
     @Test
-    fun `IntHours_toString() converts zero hours to 'PT0S'`() {
-        assertEquals("PT0S", 0.hours.toString())
+    fun `IntHours_toString() converts zero hours to 'PT0H'`() {
+        assertEquals("PT0H", 0.hours.toString())
     }
 
     @Test
     fun `IntHours_toString() converts to ISO-8601 period representation`() {
         assertEquals("PT1H", 1.hours.toString())
-        assertEquals("PT-1H", (-1).hours.toString())
+        assertEquals("-PT1H", (-1).hours.toString())
     }
 
     @Test
-    fun `LongHours_toString() converts zero hours to 'PT0S'`() {
-        assertEquals("PT0S", 0L.hours.toString())
+    fun `LongHours_toString() converts zero hours to 'PT0H'`() {
+        assertEquals("PT0H", 0L.hours.toString())
     }
 
     @Test
     fun `LongHours_toString() converts to ISO-8601 period representation`() {
         assertEquals("PT1H", 1L.hours.toString())
-        assertEquals("PT-1H", (-1L).hours.toString())
+        assertEquals("-PT1H", (-1L).hours.toString())
     }
 }

@@ -72,9 +72,11 @@ class YearTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adding zero years has no effect`() {
+    fun `adding or subtracting zero years has no effect`() {
         assertEquals(Year(2009), Year(2009) + 0.years)
         assertEquals(Year(2009), Year(2009) + 0L.years)
+        assertEquals(Year(2009), Year(2009) - 0.years)
+        assertEquals(Year(2009), Year(2009) - 0L.years)
     }
 
     @Test
@@ -96,12 +98,6 @@ class YearTest : AbstractIslandTimeTest() {
     fun `throws an exception when adding years puts the year outside the supported range`() {
         assertFailsWith<DateTimeException> { Year(9999) + 1.years }
         assertFailsWith<DateTimeException> { Year(1) + (-1).years }
-    }
-
-    @Test
-    fun `subtracting zero years has no effect`() {
-        assertEquals(Year(2009), Year(2009) - 0.years)
-        assertEquals(Year(2009), Year(2009) - 0L.years)
     }
 
     @Test

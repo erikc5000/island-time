@@ -215,7 +215,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `TIMELINE_ORDER compare based on instant only`() {
         assertTrue {
-            OffsetDateTime.TIMELINE_ORDER.compare(
+            ZonedDateTime.TIMELINE_ORDER.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
             ) == 0

@@ -66,6 +66,17 @@ class ZonedDateTimeInterval(
         }
 
     /**
+     * Get the number of whole weeks in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
+     */
+    val lengthInWeeks
+        get() = when {
+            isEmpty() -> 0L.weeks
+            isBounded -> weeksBetween(start, endExclusive)
+            else -> throwUnboundedIntervalException()
+        }
+
+    /**
      * Get the number of whole days in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
@@ -234,6 +245,14 @@ fun yearsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntYears {
  */
 fun monthsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntMonths {
     return monthsBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
+}
+
+/**
+ * Get the number of whole weeks between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
+ * match the starting date-time.
+ */
+fun weeksBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): LongWeeks {
+    return weeksBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }
 
 /**

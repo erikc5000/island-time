@@ -216,6 +216,20 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `lengthInWeeks property returns 0 when range is empty`() {
+        assertEquals(0L.weeks, DateRange.EMPTY.lengthInWeeks)
+    }
+
+    @Test
+    fun `lengthInWeeks property returns the expected number of weeks in a non-empty range`() {
+        val range1 = Date(2018, Month.FEBRUARY, 1)..Date(2018, Month.FEBRUARY, 28)
+        assertEquals(4L.weeks, range1.lengthInWeeks)
+
+        val range2 = Date(2018, Month.FEBRUARY, 1)..Date(2018, Month.FEBRUARY, 27)
+        assertEquals(3L.weeks, range2.lengthInWeeks)
+    }
+
+    @Test
     fun `lengthInMonths property returns 0 when range is empty`() {
         assertEquals(0.months, DateRange.EMPTY.lengthInMonths)
     }
@@ -346,6 +360,40 @@ class DateRangeTest : AbstractIslandTimeTest() {
         assertEquals(
             (-20L).days,
             daysBetween(Date(1970, Month.JANUARY, 4), Date(1969, Month.DECEMBER, 15))
+        )
+    }
+
+    @Test
+    fun `weeksBetween() returns zero when the start and end date are the same`() {
+        assertEquals(
+            0L.weeks,
+            weeksBetween(Date(2019, Month.AUGUST, 23), Date(2019, Month.AUGUST, 23))
+        )
+    }
+
+    @Test
+    fun `weeksBetween() returns the number of weeks between two dates in positive progression`() {
+        assertEquals(
+            4L.weeks,
+            weeksBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
+        )
+
+        assertEquals(
+            5L.weeks,
+            weeksBetween(Date(1969, Month.MAY, 1), Date(1969, Month.JUNE, 5))
+        )
+    }
+
+    @Test
+    fun `weeksBetween() returns the number of weeks between two dates in negative progression`() {
+        assertEquals(
+            (-4L).weeks,
+            weeksBetween(Date(2019, Month.JUNE, 3), Date(2019, Month.MAY, 1))
+        )
+
+        assertEquals(
+            (-5L).weeks,
+            weeksBetween(Date(1969, Month.JUNE, 5), Date(1969, Month.MAY, 1))
         )
     }
 
