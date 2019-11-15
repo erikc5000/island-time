@@ -120,77 +120,35 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthInDays property returns 0 when range is empty`() {
+    fun `lengthIn* properties return zero when the range is empty`() {
+        assertEquals(0.years, OffsetDateTimeInterval.EMPTY.lengthInYears)
+        assertEquals(0.months, OffsetDateTimeInterval.EMPTY.lengthInMonths)
+        assertEquals(0L.weeks, OffsetDateTimeInterval.EMPTY.lengthInWeeks)
         assertEquals(0L.days, OffsetDateTimeInterval.EMPTY.lengthInDays)
-    }
-
-    @Test
-    fun `lengthInDays property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInDays }
-    }
-
-    @Test
-    fun `lengthInHours property returns 0 when range is empty`() {
         assertEquals(0L.hours, OffsetDateTimeInterval.EMPTY.lengthInHours)
-    }
-
-    @Test
-    fun `lengthInHours property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInHours }
-    }
-
-    @Test
-    fun `lengthInMinutes property returns 0 when range is empty`() {
         assertEquals(0L.minutes, OffsetDateTimeInterval.EMPTY.lengthInMinutes)
-    }
-
-    @Test
-    fun `lengthInMinutes property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMinutes }
-    }
-
-    @Test
-    fun `lengthInSeconds property returns 0 when range is empty`() {
         assertEquals(0L.seconds, OffsetDateTimeInterval.EMPTY.lengthInSeconds)
-    }
-
-    @Test
-    fun `lengthInSeconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInSeconds }
-    }
-
-    @Test
-    fun `lengthInMilliseconds property returns 0 when range is empty`() {
         assertEquals(0L.milliseconds, OffsetDateTimeInterval.EMPTY.lengthInMilliseconds)
-    }
-
-    @Test
-    fun `lengthInMilliseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMilliseconds }
-    }
-
-    @Test
-    fun `lengthInMicroseconds property returns 0 when range is empty`() {
         assertEquals(0L.microseconds, OffsetDateTimeInterval.EMPTY.lengthInMicroseconds)
-    }
-
-    @Test
-    fun `lengthInMicroseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMicroseconds }
-    }
-
-    @Test
-    fun `lengthInNanoseconds property returns 0 when range is empty`() {
         assertEquals(0L.nanoseconds, OffsetDateTimeInterval.EMPTY.lengthInNanoseconds)
     }
 
     @Test
-    fun `lengthInNanoseconds property throws an exception when the interval is unbounded`() {
+    fun `lengthIn* properties throw an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInYears }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMonths }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInWeeks }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInDays }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInHours }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMinutes }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInSeconds }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMilliseconds }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMicroseconds }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInNanoseconds }
     }
 
     @Test
-    fun `lengthInNanoseconds property returns 1 when the start and end instant are the same`() {
+    fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end instant are the same`() {
         val instant = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-4).hours)
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }

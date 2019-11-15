@@ -163,6 +163,16 @@ class DateTime(
             copy(date = date + months)
         }
     }
+    
+    operator fun plus(weeks: IntWeeks) = plus(weeks.toLong().inDays)
+    
+    operator fun plus(weeks: LongWeeks): DateTime {
+        return if (weeks.value == 0L) {
+            this
+        } else {
+            copy(date = date + weeks)
+        }
+    }
 
     operator fun plus(days: IntDays) = plus(days.toLong())
 
@@ -321,6 +331,16 @@ class DateTime(
             this + Long.MAX_VALUE.months + 1.months
         } else {
             plus(-months)
+        }
+    }
+    
+    operator fun minus(weeks: IntWeeks) = plus(-weeks.toLong().inDays)
+
+    operator fun minus(weeks: LongWeeks): DateTime {
+        return if (weeks.value == Long.MIN_VALUE) {
+            this + Long.MAX_VALUE.weeks + 1.weeks
+        } else {
+            plus(-weeks)
         }
     }
 

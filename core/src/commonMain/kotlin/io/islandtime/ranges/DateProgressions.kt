@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.Date
-import io.islandtime.internal.MONTHS_IN_YEAR
+import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import kotlin.math.abs
 
@@ -117,6 +117,8 @@ infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
     return DateDayProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
+infix fun DateDayProgression.step(step: IntWeeks) = this.step(step.inDaysExact())
+
 /**
  * Step over dates in increments of months
  */
@@ -126,6 +128,8 @@ infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
 }
 
 infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonthsExact())
+infix fun DateDayProgression.step(step: IntDecades) = this.step(step.inMonthsExact())
+infix fun DateDayProgression.step(step: IntCenturies) = this.step(step.inMonthsExact())
 
 fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last, first, -step)
 
@@ -168,7 +172,7 @@ private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): D
  */
 internal fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths {
     val yearsBetween = endInclusive.year - start.year
-    val monthsBetween = yearsBetween * MONTHS_IN_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
+    val monthsBetween = yearsBetween * MONTHS_PER_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
 
     // Deal with variable month lengths
     val coercedStartDay = start.dayOfMonth.coerceAtMost(endInclusive.month.lastDayIn(endInclusive.year))

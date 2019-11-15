@@ -3,7 +3,7 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.MAX_DATE_STRING_LENGTH
 import io.islandtime.appendDate
-import io.islandtime.internal.MONTHS_IN_YEAR
+import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import io.islandtime.monthsSinceYear0
 import io.islandtime.parser.*
@@ -87,8 +87,8 @@ class DateRange(
     }
 
     /**
-     * Get the number of years in a range of dates. A year is considered to have passed if twelve full months have
-     * passed between the start date and end date, according to the definition of 'month' in [lengthInMonths].
+     * Get the number of years in the range. A year is considered to have passed if twelve full months have passed
+     * between the start date and end date, according to the definition of 'month' in [lengthInMonths].
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     val lengthInYears
@@ -99,7 +99,7 @@ class DateRange(
         }
 
     /**
-     * Get the number of months in a range of dates. A month is considered to have passed if the day of the end month is
+     * Get the number of months in the range. A month is considered to have passed if the day of the end month is
      * greater than or equal to the day of the start month minus one (as a range is inclusive).
      * @throws UnsupportedOperationException if the range isn't bounded
      */
@@ -111,8 +111,19 @@ class DateRange(
         }
 
     /**
-     * Get the number of days in a range of dates. As a range is inclusive, if the start and end date are the same, the
-     * result will be one day.
+     * Get the number of weeks in the range.
+     * @throws UnsupportedOperationException if the range isn't bounded
+     */
+    val lengthInWeeks
+        get() = when {
+            isEmpty() -> 0L.weeks
+            isBounded -> weeksBetween(start, endInclusive + 1.days)
+            else -> throwUnboundedIntervalException()
+        }
+
+    /**
+     * Get the number of days in the range. As a range is inclusive, if the start and end date are the same, the result
+     * will be one day.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     val lengthInDays
@@ -225,8 +236,8 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
         }
         else -> dayDiff
     }
-    val years = (totalMonths / MONTHS_IN_YEAR).years.toInt()
-    val months = (totalMonths % MONTHS_IN_YEAR).months.toInt()
+    val years = (totalMonths / MONTHS_PER_YEAR).years.toInt()
+    val months = (totalMonths % MONTHS_PER_YEAR).months.toInt()
 
     return periodOf(years, months, days)
 }
@@ -245,6 +256,13 @@ fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
     val startDays = start.monthsSinceYear0 * 32L + start.dayOfMonth
     val endDays = endExclusive.monthsSinceYear0 * 32L + endExclusive.dayOfMonth
     return ((endDays - startDays) / 32).toInt().months
+}
+
+/**
+ * Get the number of whole weeks between two dates.
+ */
+fun weeksBetween(start: Date, endExclusive: Date): LongWeeks {
+    return daysBetween(start, endExclusive).inWeeks
 }
 
 /**

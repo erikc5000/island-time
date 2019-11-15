@@ -312,9 +312,18 @@ fun DateTimeParserBuilder.utcDesignator() {
 }
 
 /**
+ * Parses a number's sign and populates [DateTimeField.PERIOD_SIGN] with `-1L`, if negative or `1L`, if positive.
+ */
+fun DateTimeParserBuilder.periodSign() {
+    sign {
+        associateWith(DateTimeField.PERIOD_SIGN)
+    }
+}
+
+/**
  * Parse a period of whole years.
  *
- * The number of years will be associated with [DateTimeField.PERIOD_OF_YEARS]
+ * The number of years will be associated with [DateTimeField.PERIOD_OF_YEARS].
  */
 inline fun DateTimeParserBuilder.periodOfYears(
     length: IntRange = 1..10,
@@ -329,7 +338,7 @@ inline fun DateTimeParserBuilder.periodOfYears(
 /**
  * Parse a period of whole months.
  *
- * The number of months will be associated with [DateTimeField.PERIOD_OF_MONTHS]
+ * The number of months will be associated with [DateTimeField.PERIOD_OF_MONTHS].
  */
 inline fun DateTimeParserBuilder.periodOfMonths(
     length: IntRange = 1..10,
@@ -342,9 +351,24 @@ inline fun DateTimeParserBuilder.periodOfMonths(
 }
 
 /**
+ * Parse a period of whole weeks.
+ *
+ * The number of weeks will be associated with [DateTimeField.PERIOD_OF_WEEKS].
+ */
+inline fun DateTimeParserBuilder.periodOfWeeks(
+    length: IntRange = 1..10,
+    crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
+) {
+    wholeNumber(length) {
+        associateWith(DateTimeField.PERIOD_OF_WEEKS)
+        builder()
+    }
+}
+
+/**
  * Parse a period of whole days.
  *
- * The number of days will be associated with [DateTimeField.PERIOD_OF_DAYS]
+ * The number of days will be associated with [DateTimeField.PERIOD_OF_DAYS].
  */
 inline fun DateTimeParserBuilder.periodOfDays(
     length: IntRange = 1..10,
@@ -359,7 +383,7 @@ inline fun DateTimeParserBuilder.periodOfDays(
 /**
  * Parse a duration of whole hours.
  *
- * The number of hours will be associated with [DateTimeField.DURATION_OF_HOURS]
+ * The number of hours will be associated with [DateTimeField.DURATION_OF_HOURS].
  */
 inline fun DateTimeParserBuilder.durationOfHours(
     length: IntRange = 1..19,
@@ -374,7 +398,7 @@ inline fun DateTimeParserBuilder.durationOfHours(
 /**
  * Parse a duration of whole minutes.
  *
- * The number of minutes will be associated with [DateTimeField.DURATION_OF_MINUTES]
+ * The number of minutes will be associated with [DateTimeField.DURATION_OF_MINUTES].
  */
 inline fun DateTimeParserBuilder.durationOfMinutes(
     length: IntRange = 1..19,

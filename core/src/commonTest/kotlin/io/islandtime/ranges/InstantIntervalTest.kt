@@ -144,77 +144,29 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthInDays property returns 0 when range is empty`() {
+    fun `lengthIn* properties return zero when the range is empty`() {
         assertEquals(0L.days, InstantInterval.EMPTY.lengthInDays)
-    }
-
-    @Test
-    fun `lengthInDays property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInDays }
-    }
-
-    @Test
-    fun `lengthInHours property returns 0 when range is empty`() {
         assertEquals(0L.hours, InstantInterval.EMPTY.lengthInHours)
-    }
-
-    @Test
-    fun `lengthInHours property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInHours }
-    }
-
-    @Test
-    fun `lengthInMinutes property returns 0 when range is empty`() {
         assertEquals(0L.minutes, InstantInterval.EMPTY.lengthInMinutes)
-    }
-
-    @Test
-    fun `lengthInMinutes property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMinutes }
-    }
-
-    @Test
-    fun `lengthInSeconds property returns 0 when range is empty`() {
         assertEquals(0L.seconds, InstantInterval.EMPTY.lengthInSeconds)
-    }
-
-    @Test
-    fun `lengthInSeconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInSeconds }
-    }
-
-    @Test
-    fun `lengthInMilliseconds property returns 0 when range is empty`() {
         assertEquals(0L.milliseconds, InstantInterval.EMPTY.lengthInMilliseconds)
-    }
-
-    @Test
-    fun `lengthInMilliseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMilliseconds }
-    }
-
-    @Test
-    fun `lengthInMicroseconds property returns 0 when range is empty`() {
         assertEquals(0L.microseconds, InstantInterval.EMPTY.lengthInMicroseconds)
-    }
-
-    @Test
-    fun `lengthInMicroseconds property throws an exception when the interval is unbounded`() {
-        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMicroseconds }
-    }
-
-    @Test
-    fun `lengthInNanoseconds property returns 0 when range is empty`() {
         assertEquals(0L.nanoseconds, InstantInterval.EMPTY.lengthInNanoseconds)
     }
 
     @Test
-    fun `lengthInNanoseconds property throws an exception when the interval is unbounded`() {
+    fun `lengthIn* properties throw an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInDays }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInHours }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMinutes }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInSeconds }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMilliseconds }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMicroseconds }
         assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInNanoseconds }
     }
 
     @Test
-    fun `lengthInNanoseconds property returns 1 when the start and end instant are the same`() {
+    fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end instant are the same`() {
         val instant = Instant(2L.days.inSeconds)
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }

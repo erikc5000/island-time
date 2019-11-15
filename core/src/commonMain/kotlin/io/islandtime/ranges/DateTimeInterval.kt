@@ -94,6 +94,17 @@ class DateTimeInterval(
         }
 
     /**
+     * Get the number of whole weeks in the interval.
+     * @throws UnsupportedOperationException if the interval isn't bounded
+     */
+    val lengthInWeeks: LongWeeks
+        get() = when {
+            isEmpty() -> 0L.weeks
+            isBounded -> weeksBetween(start, endExclusive)
+            else -> throwUnboundedIntervalException()
+        }
+
+    /**
      * Get the number of whole days in the interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
@@ -277,17 +288,24 @@ fun periodBetween(start: DateTime, endExclusive: DateTime): Period {
 }
 
 /**
- * Get the number of whole years between two date-times, assuming they're in the same time zone
+ * Get the number of whole years between two date-times, assuming they're in the same time zone.
  */
 fun yearsBetween(start: DateTime, endExclusive: DateTime): IntYears {
     return yearsBetween(start.date, adjustedEndDate(start, endExclusive))
 }
 
 /**
- * Get the number of whole months between two date-times, assuming they're in the same time zone
+ * Get the number of whole months between two date-times, assuming they're in the same time zone.
  */
 fun monthsBetween(start: DateTime, endExclusive: DateTime): IntMonths {
     return monthsBetween(start.date, adjustedEndDate(start, endExclusive))
+}
+
+/**
+ * Get the number whole weeks between two date-times, assuming they're in the same time zone.
+ */
+fun weeksBetween(start: DateTime, endExclusive: DateTime): LongWeeks {
+    return daysBetween(start, endExclusive).inWeeks
 }
 
 /**

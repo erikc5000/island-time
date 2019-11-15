@@ -150,6 +150,7 @@ object DateTimeParsers {
          * - `P0D`
          */
         val PERIOD = dateTimeParser {
+            optional { periodSign() }
             +'P'
             optional {
                 periodOfYears()
@@ -158,6 +159,10 @@ object DateTimeParsers {
             optional {
                 periodOfMonths()
                 +'M'
+            }
+            optional {
+                periodOfWeeks()
+                +'W'
             }
             optional {
                 periodOfDays()
@@ -172,8 +177,10 @@ object DateTimeParsers {
          * - `P1DT5H6.123S`
          * - `PT15H20M`
          * - `PT0S`
+         * - `-PT1S`
          */
         val DURATION = dateTimeParser {
+            optional { periodSign() }
             +'P'
             optional {
                 periodOfDays()

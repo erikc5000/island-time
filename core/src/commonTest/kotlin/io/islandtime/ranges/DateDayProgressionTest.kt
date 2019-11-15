@@ -29,6 +29,7 @@ class DateDayProgressionTest : AbstractIslandTimeTest() {
         val startDate = Date(2019, Month.JANUARY, 21)
         val endDate = Date(2019, Month.JANUARY, 28)
         assertFailsWith<IllegalArgumentException> { startDate..endDate step (-1).days }
+        assertFailsWith<IllegalArgumentException> { startDate..endDate step (-1).weeks }
     }
 
     @Test
