@@ -16,7 +16,7 @@ internal class TimePointSecondProgressionIterator<T : TimePoint<T>>(
 ) : TimePointIterator<T>() {
 
     private val finalElement = last
-    private var hasNext = if (step.isPositive) last > first else last < first
+    private var hasNext = if (step.isPositive()) last > first else last < first
     private var next = if (hasNext) first else finalElement
 
     override fun hasNext() = hasNext
@@ -45,7 +45,7 @@ internal class TimePointNanosecondProgressionIterator<T : TimePoint<T>>(
 ) : TimePointIterator<T>() {
 
     private val finalElement = last
-    private var hasNext = if (step.isPositive) last > first else last < first
+    private var hasNext = if (step.isPositive()) last > first else last < first
     private var next = if (hasNext) first else finalElement
 
     override fun hasNext() = hasNext

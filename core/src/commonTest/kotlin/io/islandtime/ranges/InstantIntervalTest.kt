@@ -10,23 +10,23 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `EMPTY returns an empty interval`() {
         assertTrue { InstantInterval.EMPTY.isEmpty() }
-        assertTrue { InstantInterval.EMPTY.isBounded }
-        assertTrue { InstantInterval.EMPTY.hasBoundedStart }
-        assertTrue { InstantInterval.EMPTY.hasBoundedEnd }
-        assertFalse { InstantInterval.EMPTY.isUnbounded }
-        assertFalse { InstantInterval.EMPTY.hasUnboundedStart }
-        assertFalse { InstantInterval.EMPTY.hasUnboundedEnd }
+        assertTrue { InstantInterval.EMPTY.isBounded() }
+        assertTrue { InstantInterval.EMPTY.hasBoundedStart() }
+        assertTrue { InstantInterval.EMPTY.hasBoundedEnd() }
+        assertFalse { InstantInterval.EMPTY.isUnbounded() }
+        assertFalse { InstantInterval.EMPTY.hasUnboundedStart() }
+        assertFalse { InstantInterval.EMPTY.hasUnboundedEnd() }
     }
 
     @Test
     fun `UNBOUNDED returns an unbounded interval`() {
         assertFalse { InstantInterval.UNBOUNDED.isEmpty() }
-        assertTrue { InstantInterval.UNBOUNDED.isUnbounded }
-        assertTrue { InstantInterval.UNBOUNDED.hasUnboundedStart }
-        assertTrue { InstantInterval.UNBOUNDED.hasUnboundedEnd }
-        assertFalse { InstantInterval.UNBOUNDED.isBounded }
-        assertFalse { InstantInterval.UNBOUNDED.hasBoundedStart }
-        assertFalse { InstantInterval.UNBOUNDED.hasBoundedEnd }
+        assertTrue { InstantInterval.UNBOUNDED.isUnbounded() }
+        assertTrue { InstantInterval.UNBOUNDED.hasUnboundedStart() }
+        assertTrue { InstantInterval.UNBOUNDED.hasUnboundedEnd() }
+        assertFalse { InstantInterval.UNBOUNDED.isBounded() }
+        assertFalse { InstantInterval.UNBOUNDED.hasBoundedStart() }
+        assertFalse { InstantInterval.UNBOUNDED.hasBoundedEnd() }
     }
 
     @Test

@@ -129,7 +129,7 @@ class Date(
      * defined in ISO-8601-2.
      */
     operator fun plus(period: Period): Date {
-        return if (period.isZero) {
+        return if (period.isZero()) {
             this
         } else {
             return this + period.years + period.months + period.days
@@ -368,7 +368,7 @@ fun Date(year: Int, dayOfYear: Int): Date {
 fun Instant.toDateAt(offset: UtcOffset): Date {
     var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
 
-    if (nanoOfSecondsSinceUnixEpoch.isNegative) {
+    if (nanoOfSecondsSinceUnixEpoch.isNegative()) {
         adjustedSeconds -= 1.seconds
     }
 

@@ -29,12 +29,12 @@ class Period private constructor(
     /**
      * true if this period has no length
      */
-    inline val isZero: Boolean get() = this == ZERO
+    fun isZero(): Boolean = this == ZERO
 
     /**
      * true if any component of this period is negative
      */
-    val isNegative get() = years.value < 0 || months.value < 0 || days.value < 0
+    fun isNegative(): Boolean = years.value < 0 || months.value < 0 || days.value < 0
 
     /**
      * Reverse the sign of each component in the period
@@ -85,7 +85,7 @@ class Period private constructor(
      * Multiply each component of this period by a scalar value
      */
     operator fun times(scalar: Int): Period {
-        return if (this.isZero || scalar == 1) {
+        return if (this.isZero() || scalar == 1) {
             this
         } else {
             create(years * scalar, months * scalar, days * scalar)
@@ -131,7 +131,7 @@ class Period private constructor(
      * Returns an ISO-8601 period representation, such as "P1Y10M3D"
      */
     override fun toString(): String {
-        return if (isZero) {
+        return if (isZero()) {
             "P0D"
         } else {
             buildString {

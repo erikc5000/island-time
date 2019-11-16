@@ -57,3 +57,7 @@ inline fun buildParameterSpec(
     vararg modifiers: KModifier,
     block: ParameterSpec.Builder.() -> Unit = {}
 ) = ParameterSpec.builder(name, type, *modifiers).apply(block).build()
+
+inline fun buildCodeBlock(
+    block: CodeBlock.Builder.() -> Unit
+) = CodeBlock.builder().apply(block).build()

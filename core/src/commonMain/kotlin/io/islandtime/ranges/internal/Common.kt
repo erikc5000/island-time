@@ -72,7 +72,7 @@ internal inline fun <T> TimeInterval<T>.buildIsoString(
         ""
     } else {
         buildString(2 * baseCapacity + 1) {
-            if (hasBoundedStart) {
+            if (hasBoundedStart()) {
                 appendFunction(start)
             } else {
                 append("..")
@@ -80,7 +80,7 @@ internal inline fun <T> TimeInterval<T>.buildIsoString(
 
             append('/')
 
-            if (hasBoundedEnd) {
+            if (hasBoundedEnd()) {
                 appendFunction(endExclusive)
             } else {
                 append("..")

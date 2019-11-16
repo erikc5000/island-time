@@ -24,13 +24,13 @@ class DateRange(
 ) : DateDayProgression(start, endInclusive, 1.days),
     ClosedRange<Date> {
 
-    val hasUnboundedStart: Boolean get() = start == Date.MIN
-    val hasUnboundedEnd: Boolean get() = endInclusive == Date.MAX
+    fun hasUnboundedStart(): Boolean = start == Date.MIN
+    fun hasUnboundedEnd(): Boolean = endInclusive == Date.MAX
 
-    val hasBoundedStart: Boolean get() = !hasUnboundedStart
-    val hasBoundedEnd: Boolean get() = !hasUnboundedEnd
-    val isBounded: Boolean get() = hasBoundedStart && hasBoundedEnd
-    val isUnbounded: Boolean get() = hasUnboundedStart && hasUnboundedEnd
+    fun hasBoundedStart(): Boolean = !hasUnboundedStart()
+    fun hasBoundedEnd(): Boolean = !hasUnboundedEnd()
+    fun isBounded(): Boolean = hasBoundedStart() && hasBoundedEnd()
+    fun isUnbounded(): Boolean = hasUnboundedStart() && hasUnboundedEnd()
 
     override val start: Date get() = first
     override val endInclusive: Date get() = last
@@ -47,7 +47,7 @@ class DateRange(
             ""
         } else {
             buildString(2 * MAX_DATE_STRING_LENGTH + 1) {
-                if (hasBoundedStart) {
+                if (hasBoundedStart()) {
                     appendDate(start)
                 } else {
                     append("..")
@@ -55,7 +55,7 @@ class DateRange(
 
                 append('/')
 
-                if (hasBoundedEnd) {
+                if (hasBoundedEnd()) {
                     appendDate(endInclusive)
                 } else {
                     append("..")
@@ -81,7 +81,7 @@ class DateRange(
     fun asPeriod(): Period {
         return when {
             isEmpty() -> Period.ZERO
-            isBounded -> periodBetween(start, endInclusive + 1.days)
+            isBounded() -> periodBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -94,7 +94,7 @@ class DateRange(
     val lengthInYears
         get() = when {
             isEmpty() -> 0.years
-            isBounded -> yearsBetween(start, endInclusive + 1.days)
+            isBounded() -> yearsBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
 
@@ -106,7 +106,7 @@ class DateRange(
     val lengthInMonths
         get() = when {
             isEmpty() -> 0.months
-            isBounded -> monthsBetween(start, endInclusive + 1.days)
+            isBounded() -> monthsBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
 
@@ -117,7 +117,7 @@ class DateRange(
     val lengthInWeeks
         get() = when {
             isEmpty() -> 0L.weeks
-            isBounded -> weeksBetween(start, endInclusive + 1.days)
+            isBounded() -> weeksBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
 
@@ -129,7 +129,7 @@ class DateRange(
     val lengthInDays
         get() = when {
             isEmpty() -> 0L.days
-            isBounded -> daysBetween(start, endInclusive + 1.days)
+            isBounded() -> daysBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
 

@@ -28,25 +28,23 @@ class Duration private constructor(
     /**
      * Is this duration zero?
      */
-    inline val isZero: Boolean get() = this == ZERO
+    fun isZero(): Boolean = this == ZERO
 
     /**
      * Is this duration positive?
      */
-    val isPositive: Boolean
-        get() = seconds.value > 0L || nanosecondAdjustment.value > 0
+    fun isPositive(): Boolean = seconds.value > 0L || nanosecondAdjustment.value > 0
 
     /**
      * Is this duration negative?
      */
-    val isNegative: Boolean
-        get() = seconds.value < 0L || nanosecondAdjustment.value < 0
+    fun isNegative(): Boolean = seconds.value < 0L || nanosecondAdjustment.value < 0
 
     /**
      * Get the absolute value of this duration.
      */
     val absoluteValue: Duration
-        get() = if (isNegative) -this else this
+        get() = if (isNegative()) -this else this
 
     /**
      * Convert this duration into the number of 24-hour days represented by it.
@@ -142,8 +140,8 @@ class Duration private constructor(
 
     operator fun plus(other: Duration): Duration {
         return when {
-            other.isZero -> this
-            this.isZero -> other
+            other.isZero() -> this
+            this.isZero() -> other
             else -> plus(other.seconds, other.nanosecondAdjustment)
         }
     }
@@ -370,7 +368,7 @@ class Duration private constructor(
     }
 
     override fun toString(): String {
-        return if (isZero) {
+        return if (isZero()) {
             "PT0S"
         } else {
             buildString { appendDuration(this@Duration) }
@@ -575,24 +573,24 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     duration.toComponents { hours, minutes, seconds, nanoseconds ->
         append("PT")
 
-        if (!hours.isZero) {
+        if (!hours.isZero()) {
             append(hours.value)
             append('H')
         }
 
-        if (!minutes.isZero) {
+        if (!minutes.isZero()) {
             append(minutes.value)
             append('M')
         }
 
-        if (!seconds.isZero || !nanoseconds.isZero) {
+        if (!seconds.isZero() || !nanoseconds.isZero()) {
             if (seconds.value == 0 && nanoseconds.value < 0) {
                 append('-')
             }
 
             append(seconds.value)
 
-            if (!nanoseconds.isZero) {
+            if (!nanoseconds.isZero()) {
                 append('.')
                 append(
                     abs(nanoseconds.value)

@@ -64,31 +64,31 @@ class DurationTest {
 
     @Test
     fun `isZero property returns true for duration of no length`() {
-        assertTrue { Duration.ZERO.isZero }
+        assertTrue { Duration.ZERO.isZero() }
     }
 
     @Test
     fun `isZero property returns false for non-zero durations`() {
-        assertFalse { durationOf(1.seconds).isZero }
-        assertFalse { durationOf((-1).seconds).isZero }
-        assertFalse { durationOf(1.nanoseconds).isZero }
+        assertFalse { durationOf(1.seconds).isZero() }
+        assertFalse { durationOf((-1).seconds).isZero() }
+        assertFalse { durationOf(1.nanoseconds).isZero() }
     }
 
     @Test
     fun `isNegative property returns true if seconds is negative`() {
-        assertTrue { durationOf((-1).seconds).isNegative }
+        assertTrue { durationOf((-1).seconds).isNegative() }
     }
 
     @Test
     fun `isNegative property returns true if nanosecondAdjustment is negative`() {
-        assertTrue { durationOf((-1).nanoseconds).isNegative }
+        assertTrue { durationOf((-1).nanoseconds).isNegative() }
     }
 
     @Test
     fun `isNegative property returns false if greater or equal to zero`() {
-        assertFalse { Duration.ZERO.isNegative }
-        assertFalse { 1.seconds.asDuration().isNegative }
-        assertFalse { 1.nanoseconds.asDuration().isNegative }
+        assertFalse { Duration.ZERO.isNegative() }
+        assertFalse { 1.seconds.asDuration().isNegative() }
+        assertFalse { 1.nanoseconds.asDuration().isNegative() }
     }
     
     @Test

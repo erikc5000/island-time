@@ -34,7 +34,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     inline fun <T> toComponents(
         action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
     ): T {
-        val sign = if (totalSeconds.isNegative) -1 else 1
+        val sign = if (totalSeconds.isNegative()) -1 else 1
         val absTotalSeconds = totalSeconds.absoluteValue
         val hours = (absTotalSeconds.value / SECONDS_PER_HOUR).hours
         val minutes = ((absTotalSeconds.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
@@ -198,13 +198,13 @@ internal fun StringBuilder.appendUtcOffset(offset: UtcOffset): StringBuilder {
 
 private fun validateUtcOffsetComponents(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
     when {
-        hours.isPositive -> if (minutes.isNegative || seconds.isNegative) {
+        hours.isPositive() -> if (minutes.isNegative() || seconds.isNegative()) {
             throw DateTimeException("Time offset minutes and seconds must be positive when hours are positive")
         }
-        hours.isNegative -> if (minutes.isPositive || seconds.isPositive) {
+        hours.isNegative() -> if (minutes.isPositive() || seconds.isPositive()) {
             throw DateTimeException("Time offset minutes and seconds must be negative when hours are negative")
         }
-        else -> if ((minutes.isNegative && seconds.isPositive) || (minutes.isPositive && seconds.isNegative)) {
+        else -> if ((minutes.isNegative() && seconds.isPositive()) || (minutes.isPositive() && seconds.isNegative())) {
             throw DateTimeException("Time offset minutes and seconds must have the same sign")
         }
     }

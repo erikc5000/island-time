@@ -10,6 +10,7 @@ import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.internal.YEARS_PER_CENTURY
 import io.islandtime.internal.YEARS_PER_DECADE
 import io.islandtime.internal.timesExact
+import io.islandtime.internal.toIntExact
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
@@ -24,6 +25,8 @@ import kotlin.math.absoluteValue
 inline class IntYears(
   val value: Int
 ) : Comparable<IntYears> {
+  val absoluteValue: IntYears
+    get() = IntYears(value.absoluteValue)
   val inMonths: IntMonths
     get() = (this.value * MONTHS_PER_YEAR).months
 
@@ -53,6 +56,71 @@ inline class IntYears(
   }
   fun inMonthsExact() = (this.value timesExact MONTHS_PER_YEAR).months
 
+  operator fun unaryMinus() = IntYears(-value)
+
+  operator fun plus(months: IntMonths) = this.inMonths + months
+
+  operator fun plus(months: LongMonths) = this.toLong().inMonths + months
+
+  operator fun plus(years: IntYears) = IntYears(this.value + years.value)
+
+  operator fun plus(years: LongYears) = LongYears(this.value.toLong() + years.value)
+
+  operator fun plus(decades: IntDecades) = this + decades.inYears
+
+  operator fun plus(decades: LongDecades) = this.toLong() + decades.inYears
+
+  operator fun plus(centuries: IntCenturies) = this + centuries.inYears
+
+  operator fun plus(centuries: LongCenturies) = this.toLong() + centuries.inYears
+
+  operator fun minus(months: IntMonths) = plus(-months)
+
+  operator fun minus(months: LongMonths) = plus(-months)
+
+  operator fun minus(years: IntYears) = plus(-years)
+
+  operator fun minus(years: LongYears) = plus(-years)
+
+  operator fun minus(decades: IntDecades) = plus(-decades)
+
+  operator fun minus(decades: LongDecades) = plus(-decades)
+
+  operator fun minus(centuries: IntCenturies) = plus(-centuries)
+
+  operator fun minus(centuries: LongCenturies) = plus(-centuries)
+
+  operator fun times(scalar: Int) = IntYears(this.value * scalar)
+
+  operator fun times(scalar: Long) = this.toLong() * scalar
+
+  operator fun div(scalar: Int) = IntYears(this.value / scalar)
+
+  operator fun div(scalar: Long) = this.toLong() / scalar
+
+  operator fun rem(scalar: Int) = IntYears(this.value % scalar)
+
+  operator fun rem(scalar: Long) = this.toLong() % scalar
+
+  inline fun <T> toComponents(action: (decades: IntDecades, years: IntYears) -> T): T {
+    val decades = this.inDecades
+    val years = (this - decades)
+    return action(decades, years)
+  }
+
+  inline fun <T> toComponents(action: (
+    centuries: IntCenturies,
+    decades: IntDecades,
+    years: IntYears
+  ) -> T): T {
+    val centuries = this.inCenturies
+    val decades = (this - centuries).inDecades
+    val years = (this - centuries - decades)
+    return action(centuries, decades, years)
+  }
+
+  fun toLong() = LongYears(this.value.toLong())
+
   companion object {
     val MIN: IntYears = IntYears(Int.MIN_VALUE)
 
@@ -64,6 +132,8 @@ inline class IntYears(
 inline class LongYears(
   val value: Long
 ) : Comparable<LongYears> {
+  val absoluteValue: LongYears
+    get() = LongYears(value.absoluteValue)
   val inMonths: LongMonths
     get() = (this.value * MONTHS_PER_YEAR).months
 
@@ -92,6 +162,73 @@ inline class LongYears(
       }
   }
   fun inMonthsExact() = (this.value timesExact MONTHS_PER_YEAR).months
+
+  operator fun unaryMinus() = LongYears(-value)
+
+  operator fun plus(months: IntMonths) = this.inMonths + months
+
+  operator fun plus(months: LongMonths) = this.inMonths + months
+
+  operator fun plus(years: IntYears) = LongYears(this.value + years.value)
+
+  operator fun plus(years: LongYears) = LongYears(this.value + years.value)
+
+  operator fun plus(decades: IntDecades) = this + decades.inYears
+
+  operator fun plus(decades: LongDecades) = this + decades.inYears
+
+  operator fun plus(centuries: IntCenturies) = this + centuries.inYears
+
+  operator fun plus(centuries: LongCenturies) = this + centuries.inYears
+
+  operator fun minus(months: IntMonths) = plus(-months)
+
+  operator fun minus(months: LongMonths) = plus(-months)
+
+  operator fun minus(years: IntYears) = plus(-years)
+
+  operator fun minus(years: LongYears) = plus(-years)
+
+  operator fun minus(decades: IntDecades) = plus(-decades)
+
+  operator fun minus(decades: LongDecades) = plus(-decades)
+
+  operator fun minus(centuries: IntCenturies) = plus(-centuries)
+
+  operator fun minus(centuries: LongCenturies) = plus(-centuries)
+
+  operator fun times(scalar: Int) = LongYears(this.value * scalar)
+
+  operator fun times(scalar: Long) = LongYears(this.value * scalar)
+
+  operator fun div(scalar: Int) = LongYears(this.value / scalar)
+
+  operator fun div(scalar: Long) = LongYears(this.value / scalar)
+
+  operator fun rem(scalar: Int) = LongYears(this.value % scalar)
+
+  operator fun rem(scalar: Long) = LongYears(this.value % scalar)
+
+  inline fun <T> toComponents(action: (decades: LongDecades, years: IntYears) -> T): T {
+    val decades = this.inDecades
+    val years = (this - decades).toInt()
+    return action(decades, years)
+  }
+
+  inline fun <T> toComponents(action: (
+    centuries: LongCenturies,
+    decades: IntDecades,
+    years: IntYears
+  ) -> T): T {
+    val centuries = this.inCenturies
+    val decades = (this - centuries).toInt().inDecades
+    val years = (this - centuries - decades).toInt()
+    return action(centuries, decades, years)
+  }
+
+  fun toInt() = IntYears(this.value.toInt())
+
+  fun toIntExact() = IntYears(this.value.toIntExact())
 
   companion object {
     val MIN: LongYears = LongYears(Long.MIN_VALUE)

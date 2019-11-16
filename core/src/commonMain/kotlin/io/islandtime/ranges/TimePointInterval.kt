@@ -18,7 +18,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     /**
      * The last representable time point within the interval.
      */
-    val endInclusive: T get() = if (hasUnboundedEnd) _endExclusive else _endExclusive - 1.nanoseconds
+    val endInclusive: T get() = if (hasUnboundedEnd()) _endExclusive else _endExclusive - 1.nanoseconds
 
     override val endExclusive: T get() = _endExclusive
 
@@ -32,12 +32,12 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     }
 
     override fun contains(value: T): Boolean {
-        return (value >= _start || hasUnboundedStart) && (value < _endExclusive || hasUnboundedEnd)
+        return (value >= _start || hasUnboundedStart()) && (value < _endExclusive || hasUnboundedEnd())
     }
 
     @JvmName("containsOther")
     operator fun contains(value: TimePoint<*>): Boolean {
-        return (value >= _start || hasUnboundedStart) && (value < _endExclusive || hasUnboundedEnd)
+        return (value >= _start || hasUnboundedStart()) && (value < _endExclusive || hasUnboundedEnd())
     }
 
     override fun isEmpty(): Boolean = _start >= _endExclusive
@@ -49,7 +49,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     fun asDuration(): Duration {
         return when {
             isEmpty() -> Duration.ZERO
-            isBounded -> durationBetween(_start, _endExclusive)
+            isBounded() -> durationBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -61,7 +61,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     open val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
-            isBounded -> daysBetween(_start, _endExclusive)
+            isBounded() -> daysBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -72,7 +72,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInHours: LongHours
         get() = when {
             isEmpty() -> 0L.hours
-            isBounded -> hoursBetween(_start, _endExclusive)
+            isBounded() -> hoursBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -83,7 +83,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInMinutes: LongMinutes
         get() = when {
             isEmpty() -> 0L.minutes
-            isBounded -> minutesBetween(_start, _endExclusive)
+            isBounded() -> minutesBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -94,7 +94,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInSeconds: LongSeconds
         get() = when {
             isEmpty() -> 0L.seconds
-            isBounded -> secondsBetween(_start, _endExclusive)
+            isBounded() -> secondsBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -105,7 +105,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInMilliseconds: LongMilliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
-            isBounded -> millisecondsBetween(_start, _endExclusive)
+            isBounded() -> millisecondsBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -116,7 +116,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInMicroseconds: LongMicroseconds
         get() = when {
             isEmpty() -> 0L.microseconds
-            isBounded -> microsecondsBetween(_start, _endExclusive)
+            isBounded() -> microsecondsBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -127,7 +127,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInNanoseconds: LongNanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
-            isBounded -> nanosecondsBetween(_start, _endExclusive)
+            isBounded() -> nanosecondsBetween(_start, _endExclusive)
             else -> throwUnboundedIntervalException()
         }
 }

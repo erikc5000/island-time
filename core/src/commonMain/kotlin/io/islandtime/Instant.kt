@@ -47,7 +47,7 @@ class Instant private constructor(
 
     operator fun plus(other: Duration): Instant {
         return when {
-            other.isZero -> this
+            other.isZero() -> this
             else -> plus(other.seconds, other.nanosecondAdjustment)
         }
     }

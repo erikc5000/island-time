@@ -17,33 +17,33 @@ interface TimeInterval<T> {
     /**
      * Check if the interval's start is unbounded. In ISO-8601 terminology, this is an "open" start.
      */
-    val hasUnboundedStart: Boolean
+    fun hasUnboundedStart(): Boolean
 
     /**
      * Check if the interval's end is unbounded. In ISO-8601 terminology, this is an "open" end.
      */
-    val hasUnboundedEnd: Boolean
+    fun hasUnboundedEnd(): Boolean
 
     /**
      * Check if the interval's start is bounded, meaning it has a finite value.
      */
-    val hasBoundedStart: Boolean get() = !hasUnboundedStart
+    fun hasBoundedStart(): Boolean = !hasUnboundedStart()
 
     /**
      * Check if the interval's end is bounded, meaning it has a finite value.
      */
-    val hasBoundedEnd: Boolean get() = !hasUnboundedEnd
+    fun hasBoundedEnd(): Boolean = !hasUnboundedEnd()
 
     /**
      * Check if both the start and end of the interval are bounded, meaning it has a finite range.
      */
-    val isBounded: Boolean get() = hasBoundedStart && hasBoundedEnd
+    fun isBounded(): Boolean = hasBoundedStart() && hasBoundedEnd()
 
     /**
      * Check if both the start and end of the interval are unbounded, meaning this is an infinite time period in both
      * directions.
      */
-    val isUnbounded: Boolean get() = hasUnboundedStart && hasUnboundedEnd
+    fun isUnbounded(): Boolean = hasUnboundedStart() && hasUnboundedEnd()
 
     /**
      * Check if [value] is within the interval based on timeline order.
