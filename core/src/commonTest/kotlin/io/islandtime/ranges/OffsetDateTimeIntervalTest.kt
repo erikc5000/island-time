@@ -9,23 +9,23 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `EMPTY returns an empty interval`() {
         assertTrue { OffsetDateTimeInterval.EMPTY.isEmpty() }
-        assertTrue { OffsetDateTimeInterval.EMPTY.isBounded }
-        assertTrue { OffsetDateTimeInterval.EMPTY.hasBoundedStart }
-        assertTrue { OffsetDateTimeInterval.EMPTY.hasBoundedEnd }
-        assertFalse { OffsetDateTimeInterval.EMPTY.isUnbounded }
-        assertFalse { OffsetDateTimeInterval.EMPTY.hasUnboundedStart }
-        assertFalse { OffsetDateTimeInterval.EMPTY.hasUnboundedEnd }
+        assertTrue { OffsetDateTimeInterval.EMPTY.isBounded() }
+        assertTrue { OffsetDateTimeInterval.EMPTY.hasBoundedStart() }
+        assertTrue { OffsetDateTimeInterval.EMPTY.hasBoundedEnd() }
+        assertFalse { OffsetDateTimeInterval.EMPTY.isUnbounded() }
+        assertFalse { OffsetDateTimeInterval.EMPTY.hasUnboundedStart() }
+        assertFalse { OffsetDateTimeInterval.EMPTY.hasUnboundedEnd() }
     }
 
     @Test
     fun `UNBOUNDED returns an unbounded interval`() {
         assertFalse { OffsetDateTimeInterval.UNBOUNDED.isEmpty() }
-        assertTrue { OffsetDateTimeInterval.UNBOUNDED.isUnbounded }
-        assertTrue { OffsetDateTimeInterval.UNBOUNDED.hasUnboundedStart }
-        assertTrue { OffsetDateTimeInterval.UNBOUNDED.hasUnboundedEnd }
-        assertFalse { OffsetDateTimeInterval.UNBOUNDED.isBounded }
-        assertFalse { OffsetDateTimeInterval.UNBOUNDED.hasBoundedStart }
-        assertFalse { OffsetDateTimeInterval.UNBOUNDED.hasBoundedEnd }
+        assertTrue { OffsetDateTimeInterval.UNBOUNDED.isUnbounded() }
+        assertTrue { OffsetDateTimeInterval.UNBOUNDED.hasUnboundedStart() }
+        assertTrue { OffsetDateTimeInterval.UNBOUNDED.hasUnboundedEnd() }
+        assertFalse { OffsetDateTimeInterval.UNBOUNDED.isBounded() }
+        assertFalse { OffsetDateTimeInterval.UNBOUNDED.hasBoundedStart() }
+        assertFalse { OffsetDateTimeInterval.UNBOUNDED.hasBoundedEnd() }
     }
 
     @Test

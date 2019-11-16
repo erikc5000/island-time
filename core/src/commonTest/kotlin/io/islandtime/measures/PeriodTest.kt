@@ -183,27 +183,27 @@ class PeriodTest {
 
     @Test
     fun `isZero property returns true for zeroed-out periods`() {
-        assertTrue { Period.ZERO.isZero }
+        assertTrue { Period.ZERO.isZero() }
     }
 
     @Test
     fun `isZero property returns false for non-zero periods`() {
-        assertFalse { periodOf(1.days).isZero }
+        assertFalse { periodOf(1.days).isZero() }
     }
 
     @Test
     fun `isNegative property returns true if any component is less than zero`() {
-        assertTrue { periodOf((-1).years, 1.months, 1.days).isNegative }
-        assertTrue { periodOf(1.years, (-1).months, 1.days).isNegative }
-        assertTrue { periodOf(1.years, 1.months, (-1).days).isNegative }
+        assertTrue { periodOf((-1).years, 1.months, 1.days).isNegative() }
+        assertTrue { periodOf(1.years, (-1).months, 1.days).isNegative() }
+        assertTrue { periodOf(1.years, 1.months, (-1).days).isNegative() }
     }
 
     @Test
     fun `isNegative property returns false if all components are zero or more`() {
-        assertFalse { periodOf(1.years, 0.months, 0.days).isNegative }
-        assertFalse { periodOf(0.years, 1.months, 0.days).isNegative }
-        assertFalse { periodOf(0.years, 0.months, 1.days).isNegative }
-        assertFalse { Period.ZERO.isNegative }
+        assertFalse { periodOf(1.years, 0.months, 0.days).isNegative() }
+        assertFalse { periodOf(0.years, 1.months, 0.days).isNegative() }
+        assertFalse { periodOf(0.years, 0.months, 1.days).isNegative() }
+        assertFalse { Period.ZERO.isNegative() }
     }
 
     @Test

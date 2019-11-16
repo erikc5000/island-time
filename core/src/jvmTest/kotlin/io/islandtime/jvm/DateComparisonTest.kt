@@ -49,7 +49,7 @@ class DateComparisonTest {
             assertThat(javaPeriod.months).isEqualTo(islandPeriod.months.value)
             assertThat(javaPeriod.years).isEqualTo(islandPeriod.years.value)
             assertThat(javaPeriod.negated().days).isEqualTo((-islandPeriod).days.value)
-            assertThat(javaPeriod.isNegative).isEqualTo(islandPeriod.isNegative)
+            assertThat(javaPeriod.isNegative).isEqualTo(islandPeriod.isNegative())
             assertThat(javaPeriod.normalized().days).isEqualTo(islandPeriod.normalized().days.value)
         }
     }

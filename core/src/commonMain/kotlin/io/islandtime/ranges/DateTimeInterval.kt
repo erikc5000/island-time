@@ -20,15 +20,15 @@ class DateTimeInterval(
     override val endExclusive: DateTime = UNBOUNDED.endExclusive
 ) : TimeInterval<DateTime> {
 
-    override val hasUnboundedStart: Boolean get() = start == DateTime.MIN
-    override val hasUnboundedEnd: Boolean get() = endExclusive == DateTime.MAX
+    override fun hasUnboundedStart(): Boolean = start == DateTime.MIN
+    override fun hasUnboundedEnd(): Boolean = endExclusive == DateTime.MAX
 
     /**
      * Check if this interval contains the given value.
      * @param value a date-time, assumed to be in the same time zone
      */
     override fun contains(value: DateTime): Boolean {
-        return value >= start && (value < endExclusive || hasUnboundedEnd)
+        return value >= start && (value < endExclusive || hasUnboundedEnd())
     }
 
     override fun isEmpty(): Boolean {
@@ -50,7 +50,7 @@ class DateTimeInterval(
     fun asDuration(): Duration {
         return when {
             isEmpty() -> Duration.ZERO
-            isBounded -> durationBetween(start, endExclusive)
+            isBounded() -> durationBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -62,7 +62,7 @@ class DateTimeInterval(
     fun asPeriod(): Period {
         return when {
             isEmpty() -> Period.ZERO
-            isBounded -> periodBetween(start, endExclusive)
+            isBounded() -> periodBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -74,7 +74,7 @@ class DateTimeInterval(
     val lengthInYears
         get() = when {
             isEmpty() -> 0.years
-            isBounded -> yearsBetween(start, endExclusive)
+            isBounded() -> yearsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -89,7 +89,7 @@ class DateTimeInterval(
     val lengthInMonths
         get() = when {
             isEmpty() -> 0.months
-            isBounded -> monthsBetween(start, endExclusive)
+            isBounded() -> monthsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -100,7 +100,7 @@ class DateTimeInterval(
     val lengthInWeeks: LongWeeks
         get() = when {
             isEmpty() -> 0L.weeks
-            isBounded -> weeksBetween(start, endExclusive)
+            isBounded() -> weeksBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -111,7 +111,7 @@ class DateTimeInterval(
     val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
-            isBounded -> daysBetween(start, endExclusive)
+            isBounded() -> daysBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -122,7 +122,7 @@ class DateTimeInterval(
     val lengthInHours: LongHours
         get() = when {
             isEmpty() -> 0L.hours
-            isBounded -> hoursBetween(start, endExclusive)
+            isBounded() -> hoursBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -133,7 +133,7 @@ class DateTimeInterval(
     val lengthInMinutes: LongMinutes
         get() = when {
             isEmpty() -> 0L.minutes
-            isBounded -> minutesBetween(start, endExclusive)
+            isBounded() -> minutesBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -144,7 +144,7 @@ class DateTimeInterval(
     val lengthInSeconds: LongSeconds
         get() = when {
             isEmpty() -> 0L.seconds
-            isBounded -> secondsBetween(start, endExclusive)
+            isBounded() -> secondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -155,7 +155,7 @@ class DateTimeInterval(
     val lengthInMilliseconds: LongMilliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
-            isBounded -> millisecondsBetween(start, endExclusive)
+            isBounded() -> millisecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -166,7 +166,7 @@ class DateTimeInterval(
     val lengthInMicroseconds: LongMicroseconds
         get() = when {
             isEmpty() -> 0L.microseconds
-            isBounded -> microsecondsBetween(start, endExclusive)
+            isBounded() -> microsecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -177,7 +177,7 @@ class DateTimeInterval(
     val lengthInNanoseconds: LongNanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
-            isBounded -> nanosecondsBetween(start, endExclusive)
+            isBounded() -> nanosecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 

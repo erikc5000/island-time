@@ -20,8 +20,8 @@ class OffsetDateTimeInterval(
     endExclusive: OffsetDateTime = UNBOUNDED.endExclusive
 ) : TimePointInterval<OffsetDateTime>(start, endExclusive) {
 
-    override val hasUnboundedStart: Boolean get() = start.dateTime == DateTime.MIN
-    override val hasUnboundedEnd: Boolean get() = endExclusive.dateTime == DateTime.MAX
+    override fun hasUnboundedStart(): Boolean = start.dateTime == DateTime.MIN
+    override fun hasUnboundedEnd(): Boolean = endExclusive.dateTime == DateTime.MAX
 
     /**
      * Convert this interval to a string in ISO-8601 extended format.
@@ -35,7 +35,7 @@ class OffsetDateTimeInterval(
     fun asPeriod(): Period {
         return when {
             isEmpty() -> Period.ZERO
-            isBounded -> periodBetween(start, endExclusive)
+            isBounded() -> periodBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -48,7 +48,7 @@ class OffsetDateTimeInterval(
     val lengthInYears
         get() = when {
             isEmpty() -> 0.years
-            isBounded -> yearsBetween(start, endExclusive)
+            isBounded() -> yearsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -60,7 +60,7 @@ class OffsetDateTimeInterval(
     val lengthInMonths
         get() = when {
             isEmpty() -> 0.months
-            isBounded -> monthsBetween(start, endExclusive)
+            isBounded() -> monthsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -71,7 +71,7 @@ class OffsetDateTimeInterval(
     val lengthInWeeks
         get() = when {
             isEmpty() -> 0L.weeks
-            isBounded -> weeksBetween(start, endExclusive)
+            isBounded() -> weeksBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 

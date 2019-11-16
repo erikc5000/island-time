@@ -133,7 +133,7 @@ class DateTime(
      * defined in ISO-8601-2.
      */
     operator fun plus(period: Period): DateTime {
-        return if (period.isZero) {
+        return if (period.isZero()) {
             this
         } else {
             copy(date = date + period)

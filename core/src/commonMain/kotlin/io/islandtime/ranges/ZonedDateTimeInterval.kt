@@ -21,8 +21,8 @@ class ZonedDateTimeInterval(
     endExclusive: ZonedDateTime = UNBOUNDED.endExclusive
 ) : TimePointInterval<ZonedDateTime>(start, endExclusive) {
 
-    override val hasUnboundedStart: Boolean get() = start.dateTime == DateTime.MIN
-    override val hasUnboundedEnd: Boolean get() = endExclusive.dateTime == DateTime.MAX
+    override fun hasUnboundedStart(): Boolean = start.dateTime == DateTime.MIN
+    override fun hasUnboundedEnd(): Boolean = endExclusive.dateTime == DateTime.MAX
 
     /**
      * Convert this interval to a string in ISO-8601 extended format.
@@ -36,7 +36,7 @@ class ZonedDateTimeInterval(
     fun asPeriod(): Period {
         return when {
             isEmpty() -> Period.ZERO
-            isBounded -> periodBetween(start, endExclusive)
+            isBounded() -> periodBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -49,7 +49,7 @@ class ZonedDateTimeInterval(
     val lengthInYears
         get() = when {
             isEmpty() -> 0.years
-            isBounded -> yearsBetween(start, endExclusive)
+            isBounded() -> yearsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -61,7 +61,7 @@ class ZonedDateTimeInterval(
     val lengthInMonths
         get() = when {
             isEmpty() -> 0.months
-            isBounded -> monthsBetween(start, endExclusive)
+            isBounded() -> monthsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -72,7 +72,7 @@ class ZonedDateTimeInterval(
     val lengthInWeeks
         get() = when {
             isEmpty() -> 0L.weeks
-            isBounded -> weeksBetween(start, endExclusive)
+            isBounded() -> weeksBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -83,7 +83,7 @@ class ZonedDateTimeInterval(
     override val lengthInDays
         get() = when {
             isEmpty() -> 0L.days
-            isBounded -> daysBetween(start, endExclusive)
+            isBounded() -> daysBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -199,20 +199,20 @@ infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, t
 fun DateRange.toZonedDateTimeIntervalAt(zone: TimeZone): ZonedDateTimeInterval {
     return when {
         isEmpty() -> ZonedDateTimeInterval.EMPTY
-        isUnbounded -> ZonedDateTimeInterval.UNBOUNDED
+        isUnbounded() -> ZonedDateTimeInterval.UNBOUNDED
         start == endInclusive -> {
             val zonedStart = start.startOfDayAt(zone)
             val zonedEnd = zonedStart + 1.days
             zonedStart until zonedEnd
         }
         else -> {
-            val start = if (hasUnboundedStart) {
+            val start = if (hasUnboundedStart()) {
                 DateTime.MIN at zone
             } else {
                 start.startOfDayAt(zone)
             }
 
-            val end = if (hasUnboundedEnd) {
+            val end = if (hasUnboundedEnd()) {
                 DateTime.MAX at zone
             } else {
                 endInclusive.endOfDayAt(zone)

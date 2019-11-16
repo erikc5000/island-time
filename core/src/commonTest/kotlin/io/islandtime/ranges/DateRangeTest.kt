@@ -69,12 +69,12 @@ class DateRangeTest : AbstractIslandTimeTest() {
         assertEquals(Date(2019, Month.JANUARY, 27), range.endInclusive)
         assertEquals(1.days, range.step)
         assertEquals(7, range.count())
-        assertTrue { range.isBounded }
-        assertFalse { range.isUnbounded }
-        assertTrue { range.hasBoundedStart }
-        assertTrue { range.hasBoundedEnd }
-        assertFalse { range.hasUnboundedStart }
-        assertFalse { range.hasUnboundedEnd }
+        assertTrue { range.isBounded() }
+        assertFalse { range.isUnbounded() }
+        assertTrue { range.hasBoundedStart() }
+        assertTrue { range.hasBoundedEnd() }
+        assertFalse { range.hasUnboundedStart() }
+        assertFalse { range.hasUnboundedEnd() }
     }
 
     @Test

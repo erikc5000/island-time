@@ -10,23 +10,23 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `EMPTY returns an empty interval`() {
         assertTrue { ZonedDateTimeInterval.EMPTY.isEmpty() }
-        assertTrue { ZonedDateTimeInterval.EMPTY.isBounded }
-        assertTrue { ZonedDateTimeInterval.EMPTY.hasBoundedStart }
-        assertTrue { ZonedDateTimeInterval.EMPTY.hasBoundedEnd }
-        assertFalse { ZonedDateTimeInterval.EMPTY.isUnbounded }
-        assertFalse { ZonedDateTimeInterval.EMPTY.hasUnboundedStart }
-        assertFalse { ZonedDateTimeInterval.EMPTY.hasUnboundedEnd }
+        assertTrue { ZonedDateTimeInterval.EMPTY.isBounded() }
+        assertTrue { ZonedDateTimeInterval.EMPTY.hasBoundedStart() }
+        assertTrue { ZonedDateTimeInterval.EMPTY.hasBoundedEnd() }
+        assertFalse { ZonedDateTimeInterval.EMPTY.isUnbounded() }
+        assertFalse { ZonedDateTimeInterval.EMPTY.hasUnboundedStart() }
+        assertFalse { ZonedDateTimeInterval.EMPTY.hasUnboundedEnd() }
     }
 
     @Test
     fun `UNBOUNDED returns an unbounded interval`() {
         assertFalse { ZonedDateTimeInterval.UNBOUNDED.isEmpty() }
-        assertTrue { ZonedDateTimeInterval.UNBOUNDED.isUnbounded }
-        assertTrue { ZonedDateTimeInterval.UNBOUNDED.hasUnboundedStart }
-        assertTrue { ZonedDateTimeInterval.UNBOUNDED.hasUnboundedEnd }
-        assertFalse { ZonedDateTimeInterval.UNBOUNDED.isBounded }
-        assertFalse { ZonedDateTimeInterval.UNBOUNDED.hasBoundedStart }
-        assertFalse { ZonedDateTimeInterval.UNBOUNDED.hasBoundedEnd }
+        assertTrue { ZonedDateTimeInterval.UNBOUNDED.isUnbounded() }
+        assertTrue { ZonedDateTimeInterval.UNBOUNDED.hasUnboundedStart() }
+        assertTrue { ZonedDateTimeInterval.UNBOUNDED.hasUnboundedEnd() }
+        assertFalse { ZonedDateTimeInterval.UNBOUNDED.isBounded() }
+        assertFalse { ZonedDateTimeInterval.UNBOUNDED.hasBoundedStart() }
+        assertFalse { ZonedDateTimeInterval.UNBOUNDED.hasBoundedEnd() }
     }
 
     @Test

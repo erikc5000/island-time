@@ -30,7 +30,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
     Iterable<T> {
 
     init {
-        require(!step.isZero) { "Step must be non-zero" }
+        require(!step.isZero()) { "Step must be non-zero" }
         require(step.value != Long.MIN_VALUE) {
             "Step must be greater than Long.MIN_VALUE to avoid overflow on negation"
         }
@@ -38,12 +38,12 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
 
     override val last: T = getLastTimePointInProgression(first, endInclusive, step)
 
-    fun isEmpty(): Boolean = if (step.isPositive) first > last else first < last
+    fun isEmpty(): Boolean = if (step.isPositive()) first > last else first < last
 
     override fun iterator(): TimePointIterator<T> = TimePointSecondProgressionIterator(first, last, step)
 
     override fun toString(): String {
-        return if (step.isPositive) {
+        return if (step.isPositive()) {
             "$first..$last step $step"
         } else {
             "$first downTo $last step ${-step}"
@@ -90,7 +90,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
     Iterable<T> {
 
     init {
-        require(!step.isZero) { "Step must be non-zero" }
+        require(!step.isZero()) { "Step must be non-zero" }
         require(step.value != Long.MIN_VALUE) {
             "Step must be greater than Long.MIN_VALUE to avoid overflow on negation"
         }
@@ -98,12 +98,12 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
 
     override val last: T = getLastTimePointInProgression(first, endInclusive, step)
 
-    fun isEmpty(): Boolean = if (step.isPositive) first > last else first < last
+    fun isEmpty(): Boolean = if (step.isPositive()) first > last else first < last
 
     override fun iterator(): TimePointIterator<T> = TimePointNanosecondProgressionIterator(first, last, step)
 
     override fun toString(): String {
-        return if (step.isPositive) {
+        return if (step.isPositive()) {
             "$first..$last step $step"
         } else {
             "$first downTo $last step ${-step}"
@@ -225,7 +225,7 @@ infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
  * Assumes step is non-zero
  */
 private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, step: LongSeconds): T {
-    return if ((step.isPositive && start >= end) || (step.isNegative && start <= end)) {
+    return if ((step.isPositive() && start >= end) || (step.isNegative() && start <= end)) {
         end
     } else {
         val secondsBetween = secondsBetween(start, end)
@@ -238,7 +238,7 @@ private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, s
  * Assumes step is non-zero
  */
 private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, step: LongNanoseconds): T {
-    return if ((step.isPositive && start >= end) || (step.isNegative && start <= end)) {
+    return if ((step.isPositive() && start >= end) || (step.isNegative() && start <= end)) {
         end
     } else {
         val nanosecondsBetween = nanosecondsBetween(start, end)

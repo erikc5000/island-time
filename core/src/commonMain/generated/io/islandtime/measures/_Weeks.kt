@@ -8,6 +8,7 @@ package io.islandtime.measures
 
 import io.islandtime.internal.DAYS_PER_WEEK
 import io.islandtime.internal.timesExact
+import io.islandtime.internal.toIntExact
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
@@ -22,6 +23,8 @@ import kotlin.math.absoluteValue
 inline class IntWeeks(
   val value: Int
 ) : Comparable<IntWeeks> {
+  val absoluteValue: IntWeeks
+    get() = IntWeeks(value.absoluteValue)
   val inDays: IntDays
     get() = (this.value * DAYS_PER_WEEK).days
 
@@ -45,6 +48,38 @@ inline class IntWeeks(
   }
   fun inDaysExact() = (this.value timesExact DAYS_PER_WEEK).days
 
+  operator fun unaryMinus() = IntWeeks(-value)
+
+  operator fun plus(days: IntDays) = this.inDays + days
+
+  operator fun plus(days: LongDays) = this.toLong().inDays + days
+
+  operator fun plus(weeks: IntWeeks) = IntWeeks(this.value + weeks.value)
+
+  operator fun plus(weeks: LongWeeks) = LongWeeks(this.value.toLong() + weeks.value)
+
+  operator fun minus(days: IntDays) = plus(-days)
+
+  operator fun minus(days: LongDays) = plus(-days)
+
+  operator fun minus(weeks: IntWeeks) = plus(-weeks)
+
+  operator fun minus(weeks: LongWeeks) = plus(-weeks)
+
+  operator fun times(scalar: Int) = IntWeeks(this.value * scalar)
+
+  operator fun times(scalar: Long) = this.toLong() * scalar
+
+  operator fun div(scalar: Int) = IntWeeks(this.value / scalar)
+
+  operator fun div(scalar: Long) = this.toLong() / scalar
+
+  operator fun rem(scalar: Int) = IntWeeks(this.value % scalar)
+
+  operator fun rem(scalar: Long) = this.toLong() % scalar
+
+  fun toLong() = LongWeeks(this.value.toLong())
+
   companion object {
     val MIN: IntWeeks = IntWeeks(Int.MIN_VALUE)
 
@@ -56,6 +91,8 @@ inline class IntWeeks(
 inline class LongWeeks(
   val value: Long
 ) : Comparable<LongWeeks> {
+  val absoluteValue: LongWeeks
+    get() = LongWeeks(value.absoluteValue)
   val inDays: LongDays
     get() = (this.value * DAYS_PER_WEEK).days
 
@@ -78,6 +115,40 @@ inline class LongWeeks(
       }
   }
   fun inDaysExact() = (this.value timesExact DAYS_PER_WEEK).days
+
+  operator fun unaryMinus() = LongWeeks(-value)
+
+  operator fun plus(days: IntDays) = this.inDays + days
+
+  operator fun plus(days: LongDays) = this.inDays + days
+
+  operator fun plus(weeks: IntWeeks) = LongWeeks(this.value + weeks.value)
+
+  operator fun plus(weeks: LongWeeks) = LongWeeks(this.value + weeks.value)
+
+  operator fun minus(days: IntDays) = plus(-days)
+
+  operator fun minus(days: LongDays) = plus(-days)
+
+  operator fun minus(weeks: IntWeeks) = plus(-weeks)
+
+  operator fun minus(weeks: LongWeeks) = plus(-weeks)
+
+  operator fun times(scalar: Int) = LongWeeks(this.value * scalar)
+
+  operator fun times(scalar: Long) = LongWeeks(this.value * scalar)
+
+  operator fun div(scalar: Int) = LongWeeks(this.value / scalar)
+
+  operator fun div(scalar: Long) = LongWeeks(this.value / scalar)
+
+  operator fun rem(scalar: Int) = LongWeeks(this.value % scalar)
+
+  operator fun rem(scalar: Long) = LongWeeks(this.value % scalar)
+
+  fun toInt() = IntWeeks(this.value.toInt())
+
+  fun toIntExact() = IntWeeks(this.value.toIntExact())
 
   companion object {
     val MIN: LongWeeks = LongWeeks(Long.MIN_VALUE)

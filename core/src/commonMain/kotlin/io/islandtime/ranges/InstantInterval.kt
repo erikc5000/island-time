@@ -20,8 +20,8 @@ class InstantInterval(
 ) : TimePointInterval<Instant>(start, endExclusive),
     TimePointProgressionBuilder<Instant> {
 
-    override val hasUnboundedStart: Boolean get() = start == Instant.MIN
-    override val hasUnboundedEnd: Boolean get() = endExclusive == Instant.MAX
+    override fun hasUnboundedStart(): Boolean = start == Instant.MIN
+    override fun hasUnboundedEnd(): Boolean = endExclusive == Instant.MAX
 
     override val first: Instant get() = start
     override val last: Instant get() = endInclusive
@@ -136,10 +136,10 @@ infix fun Instant.until(to: Instant) = InstantInterval(this, to)
 fun DateRange.toInstantIntervalAt(zone: TimeZone): InstantInterval {
     return when {
         isEmpty() -> InstantInterval.EMPTY
-        isUnbounded -> InstantInterval.UNBOUNDED
+        isUnbounded() -> InstantInterval.UNBOUNDED
         else -> {
-            val start = if (hasUnboundedStart) Instant.MIN else start.startOfDayAt(zone).instant
-            val end = if (hasUnboundedEnd) Instant.MAX else endInclusive.endOfDayAt(zone).instant
+            val start = if (hasUnboundedStart()) Instant.MIN else start.startOfDayAt(zone).instant
+            val end = if (hasUnboundedEnd()) Instant.MAX else endInclusive.endOfDayAt(zone).instant
             start..end
         }
     }
@@ -151,10 +151,10 @@ fun DateRange.toInstantIntervalAt(zone: TimeZone): InstantInterval {
 fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval {
     return when {
         isEmpty() -> InstantInterval.EMPTY
-        isUnbounded -> InstantInterval.UNBOUNDED
+        isUnbounded() -> InstantInterval.UNBOUNDED
         else -> {
-            val startInstant = if (hasUnboundedStart) Instant.MIN else start.instant
-            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.instant
+            val startInstant = if (hasUnboundedStart()) Instant.MIN else start.instant
+            val endInstant = if (hasUnboundedEnd()) Instant.MAX else endExclusive.instant
             startInstant until endInstant
         }
     }
@@ -166,10 +166,10 @@ fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval {
 fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval {
     return when {
         isEmpty() -> InstantInterval.EMPTY
-        isUnbounded -> InstantInterval.UNBOUNDED
+        isUnbounded() -> InstantInterval.UNBOUNDED
         else -> {
-            val startInstant = if (hasUnboundedStart) Instant.MIN else start.instant
-            val endInstant = if (hasUnboundedEnd) Instant.MAX else endExclusive.instant
+            val startInstant = if (hasUnboundedStart()) Instant.MIN else start.instant
+            val endInstant = if (hasUnboundedEnd()) Instant.MAX else endExclusive.instant
             startInstant until endInstant
         }
     }

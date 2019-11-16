@@ -2,12 +2,31 @@ package io.islandtime.codegen
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import java.lang.IllegalStateException
 import kotlin.reflect.KClass
 
-val DurationUnit.intClassName get() = ClassName(MEASURES_PACKAGE_NAME, intName)
-val DurationUnit.longClassName get() = ClassName(MEASURES_PACKAGE_NAME, longName)
+private val INT_TYPE_NAME = Int::class.asTypeName()
+private val LONG_TYPE_NAME = Long::class.asTypeName()
 
-fun generateDurationUnitFileSpecs(): List<FileSpec> {
+private val TypeName.zeroValueString
+    get() = when (this) {
+        INT_TYPE_NAME -> Int::class.zero
+        LONG_TYPE_NAME -> Long::class.zero
+        else -> throw IllegalStateException("Unsupported primitive type")
+    }
+
+private val TemporalUnitDescription.intClassName get() = ClassName(MEASURES_PACKAGE_NAME, intName)
+private val TemporalUnitDescription.longClassName get() = ClassName(MEASURES_PACKAGE_NAME, longName)
+
+private fun TemporalUnitDescription.classNameFor(primitiveType: KClass<*>): ClassName {
+    return when (primitiveType) {
+        Int::class -> intClassName
+        Long::class -> longClassName
+        else -> throw java.lang.IllegalArgumentException("Unsupported primitive type")
+    }
+}
+
+fun generateTemporalUnitFileSpecs(): List<FileSpec> {
     return TemporalUnitDescription.values().map { it.toFileSpec() }
 }
 
@@ -24,9 +43,9 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
 
 fun TemporalUnitDescription.buildClasses(): List<TypeSpec> {
     return listOf(
-        buildClass(intClassName, Int::class),
-        buildClass(longClassName, Long::class)
-    )
+        TemporalUnitClassGenerator(this, Int::class),
+        TemporalUnitClassGenerator(this, Long::class)
+    ).map { it.build() }
 }
 
 fun TemporalUnitDescription.buildExtensionProperties(): List<PropertySpec> {
@@ -34,164 +53,218 @@ fun TemporalUnitDescription.buildExtensionProperties(): List<PropertySpec> {
         buildExtensionProperties(longClassName, Long::class)
 }
 
-fun TemporalUnitDescription.buildClass(
-    className: ClassName,
-    primitiveType: KClass<*>
-): TypeSpec {
-    return buildClassTypeSpec(className) {
+data class TemporalUnitClassGenerator(
+    val description: TemporalUnitDescription,
+    val primitive: KClass<*>
+) {
+    val className = description.classNameFor(primitive)
+    val primitiveTypeName = primitive.asTypeName()
+
+    val constructorFunSpec by lazy { buildConstructorFunSpec() }
+
+    val valuePropertySpec by lazy { buildValuePropertySpec() }
+    val absoluteValuePropertySpec by lazy { buildAbsoluteValuePropertySpec() }
+
+    val isZeroFunSpec by lazy { buildIsZeroFunSpec() }
+    val isNegativeFunSpec by lazy { buildIsNegativeFunSpec() }
+    val isPositiveFunSpec by lazy { buildIsPositiveFunSpec() }
+    val compareToFunSpec by lazy { buildCompareToFunSpec() }
+    val toStringFunSpec by lazy { buildToStringFunSpec() }
+
+    val companionObjectTypeSpec by lazy { buildCompanionObjectTypeSpec() }
+
+    fun build() = buildClassTypeSpec(className) {
         addModifiers(KModifier.INLINE)
         addAnnotation(
             buildAnnotationSpec(Suppress::class) {
                 addMember("%S", "NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
             }
         )
-        primaryConstructor(
-            buildConstructorFunSpec {
-                // addModifiers(KModifier.INTERNAL)
-                addParameter(valueName, primitiveType)
+        primaryConstructor(constructorFunSpec)
+        addSuperinterface(ClassName("kotlin", "Comparable").parameterizedBy(className))
+
+        listOf(
+            valuePropertySpec,
+            absoluteValuePropertySpec,
+            isZeroFunSpec,
+            isNegativeFunSpec,
+            isPositiveFunSpec,
+            compareToFunSpec,
+            toStringFunSpec,
+            companionObjectTypeSpec
+        ).forEach {
+            when (it) {
+                is PropertySpec -> addProperty(it)
+                is FunSpec -> addFunction(it)
+                is TypeSpec -> addType(it)
             }
-        )
-        addProperty(
-            buildPropertySpec(valueName, primitiveType) { initializer(valueName) }
-        )
-        addSuperinterface(
-            ClassName("kotlin", "Comparable").parameterizedBy(className)
-        )
-        addFunction(
-            buildFunSpec("compareTo") {
-                addModifiers(KModifier.OVERRIDE)
-                addParameter("other", className)
-                returns(Int::class)
-                addStatement("return this.value.compareTo(other.value)")
-            }
-        )
-        addFunction(
-            buildFunSpec("toString") {
-                addModifiers(KModifier.OVERRIDE)
-                returns(String::class)
+        }
 
-                if (isoPeriodIsFractional) {
-                    var fractionalPartConversion = "absValue %% ${isoPeriodUnitConversion.constantValue}"
-
-                    if (primitiveType == Long::class) {
-                        fractionalPartConversion = "($fractionalPartConversion).toInt()"
-                    }
-
-                    addStatement(
-                        """
-                            |return if (this.isZero) {
-                            |    "$isoPeriodZeroString"
-                            |} else {
-                            |    buildString {
-                            |        val absValue = $valueName.%T
-                            |        val wholePart = absValue / ${isoPeriodUnitConversion.constantValue}
-                            |        val fractionalPart = $fractionalPartConversion
-                            |        if (isNegative) { append('-') }
-                            |        append("$isoPeriodPrefix")
-                            |        append(wholePart)
-                            |        if (fractionalPart != 0) {
-                            |            append('.')
-                            |            append(fractionalPart.%T($isoPeriodDecimalPlaces).dropLastWhile { it == '0' })
-                            |        }
-                            |        append('$isoPeriodUnit')
-                            |    }
-                            |}
-                        """.trimMargin(),
-                        ClassName("kotlin.math", "absoluteValue"),
-                        ClassName(INTERNAL_PACKAGE_NAME, "toZeroPaddedString")
-                    )
-                } else {
-                    val addStatementArgs = mutableListOf<Any>()
-                    val convertedValueString = buildString {
-                        append("$valueName.%T")
-                        addStatementArgs += ClassName("kotlin.math", "absoluteValue")
-
-                        if (isoPeriodUnitConversion.isNecessary()) {
-                            append(" %T ${isoPeriodUnitConversion.constantValue}")
-                            addStatementArgs += ClassName(INTERNAL_PACKAGE_NAME, "timesExact")
-                        }
-                    }
-
-                    addStatement(
-                        """
-                            |return if (this.isZero) {
-                            |    "$isoPeriodZeroString"
-                            |} else {
-                            |    buildString {
-                            |        if (isNegative) { append('-') }
-                            |        append("$isoPeriodPrefix")
-                            |        append($convertedValueString)
-                            |        append('$isoPeriodUnit')
-                            |    }
-                            |}
-                        """.trimMargin(),
-                        *addStatementArgs.toTypedArray()
-                    )
-                }
-            }
-        )
-        buildUnitConversionPropertiesAndFunctions(primitiveType).forEach {
+        // TODO: Refactor the rest of this to make it more maintainable
+        (description.buildUnitConversionPropertiesAndFunctions(primitive)
+        + description.buildOperators(className, primitive) +
+            description.buildToComponentsFunctions(primitive) +
+            description.buildPrimitiveConversionFunctions(primitive)).forEach {
             when (it) {
                 is FunSpec -> addFunction(it)
                 is PropertySpec -> addProperty(it)
             }
         }
-        addFunctions(
-            buildOperators(className, primitiveType) +
-                    buildToComponentsFunctions(primitiveType) +
-//                buildNonExpandedToComponentsFunctions(primitiveType) +
-                    buildPrimitiveConversionFunctions(primitiveType)
-        )
-        addProperties(
-            listOf(
-                buildPropertySpec("isZero", Boolean::class) {
-                    getter(buildGetterFunSpec {
-                        addModifiers(KModifier.INLINE)
-                        addStatement("return this.$valueName == ${primitiveType.zero}")
-                    })
-                },
-                buildPropertySpec("isNegative", Boolean::class) {
-                    getter(buildGetterFunSpec {
-                        addModifiers(KModifier.INLINE)
-                        addStatement("return this.$valueName < ${primitiveType.zero}")
-                    })
-                },
-                buildPropertySpec("isPositive", Boolean::class) {
-                    getter(buildGetterFunSpec {
-                        addModifiers(KModifier.INLINE)
-                        addStatement("return this.$valueName > ${primitiveType.zero}")
-                    })
-                },
-                buildPropertySpec("absoluteValue", className) {
-                    getter(
-                        buildGetterFunSpec {
-                            addStatement(
-                                "return %T(this.$valueName.%T)",
-                                className,
-                                ClassName("kotlin.math", "absoluteValue")
-                            )
-                        }
-                    )
-                }
-            )
-        )
-        addType(
-            buildCompanionObjectTypeSpec {
-                addProperty(
-                    buildPropertySpec("MIN", className) {
-                        initializer("%T(%T.MIN_VALUE)", className, primitiveType)
-                    }
-                )
-                addProperty(
-                    buildPropertySpec("MAX", className) {
-                        initializer("%T(%T.MAX_VALUE)", className, primitiveType)
-                    }
-                )
-            }
-        )
     }
 }
 
+fun TemporalUnitClassGenerator.buildValuePropertySpec() = buildPropertySpec(
+    description.valueName,
+    primitiveTypeName
+) {
+    initializer(description.valueName)
+}
+
+fun TemporalUnitClassGenerator.buildAbsoluteValuePropertySpec() = buildPropertySpec(
+    "absoluteValue",
+    className
+) {
+    getter(
+        buildGetterFunSpec {
+            val arguments = mapOf(
+                "className" to className,
+                "value" to valuePropertySpec,
+                "absoluteValue" to ClassName("kotlin.math", "absoluteValue")
+            )
+
+            addNamedCode(
+                "return %className:T(%value:N.%absoluteValue:T)",
+                arguments
+            )
+        }
+    )
+}
+
+fun TemporalUnitClassGenerator.buildConstructorFunSpec() = buildConstructorFunSpec {
+    // addModifiers(KModifier.INTERNAL)
+    addParameter(valuePropertySpec.name, valuePropertySpec.type)
+}
+
+fun TemporalUnitClassGenerator.buildIsZeroFunSpec() = buildFunSpec("isZero") {
+    returns(Boolean::class)
+    addStatement("return %N == ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
+}
+
+fun TemporalUnitClassGenerator.buildIsNegativeFunSpec() = buildFunSpec("isNegative") {
+    returns(Boolean::class)
+    addStatement("return %N < ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
+}
+
+fun TemporalUnitClassGenerator.buildIsPositiveFunSpec() = buildFunSpec("isPositive") {
+    returns(Boolean::class)
+    addStatement("return %N > ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
+}
+
+fun TemporalUnitClassGenerator.buildCompareToFunSpec() = buildFunSpec("compareTo") {
+    addModifiers(KModifier.OVERRIDE)
+    addParameter("other", className)
+    returns(Int::class)
+    addStatement("return %N.compareTo(other.%N)", valuePropertySpec, valuePropertySpec)
+}
+
+fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString") {
+    addModifiers(KModifier.OVERRIDE)
+    returns(String::class)
+
+    addCode(
+        if (description.isoPeriodIsFractional) {
+            buildFractionalToStringCodeBlock()
+        } else {
+            buildWholeToStringCodeBlock()
+        }
+    )
+}
+
+fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = buildCodeBlock {
+    var fractionalPartConversion = "absValue %% ${description.isoPeriodUnitConversion.constantValue}"
+
+    if (primitive == Long::class) {
+        fractionalPartConversion = "($fractionalPartConversion).toInt()"
+    }
+
+    val arguments = mapOf(
+        "isZero" to isZeroFunSpec,
+        "value" to valuePropertySpec,
+        "absoluteValue" to ClassName("kotlin.math", "absoluteValue"),
+        "isNegative" to isNegativeFunSpec,
+        "toZeroPaddedString" to ClassName(INTERNAL_PACKAGE_NAME, "toZeroPaddedString")
+    )
+
+    addNamed(
+        """
+            |return if (%isZero:N()) {
+            |    "$description.isoPeriodZeroString"
+            |} else {
+            |    buildString {
+            |        val absValue = %value:N.%absoluteValue:T
+            |        val wholePart = absValue / ${description.isoPeriodUnitConversion.constantValue}
+            |        val fractionalPart = $fractionalPartConversion
+            |        if (%isNegative:N()) { append('-') }
+            |        append("${description.isoPeriodPrefix}")
+            |        append(wholePart)
+            |        if (fractionalPart != 0) {
+            |            append('.')
+            |            append(fractionalPart.%toZeroPaddedString:T(${description.isoPeriodDecimalPlaces}).dropLastWhile { it == '0' })
+            |        }
+            |        append('${description.isoPeriodUnit}')
+            |    }
+            |}
+        """.trimMargin(),
+        arguments
+    )
+}
+
+fun TemporalUnitClassGenerator.buildWholeToStringCodeBlock() = buildCodeBlock {
+    val arguments = mapOf(
+        "isZero" to isZeroFunSpec,
+        "value" to valuePropertySpec,
+        "absoluteValue" to ClassName("kotlin.math", "absoluteValue"),
+        "isNegative" to isNegativeFunSpec,
+        "timesExact" to ClassName(INTERNAL_PACKAGE_NAME, "timesExact")
+    )
+
+    val convertedValueString = buildString {
+        append("%value:N.%absoluteValue:T")
+
+        if (description.isoPeriodUnitConversion.isNecessary()) {
+            append(" %timesExact:T ${description.isoPeriodUnitConversion.constantValue}")
+        }
+    }
+
+    addNamed(
+        """
+            |return if (%isZero:N()) {
+            |    "${description.isoPeriodZeroString}"
+            |} else {
+            |    buildString {
+            |        if (%isNegative:N()) { append('-') }
+            |        append("${description.isoPeriodPrefix}")
+            |        append($convertedValueString)
+            |        append('${description.isoPeriodUnit}')
+            |    }
+            |}
+        """.trimMargin(),
+        arguments
+    )
+}
+
+fun TemporalUnitClassGenerator.buildCompanionObjectTypeSpec() = buildCompanionObjectTypeSpec {
+    listOf(
+        buildPropertySpec("MIN", className) {
+            initializer("%T(%T.MIN_VALUE)", className, primitive)
+        },
+        buildPropertySpec("MAX", className) {
+            initializer("%T(%T.MAX_VALUE)", className, primitive)
+        }
+    ).forEach { addProperty(it) }
+}
+
+// TODO: Refactor everything below
 fun TemporalUnitDescription.buildPrimitiveConversionFunctions(
     primitiveType: KClass<*>
 ): List<FunSpec> {
@@ -563,57 +636,3 @@ fun TemporalUnitDescription.buildToComponentsFunctions(
             }
         }
 }
-
-//fun DurationUnit.buildNonExpandedToComponentsFunctions(
-//    primitiveType: KClass<*>
-//): List<FunSpec> {
-//    return DurationUnit.values()
-//        .filter { it < this }
-//        .map { biggestUnit ->
-//            val allComponentUnits = DurationUnit.values().filter {
-//                (it >= biggestUnit && it <= this && !it.isoPeriodIsFractional) || it == DurationUnit.NANOSECONDS
-//            }
-//
-//            buildFunSpec("toComponents") {
-//                addTypeVariable(TypeVariableName("T"))
-//                addModifiers(KModifier.INLINE)
-//                returns(TypeVariableName("T"))
-//
-//                val lambdaParameters = allComponentUnits.mapIndexed { index, unit ->
-//                    buildParameterSpec(
-//                        unit.lowerCaseName,
-//                        if (index == 0 && primitiveType == Long::class) unit.longClassName else unit.intClassName
-//                    )
-//                }
-//
-//                addParameter(
-//                    "action",
-//                    LambdaTypeName.get(parameters = lambdaParameters, returnType = TypeVariableName("T"))
-//                )
-//
-//                allComponentUnits.forEach { unit ->
-//                    val conversionComponents = listOf("this") +
-//                        allComponentUnits.filter { it < unit }.map { it.lowerCaseName }
-//
-//                    var conversionString = conversionComponents.joinToString(" - ")
-//
-//                    if (conversionComponents.count() > 1) {
-//                        conversionString = "($conversionString)"
-//
-//                        if (forceLongInOperators || primitiveType == Long::class) {
-//                            conversionString = "$conversionString.toInt()"
-//                        }
-//                    }
-//
-//                    if (unit != this@buildNonExpandedToComponentsFunctions) {
-//                        conversionString = "$conversionString.${unit.inWholeUnitPropertyName}"
-//                    }
-//
-//                    addStatement("val ${unit.lowerCaseName} = $conversionString")
-//                }
-//
-//                val allVariableNames = allComponentUnits.joinToString(", ") { it.lowerCaseName }
-//                addStatement("return action($allVariableNames)")
-//            }
-//        }
-//}
