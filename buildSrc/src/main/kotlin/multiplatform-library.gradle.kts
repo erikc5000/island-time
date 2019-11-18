@@ -51,10 +51,13 @@ kotlin {
 
     configure(iosTargets) {
         compilations.getByName("main") {
-            source(sourceSets["iosMain"])
+            if (!ideaActive) defaultSourceSet.dependsOn(sourceSets["iosMain"])
             extraOpts.add("-Xobjc-generics")
         }
-        compilations["test"].source(sourceSets["iosTest"])
+
+        if (!ideaActive) {
+            compilations["test"].defaultSourceSet.dependsOn(sourceSets["iosTest"])
+        }
     }
 }
 

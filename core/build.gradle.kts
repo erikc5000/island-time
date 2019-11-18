@@ -39,17 +39,6 @@ kotlin {
             }
         }
 
-//        val jsMain by getting {
-//            dependencies {
-//                implementation(kotlin("stdlib-js"))
-//            }
-//        }
-//        val jsTest by getting {
-//            dependencies {
-//                implementation(kotlin("test-js"))
-//            }
-//        }
-
         val iosMain by getting {
             dependencies {
                 implementation("co.touchlab:stately-collections:0.9.3")
