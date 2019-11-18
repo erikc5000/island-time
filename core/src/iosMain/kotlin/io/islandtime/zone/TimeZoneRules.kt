@@ -1,6 +1,6 @@
 package io.islandtime.zone
 
-import co.touchlab.stately.collections.SharedHashMap
+import co.touchlab.stately.collections.frozenHashMap
 import io.islandtime.*
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
@@ -11,7 +11,7 @@ import io.islandtime.measures.*
 import platform.Foundation.*
 
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
-    private val timeZoneRules = SharedHashMap<String, TimeZoneRules>()
+    private val timeZoneRules: MutableMap<String, TimeZoneRules> = frozenHashMap()
 
     @Suppress("UNCHECKED_CAST")
     private val cachedRegionIds = (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
@@ -36,7 +36,7 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     private val calendar = NSCalendar(NSCalendarIdentifierISO8601).also { it.timeZone = timeZone }
     private inline val timeZone: NSTimeZone get() = calendar.timeZone
 
-    private val transitionsInYear = SharedHashMap<Int, List<TimeZoneOffsetTransition>>()
+    private val transitionsInYear: MutableMap<Int, List<TimeZoneOffsetTransition>> = frozenHashMap()
 
     override fun offsetAt(dateTime: DateTime): UtcOffset {
         val date = dateTime.toNSDateOrNull(calendar)
@@ -45,9 +45,9 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
         return offsetAt(date)
     }
 
-    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): UtcOffset {
+    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
         val date = NSDate.dateWithTimeIntervalSince1970(
-            secondsSinceUnixEpoch.value.toDouble() + nanosecondAdjustment.value.toDouble() / NANOSECONDS_PER_SECOND
+            secondsSinceUnixEpoch.value.toDouble() + nanoOfSeconds.value.toDouble() / NANOSECONDS_PER_SECOND
         )
         return offsetAt(date)
     }
