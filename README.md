@@ -15,6 +15,8 @@ repositories {
 }
 ```
 
+This project publishes Gradle metadata, so you can use the common artifact and it will automatically sort out the correct dependencies for each platform.
+
 Common: _(Kotlin Gradle DSL)_
 ```
 dependencies {
@@ -22,18 +24,11 @@ dependencies {
 }
 ```
 
-JVM: _(Kotlin Gradle DSL)_
-```
-dependencies {
-    implementation("io.islandtime:core-jvm:0.1.0-SNAPSHOT")
-}
-```
+On Android specifically, you'll need to add the following:
 
 Android: _(Kotlin Gradle DSL)_
 ```
 dependencies {
-    implementation("io.islandtime:core-jvm:0.1.0-SNAPSHOT")
-    
     // Until java.time library desugaring is added to D8, Android relies on
     // ThreeTenABP (https://github.com/JakeWharton/ThreeTenABP) to supply the
     // time zone database
@@ -41,19 +36,9 @@ dependencies {
 }
 ```
 
-iOS ARM 64-bit: _(Kotlin Gradle DSL)_
-```
-dependencies {
-    implementation("io.islandtime:core-iosarm64:0.1.0-SNAPSHOT")
-}
-```
+Note that Island Time requires a JVM target of 1.8.
 
-iOS Simulator: _(Kotlin Gradle DSL)_
-```
-dependencies {
-    implementation("io.islandtime:core-iosx64:0.1.0-SNAPSHOT")
-}
-```
+Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
 
 # Usage
 
@@ -128,8 +113,8 @@ val today = Date.now()
 val tomorrow = today + 1.days
 val nextWednesday = today.next(DayOfWeek.WEDNESDAY)
 val lastSundayOrToday = today.previousOrSame(DayOfWeek.SUNDAY)
-val startOfMonth = today.startOfMonth()
-val endOfMonth = today.endOfMonth()
+val startOfMonth = today.startOfMonth
+val endOfMonth = today.endOfMonth
 ```
 
 ### ISO-8601 Representation
@@ -188,8 +173,8 @@ val period: Period = (today..today + 1.months).asPeriod()
 ```kotlin
 val instantInterval = "2008-09-01T04:00Z/..".toInstantInterval()
 
-val isBounded = instantInterval.isBounded // false
-val hasUnboundedEnd = instantInterval.hasUnboundedEnd // true
+val isBounded = instantInterval.isBounded() // false
+val hasUnboundedEnd = instantInterval.hasUnboundedEnd() // true
 val duration = instantInterval.asDuration() // throws DateTimeException
 ```
 
