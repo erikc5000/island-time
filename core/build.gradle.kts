@@ -14,7 +14,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("co.touchlab:stately:0.9.3")
+                implementation("co.touchlab:stately:0.9.4")
             }
         }
 
@@ -41,7 +41,7 @@ kotlin {
 
         val iosMain by getting {
             dependencies {
-                implementation("co.touchlab:stately-collections:0.9.3")
+                implementation("co.touchlab:stately-collections:0.9.4")
             }
         }
     }
