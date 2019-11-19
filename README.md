@@ -36,7 +36,10 @@ dependencies {
 }
 ```
 
-Note that Island Time requires a JVM target of 1.8.
+_**Important:**_ Due to the experimental status of inline classes, which are used in the public API, the version of Kotlin that you use in your project must match the version used by Island Time -- even for non-native targets.
+
+Island Time 0.1.0-SNAPSHOT builds are based on Kotlin 1.3.60.
+Also note that Island Time requires a JVM target of 1.8 or above.
 
 Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
 
