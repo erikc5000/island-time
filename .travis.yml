@@ -35,7 +35,7 @@ matrix:
       language: java
       install: ./gradlew core:assemble
       env: ORG_GRADLE_PROJECT_iosDevice=iPhone Xʀ
-      before_script: simctl create 'iPhone Xʀ' iOS13
+      before_script: ./simctl create 'iPhone Xʀ' iOS13
       script: ./gradlew core:build
       deploy:
         provider: script
