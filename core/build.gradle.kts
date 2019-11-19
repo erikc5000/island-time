@@ -9,7 +9,7 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            kotlin.srcDirs("src/commonMain/generated", "src/commonMain/kotlin")
+            kotlin.srcDirs("src/commonMain/generated")
 
             dependencies {
                 implementation(kotlin("stdlib-common"))
