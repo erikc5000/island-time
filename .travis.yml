@@ -34,10 +34,7 @@ matrix:
       osx_image: xcode11
       language: java
       install: ./gradlew core:assemble
-      env: ORG_GRADLE_PROJECT_iosDevice=iPhone X
-      before_script:
-        - xcrun simctl list
-        - xcrun simctl create 'iPhone X' iOS13
+      env: ORG_GRADLE_PROJECT_iosDevice=iPhone 11
       script: ./gradlew core:build
       deploy:
         provider: script
