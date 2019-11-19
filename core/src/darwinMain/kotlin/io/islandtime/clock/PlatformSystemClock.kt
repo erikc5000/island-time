@@ -1,6 +1,6 @@
 package io.islandtime.clock
 
-import io.islandtime.ios.toIslandTimeZone
+import io.islandtime.darwin.toIslandTimeZone
 import io.islandtime.measures.LongMilliseconds
 import io.islandtime.measures.microseconds
 import io.islandtime.measures.seconds

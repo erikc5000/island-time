@@ -39,7 +39,7 @@ kotlin {
             }
         }
 
-        val iosMain by getting {
+        val darwinMain by getting {
             dependencies {
                 implementation("co.touchlab:stately-collections:0.9.4")
             }

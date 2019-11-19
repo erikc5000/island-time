@@ -41,7 +41,7 @@ _**Important:**_ Due to the experimental status of inline classes, which are use
 Island Time 0.1.0-SNAPSHOT builds are based on Kotlin 1.3.60.
 Also note that Island Time requires a JVM target of 1.8 or above.
 
-Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
+Current supported platforms are JVM, Android, iOS ARM64/x64, watchOS ARM64/X86, tvOS ARM64/X64, and macOS x64.
 
 # Usage
 
