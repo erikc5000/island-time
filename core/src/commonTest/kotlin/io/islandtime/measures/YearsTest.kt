@@ -1,6 +1,5 @@
 package io.islandtime.measures
 
-import kotlin.math.roundToLong
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
