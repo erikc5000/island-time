@@ -31,7 +31,7 @@ matrix:
           branch: master
 
     - os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11
       language: java
       install: ./gradlew core:assemble
       script: ./gradlew core:build
