@@ -13,12 +13,6 @@ val ideaActive get() = System.getProperty("idea.active") == "true"
 kotlin {
     jvm()
 
-//    js {
-//        useCommonJs()
-//        browser()
-//        nodejs()
-//    }
-
     val iosTargets = if (ideaActive) {
         listOf(iosX64("ios"))
     } else {
@@ -37,27 +31,23 @@ kotlin {
             val commonMain by getting
             val commonTest by getting
 
-            @Suppress("UNUSED_VARIABLE")
             val iosMain by creating {
                 dependsOn(commonMain)
             }
 
-            @Suppress("UNUSED_VARIABLE")
             val iosTest by creating {
                 dependsOn(commonTest)
+            }
+
+            configure(iosTargets) {
+                compilations["main"].defaultSourceSet.dependsOn(iosMain)
+                compilations["test"].defaultSourceSet.dependsOn(iosTest)
             }
         }
     }
 
     configure(iosTargets) {
-        compilations.getByName("main") {
-            if (!ideaActive) defaultSourceSet.dependsOn(sourceSets["iosMain"])
-            extraOpts.add("-Xobjc-generics")
-        }
-
-        if (!ideaActive) {
-            compilations["test"].defaultSourceSet.dependsOn(sourceSets["iosTest"])
-        }
+        compilations["main"].kotlinOptions.freeCompilerArgs += "-Xobjc-generics"
     }
 }
 
