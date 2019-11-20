@@ -13,8 +13,6 @@ pluginManagement {
     }
 }
 
-enableFeaturePreview("GRADLE_METADATA")
-
 include(
     ":core",
     ":tools:code-generator",

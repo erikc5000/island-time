@@ -4,9 +4,9 @@ import co.touchlab.stately.collections.frozenHashMap
 import io.islandtime.*
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.ios.toIslandDateTimeAt
-import io.islandtime.ios.toNSDate
-import io.islandtime.ios.toNSDateComponents
+import io.islandtime.darwin.toIslandDateTimeAt
+import io.islandtime.darwin.toNSDate
+import io.islandtime.darwin.toNSDateComponents
 import io.islandtime.measures.*
 import platform.Foundation.*
 
@@ -23,7 +23,7 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     override fun rulesFor(regionId: String): TimeZoneRules {
         return timeZoneRules.getOrPut(regionId) {
             // TODO: May overwrite -- putIfAbsent() analog would be better here
-            IosTimeZoneRules(
+            DarwinTimeZoneRules(
                 NSTimeZone.timeZoneWithName(regionId)
                     ?: throw TimeZoneRulesException("No time zone exists with region ID '$regionId'")
             )
@@ -31,7 +31,7 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     }
 }
 
-private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
+private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
     private val calendar = NSCalendar(NSCalendarIdentifierISO8601).also { it.timeZone = timeZone }
     private inline val timeZone: NSTimeZone get() = calendar.timeZone
@@ -114,7 +114,7 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
             val offsetAfter = offsetAt(nextTransition)
             val dateTimeBefore = nextTransition.toIslandDateTimeAt(offsetBefore)
 
-            transitionList += IosTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter)
+            transitionList += DarwinTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter)
 
             currentDate = nextTransition
             nextTransition = timeZone.nextDaylightSavingTimeTransitionAfterDate(currentDate)
@@ -124,7 +124,7 @@ private class IosTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     }
 }
 
-private class IosTimeZoneOffsetTransition(
+private class DarwinTimeZoneOffsetTransition(
     override val dateTimeBefore: DateTime,
     override val offsetBefore: UtcOffset,
     override val offsetAfter: UtcOffset
@@ -141,7 +141,7 @@ private class IosTimeZoneOffsetTransition(
     override val isOverlap get() = offsetAfter < offsetBefore
 
     override fun equals(other: Any?): Boolean {
-        return this === other || (other is IosTimeZoneOffsetTransition &&
+        return this === other || (other is DarwinTimeZoneOffsetTransition &&
                 dateTimeBefore == other.dateTimeBefore &&
                 offsetBefore == other.offsetBefore &&
                 offsetAfter == other.offsetAfter)
