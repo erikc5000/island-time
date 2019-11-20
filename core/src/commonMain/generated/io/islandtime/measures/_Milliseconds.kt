@@ -25,38 +25,77 @@ import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
 
+/**
+ * A number of milliseconds.
+ */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntMilliseconds(
+  /**
+   * The underlying value.
+   */
   val value: Int
 ) : Comparable<IntMilliseconds> {
+  /**
+   * Get the absolute value.
+   */
   val absoluteValue: IntMilliseconds
     get() = IntMilliseconds(value.absoluteValue)
+  /**
+   * Convert to nanoseconds.
+   */
   val inNanoseconds: LongNanoseconds
-    get() = (this.value.toLong() * NANOSECONDS_PER_MILLISECOND).nanoseconds
+    get() = (value.toLong() * NANOSECONDS_PER_MILLISECOND).nanoseconds
 
+  /**
+   * Convert to microseconds.
+   */
   val inMicroseconds: LongMicroseconds
-    get() = (this.value.toLong() * MICROSECONDS_PER_MILLISECOND).microseconds
+    get() = (value.toLong() * MICROSECONDS_PER_MILLISECOND).microseconds
 
+  /**
+   * Convert to whole seconds.
+   */
   val inSeconds: IntSeconds
-    get() = (this.value / MILLISECONDS_PER_SECOND).seconds
+    get() = (value / MILLISECONDS_PER_SECOND).seconds
 
+  /**
+   * Convert to whole minutes.
+   */
   val inMinutes: IntMinutes
-    get() = (this.value / MILLISECONDS_PER_MINUTE).minutes
+    get() = (value / MILLISECONDS_PER_MINUTE).minutes
 
+  /**
+   * Convert to whole hours.
+   */
   val inHours: IntHours
-    get() = (this.value / MILLISECONDS_PER_HOUR).hours
+    get() = (value / MILLISECONDS_PER_HOUR).hours
 
+  /**
+   * Convert to whole days.
+   */
   val inDays: IntDays
-    get() = (this.value / MILLISECONDS_PER_DAY).days
+    get() = (value / MILLISECONDS_PER_DAY).days
 
+  /**
+   * Is this duration zero?
+   */
   fun isZero(): Boolean = value == 0
 
+  /**
+   * Is this duration negative?
+   */
   fun isNegative(): Boolean = value < 0
 
+  /**
+   * Is this duration positive?
+   */
   fun isPositive(): Boolean = value > 0
 
   override fun compareTo(other: IntMilliseconds): Int = value.compareTo(other.value)
 
+  /**
+   * Convert to an ISO-8601 time interval representation.
+   */
   override fun toString(): String = if (isZero()) {
       "MILLISECONDS.isoPeriodZeroString"
   } else {
@@ -76,77 +115,81 @@ inline class IntMilliseconds(
   }
   operator fun unaryMinus() = IntMilliseconds(-value)
 
-  operator fun plus(nanoseconds: IntNanoseconds) = this.toLong().inNanoseconds +
-      nanoseconds.toLong()
-
-  operator fun plus(nanoseconds: LongNanoseconds) = this.toLong().inNanoseconds + nanoseconds
-
-  operator fun plus(microseconds: IntMicroseconds) = this.toLong().inMicroseconds +
-      microseconds.toLong()
-
-  operator fun plus(microseconds: LongMicroseconds) = this.toLong().inMicroseconds + microseconds
-
-  operator fun plus(milliseconds: IntMilliseconds) = LongMilliseconds(this.value.toLong() +
-      milliseconds.value)
-
-  operator fun plus(milliseconds: LongMilliseconds) = LongMilliseconds(this.value.toLong() +
-      milliseconds.value)
-
-  operator fun plus(seconds: IntSeconds) = this.toLong() + seconds.inMilliseconds
-
-  operator fun plus(seconds: LongSeconds) = this.toLong() + seconds.inMilliseconds
-
-  operator fun plus(minutes: IntMinutes) = this.toLong() + minutes.inMilliseconds
-
-  operator fun plus(minutes: LongMinutes) = this.toLong() + minutes.inMilliseconds
-
-  operator fun plus(hours: IntHours) = this.toLong() + hours.inMilliseconds
-
-  operator fun plus(hours: LongHours) = this.toLong() + hours.inMilliseconds
-
-  operator fun plus(days: IntDays) = this.toLong() + days.inMilliseconds
-
-  operator fun plus(days: LongDays) = this.toLong() + days.inMilliseconds
-
-  operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds)
-
-  operator fun minus(nanoseconds: LongNanoseconds) = plus(-nanoseconds)
-
-  operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds)
-
-  operator fun minus(microseconds: LongMicroseconds) = plus(-microseconds)
-
-  operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds)
-
-  operator fun minus(milliseconds: LongMilliseconds) = plus(-milliseconds)
-
-  operator fun minus(seconds: IntSeconds) = plus(-seconds)
-
-  operator fun minus(seconds: LongSeconds) = plus(-seconds)
-
-  operator fun minus(minutes: IntMinutes) = plus(-minutes)
-
-  operator fun minus(minutes: LongMinutes) = plus(-minutes)
-
-  operator fun minus(hours: IntHours) = plus(-hours)
-
-  operator fun minus(hours: LongHours) = plus(-hours)
-
-  operator fun minus(days: IntDays) = plus(-days)
-
-  operator fun minus(days: LongDays) = plus(-days)
-
   operator fun times(scalar: Int) = this.toLong() * scalar
 
   operator fun times(scalar: Long) = this.toLong() * scalar
 
-  operator fun div(scalar: Int) = IntMilliseconds(this.value / scalar)
+  operator fun div(scalar: Int) = IntMilliseconds(value / scalar)
 
   operator fun div(scalar: Long) = this.toLong() / scalar
 
-  operator fun rem(scalar: Int) = IntMilliseconds(this.value % scalar)
+  operator fun rem(scalar: Int) = IntMilliseconds(value % scalar)
 
   operator fun rem(scalar: Long) = this.toLong() % scalar
+
+  operator fun plus(nanoseconds: IntNanoseconds) = this.toLong().inNanoseconds +
+      nanoseconds.toLong()
+
+  operator fun minus(nanoseconds: IntNanoseconds) = this.toLong().inNanoseconds -
+      nanoseconds.toLong()
+
+  operator fun plus(nanoseconds: LongNanoseconds) = this.toLong().inNanoseconds + nanoseconds
+
+  operator fun minus(nanoseconds: LongNanoseconds) = this.toLong().inNanoseconds - nanoseconds
+
+  operator fun plus(microseconds: IntMicroseconds) = this.toLong().inMicroseconds +
+      microseconds.toLong()
+
+  operator fun minus(microseconds: IntMicroseconds) = this.toLong().inMicroseconds -
+      microseconds.toLong()
+
+  operator fun plus(microseconds: LongMicroseconds) = this.toLong().inMicroseconds + microseconds
+
+  operator fun minus(microseconds: LongMicroseconds) = this.toLong().inMicroseconds - microseconds
+
+  operator fun plus(milliseconds: IntMilliseconds) = LongMilliseconds(value.toLong() +
+      milliseconds.value)
+
+  operator fun minus(milliseconds: IntMilliseconds) = LongMilliseconds(value.toLong() -
+      milliseconds.value)
+
+  operator fun plus(milliseconds: LongMilliseconds) = LongMilliseconds(value.toLong() +
+      milliseconds.value)
+
+  operator fun minus(milliseconds: LongMilliseconds) = LongMilliseconds(value.toLong() -
+      milliseconds.value)
+
+  operator fun plus(seconds: IntSeconds) = this.toLong() + seconds.inMilliseconds
+
+  operator fun minus(seconds: IntSeconds) = this.toLong() - seconds.inMilliseconds
+
+  operator fun plus(seconds: LongSeconds) = this.toLong() + seconds.inMilliseconds
+
+  operator fun minus(seconds: LongSeconds) = this.toLong() - seconds.inMilliseconds
+
+  operator fun plus(minutes: IntMinutes) = this.toLong() + minutes.inMilliseconds
+
+  operator fun minus(minutes: IntMinutes) = this.toLong() - minutes.inMilliseconds
+
+  operator fun plus(minutes: LongMinutes) = this.toLong() + minutes.inMilliseconds
+
+  operator fun minus(minutes: LongMinutes) = this.toLong() - minutes.inMilliseconds
+
+  operator fun plus(hours: IntHours) = this.toLong() + hours.inMilliseconds
+
+  operator fun minus(hours: IntHours) = this.toLong() - hours.inMilliseconds
+
+  operator fun plus(hours: LongHours) = this.toLong() + hours.inMilliseconds
+
+  operator fun minus(hours: LongHours) = this.toLong() - hours.inMilliseconds
+
+  operator fun plus(days: IntDays) = this.toLong() + days.inMilliseconds
+
+  operator fun minus(days: IntDays) = this.toLong() - days.inMilliseconds
+
+  operator fun plus(days: LongDays) = this.toLong() + days.inMilliseconds
+
+  operator fun minus(days: LongDays) = this.toLong() - days.inMilliseconds
 
   inline fun <T> toComponents(action: (seconds: IntSeconds, milliseconds: IntMilliseconds) -> T):
       T {
@@ -194,47 +237,98 @@ inline class IntMilliseconds(
     return action(days, hours, minutes, seconds, milliseconds)
   }
 
-  fun toLong() = LongMilliseconds(this.value.toLong())
+  fun toLong() = LongMilliseconds(value.toLong())
 
   companion object {
+    /**
+     * The smallest supported value.
+     */
     val MIN: IntMilliseconds = IntMilliseconds(Int.MIN_VALUE)
 
+    /**
+     * The largest supported value.
+     */
     val MAX: IntMilliseconds = IntMilliseconds(Int.MAX_VALUE)
   }
 }
 
+/**
+ * Convert to [IntMilliseconds].
+ */
+val Int.milliseconds: IntMilliseconds
+  get() = IntMilliseconds(this)
+
+/**
+ * A number of milliseconds.
+ */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongMilliseconds(
+  /**
+   * The underlying value.
+   */
   val value: Long
 ) : Comparable<LongMilliseconds> {
+  /**
+   * Get the absolute value.
+   */
   val absoluteValue: LongMilliseconds
     get() = LongMilliseconds(value.absoluteValue)
+  /**
+   * Convert to nanoseconds.
+   */
   val inNanoseconds: LongNanoseconds
-    get() = (this.value * NANOSECONDS_PER_MILLISECOND).nanoseconds
+    get() = (value * NANOSECONDS_PER_MILLISECOND).nanoseconds
 
+  /**
+   * Convert to microseconds.
+   */
   val inMicroseconds: LongMicroseconds
-    get() = (this.value * MICROSECONDS_PER_MILLISECOND).microseconds
+    get() = (value * MICROSECONDS_PER_MILLISECOND).microseconds
 
+  /**
+   * Convert to whole seconds.
+   */
   val inSeconds: LongSeconds
-    get() = (this.value / MILLISECONDS_PER_SECOND).seconds
+    get() = (value / MILLISECONDS_PER_SECOND).seconds
 
+  /**
+   * Convert to whole minutes.
+   */
   val inMinutes: LongMinutes
-    get() = (this.value / MILLISECONDS_PER_MINUTE).minutes
+    get() = (value / MILLISECONDS_PER_MINUTE).minutes
 
+  /**
+   * Convert to whole hours.
+   */
   val inHours: LongHours
-    get() = (this.value / MILLISECONDS_PER_HOUR).hours
+    get() = (value / MILLISECONDS_PER_HOUR).hours
 
+  /**
+   * Convert to whole days.
+   */
   val inDays: LongDays
-    get() = (this.value / MILLISECONDS_PER_DAY).days
+    get() = (value / MILLISECONDS_PER_DAY).days
 
+  /**
+   * Is this duration zero?
+   */
   fun isZero(): Boolean = value == 0L
 
+  /**
+   * Is this duration negative?
+   */
   fun isNegative(): Boolean = value < 0L
 
+  /**
+   * Is this duration positive?
+   */
   fun isPositive(): Boolean = value > 0L
 
   override fun compareTo(other: LongMilliseconds): Int = value.compareTo(other.value)
 
+  /**
+   * Convert to an ISO-8601 time interval representation.
+   */
   override fun toString(): String = if (isZero()) {
       "MILLISECONDS.isoPeriodZeroString"
   } else {
@@ -252,81 +346,85 @@ inline class LongMilliseconds(
           append('S')
       }
   }
-  fun inNanosecondsExact() = (this.value timesExact NANOSECONDS_PER_MILLISECOND).nanoseconds
-
-  fun inMicrosecondsExact() = (this.value timesExact MICROSECONDS_PER_MILLISECOND).microseconds
-
   operator fun unaryMinus() = LongMilliseconds(-value)
+
+  operator fun times(scalar: Int) = LongMilliseconds(value * scalar)
+
+  operator fun times(scalar: Long) = LongMilliseconds(value * scalar)
+
+  operator fun div(scalar: Int) = LongMilliseconds(value / scalar)
+
+  operator fun div(scalar: Long) = LongMilliseconds(value / scalar)
+
+  operator fun rem(scalar: Int) = LongMilliseconds(value % scalar)
+
+  operator fun rem(scalar: Long) = LongMilliseconds(value % scalar)
 
   operator fun plus(nanoseconds: IntNanoseconds) = this.inNanoseconds + nanoseconds
 
+  operator fun minus(nanoseconds: IntNanoseconds) = this.inNanoseconds - nanoseconds
+
   operator fun plus(nanoseconds: LongNanoseconds) = this.inNanoseconds + nanoseconds
+
+  operator fun minus(nanoseconds: LongNanoseconds) = this.inNanoseconds - nanoseconds
 
   operator fun plus(microseconds: IntMicroseconds) = this.inMicroseconds + microseconds
 
+  operator fun minus(microseconds: IntMicroseconds) = this.inMicroseconds - microseconds
+
   operator fun plus(microseconds: LongMicroseconds) = this.inMicroseconds + microseconds
 
-  operator fun plus(milliseconds: IntMilliseconds) = LongMilliseconds(this.value +
-      milliseconds.value)
+  operator fun minus(microseconds: LongMicroseconds) = this.inMicroseconds - microseconds
 
-  operator fun plus(milliseconds: LongMilliseconds) = LongMilliseconds(this.value +
-      milliseconds.value)
+  operator fun plus(milliseconds: IntMilliseconds) = LongMilliseconds(value + milliseconds.value)
+
+  operator fun minus(milliseconds: IntMilliseconds) = LongMilliseconds(value - milliseconds.value)
+
+  operator fun plus(milliseconds: LongMilliseconds) = LongMilliseconds(value + milliseconds.value)
+
+  operator fun minus(milliseconds: LongMilliseconds) = LongMilliseconds(value - milliseconds.value)
 
   operator fun plus(seconds: IntSeconds) = this + seconds.inMilliseconds
 
+  operator fun minus(seconds: IntSeconds) = this - seconds.inMilliseconds
+
   operator fun plus(seconds: LongSeconds) = this + seconds.inMilliseconds
+
+  operator fun minus(seconds: LongSeconds) = this - seconds.inMilliseconds
 
   operator fun plus(minutes: IntMinutes) = this + minutes.inMilliseconds
 
+  operator fun minus(minutes: IntMinutes) = this - minutes.inMilliseconds
+
   operator fun plus(minutes: LongMinutes) = this + minutes.inMilliseconds
+
+  operator fun minus(minutes: LongMinutes) = this - minutes.inMilliseconds
 
   operator fun plus(hours: IntHours) = this + hours.inMilliseconds
 
+  operator fun minus(hours: IntHours) = this - hours.inMilliseconds
+
   operator fun plus(hours: LongHours) = this + hours.inMilliseconds
+
+  operator fun minus(hours: LongHours) = this - hours.inMilliseconds
 
   operator fun plus(days: IntDays) = this + days.inMilliseconds
 
+  operator fun minus(days: IntDays) = this - days.inMilliseconds
+
   operator fun plus(days: LongDays) = this + days.inMilliseconds
 
-  operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds)
+  operator fun minus(days: LongDays) = this - days.inMilliseconds
 
-  operator fun minus(nanoseconds: LongNanoseconds) = plus(-nanoseconds)
+  /**
+   * Convert to nanoseconds.
+   */
+  fun inNanosecondsExact() = (value timesExact NANOSECONDS_PER_MILLISECOND).nanoseconds
 
-  operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds)
-
-  operator fun minus(microseconds: LongMicroseconds) = plus(-microseconds)
-
-  operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds)
-
-  operator fun minus(milliseconds: LongMilliseconds) = plus(-milliseconds)
-
-  operator fun minus(seconds: IntSeconds) = plus(-seconds)
-
-  operator fun minus(seconds: LongSeconds) = plus(-seconds)
-
-  operator fun minus(minutes: IntMinutes) = plus(-minutes)
-
-  operator fun minus(minutes: LongMinutes) = plus(-minutes)
-
-  operator fun minus(hours: IntHours) = plus(-hours)
-
-  operator fun minus(hours: LongHours) = plus(-hours)
-
-  operator fun minus(days: IntDays) = plus(-days)
-
-  operator fun minus(days: LongDays) = plus(-days)
-
-  operator fun times(scalar: Int) = LongMilliseconds(this.value * scalar)
-
-  operator fun times(scalar: Long) = LongMilliseconds(this.value * scalar)
-
-  operator fun div(scalar: Int) = LongMilliseconds(this.value / scalar)
-
-  operator fun div(scalar: Long) = LongMilliseconds(this.value / scalar)
-
-  operator fun rem(scalar: Int) = LongMilliseconds(this.value % scalar)
-
-  operator fun rem(scalar: Long) = LongMilliseconds(this.value % scalar)
+  /**
+   * Convert to microseconds.
+   */
+  fun inMicrosecondsExact() = (value timesExact MICROSECONDS_PER_MILLISECOND).microseconds
 
   inline fun <T> toComponents(action: (seconds: LongSeconds, milliseconds: IntMilliseconds) -> T):
       T {
@@ -374,19 +472,25 @@ inline class LongMilliseconds(
     return action(days, hours, minutes, seconds, milliseconds)
   }
 
-  fun toInt() = IntMilliseconds(this.value.toInt())
+  fun toInt() = IntMilliseconds(value.toInt())
 
-  fun toIntExact() = IntMilliseconds(this.value.toIntExact())
+  fun toIntExact() = IntMilliseconds(value.toIntExact())
 
   companion object {
+    /**
+     * The smallest supported value.
+     */
     val MIN: LongMilliseconds = LongMilliseconds(Long.MIN_VALUE)
 
+    /**
+     * The largest supported value.
+     */
     val MAX: LongMilliseconds = LongMilliseconds(Long.MAX_VALUE)
   }
 }
 
-val Int.milliseconds: IntMilliseconds
-  get() = IntMilliseconds(this)
-
+/**
+ * Convert to [LongMilliseconds].
+ */
 val Long.milliseconds: LongMilliseconds
   get() = LongMilliseconds(this)

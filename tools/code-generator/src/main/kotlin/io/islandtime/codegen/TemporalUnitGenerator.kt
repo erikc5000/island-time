@@ -36,44 +36,84 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
         "_$pluralName"
     ) {
         addHeader("${pluralName}Kt")
-        buildClasses().forEach { addType(it) }
-        buildExtensionProperties().forEach { addProperty(it) }
+
+        listOf(
+            IntTemporalUnitClassGenerator(this@toFileSpec),
+            LongTemporalUnitClassGenerator(this@toFileSpec)
+        )
+            .flatMap { it.build() }
+            .forEach {
+                when (it) {
+                    is TypeSpec -> addType(it)
+                    is PropertySpec -> addProperty(it)
+                }
+            }
     }
 }
 
-fun TemporalUnitDescription.buildClasses(): List<TypeSpec> {
-    return listOf(
-        TemporalUnitClassGenerator(this, Int::class),
-        TemporalUnitClassGenerator(this, Long::class)
-    ).map { it.build() }
-}
-
-fun TemporalUnitDescription.buildExtensionProperties(): List<PropertySpec> {
-    return buildExtensionProperties(intClassName, Int::class) +
-        buildExtensionProperties(longClassName, Long::class)
-}
-
-data class TemporalUnitClassGenerator(
+abstract class TemporalUnitClassGenerator(
     val description: TemporalUnitDescription,
     val primitive: KClass<*>
 ) {
     val className = description.classNameFor(primitive)
     val primitiveTypeName = primitive.asTypeName()
 
-    val constructorFunSpec by lazy { buildConstructorFunSpec() }
+    val constructorFunSpec by lazy(::buildConstructorFunSpec)
 
-    val valuePropertySpec by lazy { buildValuePropertySpec() }
-    val absoluteValuePropertySpec by lazy { buildAbsoluteValuePropertySpec() }
+    val valuePropertySpec by lazy(::buildValuePropertySpec)
+    val absoluteValuePropertySpec by lazy(::buildAbsoluteValuePropertySpec)
 
-    val isZeroFunSpec by lazy { buildIsZeroFunSpec() }
-    val isNegativeFunSpec by lazy { buildIsNegativeFunSpec() }
-    val isPositiveFunSpec by lazy { buildIsPositiveFunSpec() }
-    val compareToFunSpec by lazy { buildCompareToFunSpec() }
-    val toStringFunSpec by lazy { buildToStringFunSpec() }
+    val isZeroFunSpec by lazy(::buildIsZeroFunSpec)
+    val isNegativeFunSpec by lazy(::buildIsNegativeFunSpec)
+    val isPositiveFunSpec by lazy(::buildIsPositiveFunSpec)
+    val compareToFunSpec by lazy(::buildCompareToFunSpec)
+    val toStringFunSpec by lazy(::buildToStringFunSpec)
 
-    val companionObjectTypeSpec by lazy { buildCompanionObjectTypeSpec() }
+    val unaryMinusFunSpec by lazy(::buildUnaryMinusFunSpec)
+    val timesIntFunSpec by lazy { buildTimesFunSpec(Int::class) }
+    val timesLongFunSpec by lazy { buildTimesFunSpec(Long::class) }
+    val divIntFunSpec by lazy { buildDivFunSpec(Int::class) }
+    val divLongFunSpec by lazy { buildDivFunSpec(Long::class) }
+    val remIntFunSpec by lazy { buildRemFunSpec(Int::class) }
+    val remLongFunSpec by lazy { buildRemFunSpec(Long::class) }
 
-    fun build() = buildClassTypeSpec(className) {
+    val companionObjectTypeSpec by lazy(::buildCompanionObjectTypeSpec)
+
+    val primitiveExtensionPropertySpec by lazy(::buildPrimitiveExtensionPropertySpec)
+
+    private val baseClassSpecList
+        get() = listOf(
+            valuePropertySpec,
+            absoluteValuePropertySpec,
+            isZeroFunSpec,
+            isNegativeFunSpec,
+            isPositiveFunSpec,
+            compareToFunSpec,
+            toStringFunSpec,
+            unaryMinusFunSpec,
+            timesIntFunSpec,
+            timesLongFunSpec,
+            divIntFunSpec,
+            divLongFunSpec,
+            remIntFunSpec,
+            remLongFunSpec,
+            companionObjectTypeSpec
+        ) +
+            buildPlusMinusOperatorFunSpecs() +
+            buildUnitConversionSpecs() +
+            buildToComponentsFunctions()
+
+    protected open fun allClassSpecs(): List<Any> {
+        return baseClassSpecList
+    }
+
+    fun build() = listOf(
+        buildClass(),
+        primitiveExtensionPropertySpec
+    )
+
+    fun buildClass() = buildClassTypeSpec(className) {
+        addKdoc("A number of ${description.lowerCaseName}.")
         addModifiers(KModifier.INLINE)
         addAnnotation(
             buildAnnotationSpec(Suppress::class) {
@@ -83,33 +123,41 @@ data class TemporalUnitClassGenerator(
         primaryConstructor(constructorFunSpec)
         addSuperinterface(ClassName("kotlin", "Comparable").parameterizedBy(className))
 
-        listOf(
-            valuePropertySpec,
-            absoluteValuePropertySpec,
-            isZeroFunSpec,
-            isNegativeFunSpec,
-            isPositiveFunSpec,
-            compareToFunSpec,
-            toStringFunSpec,
-            companionObjectTypeSpec
-        ).forEach {
+        allClassSpecs().forEach {
             when (it) {
                 is PropertySpec -> addProperty(it)
                 is FunSpec -> addFunction(it)
                 is TypeSpec -> addType(it)
             }
         }
+    }
+}
 
-        // TODO: Refactor the rest of this to make it more maintainable
-        (description.buildUnitConversionPropertiesAndFunctions(primitive)
-        + description.buildOperators(className, primitive) +
-            description.buildToComponentsFunctions(primitive) +
-            description.buildPrimitiveConversionFunctions(primitive)).forEach {
-            when (it) {
-                is FunSpec -> addFunction(it)
-                is PropertySpec -> addProperty(it)
-            }
-        }
+class IntTemporalUnitClassGenerator(
+    description: TemporalUnitDescription
+) : TemporalUnitClassGenerator(description, Int::class) {
+
+    val toLongFunSpec by lazy(::buildToLongFunSpec)
+
+    override fun allClassSpecs(): List<Any> {
+        return super.allClassSpecs() + listOf(
+            toLongFunSpec
+        )
+    }
+}
+
+class LongTemporalUnitClassGenerator(
+    description: TemporalUnitDescription
+) : TemporalUnitClassGenerator(description, Long::class) {
+
+    val toIntFunSpec by lazy(::buildToIntFunSpec)
+    val toIntExactFunSpec by lazy(::buildToIntExactFunSpec)
+
+    override fun allClassSpecs(): List<Any> {
+        return super.allClassSpecs() + listOf(
+            toIntFunSpec,
+            toIntExactFunSpec
+        )
     }
 }
 
@@ -117,6 +165,7 @@ fun TemporalUnitClassGenerator.buildValuePropertySpec() = buildPropertySpec(
     description.valueName,
     primitiveTypeName
 ) {
+    addKdoc("The underlying value.")
     initializer(description.valueName)
 }
 
@@ -124,6 +173,7 @@ fun TemporalUnitClassGenerator.buildAbsoluteValuePropertySpec() = buildPropertyS
     "absoluteValue",
     className
 ) {
+    addKdoc("Get the absolute value.")
     getter(
         buildGetterFunSpec {
             val arguments = mapOf(
@@ -146,16 +196,19 @@ fun TemporalUnitClassGenerator.buildConstructorFunSpec() = buildConstructorFunSp
 }
 
 fun TemporalUnitClassGenerator.buildIsZeroFunSpec() = buildFunSpec("isZero") {
+    addKdoc("Is this duration zero?")
     returns(Boolean::class)
     addStatement("return %N == ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
 }
 
 fun TemporalUnitClassGenerator.buildIsNegativeFunSpec() = buildFunSpec("isNegative") {
+    addKdoc("Is this duration negative?")
     returns(Boolean::class)
     addStatement("return %N < ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
 }
 
 fun TemporalUnitClassGenerator.buildIsPositiveFunSpec() = buildFunSpec("isPositive") {
+    addKdoc("Is this duration positive?")
     returns(Boolean::class)
     addStatement("return %N > ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
 }
@@ -168,6 +221,7 @@ fun TemporalUnitClassGenerator.buildCompareToFunSpec() = buildFunSpec("compareTo
 }
 
 fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString") {
+    addKdoc("Convert to an ISO-8601 time interval representation.")
     addModifiers(KModifier.OVERRIDE)
     returns(String::class)
 
@@ -254,247 +308,210 @@ fun TemporalUnitClassGenerator.buildWholeToStringCodeBlock() = buildCodeBlock {
 }
 
 fun TemporalUnitClassGenerator.buildCompanionObjectTypeSpec() = buildCompanionObjectTypeSpec {
-    listOf(
-        buildPropertySpec("MIN", className) {
-            initializer("%T(%T.MIN_VALUE)", className, primitive)
-        },
-        buildPropertySpec("MAX", className) {
-            initializer("%T(%T.MAX_VALUE)", className, primitive)
-        }
-    ).forEach { addProperty(it) }
-}
-
-// TODO: Refactor everything below
-fun TemporalUnitDescription.buildPrimitiveConversionFunctions(
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return when (primitiveType) {
-        Int::class -> listOf(
-            buildFunSpec("toLong") {
-                addStatement("return %T(this.$valueName.toLong())", longClassName)
-            }
-        )
-        Long::class -> listOf(
-            buildFunSpec("toInt") {
-                addStatement("return %T(this.$valueName.toInt())", intClassName)
-            },
-            buildFunSpec("toIntExact") {
-                addStatement(
-                    "return %T(this.$valueName.%T())", intClassName,
-                    ClassName(INTERNAL_PACKAGE_NAME, "toIntExact")
-                )
-            }
-        )
-        else -> throw IllegalArgumentException("Unsupported primitive type: $primitiveType")
+    property("MIN", className) {
+        addKdoc("The smallest supported value.")
+        initializer("%T(%T.MIN_VALUE)", className, primitive)
+    }
+    property("MAX", className) {
+        addKdoc("The largest supported value.")
+        initializer("%T(%T.MAX_VALUE)", className, primitive)
     }
 }
 
-fun TemporalUnitDescription.buildExtensionProperties(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<PropertySpec> {
-    return listOf(
-        buildPropertySpec(lowerCaseName, className) {
-            receiver(primitiveType)
-            getter(buildGetterFunSpec {
-                addStatement("return %T(this)", className)
-            })
-        }
+fun IntTemporalUnitClassGenerator.buildToLongFunSpec() = buildFunSpec("toLong") {
+    addStatement("return %T(%N.toLong())", description.longClassName, valuePropertySpec)
+}
+
+fun LongTemporalUnitClassGenerator.buildToIntFunSpec() = buildFunSpec("toInt") {
+    addStatement("return %T(%N.toInt())", description.intClassName, valuePropertySpec)
+}
+
+fun LongTemporalUnitClassGenerator.buildToIntExactFunSpec() = buildFunSpec("toIntExact") {
+    addStatement(
+        "return %T(%N.%T())",
+        description.intClassName,
+        valuePropertySpec,
+        ClassName(INTERNAL_PACKAGE_NAME, "toIntExact")
     )
 }
 
-fun TemporalUnitDescription.buildOperators(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return buildUnaryOperators(className) +
-        buildPlusOperators(className, primitiveType) +
-        buildMinusOperators() +
-        buildTimesOperators(className, primitiveType) +
-        buildDivOperators(className, primitiveType) +
-        buildRemOperators(className, primitiveType)
+fun TemporalUnitClassGenerator.buildUnaryMinusFunSpec() = buildFunSpec("unaryMinus") {
+    addModifiers(KModifier.OPERATOR)
+    addStatement("return %T(-%N)", className, valuePropertySpec)
 }
 
-fun TemporalUnitDescription.buildUnaryOperators(className: ClassName): List<FunSpec> {
-    return listOf(
-        buildFunSpec("unaryMinus") {
-            addModifiers(KModifier.OPERATOR)
-            addStatement("return %T(-$valueName)", className)
-        }
-    )
+enum class PlusOrMinusOperator(val functionName: String, val operator: String) {
+    PLUS("plus", "+"),
+    MINUS("minus", "-")
 }
 
-fun TemporalUnitDescription.buildPlusOperators(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return TemporalUnitDescription.values()
-        .filter { (this per it).isSupported() }
-        .flatMap { other ->
-            listOf(
-                buildFunSpec("plus") {
-                    addModifiers(KModifier.OPERATOR)
-                    addParameter(other.lowerCaseName, other.intClassName)
+fun TemporalUnitClassGenerator.buildPlusMinusOperatorFunSpecs() = TemporalUnitDescription.values()
+    .map { description per it }
+    .filter { it.isSupported() }
+    .flatMap { conversion ->
+        listOf(
+            buildIntPlusMinusOperatorFunSpec(conversion, PlusOrMinusOperator.PLUS),
+            buildIntPlusMinusOperatorFunSpec(conversion, PlusOrMinusOperator.MINUS),
+            buildLongPlusMinusOperatorFunSpec(conversion, PlusOrMinusOperator.PLUS),
+            buildLongPlusMinusOperatorFunSpec(conversion, PlusOrMinusOperator.MINUS)
+        )
+    }
 
-                    when {
-                        other.ordinal > ordinal -> {
-                            if (forceLongInOperators && primitiveType == Int::class) {
-                                addStatement("return this.toLong() + ${other.lowerCaseName}.$inUnitPropertyName")
-                            } else {
-                                addStatement("return this + ${other.lowerCaseName}.$inUnitPropertyName")
-                            }
-                        }
-                        other.ordinal < ordinal -> {
-                            if (forceLongInOperators && primitiveType == Int::class) {
-                                addStatement("return this.toLong().${other.inUnitPropertyName} + ${other.lowerCaseName}.toLong()")
-                            } else {
-                                addStatement("return this.${other.inUnitPropertyName} + ${other.lowerCaseName}")
-                            }
-                        }
-                        else -> {
-                            if (forceLongInOperators && primitiveType == Int::class) {
-                                addStatement(
-                                    "return %T(this.$valueName.toLong() + ${other.lowerCaseName}.$valueName)",
-                                    longClassName
-                                )
-                            } else {
-                                addStatement(
-                                    "return %T(this.$valueName + ${other.lowerCaseName}.$valueName)",
-                                    className
-                                )
-                            }
-                        }
-                    }
-                },
-                buildFunSpec("plus") {
-                    addModifiers(KModifier.OPERATOR)
-                    addParameter(other.lowerCaseName, other.longClassName)
+fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
+    conversion: TemporalUnitConversion,
+    plusOrMinusOperator: PlusOrMinusOperator
+) = buildFunSpec(plusOrMinusOperator.functionName) {
+    addModifiers(KModifier.OPERATOR)
 
-                    when {
-                        other.ordinal > ordinal -> {
-                            if (primitiveType == Int::class) {
-                                addStatement("return this.toLong() + ${other.lowerCaseName}.$inUnitPropertyName")
-                            } else {
-                                addStatement("return this + ${other.lowerCaseName}.$inUnitPropertyName")
-                            }
-                        }
-                        other.ordinal < ordinal -> {
-                            if (primitiveType == Int::class) {
-                                addStatement("return this.toLong().${other.inUnitPropertyName} + ${other.lowerCaseName}")
-                            } else {
-                                addStatement("return this.${other.inUnitPropertyName} + ${other.lowerCaseName}")
-                            }
-                        }
-                        else -> {
-                            if (primitiveType == Int::class) {
-                                addStatement(
-                                    "return %T(this.$valueName.toLong() + ${other.lowerCaseName}.$valueName)",
-                                    longClassName
-                                )
-                            } else {
-                                addStatement(
-                                    "return %T(this.$valueName + ${other.lowerCaseName}.$valueName)",
-                                    className
-                                )
-                            }
-                        }
-                    }
-                }
-            )
-        }
-}
+    val plusOrMinus = plusOrMinusOperator.operator
+    val amount = ParameterSpec(conversion.toUnit.lowerCaseName, conversion.toUnit.intClassName)
+    addParameter(amount)
 
-fun TemporalUnitDescription.buildMinusOperators(): List<FunSpec> {
-    return TemporalUnitDescription.values()
-        .filter { (this per it).isSupported() }
-        .flatMap { other ->
-            listOf(
-                buildFunSpec("minus") {
-                    addModifiers(KModifier.OPERATOR)
-                    addParameter(other.lowerCaseName, other.intClassName)
-                    addStatement("return plus(-${other.lowerCaseName})")
-                },
-                buildFunSpec("minus") {
-                    addModifiers(KModifier.OPERATOR)
-                    addParameter(other.lowerCaseName, other.longClassName)
-                    addStatement("return plus(-${other.lowerCaseName})")
-                }
-            )
-        }
-}
-
-fun TemporalUnitDescription.buildTimesOperators(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return listOf(
-        buildFunSpec("times") {
-            addModifiers(KModifier.OPERATOR)
-            addParameter("scalar", Int::class)
-
-            if (forceLongInOperators && primitiveType == Int::class) {
-                addStatement("return this.toLong() * scalar")
+    when (conversion.operator) {
+        ConversionOperator.DIV -> {
+            if (this@buildIntPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator &&
+                description.forceLongInOperators
+            ) {
+                addStatement(
+                    "return this.%N() $plusOrMinus %N.${description.inUnitPropertyName}",
+                    toLongFunSpec,
+                    amount
+                )
             } else {
-                addStatement("return %T(this.$valueName * scalar)", className)
-            }
-        },
-        buildFunSpec("times") {
-            addModifiers(KModifier.OPERATOR)
-            addParameter("scalar", Long::class)
-
-            if (primitiveType == Int::class) {
-                addStatement("return this.toLong() * scalar")
-            } else {
-                addStatement("return %T(this.$valueName * scalar)", className)
+                addStatement("return this $plusOrMinus %N.${description.inUnitPropertyName}", amount)
             }
         }
-    )
-}
-
-fun TemporalUnitDescription.buildDivOperators(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return listOf(
-        buildFunSpec("div") {
-            addModifiers(KModifier.OPERATOR)
-            addParameter("scalar", Int::class)
-            addStatement("return %T(this.$valueName / scalar)", className)
-        },
-        buildFunSpec("div") {
-            addModifiers(KModifier.OPERATOR)
-            addParameter("scalar", Long::class)
-
-            if (primitiveType == Int::class) {
-                addStatement("return this.toLong() / scalar")
+        ConversionOperator.TIMES -> {
+            if (this@buildIntPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator &&
+                description.forceLongInOperators
+            ) {
+                addStatement(
+                    "return this.%N().${conversion.toUnit.inUnitPropertyName} $plusOrMinus %N.toLong()",
+                    toLongFunSpec,
+                    amount
+                )
             } else {
-                addStatement("return %T(this.$valueName / scalar)", className)
+                addStatement("return this.${conversion.toUnit.inUnitPropertyName} $plusOrMinus %N", amount)
             }
         }
-    )
-}
-
-fun TemporalUnitDescription.buildRemOperators(
-    className: ClassName,
-    primitiveType: KClass<*>
-): List<FunSpec> {
-    return listOf(
-        buildFunSpec("rem") {
-            addModifiers(KModifier.OPERATOR)
-            addParameter("scalar", Int::class)
-            addStatement("return %T(this.$valueName %% scalar)", className)
-        },
-        buildFunSpec("rem") {
-            addModifiers(KModifier.OPERATOR)
-            addParameter("scalar", Long::class)
-
-            if (primitiveType == Int::class) {
-                addStatement("return this.toLong() %% scalar")
+        ConversionOperator.NONE -> {
+            if (primitive == Int::class && description.forceLongInOperators) {
+                addStatement(
+                    "return %T(%N.toLong() $plusOrMinus %N.${description.valueName})",
+                    description.longClassName,
+                    valuePropertySpec,
+                    amount
+                )
             } else {
-                addStatement("return %T(this.$valueName %% scalar)", className)
+                addStatement(
+                    "return %T(%N $plusOrMinus %N.${description.valueName})",
+                    className,
+                    valuePropertySpec,
+                    amount
+                )
             }
         }
-    )
+    }
+}
+
+fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
+    conversion: TemporalUnitConversion,
+    plusOrMinusOperator: PlusOrMinusOperator
+) = buildFunSpec(plusOrMinusOperator.functionName) {
+    addModifiers(KModifier.OPERATOR)
+
+    val plusOrMinus = plusOrMinusOperator.operator
+    val amount = ParameterSpec(conversion.toUnit.lowerCaseName, conversion.toUnit.longClassName)
+    addParameter(amount)
+
+    when (conversion.operator) {
+        ConversionOperator.DIV -> {
+            if (this@buildLongPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator) {
+                addStatement(
+                    "return this.%N() $plusOrMinus %N.${description.inUnitPropertyName}",
+                    toLongFunSpec,
+                    amount
+                )
+            } else {
+                addStatement("return this $plusOrMinus %N.${description.inUnitPropertyName}", amount)
+            }
+        }
+        ConversionOperator.TIMES -> {
+            if (this@buildLongPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator) {
+                addStatement(
+                    "return this.%N().${conversion.toUnit.inUnitPropertyName} $plusOrMinus %N",
+                    toLongFunSpec,
+                    amount
+                )
+            } else {
+                addStatement("return this.${conversion.toUnit.inUnitPropertyName} $plusOrMinus %N", amount)
+            }
+        }
+        ConversionOperator.NONE -> {
+            if (primitive == Int::class) {
+                addStatement(
+                    "return %T(%N.toLong() $plusOrMinus %N.${description.valueName})",
+                    description.longClassName,
+                    valuePropertySpec,
+                    amount
+                )
+            } else {
+                addStatement(
+                    "return %T(%N $plusOrMinus %N.${description.valueName})",
+                    className,
+                    valuePropertySpec,
+                    amount
+                )
+            }
+        }
+    }
+}
+
+fun TemporalUnitClassGenerator.buildTimesFunSpec(
+    scalarPrimitive: KClass<*>
+) = buildFunSpec("times") {
+    addModifiers(KModifier.OPERATOR)
+
+    val scalar = ParameterSpec("scalar", scalarPrimitive.asTypeName())
+    addParameter(scalar)
+
+    if (this@buildTimesFunSpec is IntTemporalUnitClassGenerator &&
+        (scalarPrimitive == Long::class || description.forceLongInOperators)
+    ) {
+        addStatement("return this.%N() * %N", toLongFunSpec, scalar)
+    } else {
+        addStatement("return %T(%N * %N)", className, valuePropertySpec, scalar)
+    }
+}
+
+fun TemporalUnitClassGenerator.buildDivFunSpec(
+    scalarPrimitive: KClass<*>
+) = buildFunSpec("div") {
+    addModifiers(KModifier.OPERATOR)
+
+    val scalar = ParameterSpec("scalar", scalarPrimitive.asTypeName())
+    addParameter(scalar)
+
+    if (this@buildDivFunSpec is IntTemporalUnitClassGenerator && scalarPrimitive == Long::class) {
+        addStatement("return this.%N() / %N", toLongFunSpec, scalar)
+    } else {
+        addStatement("return %T(%N / %N)", className, valuePropertySpec, scalar)
+    }
+}
+
+fun TemporalUnitClassGenerator.buildRemFunSpec(
+    scalarPrimitive: KClass<*>
+) = buildFunSpec("rem") {
+    addModifiers(KModifier.OPERATOR)
+
+    val scalar = ParameterSpec("scalar", scalarPrimitive.asTypeName())
+    addParameter(scalar)
+
+    if (this@buildRemFunSpec is IntTemporalUnitClassGenerator && scalarPrimitive == Long::class) {
+        addStatement("return this.%N() %% %N", toLongFunSpec, scalar)
+    } else {
+        addStatement("return %T(%N %% %N)", className, valuePropertySpec, scalar)
+    }
 }
 
 val TemporalUnitConversion.propertyClassName get() = ClassName(INTERNAL_PACKAGE_NAME, constantName)
@@ -507,90 +524,112 @@ fun TemporalUnitDescription.operatorReturnClassNameFor(primitiveType: KClass<*>)
     }
 }
 
-fun TemporalUnitDescription.buildUnitConversionPropertiesAndFunctions(
-    primitiveType: KClass<*>
-): List<Any?> {
-    return TemporalUnitDescription.values()
-        .map { otherUnit -> this per otherUnit }
-        .filter { conversion -> conversion.isSupportedAndNecessary() }
-        .flatMap { conversion ->
-            when (conversion.operator) {
-                ConversionOperator.DIV -> listOf(
-                    buildPropertySpec(
-                        conversion.toUnit.inWholeUnitPropertyName,
-                        conversion.toUnit.classNameFor(primitiveType)
-                    ) {
-                        getter(
-                            buildGetterFunSpec {
-                                val statement = buildString {
-                                    append("return (this.$valueName / %T)")
+fun TemporalUnitClassGenerator.buildUnitConversionSpecs() = TemporalUnitDescription.values()
+    .map { otherUnit -> description per otherUnit }
+    .filter { conversion -> conversion.isSupportedAndNecessary() }
+    .flatMap { conversion ->
+        when (conversion.operator) {
+            ConversionOperator.DIV -> buildInBiggerUnitConversionSpecs(conversion)
+            ConversionOperator.TIMES -> buildInSmallerUnitConversionSpecs(conversion)
+            else -> throw IllegalStateException("Invalid operator")
+        }
+    }
 
-                                    if (primitiveType == Int::class && !conversion.valueFitsInInt) {
-                                        append(".toInt()")
-                                    }
+fun TemporalUnitClassGenerator.buildInBiggerUnitConversionSpecs(
+    conversion: TemporalUnitConversion
+) = listOf(
+    buildPropertySpec(
+        conversion.toUnit.inWholeUnitPropertyName,
+        conversion.toUnit.classNameFor(primitive)
+    ) {
+        addKdoc("Convert to whole ${conversion.toUnit.lowerCaseName}.")
+        getter(
+            buildGetterFunSpec {
+                val statement = buildString {
+                    append("return (%N / %T)")
 
-                                    append(".${conversion.toUnit.lowerCaseName}")
-                                }
-
-                                addStatement(statement, conversion.propertyClassName)
-                            }
-                        )
+                    if (primitive == Int::class && !conversion.valueFitsInInt) {
+                        append(".toInt()")
                     }
-                )
-                ConversionOperator.TIMES -> {
-                    val className = conversion.toUnit.operatorReturnClassNameFor(primitiveType)
 
-                    val overflowSafeMethodRequired = primitiveType == Long::class ||
-                        !conversion.toUnit.forceLongInOperators ||
-                        conversion.requiresSafeMultiplicationForInt()
+                    append(".${conversion.toUnit.lowerCaseName}")
+                }
 
-                    listOf(
-                        if (overflowSafeMethodRequired) {
-                            buildFunSpec(conversion.toUnit.inUnitExactMethodName) {
-                                addStatement(
-                                    if (primitiveType == Int::class && conversion.toUnit.forceLongInOperators) {
-                                        "return (this.$valueName.toLong() %T %T).${conversion.toUnit.lowerCaseName}"
-                                    } else {
-                                        "return (this.$valueName %T %T).${conversion.toUnit.lowerCaseName}"
-                                    },
-                                    ClassName(INTERNAL_PACKAGE_NAME, "timesExact"),
-                                    conversion.propertyClassName
-                                )
-                            }
-                        } else {
-                            null
-                        },
-                        buildPropertySpec(conversion.toUnit.inUnitPropertyName, className) {
-                            getter(
-                                buildGetterFunSpec {
-                                    if (primitiveType == Int::class && conversion.toUnit.forceLongInOperators) {
-                                        addStatement(
-                                            "return (this.$valueName.toLong() * %T).${conversion.toUnit.lowerCaseName}",
-                                            conversion.propertyClassName
-                                        )
-                                    } else {
-                                        addStatement(
-                                            "return (this.$valueName * %T).${conversion.toUnit.lowerCaseName}",
-                                            conversion.propertyClassName
-                                        )
-                                    }
-                                }
-                            )
-                        }
+                addStatement(statement, valuePropertySpec, conversion.propertyClassName)
+            }
+        )
+    }
+)
+
+fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
+    conversion: TemporalUnitConversion
+): List<Any> {
+    val operators = mutableListOf<Any>()
+
+    val overflowSafeMethodRequired = primitive == Long::class ||
+        !conversion.toUnit.forceLongInOperators ||
+        conversion.requiresSafeMultiplicationForInt()
+
+    if (overflowSafeMethodRequired) {
+        operators += buildFunSpec(conversion.toUnit.inUnitExactMethodName) {
+            addKdoc("Convert to ${conversion.toUnit.lowerCaseName}.")
+            addStatement(
+                if (primitive == Int::class && conversion.toUnit.forceLongInOperators) {
+                    "return (%N.toLong() %T %T).${conversion.toUnit.lowerCaseName}"
+                } else {
+                    "return (%N %T %T).${conversion.toUnit.lowerCaseName}"
+                },
+                valuePropertySpec,
+                ClassName(INTERNAL_PACKAGE_NAME, "timesExact"),
+                conversion.propertyClassName
+            )
+        }
+    }
+
+    operators += buildPropertySpec(
+        conversion.toUnit.inUnitPropertyName,
+        conversion.toUnit.operatorReturnClassNameFor(primitive)
+    ) {
+        addKdoc("Convert to ${conversion.toUnit.lowerCaseName}.")
+        getter(
+            buildGetterFunSpec {
+                if (primitive == Int::class && conversion.toUnit.forceLongInOperators) {
+                    addStatement(
+                        "return (%N.toLong() * %T).${conversion.toUnit.lowerCaseName}",
+                        valuePropertySpec,
+                        conversion.propertyClassName
+                    )
+                } else {
+                    addStatement(
+                        "return (%N * %T).${conversion.toUnit.lowerCaseName}",
+                        valuePropertySpec,
+                        conversion.propertyClassName
                     )
                 }
             }
-        }
+        )
+    }
+
+    return operators
 }
 
-fun TemporalUnitDescription.buildToComponentsFunctions(
-    primitiveType: KClass<*>
-): List<FunSpec> {
+fun TemporalUnitClassGenerator.buildPrimitiveExtensionPropertySpec() = buildPropertySpec(
+    description.lowerCaseName,
+    className
+) {
+    addKdoc("Convert to [%T].", className)
+    receiver(primitive)
+    getter(buildGetterFunSpec {
+        addStatement("return %T(this)", className)
+    })
+}
+
+fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
     return TemporalUnitDescription.values()
-        .filter { it > this && (this per it).isSupported() }
+        .filter { it > this.description && (this.description per it).isSupported() }
         .map { biggestUnit ->
             val allComponentUnits = TemporalUnitDescription.values()
-                .filter { it in this..biggestUnit }
+                .filter { it in description..biggestUnit }
                 .sortedDescending()
 
             buildFunSpec("toComponents") {
@@ -601,7 +640,7 @@ fun TemporalUnitDescription.buildToComponentsFunctions(
                 val lambdaParameters = allComponentUnits.mapIndexed { index, unit ->
                     buildParameterSpec(
                         unit.lowerCaseName,
-                        if (index == 0 && primitiveType == Long::class) unit.longClassName else unit.intClassName
+                        if (index == 0 && primitive == Long::class) unit.longClassName else unit.intClassName
                     )
                 }
 
@@ -619,12 +658,12 @@ fun TemporalUnitDescription.buildToComponentsFunctions(
                     if (conversionComponents.count() > 1) {
                         conversionString = "($conversionString)"
 
-                        if (forceLongInOperators || primitiveType == Long::class) {
+                        if (description.forceLongInOperators || primitive == Long::class) {
                             conversionString = "$conversionString.toInt()"
                         }
                     }
 
-                    if (unit != this@buildToComponentsFunctions) {
+                    if (unit != this@buildToComponentsFunctions.description) {
                         conversionString = "$conversionString.${unit.inWholeUnitPropertyName}"
                     }
 
