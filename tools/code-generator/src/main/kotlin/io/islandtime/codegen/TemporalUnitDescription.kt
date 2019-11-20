@@ -64,12 +64,9 @@ infix fun TemporalUnitDescription.per(unit: TemporalUnitDescription): TemporalUn
 }
 
 enum class ConversionOperator {
-    TIMES {
-        override fun toString() = "*"
-    },
-    DIV {
-        override fun toString() = "/"
-    }
+    NONE,
+    TIMES,
+    DIV
 }
 
 data class TemporalUnitConversion(
@@ -83,7 +80,7 @@ data class TemporalUnitConversion(
             constantValue > 0L
     }
 
-    fun isNecessary() = fromUnit != toUnit
+    fun isNecessary() = operator != ConversionOperator.NONE
 
     val constantName: String
         get() {
@@ -92,7 +89,11 @@ data class TemporalUnitConversion(
         }
 
     val operator: ConversionOperator
-        get() = if (toUnit <= fromUnit) ConversionOperator.TIMES else ConversionOperator.DIV
+        get() = when {
+            toUnit == fromUnit -> ConversionOperator.NONE
+            toUnit < fromUnit -> ConversionOperator.TIMES
+            else -> ConversionOperator.DIV
+        }
 
     val constantValue: Long by lazy {
         val (smallerUnit, largerUnit) = smallerUnitToLargerUnit()
