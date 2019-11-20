@@ -16,7 +16,7 @@ kotlin {
     val darwinTargets = if (ideaActive) {
         listOf(iosX64("darwin"))
     } else {
-        listOf(iosArm64(), iosX64(), macosX64(), watchosArm64(), watchosX86(), tvosArm64(), tvosX64())
+        listOf(iosArm64(), iosX64(), macosX64())
     }
 
     sourceSets {
