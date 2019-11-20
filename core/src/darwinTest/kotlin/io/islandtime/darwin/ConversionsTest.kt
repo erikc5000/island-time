@@ -1,4 +1,4 @@
-package io.islandtime.ios
+package io.islandtime.darwin
 
 import io.islandtime.*
 import io.islandtime.measures.seconds

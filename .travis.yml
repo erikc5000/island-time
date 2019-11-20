@@ -31,9 +31,10 @@ matrix:
           branch: master
 
     - os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11
       language: java
       install: ./gradlew core:assemble
+      env: ORG_GRADLE_PROJECT_iosDevice="iPhone 11"
       script: ./gradlew core:build
       deploy:
         provider: script

@@ -13,14 +13,8 @@ val ideaActive get() = System.getProperty("idea.active") == "true"
 kotlin {
     jvm()
 
-//    js {
-//        useCommonJs()
-//        browser()
-//        nodejs()
-//    }
-
-    val iosTargets = if (ideaActive) {
-        listOf(iosX64("ios"))
+    val darwinTargets = if (ideaActive) {
+        listOf(iosX64("darwin"))
     } else {
         listOf(iosArm64(), iosX64(), macosX64())
     }
@@ -37,32 +31,28 @@ kotlin {
             val commonMain by getting
             val commonTest by getting
 
-            @Suppress("UNUSED_VARIABLE")
-            val iosMain by creating {
+            val darwinMain by creating {
                 dependsOn(commonMain)
             }
 
-            @Suppress("UNUSED_VARIABLE")
-            val iosTest by creating {
+            val darwinTest by creating {
                 dependsOn(commonTest)
+            }
+
+            configure(darwinTargets) {
+                compilations["main"].defaultSourceSet.dependsOn(darwinMain)
+                compilations["test"].defaultSourceSet.dependsOn(darwinTest)
             }
         }
     }
 
-    configure(iosTargets) {
-        compilations.getByName("main") {
-            if (!ideaActive) defaultSourceSet.dependsOn(sourceSets["iosMain"])
-            extraOpts.add("-Xobjc-generics")
-        }
-
-        if (!ideaActive) {
-            compilations["test"].defaultSourceSet.dependsOn(sourceSets["iosTest"])
-        }
+    configure(darwinTargets) {
+        compilations["main"].kotlinOptions.freeCompilerArgs += "-Xobjc-generics"
     }
 }
 
 if (HostManager.hostIsMac) {
-    registerIosTestTask(if (ideaActive) "ios" else "iosX64")
+    registerIosTestTask(if (ideaActive) "darwin" else "iosX64")
 }
 
 tasks.withType<DokkaTask> {

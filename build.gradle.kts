@@ -16,6 +16,4 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
-
-    configurations.create("compileClasspath")
 }
