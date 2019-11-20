@@ -9,12 +9,12 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            kotlin.srcDirs("src/commonMain/generated", "src/commonMain/kotlin")
+            kotlin.srcDirs("src/commonMain/generated")
 
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("co.touchlab:stately:0.9.3")
+                implementation("co.touchlab:stately:0.9.4")
             }
         }
 
@@ -39,9 +39,9 @@ kotlin {
             }
         }
 
-        val iosMain by getting {
+        val darwinMain by getting {
             dependencies {
-                implementation("co.touchlab:stately-collections:0.9.3")
+                implementation("co.touchlab:stately-collections:0.9.4")
             }
         }
     }
