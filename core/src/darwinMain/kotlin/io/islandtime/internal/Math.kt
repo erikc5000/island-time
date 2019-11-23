@@ -84,9 +84,9 @@ internal actual infix fun Long.timesExact(other: Long): Long {
         else -> {
             val total = this * other
 
-            if (total / other != this ||
-                (this == Long.MIN_VALUE && other == -1L) ||
-                (other == Long.MIN_VALUE && this == -1L)
+            if ((this == Long.MIN_VALUE && other == -1L) ||
+                (other == Long.MIN_VALUE && this == -1L) ||
+                total / other != this
             ) {
                 throw ArithmeticException("'$this * $other' overflows a Long")
             }
