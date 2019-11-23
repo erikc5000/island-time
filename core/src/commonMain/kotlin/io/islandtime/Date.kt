@@ -136,7 +136,7 @@ class Date(
         }
     }
 
-    operator fun plus(years: IntYears) = plus(years.toLong())
+    operator fun plus(years: IntYears) = plus(years.toLongYears())
 
     operator fun plus(years: LongYears): Date {
         return if (years.value == 0L) {
@@ -147,7 +147,7 @@ class Date(
         }
     }
 
-    operator fun plus(months: IntMonths) = plus(months.toLong())
+    operator fun plus(months: IntMonths) = plus(months.toLongMonths())
 
     operator fun plus(months: LongMonths): Date {
         return if (months.value == 0L) {
@@ -161,16 +161,16 @@ class Date(
         }
     }
 
-    operator fun plus(weeks: IntWeeks) = plus(weeks.toLong().inDays)
-    operator fun plus(weeks: LongWeeks) = plus(weeks.inDaysExact())
+    operator fun plus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked)
+    operator fun plus(weeks: LongWeeks) = plus(weeks.inDays)
 
-    operator fun plus(days: IntDays) = plus(days.toLong())
+    operator fun plus(days: IntDays) = plus(days.toLongDays())
 
     operator fun plus(days: LongDays): Date {
         return if (days.value == 0L) {
             this
         } else {
-            fromDaysSinceUnixEpoch(daysSinceUnixEpoch plusExact days)
+            fromDaysSinceUnixEpoch(daysSinceUnixEpoch + days)
         }
     }
 
@@ -181,45 +181,51 @@ class Date(
      * will be coerced into the valid range. This behavior is consistent with the order of operations for period
      * addition as defined in ISO-8601-2.
      */
-    operator fun minus(period: Period) = plus(-period)
+    operator fun minus(period: Period): Date {
+        return if (period.isZero()) {
+            this
+        } else {
+            return this - period.years - period.months - period.days
+        }
+    }
 
-    operator fun minus(years: IntYears) = plus(-years.toLong())
+    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
 
     operator fun minus(years: LongYears): Date {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1.years
         } else {
-            plus(-years)
+            plus(years.negateUnchecked())
         }
     }
 
-    operator fun minus(months: IntMonths) = plus(-months.toLong())
+    operator fun minus(months: IntMonths) = plus(months.toLongMonths().negateUnchecked())
 
     operator fun minus(months: LongMonths): Date {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1.months
         } else {
-            plus(-months)
+            plus(months.negateUnchecked())
         }
     }
 
-    operator fun minus(weeks: IntWeeks) = plus(-weeks.toLong().inDays)
+    operator fun minus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
 
     operator fun minus(weeks: LongWeeks): Date {
         return if (weeks.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.weeks
         } else {
-            plus(-weeks)
+            plus(weeks.negateUnchecked())
         }
     }
 
-    operator fun minus(days: IntDays) = plus(-days.toLong())
+    operator fun minus(days: IntDays) = plus(days.toLongDays().negateUnchecked())
 
     operator fun minus(days: LongDays): Date {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
         } else {
-            plus(-days)
+            plus(days.negateUnchecked())
         }
     }
 
@@ -366,13 +372,13 @@ fun Date(year: Int, dayOfYear: Int): Date {
 }
 
 fun Instant.toDateAt(offset: UtcOffset): Date {
-    var adjustedSeconds = secondsSinceUnixEpoch + offset.totalSeconds
+    var adjustedSeconds = unixEpochSecond + offset.totalSeconds.value
 
     if (nanoOfSecondsSinceUnixEpoch.isNegative()) {
-        adjustedSeconds -= 1.seconds
+        adjustedSeconds -= 1
     }
 
-    val unixEpochDay = adjustedSeconds.value floorDiv SECONDS_PER_DAY
+    val unixEpochDay = adjustedSeconds floorDiv SECONDS_PER_DAY
     return Date.fromUnixEpochDay(unixEpochDay)
 }
 

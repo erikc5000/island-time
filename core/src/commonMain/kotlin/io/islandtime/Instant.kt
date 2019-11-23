@@ -7,7 +7,6 @@ import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
 import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.*
-import io.islandtime.measures.plusExact
 import io.islandtime.parser.*
 import io.islandtime.ranges.InstantInterval
 
@@ -33,8 +32,7 @@ class Instant private constructor(
         get() = nanoOfSecond.nanoseconds
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
-        get() = secondsSinceUnixEpoch.inMillisecondsExact() plusExact
-            nanoOfSecondsSinceUnixEpoch.inMilliseconds.toLong()
+        get() = secondsSinceUnixEpoch + nanoOfSecondsSinceUnixEpoch.inMilliseconds
 
     override val unixEpochSecond: Long
         get() = second
@@ -52,16 +50,16 @@ class Instant private constructor(
         }
     }
 
-    operator fun plus(days: IntDays) = plus(days.toLong().inSeconds, 0.nanoseconds)
-    operator fun plus(days: LongDays) = plus(days.inSecondsExact(), 0.nanoseconds)
+    operator fun plus(days: IntDays) = plus(days.toLongDays().inSecondsUnchecked, 0.nanoseconds)
+    operator fun plus(days: LongDays) = plus(days.inSeconds, 0.nanoseconds)
 
-    override operator fun plus(hours: IntHours) = plus(hours.toLong().inSeconds, 0.nanoseconds)
-    override operator fun plus(hours: LongHours) = plus(hours.inSecondsExact(), 0.nanoseconds)
+    override operator fun plus(hours: IntHours) = plus(hours.toLongHours().inSecondsUnchecked, 0.nanoseconds)
+    override operator fun plus(hours: LongHours) = plus(hours.inSeconds, 0.nanoseconds)
 
-    override operator fun plus(minutes: IntMinutes) = plus(minutes.toLong().inSeconds, 0.nanoseconds)
-    override operator fun plus(minutes: LongMinutes) = plus(minutes.inSecondsExact(), 0.nanoseconds)
+    override operator fun plus(minutes: IntMinutes) = plus(minutes.toLongMinutes().inSecondsUnchecked, 0.nanoseconds)
+    override operator fun plus(minutes: LongMinutes) = plus(minutes.inSeconds, 0.nanoseconds)
 
-    override operator fun plus(seconds: IntSeconds) = plus(seconds.toLong(), 0.nanoseconds)
+    override operator fun plus(seconds: IntSeconds) = plus(seconds.toLongSeconds(), 0.nanoseconds)
     override operator fun plus(seconds: LongSeconds) = plus(seconds, 0.nanoseconds)
 
     override operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.inNanoseconds)
@@ -82,34 +80,34 @@ class Instant private constructor(
         )
     }
 
-    override operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+    override operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds())
 
     override operator fun plus(nanoseconds: LongNanoseconds): Instant {
         return plus(
             nanoseconds.inSeconds,
-            (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
+            (nanoseconds % NANOSECONDS_PER_SECOND).toIntNanosecondsUnchecked()
         )
     }
 
     operator fun minus(other: Duration): Instant {
         return if (other.seconds.value == Long.MIN_VALUE) {
-            plus(Long.MAX_VALUE.seconds, -other.nanosecondAdjustment)
+            plus(Long.MAX_VALUE.seconds, other.nanosecondAdjustment.negateUnchecked())
         } else {
-            plus(-other.seconds, -other.nanosecondAdjustment)
+            plus(other.seconds.negateUnchecked(), other.nanosecondAdjustment.negateUnchecked())
         }
     }
 
-    operator fun minus(days: IntDays) = plus(-days.toLong())
+    operator fun minus(days: IntDays) = plus(days.toLongDays().negateUnchecked())
 
     operator fun minus(days: LongDays): Instant {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
         } else {
-            plus(-days)
+            plus(days.negateUnchecked())
         }
     }
 
-    override operator fun minus(hours: IntHours) = plus(-hours.toLong())
+    override operator fun minus(hours: IntHours) = plus(hours.toLongHours().negateUnchecked())
 
     override operator fun minus(hours: LongHours): Instant {
         return if (hours.value == Long.MIN_VALUE) {
@@ -119,53 +117,55 @@ class Instant private constructor(
         }
     }
 
-    override operator fun minus(minutes: IntMinutes) = plus(-minutes.toLong())
+    override operator fun minus(minutes: IntMinutes) = plus(minutes.toLongMinutes().negateUnchecked())
 
     override operator fun minus(minutes: LongMinutes): Instant {
         return if (minutes.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.minutes + 1.minutes
         } else {
-            plus(-minutes)
+            plus(minutes.negateUnchecked())
         }
     }
 
-    override operator fun minus(seconds: IntSeconds) = plus(-seconds.toLong())
+    override operator fun minus(seconds: IntSeconds) = plus(seconds.toLongSeconds().negateUnchecked())
 
     override operator fun minus(seconds: LongSeconds): Instant {
         return if (seconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.seconds + 1.seconds
         } else {
-            plus(-seconds)
+            plus(seconds.negateUnchecked())
         }
     }
 
-    override operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds.toLong())
+    override operator fun minus(milliseconds: IntMilliseconds) =
+        plus(milliseconds.toLongMilliseconds().negateUnchecked())
 
     override operator fun minus(milliseconds: LongMilliseconds): Instant {
         return if (milliseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.milliseconds + 1.milliseconds
         } else {
-            plus(-milliseconds)
+            plus(milliseconds.negateUnchecked())
         }
     }
 
-    override operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds.toLong())
+    override operator fun minus(microseconds: IntMicroseconds) =
+        plus(microseconds.toLongMicroseconds().negateUnchecked())
 
     override operator fun minus(microseconds: LongMicroseconds): Instant {
         return if (microseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.microseconds + 1.microseconds
         } else {
-            plus(-microseconds)
+            plus(microseconds.negateUnchecked())
         }
     }
 
-    override operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds.toLong())
+    override operator fun minus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds().negateUnchecked())
 
     override operator fun minus(nanoseconds: LongNanoseconds): Instant {
         return if (nanoseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.nanoseconds + 1.nanoseconds
         } else {
-            plus(-nanoseconds)
+            plus(nanoseconds.negateUnchecked())
         }
     }
 
@@ -191,15 +191,14 @@ class Instant private constructor(
             this
         } else {
             Instant(
-                secondsSinceUnixEpoch plusExact secondsToAdd,
+                secondsSinceUnixEpoch + secondsToAdd,
                 nanoOfSecondsSinceUnixEpoch plusWithOverflow nanosecondsToAdd
             )
         }
     }
 
     override fun equals(other: Any?): Boolean {
-        return this === other ||
-            (other is Instant && second == other.second && nanoOfSecond == other.nanoOfSecond)
+        return this === other || (other is Instant && second == other.second && nanoOfSecond == other.nanoOfSecond)
     }
 
     override fun hashCode(): Int {

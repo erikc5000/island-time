@@ -1,9 +1,7 @@
 package io.islandtime.ranges.internal
 
 import io.islandtime.measures.*
-import io.islandtime.measures.minusExact
 import io.islandtime.measures.minusWithOverflow
-import io.islandtime.measures.plusExact
 import io.islandtime.ranges.TimeInterval
 
 internal fun secondsBetween(
@@ -12,7 +10,7 @@ internal fun secondsBetween(
     endExclusiveSeconds: LongSeconds,
     endExclusiveNanoseconds: IntNanoseconds
 ): LongSeconds {
-    val secondDiff = endExclusiveSeconds minusExact startSeconds
+    val secondDiff = endExclusiveSeconds - startSeconds
     val nanoDiff = endExclusiveNanoseconds minusWithOverflow startNanoseconds
 
     return when {
@@ -32,7 +30,7 @@ internal fun millisecondsBetween(
     endExclusiveSeconds: LongSeconds,
     endExclusiveNanoseconds: IntNanoseconds
 ): LongMilliseconds {
-    return (endExclusiveSeconds minusExact startSeconds).inMillisecondsExact() plusExact
+    return (endExclusiveSeconds - startSeconds).inMilliseconds +
         (endExclusiveNanoseconds - startNanoseconds).inMilliseconds
 }
 
@@ -46,7 +44,7 @@ internal fun microsecondsBetween(
     endExclusiveSeconds: LongSeconds,
     endExclusiveNanoseconds: IntNanoseconds
 ): LongMicroseconds {
-    return (endExclusiveSeconds minusExact startSeconds).inMicrosecondsExact() plusExact
+    return (endExclusiveSeconds - startSeconds).inMicroseconds +
         (endExclusiveNanoseconds - startNanoseconds).inMicroseconds
 }
 
@@ -60,7 +58,7 @@ internal fun nanosecondsBetween(
     endExclusiveSeconds: LongSeconds,
     endExclusiveNanoseconds: IntNanoseconds
 ): LongNanoseconds {
-    return (endExclusiveSeconds minusExact startSeconds).inNanosecondsExact() plusExact
+    return (endExclusiveSeconds - startSeconds).inNanoseconds +
         (endExclusiveNanoseconds - startNanoseconds)
 }
 

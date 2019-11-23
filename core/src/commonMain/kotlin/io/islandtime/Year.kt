@@ -29,17 +29,17 @@ inline class Year(val value: Int) : Comparable<Year> {
         return Year(newValue)
     }
 
-    operator fun plus(years: IntYears) = plus(years.toLong())
+    operator fun plus(years: IntYears) = plus(years.toLongYears())
 
     operator fun minus(years: LongYears): Year {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
         } else {
-            plus(-years)
+            plus(years.negateUnchecked())
         }
     }
 
-    operator fun minus(years: IntYears) = plus(-years.toLong())
+    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
 
     operator fun contains(yearMonth: YearMonth) = yearMonth.year == value
     operator fun contains(date: Date) = date.year == value

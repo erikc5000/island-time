@@ -321,7 +321,7 @@ fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
  * when working with [DateTime] directly.
  */
 fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
-    val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) minusExact
+    val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) -
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
 
     val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch

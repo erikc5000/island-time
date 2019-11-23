@@ -1,5 +1,8 @@
 package io.islandtime.internal
 
+internal infix fun Long.plusExact(other: Int): Long = this plusExact other.toLong()
+internal infix fun Long.minusExact(other: Int): Long = this minusExact other.toLong()
+
 /**
  * Append a number to a string, padding it with zeros as necessary to reach a desired length
  * @param number The number to pad -- must be positive or zero

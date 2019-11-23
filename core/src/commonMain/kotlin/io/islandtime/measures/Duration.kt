@@ -10,7 +10,7 @@ import io.islandtime.measures.Duration.Companion.create
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
 import io.islandtime.parser.DateTimeParsers
-import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 /**
  * A duration of time at nanosecond precision.
@@ -72,21 +72,21 @@ class Duration private constructor(
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
     val inMilliseconds
-        get() = seconds.inMillisecondsExact() plusExact nanosecondAdjustment.inMilliseconds.toLong()
+        get() = seconds.inMilliseconds + nanosecondAdjustment.inMilliseconds.toLongMilliseconds()
 
     /**
      * Convert this duration into the number of whole microseconds represented by it.
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
     val inMicroseconds
-        get() = seconds.inMicrosecondsExact() plusExact nanosecondAdjustment.inMicroseconds.toLong()
+        get() = seconds.inMicroseconds + nanosecondAdjustment.inMicroseconds.toLongMicroseconds()
 
     /**
      * Convert this duration into [LongNanoseconds].
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
     val inNanoseconds
-        get() = seconds.inNanosecondsExact() plusExact nanosecondAdjustment.toLong()
+        get() = seconds.inNanoseconds + nanosecondAdjustment
 
     /**
      * Return this duration truncated to the number of 24-hour days.
@@ -136,7 +136,7 @@ class Duration private constructor(
         (nanosecondAdjustment.value / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND).nanoseconds
     )
 
-    operator fun unaryMinus() = create(seconds.value.negateExact().seconds, -nanosecondAdjustment)
+    operator fun unaryMinus() = create(-seconds, nanosecondAdjustment.negateUnchecked())
 
     operator fun plus(other: Duration): Duration {
         return when {
@@ -146,16 +146,16 @@ class Duration private constructor(
         }
     }
 
-    operator fun plus(days: IntDays) = plus(days.toLong().inSeconds, 0.nanoseconds)
-    operator fun plus(days: LongDays) = plus(days.inSecondsExact(), 0.nanoseconds)
+    operator fun plus(days: IntDays) = plus(days.toLongDays().inSecondsUnchecked, 0.nanoseconds)
+    operator fun plus(days: LongDays) = plus(days.inSeconds, 0.nanoseconds)
 
-    operator fun plus(hours: IntHours) = plus(hours.toLong().inSeconds, 0.nanoseconds)
-    operator fun plus(hours: LongHours) = plus(hours.inSecondsExact(), 0.nanoseconds)
+    operator fun plus(hours: IntHours) = plus(hours.toLongHours().inSecondsUnchecked, 0.nanoseconds)
+    operator fun plus(hours: LongHours) = plus(hours.inSeconds, 0.nanoseconds)
 
-    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong().inSeconds, 0.nanoseconds)
-    operator fun plus(minutes: LongMinutes) = plus(minutes.inSecondsExact(), 0.nanoseconds)
+    operator fun plus(minutes: IntMinutes) = plus(minutes.toLongMinutes().inSecondsUnchecked, 0.nanoseconds)
+    operator fun plus(minutes: LongMinutes) = plus(minutes.inSeconds, 0.nanoseconds)
 
-    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong(), 0.nanoseconds)
+    operator fun plus(seconds: IntSeconds) = plus(seconds.toLongSeconds(), 0.nanoseconds)
     operator fun plus(seconds: LongSeconds) = plus(seconds, 0.nanoseconds)
 
     operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.inNanoseconds)
@@ -176,90 +176,93 @@ class Duration private constructor(
         )
     }
 
-    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds())
 
     operator fun plus(nanoseconds: LongNanoseconds): Duration {
         return plus(
             nanoseconds.inSeconds,
-            (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
+            (nanoseconds % NANOSECONDS_PER_SECOND).toIntNanosecondsUnchecked()
         )
     }
 
     operator fun minus(other: Duration): Duration {
         return if (other.seconds.value == Long.MIN_VALUE) {
-            plus(Long.MAX_VALUE.seconds, -other.nanosecondAdjustment)
+            plus(
+                Long.MAX_VALUE.seconds,
+                other.nanosecondAdjustment.negateUnchecked() plusWithOverflow 1.seconds
+            )
         } else {
-            plus(-other.seconds, -other.nanosecondAdjustment)
+            plus(other.seconds.negateUnchecked(), other.nanosecondAdjustment.negateUnchecked())
         }
     }
 
-    operator fun minus(days: IntDays) = plus(-days.toLong())
+    operator fun minus(days: IntDays) = plus(days.toLongDays().negateUnchecked())
 
     operator fun minus(days: LongDays): Duration {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
         } else {
-            plus(-days)
+            plus(days.negateUnchecked())
         }
     }
 
-    operator fun minus(hours: IntHours) = plus(-hours.toLong())
+    operator fun minus(hours: IntHours) = plus(hours.toLongHours().negateUnchecked())
 
     operator fun minus(hours: LongHours): Duration {
         return if (hours.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.hours + 1.hours
         } else {
-            plus(-hours)
+            plus(hours.negateUnchecked())
         }
     }
 
-    operator fun minus(minutes: IntMinutes) = plus(-minutes.toLong())
+    operator fun minus(minutes: IntMinutes) = plus(minutes.toLongMinutes().negateUnchecked())
 
     operator fun minus(minutes: LongMinutes): Duration {
         return if (minutes.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.minutes + 1.minutes
         } else {
-            plus(-minutes)
+            plus(minutes.negateUnchecked())
         }
     }
 
-    operator fun minus(seconds: IntSeconds) = plus(-seconds.toLong())
+    operator fun minus(seconds: IntSeconds) = plus(seconds.toLongSeconds().negateUnchecked())
 
     operator fun minus(seconds: LongSeconds): Duration {
         return if (seconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.seconds + 1.seconds
         } else {
-            plus(-seconds)
+            plus(seconds.negateUnchecked())
         }
     }
 
-    operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds.toLong())
+    operator fun minus(milliseconds: IntMilliseconds) = plus(milliseconds.toLongMilliseconds().negateUnchecked())
 
     operator fun minus(milliseconds: LongMilliseconds): Duration {
         return if (milliseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.milliseconds + 1.milliseconds
         } else {
-            plus(-milliseconds)
+            plus(milliseconds.negateUnchecked())
         }
     }
 
-    operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds.toLong())
+    operator fun minus(microseconds: IntMicroseconds) = plus(microseconds.toLongMicroseconds().negateUnchecked())
 
     operator fun minus(microseconds: LongMicroseconds): Duration {
         return if (microseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.microseconds + 1.microseconds
         } else {
-            plus(-microseconds)
+            plus(microseconds.negateUnchecked())
         }
     }
 
-    operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds.toLong())
+    operator fun minus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds().negateUnchecked())
 
     operator fun minus(nanoseconds: LongNanoseconds): Duration {
         return if (nanoseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.nanoseconds + 1.nanoseconds
         } else {
-            plus(-nanoseconds)
+            plus(nanoseconds.negateUnchecked())
         }
     }
 
@@ -268,12 +271,11 @@ class Duration private constructor(
             0 -> ZERO
             1 -> this
             else -> {
-                // TODO: Revisit this if and when overflow safe operations are fully added to the duration units
-                var newSeconds = seconds.value timesExact scalar
-                var newNanoseconds = nanosecondAdjustment.toLong() * scalar
-                newSeconds = newSeconds plusExact newNanoseconds.inSeconds.value
+                var newSeconds = seconds * scalar
+                var newNanoseconds = nanosecondAdjustment * scalar
+                newSeconds += newNanoseconds.inSeconds
                 newNanoseconds %= NANOSECONDS_PER_SECOND
-                create(newSeconds.seconds, newNanoseconds.toInt())
+                create(newSeconds, newNanoseconds.toIntNanosecondsUnchecked())
             }
         }
     }
@@ -309,7 +311,14 @@ class Duration private constructor(
         val hours = (seconds - days).inHours
         val minutes = (seconds - days - hours).inMinutes
         val seconds = seconds - days - hours - minutes
-        return action(days, hours.toInt(), minutes.toInt(), seconds.toInt(), nanosecondAdjustment)
+
+        return action(
+            days,
+            hours.toIntHoursUnchecked(),
+            minutes.toIntMinutesUnchecked(),
+            seconds.toIntSecondsUnchecked(),
+            nanosecondAdjustment
+        )
     }
 
     /**
@@ -326,7 +335,13 @@ class Duration private constructor(
         val hours = seconds.inHours
         val minutes = (seconds - hours).inMinutes
         val seconds = seconds - hours - minutes
-        return action(hours, minutes.toInt(), seconds.toInt(), nanosecondAdjustment)
+
+        return action(
+            hours,
+            minutes.toIntMinutesUnchecked(),
+            seconds.toIntSecondsUnchecked(),
+            nanosecondAdjustment
+        )
     }
 
     /**
@@ -341,7 +356,7 @@ class Duration private constructor(
     ): T {
         val minutes = seconds.inMinutes
         val seconds = seconds - minutes
-        return action(minutes, seconds.toInt(), nanosecondAdjustment)
+        return action(minutes, seconds.toIntSecondsUnchecked(), nanosecondAdjustment)
     }
 
     /**
@@ -359,8 +374,8 @@ class Duration private constructor(
     override fun equals(other: Any?): Boolean {
         return other === this ||
             (other is Duration &&
-                other.seconds.value == seconds.value &&
-                other.nanosecondAdjustment.value == nanosecondAdjustment.value)
+                other.seconds == seconds &&
+                other.nanosecondAdjustment == nanosecondAdjustment)
     }
 
     override fun hashCode(): Int {
@@ -390,7 +405,7 @@ class Duration private constructor(
             this
         } else {
             durationOf(
-                seconds plusExact secondsToAdd,
+                seconds + secondsToAdd,
                 nanosecondAdjustment plusWithOverflow nanosecondsToAdd
             )
         }
@@ -420,7 +435,10 @@ class Duration private constructor(
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
  */
-fun durationOf(seconds: IntSeconds, nanoseconds: IntNanoseconds) = durationOf(seconds.toLong(), nanoseconds.toLong())
+fun durationOf(
+    seconds: IntSeconds,
+    nanoseconds: IntNanoseconds
+) = durationOf(seconds.toLongSeconds(), nanoseconds.toLongNanoseconds())
 
 /**
  * Create a [Duration].
@@ -428,7 +446,10 @@ fun durationOf(seconds: IntSeconds, nanoseconds: IntNanoseconds) = durationOf(se
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
  */
-fun durationOf(seconds: LongSeconds, nanoseconds: IntNanoseconds) = durationOf(seconds, nanoseconds.toLong())
+fun durationOf(
+    seconds: LongSeconds,
+    nanoseconds: IntNanoseconds
+) = durationOf(seconds, nanoseconds.toLongNanoseconds())
 
 /**
  * Create a [Duration].
@@ -436,7 +457,10 @@ fun durationOf(seconds: LongSeconds, nanoseconds: IntNanoseconds) = durationOf(s
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
  */
-fun durationOf(seconds: IntSeconds, nanoseconds: LongNanoseconds) = durationOf(seconds.toLong(), nanoseconds)
+fun durationOf(
+    seconds: IntSeconds,
+    nanoseconds: LongNanoseconds
+) = durationOf(seconds.toLongSeconds(), nanoseconds)
 
 /**
  * Create a [Duration].
@@ -445,14 +469,14 @@ fun durationOf(seconds: IntSeconds, nanoseconds: LongNanoseconds) = durationOf(s
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
  */
 fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
-    var adjustedSeconds = seconds plusExact nanoseconds.inSeconds
-    var newNanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
+    var adjustedSeconds = seconds + nanoseconds.inSeconds
+    var newNanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toIntNanosecondsUnchecked()
 
     if (newNanoOfSeconds.value < 0 && adjustedSeconds.value > 0) {
-        adjustedSeconds -= 1L.seconds
+        adjustedSeconds = (adjustedSeconds.value - 1L).seconds
         newNanoOfSeconds = (newNanoOfSeconds.value + NANOSECONDS_PER_SECOND).nanoseconds
     } else if (newNanoOfSeconds.value > 0 && adjustedSeconds.value < 0) {
-        adjustedSeconds += 1L.seconds
+        adjustedSeconds = (adjustedSeconds.value + 1L).seconds
         newNanoOfSeconds = (newNanoOfSeconds.value - NANOSECONDS_PER_SECOND).nanoseconds
     }
 
@@ -462,40 +486,40 @@ fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
 /**
  * Create a [Duration] of 24-hour days.
  */
-fun durationOf(days: IntDays) = create(days.toLong().inSeconds)
+fun durationOf(days: IntDays) = create(days.toLongDays().inSecondsUnchecked)
 
 /**
  * Create a [Duration] of 24-hour days.
  * @throws ArithmeticException if overflow occurs
  */
-fun durationOf(days: LongDays) = create(days.inSecondsExact())
+fun durationOf(days: LongDays) = create(days.inSeconds)
 
 /**
  * Create a [Duration] of hours.
  */
-fun durationOf(hours: IntHours) = create(hours.toLong().inSeconds)
+fun durationOf(hours: IntHours) = create(hours.toLongHours().inSecondsUnchecked)
 
 /**
  * Create a [Duration] of hours.
  * @throws ArithmeticException if overflow occurs
  */
-fun durationOf(hours: LongHours) = create(hours.inSecondsExact())
+fun durationOf(hours: LongHours) = create(hours.inSeconds)
 
 /**
  * Create a [Duration] of minutes.
  */
-fun durationOf(minutes: IntMinutes) = create(minutes.toLong().inSeconds)
+fun durationOf(minutes: IntMinutes) = create(minutes.toLongMinutes().inSecondsUnchecked)
 
 /**
  * Create a [Duration] of minutes.
  * @throws ArithmeticException if overflow occurs
  */
-fun durationOf(minutes: LongMinutes) = create(minutes.inSecondsExact())
+fun durationOf(minutes: LongMinutes) = create(minutes.inSeconds)
 
 /**
  * Create a [Duration] of seconds.
  */
-fun durationOf(seconds: IntSeconds) = create(seconds.toLong())
+fun durationOf(seconds: IntSeconds) = create(seconds.toLongSeconds())
 
 /**
  * Create a [Duration] of seconds.
@@ -506,14 +530,14 @@ fun durationOf(seconds: LongSeconds) = create(seconds)
 /**
  * Create a [Duration] of milliseconds.
  */
-fun durationOf(milliseconds: IntMilliseconds) = durationOf(milliseconds.toLong())
+fun durationOf(milliseconds: IntMilliseconds) = durationOf(milliseconds.toLongMilliseconds())
 
 /**
  * Create a [Duration] of milliseconds.
  */
 fun durationOf(milliseconds: LongMilliseconds): Duration {
     val seconds = milliseconds.inSeconds
-    val nanoOfSeconds = (milliseconds % MILLISECONDS_PER_SECOND).inNanoseconds.toInt()
+    val nanoOfSeconds = (milliseconds % MILLISECONDS_PER_SECOND).inNanoseconds.toIntNanosecondsUnchecked()
 
     return create(seconds, nanoOfSeconds)
 }
@@ -521,14 +545,14 @@ fun durationOf(milliseconds: LongMilliseconds): Duration {
 /**
  * Create a [Duration] of microseconds.
  */
-fun durationOf(microseconds: IntMicroseconds) = durationOf(microseconds.toLong())
+fun durationOf(microseconds: IntMicroseconds) = durationOf(microseconds.toLongMicroseconds())
 
 /**
  * Create a [Duration] of microseconds.
  */
 fun durationOf(microseconds: LongMicroseconds): Duration {
     val seconds = microseconds.inSeconds
-    val nanoOfSeconds = (microseconds % MICROSECONDS_PER_SECOND).inNanoseconds.toInt()
+    val nanoOfSeconds = (microseconds % MICROSECONDS_PER_SECOND).inNanoseconds.toIntNanosecondsUnchecked()
 
     return create(seconds, nanoOfSeconds)
 }
@@ -536,14 +560,14 @@ fun durationOf(microseconds: LongMicroseconds): Duration {
 /**
  * Create a [Duration] of nanoseconds.
  */
-fun durationOf(nanoseconds: IntNanoseconds) = durationOf(nanoseconds.toLong())
+fun durationOf(nanoseconds: IntNanoseconds) = durationOf(nanoseconds.toLongNanoseconds())
 
 /**
  * Create a [Duration] of nanoseconds.
  */
 fun durationOf(nanoseconds: LongNanoseconds): Duration {
     val seconds = nanoseconds.inSeconds
-    val nanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toInt()
+    val nanoOfSeconds = (nanoseconds % NANOSECONDS_PER_SECOND).toIntNanosecondsUnchecked()
 
     return create(seconds, nanoOfSeconds)
 }
@@ -593,7 +617,7 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
             if (!nanoseconds.isZero()) {
                 append('.')
                 append(
-                    abs(nanoseconds.value)
+                    nanoseconds.value.absoluteValue
                         .toZeroPaddedString(9)
                         .dropLastWhile { it == '0' }
                 )
@@ -619,6 +643,7 @@ fun String.toDuration(parser: DateTimeParser): Duration {
 }
 
 internal fun DateTimeParseResult.toDuration(): Duration {
+    // TODO: Make sure we have at least one component
     val days = (fields[DateTimeField.PERIOD_OF_DAYS] ?: 0L).days
     val hours = (fields[DateTimeField.DURATION_OF_HOURS] ?: 0L).hours
     val minutes = (fields[DateTimeField.DURATION_OF_MINUTES] ?: 0L).minutes
