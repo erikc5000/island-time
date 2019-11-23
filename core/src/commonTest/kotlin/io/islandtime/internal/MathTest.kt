@@ -68,12 +68,7 @@ class MathTest {
         assertFailsWith<ArithmeticException> { Long.MAX_VALUE timesExact Long.MAX_VALUE }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE timesExact Long.MIN_VALUE }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE timesExact Long.MAX_VALUE }
-
-
-        // Crashes on iOS
-        todo {
-            assertFailsWith<ArithmeticException> { Long.MIN_VALUE timesExact (-1) }
-        }
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE timesExact (-1) }
     }
 
     @Test
