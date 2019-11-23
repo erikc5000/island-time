@@ -254,7 +254,7 @@ class DurationTest {
     fun `multiplication by a positive scalar value`() {
         assertEquals(
             (25.hours + 2.seconds + 500.milliseconds).asDuration(),
-            (5.hours + 500.milliseconds).asDuration() * 5
+            5 * (5.hours + 500.milliseconds).asDuration()
         )
     }
 
