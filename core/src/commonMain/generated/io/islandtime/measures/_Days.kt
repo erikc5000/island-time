@@ -147,10 +147,10 @@ inline class IntDays(
        isZero() -> "P0D"
        value == Int.MIN_VALUE -> "-P2147483648D"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('D')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('D')
        }
      }
   }
@@ -427,10 +427,10 @@ inline class LongDays(
        isZero() -> "P0D"
        value == Long.MIN_VALUE -> "-P9223372036854775808D"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('D')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('D')
        }
      }
   }

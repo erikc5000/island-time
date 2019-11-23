@@ -105,10 +105,10 @@ inline class IntSeconds(
        isZero() -> "PT0S"
        value == Int.MIN_VALUE -> "-PT2147483648S"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("PT")
-           append(value.absoluteValue)
-           append('S')
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(value.absoluteValue)
+         append('S')
        }
      }
   }
@@ -375,10 +375,10 @@ inline class LongSeconds(
        isZero() -> "PT0S"
        value == Long.MIN_VALUE -> "-PT9223372036854775808S"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("PT")
-           append(value.absoluteValue)
-           append('S')
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(value.absoluteValue)
+         append('S')
        }
      }
   }

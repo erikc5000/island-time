@@ -77,10 +77,10 @@ inline class IntWeeks(
        isZero() -> "P0W"
        value == Int.MIN_VALUE -> "-P2147483648W"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('W')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('W')
        }
      }
   }
@@ -228,10 +228,10 @@ inline class LongWeeks(
        isZero() -> "P0W"
        value == Long.MIN_VALUE -> "-P9223372036854775808W"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('W')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('W')
        }
      }
   }

@@ -119,10 +119,10 @@ inline class IntMinutes(
        isZero() -> "PT0M"
        value == Int.MIN_VALUE -> "-PT2147483648M"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("PT")
-           append(value.absoluteValue)
-           append('M')
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(value.absoluteValue)
+         append('M')
        }
      }
   }
@@ -383,10 +383,10 @@ inline class LongMinutes(
        isZero() -> "PT0M"
        value == Long.MIN_VALUE -> "-PT9223372036854775808M"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("PT")
-           append(value.absoluteValue)
-           append('M')
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(value.absoluteValue)
+         append('M')
        }
      }
   }

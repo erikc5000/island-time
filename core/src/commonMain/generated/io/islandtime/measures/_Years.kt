@@ -91,10 +91,10 @@ inline class IntYears(
        isZero() -> "P0Y"
        value == Int.MIN_VALUE -> "-P2147483648Y"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('Y')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('Y')
        }
      }
   }
@@ -287,10 +287,10 @@ inline class LongYears(
        isZero() -> "P0Y"
        value == Long.MIN_VALUE -> "-P9223372036854775808Y"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('Y')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('Y')
        }
      }
   }
