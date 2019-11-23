@@ -514,15 +514,16 @@ class DateTime(
     fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
     /**
-     * Get the number of whole seconds relative to the Unix Epoch of 1970-01-01T00:00Z.
+     * Get the number of seconds relative to the Unix epoch of `1970-01-01T00:00Z`.
      *
      * @param offset the offset from UTC
      * @see nanoOfSecondsSinceUnixEpoch
      * @see unixEpochSecondAt
      */
     fun secondsSinceUnixEpochAt(offset: UtcOffset): LongSeconds {
-        // TODO: Use unchecked operators
-        return date.daysSinceUnixEpoch + time.secondsSinceStartOfDay - offset.totalSeconds
+        return (date.daysSinceUnixEpoch.inSecondsUnchecked.value +
+            time.secondsSinceStartOfDay.value -
+            offset.totalSeconds.value).seconds
     }
 
     /**
@@ -534,8 +535,11 @@ class DateTime(
     val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
         get() = nanosecond.nanoseconds
 
+    /**
+     * Get the number of milliseconds relative to the Unix epoch of `1970-01-01T00:00Z`.
+     * @throws ArithmeticException if the number of milliseconds can't be expressed without overflow
+     */
     fun millisecondsSinceUnixEpochAt(offset: UtcOffset): LongMilliseconds {
-        // TODO: Use unchecked operators
         return date.daysSinceUnixEpoch +
             time.secondsSinceStartOfDay +
             time.nanosecondsSinceStartOfDay.inMilliseconds -
