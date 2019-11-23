@@ -314,6 +314,8 @@ operator fun LongDays.minus(period: Period) = Period.create(
     (this - period.days).toIntDays()
 )
 
+operator fun Int.times(period: Period) = period * this
+
 fun String.toPeriod() = toPeriod(DateTimeParsers.Iso.PERIOD)
 
 fun String.toPeriod(parser: DateTimeParser): Period {

@@ -418,6 +418,7 @@ class PeriodTest {
         }
 
         assertFailsWith<ArithmeticException> { periodOf(1.weeks) * Int.MAX_VALUE }
+        assertFailsWith<ArithmeticException> { Int.MAX_VALUE * periodOf(2.days) }
     }
 
     @Test

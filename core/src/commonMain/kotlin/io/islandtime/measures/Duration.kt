@@ -629,6 +629,8 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     return this
 }
 
+operator fun Int.times(duration: Duration) = duration * this
+
 /**
  * Convert an ISO-8601 duration string into a [Duration].
  */
