@@ -79,15 +79,15 @@ class Time(
     operator fun plus(hours: LongHours): Time {
         val wrappedHours = (hours % HOURS_PER_DAY).toInt()
 
-        return if (wrappedHours.value == 0) {
+        return if (wrappedHours == 0) {
             this
         } else {
-            val newHour = (wrappedHours.value + hour + HOURS_PER_DAY) % HOURS_PER_DAY
+            val newHour = (wrappedHours + hour + HOURS_PER_DAY) % HOURS_PER_DAY
             return copy(hour = newHour)
         }
     }
 
-    operator fun plus(hours: IntHours) = plus(hours.toLong())
+    operator fun plus(hours: IntHours) = plus(hours.toLongHours())
 
     operator fun plus(minutes: LongMinutes): Time {
         return if (minutes.value == 0L) {
@@ -107,7 +107,7 @@ class Time(
         }
     }
 
-    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong())
+    operator fun plus(minutes: IntMinutes) = plus(minutes.toLongMinutes())
 
     operator fun plus(seconds: LongSeconds): Time {
         return if (seconds.value == 0L) {
@@ -125,19 +125,19 @@ class Time(
         }
     }
 
-    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong())
+    operator fun plus(seconds: IntSeconds) = plus(seconds.toLongSeconds())
     
     operator fun plus(milliseconds: LongMilliseconds): Time {
-        return plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
+        return plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanosecondsUnchecked)
     }
     
-    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLong())
+    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLongMilliseconds())
 
     operator fun plus(microseconds: LongMicroseconds): Time {
-        return plusWrapped((microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
+        return plusWrapped((microseconds % MICROSECONDS_PER_DAY).inNanosecondsUnchecked)
     }
 
-    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLong())
+    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLongMicroseconds())
 
     operator fun plus(nanoseconds: LongNanoseconds): Time {
         return plusWrapped(nanoseconds % NANOSECONDS_PER_DAY)
@@ -158,32 +158,33 @@ class Time(
         }
     }
 
-    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds())
 
     operator fun minus(duration: Duration): Time {
         return this - duration.seconds - duration.nanosecondAdjustment
     }
 
-    operator fun minus(hours: LongHours) = plus(-(hours % HOURS_PER_DAY))
-    operator fun minus(hours: IntHours) = plus(-hours.toLong())
-    operator fun minus(minutes: LongMinutes) = plus(-(minutes % MINUTES_PER_DAY))
-    operator fun minus(minutes: IntMinutes) = plus(-minutes.toLong())
-    operator fun minus(seconds: LongSeconds) = plus(-(seconds % SECONDS_PER_DAY))
-    operator fun minus(seconds: IntSeconds) = plus(-seconds.toLong())
+    operator fun minus(hours: LongHours) = plus((hours % HOURS_PER_DAY).negateUnchecked())
+    operator fun minus(hours: IntHours) = plus(hours.toLongHours().negateUnchecked())
+    operator fun minus(minutes: LongMinutes) = plus((minutes % MINUTES_PER_DAY).negateUnchecked())
+    operator fun minus(minutes: IntMinutes) = plus(minutes.toLongMinutes().negateUnchecked())
+    operator fun minus(seconds: LongSeconds) = plus((seconds % SECONDS_PER_DAY).negateUnchecked())
+    operator fun minus(seconds: IntSeconds) = plus(seconds.toLongSeconds().negateUnchecked())
 
     operator fun minus(milliseconds: LongMilliseconds) =
-        plusWrapped(-(milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
+        plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanosecondsUnchecked.negateUnchecked())
 
-    operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds.toLong())
+    operator fun minus(milliseconds: IntMilliseconds) = plus(milliseconds.toLongMilliseconds().negateUnchecked())
 
     operator fun minus(microseconds: LongMicroseconds) =
-        plusWrapped(-(microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
+        plusWrapped((microseconds % MICROSECONDS_PER_DAY).inNanosecondsUnchecked.negateUnchecked())
 
-    operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds.toLong())
+    operator fun minus(microseconds: IntMicroseconds) = plus(microseconds.toLongMicroseconds().negateUnchecked())
 
-    operator fun minus(nanoseconds: LongNanoseconds) = plusWrapped(-(nanoseconds % NANOSECONDS_PER_DAY))
+    operator fun minus(nanoseconds: LongNanoseconds) =
+        plusWrapped((nanoseconds % NANOSECONDS_PER_DAY).negateUnchecked())
 
-    operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds.toLong())
+    operator fun minus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds().negateUnchecked())
 
     operator fun component1() = hour
     operator fun component2() = minute

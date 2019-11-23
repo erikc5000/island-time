@@ -9,210 +9,426 @@ package io.islandtime.measures
 import io.islandtime.internal.DECADES_PER_CENTURY
 import io.islandtime.internal.MONTHS_PER_CENTURY
 import io.islandtime.internal.YEARS_PER_CENTURY
+import io.islandtime.internal.minusExact
+import io.islandtime.internal.negateExact
+import io.islandtime.internal.plusExact
 import io.islandtime.internal.timesExact
 import io.islandtime.internal.toIntExact
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
 import kotlin.Long
+import kotlin.PublishedApi
 import kotlin.String
 import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
 
+/**
+ * A number of centuries.
+ */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntCenturies(
+  /**
+   * The underlying value.
+   */
   val value: Int
 ) : Comparable<IntCenturies> {
+  /**
+   * Get the absolute value.
+   * @throws ArithmeticException if overflow occurs
+   */
   val absoluteValue: IntCenturies
-    get() = IntCenturies(value.absoluteValue)
+    get() = if (value < 0) IntCenturies(value.negateExact()) else this
+  /**
+   * Convert to months.
+   * @throws ArithmeticException if overflow occurs
+   */
   val inMonths: IntMonths
-    get() = (this.value * MONTHS_PER_CENTURY).months
+    get() = (value timesExact MONTHS_PER_CENTURY).months
 
+  /**
+   * Convert to months without checking for overflow.
+   */
+  internal val inMonthsUnchecked: IntMonths
+    get() = (value * MONTHS_PER_CENTURY).months
+
+  /**
+   * Convert to years.
+   * @throws ArithmeticException if overflow occurs
+   */
   val inYears: IntYears
-    get() = (this.value * YEARS_PER_CENTURY).years
+    get() = (value timesExact YEARS_PER_CENTURY).years
 
+  /**
+   * Convert to years without checking for overflow.
+   */
+  internal val inYearsUnchecked: IntYears
+    get() = (value * YEARS_PER_CENTURY).years
+
+  /**
+   * Convert to decades.
+   * @throws ArithmeticException if overflow occurs
+   */
   val inDecades: IntDecades
-    get() = (this.value * DECADES_PER_CENTURY).decades
+    get() = (value timesExact DECADES_PER_CENTURY).decades
 
+  /**
+   * Convert to decades without checking for overflow.
+   */
+  internal val inDecadesUnchecked: IntDecades
+    get() = (value * DECADES_PER_CENTURY).decades
+
+  /**
+   * Is this duration zero?
+   */
   fun isZero(): Boolean = value == 0
 
+  /**
+   * Is this duration negative?
+   */
   fun isNegative(): Boolean = value < 0
 
+  /**
+   * Is this duration positive?
+   */
   fun isPositive(): Boolean = value > 0
 
   override fun compareTo(other: IntCenturies): Int = value.compareTo(other.value)
 
-  override fun toString(): String = if (isZero()) {
-      "P0Y"
-  } else {
-      buildString {
-          if (isNegative()) { append('-') }
-          append("P")
-          append(value.absoluteValue timesExact 100)
-          append('Y')
-      }
+  /**
+   * Convert to an ISO-8601 time interval representation.
+   */
+  override fun toString(): String {
+     return when {
+       isZero() -> "P0Y"
+       value == Int.MIN_VALUE -> "-P2147483648Y"
+       else -> buildString {
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue timesExact 100)
+         append('Y')
+       }
+     }
   }
-  fun inMonthsExact() = (this.value timesExact MONTHS_PER_CENTURY).months
 
-  fun inYearsExact() = (this.value timesExact YEARS_PER_CENTURY).years
+  /**
+   * Negate the value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  operator fun unaryMinus() = IntCenturies(value.negateExact())
 
-  fun inDecadesExact() = (this.value timesExact DECADES_PER_CENTURY).decades
+  /**
+   * Negate the value without checking for overflow.
+   */
+  internal fun negateUnchecked() = IntCenturies(-value)
 
-  operator fun unaryMinus() = IntCenturies(-value)
+  /**
+   * Multiply by a scalar value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  operator fun times(scalar: Int) = IntCenturies(value timesExact scalar)
+
+  /**
+   * Multiply by a scalar value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  operator fun times(scalar: Long) = this.toLongCenturies() * scalar
+
+  /**
+   * Divide by a scalar value.
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
+   */
+  operator fun div(scalar: Int): IntCenturies {
+     return if (scalar == -1) {
+       -this
+     } else {
+       IntCenturies(value / scalar)
+     }
+  }
+
+  /**
+   * Divide by a scalar value.
+   * @throws ArithmeticException if the scalar is zero
+   */
+  operator fun div(scalar: Long): LongCenturies = this.toLongCenturies() / scalar
+  operator fun rem(scalar: Int) = IntCenturies(value % scalar)
+
+  operator fun rem(scalar: Long) = this.toLongCenturies() % scalar
 
   operator fun plus(months: IntMonths) = this.inMonths + months
 
-  operator fun plus(months: LongMonths) = this.toLong().inMonths + months
+  operator fun minus(months: IntMonths) = this.inMonths - months
+
+  operator fun plus(months: LongMonths) = this.toLongCenturies().inMonths + months
+
+  operator fun minus(months: LongMonths) = this.toLongCenturies().inMonths - months
 
   operator fun plus(years: IntYears) = this.inYears + years
 
-  operator fun plus(years: LongYears) = this.toLong().inYears + years
+  operator fun minus(years: IntYears) = this.inYears - years
+
+  operator fun plus(years: LongYears) = this.toLongCenturies().inYears + years
+
+  operator fun minus(years: LongYears) = this.toLongCenturies().inYears - years
 
   operator fun plus(decades: IntDecades) = this.inDecades + decades
 
-  operator fun plus(decades: LongDecades) = this.toLong().inDecades + decades
+  operator fun minus(decades: IntDecades) = this.inDecades - decades
 
-  operator fun plus(centuries: IntCenturies) = IntCenturies(this.value + centuries.value)
+  operator fun plus(decades: LongDecades) = this.toLongCenturies().inDecades + decades
 
-  operator fun plus(centuries: LongCenturies) = LongCenturies(this.value.toLong() + centuries.value)
+  operator fun minus(decades: LongDecades) = this.toLongCenturies().inDecades - decades
 
-  operator fun minus(months: IntMonths) = plus(-months)
+  operator fun plus(centuries: IntCenturies) = IntCenturies(value plusExact centuries.value)
 
-  operator fun minus(months: LongMonths) = plus(-months)
+  operator fun minus(centuries: IntCenturies) = IntCenturies(value minusExact centuries.value)
 
-  operator fun minus(years: IntYears) = plus(-years)
+  operator fun plus(centuries: LongCenturies) = LongCenturies(value.toLong() plusExact
+      centuries.value)
 
-  operator fun minus(years: LongYears) = plus(-years)
+  operator fun minus(centuries: LongCenturies) = LongCenturies(value.toLong() minusExact
+      centuries.value)
 
-  operator fun minus(decades: IntDecades) = plus(-decades)
+  /**
+   * Convert to [LongCenturies].
+   */
+  fun toLongCenturies() = LongCenturies(value.toLong())
 
-  operator fun minus(decades: LongDecades) = plus(-decades)
-
-  operator fun minus(centuries: IntCenturies) = plus(-centuries)
-
-  operator fun minus(centuries: LongCenturies) = plus(-centuries)
-
-  operator fun times(scalar: Int) = IntCenturies(this.value * scalar)
-
-  operator fun times(scalar: Long) = this.toLong() * scalar
-
-  operator fun div(scalar: Int) = IntCenturies(this.value / scalar)
-
-  operator fun div(scalar: Long) = this.toLong() / scalar
-
-  operator fun rem(scalar: Int) = IntCenturies(this.value % scalar)
-
-  operator fun rem(scalar: Long) = this.toLong() % scalar
-
-  fun toLong() = LongCenturies(this.value.toLong())
+  /**
+   * Convert to a unit-less `Long` value.
+   */
+  fun toLong() = value.toLong()
 
   companion object {
+    /**
+     * The smallest supported value.
+     */
     val MIN: IntCenturies = IntCenturies(Int.MIN_VALUE)
 
+    /**
+     * The largest supported value.
+     */
     val MAX: IntCenturies = IntCenturies(Int.MAX_VALUE)
   }
 }
 
+/**
+ * Convert to [IntCenturies].
+ */
+val Int.centuries: IntCenturies
+  get() = IntCenturies(this)
+
+/**
+ * A number of centuries.
+ */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongCenturies(
+  /**
+   * The underlying value.
+   */
   val value: Long
 ) : Comparable<LongCenturies> {
+  /**
+   * Get the absolute value.
+   * @throws ArithmeticException if overflow occurs
+   */
   val absoluteValue: LongCenturies
-    get() = LongCenturies(value.absoluteValue)
+    get() = if (value < 0) LongCenturies(value.negateExact()) else this
+  /**
+   * Convert to months.
+   * @throws ArithmeticException if overflow occurs
+   */
   val inMonths: LongMonths
-    get() = (this.value * MONTHS_PER_CENTURY).months
+    get() = (value timesExact MONTHS_PER_CENTURY).months
 
+  /**
+   * Convert to months without checking for overflow.
+   */
+  internal val inMonthsUnchecked: LongMonths
+    get() = (value * MONTHS_PER_CENTURY).months
+
+  /**
+   * Convert to years.
+   * @throws ArithmeticException if overflow occurs
+   */
   val inYears: LongYears
-    get() = (this.value * YEARS_PER_CENTURY).years
+    get() = (value timesExact YEARS_PER_CENTURY).years
 
+  /**
+   * Convert to years without checking for overflow.
+   */
+  internal val inYearsUnchecked: LongYears
+    get() = (value * YEARS_PER_CENTURY).years
+
+  /**
+   * Convert to decades.
+   * @throws ArithmeticException if overflow occurs
+   */
   val inDecades: LongDecades
-    get() = (this.value * DECADES_PER_CENTURY).decades
+    get() = (value timesExact DECADES_PER_CENTURY).decades
 
+  /**
+   * Convert to decades without checking for overflow.
+   */
+  internal val inDecadesUnchecked: LongDecades
+    get() = (value * DECADES_PER_CENTURY).decades
+
+  /**
+   * Is this duration zero?
+   */
   fun isZero(): Boolean = value == 0L
 
+  /**
+   * Is this duration negative?
+   */
   fun isNegative(): Boolean = value < 0L
 
+  /**
+   * Is this duration positive?
+   */
   fun isPositive(): Boolean = value > 0L
 
   override fun compareTo(other: LongCenturies): Int = value.compareTo(other.value)
 
-  override fun toString(): String = if (isZero()) {
-      "P0Y"
-  } else {
-      buildString {
-          if (isNegative()) { append('-') }
-          append("P")
-          append(value.absoluteValue timesExact 100)
-          append('Y')
-      }
+  /**
+   * Convert to an ISO-8601 time interval representation.
+   */
+  override fun toString(): String {
+     return when {
+       isZero() -> "P0Y"
+       value == Long.MIN_VALUE -> "-P9223372036854775808Y"
+       else -> buildString {
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue timesExact 100)
+         append('Y')
+       }
+     }
   }
-  fun inMonthsExact() = (this.value timesExact MONTHS_PER_CENTURY).months
 
-  fun inYearsExact() = (this.value timesExact YEARS_PER_CENTURY).years
+  /**
+   * Negate the value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  operator fun unaryMinus() = LongCenturies(value.negateExact())
 
-  fun inDecadesExact() = (this.value timesExact DECADES_PER_CENTURY).decades
+  /**
+   * Negate the value without checking for overflow.
+   */
+  internal fun negateUnchecked() = LongCenturies(-value)
 
-  operator fun unaryMinus() = LongCenturies(-value)
+  /**
+   * Multiply by a scalar value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  operator fun times(scalar: Int) = LongCenturies(value timesExact scalar)
+
+  /**
+   * Multiply by a scalar value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  operator fun times(scalar: Long) = LongCenturies(value timesExact scalar)
+
+  /**
+   * Divide by a scalar value.
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
+   */
+  operator fun div(scalar: Int): LongCenturies {
+     return if (scalar == -1) {
+       -this
+     } else {
+       LongCenturies(value / scalar)
+     }
+  }
+
+  /**
+   * Divide by a scalar value.
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
+   */
+  operator fun div(scalar: Long): LongCenturies {
+     return if (scalar == -1L) {
+       -this
+     } else {
+       LongCenturies(value / scalar)
+     }
+  }
+
+  operator fun rem(scalar: Int) = LongCenturies(value % scalar)
+
+  operator fun rem(scalar: Long) = LongCenturies(value % scalar)
 
   operator fun plus(months: IntMonths) = this.inMonths + months
 
+  operator fun minus(months: IntMonths) = this.inMonths - months
+
   operator fun plus(months: LongMonths) = this.inMonths + months
+
+  operator fun minus(months: LongMonths) = this.inMonths - months
 
   operator fun plus(years: IntYears) = this.inYears + years
 
+  operator fun minus(years: IntYears) = this.inYears - years
+
   operator fun plus(years: LongYears) = this.inYears + years
+
+  operator fun minus(years: LongYears) = this.inYears - years
 
   operator fun plus(decades: IntDecades) = this.inDecades + decades
 
+  operator fun minus(decades: IntDecades) = this.inDecades - decades
+
   operator fun plus(decades: LongDecades) = this.inDecades + decades
 
-  operator fun plus(centuries: IntCenturies) = LongCenturies(this.value + centuries.value)
+  operator fun minus(decades: LongDecades) = this.inDecades - decades
 
-  operator fun plus(centuries: LongCenturies) = LongCenturies(this.value + centuries.value)
+  operator fun plus(centuries: IntCenturies) = LongCenturies(value plusExact centuries.value)
 
-  operator fun minus(months: IntMonths) = plus(-months)
+  operator fun minus(centuries: IntCenturies) = LongCenturies(value minusExact centuries.value)
 
-  operator fun minus(months: LongMonths) = plus(-months)
+  operator fun plus(centuries: LongCenturies) = LongCenturies(value plusExact centuries.value)
 
-  operator fun minus(years: IntYears) = plus(-years)
+  operator fun minus(centuries: LongCenturies) = LongCenturies(value minusExact centuries.value)
 
-  operator fun minus(years: LongYears) = plus(-years)
+  /**
+   * Convert to [IntCenturies].
+   * @throws ArithmeticException if overflow occurs
+   */
+  fun toIntCenturies() = IntCenturies(value.toIntExact())
 
-  operator fun minus(decades: IntDecades) = plus(-decades)
+  /**
+   * Convert to [IntCenturies] without checking for overflow.
+   */
+  @PublishedApi
+  internal fun toIntCenturiesUnchecked() = IntCenturies(value.toInt())
 
-  operator fun minus(decades: LongDecades) = plus(-decades)
+  /**
+   * Convert to a unit-less `Int` value.
+   * @throws ArithmeticException if overflow occurs
+   */
+  fun toInt() = value.toIntExact()
 
-  operator fun minus(centuries: IntCenturies) = plus(-centuries)
-
-  operator fun minus(centuries: LongCenturies) = plus(-centuries)
-
-  operator fun times(scalar: Int) = LongCenturies(this.value * scalar)
-
-  operator fun times(scalar: Long) = LongCenturies(this.value * scalar)
-
-  operator fun div(scalar: Int) = LongCenturies(this.value / scalar)
-
-  operator fun div(scalar: Long) = LongCenturies(this.value / scalar)
-
-  operator fun rem(scalar: Int) = LongCenturies(this.value % scalar)
-
-  operator fun rem(scalar: Long) = LongCenturies(this.value % scalar)
-
-  fun toInt() = IntCenturies(this.value.toInt())
-
-  fun toIntExact() = IntCenturies(this.value.toIntExact())
+  /**
+   * Convert to a unit-less `Int` value without checking for overflow.
+   */
+  internal fun toIntUnchecked() = value.toInt()
 
   companion object {
+    /**
+     * The smallest supported value.
+     */
     val MIN: LongCenturies = LongCenturies(Long.MIN_VALUE)
 
+    /**
+     * The largest supported value.
+     */
     val MAX: LongCenturies = LongCenturies(Long.MAX_VALUE)
   }
 }
 
-val Int.centuries: IntCenturies
-  get() = IntCenturies(this)
-
+/**
+ * Convert to [LongCenturies].
+ */
 val Long.centuries: LongCenturies
   get() = LongCenturies(this)

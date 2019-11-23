@@ -12,7 +12,6 @@ abstract class RunIosTestsTask : AbstractTask() {
     @Input
     var device = project.findProperty("iosDevice")?.toString() ?: "iPhone Xʀ"
 
-    @Suppress("UnstableApiUsage")
     @InputFile
     @SkipWhenEmpty
     open var binary: File? = null

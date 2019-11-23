@@ -61,9 +61,6 @@ class DateMonthProgression private constructor(
 
     init {
         require(step.value != 0) { "Step must be non-zero" }
-        require(step.value != Int.MIN_VALUE) {
-            "Step must be greater than Int.MIN_VALUE to avoid overflow on negation"
-        }
     }
 
     val last = getLastDateInProgression(first, endInclusive, step)
@@ -117,7 +114,7 @@ infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
     return DateDayProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
-infix fun DateDayProgression.step(step: IntWeeks) = this.step(step.inDaysExact())
+infix fun DateDayProgression.step(step: IntWeeks) = this.step(step.inDays)
 
 /**
  * Step over dates in increments of months
@@ -127,9 +124,9 @@ infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
     return DateMonthProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
-infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonthsExact())
-infix fun DateDayProgression.step(step: IntDecades) = this.step(step.inMonthsExact())
-infix fun DateDayProgression.step(step: IntCenturies) = this.step(step.inMonthsExact())
+infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonths)
+infix fun DateDayProgression.step(step: IntDecades) = this.step(step.inMonths)
+infix fun DateDayProgression.step(step: IntCenturies) = this.step(step.inMonths)
 
 fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last, first, -step)
 

@@ -90,14 +90,14 @@ class DurationTest {
         assertFalse { 1.seconds.asDuration().isNegative() }
         assertFalse { 1.nanoseconds.asDuration().isNegative() }
     }
-    
+
     @Test
     fun `inDays property returns the number of whole days`() {
         assertEquals(1L.days, durationOf(1.days).inDays)
         assertEquals((-1L).days, durationOf((-1).days).inDays)
         assertEquals(0L.days, durationOf(1.days - 1.nanoseconds).inDays)
     }
-    
+
     @Test
     fun `inHours property returns the number of whole hours`() {
         assertEquals(1L.hours, durationOf(1.hours).inHours)
@@ -208,6 +208,26 @@ class DurationTest {
     }
 
     @Test
+    fun `subtraction of positive duration`() {
+        assertEquals(durationOf((-1).nanoseconds), Duration.ZERO - durationOf(1.nanoseconds))
+        assertEquals(durationOf(Long.MIN_VALUE.seconds), durationOf((-1).seconds) - Long.MAX_VALUE.seconds)
+    }
+
+    @Test
+    fun `subtraction of negative duration`() {
+        assertEquals(durationOf(1.nanoseconds), Duration.ZERO - durationOf((-1).nanoseconds))
+        assertEquals(Duration.MAX, durationOf((-1).seconds) - Duration.MIN)
+    }
+
+    @Test
+    fun `throws an exception when addition or subtraction of another duration causes overflow`() {
+        assertFailsWith<ArithmeticException> { Duration.MAX + durationOf(1.nanoseconds) }
+        assertFailsWith<ArithmeticException> { Duration.MAX - -durationOf(1.nanoseconds) }
+        assertFailsWith<ArithmeticException> { Duration.MIN - durationOf(1.nanoseconds) }
+        assertFailsWith<ArithmeticException> { Duration.MIN + -durationOf(1.nanoseconds) }
+    }
+
+    @Test
     fun `multiplying by zero returns ZERO`() {
         assertEquals(Duration.ZERO, 2.hours.asDuration() * 0)
     }
@@ -226,11 +246,7 @@ class DurationTest {
 
     @Test
     fun `throws an exception when multiplication causes overflow`() {
-        todo {
-            // Fails with floating point exception on iOS
-            assertFailsWith<ArithmeticException> { Long.MIN_VALUE.seconds.asDuration() * -1 }
-        }
-
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE.seconds.asDuration() * -1 }
         assertFailsWith<ArithmeticException> { Int.MAX_VALUE.hours.asDuration() * Int.MAX_VALUE }
     }
 
@@ -238,7 +254,7 @@ class DurationTest {
     fun `multiplication by a positive scalar value`() {
         assertEquals(
             (25.hours + 2.seconds + 500.milliseconds).asDuration(),
-            (5.hours + 500.milliseconds).asDuration() * 5
+            5 * (5.hours + 500.milliseconds).asDuration()
         )
     }
 
@@ -263,6 +279,11 @@ class DurationTest {
     @Test
     fun `dividing by -1 negates the duration`() {
         assertEquals(1.minutes.asDuration(), (-1).minutes.asDuration() / -1)
+    }
+
+    @Test
+    fun `dividing by -1 causes an exception when the duration is at minimum`() {
+        assertFailsWith<ArithmeticException> { Duration.MIN / -1 }
     }
 
     @Test

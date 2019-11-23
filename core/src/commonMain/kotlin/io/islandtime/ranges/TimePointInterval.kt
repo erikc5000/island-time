@@ -136,7 +136,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
  * Get the [Duration] between two time points.
  */
 fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): Duration {
-    val secondDiff = endExclusive.secondsSinceUnixEpoch minusExact start.secondsSinceUnixEpoch
+    val secondDiff = endExclusive.secondsSinceUnixEpoch - start.secondsSinceUnixEpoch
     val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
     return durationOf(secondDiff, nanoDiff)
 }
