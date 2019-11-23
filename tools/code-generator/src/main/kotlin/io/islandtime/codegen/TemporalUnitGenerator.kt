@@ -270,22 +270,22 @@ fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = buildCodeBlo
 
     addNamed(
         """
-            |return if (%isZero:N()) {
-            |    "${description.isoPeriodZeroString}"
-            |} else {
-            |    buildString {
-            |        val wholePart = (%value:N / ${description.isoPeriodUnitConversion.constantValue}).%absoluteValue:T
-            |        val fractionalPart = (${fractionalPartConversion}).%absoluteValue:T
-            |        if (%isNegative:N()) { append('-') }
-            |        append("${description.isoPeriodPrefix}")
-            |        append(wholePart)
-            |        if (fractionalPart != 0) {
-            |            append('.')
-            |            append(fractionalPart.%toZeroPaddedString:T(${description.isoPeriodDecimalPlaces}).dropLastWhile { it == '0' })
-            |        }
-            |        append('${description.isoPeriodUnit}')
-            |    }
-            |}
+            | return if (%isZero:N()) {
+            |   "${description.isoPeriodZeroString}"
+            | } else {
+            |   buildString {
+            |     val wholePart = (%value:N / ${description.isoPeriodUnitConversion.constantValue}).%absoluteValue:T
+            |     val fractionalPart = (${fractionalPartConversion}).%absoluteValue:T
+            |     if (%isNegative:N()) { append('-') }
+            |     append("${description.isoPeriodPrefix}")
+            |     append(wholePart)
+            |     if (fractionalPart != 0) {
+            |       append('.')
+            |       append(fractionalPart.%toZeroPaddedString:T(${description.isoPeriodDecimalPlaces}).dropLastWhile { it == '0' })
+            |     }
+            |     append('${description.isoPeriodUnit}')
+            |   }
+            | }
         """.trimMargin(),
         arguments
     )
@@ -321,10 +321,10 @@ fun TemporalUnitClassGenerator.buildWholeToStringCodeBlock() = buildCodeBlock {
             |   %isZero:N() -> "${description.isoPeriodZeroString}"
             |   %value:N == %minValue:L -> "-${description.isoPeriodPrefix}${absoluteValueOfMinValue}${description.isoPeriodUnit}"
             |   else -> buildString {
-            |       if (%isNegative:N()) { append('-') }
-            |       append("${description.isoPeriodPrefix}")
-            |       append($convertedValueString)
-            |       append('${description.isoPeriodUnit}')
+            |     if (%isNegative:N()) { append('-') }
+            |     append("${description.isoPeriodPrefix}")
+            |     append($convertedValueString)
+            |     append('${description.isoPeriodUnit}')
             |   }
             | }
         """.trimMargin(),
@@ -427,8 +427,16 @@ enum class PlusOrMinusOperator(
     val operator: ClassName,
     val uncheckedOperator: String
 ) {
-    PLUS("plus", ClassName(INTERNAL_PACKAGE_NAME, "plusExact"), "+"),
-    MINUS("minus", ClassName(INTERNAL_PACKAGE_NAME, "minusExact"), "-")
+    PLUS(
+        functionName = "plus",
+        operator = ClassName(INTERNAL_PACKAGE_NAME, "plusExact"),
+        uncheckedOperator = "+"
+    ),
+    MINUS(
+        functionName = "minus",
+        operator = ClassName(INTERNAL_PACKAGE_NAME, "minusExact"),
+        uncheckedOperator = "-"
+    )
 }
 
 fun TemporalUnitClassGenerator.buildPlusMinusOperatorFunSpecs() = TemporalUnitDescription.values()

@@ -84,10 +84,10 @@ inline class IntMonths(
        isZero() -> "P0M"
        value == Int.MIN_VALUE -> "-P2147483648M"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('M')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('M')
        }
      }
   }
@@ -286,10 +286,10 @@ inline class LongMonths(
        isZero() -> "P0M"
        value == Long.MIN_VALUE -> "-P9223372036854775808M"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("P")
-           append(value.absoluteValue)
-           append('M')
+         if (isNegative()) { append('-') }
+         append("P")
+         append(value.absoluteValue)
+         append('M')
        }
      }
   }

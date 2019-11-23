@@ -126,10 +126,10 @@ inline class IntHours(
        isZero() -> "PT0H"
        value == Int.MIN_VALUE -> "-PT2147483648H"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("PT")
-           append(value.absoluteValue)
-           append('H')
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(value.absoluteValue)
+         append('H')
        }
      }
   }
@@ -385,10 +385,10 @@ inline class LongHours(
        isZero() -> "PT0H"
        value == Long.MIN_VALUE -> "-PT9223372036854775808H"
        else -> buildString {
-           if (isNegative()) { append('-') }
-           append("PT")
-           append(value.absoluteValue)
-           append('H')
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(value.absoluteValue)
+         append('H')
        }
      }
   }

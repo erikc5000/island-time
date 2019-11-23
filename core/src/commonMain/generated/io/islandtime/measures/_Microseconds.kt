@@ -101,22 +101,25 @@ inline class IntMicroseconds(
   /**
    * Convert to an ISO-8601 time interval representation.
    */
-  override fun toString(): String = if (isZero()) {
-      "PT0S"
-  } else {
-      buildString {
-          val wholePart = (value / 1000000).absoluteValue
-          val fractionalPart = (value % 1000000).absoluteValue
-          if (isNegative()) { append('-') }
-          append("PT")
-          append(wholePart)
-          if (fractionalPart != 0) {
-              append('.')
-              append(fractionalPart.toZeroPaddedString(6).dropLastWhile { it == '0' })
-          }
-          append('S')
-      }
+  override fun toString(): String {
+     return if (isZero()) {
+       "PT0S"
+     } else {
+       buildString {
+         val wholePart = (value / 1000000).absoluteValue
+         val fractionalPart = (value % 1000000).absoluteValue
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(wholePart)
+         if (fractionalPart != 0) {
+           append('.')
+           append(fractionalPart.toZeroPaddedString(6).dropLastWhile { it == '0' })
+         }
+         append('S')
+       }
+     }
   }
+
   /**
    * Negate the value.
    * @throws ArithmeticException if overflow occurs
@@ -404,22 +407,25 @@ inline class LongMicroseconds(
   /**
    * Convert to an ISO-8601 time interval representation.
    */
-  override fun toString(): String = if (isZero()) {
-      "PT0S"
-  } else {
-      buildString {
-          val wholePart = (value / 1000000).absoluteValue
-          val fractionalPart = ((value % 1000000).toInt()).absoluteValue
-          if (isNegative()) { append('-') }
-          append("PT")
-          append(wholePart)
-          if (fractionalPart != 0) {
-              append('.')
-              append(fractionalPart.toZeroPaddedString(6).dropLastWhile { it == '0' })
-          }
-          append('S')
-      }
+  override fun toString(): String {
+     return if (isZero()) {
+       "PT0S"
+     } else {
+       buildString {
+         val wholePart = (value / 1000000).absoluteValue
+         val fractionalPart = ((value % 1000000).toInt()).absoluteValue
+         if (isNegative()) { append('-') }
+         append("PT")
+         append(wholePart)
+         if (fractionalPart != 0) {
+           append('.')
+           append(fractionalPart.toZeroPaddedString(6).dropLastWhile { it == '0' })
+         }
+         append('S')
+       }
+     }
   }
+
   /**
    * Negate the value.
    * @throws ArithmeticException if overflow occurs
