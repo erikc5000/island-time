@@ -171,28 +171,29 @@ class FixedClock(
 }
 
 @Suppress("FunctionName")
-fun FixedClock(days: LongDays, zone: TimeZone = TimeZone.UTC) = FixedClock(days.inMillisecondsExact(), zone)
+fun FixedClock(days: LongDays, zone: TimeZone = TimeZone.UTC) = FixedClock(days.inMilliseconds, zone)
 
 @Suppress("FunctionName")
 fun FixedClock(days: IntDays, zone: TimeZone = TimeZone.UTC) = FixedClock(days.inMilliseconds, zone)
 
 @Suppress("FunctionName")
-fun FixedClock(hours: LongHours, zone: TimeZone = TimeZone.UTC) = FixedClock(hours.inMillisecondsExact(), zone)
+fun FixedClock(hours: LongHours, zone: TimeZone = TimeZone.UTC) = FixedClock(hours.inMilliseconds, zone)
 
 @Suppress("FunctionName")
 fun FixedClock(hours: IntHours, zone: TimeZone = TimeZone.UTC) = FixedClock(hours.inMilliseconds, zone)
 
 @Suppress("FunctionName")
-fun FixedClock(minutes: LongMinutes, zone: TimeZone = TimeZone.UTC) = FixedClock(minutes.inMillisecondsExact(), zone)
+fun FixedClock(minutes: LongMinutes, zone: TimeZone = TimeZone.UTC) = FixedClock(minutes.inMilliseconds, zone)
 
 @Suppress("FunctionName")
 fun FixedClock(minutes: IntMinutes, zone: TimeZone = TimeZone.UTC) = FixedClock(minutes.inMilliseconds, zone)
 
 @Suppress("FunctionName")
-fun FixedClock(seconds: LongSeconds, zone: TimeZone = TimeZone.UTC) = FixedClock(seconds.inMillisecondsExact(), zone)
+fun FixedClock(seconds: LongSeconds, zone: TimeZone = TimeZone.UTC) = FixedClock(seconds.inMilliseconds, zone)
 
 @Suppress("FunctionName")
 fun FixedClock(seconds: IntSeconds, zone: TimeZone = TimeZone.UTC) = FixedClock(seconds.inMilliseconds, zone)
 
 @Suppress("FunctionName")
-fun FixedClock(milliseconds: IntMilliseconds, zone: TimeZone = TimeZone.UTC) = FixedClock(milliseconds.toLong(), zone)
+fun FixedClock(milliseconds: IntMilliseconds, zone: TimeZone = TimeZone.UTC) =
+    FixedClock(milliseconds.toLongMilliseconds(), zone)

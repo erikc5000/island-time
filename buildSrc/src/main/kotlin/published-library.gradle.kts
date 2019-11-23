@@ -19,7 +19,6 @@ val javadocJar by tasks.registering(Jar::class) {
     from(dokka.get().outputDirectory)
 }
 
-@Suppress("UnstableApiUsage")
 signing {
     val signingKey: String? by project
     val signingPassword: String? by project
@@ -70,7 +69,6 @@ afterEvaluate {
                 artifactId = pomArtifactId
             }
 
-            @Suppress("UnstableApiUsage")
             pom.apply {
                 name.set(pomName)
                 description.set(pomDescription)

@@ -57,7 +57,7 @@ class OffsetTime(
      * [OffsetTime] objects with different offsets to be compared.
      */
     val nanosecondsSinceStartOfUtcDay: LongNanoseconds
-        get() = time.nanosecondsSinceStartOfDay - offset.totalSeconds
+        get() = (time.nanosecondsSinceStartOfDay.value - offset.totalSeconds.inNanoseconds.value).nanoseconds
 
     /**
      * Return an [OffsetTime] with the offset changed to [newOffset], adjusting the time component such that the instant
@@ -74,31 +74,31 @@ class OffsetTime(
 
     operator fun plus(duration: Duration) = copy(time = time + duration)
     operator fun plus(hours: LongHours) = copy(time = time + hours)
-    operator fun plus(hours: IntHours) = plus(hours.toLong())
+    operator fun plus(hours: IntHours) = copy(time = time + hours)
     operator fun plus(minutes: LongMinutes) = copy(time = time + minutes)
-    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong())
+    operator fun plus(minutes: IntMinutes) = copy(time = time + minutes)
     operator fun plus(seconds: LongSeconds) = copy(time = time + seconds)
-    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong())
+    operator fun plus(seconds: IntSeconds) = copy(time = time + seconds)
     operator fun plus(milliseconds: LongMilliseconds) = copy(time = time + milliseconds)
-    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLong())
+    operator fun plus(milliseconds: IntMilliseconds) = copy(time = time + milliseconds)
     operator fun plus(microseconds: LongMicroseconds) = copy(time = time + microseconds)
-    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLong())
+    operator fun plus(microseconds: IntMicroseconds) = copy(time = time + microseconds)
     operator fun plus(nanoseconds: LongNanoseconds) = copy(time = time + nanoseconds)
-    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+    operator fun plus(nanoseconds: IntNanoseconds) = copy(time = time + nanoseconds)
 
     operator fun minus(duration: Duration) = copy(time = time - duration)
     operator fun minus(hours: LongHours) = copy(time = time - hours)
-    operator fun minus(hours: IntHours) = minus(hours.toLong())
+    operator fun minus(hours: IntHours) = copy(time = time - hours)
     operator fun minus(minutes: LongMinutes) = copy(time = time - minutes)
-    operator fun minus(minutes: IntMinutes) = minus(minutes.toLong())
+    operator fun minus(minutes: IntMinutes) = copy(time = time - minutes)
     operator fun minus(seconds: LongSeconds) = copy(time = time - seconds)
-    operator fun minus(seconds: IntSeconds) = minus(seconds.toLong())
+    operator fun minus(seconds: IntSeconds) = copy(time = time - seconds)
     operator fun minus(milliseconds: LongMilliseconds) = copy(time = time - milliseconds)
-    operator fun minus(milliseconds: IntMilliseconds) = minus(milliseconds.toLong())
+    operator fun minus(milliseconds: IntMilliseconds) = copy(time = time - milliseconds)
     operator fun minus(microseconds: LongMicroseconds) = copy(time = time - microseconds)
-    operator fun minus(microseconds: IntMicroseconds) = minus(microseconds.toLong())
+    operator fun minus(microseconds: IntMicroseconds) = copy(time = time - microseconds)
     operator fun minus(nanoseconds: LongNanoseconds) = copy(time = time - nanoseconds)
-    operator fun minus(nanoseconds: IntNanoseconds) = minus(nanoseconds.toLong())
+    operator fun minus(nanoseconds: IntNanoseconds) = copy(time = time - nanoseconds)
 
     override fun compareTo(other: OffsetTime): Int {
         return if (offset == other.offset) {

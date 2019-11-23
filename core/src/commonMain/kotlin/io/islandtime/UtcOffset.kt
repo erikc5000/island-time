@@ -118,13 +118,13 @@ fun UtcOffset(
  * Convert a duration of hours into a UTC time offset of the same length.
  * @throws ArithmeticException if overflow occurs
  */
-fun IntHours.asUtcOffset() = UtcOffset(this.inSecondsExact())
+fun IntHours.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
  * Convert a duration of minutes into a UTC time offset of the same length.
  * @throws ArithmeticException if overflow occurs
  */
-fun IntMinutes.asUtcOffset() = UtcOffset(this.inSecondsExact())
+fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
  * Convert a duration of seconds into a UTC time offset of the same length.

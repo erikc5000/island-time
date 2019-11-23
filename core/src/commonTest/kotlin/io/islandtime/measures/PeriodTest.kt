@@ -132,7 +132,11 @@ class PeriodTest {
             periodOf(1.weeks) to "P7D",
             periodOf(10.years) to "P10Y",
             periodOf(10.years, (-12).months, 4.days) to "P10Y-12M4D",
-            periodOf((-100).days) to "P-100D"
+            periodOf((-100).days) to "P-100D",
+            periodOf(Int.MAX_VALUE.years, Int.MAX_VALUE.months, Int.MAX_VALUE.days) to
+                "P${Int.MAX_VALUE}Y${Int.MAX_VALUE}M${Int.MAX_VALUE}D",
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months, Int.MIN_VALUE.days) to
+                "P${Int.MIN_VALUE}Y${Int.MIN_VALUE}M${Int.MIN_VALUE}D"
         ).forEach {
             assertEquals(it.second, it.first.toString())
         }
@@ -179,31 +183,37 @@ class PeriodTest {
     fun `totalMonths property combines years and months components`() {
         assertEquals(15L.months, periodOf(1.years, 3.months, 15.days).totalMonths)
         assertEquals(15L.months, periodOf((-1).years, 27.months, (-1).days).totalMonths)
+        assertEquals(27917287411L.months, periodOf(Int.MAX_VALUE.years, Int.MAX_VALUE.months).totalMonths)
+        assertEquals((-27917287424L).months, periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months).totalMonths)
     }
 
     @Test
-    fun `isZero property returns true for zeroed-out periods`() {
+    fun `isZero() returns true for zeroed-out periods`() {
         assertTrue { Period.ZERO.isZero() }
     }
 
     @Test
-    fun `isZero property returns false for non-zero periods`() {
+    fun `isZero() returns false for non-zero periods`() {
         assertFalse { periodOf(1.days).isZero() }
     }
 
     @Test
-    fun `isNegative property returns true if any component is less than zero`() {
+    fun `isNegative() returns true if any component is less than zero`() {
         assertTrue { periodOf((-1).years, 1.months, 1.days).isNegative() }
         assertTrue { periodOf(1.years, (-1).months, 1.days).isNegative() }
         assertTrue { periodOf(1.years, 1.months, (-1).days).isNegative() }
     }
 
     @Test
-    fun `isNegative property returns false if all components are zero or more`() {
-        assertFalse { periodOf(1.years, 0.months, 0.days).isNegative() }
-        assertFalse { periodOf(0.years, 1.months, 0.days).isNegative() }
-        assertFalse { periodOf(0.years, 0.months, 1.days).isNegative() }
-        assertFalse { Period.ZERO.isNegative() }
+    fun `isNegative() returns false if all components are zero or more`() {
+        listOf(
+            periodOf(1.years, 0.months, 0.days),
+            periodOf(0.years, 1.months, 0.days),
+            periodOf(0.years, 0.months, 1.days),
+            Period.ZERO
+        ).forEach {
+            assertFalse { it.isNegative() }
+        }
     }
 
     @Test
@@ -240,8 +250,28 @@ class PeriodTest {
     }
 
     @Test
-    fun `unaryMinus changes the sign on all components`() {
+    fun `normalized() throws an exception when overflow occurs`() {
+        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.years, Int.MAX_VALUE.months).normalized() }
+        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months).normalized() }
+    }
+
+    @Test
+    fun `unary minus changes the sign on all components`() {
         assertEquals(periodOf((-1).years, 1.months, 1.days), -periodOf(1.years, (-1).months, (-1).days))
+    }
+
+    @Test
+    fun `unary minus throws an exception when overflow occurs`() {
+        listOf(
+            periodOf(Int.MIN_VALUE.years),
+            periodOf(Int.MIN_VALUE.months),
+            periodOf(Int.MIN_VALUE.days),
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months),
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.days),
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months, Int.MIN_VALUE.days)
+        ).forEach {
+            assertFailsWith<ArithmeticException> { -it }
+        }
     }
 
     @Test
@@ -323,6 +353,38 @@ class PeriodTest {
             periodOf(1.years, 1.months, 1.days) - 1.days
         )
     }
+    
+    @Test
+    fun `adding or subtracting years causes an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.years) + 1.years }
+        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.years) - 1.years }
+        assertFailsWith<ArithmeticException> { periodOf(1.years) + Int.MAX_VALUE.years }
+        assertFailsWith<ArithmeticException> { periodOf((-1).years) + Int.MIN_VALUE.years }
+    }
+
+    @Test
+    fun `adding or subtracting months causes an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.months) + 1.months }
+        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.months) - 1.months }
+        assertFailsWith<ArithmeticException> { periodOf(1.months) + Int.MAX_VALUE.months }
+        assertFailsWith<ArithmeticException> { periodOf((-1).months) + Int.MIN_VALUE.months }
+    }
+
+    @Test
+    fun `adding or subtracting weeks causes an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.days) + 1.weeks }
+        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.days) - 1.weeks }
+        assertFailsWith<ArithmeticException> { periodOf(1.days) + Int.MAX_VALUE.weeks }
+        assertFailsWith<ArithmeticException> { periodOf((-1).days) + Int.MIN_VALUE.weeks }
+    }
+
+    @Test
+    fun `adding or subtracting days causes an exception on overflow`() {
+        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.days) + 1.days }
+        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.days) - 1.days }
+        assertFailsWith<ArithmeticException> { periodOf(1.days) + Int.MAX_VALUE.days }
+        assertFailsWith<ArithmeticException> { periodOf((-1).days) + Int.MIN_VALUE.days }
+    }
 
     @Test
     fun `multiplying by 1 has no effect`() {
@@ -343,10 +405,32 @@ class PeriodTest {
     }
 
     @Test
+    fun `multiplication causes an exception when overflow occurs`() {
+        listOf(
+            periodOf(Int.MIN_VALUE.years),
+            periodOf(Int.MIN_VALUE.months),
+            periodOf(Int.MIN_VALUE.days),
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months),
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.days),
+            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months, Int.MIN_VALUE.days)
+        ).forEach {
+            assertFailsWith<ArithmeticException> { it * -1 }
+        }
+
+        assertFailsWith<ArithmeticException> { periodOf(1.weeks) * Int.MAX_VALUE }
+        assertFailsWith<ArithmeticException> { Int.MAX_VALUE * periodOf(2.days) }
+    }
+
+    @Test
     fun `adding a period to years returns a new period with adjusted years`() {
         assertEquals(
             periodOf(2.years, 1.months),
             1.years + periodOf(1.years, 1.months)
+        )
+
+        assertEquals(
+            periodOf(Int.MAX_VALUE.years, 1.months),
+            1.years + periodOf((Int.MAX_VALUE - 1).years, 1.months)
         )
     }
 
@@ -355,6 +439,11 @@ class PeriodTest {
         assertEquals(
             periodOf(3.months, 4.days),
             (-2).months + periodOf(5.months, 4.days)
+        )
+
+        assertEquals(
+            periodOf(Int.MAX_VALUE.months, 1.days),
+            1.months + periodOf((Int.MAX_VALUE - 1).months, 1.days)
         )
     }
 
@@ -381,6 +470,11 @@ class PeriodTest {
         assertEquals(
             periodOf(1.years, 3.days),
             5L.days + periodOf(1.years, (-2).days)
+        )
+
+        assertEquals(
+            periodOf(1.months, Int.MAX_VALUE.days),
+            1.days + periodOf(1.months, (Int.MAX_VALUE - 1).days)
         )
     }
 

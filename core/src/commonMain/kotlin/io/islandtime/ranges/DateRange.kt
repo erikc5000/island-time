@@ -228,16 +228,16 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
         totalMonths > 0 && dayDiff.value < 0 -> {
             totalMonths--
             val testDate = start + totalMonths.months
-            daysBetween(testDate, endExclusive).toInt()
+            daysBetween(testDate, endExclusive).toIntDaysUnchecked()
         }
         totalMonths < 0 && dayDiff.value > 0 -> {
             totalMonths++
-            dayDiff - endExclusive.lengthOfMonth
+            (dayDiff.value - endExclusive.lengthOfMonth.value).days
         }
         else -> dayDiff
     }
-    val years = (totalMonths / MONTHS_PER_YEAR).years.toInt()
-    val months = (totalMonths % MONTHS_PER_YEAR).months.toInt()
+    val years = (totalMonths / MONTHS_PER_YEAR).toInt().years
+    val months = (totalMonths % MONTHS_PER_YEAR).toInt().months
 
     return periodOf(years, months, days)
 }

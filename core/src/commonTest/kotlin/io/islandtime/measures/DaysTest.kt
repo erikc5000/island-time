@@ -20,13 +20,13 @@ class DaysTest {
     }
 
     @Test
-    fun `toLong() converts IntDays to LongDays`() {
-        assertEquals(2L.days, 2.days.toLong())
+    fun `toLongDays() converts IntDays to LongDays`() {
+        assertEquals(2L.days, 2.days.toLongDays())
     }
 
     @Test
-    fun `toInt() converts LongDays to IntDays`() {
-        assertEquals(2.days, 2L.days.toInt())
+    fun `toIntDays() converts LongDays to IntDays`() {
+        assertEquals(2.days, 2L.days.toIntDays())
     }
 
     @Test
