@@ -57,8 +57,7 @@ class OffsetTime(
      * [OffsetTime] objects with different offsets to be compared.
      */
     val nanosecondsSinceStartOfUtcDay: LongNanoseconds
-        // TODO: Use unchecked subtraction
-        get() = time.nanosecondsSinceStartOfDay - offset.totalSeconds
+        get() = (time.nanosecondsSinceStartOfDay.value - offset.totalSeconds.inNanoseconds.value).nanoseconds
 
     /**
      * Return an [OffsetTime] with the offset changed to [newOffset], adjusting the time component such that the instant
