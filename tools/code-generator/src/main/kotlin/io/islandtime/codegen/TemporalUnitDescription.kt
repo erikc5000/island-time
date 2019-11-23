@@ -46,7 +46,7 @@ enum class TemporalUnitDescription(
     val lowerCaseName: String get() = pluralName.toLowerCase()
     val valueName: String get() = "value"
     val inUnitPropertyName: String get() = "in$pluralName"
-    val inUnitExactMethodName: String get() = "${inUnitPropertyName}Exact"
+    val inUnitUncheckedPropertyName: String get() = "${inUnitPropertyName}Unchecked"
     val inWholeUnitPropertyName: String get() = "in$pluralName"
 
     open val isoPeriodPrefix: String get() = if (isTimeBased) "PT" else "P"

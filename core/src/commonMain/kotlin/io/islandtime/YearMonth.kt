@@ -126,7 +126,7 @@ class YearMonth(
      */
     fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
 
-    operator fun plus(years: IntYears) = plus(years.toLong())
+    operator fun plus(years: IntYears) = plus(years.toLongYears())
 
     operator fun plus(years: LongYears): YearMonth {
         return if (years.value == 0L) {
@@ -137,7 +137,7 @@ class YearMonth(
         }
     }
 
-    operator fun plus(months: IntMonths) = plus(months.toLong())
+    operator fun plus(months: IntMonths) = plus(months.toLongMonths())
 
     operator fun plus(months: LongMonths): YearMonth {
         return if (months.value == 0L) {
@@ -150,23 +150,23 @@ class YearMonth(
         }
     }
 
-    operator fun minus(years: IntYears) = plus(-years.toLong())
+    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
 
     operator fun minus(years: LongYears): YearMonth {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
         } else {
-            plus(-years)
+            plus(years.negateUnchecked())
         }
     }
 
-    operator fun minus(months: IntMonths) = plus(-months.toLong())
+    operator fun minus(months: IntMonths) = plus(months.toLongMonths().negateUnchecked())
 
     operator fun minus(months: LongMonths): YearMonth {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1L.months
         } else {
-            plus(-months)
+            plus(months.negateUnchecked())
         }
     }
 

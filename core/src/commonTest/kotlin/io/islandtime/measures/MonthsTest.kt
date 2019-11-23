@@ -38,12 +38,12 @@ class MonthsTest {
     }
 
     @Test
-    fun `toLong() converts IntMonths to LongMonths`() {
-        assertEquals(2L.months, 2.months.toLong())
+    fun `toLongMonths() converts IntMonths to LongMonths`() {
+        assertEquals(2L.months, 2.months.toLongMonths())
     }
 
     @Test
-    fun `toInt() converts LongMonths to IntMonths`() {
-        assertEquals(2.months, 2L.months.toInt())
+    fun `toIntMonths() converts LongMonths to IntMonths`() {
+        assertEquals(2.months, 2L.months.toIntMonths())
     }
 }

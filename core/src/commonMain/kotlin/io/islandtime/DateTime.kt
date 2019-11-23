@@ -144,7 +144,7 @@ class DateTime(
         return this + duration.seconds + duration.nanosecondAdjustment
     }
 
-    operator fun plus(years: IntYears) = plus(years.toLong())
+    operator fun plus(years: IntYears) = plus(years.toLongYears())
 
     operator fun plus(years: LongYears): DateTime {
         return if (years.value == 0L) {
@@ -154,7 +154,7 @@ class DateTime(
         }
     }
 
-    operator fun plus(months: IntMonths) = plus(months.toLong())
+    operator fun plus(months: IntMonths) = plus(months.toLongMonths())
 
     operator fun plus(months: LongMonths): DateTime {
         return if (months.value == 0L) {
@@ -164,7 +164,7 @@ class DateTime(
         }
     }
     
-    operator fun plus(weeks: IntWeeks) = plus(weeks.toLong().inDays)
+    operator fun plus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked)
     
     operator fun plus(weeks: LongWeeks): DateTime {
         return if (weeks.value == 0L) {
@@ -174,7 +174,7 @@ class DateTime(
         }
     }
 
-    operator fun plus(days: IntDays) = plus(days.toLong())
+    operator fun plus(days: IntDays) = plus(days.toLongDays())
 
     operator fun plus(days: LongDays): DateTime {
         return if (days.value == 0L) {
@@ -184,7 +184,7 @@ class DateTime(
         }
     }
 
-    operator fun plus(hours: IntHours) = plus(hours.toLong())
+    operator fun plus(hours: IntHours) = plus(hours.toLongHours())
 
     operator fun plus(hours: LongHours): DateTime {
         return if (hours.value == 0L) {
@@ -192,7 +192,7 @@ class DateTime(
         } else {
             var daysToAdd = hours.inDays
             val wrappedHours = (hours % HOURS_PER_DAY).toInt()
-            var newHour = time.hour + wrappedHours.value
+            var newHour = time.hour + wrappedHours
             daysToAdd += (newHour floorDiv HOURS_PER_DAY).days
             newHour = newHour floorMod HOURS_PER_DAY
 
@@ -202,7 +202,7 @@ class DateTime(
         }
     }
 
-    operator fun plus(minutes: IntMinutes) = plus(minutes.toLong())
+    operator fun plus(minutes: IntMinutes) = plus(minutes.toLongMinutes())
 
     operator fun plus(minutes: LongMinutes): DateTime {
         return if (minutes.value == 0L) {
@@ -211,7 +211,7 @@ class DateTime(
             var daysToAdd = minutes.inDays
             val currentMinuteOfDay = time.hour * MINUTES_PER_HOUR + minute
             val wrappedMinutes = (minutes % MINUTES_PER_DAY).toInt()
-            var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes.value
+            var newMinuteOfDay = currentMinuteOfDay + wrappedMinutes
             daysToAdd += (newMinuteOfDay floorDiv MINUTES_PER_DAY).days
             newMinuteOfDay = newMinuteOfDay floorMod MINUTES_PER_DAY
 
@@ -229,7 +229,7 @@ class DateTime(
         }
     }
 
-    operator fun plus(seconds: IntSeconds) = plus(seconds.toLong())
+    operator fun plus(seconds: IntSeconds) = plus(seconds.toLongSeconds())
 
     operator fun plus(seconds: LongSeconds): DateTime {
         return if (seconds.value == 0L) {
@@ -238,7 +238,7 @@ class DateTime(
             var daysToAdd = seconds.inDays
             val currentSecondOfDay = time.secondOfDay
             val wrappedSeconds = (seconds % SECONDS_PER_DAY).toInt()
-            var newSecondOfDay = currentSecondOfDay + wrappedSeconds.value
+            var newSecondOfDay = currentSecondOfDay + wrappedSeconds
             daysToAdd += (newSecondOfDay floorDiv SECONDS_PER_DAY).days
             newSecondOfDay = newSecondOfDay floorMod SECONDS_PER_DAY
 
@@ -254,27 +254,27 @@ class DateTime(
         }
     }
 
-    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLong())
+    operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLongMilliseconds())
 
     operator fun plus(milliseconds: LongMilliseconds): DateTime {
         return if (milliseconds.value == 0L) {
             this
         } else {
-            plus(milliseconds.inDays, (milliseconds % MILLISECONDS_PER_DAY).inNanoseconds)
+            plus(milliseconds.inDays, (milliseconds % MILLISECONDS_PER_DAY).inNanosecondsUnchecked)
         }
     }
 
-    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLong())
+    operator fun plus(microseconds: IntMicroseconds) = plus(microseconds.toLongMicroseconds())
 
     operator fun plus(microseconds: LongMicroseconds): DateTime {
         return if (microseconds.value == 0L) {
             this
         } else {
-            plus(microseconds.inDays, (microseconds % MICROSECONDS_PER_DAY).inNanoseconds)
+            plus(microseconds.inDays, (microseconds % MICROSECONDS_PER_DAY).inNanosecondsUnchecked)
         }
     }
 
-    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLong())
+    operator fun plus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds())
 
     operator fun plus(nanoseconds: LongNanoseconds): DateTime {
         return if (nanoseconds.value == 0L) {
@@ -287,7 +287,7 @@ class DateTime(
     private fun plus(days: LongDays, wrappedNanoseconds: LongNanoseconds): DateTime {
         val currentNanosecondOfDay = time.nanosecondOfDay
         var newNanosecondOfDay = currentNanosecondOfDay + wrappedNanoseconds.value
-        val daysToAdd = days + (newNanosecondOfDay floorDiv NANOSECONDS_PER_DAY).days
+        val daysToAdd = (days.value + (newNanosecondOfDay floorDiv NANOSECONDS_PER_DAY)).days
         newNanosecondOfDay = newNanosecondOfDay floorMod NANOSECONDS_PER_DAY
 
         val newDate = date + daysToAdd
@@ -314,103 +314,103 @@ class DateTime(
         return this - duration.seconds - duration.nanosecondAdjustment
     }
 
-    operator fun minus(years: IntYears) = plus(-years.toLong())
+    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
 
     operator fun minus(years: LongYears): DateTime {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1.years
         } else {
-            plus(-years)
+            plus(years.negateUnchecked())
         }
     }
 
-    operator fun minus(months: IntMonths) = plus(-months.toLong())
+    operator fun minus(months: IntMonths) = plus(months.toLongMonths().negateUnchecked())
 
     operator fun minus(months: LongMonths): DateTime {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1.months
         } else {
-            plus(-months)
+            plus(months.negateUnchecked())
         }
     }
     
-    operator fun minus(weeks: IntWeeks) = plus(-weeks.toLong().inDays)
+    operator fun minus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
 
     operator fun minus(weeks: LongWeeks): DateTime {
         return if (weeks.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.weeks + 1.weeks
         } else {
-            plus(-weeks)
+            plus(weeks.negateUnchecked())
         }
     }
 
-    operator fun minus(days: IntDays) = plus(-days.toLong())
+    operator fun minus(days: IntDays) = plus(days.toLongDays().negateUnchecked())
 
     operator fun minus(days: LongDays): DateTime {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
         } else {
-            plus(-days)
+            plus(days.negateUnchecked())
         }
     }
 
-    operator fun minus(hours: IntHours) = plus(-hours.toLong())
+    operator fun minus(hours: IntHours) = plus(hours.toLongHours().negateUnchecked())
 
     operator fun minus(hours: LongHours): DateTime {
         return if (hours.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.hours + 1.hours
         } else {
-            plus(-hours)
+            plus(hours.negateUnchecked())
         }
     }
 
-    operator fun minus(minutes: IntMinutes) = plus(-minutes.toLong())
+    operator fun minus(minutes: IntMinutes) = plus(minutes.toLongMinutes().negateUnchecked())
 
     operator fun minus(minutes: LongMinutes): DateTime {
         return if (minutes.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.minutes + 1.minutes
         } else {
-            plus(-minutes)
+            plus(minutes.negateUnchecked())
         }
     }
 
-    operator fun minus(seconds: IntSeconds) = plus(-seconds.toLong())
+    operator fun minus(seconds: IntSeconds) = plus(seconds.toLongSeconds().negateUnchecked())
 
     operator fun minus(seconds: LongSeconds): DateTime {
         return if (seconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.seconds + 1.seconds
         } else {
-            plus(-seconds)
+            plus(seconds.negateUnchecked())
         }
     }
 
-    operator fun minus(milliseconds: IntMilliseconds) = plus(-milliseconds.toLong())
+    operator fun minus(milliseconds: IntMilliseconds) = plus(milliseconds.toLongMilliseconds().negateUnchecked())
 
     operator fun minus(milliseconds: LongMilliseconds): DateTime {
         return if (milliseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.milliseconds + 1.milliseconds
         } else {
-            plus(-milliseconds)
+            plus(milliseconds.negateUnchecked())
         }
     }
 
-    operator fun minus(microseconds: IntMicroseconds) = plus(-microseconds.toLong())
+    operator fun minus(microseconds: IntMicroseconds) = plus(microseconds.toLongMicroseconds().negateUnchecked())
 
     operator fun minus(microseconds: LongMicroseconds): DateTime {
         return if (microseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.microseconds + 1.microseconds
         } else {
-            plus(-microseconds)
+            plus(microseconds.negateUnchecked())
         }
     }
 
-    operator fun minus(nanoseconds: IntNanoseconds) = plus(-nanoseconds.toLong())
+    operator fun minus(nanoseconds: IntNanoseconds) = plus(nanoseconds.toLongNanoseconds().negateUnchecked())
 
     operator fun minus(nanoseconds: LongNanoseconds): DateTime {
         return if (nanoseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.nanoseconds + 1.nanoseconds
         } else {
-            plus(-nanoseconds)
+            plus(nanoseconds.negateUnchecked())
         }
     }
 
@@ -521,6 +521,7 @@ class DateTime(
      * @see unixEpochSecondAt
      */
     fun secondsSinceUnixEpochAt(offset: UtcOffset): LongSeconds {
+        // TODO: Use unchecked operators
         return date.daysSinceUnixEpoch + time.secondsSinceStartOfDay - offset.totalSeconds
     }
 
@@ -534,6 +535,7 @@ class DateTime(
         get() = nanosecond.nanoseconds
 
     fun millisecondsSinceUnixEpochAt(offset: UtcOffset): LongMilliseconds {
+        // TODO: Use unchecked operators
         return date.daysSinceUnixEpoch +
             time.secondsSinceStartOfDay +
             time.nanosecondsSinceStartOfDay.inMilliseconds -
@@ -574,7 +576,7 @@ class DateTime(
             val localMilliseconds = milliseconds + offset.totalSeconds
             val localEpochDays = (localMilliseconds.value floorDiv MILLISECONDS_PER_DAY).days
             val nanosecondOfDay =
-                (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.inNanoseconds.value
+                (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.inNanosecondsUnchecked.value
             val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
             val time = Time.fromNanosecondOfDay(nanosecondOfDay)
             return DateTime(date, time)

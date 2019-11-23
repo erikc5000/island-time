@@ -22,27 +22,30 @@ class Period private constructor(
 ) {
 
     /**
-     * The total number of months in this period, including years
+     * The total number of months in this period, including years.
      */
-    val totalMonths: LongMonths get() = years.toLong() + months.toLong()
+    val totalMonths: LongMonths
+        get() = (years.toLongYears().inMonthsUnchecked.value + months.value).months
 
     /**
-     * true if this period has no length
+     * Check if this period has no length.
      */
     fun isZero(): Boolean = this == ZERO
 
     /**
-     * true if any component of this period is negative
+     * Check if any component of this period is negative.
      */
     fun isNegative(): Boolean = years.value < 0 || months.value < 0 || days.value < 0
 
     /**
-     * Reverse the sign of each component in the period
+     * Reverse the sign of each component in the period.
+     * @throws ArithmeticException if overflow occurs
      */
     operator fun unaryMinus() = create(-years, -months, -days)
 
     /**
-     * Add each component of another period to each component of this period
+     * Add each component of another period to each component of this period.
+     * @throws ArithmeticException if overflow occurs
      */
     operator fun plus(other: Period) = create(
         years + other.years,
@@ -51,7 +54,8 @@ class Period private constructor(
     )
 
     /**
-     * Subtract each component of another period from this period
+     * Subtract each component of another period from this period.
+     * @throws ArithmeticException if overflow occurs
      */
     operator fun minus(other: Period) = create(
         years - other.years,
@@ -59,30 +63,29 @@ class Period private constructor(
         days - other.days
     )
 
-    // TODO: These methods all need to be made overflow safe
     operator fun plus(years: IntYears) = copy(years = this.years + years)
-
     operator fun plus(months: IntMonths) = copy(months = this.months + months)
-    operator fun plus(weeks: IntWeeks) = plus(weeks.toLong().inDays)
+    operator fun plus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked)
     operator fun plus(days: IntDays) = copy(days = this.days + days)
 
-    operator fun plus(years: LongYears) = copy(years = (this.years.toLong() + years).toInt())
-    operator fun plus(months: LongMonths) = copy(months = (this.months.toLong() + months).toInt())
-    operator fun plus(weeks: LongWeeks) = plus(weeks.inDaysExact())
-    operator fun plus(days: LongDays) = copy(days = (this.days.toLong() + days).toInt())
+    operator fun plus(years: LongYears) = copy(years = (this.years.toLong() + years.value).toIntExact().years)
+    operator fun plus(months: LongMonths) = copy(months = (this.months.toLong() + months.value).toIntExact().months)
+    operator fun plus(weeks: LongWeeks) = plus(weeks.inDays)
+    operator fun plus(days: LongDays) = copy(days = (this.days.toLong() + days.value).toIntExact().days)
 
-    operator fun minus(years: IntYears) = plus(-years)
-    operator fun minus(months: IntMonths) = plus(-months)
-    operator fun minus(weeks: IntWeeks) = minus(weeks.toLong().inDays)
-    operator fun minus(days: IntDays) = plus(-days)
+    operator fun minus(years: IntYears) = copy(years = this.years - years)
+    operator fun minus(months: IntMonths) = copy(months = this.months - months)
+    operator fun minus(weeks: IntWeeks) = minus(weeks.toLongWeeks().inDaysUnchecked)
+    operator fun minus(days: IntDays) = copy(days = this.days - days)
 
-    operator fun minus(years: LongYears) = plus(-years)
-    operator fun minus(months: LongMonths) = plus(-months)
-    operator fun minus(weeks: LongWeeks) = minus(weeks.inDaysExact())
-    operator fun minus(days: LongDays) = plus(-days)
+    operator fun minus(years: LongYears) = copy(years = (this.years.toLong() - years.value).toIntExact().years)
+    operator fun minus(months: LongMonths) = copy(months = (this.months.toLong() - months.value).toIntExact().months)
+    operator fun minus(weeks: LongWeeks) = minus(weeks.inDays)
+    operator fun minus(days: LongDays) = copy(days = (this.days.toLong() - days.value).toIntExact().days)
 
     /**
-     * Multiply each component of this period by a scalar value
+     * Multiply each component of this period by a scalar value.
+     * @throws ArithmeticException if overflow occurs
      */
     operator fun times(scalar: Int): Period {
         return if (this.isZero() || scalar == 1) {
@@ -102,8 +105,8 @@ class Period private constructor(
      */
     fun normalized(): Period {
         val monthTotal = totalMonths
-        val newYears = monthTotal.inYears.toIntExact()
-        val newMonths = (monthTotal % MONTHS_PER_YEAR).toInt()
+        val newYears = monthTotal.inYears.toIntYears()
+        val newMonths = (monthTotal % MONTHS_PER_YEAR).toIntMonthsUnchecked()
 
         return if (newYears == years && newMonths == months) {
             this
@@ -207,8 +210,9 @@ fun periodOf(months: IntMonths, days: IntDays = 0.days) = Period.create(months =
 
 /**
  * Create a [Period].
+ * @throws ArithmeticException if overflow occurs
  */
-fun periodOf(weeks: IntWeeks) = Period.create(days = weeks.inDaysExact())
+fun periodOf(weeks: IntWeeks) = Period.create(days = weeks.inDays)
 
 /**
  * Create a [Period].
@@ -229,7 +233,7 @@ fun IntMonths.asPeriod() = Period.create(months = this)
  * Convert [IntWeeks] into a [Period] with the same number of weeks
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
-fun IntWeeks.asPeriod() = Period.create(days = this.inDaysExact())
+fun IntWeeks.asPeriod() = Period.create(days = this.inDays)
 
 /**
  * Convert [IntDays] into a [Period] with the same number of days
@@ -240,35 +244,35 @@ fun IntDays.asPeriod() = Period.create(days = this)
  * Convert [LongYears] into a [Period] with the same number of years
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
-fun LongYears.asPeriod() = this.toIntExact().asPeriod()
+fun LongYears.asPeriod() = this.toIntYears().asPeriod()
 
 /**
  * Convert [LongMonths] into a [Period] with the same number of months
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
-fun LongMonths.asPeriod() = this.toIntExact().asPeriod()
+fun LongMonths.asPeriod() = this.toIntMonths().asPeriod()
 
 /**
  * Convert [LongWeeks] into a [Period] with the same number of weeks
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
-fun LongWeeks.asPeriod() = this.inDaysExact().asPeriod()
+fun LongWeeks.asPeriod() = this.inDays.asPeriod()
 
 /**
  * Convert [LongDays] into a [Period] with the same number of days
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
-fun LongDays.asPeriod() = this.toIntExact().asPeriod()
+fun LongDays.asPeriod() = this.toIntDays().asPeriod()
 
 operator fun IntYears.plus(period: Period) = period.copy(years = this + period.years)
 operator fun IntMonths.plus(period: Period) = period.copy(months = this + period.months)
-operator fun IntWeeks.plus(period: Period) = this.toLong().inDays + period
+operator fun IntWeeks.plus(period: Period) = this.toLongWeeks().inDaysUnchecked + period
 operator fun IntDays.plus(period: Period) = period.copy(days = this + period.days)
 
-operator fun LongYears.plus(period: Period) = period.copy(years = (this + period.years.toLong()).toInt())
-operator fun LongMonths.plus(period: Period) = period.copy(months = (this + period.months.toLong()).toInt())
-operator fun LongWeeks.plus(period: Period) = this.inDaysExact() + period
-operator fun LongDays.plus(period: Period) = period.copy(days = (this + period.days.toLong()).toInt())
+operator fun LongYears.plus(period: Period) = period.copy(years = (this + period.years).toIntYears())
+operator fun LongMonths.plus(period: Period) = period.copy(months = (this + period.months).toIntMonths())
+operator fun LongWeeks.plus(period: Period) = this.inDays + period
+operator fun LongDays.plus(period: Period) = period.copy(days = (this + period.days).toIntDays())
 
 operator fun IntYears.minus(period: Period) = Period.create(
     this - period.years,
@@ -282,7 +286,7 @@ operator fun IntMonths.minus(period: Period) = Period.create(
     -period.days
 )
 
-operator fun IntWeeks.minus(period: Period) = this.toLong().inDays - period
+operator fun IntWeeks.minus(period: Period) = this.toLongWeeks().inDaysUnchecked - period
 
 operator fun IntDays.minus(period: Period) = Period.create(
     -period.years,
@@ -291,23 +295,23 @@ operator fun IntDays.minus(period: Period) = Period.create(
 )
 
 operator fun LongYears.minus(period: Period) = Period.create(
-    (this - period.years.toLong()).toInt(),
+    (this - period.years).toIntYears(),
     -period.months,
     -period.days
 )
 
 operator fun LongMonths.minus(period: Period) = Period.create(
     -period.years,
-    (this - period.months.toLong()).toInt(),
+    (this - period.months).toIntMonths(),
     -period.days
 )
 
-operator fun LongWeeks.minus(period: Period) = this.inDaysExact() - period
+operator fun LongWeeks.minus(period: Period) = this.inDays - period
 
 operator fun LongDays.minus(period: Period) = Period.create(
     -period.years,
     -period.months,
-    (this - period.days.toLong()).toInt()
+    (this - period.days).toIntDays()
 )
 
 fun String.toPeriod() = toPeriod(DateTimeParsers.Iso.PERIOD)
@@ -333,7 +337,7 @@ internal fun DateTimeParseResult.toPeriod(): Period? {
         var days = daysValue?.toIntExact()?.timesExact(sign)?.days ?: 0.days
 
         if (weeksValue != null) {
-            days += weeksValue.toIntExact().timesExact(sign).weeks.inDaysExact()
+            days += weeksValue.toIntExact().timesExact(sign).weeks.inDays
         }
 
         periodOf(years, months, days)
