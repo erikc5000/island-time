@@ -262,7 +262,7 @@ class OffsetDateTime(
     }
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values
+     * Return a new [OffsetDateTime], replacing any of the components with new values.
      */
     fun copy(
         dateTime: DateTime = this.dateTime,
@@ -270,7 +270,7 @@ class OffsetDateTime(
     ) = OffsetDateTime(dateTime, offset)
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values
+     * Return a new [OffsetDateTime], replacing any of the components with new values.
      */
     fun copy(
         date: Date = this.date,
@@ -279,7 +279,7 @@ class OffsetDateTime(
     ) = OffsetDateTime(date, time, offset)
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values
+     * Return a new [OffsetDateTime], replacing any of the components with new values.
      */
     fun copy(
         year: Int = this.year,
@@ -292,7 +292,7 @@ class OffsetDateTime(
     ) = OffsetDateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond), offset)
 
     /**
-     * Return a new OffsetDateTime, replacing any of the components with new values
+     * Return a new [OffsetDateTime], replacing any of the components with new values.
      */
     fun copy(
         year: Int = this.year,
@@ -306,38 +306,47 @@ class OffsetDateTime(
     ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond), offset)
 
     /**
-     * Truncate to the [hour] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with
+     * zero.
      */
-    fun truncatedToHours() = copy(time = time.truncatedToHours())
+    fun truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
 
     /**
-     * Truncate to the [minute] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with
+     * zero.
      */
-    fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
+    fun truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
 
     /**
-     * Truncate to the [second] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with
+     * zero.
      */
-    fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
+    fun truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
 
     /**
-     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
      */
-    fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
+    fun truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
 
     /**
-     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
      */
-    fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
+    fun truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
 
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
         val MAX = DateTime.MAX at UtcOffset.MIN
 
+        /**
+         * Compare by instant, then date-time. Using this `Comparator` guarantees a deterministic order when sorting.
+         */
         val DEFAULT_SORT_ORDER = compareBy<OffsetDateTime> { it.unixEpochSecond }
             .thenBy { it.unixEpochNanoOfSecond }
             .thenBy { it.dateTime }
 
+        /**
+         * Compare by timeline order only, ignoring any offset differences.
+         */
         val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): OffsetDateTime {

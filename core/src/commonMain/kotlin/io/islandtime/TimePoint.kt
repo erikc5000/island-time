@@ -91,6 +91,9 @@ interface TimePoint<T> {
     operator fun minus(nanoseconds: LongNanoseconds): T
 
     companion object {
+        /**
+         * Compare by timeline order.
+         */
         val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.unixEpochSecond }.thenBy { it.unixEpochNanoOfSecond }
     }
 }

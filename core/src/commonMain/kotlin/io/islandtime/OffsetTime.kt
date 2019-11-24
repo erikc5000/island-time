@@ -145,37 +145,27 @@ class OffsetTime(
     ) = OffsetTime(time.copy(hour, minute, second, nanosecond), offset)
 
     /**
-     * Return this time, truncated to the [hour] value.
-     *
-     * All time components smaller than an hour will be replaced with zero.
+     * Return a copy of this time, truncated to the [hour] value. All smaller components will be replaced with zero.
      */
     fun truncatedToHours() = copy(time = time.truncatedToHours())
 
     /**
-     * Return this time, truncated to the [minute] value.
-     *
-     * All time components smaller than a minute will be replaced with zero.
+     * Return a copy of this time, truncated to the [minute] value. ll smaller components will be replaced with zero.
      */
     fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
 
     /**
-     * Return this time, truncated to the [second] value.
-     *
-     * All time components smaller than a second will be replaced with zero.
+     * Return a copy of this time, truncated to the [second] value. All smaller components will be replaced with zero.
      */
     fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
 
     /**
-     * Return this time with the [nanosecond] value truncated to milliseconds.
-     *
-     * All unit components smaller than a millisecond will be replaced with zero.
+     * Return a copy of this time with the [nanosecond] value truncated to milliseconds.
      */
     fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
 
     /**
-     * Return this time with the [nanosecond] value truncated to microseconds.
-     *
-     * All unit components smaller than a microsecond will be replaced with zero.
+     * Return a copy of this time with the [nanosecond] value truncated to microseconds.
      */
     fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
