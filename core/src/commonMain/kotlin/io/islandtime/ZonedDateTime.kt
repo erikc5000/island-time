@@ -318,27 +318,30 @@ class ZonedDateTime private constructor(
     )
 
     /**
-     * Truncate to the [hour] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with
+     * zero.
      */
     fun truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
 
     /**
-     * Truncate to the [minute] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with
+     * zero.
      */
     fun truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
 
     /**
-     * Truncate to the [second] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with
+     * zero.
      */
     fun truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
 
     /**
-     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
      */
     fun truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
 
     /**
-     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
      */
     fun truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
 
@@ -399,11 +402,18 @@ class ZonedDateTime private constructor(
     private fun resolveInstant(newDateTime: DateTime) = fromInstant(newDateTime, offset, zone)
 
     companion object {
+        /**
+         * Compare by instant, then date-time, then time zone. Using this `Comparator` guarantees a deterministic order
+         * when sorting.
+         */
         val DEFAULT_SORT_ORDER = compareBy<ZonedDateTime> { it.unixEpochSecond }
             .thenBy { it.unixEpochNanoOfSecond }
             .thenBy { it.dateTime }
             .thenBy { it.zone }
 
+        /**
+         * Compare by timeline order only, ignoring any offset or time zone differences.
+         */
         val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
         /**
