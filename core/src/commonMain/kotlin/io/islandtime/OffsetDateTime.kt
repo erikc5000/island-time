@@ -305,34 +305,6 @@ class OffsetDateTime(
         offset: UtcOffset = this.offset
     ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond), offset)
 
-    /**
-     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
-
-    /**
-     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
-
-    /**
-     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
-
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
         val MAX = DateTime.MAX at UtcOffset.MIN

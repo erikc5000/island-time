@@ -144,31 +144,6 @@ class OffsetTime(
         offset: UtcOffset = this.offset
     ) = OffsetTime(time.copy(hour, minute, second, nanosecond), offset)
 
-    /**
-     * Return a copy of this time, truncated to the [hour] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToHours() = copy(time = time.truncatedToHours())
-
-    /**
-     * Return a copy of this time, truncated to the [minute] value. ll smaller components will be replaced with zero.
-     */
-    fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
-
-    /**
-     * Return a copy of this time, truncated to the [second] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
-
-    /**
-     * Return a copy of this time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
-
-    /**
-     * Return a copy of this time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
-
     companion object {
         /**
          * The smallest allowed [OffsetTime] -- `00:00+18:00`.

@@ -4,6 +4,8 @@ import io.islandtime.*
 import io.islandtime.MAX_INSTANT_STRING_LENGTH
 import io.islandtime.appendInstant
 import io.islandtime.measures.*
+import io.islandtime.operators.endOfDayAt
+import io.islandtime.operators.startOfDayAt
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.toInstant

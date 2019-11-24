@@ -489,31 +489,6 @@ class DateTime(
     ) = DateTime(date.copy(year, monthNumber, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToHours() = copy(time = time.truncatedToHours())
-
-    /**
-     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with zero.
-     */
-    fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
-
-    /**
-     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
-
-    /**
      * Get the number of seconds relative to the Unix epoch of `1970-01-01T00:00Z`.
      *
      * @param offset the offset from UTC
@@ -622,16 +597,6 @@ infix fun Date.at(time: Time) = DateTime(this, time)
 fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): DateTime {
     return DateTime(this, Time(hour, minute, second, nanosecond))
 }
-
-/**
- * The [DateTime] at the start of the day
- */
-val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
-
-/**
- * The [DateTime] at the end of the day
- */
-val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
