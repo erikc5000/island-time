@@ -13,19 +13,82 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     private val time1234 = Time(1, 2, 3, 4) at UtcOffset.MAX
 
     @Test
-    fun `compareTo() compares based on time when the offset for both times is the same`() {
+    fun `compareTo() compares based on instant only`() {
         assertTrue { Time.MIN at UtcOffset.ZERO < Time(0, 0, 0, 1) at UtcOffset.ZERO }
         assertTrue { Time.MAX at UtcOffset.MIN > Time(23, 59, 59) at UtcOffset.MIN }
-    }
-
-    @Test
-    fun `compareTo() compares based on instant, then time when there are differing offsets`() {
+        assertTrue {
+            (Time(1, 0) at UtcOffset((-1).hours)).compareTo(Time(2, 0) at UtcOffset.ZERO) == 0
+        }
         assertTrue {
             Time(1, 0, 0, 1) at UtcOffset((-1).hours) >
                 Time(2, 0) at UtcOffset.ZERO
         }
         assertTrue { Time(2, 0) at UtcOffset(1.hours) < Time(3, 0) at UtcOffset.ZERO }
         assertTrue { Time(1, 0) at UtcOffset((-1).hours) > Time(0, 0) at UtcOffset.ZERO }
+    }
+
+    @Test
+    fun `TIMELINE_ORDER compares based on instant only`() {
+        assertTrue {
+            OffsetTime.TIMELINE_ORDER.compare(
+                Time.MIN at UtcOffset.ZERO,
+                Time(0, 0, 0, 1) at UtcOffset.ZERO
+            ) < 0
+        }
+        assertTrue {
+            OffsetTime.TIMELINE_ORDER.compare(
+                Time.MAX at UtcOffset.MIN,
+                Time(23, 59, 59) at UtcOffset.MIN
+            ) > 0
+        }
+        assertTrue {
+            OffsetTime.TIMELINE_ORDER.compare(
+                Time(1, 0) at UtcOffset((-1).hours),
+                Time(2, 0) at UtcOffset.ZERO
+            ) == 0
+        }
+        assertTrue {
+            OffsetTime.TIMELINE_ORDER.compare(
+                Time(1, 0, 0, 1) at UtcOffset((-1).hours),
+                Time(2, 0) at UtcOffset.ZERO
+            ) > 0
+        }
+        assertTrue {
+            OffsetTime.TIMELINE_ORDER.compare(
+                Time(2, 0) at UtcOffset(1.hours),
+                Time(3, 0) at UtcOffset.ZERO
+            ) < 0
+        }
+        assertTrue {
+            OffsetTime.TIMELINE_ORDER.compare(
+                Time(1, 0) at UtcOffset((-1).hours),
+                Time(0, 0) at UtcOffset.ZERO
+            ) > 0
+        }
+    }
+
+    @Test
+    fun `DEFAULT_SORT_ORDER compares based on instant, then time when there are differing offsets`() {
+        assertTrue {
+            OffsetTime.DEFAULT_SORT_ORDER.compare(
+                Time(1, 0, 0, 1) at UtcOffset((-1).hours),
+                Time(2, 0) at UtcOffset.ZERO
+            ) > 0
+        }
+
+        assertTrue {
+            OffsetTime.DEFAULT_SORT_ORDER.compare(
+                Time(2, 0) at UtcOffset(1.hours),
+                Time(3, 0) at UtcOffset.ZERO
+            ) < 0
+        }
+
+        assertTrue {
+            OffsetTime.DEFAULT_SORT_ORDER.compare(
+                Time(1, 0) at UtcOffset((-1).hours),
+                Time(0, 0) at UtcOffset.ZERO
+            ) > 0
+        }
     }
 
     @Test
