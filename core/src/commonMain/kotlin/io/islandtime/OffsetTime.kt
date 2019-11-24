@@ -14,7 +14,7 @@ class OffsetTime(
     val time: Time,
     /** The offset from UTC. */
     val offset: UtcOffset
-) : Comparable<OffsetTime> {
+) {
 
     init {
         offset.validate()
@@ -100,18 +100,13 @@ class OffsetTime(
     operator fun minus(nanoseconds: LongNanoseconds) = copy(time = time - nanoseconds)
     operator fun minus(nanoseconds: IntNanoseconds) = copy(time = time - nanoseconds)
 
-    override fun compareTo(other: OffsetTime): Int {
-        return if (offset == other.offset) {
-            time.compareTo(other.time)
-        } else {
-            val nanoDiff = nanosecondsSinceStartOfUtcDay.compareTo(other.nanosecondsSinceStartOfUtcDay)
-
-            if (nanoDiff != 0) {
-                nanoDiff
-            } else {
-                time.compareTo(other.time)
-            }
-        }
+    /**
+     * Compare to another [OffsetTime] based on timeline order, ignoring offset differences.
+     * @see DEFAULT_SORT_ORDER
+     * @see TIMELINE_ORDER
+     */
+    operator fun compareTo(other: OffsetTime): Int {
+        return nanosecondsSinceStartOfUtcDay.compareTo(other.nanosecondsSinceStartOfUtcDay)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -150,38 +145,66 @@ class OffsetTime(
     ) = OffsetTime(time.copy(hour, minute, second, nanosecond), offset)
 
     /**
-     * Truncate to the [hour] value, replacing all smaller components with zero
+     * Return this time, truncated to the [hour] value.
+     *
+     * All time components smaller than an hour will be replaced with zero.
      */
     fun truncatedToHours() = copy(time = time.truncatedToHours())
 
     /**
-     * Truncate to the [minute] value, replacing all smaller components with zero
+     * Return this time, truncated to the [minute] value.
+     *
+     * All time components smaller than a minute will be replaced with zero.
      */
     fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
 
     /**
-     * Truncate to the [second] value, replacing all smaller components with zero
+     * Return this time, truncated to the [second] value.
+     *
+     * All time components smaller than a second will be replaced with zero.
      */
     fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
 
     /**
-     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     * Return this time with the [nanosecond] value truncated to milliseconds.
+     *
+     * All unit components smaller than a millisecond will be replaced with zero.
      */
     fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
 
     /**
-     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     * Return this time with the [nanosecond] value truncated to microseconds.
+     *
+     * All unit components smaller than a microsecond will be replaced with zero.
      */
     fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
     companion object {
+        /**
+         * The smallest allowed [OffsetTime] -- `00:00+18:00`.
+         */
         val MIN = Time.MIN at UtcOffset.MAX
+
+        /**
+         * The largest allowed [OffsetTime] -- `23:59:59.999999999-18:00`.
+         */
         val MAX = Time.MAX at UtcOffset.MIN
+
+        /**
+         * Compare by UTC equivalent instant, then time. Using this `Comparator` guarantees a deterministic order when
+         * sorting.
+         */
+        val DEFAULT_SORT_ORDER = compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }.thenBy { it.time }
+
+        /**
+         * Compare by timeline order only, ignoring any offset differences.
+         */
+        val TIMELINE_ORDER = compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }
     }
 }
 
 /**
- * Create an [OffsetTime] by combining a [Time] with a [UtcOffset]
+ * Create an [OffsetTime] by combining a [Time] with a [UtcOffset].
  */
 infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 
