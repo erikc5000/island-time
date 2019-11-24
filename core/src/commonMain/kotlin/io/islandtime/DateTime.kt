@@ -489,27 +489,27 @@ class DateTime(
     ) = DateTime(date.copy(year, monthNumber, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Truncate to the [hour] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with zero.
      */
     fun truncatedToHours() = copy(time = time.truncatedToHours())
 
     /**
-     * Truncate to the [minute] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with zero.
      */
     fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
 
     /**
-     * Truncate to the [second] value, replacing all smaller components with zero
+     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with zero.
      */
     fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
 
     /**
-     * Truncate the [nanosecond] value to milliseconds, replacing the rest with zero
+     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
      */
     fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
 
     /**
-     * Truncate the [nanosecond] value to microseconds, replacing the rest with zero
+     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
      */
     fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
