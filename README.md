@@ -49,18 +49,18 @@ Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
 
 Prior to using Island Time, it may be initialized with a custom `TimeZoneRulesProvider`. The platform default provider will be used if this isn't specified explicitly.
 
-On Android, using the default provider will trigger an exception at runtime when targeting an API version below 26 since it uses the java.time library internally. The `AndroidThreeTenProvider` in threetenabp-extensions can be used instead. Generally, initialization should be performed during `Application.onCreate()`.
+On Android, using the default provider will trigger an exception at runtime since it doesn't support the full set of classes in the java.time library -- even with the experimental desugaring available in the Android Studio 4.0 canary builds. Until AS 4.0 becomes stable and we're able to work around the limitations on Android, the `AndroidThreeTenProvider` in threetenabp-extensions can be used instead. Generally, initialization should be performed during `Application.onCreate()`.
 
 ```kotlin
 // Note that it isn't necessary to call AndroidThreeTen.init() separately
 IslandTime.initializeWith(AndroidThreeTenProvider(context))
 ```
 
-For further information, see https://github.com/JakeWharton/ThreeTenABP. Once java.time desugaring is available, this step should no longer be required.
+For further information, see https://github.com/JakeWharton/ThreeTenABP.
 
-## The Basics
+## A primer for those coming from java.time
 
-As Island Time draws heavily from the java.time library design, many of the classes should be familiar to anyone migrating over. The following table shows the relationship between a subset of the classes:
+As Island Time draws heavily from the java.time library design, many of the core classes and concepts should be familiar to anyone migrating over. The following table shows the relationship between a subset of the classes:
 
 | java.time | Island Time | Description |
 | --- | --- | --- |
@@ -72,9 +72,68 @@ As Island Time draws heavily from the java.time library design, many of the clas
 | `OffsetDateTime` | `OffsetDateTime` | A date and time of day with fixed UTC offset |
 | `ZonedDateTime` | `ZonedDateTime` | A date and time of day in a particular time zone region |
 | `ZoneOffset` | `UtcOffset` | An offset from UTC |
-| `ZoneRegion` | `TimeZone` | An IANA time zone database region ID |
+| `ZoneId` | `TimeZone` | An IANA time zone database region ID or fixed offset from UTC |
 | `Duration` | `Duration` | A (potentially large) duration of time |
 | `Period` | `Period` | A date-based period of time |
+
+That said, Island Time is not a strict port. It takes inspiration from other date-time libraries as well with the goal being to (ultimately) create a powerful library that enables a wide array of use cases while providing a more friendly, extension-oriented API that takes full advantage of Kotlin language features.
+
+Some notable differences from java.time:
+
+##### `OffsetTime`, `OffsetDateTime`, and `ZonedDateTime` don't implement `Comparable`
+
+In java.time, using the `<` or `>` to compare objects of any of these classes probably doesn't do what you'd expect. In the interest of being "consistent with equals", comparison is based on a natural ordering that looks at the instant first, but then other properties of these objects such as the time or date-time to provide a fully deterministic ordering in the face of differing offsets and regions. You need to use `isBefore()` or `isAfter()` to compare based solely on timeline order and failing to do so can lead to subtle bugs -- say if using them in a `ClosedRange`.
+
+For that reason, Island Time doesn't implement `Comparable` for these classes, instead requiring you to be explicit about what order you want when it comes to sorting or use of sorted containers. The companion objects have `TIMELINE_ORDER` and `DEFAULT_SORT_ORDER` comparators available. Island Time does, however, provide `compareTo` operators that are based on timeline order for convenience. This may change since it still creates some "inconsistent with equals" issues.
+
+##### No "temporal adjusters" -- for example
+
+While java.time uses a highly generic mechanism that allows you to do things like `date.with(TemporalAdjusters.firstDayOfMonth())`, 
+Island Time opts for a more "extension-oriented" approach, allowing you to do the same with `date.startOfMonth`. Certainly, you can build your own extension functions around an OO mechanism like that offered in java.time, but the core problem is that some of these mechanisms are overally abstract, providing opportunity for runtime failure, creating a higher learning curve, and offering poor out-of-the-box IDE discoverability.
+
+While Island Time will need to get more "abstract" in some areas as more features are added, we want to create something that's a little more approachable and won't compile if you try to do nonsensical things -- even if it means increasing the method count significantly to do so.
+
+##### You may not need to use `Duration` at all
+
+Island Time provides inline classes for individual duration units, backed by either a `Long` or `Int` -- for example, `IntYears`, `IntHours`, or `LongNanoseconds`. This allows you to represent a duration with a specific level of precision. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
+
+```kotlin
+val total: LongMilliseconds = 5.days + 5.hours - 500.milliseconds
+```
+
+Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use `Duration` class at all. The ability to do this in an efficient manner is really enabled by inline classes, which just weren't an option for java.time.
+
+##### DSL-based parser definition
+
+While Island Time doesn't yet support custom formats, it does support support custom parsers, which can be defined using a DSL rather than the traditional format strings.
+
+```kotlin
+val customParser = dateTimeParser {
+    monthNumber() { enforceSignStyle(SignStyle.NEVER) }
+    anyOf({ +'-' }, { +'/' })
+    dayOfMonth() { enforceSignStyle(SignStyle.NEVER) }
+    anyOf({ +'-' }, { +' ' })
+    year(length = 4) { enforceSignStyle(SignStyle.NEVER) }
+}
+```
+
+Or to parse more than one date-time, as with an interval:
+
+```kotlin
+val intervalParser = groupedDateTimeParser {
+    group {
+        childParser(DateTimeParsers.Iso.CALENDAR_DATE)
+    }
+    +"--"
+    group {
+        childParser(DateTimeParsers.Iso.CALENDAR_DATE)
+    }
+}
+
+val dateTime = someString.toDateTimeInterval(intervalParser)
+```
+
+This is in contrast to the builder-based approach in java.time, which you probably never used since the API isn't so nice. Ultimately, support for format strings may be added in addition to the DSL-based approach, but I think it does offer better readability and IDE discoverability.
 
 ## Examples
 
