@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.SECONDS_PER_HOUR
 import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded

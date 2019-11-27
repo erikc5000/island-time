@@ -58,13 +58,6 @@ if (HostManager.hostIsMac) {
 tasks.withType<DokkaTask> {
     doFirst {
         multiplatform {
-            create("global") {
-                perPackageOption {
-                    prefix = "io.islandtime.internal"
-                    suppress = true
-                }
-            }
-
             kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
         }
     }

@@ -1,6 +1,6 @@
 package io.islandtime.ranges
 
-import io.islandtime.TimePoint
+import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 
 abstract class TimePointIterator<T : TimePoint<T>> : Iterator<T> {

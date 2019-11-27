@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
@@ -117,15 +118,6 @@ class ZonedDateTime private constructor(
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
-
-    /**
-     * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
-     *
-     * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
-     * database differences between systems, making it better suited for use cases involving persistence or network
-     * transfer.
-     */
-    fun asOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
@@ -316,34 +308,6 @@ class ZonedDateTime private constructor(
         zone,
         offset
     )
-
-    /**
-     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
-
-    /**
-     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
-
-    /**
-     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
 
     /**
      * If the local date-time falls during an overlap caused by a daylight savings transition, return a [ZonedDateTime]
@@ -592,6 +556,45 @@ fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(
 infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
 
 /**
+ * The [ZonedDateTime] at the start of this date in a particular time zone, taking into account
+ */
+fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
+    val dateTime = this at Time.MIDNIGHT
+    val transition = zone.rules.transitionAt(dateTime)
+
+    return if (transition?.isGap == true) {
+        transition.dateTimeAfter at zone
+    } else {
+        dateTime at zone
+    }
+}
+
+/**
+ * The [ZonedDateTime] at the last representable instant of this date in a particular time zone.
+ */
+fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
+    val dateTime = this at Time.MAX
+    val rules = zone.rules
+    val validOffsets = rules.validOffsetsAt(dateTime)
+
+    return if (validOffsets.size == 1) {
+        ZonedDateTime.create(dateTime, validOffsets[0], zone)
+    } else {
+        val transition = rules.transitionAt(dateTime)
+
+        if (validOffsets.isEmpty()) {
+            ZonedDateTime.create(
+                transition!!.dateTimeBefore,
+                transition.offsetBefore,
+                zone
+            )
+        } else {
+            ZonedDateTime.create(dateTime, transition!!.offsetAfter, zone)
+        }
+    }
+}
+
+/**
  * Get the [ZonedDateTime] corresponding to a local date, time, and offset in a particular time zone. The offset
  * will be preserved if it is valid based on the rules of the time zone.
  *
@@ -622,41 +625,6 @@ fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
  * Get the [ZonedDateTime] representing an instant in a particular time zone.
  */
 infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
-
-/**
- * Create the [ZonedDateTime] at the start of this date in a particular time zone, taking into account
- */
-fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
-    val dateTime = this at Time.MIDNIGHT
-    val transition = zone.rules.transitionAt(dateTime)
-
-    return if (transition?.isGap == true) {
-        transition.dateTimeAfter at zone
-    } else {
-        dateTime at zone
-    }
-}
-
-/**
- * Create the [ZonedDateTime] at the last representable instant of this date in a particular time zone.
- */
-fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
-    val dateTime = this at Time.MAX
-    val rules = zone.rules
-    val validOffsets = rules.validOffsetsAt(dateTime)
-
-    return if (validOffsets.size == 1) {
-        ZonedDateTime.create(dateTime, validOffsets[0], zone)
-    } else {
-        val transition = rules.transitionAt(dateTime)
-
-        if (validOffsets.isEmpty()) {
-            ZonedDateTime.create(transition!!.dateTimeBefore, transition.offsetBefore, zone)
-        } else {
-            ZonedDateTime.create(dateTime, transition!!.offsetAfter, zone)
-        }
-    }
-}
 
 /**
  * Convert a string to a [ZonedDateTime].

@@ -1,12 +1,9 @@
 package io.islandtime
 
+import io.islandtime.base.TimePoint
 import io.islandtime.internal.*
-import io.islandtime.internal.MICROSECONDS_PER_SECOND
-import io.islandtime.internal.MILLISECONDS_PER_SECOND
-import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
-import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
-import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.*
+import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.*
 import io.islandtime.ranges.InstantInterval
 

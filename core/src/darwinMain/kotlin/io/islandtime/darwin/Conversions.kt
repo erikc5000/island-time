@@ -1,6 +1,7 @@
 package io.islandtime.darwin
 
 import io.islandtime.*
+import io.islandtime.base.TimePoint
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.seconds
 import io.islandtime.zone.TimeZoneRulesException

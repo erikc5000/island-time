@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -12,17 +13,43 @@ inline class Year(val value: Int) : Comparable<Year> {
      */
     val isValid: Boolean get() = value in MIN_VALUE..MAX_VALUE
 
+    /**
+     * Is this a leap year?
+     */
     val isLeap: Boolean
         get() = value % 4 == 0 && (value % 100 != 0 || value % 400 == 0)
 
+    /**
+     * The length of the year in days.
+     */
     val length: IntDays
         get() = if (isLeap) 366.days else 365.days
 
+    /**
+     * The last day of the year. This will be either `365` or `366` depending on whether this is a common or leap year.
+     */
     val lastDay: Int get() = length.value
-    inline val dayRange: IntRange get() = 1..lastDay
-    inline val dateRange: DateRange get() = DateRange(startDate, endDate)
-    inline val startDate: Date get() = Date(value, Month.JANUARY, 1)
-    inline val endDate: Date get() = Date(value, Month.DECEMBER, 31)
+
+    /**
+     * The day range of the year. This will be either `1..365` or `1.366` depending on whether this is a common or leap
+     * year.
+     */
+    val dayRange: IntRange get() = 1..lastDay
+
+    /**
+     * The date range of the year.
+     */
+    val dateRange: DateRange get() = DateRange(startDate, endDate)
+
+    /**
+     * The first date of the year.
+     */
+    val startDate: Date get() = Date(value, Month.JANUARY, 1)
+
+    /**
+     * The last date of the year.
+     */
+    val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
     operator fun plus(years: LongYears): Year {
         val newValue = checkValidYear(value + years.value)
