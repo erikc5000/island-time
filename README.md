@@ -12,8 +12,9 @@ Features:
 - Operators like `date.next(MONDAY)` or `dateTime.startOfWeek`
 - Works on JVM, Android, iOS, and macOS
 
-Limitations:
+Current limitations:
 - No custom and/or localized format strings
+- No localized week fields
 - Only supports the ISO calendar system
 - Year range currently restricted to 1-9999
 
@@ -74,7 +75,7 @@ For further information, see https://github.com/JakeWharton/ThreeTenABP.
 
 ## For those coming from java.time
 
-As Island Time draws heavily from the java.time library design, many of the core classes and concepts should be familiar to anyone migrating over. The following table shows the relationship between a subset of the classes:
+I suspect this is many of you, so I'm putting this here first. As Island Time draws heavily from the java.time library design, many of the core classes and concepts should be familiar to anyone migrating over. The following table shows the relationship between a subset of the classes:
 
 | java.time | Island Time | Description |
 | --- | --- | --- |
@@ -151,7 +152,7 @@ This is in contrast to the builder-based approach in java.time, which you probab
 
 ## Examples
 
-These may get outdated as the library continues to get flushed out, but should give an idea as to how the library is intended to be used so as to help foster discussion on the design.
+The following examples demonstrate how to use some of the features present in Island Time.
 
 ### Durations
 
@@ -223,6 +224,8 @@ val date = "10-01-2019".toDate(customParser)
 
 ### Date Ranges
 
+Note that in Island Time, "ranges" are inclusive, implementing Kotlin's `ClosedRange`, while intervals" are half-open with an exclusive end. When it comes to time, precision differences (ie. millisecond vs nanosecond) can make an inclusive end problematic.
+
 ```kotlin
 val clock: Clock = SystemClock()
 val today: Date = Date.now(clock)
@@ -246,6 +249,8 @@ val period: Period = (today..today + 1.months).asPeriod()
 
 ### Open Time Intervals
 
+Island Time supports unbounded time intervals, using the `MIN` and `MAX` values for the date-time primitive to indicate "far past" or "far future". In the ISO standard, this is referred to as an "open" interval, but that conflicts with the mathematical definition of open/closed, so we've opted not to use that terminology (see `ClosedRange`).
+
 ```kotlin
 val instantInterval = "2008-09-01T04:00Z/..".toInstantInterval()
 
@@ -253,7 +258,6 @@ val isBounded = instantInterval.isBounded() // false
 val hasUnboundedEnd = instantInterval.hasUnboundedEnd() // true
 val duration = instantInterval.asDuration() // throws DateTimeException
 ```
-
 
 ### Daylight Savings Changes
 
@@ -275,6 +279,8 @@ val nextDay = zonedDateTime + 1.days // 2019-03-11T01:30-04:00[America/New_York]
 
 ### Interop
 
+A set of extensions are available that will allow you to convert to and from platform date-time primitives.
+
 java.time / ThreeTenABP:
 ```kotlin
 val javaLocalDate = Date(2019, OCTOBER, 24).toJavaLocalDate()
@@ -286,10 +292,6 @@ iOS:
 val nsDate = Instant.now().toNSDate()
 val islandInstant = NSDate().toIslandInstant()
 ```
-
-## Limitations
-
-Currently, only the ISO calendar system is supported and the year range is limited to 1-9999. There's also no support for custom/localized date-time formats or week fields, so it's likely necessary to convert to a platform-specific type for presentation purposes. Addressing the ability to customize at least non-localized formats is high on the priority list.
 
 ## Notes on kotlin.time
 
