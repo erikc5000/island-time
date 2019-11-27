@@ -7,7 +7,7 @@ Features:
 - A set of date-time primitives such as `Date`, `Time`, `DateTime`, `Instant`, and `ZonedDateTime`
 - Time zone database support
 - Date ranges and time intervals, integrating with Kotlin ranges and progressions
-- Read and write strings in ISO-8601 formats
+- Read and write strings in ISO formats
 - DSL-based definition of custom parsers
 - Operators like `date.next(MONDAY)` or `dateTime.startOfWeek`
 - Works on JVM, Android, iOS, and macOS
@@ -64,14 +64,14 @@ Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
 
 Prior to using Island Time, it may be initialized with a custom `TimeZoneRulesProvider`. The platform default provider will be used if this isn't specified explicitly.
 
-On Android, using the default provider will trigger an exception at runtime since it doesn't support the full set of classes in the java.time library -- even with the experimental desugaring available in the Android Studio 4.0 canary builds. Until AS 4.0 becomes stable and we're able to work around the limitations on Android, the `AndroidThreeTenProvider` in threetenabp-extensions can be used instead. Generally, initialization should be performed during `Application.onCreate()`.
+On Android, using the default provider will trigger an exception at runtime with any version below API 26-- unless you're using an Android Gradle Plugin 4.0 alpha build with `coreLibraryDesugaringEnabled = true`. Until AGP 4.0 and java.time desugaring becomes stable, it's recommended that you use the `AndroidThreeTenProvider` in `threetenabp-extensions` instead, which uses the Android ThreenTen backport under the hood to provide time zone data. Generally, initialization should be performed during `Application.onCreate()`.
 
 ```kotlin
 // Note that it isn't necessary to call AndroidThreeTen.init() separately
 IslandTime.initializeWith(AndroidThreeTenProvider(context))
 ```
 
-For further information, see https://github.com/JakeWharton/ThreeTenABP.
+For further information on the Android backport, see https://github.com/JakeWharton/ThreeTenABP.
 
 ## For those coming from java.time
 

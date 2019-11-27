@@ -5,6 +5,7 @@ package io.islandtime.zone
 import io.islandtime.*
 import io.islandtime.measures.*
 import io.islandtime.jvm.*
+import java.time.ZoneId
 import java.time.Instant as JavaInstant
 import java.time.zone.ZoneOffsetTransition
 import java.time.zone.ZoneRules
@@ -24,7 +25,7 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
         }
 
     override val availableRegionIds: Set<String>
-        get() = ZoneRulesProvider.getAvailableZoneIds()
+        get() = ZoneId.getAvailableZoneIds()
 
     override fun hasRulesFor(regionId: String): Boolean {
         return availableRegionIds.contains(regionId)
@@ -32,7 +33,7 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
 
     override fun rulesFor(regionId: String): TimeZoneRules {
         return try {
-            JavaTimeZoneRules(ZoneRulesProvider.getRules(regionId, false))
+            JavaTimeZoneRules(ZoneId.of(regionId).rules)
         } catch (e: ZoneRulesException) {
             throw TimeZoneRulesException(e.message, e)
         }
