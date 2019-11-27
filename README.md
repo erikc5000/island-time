@@ -3,6 +3,20 @@
 # Island Time
 A Kotlin Multiplatform library for working with dates and times, heavily inspired by the java.time library.
 
+Features:
+- A set of date-time primitives such as `Date`, `Time`, `DateTime`, `Instant`, and `ZonedDateTime`
+- Time zone database support
+- Date ranges and time intervals, integrating with Kotlin ranges and progressions
+- Read and write strings in ISO-8601 formats
+- DSL-based definition of custom parsers
+- Operators like `date.next(MONDAY)` or `dateTime.startOfWeek`
+- Works on JVM, Android, iOS, and macOS
+
+Limitations:
+- No custom and/or localized format strings
+- Only supports the ISO calendar system
+- Year range currently restricted to 1-9999
+
 # Setup
 Island Time is still early in development and the API is likely to change significantly. Snapshot builds are available on the Sonatype OSS Snapshot Repository.
 
@@ -58,7 +72,7 @@ IslandTime.initializeWith(AndroidThreeTenProvider(context))
 
 For further information, see https://github.com/JakeWharton/ThreeTenABP.
 
-## A primer for those coming from java.time
+## For those coming from java.time
 
 As Island Time draws heavily from the java.time library design, many of the core classes and concepts should be familiar to anyone migrating over. The following table shows the relationship between a subset of the classes:
 
@@ -101,7 +115,7 @@ Island Time provides inline classes for individual duration units, backed by eit
 val total: LongMilliseconds = 5.days + 5.hours - 500.milliseconds
 ```
 
-Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use `Duration` class at all. The ability to do this in an efficient manner is really enabled by inline classes, which just weren't an option for java.time.
+Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use `Duration` class at all. The ability to do this in an efficient manner is really enabled by inline classes, which just aren't an option for a Java library.
 
 ##### DSL-based parser definition
 
