@@ -439,6 +439,11 @@ class DateTime(
         return 31 * date.hashCode() + time.hashCode()
     }
 
+    /**
+     * Return a copy of this [DateTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
+     */
     fun copy(
         date: Date = this.date,
         time: Time = this.time
@@ -587,20 +592,33 @@ class DateTime(
 }
 
 /**
- * Combine a [Date] with a [Time] to create a [DateTime]
+ * Combine a [Date] with a [Time] to create a [DateTime].
  */
 infix fun Date.at(time: Time) = DateTime(this, time)
 
 /**
- * Combine a [Date] with a time to create a [DateTime]
+ * Combine a [Date] with a time to create a [DateTime].
  */
 fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): DateTime {
     return DateTime(this, Time(hour, minute, second, nanosecond))
 }
 
+/**
+ * Convert an instant into a [DateTime] at a particular offset from UTC.
+ */
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
+
+/**
+ * The [DateTime] at the start of the day.
+ */
+val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
+
+/**
+ * The [DateTime] at the end of the day.
+ */
+val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 
 /**
  * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or

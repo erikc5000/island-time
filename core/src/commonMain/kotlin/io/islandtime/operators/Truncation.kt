@@ -62,7 +62,7 @@ fun DateTime.truncatedToMicroseconds() = copy(time = time.truncatedToMicrosecond
 fun ZonedDateTime.truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
 
 /**
- * Return a copy of this date-time, truncated to the `minute` value. ll smaller components will be replaced with zero.
+ * Return a copy of this date-time, truncated to the `minute` value. All smaller components will be replaced with zero.
  */
 fun ZonedDateTime.truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
 

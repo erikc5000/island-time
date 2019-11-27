@@ -1,7 +1,7 @@
 package io.islandtime.parser
 
 import io.islandtime.MAX_TIME_ZONE_STRING_LENGTH
-import io.islandtime.DateTimeField
+import io.islandtime.base.DateTimeField
 
 /**
  * Parse a year with a variable number of digits.

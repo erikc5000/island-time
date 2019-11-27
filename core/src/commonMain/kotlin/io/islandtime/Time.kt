@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*

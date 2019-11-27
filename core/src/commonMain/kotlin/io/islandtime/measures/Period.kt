@@ -1,6 +1,6 @@
 package io.islandtime.measures
 
-import io.islandtime.DateTimeField
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.internal.timesExact
 import io.islandtime.internal.toIntExact

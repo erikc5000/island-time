@@ -1,12 +1,13 @@
 package io.islandtime.measures
 
-import io.islandtime.DateTimeField
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.*
 import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.Duration.Companion.create
+import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
 import io.islandtime.parser.DateTimeParsers

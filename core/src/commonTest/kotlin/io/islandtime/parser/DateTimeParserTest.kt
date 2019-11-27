@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.DateTimeField
+import io.islandtime.base.DateTimeField
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

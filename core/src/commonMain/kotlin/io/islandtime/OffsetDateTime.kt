@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
@@ -358,6 +359,15 @@ class OffsetDateTime(
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
 infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
+
+/**
+ * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
+ *
+ * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
+ * database differences between systems, making it better suited for use cases involving persistence or network
+ * transfer.
+ */
+fun ZonedDateTime.asOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 

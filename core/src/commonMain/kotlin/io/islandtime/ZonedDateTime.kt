@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
@@ -117,15 +118,6 @@ class ZonedDateTime private constructor(
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
-
-    /**
-     * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
-     *
-     * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
-     * database differences between systems, making it better suited for use cases involving persistence or network
-     * transfer.
-     */
-    fun asOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
@@ -562,6 +554,45 @@ fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
+
+/**
+ * The [ZonedDateTime] at the start of this date in a particular time zone, taking into account
+ */
+fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
+    val dateTime = this at Time.MIDNIGHT
+    val transition = zone.rules.transitionAt(dateTime)
+
+    return if (transition?.isGap == true) {
+        transition.dateTimeAfter at zone
+    } else {
+        dateTime at zone
+    }
+}
+
+/**
+ * The [ZonedDateTime] at the last representable instant of this date in a particular time zone.
+ */
+fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
+    val dateTime = this at Time.MAX
+    val rules = zone.rules
+    val validOffsets = rules.validOffsetsAt(dateTime)
+
+    return if (validOffsets.size == 1) {
+        ZonedDateTime.create(dateTime, validOffsets[0], zone)
+    } else {
+        val transition = rules.transitionAt(dateTime)
+
+        if (validOffsets.isEmpty()) {
+            ZonedDateTime.create(
+                transition!!.dateTimeBefore,
+                transition.offsetBefore,
+                zone
+            )
+        } else {
+            ZonedDateTime.create(dateTime, transition!!.offsetAfter, zone)
+        }
+    }
+}
 
 /**
  * Get the [ZonedDateTime] corresponding to a local date, time, and offset in a particular time zone. The offset

@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.DateTimeField
+import io.islandtime.base.DateTimeField
 
 /**
  * The result of a parsing operation.

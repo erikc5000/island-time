@@ -37,51 +37,6 @@ val Date.startOfWeek: Date get() = previousOrSame(DayOfWeek.MIN)
 val Date.endOfWeek: Date get() = nextOrSame(DayOfWeek.MAX)
 
 /**
- * The [DateTime] at the start of the day.
- */
-val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
-
-/**
- * The [DateTime] at the end of the day.
- */
-val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
-
-/**
- * The [ZonedDateTime] at the start of this date in a particular time zone, taking into account
- */
-fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
-    val dateTime = this at Time.MIDNIGHT
-    val transition = zone.rules.transitionAt(dateTime)
-
-    return if (transition?.isGap == true) {
-        transition.dateTimeAfter at zone
-    } else {
-        dateTime at zone
-    }
-}
-
-/**
- * The [ZonedDateTime] at the last representable instant of this date in a particular time zone.
- */
-fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
-    val dateTime = this at Time.MAX
-    val rules = zone.rules
-    val validOffsets = rules.validOffsetsAt(dateTime)
-
-    return if (validOffsets.size == 1) {
-        ZonedDateTime.create(dateTime, validOffsets[0], zone)
-    } else {
-        val transition = rules.transitionAt(dateTime)
-
-        if (validOffsets.isEmpty()) {
-            ZonedDateTime.create(transition!!.dateTimeBefore, transition.offsetBefore, zone)
-        } else {
-            ZonedDateTime.create(dateTime, transition!!.offsetAfter, zone)
-        }
-    }
-}
-
-/**
  * The date-time at the first instant of the year that this date-time falls in.
  */
 val DateTime.startOfYear: DateTime

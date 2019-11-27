@@ -1,4 +1,4 @@
-package io.islandtime
+package io.islandtime.base
 
 /**
  * A field describing a property of a date, time, or measurement of time.
