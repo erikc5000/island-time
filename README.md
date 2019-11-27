@@ -39,7 +39,7 @@ dependencies {
 }
 ```
 
-On Android specifically, you'll need to add the following:
+On Android specifically, you'll probably want to add the following (more on this in [Initialization](#initialization)):
 
 Android: _(Kotlin Gradle DSL)_
 ```
@@ -64,7 +64,7 @@ Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
 
 Prior to using Island Time, it may be initialized with a custom `TimeZoneRulesProvider`. The platform default provider will be used if this isn't specified explicitly.
 
-On Android, using the default provider will trigger an exception at runtime with any version below API 26-- unless you're using an Android Gradle Plugin 4.0 alpha build with `coreLibraryDesugaringEnabled = true`. Until AGP 4.0 and java.time desugaring becomes stable, it's recommended that you use the `AndroidThreeTenProvider` in `threetenabp-extensions` instead, which uses the Android ThreenTen backport under the hood to provide time zone data. Generally, initialization should be performed during `Application.onCreate()`.
+On Android, using the default provider will trigger an exception at runtime with any version below API 26-- unless you're using an Android Gradle Plugin 4.0 alpha build with `coreLibraryDesugaringEnabled = true`. Until AGP 4.0 and java.time desugaring becomes stable, it's recommended that you use the `AndroidThreeTenProvider` in `threetenabp-extensions` instead, which uses the Android JSR-310 backport under the hood to provide time zone data. Generally, initialization should be performed during `Application.onCreate()`.
 
 ```kotlin
 // Note that it isn't necessary to call AndroidThreeTen.init() separately
@@ -73,7 +73,7 @@ IslandTime.initializeWith(AndroidThreeTenProvider(context))
 
 For further information on the Android backport, see https://github.com/JakeWharton/ThreeTenABP.
 
-## For those coming from java.time
+## For Those Familiar with java.time
 
 I suspect this is many of you, so I'm putting this here first. As Island Time draws heavily from the java.time library design, many of the core classes and concepts should be familiar to anyone migrating over. The following table shows the relationship between a subset of the classes:
 
@@ -116,7 +116,7 @@ Island Time provides inline classes for individual duration units, backed by eit
 val total: LongMilliseconds = 5.days + 5.hours - 500.milliseconds
 ```
 
-Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use `Duration` class at all. The ability to do this in an efficient manner is really enabled by inline classes, which just aren't an option for a Java library.
+Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use `Duration` class at all. The ability to do this in an efficient manner is really enabled by Kotlin's inline classes.
 
 ##### DSL-based parser definition
 
@@ -148,11 +148,11 @@ val intervalParser = groupedDateTimeParser {
 val dateTime = someString.toDateTimeInterval(intervalParser)
 ```
 
-This is in contrast to the builder-based approach in java.time, which you probably never used since the API isn't so nice. Ultimately, support for format strings may be added in addition to the DSL-based approach, but I think it does offer better readability and IDE discoverability.
+Ultimately, support for format strings may be added in addition to the DSL-based approach, but there are readability and IDE discoverability advantages to the DSL.
 
 ## Examples
 
-The following examples demonstrate how to use some of the features present in Island Time.
+The following examples demonstrate how you might use Island Time to perform various tasks.
 
 ### Durations
 
@@ -176,6 +176,8 @@ duration.toComponents { hours, minutes, seconds, nanoseconds ->
 
 ### Periods
 
+Periods are a date-based measure of time. Like java.time, Island Time trys to separate date-based and time-based measurements.
+
 ```kotlin
 val period = periodOf(5.years, 13.months, 10.days)
 val normalizedPeriod = period.normalized() // periodOf(6.years, 1.months, 10.days)
@@ -183,7 +185,7 @@ val modifiedPeriod = period - 1.years - 15.days // periodOf(5.years, 1.months, (
 val invertedPeriod = -period // periodOf((-5).years, (-13).months, (-10).days)
 ```
 
-### Date Manipulation
+### Date Operators
 
 ```kotlin
 val today = Date.now()
@@ -194,7 +196,9 @@ val startOfMonth = today.startOfMonth
 val endOfMonth = today.endOfMonth
 ```
 
-### ISO-8601 Representation
+### Writing to ISO-8601 Representation
+
+ISO-8601 is the international standard for dates and times. In Island Time, calling `toString()` on any date-time primitive will produce an ISO representation.
 
 ```kotlin
 val isoTimestamp = Instant.now().toString() // 2019-10-28T08:34:03.389Z
@@ -224,7 +228,7 @@ val date = "10-01-2019".toDate(customParser)
 
 ### Date Ranges
 
-Note that in Island Time, "ranges" are inclusive, implementing Kotlin's `ClosedRange`, while intervals" are half-open with an exclusive end. When it comes to time, precision differences (ie. millisecond vs nanosecond) can make an inclusive end problematic.
+Note that in Island Time, "ranges" are inclusive, implementing Kotlin's `ClosedRange`, while "intervals" are half-open with an exclusive end. When it comes to time, precision differences (ie. millisecond vs nanosecond) can make an inclusive end problematic, so while you can create an interval from a closed range, it'll be stored, read, and written with an exclusive end.
 
 ```kotlin
 val clock: Clock = SystemClock()
@@ -247,9 +251,21 @@ val totalDays: IntDays = (today until today + 6.months).lengthInDays
 val period: Period = (today..today + 1.months).asPeriod()
 ```
 
-### Open Time Intervals
+### Time Intervals
 
-Island Time supports unbounded time intervals, using the `MIN` and `MAX` values for the date-time primitive to indicate "far past" or "far future". In the ISO standard, this is referred to as an "open" interval, but that conflicts with the mathematical definition of open/closed, so we've opted not to use that terminology (see `ClosedRange`).
+```kotlin
+val now: Instant = Instant.now()
+val then: Instant = now + 1.hours
+
+// Step over instants in an interval in second increments
+for (instant in now until then step 1.seconds) {
+    // ...
+}
+```
+
+### Open Ranges and Intervals
+
+Island Time supports unbounded ranges and time intervals, using the `MIN` and `MAX` values for the date-time primitive to indicate "far past" or "far future". In the ISO standard, this is referred to as an "open" interval, but that conflicts with the mathematical definition of open/closed (and Kotlin's `ClosedRange`), so we've opted not to use that terminology.
 
 ```kotlin
 val instantInterval = "2008-09-01T04:00Z/..".toInstantInterval()
@@ -279,7 +295,7 @@ val nextDay = zonedDateTime + 1.days // 2019-03-11T01:30-04:00[America/New_York]
 
 ### Interop
 
-A set of extensions are available that will allow you to convert to and from platform date-time primitives.
+A set of extensions are available that allow you to convert to and from platform date-time types.
 
 java.time / ThreeTenABP:
 ```kotlin
@@ -295,14 +311,14 @@ val islandInstant = NSDate().toIslandInstant()
 
 ## Notes on kotlin.time
 
-An [experimental time API](https://github.com/Kotlin/KEEP/issues/190) has recently been added to the Kotlin standard library. Unfortunately, its design does't agree well with Island Time -- at least currently.
+An [experimental time API](https://github.com/Kotlin/KEEP/issues/190) has recently been added to the Kotlin standard library. Unfortunately, its design does't mesh well with Island Time -- at least currently.
 
-The Kotlin `Duration` class is based on a floating point number, which we steer clear of to avoid any accuracy issues that might come about during manipulation of floating point values and offer a fixed nanosecond precision across the entire supported time range. We also opt to preserve unit granularity. For example, `1.seconds` translates to `IntSeconds` rather than `Duration`. This allows you to specify a particular unit granularity in your code when required.
+The Kotlin `Duration` class is based on a floating point number, which we steer clear of to avoid any accuracy issues that might come about during manipulation of floating point values and offer a fixed nanosecond precision across the entire supported time scale. We also opt to preserve unit granularity. For example, `1.seconds` translates to `IntSeconds` rather than `Duration`. This allows you to enforce a certain precision level when required.
 
-Currently, Kotlin's `WallClock` isn't available and doesn't offer time zone support in any case, so we have our own `Clock` implementation as well. Island Time takes an extension-oriented approach to clocks, enabling support for multiple implementations -- in fact, it's in envisioned that there will be separate millisecond and nanosecond precision clocks. In the future, we can concievably offer support for any standard library clock implementation as well.
+At this time, Kotlin's `WallClock` isn't available and doesn't offer time zone support in any case, so we have our own `Clock` implementation as well. Island Time takes an extension-oriented approach to clocks though, so different implementations may be introduced in the future and support for any standard library clock will be added, if suitable.
 
 # Feedback/Contributions
 
-The goal of this project is not just to port the java.time library over to Kotlin Multiplatform, but to take full advantage of Kotlin language features to create a date-time DSL that feels natural to users of the language and encourages best practices where possible. To that end, any and all feedback would be much appreciated in helping to iron out the API.
+As mentioned earlier, the goal of this project is not just to port the java.time library over to Kotlin Multiplatform, but to take full advantage of Kotlin language features to create a date-time DSL that feels natural to users of the language and encourages best practices where possible. To that end, any and all feedback would be much appreciated in helping to iron out the API.
 
 If you're interested in contributing or have ideas on areas that can be improved (there are definitely many right now), please feel free to initiate a dialog by opening design-related issues or submitting pull requests.
