@@ -439,6 +439,11 @@ class DateTime(
         return 31 * date.hashCode() + time.hashCode()
     }
 
+    /**
+     * Return a copy of this [DateTime], replacing individual components with new values as desired.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
+     */
     fun copy(
         date: Date = this.date,
         time: Time = this.time
@@ -487,31 +492,6 @@ class DateTime(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond
     ) = DateTime(date.copy(year, monthNumber, dayOfMonth), time.copy(hour, minute, second, nanosecond))
-
-    /**
-     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToHours() = copy(time = time.truncatedToHours())
-
-    /**
-     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with zero.
-     */
-    fun truncatedToMinutes() = copy(time = time.truncatedToMinutes())
-
-    /**
-     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToSeconds() = copy(time = time.truncatedToSeconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
 
     /**
      * Get the number of seconds relative to the Unix epoch of `1970-01-01T00:00Z`.
@@ -612,30 +592,33 @@ class DateTime(
 }
 
 /**
- * Combine a [Date] with a [Time] to create a [DateTime]
+ * Combine a [Date] with a [Time] to create a [DateTime].
  */
 infix fun Date.at(time: Time) = DateTime(this, time)
 
 /**
- * Combine a [Date] with a time to create a [DateTime]
+ * Combine a [Date] with a time to create a [DateTime].
  */
 fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): DateTime {
     return DateTime(this, Time(hour, minute, second, nanosecond))
 }
 
 /**
- * The [DateTime] at the start of the day
+ * Convert an instant into a [DateTime] at a particular offset from UTC.
+ */
+fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
+    return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
+}
+
+/**
+ * The [DateTime] at the start of the day.
  */
 val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
 
 /**
- * The [DateTime] at the end of the day
+ * The [DateTime] at the end of the day.
  */
 val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
-
-fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
-    return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
-}
 
 /**
  * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or

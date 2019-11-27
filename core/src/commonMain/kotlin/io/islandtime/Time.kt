@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -246,33 +247,6 @@ class Time(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond
     ) = Time(hour, minute, second, nanosecond)
-
-    /**
-     * Return a copy of this time, truncated to the [hour] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToHours() = copy(minute = 0, second = 0, nanosecond = 0)
-
-    /**
-     * Return a copy of this time, truncated to the [minute] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToMinutes() = copy(second = 0, nanosecond = 0)
-
-    /**
-     * Return a copy of this time, truncated to the [second] value. All smaller components will be replaced with zero.
-     */
-    fun truncatedToSeconds() = copy(nanosecond = 0)
-
-    /**
-     * Return a copy of this time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() =
-        copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND)
-
-    /**
-     * Return a copy of this time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() =
-        copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND)
 
     companion object {
         val MIN = Time(0, 0)

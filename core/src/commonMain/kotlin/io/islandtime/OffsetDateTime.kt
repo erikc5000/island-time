@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
@@ -305,34 +306,6 @@ class OffsetDateTime(
         offset: UtcOffset = this.offset
     ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond), offset)
 
-    /**
-     * Return a copy of this date-time, truncated to the [hour] value. All smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
-
-    /**
-     * Return a copy of this date-time, truncated to the [minute] value. ll smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
-
-    /**
-     * Return a copy of this date-time, truncated to the [second] value. All smaller components will be replaced with
-     * zero.
-     */
-    fun truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to milliseconds.
-     */
-    fun truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
-
-    /**
-     * Return a copy of this date-time with the [nanosecond] value truncated to microseconds.
-     */
-    fun truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
-
     companion object {
         val MIN = DateTime.MIN at UtcOffset.MAX
         val MAX = DateTime.MAX at UtcOffset.MIN
@@ -386,6 +359,15 @@ class OffsetDateTime(
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
 infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
+
+/**
+ * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
+ *
+ * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
+ * database differences between systems, making it better suited for use cases involving persistence or network
+ * transfer.
+ */
+fun ZonedDateTime.asOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 

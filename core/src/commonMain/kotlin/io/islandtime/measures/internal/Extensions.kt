@@ -1,8 +1,12 @@
-package io.islandtime.measures
+package io.islandtime.measures.internal
 
 import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
 import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
+import io.islandtime.measures.IntMicroseconds
+import io.islandtime.measures.IntMilliseconds
+import io.islandtime.measures.IntNanoseconds
+import io.islandtime.measures.IntSeconds
 
 internal infix fun IntNanoseconds.plusWithOverflow(nanoseconds: IntNanoseconds) =
     IntNanoseconds(value + nanoseconds.value)

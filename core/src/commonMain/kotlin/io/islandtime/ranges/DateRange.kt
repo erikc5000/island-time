@@ -3,6 +3,7 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.MAX_DATE_STRING_LENGTH
 import io.islandtime.appendDate
+import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import io.islandtime.monthsSinceYear0

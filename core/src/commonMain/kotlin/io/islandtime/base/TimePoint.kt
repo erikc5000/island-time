@@ -1,4 +1,4 @@
-package io.islandtime
+package io.islandtime.base
 
 import io.islandtime.measures.*
 
@@ -43,7 +43,7 @@ interface TimePoint<T> {
      * Check if this time point represent the same instant as [other]. Unlike the equals operator, equality is
      * determined solely by timeline order.
      */
-    fun <U> isSameInstantAs(other: TimePoint<U>): Boolean {
+    fun isSameInstantAs(other: TimePoint<*>): Boolean {
         return unixEpochSecond == other.unixEpochSecond && unixEpochNanoOfSecond == other.unixEpochNanoOfSecond
     }
 
