@@ -116,7 +116,7 @@ Island Time provides inline classes for individual duration units, backed by eit
 val total: LongMilliseconds = 5.days + 5.hours - 500.milliseconds
 ```
 
-Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use `Duration` class at all. The ability to do this in an efficient manner is really enabled by Kotlin's inline classes.
+Unless you're doing calculations with particularly long durations at a high precision where overflow is a very real possibility, you might not need to use the `Duration` class at all. The ability to do this in an efficient manner is really enabled by Kotlin's inline classes.
 
 ##### DSL-based parser definition
 
