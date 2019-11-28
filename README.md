@@ -265,7 +265,7 @@ for (instant in now until then step 1.seconds) {
 
 ### Open Ranges and Intervals
 
-Island Time supports unbounded ranges and time intervals, using the `MIN` and `MAX` values for the date-time primitive to indicate "far past" or "far future". In the ISO standard, this is referred to as an "open" interval, but that conflicts with the mathematical definition of open/closed (and Kotlin's `ClosedRange`), so we've opted not to use that terminology.
+Island Time supports unbounded ranges and time intervals using the `MIN` and `MAX` values for the date-time primitive to indicate "far past" or "far future". In the ISO standard, this is referred to as an "open" interval, but that conflicts with the mathematical definition of open/closed (and Kotlin's `ClosedRange`), so we've opted not to use that terminology.
 
 ```kotlin
 val instantInterval = "2008-09-01T04:00Z/..".toInstantInterval()
@@ -275,7 +275,24 @@ val hasUnboundedEnd = instantInterval.hasUnboundedEnd() // true
 val duration = instantInterval.asDuration() // throws DateTimeException
 ```
 
+### `at` Builders
+
+Date-time primitives can be "built up" using the `at` infix function.
+
+```kotlin
+val clock = SystemClock()
+val today = Date.now(clock)
+val dateTime = today at Time.NOON
+val zonedDateTime = dateTime at clock.zone()
+val offsetDateTime = dateTime at UtcOffset.UTC
+
+val anotherZonedDateTime = someInstant at TimeZone("America/New_York")
+val yearMonth = Year(2019) at Month.NOVEMBER
+```
+
 ### Daylight Savings Changes
+
+`ZonedDateTime` is aware of time zone rules and handles daylight savings transitions as demonstrated below.
 
 ```kotlin
 // Gaining an hour (ie. overlap)
