@@ -71,6 +71,12 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `isZero() returns true only when the offset is zero`() {
+        assertTrue { UtcOffset(0.seconds).isZero() }
+        assertFalse { UtcOffset((-1).seconds).isZero() }
+    }
+
+    @Test
     fun `validated() returns the unmodified offset when within the valid range`() {
         assertEquals(UtcOffset.MAX, UtcOffset.MAX.validated())
         assertEquals(UtcOffset.MIN, UtcOffset.MIN.validated())
