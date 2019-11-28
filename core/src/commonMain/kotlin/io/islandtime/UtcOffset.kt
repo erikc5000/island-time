@@ -26,7 +26,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     /**
      * Is this the UTC offset of +00:00?
      */
-    inline val isZero get() = this == ZERO
+    fun isZero(): Boolean = this == ZERO
 
     /**
      * Break a UTC offset down into components. The sign will indicate whether the offset is positive or negative while
@@ -61,7 +61,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
 
     override fun toString(): String {
-        return if (isZero) {
+        return if (isZero()) {
             "Z"
         } else {
             buildString(MAX_UTC_OFFSET_STRING_LENGTH) { appendUtcOffset(this@UtcOffset) }
@@ -179,7 +179,7 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
 internal const val MAX_UTC_OFFSET_STRING_LENGTH = 9
 
 internal fun StringBuilder.appendUtcOffset(offset: UtcOffset): StringBuilder {
-    if (offset.isZero) {
+    if (offset.isZero()) {
         append('Z')
     } else {
         offset.toComponents { sign, hours, minutes, seconds ->
