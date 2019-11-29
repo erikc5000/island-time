@@ -18,24 +18,16 @@ Current limitations:
 - Only supports the ISO calendar system
 - Year range currently restricted to 1-9999
 
-# Setup
-Island Time is still early in development and the API is likely to change significantly. Snapshot builds are available on the Sonatype OSS Snapshot Repository.
+Island Time is still early in development and "moving fast" so to speak. The API is likely to experience changes between minor version increments.
 
-Repository configuration: _(Kotlin Gradle DSL)_
-```kotlin
-repositories {
-    maven {
-        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-    }
-}
-```
+# Setup
 
 This project publishes Gradle metadata, so you can use the common artifact and it will automatically sort out the correct dependencies for each platform.
 
 Common: _(Kotlin Gradle DSL)_
 ```
 dependencies {
-    implementation("io.islandtime:core:0.1.0-SNAPSHOT")
+    implementation("io.islandtime:core:0.1.0")
 }
 ```
 
@@ -47,16 +39,18 @@ dependencies {
     // Until java.time library desugaring is added to D8, Android relies on
     // ThreeTenABP (https://github.com/JakeWharton/ThreeTenABP) to supply the
     // time zone database
-    implementation("io.islandtime:threetenabp-extensions:0.1.0-SNAPSHOT")
+    implementation("io.islandtime:threetenabp-extensions:0.1.0")
 }
 ```
 
 _**Important:**_ Due to the experimental status of inline classes, which are used in the public API, the version of Kotlin that you use in your project must match the version used by Island Time -- even for non-native targets.
 
-Island Time 0.1.0-SNAPSHOT builds are based on Kotlin 1.3.60.
-Also note that Island Time requires a JVM target of 1.8 or above.
+Island Time 0.1.x builds are based on Kotlin 1.3.60. Also note that Island Time requires a JVM target of 1.8 or above.
 
 Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
+
+Snapshot builds are available on the Sonatype OSS Snapshot Repository (https://oss.sonatype.org/content/repositories/snapshots/).
+
 
 # Usage
 
