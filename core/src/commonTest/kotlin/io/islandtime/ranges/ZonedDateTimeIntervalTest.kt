@@ -30,6 +30,17 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `inclusive end creation handles unbounded correctly`() {
+        val timeZone = "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at timeZone
+        val max = DateTime.MAX at timeZone
+
+        assertTrue { (start..max).hasUnboundedEnd() }
+        assertFailsWith<DateTimeException> { start..max - 1.nanoseconds }
+        assertEquals(start until max - 1.nanoseconds, start..max - 2.nanoseconds)
+    }
+
+    @Test
     fun `contains() returns true for dates within bounded range`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()

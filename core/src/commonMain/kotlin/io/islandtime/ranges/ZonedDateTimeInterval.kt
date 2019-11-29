@@ -8,6 +8,7 @@ import io.islandtime.startOfDayAt
 import io.islandtime.parser.*
 import io.islandtime.parser.expectingGroupCount
 import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
@@ -111,10 +112,11 @@ class ZonedDateTimeInterval(
             start: ZonedDateTime,
             endInclusive: ZonedDateTime
         ): ZonedDateTimeInterval {
-            val endExclusive = if (endInclusive.dateTime == DateTime.MAX) {
-                endInclusive
-            } else {
-                endInclusive + 1.nanoseconds
+            val endExclusive = when {
+                endInclusive.dateTime == DateTime.MAX -> endInclusive
+                endInclusive.dateTime > MAX_INCLUSIVE_END_DATE_TIME ->
+                    throw DateTimeException("The end of the interval can't be represented")
+                else -> endInclusive + 1.nanoseconds
             }
 
             return ZonedDateTimeInterval(start, endExclusive)
