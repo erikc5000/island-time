@@ -1,8 +1,11 @@
 package io.islandtime.ranges.internal
 
+import io.islandtime.DateTime
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.TimeInterval
+
+internal val MAX_INCLUSIVE_END_DATE_TIME = DateTime.MAX - 2.nanoseconds
 
 internal fun secondsBetween(
     startSeconds: LongSeconds,

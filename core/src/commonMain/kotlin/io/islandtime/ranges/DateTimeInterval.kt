@@ -198,10 +198,11 @@ class DateTimeInterval(
         val UNBOUNDED = DateTimeInterval(DateTime.MIN, DateTime.MAX)
 
         internal fun withInclusiveEnd(start: DateTime, endInclusive: DateTime): DateTimeInterval {
-            val endExclusive = if (endInclusive == DateTime.MAX) {
-                endInclusive
-            } else {
-                endInclusive + 1.nanoseconds
+            val endExclusive = when {
+                endInclusive == DateTime.MAX -> endInclusive
+                endInclusive > MAX_INCLUSIVE_END_DATE_TIME ->
+                    throw DateTimeException("The end of the interval can't be represented")
+                else -> endInclusive + 1.nanoseconds
             }
 
             return DateTimeInterval(start, endExclusive)

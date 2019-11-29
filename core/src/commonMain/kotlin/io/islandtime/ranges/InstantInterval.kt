@@ -8,6 +8,7 @@ import io.islandtime.measures.*
 import io.islandtime.endOfDayAt
 import io.islandtime.startOfDayAt
 import io.islandtime.parser.*
+import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.toInstant
 import kotlin.random.Random
@@ -45,14 +46,17 @@ class InstantInterval(
          */
         val UNBOUNDED = InstantInterval(Instant.MIN, Instant.MAX)
 
+        private val MAX_INCLUSIVE_END = Instant.MAX - 2.nanoseconds
+
         internal fun withInclusiveEnd(
             start: Instant,
             endInclusive: Instant
         ): InstantInterval {
-            val endExclusive = if (endInclusive == Instant.MAX) {
-                endInclusive
-            } else {
-                endInclusive + 1.nanoseconds
+            val endExclusive = when {
+                endInclusive == Instant.MAX -> endInclusive
+                endInclusive > MAX_INCLUSIVE_END ->
+                    throw DateTimeException("The end of the interval can't be represented")
+                else -> endInclusive + 1.nanoseconds
             }
 
             return InstantInterval(start, endExclusive)

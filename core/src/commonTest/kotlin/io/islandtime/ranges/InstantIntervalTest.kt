@@ -30,6 +30,16 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `inclusive end creation handles unbounded correctly`() {
+        val start = Instant.UNIX_EPOCH
+        val max = Instant.MAX
+
+        assertTrue { (start..max).hasUnboundedEnd() }
+        assertFailsWith<DateTimeException> { start..max - 1.nanoseconds }
+        assertEquals(start until max - 1.nanoseconds, start..max - 2.nanoseconds)
+    }
+
+    @Test
     fun `contains() returns true for dates within bounded range`() {
         val start = Instant((-2L).days.inSeconds)
         val end = Instant(2L.days.inSeconds)
