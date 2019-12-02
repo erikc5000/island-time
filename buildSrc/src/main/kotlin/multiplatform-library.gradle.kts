@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.konan.target.HostManager
 plugins {
     kotlin("multiplatform")
     id("published-library")
+    jacoco
 }
 
 val ideaActive get() = System.getProperty("idea.active") == "true"
@@ -72,6 +73,17 @@ afterEvaluate {
         publications.withType<MavenPublication>().named("kotlinMultiplatform") {
             artifact(emptySourcesJar.get())
         }
+    }
+
+    tasks.named("jacocoTestReport", JacocoReport::class).configure {
+        classDirectories.setFrom(
+            fileTree("${buildDir}/classes/kotlin/jvm/") {
+                exclude("**/*Test*.*")
+            }
+        )
+
+        sourceDirectories.setFrom(kotlin.sourceSets["commonMain"].kotlin.sourceDirectories)
+        executionData.setFrom("${buildDir}/jacoco/jvmTest.exec")
     }
 }
 
