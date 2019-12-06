@@ -6,12 +6,6 @@ matrix:
       jdk: openjdk8
       env:
         - ADB_INSTALL_TIMEOUT=5
-      android:
-        components:
-          - tools
-          - platform-tools
-          - build-tools-29.0.2
-          - android-29
       before_install:
         - touch $HOME/.android/repositories.cfg
         - yes | sdkmanager tools
@@ -25,7 +19,7 @@ matrix:
         - adb shell input keyevent 82 &
       deploy:
         provider: script
-        script: ./gradlew extensions:threetenabp:publishAllPublicationsToMavenRepository
+        script: ./gradlew extensions:threetenabp:publishAllPublicationsToMavenRepository extensions:parcelize:publishAllPublicationsToMavenRepository
         skip_cleanup: true
         on:
           branch: master

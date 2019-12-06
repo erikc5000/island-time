@@ -16,5 +16,6 @@ pluginManagement {
 include(
     ":core",
     ":tools:code-generator",
+    ":extensions:parcelize",
     ":extensions:threetenabp"
 )
