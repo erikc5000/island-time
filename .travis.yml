@@ -6,6 +6,11 @@ matrix:
       jdk: openjdk8
       env:
         - ADB_INSTALL_TIMEOUT=5
+      android:
+        components:
+          - tools
+          - platform-tools
+          - build-tools-29.0.2
       before_install:
         - touch $HOME/.android/repositories.cfg
         - yes | sdkmanager tools
