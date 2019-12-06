@@ -29,6 +29,23 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `equality works correctly`() {
+        assertEquals(DateTimeInterval.EMPTY, DateTimeInterval.EMPTY)
+        assertNotEquals(DateTimeInterval.UNBOUNDED, DateTimeInterval.EMPTY)
+        assertNotEquals(DateTimeInterval.EMPTY, DateTimeInterval.UNBOUNDED)
+
+        val date1 = DateTime(2017, 1, 3, 30, 0, 0)
+        val date2 = DateTime(2017, 2, 3, 30, 0, 0)
+        val date3 = DateTime(2017, 3, 3, 30, 0, 0)
+
+        assertEquals(DateTimeInterval.EMPTY, date2..date1)
+        assertNotEquals(date1..date2, date1..date3)
+        assertNotEquals(date1..date3, date1..date2)
+        assertNotEquals(date2..date3, date1..date3)
+        assertNotEquals(date1..date3, date2..date3)
+    }
+
+    @Test
     fun `inclusive end creation handles unbounded correctly`() {
         val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
         val max = DateTime.MAX
