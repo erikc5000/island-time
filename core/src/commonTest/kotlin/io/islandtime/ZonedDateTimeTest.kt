@@ -85,6 +85,20 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `can be constructed with day of year`() {
+        ZonedDateTime(2019, 18, 1, 2, 3, 4, nyZone).run {
+            assertEquals(2019, year)
+            assertEquals(18, dayOfYear)
+            assertEquals(1, hour)
+            assertEquals(2, minute)
+            assertEquals(3, second)
+            assertEquals(4, nanosecond)
+            assertEquals((-5).hours.asUtcOffset(), offset)
+            assertEquals(nyZone, zone)
+        }
+    }
+
+    @Test
     fun `at infix creates a ZonedDateTime from a DateTime`() {
         assertEquals(
             ZonedDateTime(
