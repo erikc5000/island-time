@@ -12,6 +12,18 @@ import kotlin.test.assertTrue
 
 class DateTimeTest : AbstractIslandTimeTest() {
     @Test
+    fun `can be constructed with day of year`() {
+        DateTime(2019, 18, 1, 2, 3, 4).run {
+            assertEquals(2019, year)
+            assertEquals(18, dayOfYear)
+            assertEquals(1, hour)
+            assertEquals(2, minute)
+            assertEquals(3, second)
+            assertEquals(4, nanosecond)
+        }
+    }
+
+    @Test
     fun `at infix combines date with time`() {
         val today = Date(2019, Month.JANUARY, 1)
 

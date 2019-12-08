@@ -37,6 +37,11 @@ class DateTimeInterval(
         return start >= endExclusive
     }
 
+    override fun equals(other: Any?): Boolean {
+        return other is DateTimeInterval && (isEmpty() && other.isEmpty() ||
+            start == other.start && endExclusive == other.endExclusive)
+    }
+
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */

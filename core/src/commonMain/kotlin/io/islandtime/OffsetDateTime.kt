@@ -68,6 +68,20 @@ class OffsetDateTime(
     ) : this(DateTime(year, monthNumber.toMonth(), dayOfMonth, hour, minute, second, nanosecond), offset)
 
     /**
+     * Create an [OffsetDateTime].
+     * @throws DateTimeException if the date-time or offset is invalid
+     */
+    constructor(
+        year: Int,
+        dayOfYear: Int,
+        hour: Int,
+        minute: Int,
+        second: Int,
+        nanosecond: Int,
+        offset: UtcOffset
+    ) : this(DateTime(year, dayOfYear, hour, minute, second, nanosecond), offset)
+
+    /**
      * The local date.
      */
     inline val date: Date get() = dateTime.date
