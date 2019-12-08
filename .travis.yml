@@ -11,7 +11,6 @@ matrix:
           - tools
           - platform-tools
           - build-tools-29.0.2
-          - android-29
       before_install:
         - touch $HOME/.android/repositories.cfg
         - yes | sdkmanager tools
@@ -19,13 +18,13 @@ matrix:
         - yes | sdkmanager --licenses
         - sdkmanager "system-images;android-18;default;armeabi-v7a"
         - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
-        - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+        - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu off &
       before_script:
         - android-wait-for-emulator
         - adb shell input keyevent 82 &
       deploy:
         provider: script
-        script: ./gradlew extensions:threetenabp:publishAllPublicationsToMavenRepository
+        script: ./gradlew extensions:threetenabp:publishAllPublicationsToMavenRepository extensions:parcelize:publishAllPublicationsToMavenRepository
         skip_cleanup: true
         on:
           branch: master

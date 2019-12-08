@@ -51,6 +51,19 @@ class DateTime(
     ) : this(year, monthNumber.toMonth(), day, hour, minute, second, nanosecond)
 
     /**
+     * Create a [DateTime].
+     * @throws DateTimeException if the date-time is invalid
+     */
+    constructor(
+        year: Int,
+        dayOfYear: Int,
+        hour: Int,
+        minute: Int,
+        second: Int,
+        nanosecond: Int
+    ) : this(Date(year, dayOfYear), Time(hour, minute, second, nanosecond))
+
+    /**
      * The hour of the day.
      */
     inline val hour: Int get() = time.hour

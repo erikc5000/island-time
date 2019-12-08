@@ -26,6 +26,19 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `can be constructed with day of year`() {
+        OffsetDateTime(2019, 18, 1, 2, 3, 4, UtcOffset.ZERO).run {
+            assertEquals(2019, year)
+            assertEquals(18, dayOfYear)
+            assertEquals(1, hour)
+            assertEquals(2, minute)
+            assertEquals(3, second)
+            assertEquals(4, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
     fun `equality is based on date, time, and offset`() {
         assertFalse {
             Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours) ==
