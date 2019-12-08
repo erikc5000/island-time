@@ -1,8 +1,12 @@
 package io.islandtime
 
+import io.islandtime.format.TextStyle
 import io.islandtime.internal.DAYS_PER_WEEK
+import io.islandtime.locale.Locale
+import io.islandtime.locale.firstDayOfWeek
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.LongDays
+import io.islandtime.measures.days
 
 /**
  * A day of the week.
@@ -22,6 +26,17 @@ enum class DayOfWeek {
      * The ISO week starts on Monday (1) and ends on Sunday (7).
      */
     val number: Int get() = ordinal + 1
+
+    /**
+     * The day of week number in the specified locale, from 1-7.
+     */
+    fun number(locale: Locale): Int {
+        return (this + (locale.firstDayOfWeek.number - 1).days).number
+    }
+
+//    fun displayName(textStyle: TextStyle, locale: Locale): String {
+//        return
+//    }
 
     operator fun plus(days: IntDays) = plus(days.value % DAYS_PER_WEEK)
     operator fun plus(days: LongDays) = plus((days.value % DAYS_PER_WEEK).toInt())
