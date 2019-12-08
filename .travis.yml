@@ -16,7 +16,7 @@ matrix:
         - yes | sdkmanager tools
         - mkdir "$ANDROID_HOME/licenses" || true
         - yes | sdkmanager --licenses
-        - sdkmanager "system-images;android-18;default;armeabi-v7a"
+        - sdkmanager "emulator" "system-images;android-18;default;armeabi-v7a"
         - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
         - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -gpu off &
       before_script:
