@@ -12,6 +12,7 @@ matrix:
         - unzip -q android-sdk-tools.zip -d ${ANDROID_HOME}
         - rm android-sdk-tools.zip
         - PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools
+        - touch ~/.android/repositories.cfg
         - yes | sdkmanager --update > /dev/null
         - yes | sdkmanager --licenses
         - sdkmanager "emulator" "tools" "platform-tools" > /dev/null
