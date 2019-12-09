@@ -2,7 +2,7 @@ matrix:
   include:
     - os: linux
       dist: xenial
-      language: generic
+      language: java
       jdk: openjdk8
       env:
         - ADB_INSTALL_TIMEOUT=25
