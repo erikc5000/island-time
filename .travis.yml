@@ -14,9 +14,9 @@ matrix:
         - yes | sdkmanager --licenses
         - sdkmanager "emulator" "tools" "platform-tools" > /dev/null
         - sdkmanager "build-tools;29.0.2" "platforms;android-29" > /dev/null
-        - sdkmanager "system-images;android-19;default;armeabi-v7a"
+        - sdkmanager "system-images;android-18;default;armeabi-v7a"
         - sdkmanager --list | head -20
-        - echo no | avdmanager create avd --force -n test -k "system-images;android-19;default;armeabi-v7a"
+        - echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
         - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -no-boot-anim -no-snapshot -camera-back none -camera-front none -verbose &
       before_script:
         - android-wait-for-emulator
