@@ -6,17 +6,16 @@ matrix:
       jdk: openjdk8
       env:
         - ADB_INSTALL_TIMEOUT=5
+        - ANDROID_SDK_ROOT=/usr/local/android-sdk
       before_install:
         - touch $HOME/.android/repositories.cfg
-        - yes | sdkmanager tools
         - yes | sdkmanager --update > /dev/null
         - mkdir "$ANDROID_HOME/licenses" || true
         - yes | sdkmanager --licenses
         - sdkmanager "emulator" "tools" "platform-tools" > /dev/null
-        - sdkmanager --list | head -20
         - sdkmanager "build-tools;29.0.2" "platforms;android-29" > /dev/null
         - sdkmanager "system-images;android-19;default;armeabi-v7a"
-        - sdkmanager --list | head -15
+        - sdkmanager --list | head -20
         - echo no | avdmanager create avd --force -n test -k "system-images;android-19;default;armeabi-v7a"
         - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window -no-boot-anim -no-snapshot -camera-back none -camera-front none -verbose &
       before_script:
