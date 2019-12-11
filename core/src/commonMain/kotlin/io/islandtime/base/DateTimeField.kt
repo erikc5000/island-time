@@ -15,6 +15,20 @@ enum class DateTimeField {
     YEAR,
 
     /**
+     * The proleptic year.
+     *
+     * In the ISO calendar system, years prior to 1 ACE will be negative.
+     */
+    YEAR_OF_ERA,
+
+    /**
+     * The era.
+     *
+     * In the ISO calendar system, this will be 0 (`BC`) or 1 (`AD`).
+     */
+    ERA,
+
+    /**
      * The month of the year, such as `January`
      *
      * In the ISO calendar system, this will be from 1 (`January`) to 12 (`December`).
@@ -47,7 +61,7 @@ enum class DateTimeField {
      *
      * 0 (`AM`) or 1 (`PM`).
      */
-//    AM_PM_OF_DAY,
+    AM_PM_OF_DAY,
 
     /**
      * The hour of the day in AM or PM, from 0-11.

@@ -104,7 +104,7 @@ class StartEndTest : AbstractIslandTimeTest() {
             Date(2019, Month.DECEMBER, 6).startOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 2),
@@ -130,7 +130,7 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .startOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             DateTime(2019, Month.DECEMBER, 2, 0, 0),
@@ -162,7 +162,7 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .startOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 2) at MIDNIGHT at 1.hours.asUtcOffset(),
@@ -196,7 +196,7 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .startOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 2) at MIDNIGHT at nyZone,
@@ -300,7 +300,7 @@ class StartEndTest : AbstractIslandTimeTest() {
             Date(2019, Month.DECEMBER, 6).endOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 8),
@@ -326,7 +326,7 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .endOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 8) at Time.MAX,
@@ -358,7 +358,7 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .endOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 8) at Time.MAX at 1.hours.asUtcOffset(),
@@ -392,7 +392,7 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .endOfWeek(sundayFirstLocale)
         )
 
-        val mondayFirstLocale = localeFor("de-de")
+        val mondayFirstLocale = localeFor("de-DE")
 
         assertEquals(
             Date(2019, Month.DECEMBER, 8) at Time.MAX at nyZone,
