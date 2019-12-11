@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 allprojects {
     repositories {
@@ -14,6 +16,14 @@ allprojects {
         kotlinOptions {
             freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
             jvmTarget = "1.8"
+        }
+    }
+    
+    tasks.withType(AbstractTestTask::class).configureEach {
+        testLogging {
+            events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.PASSED)
+            exceptionFormat = TestExceptionFormat.FULL
+            showStackTraces = true
         }
     }
 }

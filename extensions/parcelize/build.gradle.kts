@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":core"))
     implementation(kotlin("stdlib-jdk8"))
 
+    androidTestImplementation(project(":extensions:threetenabp"))
     androidTestImplementation("androidx.test:runner:1.2.0")
     androidTestImplementation("com.google.truth:truth:1.0")
     androidTestUtil("androidx.test:orchestrator:1.2.0")
