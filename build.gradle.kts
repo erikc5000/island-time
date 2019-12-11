@@ -19,7 +19,8 @@ allprojects {
     
     tasks.withType(AbstractTestTask::class).configureEach {
         testLogging {
-            showExceptions = true
+            events("failed", "skipped", "passed")
+            exceptionFormat = "full"
             showStackTraces = true
         }
     }
