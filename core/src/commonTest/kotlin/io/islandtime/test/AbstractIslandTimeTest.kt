@@ -11,6 +11,7 @@ abstract class AbstractIslandTimeTest(
 ) {
     @BeforeTest
     fun setUp() {
+        IslandTime.reset()
         IslandTime.initializeWith(timeZoneRulesProvider)
     }
 
