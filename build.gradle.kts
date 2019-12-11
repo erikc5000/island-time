@@ -19,8 +19,8 @@ allprojects {
     
     tasks.withType(AbstractTestTask::class).configureEach {
         testLogging {
-            showStandardStreams = true
-            events("passed", "failed")
+            showExceptions = true
+            showStackTraces = true
         }
     }
 }
