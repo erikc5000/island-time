@@ -3,12 +3,13 @@ package io.islandtime.jvm.clock
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
 import io.islandtime.clock.toIslandTimeZone
+import io.islandtime.test.AbstractIslandTimeTest
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class JvmPlatformSystemClockTest {
+class JvmPlatformSystemClockTest : AbstractIslandTimeTest() {
     @Test
     fun `converts java_util_TimeZone with UTC equivalent IDs to Island region-based zones`() {
         listOf("GMT", "UTC").forEach {
