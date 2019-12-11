@@ -16,4 +16,11 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
+    
+    tasks.withType(AbstractTestTask::class).configureEach {
+        testLogging {
+            showStandardStreams = true
+            events("passed", "failed")
+        }
+    }
 }
