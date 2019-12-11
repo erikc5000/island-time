@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 allprojects {
     repositories {
@@ -20,7 +21,7 @@ allprojects {
     tasks.withType(AbstractTestTask::class).configureEach {
         testLogging {
             events("failed", "skipped", "passed")
-            exceptionFormat("full")
+            exceptionFormat = TestExceptionFormat.FULL
             showStackTraces = true
         }
     }
