@@ -11,6 +11,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return when (field) {
             DateTimeField.DAY_OF_WEEK -> dayOfWeekTextFor(value, style, locale)
             DateTimeField.MONTH_OF_YEAR -> monthTextFor(value, style, locale)
+            DateTimeField.AM_PM_OF_DAY -> amPmTextFor(value, locale)
             else -> null
         }
     }
@@ -25,24 +26,33 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 //        }
 //    }
 
-    private fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return dayOfWeekTextListFor(style, locale)?.run {
             if (value !in 1L..7L) {
                 throw DateTimeException("'$value' is outside the supported day of week field range")
             }
 
-            val index = if (value == 7L) 0 else value.toInt()
-            get(index)
+            get(value.toInt() % 7)
         }
     }
 
-    private fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        return dayOfWeekTextListFor(style, locale)?.run {
+    fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+        return monthTextListFor(style, locale)?.run {
             if (value !in 1L..12L) {
                 throw DateTimeException("'$value' is outside the supported month of year field range")
             }
 
             get(value.toInt() - 1)
+        }
+    }
+
+    fun amPmTextFor(value: Long, locale: Locale): String? {
+        return withCalendarIn(locale) {
+            when (value) {
+                0L -> AMSymbol
+                1L -> PMSymbol
+                else -> throw DateTimeException("'$value' is outside the supported AM/PM range")
+            }
         }
     }
 

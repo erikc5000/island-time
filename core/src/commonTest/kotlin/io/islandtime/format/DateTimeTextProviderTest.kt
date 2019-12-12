@@ -88,7 +88,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(
                 it.second,
-                DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 1L, it.first, en_US)
+                DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 1L, it.first, en_US)?.removeSuffix(".")
             )
         }
     }
@@ -105,7 +105,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(
                 it.second,
-                DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 1L, it.first, de_DE)
+                DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 1L, it.first, de_DE)?.removeSuffix(".")
             )
         }
     }
