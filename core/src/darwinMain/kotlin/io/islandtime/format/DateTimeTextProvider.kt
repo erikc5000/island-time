@@ -1,10 +1,10 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
+import io.islandtime.TimeZone
 import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
-import platform.Foundation.NSCalendar
-import platform.Foundation.NSCalendarIdentifierISO8601
+import platform.Foundation.*
 
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     override fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
@@ -26,17 +26,18 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 //        }
 //    }
 
-    fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return dayOfWeekTextListFor(style, locale)?.run {
             if (value !in 1L..7L) {
                 throw DateTimeException("'$value' is outside the supported day of week field range")
             }
 
-            get(value.toInt() % 7)
+            val index = if (value == 7L) 0 else value.toInt()
+            get(index)
         }
     }
 
-    fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return monthTextListFor(style, locale)?.run {
             if (value !in 1L..12L) {
                 throw DateTimeException("'$value' is outside the supported month of year field range")
@@ -46,13 +47,32 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    fun amPmTextFor(value: Long, locale: Locale): String? {
+    override fun amPmTextFor(value: Long, locale: Locale): String? {
         return withCalendarIn(locale) {
             when (value) {
                 0L -> AMSymbol
                 1L -> PMSymbol
                 else -> throw DateTimeException("'$value' is outside the supported AM/PM range")
             }
+        }
+    }
+
+    override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+        return if (zone is TimeZone.Region) {
+            NSTimeZone.timeZoneWithName(zone.id)?.run {
+                val darwinStyle = when (style) {
+                    TimeZoneTextStyle.STANDARD -> NSTimeZoneNameStyle.NSTimeZoneNameStyleStandard
+                    TimeZoneTextStyle.SHORT_STANDARD -> NSTimeZoneNameStyle.NSTimeZoneNameStyleShortStandard
+                    TimeZoneTextStyle.DAYLIGHT_SAVING -> NSTimeZoneNameStyle.NSTimeZoneNameStyleDaylightSaving
+                    TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING -> NSTimeZoneNameStyle.NSTimeZoneNameStyleShortDaylightSaving
+                    TimeZoneTextStyle.GENERIC -> NSTimeZoneNameStyle.NSTimeZoneNameStyleGeneric
+                    TimeZoneTextStyle.SHORT_GENERIC -> NSTimeZoneNameStyle.NSTimeZoneNameStyleShortGeneric
+                }
+
+                localizedName(darwinStyle, locale)
+            }
+        } else {
+            null
         }
     }
 

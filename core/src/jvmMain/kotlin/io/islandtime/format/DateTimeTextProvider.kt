@@ -1,6 +1,7 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
+import io.islandtime.TimeZone
 import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
 import java.text.DateFormatSymbols
@@ -21,7 +22,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         if (value !in 1L..7L) {
             throw DateTimeException("'$value' is outside the supported day of week field range")
         }
@@ -39,16 +40,16 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         fun mapMonthSymbols(symbols: Array<String>): Map<Long, String> {
-            val valueToSymbolMap = mutableMapOf<Long, String>()
+            val valueToSymbolMap = hashMapOf<Long, String>()
             symbols.sliceArray(Calendar.JANUARY..Calendar.DECEMBER)
                 .forEachIndexed { index, s -> valueToSymbolMap[index + 1L] = s }
             return valueToSymbolMap
         }
 
         fun standaloneSymbolMapFromDateFormat(pattern: String): Map<Long, String> {
-            val valueToSymbolMap = mutableMapOf<Long, String>()
+            val valueToSymbolMap = hashMapOf<Long, String>()
             val dateFormat = SimpleDateFormat(pattern, locale)
 
             for (index in Calendar.JANUARY..Calendar.DECEMBER) {
@@ -88,7 +89,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return localeSymbols.getValue(style)[value]
     }
 
-    fun amPmTextFor(value: Long, locale: Locale): String? {
+    override fun amPmTextFor(value: Long, locale: Locale): String? {
         if (value !in 0L..1L) {
             throw DateTimeException("'$value' is outside the supported AM/PM range")
         }
@@ -97,29 +98,14 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return symbols.amPmStrings[value.toInt()]
     }
 
-//    private fun dayOfWeekTextListFor(style: TextStyle, locale: Locale): Array<String>? {
-//        return with(DateFormatSymbols.getInstance(locale)) {
-//            when (style) {
-//                TextStyle.FULL -> weekdays
-//                TextStyle.FULL_STANDALONE -> weekdays
-//                TextStyle.SHORT -> shortWeekdays
-//                TextStyle.SHORT_STANDALONE -> shortWeekdays
-//                TextStyle.NARROW -> weekdays
-//                TextStyle.NARROW_STANDALONE -> weekdays
-//            }
-//        }
-//    }
-//
-//    private fun monthTextListFor(style: TextStyle, locale: Locale): Array<String>? {
-//        return with(DateFormatSymbols.getInstance(locale)) {
-//            when (style) {
-//                TextStyle.FULL -> months
-//                TextStyle.FULL_STANDALONE -> months
-//                TextStyle.SHORT -> shortMonths
-//                TextStyle.SHORT_STANDALONE -> shortMonths
-//                TextStyle.NARROW -> months
-//                TextStyle.NARROW_STANDALONE -> months
-//            }
-//        }
-//    }
+    override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+        return if (zone is TimeZone.FixedOffset || !zone.isValid || style.isGeneric()) {
+            null
+        } else {
+            val javaTzStyle = if (style.isShort()) java.util.TimeZone.SHORT else java.util.TimeZone.LONG
+            val isDaylightSaving = style.isDaylightSaving()
+
+            return java.util.TimeZone.getTimeZone(zone.id).getDisplayName(isDaylightSaving, javaTzStyle, locale)
+        }
+    }
 }

@@ -1,5 +1,7 @@
 package io.islandtime
 
+import io.islandtime.format.TextStyle
+import io.islandtime.locale.localeFor
 import io.islandtime.measures.days
 import io.islandtime.measures.months
 import io.islandtime.test.AbstractIslandTimeTest
@@ -64,6 +66,13 @@ class MonthTest : AbstractIslandTimeTest() {
         assertEquals(1, Month.JANUARY.firstDayOfYearIn(2000))
         assertEquals(244, Month.SEPTEMBER.firstDayOfYearIn(2001))
         assertEquals(245, Month.SEPTEMBER.firstDayOfYearIn(2000))
+    }
+
+    @Test
+    fun `localizedName() and displayName() get localized text from the provider`() {
+        val en_US = localeFor("en-US")
+        assertEquals("April", Month.APRIL.localizedName(TextStyle.FULL_STANDALONE, en_US))
+        assertEquals("Jun", Month.JUNE.displayName(TextStyle.SHORT_STANDALONE, en_US))
     }
 
     @Test

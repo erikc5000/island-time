@@ -1,8 +1,10 @@
 package io.islandtime
 
+import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.internal.DAYS_PER_WEEK
 import io.islandtime.locale.Locale
+import io.islandtime.locale.defaultLocale
 import io.islandtime.locale.firstDayOfWeek
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.LongDays
@@ -28,15 +30,40 @@ enum class DayOfWeek {
     val number: Int get() = ordinal + 1
 
     /**
-     * The day of week number in the specified locale, from 1-7.
+     * The day of week number (1-7) according to the specified locale. Typically, the week will start on either Monday,
+     * Sunday, or Saturday. The number returned may differ between platforms.
      */
-    fun number(locale: Locale): Int {
-        return (this + (locale.firstDayOfWeek.number - 1).days).number
+    fun localizedNumber(locale: Locale = defaultLocale()): Int {
+        return (this - (locale.firstDayOfWeek.number - 1).days).number
     }
 
-//    fun displayName(textStyle: TextStyle, locale: Locale): String {
-//        return
-//    }
+    /**
+     * The localized name of the day, if available for the locale in the specified style. The result depends on the
+     * configured [DateTimeTextProvider] and may differ between platforms.
+     *
+     * @param style the style of text
+     * @param locale the locale
+     * @return the localized name or `null` if unavailable for the specified locale
+     * @see displayName
+     */
+    fun localizedName(style: TextStyle, locale: Locale = defaultLocale()): String? {
+        return DateTimeTextProvider.dayOfWeekTextFor(number.toLong(), style, locale)
+    }
+
+    /**
+     * A textual representation of the day, suitable for display purposes. The localized name will be returned, if
+     * available. If not, the ISO day of week number will be returned instead.
+     *
+     * The result depends on the configured [DateTimeTextProvider] and may differ between platforms.
+     *
+     * @param style the style of text
+     * @param locale the locale
+     * @return the localized name or [number] if unavailable for the specified locale
+     * @see localizedName
+     */
+    fun displayName(style: TextStyle, locale: Locale = defaultLocale()): String {
+        return localizedName(style, locale) ?: number.toString()
+    }
 
     operator fun plus(days: IntDays) = plus(days.value % DAYS_PER_WEEK)
     operator fun plus(days: LongDays) = plus((days.value % DAYS_PER_WEEK).toInt())
