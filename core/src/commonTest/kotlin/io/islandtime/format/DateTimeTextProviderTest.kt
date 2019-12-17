@@ -32,6 +32,12 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         assertFailsWith<DateTimeException> {
             DateTimeTextProvider.textFor(DateTimeField.AM_PM_OF_DAY, 2L, TextStyle.FULL, en_US)
         }
+        assertFailsWith<DateTimeException> {
+            DateTimeTextProvider.textFor(DateTimeField.ERA, -1L, TextStyle.FULL, en_US)
+        }
+        assertFailsWith<DateTimeException> {
+            DateTimeTextProvider.textFor(DateTimeField.ERA, 2L, TextStyle.FULL, en_US)
+        }
     }
 
     @Test
@@ -145,6 +151,52 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
             "PM",
             DateTimeTextProvider.amPmTextFor(1L, en_US)
         )
+    }
+
+    @Test
+    fun `era text in en-US`() {
+        listOf(
+            TextStyle.FULL to listOf("Before Christ", "Anno Domini"),
+            TextStyle.FULL_STANDALONE to listOf("Before Christ", "Anno Domini"),
+            TextStyle.SHORT to listOf("BC", "AD"),
+            TextStyle.SHORT_STANDALONE to listOf("BC", "AD"),
+            TextStyle.NARROW to listOf("B", "A"),
+            TextStyle.NARROW_STANDALONE to listOf("B", "A")
+        ).forEach {
+            it.second.forEachIndexed { index, eraValue ->
+                assertEquals(
+                    eraValue,
+                    DateTimeTextProvider.textFor(DateTimeField.ERA, index.toLong(), it.first, en_US)
+                )
+                assertEquals(
+                    eraValue,
+                    DateTimeTextProvider.eraTextFor(index.toLong(), it.first, en_US)
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `era text in de-DE`() {
+        listOf(
+            TextStyle.FULL to listOf("v. Chr.", "n. Chr."),
+            TextStyle.FULL_STANDALONE to listOf("v. Chr.", "n. Chr."),
+            TextStyle.SHORT to listOf("v. Chr.", "n. Chr."),
+            TextStyle.SHORT_STANDALONE to listOf("v. Chr.", "n. Chr."),
+            TextStyle.NARROW to listOf("B", "A"),
+            TextStyle.NARROW_STANDALONE to listOf("B", "A")
+        ).forEach {
+            it.second.forEachIndexed { index, eraValue ->
+                assertEquals(
+                    eraValue,
+                    DateTimeTextProvider.textFor(DateTimeField.ERA, index.toLong(), it.first, de_DE)
+                )
+                assertEquals(
+                    eraValue,
+                    DateTimeTextProvider.eraTextFor(index.toLong(), it.first, de_DE)
+                )
+            }
+        }
     }
 
     @Test

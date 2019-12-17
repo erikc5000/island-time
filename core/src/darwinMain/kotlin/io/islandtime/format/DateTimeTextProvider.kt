@@ -7,14 +7,7 @@ import io.islandtime.locale.Locale
 import platform.Foundation.*
 
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
-    override fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
-        return when (field) {
-            DateTimeField.DAY_OF_WEEK -> dayOfWeekTextFor(value, style, locale)
-            DateTimeField.MONTH_OF_YEAR -> monthTextFor(value, style, locale)
-            DateTimeField.AM_PM_OF_DAY -> amPmTextFor(value, locale)
-            else -> null
-        }
-    }
+    private val narrowEraTextSymbols = listOf("B", "A")
 
 //    override fun textIteratorFor(
 //        field: DateTimeField,
@@ -27,24 +20,22 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 //    }
 
     override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        return dayOfWeekTextListFor(style, locale)?.run {
-            if (value !in 1L..7L) {
-                throw DateTimeException("'$value' is outside the supported day of week field range")
-            }
+        if (value !in 1L..7L) {
+            throw DateTimeException("'$value' is outside the supported day of week field range")
+        }
 
+        return dayOfWeekTextListFor(style, locale)?.run {
             val index = if (value == 7L) 0 else value.toInt()
             get(index)
         }
     }
 
     override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        return monthTextListFor(style, locale)?.run {
-            if (value !in 1L..12L) {
-                throw DateTimeException("'$value' is outside the supported month of year field range")
-            }
-
-            get(value.toInt() - 1)
+        if (value !in 1L..12L) {
+            throw DateTimeException("'$value' is outside the supported month of year field range")
         }
+
+        return monthTextListFor(style, locale)?.get(value.toInt() - 1)
     }
 
     override fun amPmTextFor(value: Long, locale: Locale): String? {
@@ -55,6 +46,14 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
                 else -> throw DateTimeException("'$value' is outside the supported AM/PM range")
             }
         }
+    }
+
+    override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+        if (value !in 0L..1L) {
+            throw DateTimeException("'$value' is outside the supported era field range")
+        }
+
+        return eraTextListFor(style, locale)?.get(value.toInt())
     }
 
     override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
@@ -103,10 +102,23 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
             } as List<String>
         }
     }
-}
 
-private inline fun <T> withCalendarIn(locale: Locale, block: NSCalendar.() -> T): T? {
-    return NSCalendar.calendarWithIdentifier(NSCalendarIdentifierISO8601)?.also {
-        it.locale = locale
-    }?.block()
+    @Suppress("UNCHECKED_CAST")
+    private fun eraTextListFor(style: TextStyle, locale: Locale): List<String>? {
+        return when (style) {
+            TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> narrowEraTextSymbols
+            else -> withCalendarIn(locale) {
+                when (style) {
+                    TextStyle.FULL, TextStyle.FULL_STANDALONE -> longEraSymbols
+                    else -> eraSymbols
+                } as List<String>
+            }
+        }
+    }
+
+    private inline fun <T> withCalendarIn(locale: Locale, block: NSCalendar.() -> T): T? {
+        return NSCalendar.calendarWithIdentifier(NSCalendarIdentifierISO8601)?.also {
+            it.locale = locale
+        }?.block()
+    }
 }

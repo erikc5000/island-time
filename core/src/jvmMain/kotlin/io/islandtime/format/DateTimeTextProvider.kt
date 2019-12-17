@@ -2,7 +2,6 @@ package io.islandtime.format
 
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
-import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
@@ -12,15 +11,8 @@ import kotlin.collections.HashMap
 
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private val monthSymbols = ConcurrentHashMap<Locale, HashMap<TextStyle, Map<Long, String>>>()
-
-    override fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
-        return when (field) {
-            DateTimeField.DAY_OF_WEEK -> dayOfWeekTextFor(value, style, locale)
-            DateTimeField.MONTH_OF_YEAR -> monthTextFor(value, style, locale)
-            DateTimeField.AM_PM_OF_DAY -> amPmTextFor(value, locale)
-            else -> null
-        }
-    }
+    private val narrowEraTextSymbols = arrayOf("B", "A")
+    private val englishLongEraTextSymbols = arrayOf("Before Christ", "Anno Domini")
 
     override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         if (value !in 1L..7L) {
@@ -96,6 +88,24 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 
         val symbols = DateFormatSymbols.getInstance(locale)
         return symbols.amPmStrings[value.toInt()]
+    }
+
+    override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+        if (value !in 0L..1L) {
+            throw DateTimeException("'$value' is outside the supported era field range")
+        }
+
+        val eraSymbols = when (style) {
+            TextStyle.FULL, TextStyle.FULL_STANDALONE -> if (locale.language == Locale.ENGLISH.language) {
+                englishLongEraTextSymbols
+            } else {
+                DateFormatSymbols.getInstance(locale).eras
+            }
+            TextStyle.SHORT, TextStyle.SHORT_STANDALONE -> DateFormatSymbols.getInstance(locale).eras
+            TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> narrowEraTextSymbols
+        }
+
+        return eraSymbols[value.toInt()]
     }
 
     override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {

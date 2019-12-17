@@ -2,10 +2,11 @@ package io.islandtime.format
 
 import io.islandtime.TimeZone
 import io.islandtime.locale.localeFor
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class DarwinDateTimeTextProviderTest {
+class DarwinDateTimeTextProviderTest : AbstractIslandTimeTest() {
     private val en_US = localeFor("en-US")
 
     @Test

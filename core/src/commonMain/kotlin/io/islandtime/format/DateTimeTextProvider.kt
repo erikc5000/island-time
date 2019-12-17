@@ -20,7 +20,15 @@ interface DateTimeTextProvider {
      * @return the localized text or `null` if unavailable
      * @throws DateTimeException if the value if out of range for the specified field
      */
-    fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String?
+    fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
+        return when (field) {
+            DateTimeField.DAY_OF_WEEK -> dayOfWeekTextFor(value, style, locale)
+            DateTimeField.MONTH_OF_YEAR -> monthTextFor(value, style, locale)
+            DateTimeField.AM_PM_OF_DAY -> amPmTextFor(value, locale)
+            DateTimeField.ERA -> eraTextFor(value, style, locale)
+            else -> null
+        }
+    }
 
 //    fun textIteratorFor(field: DateTimeField, style: TextStyle, locale: Locale): Iterator<Map.Entry<String, Long>>?
 
@@ -55,6 +63,17 @@ interface DateTimeTextProvider {
      * @throws DateTimeException if the value is not `0` or `1`
      */
     fun amPmTextFor(value: Long, locale: Locale): String?
+
+    /**
+     * Get the localized ISO era text.
+     *
+     * @param value `0` for BCE or `1` for CE
+     * @param locale the locale
+     * @param style the style of the text
+     * @return the localized era text or `null` if unavailable
+     * @throws DateTimeException if the value is not `0` or `1`
+     */
+    fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String?
 
     /**
      * Get the localized time zone text.

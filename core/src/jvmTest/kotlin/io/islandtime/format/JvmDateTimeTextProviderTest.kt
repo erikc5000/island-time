@@ -2,10 +2,11 @@ package io.islandtime.format
 
 import io.islandtime.TimeZone
 import io.islandtime.locale.localeFor
+import io.islandtime.test.AbstractIslandTimeTest
 import org.junit.Test
 import kotlin.test.assertNull
 
-class JvmDateTimeTextProviderTest {
+class JvmDateTimeTextProviderTest : AbstractIslandTimeTest() {
     private val en_US = localeFor("en-US")
     private val de_DE = localeFor("de-DE")
 
