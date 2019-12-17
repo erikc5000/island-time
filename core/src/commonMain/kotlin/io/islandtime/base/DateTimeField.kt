@@ -10,21 +10,20 @@ enum class DateTimeField {
     /**
      * The proleptic year.
      *
-     * In the ISO calendar system, years prior to 1 ACE will be negative.
+     * In the ISO calendar system, positive values indicate years in the current era, a value of 0 is equivalent to 1
+     * BCE, -1 to 2 BCE, and so forth.
      */
     YEAR,
 
     /**
-     * The proleptic year.
-     *
-     * In the ISO calendar system, years prior to 1 ACE will be negative.
+     * The year of the era.
      */
     YEAR_OF_ERA,
 
     /**
      * The era.
      *
-     * In the ISO calendar system, this will be 0 (`BC`) or 1 (`AD`).
+     * In the ISO calendar system, this will be 0 (`BCE`) or 1 (`CE`).
      */
     ERA,
 
