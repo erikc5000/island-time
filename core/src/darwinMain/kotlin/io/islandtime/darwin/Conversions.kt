@@ -5,20 +5,21 @@ import io.islandtime.base.TimePoint
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.seconds
 import io.islandtime.zone.TimeZoneRulesException
+import kotlinx.cinterop.convert
 import platform.Foundation.*
 
 fun Year.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
-        it.year = value.toLong()
+        it.year = value.convert()
     }
 }
 
 fun YearMonth.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
-        it.year = year.toLong()
-        it.month = monthNumber.toLong()
+        it.year = year.convert()
+        it.month = monthNumber.convert()
     }
 }
 
@@ -68,11 +69,11 @@ fun ZonedDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCo
 }
 
 fun NSDateComponents.toIslandDate(): Date {
-    return Date(year.toInt(), month.toInt(), day.toInt())
+    return Date(year.convert(), month.convert<Int>(), day.convert())
 }
 
 fun NSDateComponents.toIslandTime(): Time {
-    return Time(hour.toInt(), minute.toInt(), second.toInt(), nanosecond.toInt())
+    return Time(hour.convert(), minute.convert(), second.convert(), nanosecond.convert())
 }
 
 fun NSDateComponents.toIslandDateTime(): DateTime {
@@ -129,9 +130,9 @@ fun NSDate.toIslandZonedDateTimeAt(zone: TimeZone): ZonedDateTime {
 
 fun NSDate.toIslandZonedDateTimeAt(nsTimeZone: NSTimeZone) = toIslandZonedDateTimeAt(nsTimeZone.toIslandTimeZone())
 
-fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(totalSeconds.value.toLong())
+fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(totalSeconds.value.convert())
 
-fun NSTimeZone.toIslandUtcOffset(): UtcOffset = UtcOffset(secondsFromGMT.toInt().seconds)
+fun NSTimeZone.toIslandUtcOffset(): UtcOffset = UtcOffset(secondsFromGMT.convert<Int>().seconds)
 
 /**
  * Convert an Apple `NSTimeZone` to an Island Time [TimeZone] with the same identifier.
@@ -152,23 +153,23 @@ fun TimeZone.toNSTimeZone(): NSTimeZone = toNSTimeZoneOrNull()
  */
 fun TimeZone.toNSTimeZoneOrNull(): NSTimeZone? {
     return if (this is TimeZone.FixedOffset) {
-        NSTimeZone.timeZoneForSecondsFromGMT(offset.totalSeconds.value.toLong())
+        NSTimeZone.timeZoneForSecondsFromGMT(offset.totalSeconds.value.convert())
     } else {
         NSTimeZone.timeZoneWithName(id)
     }
 }
 
 private fun NSDateComponents.populateFrom(date: Date) {
-    year = date.year.toLong()
-    month = date.monthNumber.toLong()
-    day = date.dayOfMonth.toLong()
+    year = date.year.convert()
+    month = date.monthNumber.convert()
+    day = date.dayOfMonth.convert()
 }
 
 private fun NSDateComponents.populateFrom(time: Time) {
-    hour = time.hour.toLong()
-    minute = time.minute.toLong()
-    second = time.second.toLong()
-    nanosecond = time.nanosecond.toLong()
+    hour = time.hour.convert()
+    minute = time.minute.convert()
+    second = time.second.convert()
+    nanosecond = time.nanosecond.convert()
 }
 
 private fun NSDateComponents.populateFrom(dateTime: DateTime) {

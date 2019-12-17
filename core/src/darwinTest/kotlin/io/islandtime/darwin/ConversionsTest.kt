@@ -3,6 +3,7 @@ package io.islandtime.darwin
 import io.islandtime.*
 import io.islandtime.measures.seconds
 import io.islandtime.test.AbstractIslandTimeTest
+import kotlinx.cinterop.convert
 import platform.Foundation.*
 import kotlin.test.*
 
@@ -240,12 +241,12 @@ class ConversionsTest : AbstractIslandTimeTest() {
     ) {
         if (hasCalendar) assertNotNull(dateComponents.calendar()) else assertNull(dateComponents.calendar())
         if (hasTimeZone) assertNotNull(dateComponents.timeZone()) else assertNull(dateComponents.timeZone())
-        assertEquals(year?.toLong() ?: NSDateComponentUndefined, dateComponents.year())
-        assertEquals(month?.toLong() ?: NSDateComponentUndefined, dateComponents.month())
-        assertEquals(day?.toLong() ?: NSDateComponentUndefined, dateComponents.day())
-        assertEquals(hour?.toLong() ?: NSDateComponentUndefined, dateComponents.hour())
-        assertEquals(minute?.toLong() ?: NSDateComponentUndefined, dateComponents.minute())
-        assertEquals(second?.toLong() ?: NSDateComponentUndefined, dateComponents.second())
-        assertEquals(nanosecond?.toLong() ?: NSDateComponentUndefined, dateComponents.nanosecond())
+        assertEquals(year?.convert() ?: NSDateComponentUndefined, dateComponents.year())
+        assertEquals(month?.convert() ?: NSDateComponentUndefined, dateComponents.month())
+        assertEquals(day?.convert() ?: NSDateComponentUndefined, dateComponents.day())
+        assertEquals(hour?.convert() ?: NSDateComponentUndefined, dateComponents.hour())
+        assertEquals(minute?.convert() ?: NSDateComponentUndefined, dateComponents.minute())
+        assertEquals(second?.convert() ?: NSDateComponentUndefined, dateComponents.second())
+        assertEquals(nanosecond?.convert() ?: NSDateComponentUndefined, dateComponents.nanosecond())
     }
 }
