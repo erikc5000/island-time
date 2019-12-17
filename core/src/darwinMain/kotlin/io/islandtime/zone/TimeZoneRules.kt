@@ -8,6 +8,7 @@ import io.islandtime.darwin.toIslandDateTimeAt
 import io.islandtime.darwin.toNSDate
 import io.islandtime.darwin.toNSDateComponents
 import io.islandtime.measures.*
+import kotlinx.cinterop.convert
 import platform.Foundation.*
 
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
@@ -89,13 +90,13 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
         get() = timeZone.nextDaylightSavingTimeTransitionAfterDate(Instant.MIN.toNSDate()) == null
 
     private fun offsetAt(date: NSDate): UtcOffset {
-        return timeZone.secondsFromGMTForDate(date).toInt().seconds.asUtcOffset()
+        return timeZone.secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
     }
 
     private fun findTransitionsIn(year: Int): List<TimeZoneOffsetTransition> {
         var currentDate = calendar.dateFromComponents(
             NSDateComponents().also {
-                it.year = (year - 1).toLong()
+                it.year = (year - 1).convert()
                 it.month = 12
                 it.day = 31
             }
@@ -161,4 +162,4 @@ private fun NSDate.Companion.fromMillisecondsSinceUnixEpoch(milliseconds: LongMi
 
 private fun DateTime.toNSDateOrNull(calendar: NSCalendar) = calendar.dateFromComponents(toNSDateComponents())
 
-private fun NSDate.yearIn(calendar: NSCalendar) = calendar.component(NSCalendarUnitYear, this).toInt()
+private fun NSDate.yearIn(calendar: NSCalendar) = calendar.component(NSCalendarUnitYear, this).convert<Int>()
