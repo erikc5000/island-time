@@ -5,6 +5,9 @@ import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import io.islandtime.zone.TimeZoneRulesException
 import io.islandtime.zone.TimeZoneRulesProvider
 
+/**
+ * Global configuration for Island Time.
+ */
 object IslandTime {
     private val provider = AtomicReference<TimeZoneRulesProvider?>(null)
 

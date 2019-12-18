@@ -11,9 +11,10 @@ import io.islandtime.parser.*
 /**
  * The time shift between a local time and UTC.
  *
- * To ensure that the offset is within the valid supported range, you must explicitly call [validated].
+ * To ensure that the offset is within the valid supported range, you must explicitly call [validate] or [validated].
  *
  * @param totalSeconds the total number of seconds to offset by
+ * @see validate
  * @see validated
  */
 inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {

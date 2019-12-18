@@ -96,7 +96,8 @@ enum class Month {
 
     /**
      * Get the number of days in the month for a particular year.
-     * @param year Retrieve the length of the month within this year
+     * @param year retrieve the length of the month within this year
+     * @return the number of days in the month
      */
     fun lengthIn(year: Int): IntDays {
         return when (this) {
@@ -111,14 +112,27 @@ enum class Month {
     fun lastDayIn(year: Int) = lengthIn(year).value
 
     /**
-     * The number of days into the year that this month's first date falls.  This may vary depending on whether or not
-     * the year is a leap year.
-     * @param year Retrieve the day of year number within this year
+     * The day of the year that this month's first days falls on.  This may vary depending on whether or not the year is
+     * a leap year.
+     *
+     * For example, the first day of [MARCH] will be either 60th or 61st day of the year.
+     *
+     * @param year retrieve the day of year number within this year
+     * @return the first day of year number
      */
     fun firstDayOfYearIn(year: Int): Int {
         return if (isLeapYear(year)) firstDayOfLeapYear else firstDayOfCommonYear
     }
 
+    /**
+     * The day of the year that this month's last day falls on. This may vary depending on whether or not the year is a
+     * leap year.
+     *
+     * For example, the last of [FEBRUARY] will be either 59th or 60th day of the year.
+     *
+     * @param year retrieve the day of year number within this year
+     * @return the last day of year number
+     */
     fun lastDayOfYearIn(year: Int): Int {
         val isLeap = isLeapYear(year)
 
@@ -131,8 +145,8 @@ enum class Month {
 
     /**
      * The range of valid days for this month within a given year
-     * @param year Retrieve the day range within this year
-     * @return Range of valid days
+     * @param year retrieve the day range within this year
+     * @return the range of valid days
      */
     fun dayRangeIn(year: Int): IntRange {
         return 1..lengthIn(year).value
