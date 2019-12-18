@@ -22,9 +22,11 @@ interface DateTimeParserBuilder {
      * Parse a character indicating the sign of a number.
      *
      * The characters associated with a number's sign are controlled by the [DateTimeParserSettings]. By default, this
-     * is '+', '-', or '−' as specified in ISO-8601.
+     * is '+', '-', or '−' as specified in ISO-8601. The characters may be overridden by using a different
+     * [NumberParserStyle].
      *
      * @param builder configure parser behavior
+     * @see NumberParserStyle
      */
     fun sign(builder: SignParserBuilder.() -> Unit = {})
 
@@ -32,9 +34,11 @@ interface DateTimeParserBuilder {
      * Parse a decimal separator character.
      *
      * The characters associated with a decimal separator are controlled by the [DateTimeParserSettings]. By default,
-     * this is '.' or ',' as specified in ISO-8601.
+     * this is '.' or ',' as specified in ISO-8601. The characters may be overridden by using a different
+     * [NumberParserStyle].
      *
      * @param builder configure parser behavior
+     * @see NumberParserStyle
      */
     fun decimalSeparator(builder: LiteralParserBuilder.() -> Unit = {})
 

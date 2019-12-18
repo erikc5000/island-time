@@ -160,14 +160,14 @@ internal class SignParser(
         return if (position >= text.length) {
             position.inv()
         } else {
-            val chars = context.settings.chars
+            val numberStyle = context.settings.numberStyle
 
             when (text[position]) {
-                in chars.plusSign -> {
+                in numberStyle.plusSign -> {
                     onParsed.forEach { it(context.result, 1) }
                     position + 1
                 }
-                in chars.minusSign -> {
+                in numberStyle.minusSign -> {
                     onParsed.forEach { it(context.result, -1) }
                     position + 1
                 }
@@ -182,9 +182,9 @@ internal class DecimalSeparatorParser(
 ) : DateTimeParser() {
 
     override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        val chars = context.settings.chars
+        val numberStyle = context.settings.numberStyle
 
-        return if (position < text.length && text[position] in chars.decimalSeparator) {
+        return if (position < text.length && text[position] in numberStyle.decimalSeparator) {
             onParsed.forEach { it(context.result) }
             position + 1
         } else {
@@ -198,16 +198,16 @@ internal abstract class AbstractNumberParser(
 ) : DateTimeParser() {
 
     protected fun parseSign(
-        chars: DateTimeParserSettings.Chars,
+        numberStyle: NumberParserStyle,
         text: CharSequence,
         position: Int
     ): ParseSignResult {
         return when (text[position]) {
-            in chars.plusSign -> when (signStyle) {
+            in numberStyle.plusSign -> when (signStyle) {
                 SignStyle.NEVER, SignStyle.NEGATIVE_ONLY -> ParseSignResult.ERROR
                 else -> ParseSignResult.POSITIVE
             }
-            in chars.minusSign -> when (signStyle) {
+            in numberStyle.minusSign -> when (signStyle) {
                 SignStyle.NEVER -> ParseSignResult.ERROR
                 else -> ParseSignResult.NEGATIVE
             }
@@ -244,7 +244,7 @@ internal class FixedLengthNumberParser(
             return currentPosition.inv()
         }
 
-        val signResult = parseSign(context.settings.chars, text, currentPosition)
+        val signResult = parseSign(context.settings.numberStyle, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -260,7 +260,7 @@ internal class FixedLengthNumberParser(
             }
 
             val char = text[currentPosition]
-            val digit = char.toDigit(context.settings.numberConverter)
+            val digit = char.toDigit(context.settings.numberStyle)
 
             if (digit < 0) {
                 return currentPosition.inv()
@@ -301,7 +301,7 @@ internal class VariableLengthNumberParser(
         }
 
         val settings = context.settings
-        val signResult = parseSign(settings.chars, text, currentPosition)
+        val signResult = parseSign(settings.numberStyle, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -312,7 +312,7 @@ internal class VariableLengthNumberParser(
         var numberLength = 0
 
         for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberConverter) < 0) {
+            if (text[i].toDigit(settings.numberStyle) < 0) {
                 break
             }
             numberLength++
@@ -328,7 +328,7 @@ internal class VariableLengthNumberParser(
 
         for (i in numberLength downTo 1) {
             val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberConverter)
+            val digit = char.toDigit(settings.numberStyle)
             value += digit * FACTOR[i]
             currentPosition++
         }
@@ -373,7 +373,7 @@ internal class DecimalNumberParser(
         }
 
         val settings = context.settings
-        val signResult = parseSign(settings.chars, text, currentPosition)
+        val signResult = parseSign(settings.numberStyle, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -384,7 +384,7 @@ internal class DecimalNumberParser(
         var wholeNumberLength = 0
 
         for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberConverter) < 0) {
+            if (text[i].toDigit(settings.numberStyle) < 0) {
                 break
             }
             wholeNumberLength++
@@ -400,7 +400,7 @@ internal class DecimalNumberParser(
 
         for (i in wholeNumberLength downTo 1) {
             val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberConverter)
+            val digit = char.toDigit(settings.numberStyle)
             wholeResult += digit * FACTOR[i]
             currentPosition++
         }
@@ -410,7 +410,7 @@ internal class DecimalNumberParser(
         }
 
         if (currentPosition < textLength && maxFractionLength > 0) {
-            if (text[currentPosition] in settings.chars.decimalSeparator) {
+            if (text[currentPosition] in settings.numberStyle.decimalSeparator) {
                 currentPosition++
 
                 if (currentPosition >= textLength) {
@@ -420,7 +420,7 @@ internal class DecimalNumberParser(
                 var fractionNumberLength = 0
 
                 for (i in currentPosition until textLength) {
-                    if (text[i].toDigit(settings.numberConverter) < 0) {
+                    if (text[i].toDigit(settings.numberStyle) < 0) {
                         break
                     }
                     fractionNumberLength++
@@ -436,7 +436,7 @@ internal class DecimalNumberParser(
 
                 for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
                     val char = text[currentPosition]
-                    val digit = char.toDigit(settings.numberConverter)
+                    val digit = char.toDigit(settings.numberStyle)
                     fractionResult += digit * FACTOR[i]
                     currentPosition++
                 }
@@ -486,7 +486,7 @@ internal class FractionParser internal constructor(
         var numberLength = 0
 
         for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberConverter) < 0) {
+            if (text[i].toDigit(settings.numberStyle) < 0) {
                 break
             }
             numberLength++
@@ -502,7 +502,7 @@ internal class FractionParser internal constructor(
 
         for (i in scale downTo scale - numberLength + 1) {
             val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberConverter)
+            val digit = char.toDigit(settings.numberStyle)
             value += digit * FACTOR[i]
             currentPosition++
         }
@@ -536,6 +536,3 @@ private val FACTOR = arrayOf(
     100_000_000_000_000_000L,
     1_000_000_000_000_000_000L
 )
-
-private fun Char.toDigit(numberConverter: DateTimeParserSettings.NumberConverter) =
-    numberConverter.convertToDigit(this)
