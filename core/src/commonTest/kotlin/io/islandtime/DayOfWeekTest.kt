@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.format.TextStyle
-import io.islandtime.locale.localeFor
+import io.islandtime.locale.localeOf
 import io.islandtime.measures.days
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
@@ -29,9 +29,9 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
         assertEquals(3, DayOfWeek.WEDNESDAY.number)
     }
 
-    private val en_US = localeFor("en-US")
-    private val de_DE = localeFor("de-DE")
-    private val ar_EG = localeFor("ar-EG")
+    private val en_US = localeOf("en-US")
+    private val de_DE = localeOf("de-DE")
+    private val ar_EG = localeOf("ar-EG")
 
     @Test
     fun `localizedNumber() matches locale`() {

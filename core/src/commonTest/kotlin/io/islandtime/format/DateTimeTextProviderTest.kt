@@ -3,14 +3,14 @@ package io.islandtime.format
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
 import io.islandtime.base.DateTimeField
-import io.islandtime.locale.localeFor
+import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class DateTimeTextProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeFor("en-US")
-    private val de_DE = localeFor("de-DE")
-    private val pl_PL = localeFor("pl-PL")
+    private val en_US = localeOf("en-US")
+    private val de_DE = localeOf("de-DE")
+    private val pl_PL = localeOf("pl-PL")
 
     @Test
     fun `textFor() throws an exception when value is out of range`() {

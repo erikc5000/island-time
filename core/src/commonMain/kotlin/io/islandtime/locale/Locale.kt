@@ -12,7 +12,4 @@ expect class Locale
  */
 expect fun defaultLocale(): Locale
 
-internal expect fun localeFor(identifier: String): Locale
-
-internal expect val Locale.firstDayOfWeek: DayOfWeek
-internal expect val Locale.lastDayOfWeek: DayOfWeek
+internal expect fun localeOf(identifier: String): Locale

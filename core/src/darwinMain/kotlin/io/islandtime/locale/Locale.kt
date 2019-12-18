@@ -7,6 +7,6 @@ actual typealias Locale = NSLocale
 
 actual fun defaultLocale(): Locale = NSLocale.currentLocale
 
-internal actual fun localeFor(identifier: String): Locale {
+internal actual fun localeOf(identifier: String): Locale {
     return NSLocale(identifier)
 }

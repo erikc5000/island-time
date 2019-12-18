@@ -1,13 +1,13 @@
 package io.islandtime.parser
 
-import io.islandtime.locale.localeFor
+import io.islandtime.locale.localeOf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DateTimeParserSettingsTest {
-    val en_US = localeFor("en-US")
-    val de_DE = localeFor("de-DE")
-    val hi_IN_u_nu_native = localeFor("hi-IN-u-nu-native")
+    val en_US = localeOf("en-US")
+    val de_DE = localeOf("de-DE")
+    val hi_IN_u_nu_native = localeOf("hi-IN-u-nu-native")
 
     @Test
     fun `Locale_numberParserStyle returns a NumberParserStyle based on the locale`() {

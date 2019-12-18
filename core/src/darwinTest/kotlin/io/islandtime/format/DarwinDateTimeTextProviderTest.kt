@@ -1,13 +1,13 @@
 package io.islandtime.format
 
 import io.islandtime.TimeZone
-import io.islandtime.locale.localeFor
+import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DarwinDateTimeTextProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeFor("en-US")
+    private val en_US = localeOf("en-US")
 
     @Test
     fun `timeZoneTextFor() returns a localized string for generic styles`() {

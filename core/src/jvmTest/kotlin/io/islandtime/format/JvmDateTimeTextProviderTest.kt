@@ -1,14 +1,14 @@
 package io.islandtime.format
 
 import io.islandtime.TimeZone
-import io.islandtime.locale.localeFor
+import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import org.junit.Test
 import kotlin.test.assertNull
 
 class JvmDateTimeTextProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeFor("en-US")
-    private val de_DE = localeFor("de-DE")
+    private val en_US = localeOf("en-US")
+    private val de_DE = localeOf("de-DE")
 
     @Test
     fun `timeZoneTextFor() returns null for generic styles - limited by Android currently`() {
