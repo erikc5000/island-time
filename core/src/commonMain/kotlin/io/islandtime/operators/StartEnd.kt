@@ -2,8 +2,6 @@ package io.islandtime.operators
 
 import io.islandtime.*
 import io.islandtime.locale.Locale
-import io.islandtime.locale.firstDayOfWeek
-import io.islandtime.locale.lastDayOfWeek
 
 /**
  * The date at the start of the year that this date falls in.

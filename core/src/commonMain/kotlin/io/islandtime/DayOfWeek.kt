@@ -5,7 +5,6 @@ import io.islandtime.format.TextStyle
 import io.islandtime.internal.DAYS_PER_WEEK
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
-import io.islandtime.locale.firstDayOfWeek
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.LongDays
 import io.islandtime.measures.days
@@ -92,3 +91,6 @@ fun Int.toDayOfWeek(): DayOfWeek {
 
     return DayOfWeek.values()[this - 1]
 }
+
+internal expect val Locale.firstDayOfWeek: DayOfWeek
+internal expect val Locale.lastDayOfWeek: DayOfWeek

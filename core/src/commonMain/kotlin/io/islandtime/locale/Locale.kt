@@ -1,7 +1,5 @@
 package io.islandtime.locale
 
-import io.islandtime.DayOfWeek
-
 /**
  * A locale.
  *
