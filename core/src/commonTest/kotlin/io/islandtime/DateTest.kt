@@ -1,8 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.*
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -114,6 +113,7 @@ class DateTest : AbstractIslandTimeTest() {
     fun `isLeapDay property returns true only on February 29`() {
         assertTrue { Date(2020, Month.FEBRUARY, 29).isLeapDay }
         assertFalse { Date(2019, Month.FEBRUARY, 28).isLeapDay }
+        assertFalse { Date(2019, Month.MARCH, 29).isLeapDay }
     }
 
     @Test
@@ -132,12 +132,16 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `date equality`() {
-        assertTrue { Date(2019, Month.JUNE, 21) == Date(2019, Month.JUNE, 21) }
+        val testDate = Date(2019, Month.JUNE, 21)
+        assertTrue { testDate == testDate }
+        assertTrue { testDate == Date(2019, Month.JUNE, 21) }
     }
 
     @Test
     fun `date inequality`() {
         assertTrue { Date(2018, Month.JUNE, 21) != Date(2019, Month.JUNE, 21) }
+        assertTrue { Date(2019, Month.JULY, 21) != Date(2019, Month.JUNE, 21) }
+        assertTrue { Date(2019, Month.JUNE, 22) != Date(2019, Month.JUNE, 21) }
     }
 
     @Test
@@ -624,6 +628,26 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `String_toDate() throws an exception when the parser cannot supply the required fields`() {
+        assertFailsWith<DateTimeParseException> { "05:06".toDate(DateTimeParsers.Iso.TIME) }
+        assertFailsWith<DateTimeParseException> { "2010".toDate(DateTimeParsers.Iso.YEAR) }
+        assertFailsWith<DateTimeParseException> { "2010-05".toDate(DateTimeParsers.Iso.YEAR_MONTH) }
+    }
+
+    @Test
+    fun `String_toDate() throws an exception when fields overflow`() {
+        val customParser = dateTimeParser {
+            year()
+            +' '
+            monthNumber()
+            +' '
+            dayOfYear()
+        }
+
+        assertFailsWith<DateTimeException> { "10000000001 5 4".toDate(customParser) }
+    }
+
+    @Test
     fun `String_toDate() parses valid ISO-8601 extended date strings by default`() {
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate())
     }
@@ -634,5 +658,32 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(Date(2000, Month.FEBRUARY, 29), "20000229".toDate(DateTimeParsers.Iso.DATE))
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-060".toDate(DateTimeParsers.Iso.DATE))
         assertEquals(Date(2000, Month.FEBRUARY, 29), "2000060".toDate(DateTimeParsers.Iso.DATE))
+    }
+
+    @Test
+    fun `Instant_toDateAt() converts an instant to a Date at a UTC offset`() {
+        assertEquals(Date(1970, Month.JANUARY, 1), Instant.UNIX_EPOCH.toDateAt(UtcOffset.ZERO))
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 2),
+            Instant(20L.hours.inSeconds).toDateAt(UtcOffset(4.hours))
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 31),
+            Instant((-20L).hours.inSeconds).toDateAt(UtcOffset((-4).hours))
+        )
+    }
+
+    @Test
+    fun `Instant_toDateAt() converts an instant to a Date at a time zone`() {
+        val zone = TimeZone("America/New_York")
+
+        assertEquals(Date(1970, Month.JANUARY, 1), Instant(5L.hours.inSeconds).toDateAt(zone))
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 31),
+            Instant(5L.hours - 1.seconds).toDateAt(zone)
+        )
     }
 }
