@@ -3,6 +3,9 @@ package io.islandtime.parser
 import io.islandtime.parser.internal.DateTimeParseContext
 import io.islandtime.parser.internal.DateTimeParserBuilderImpl
 
+/**
+ * A parser that converts text into a collection of date-time fields that are understood throughout Island Time.
+ */
 abstract class DateTimeParser internal constructor() {
     /**
      * Parse [text] into a [DateTimeParseResult] containing all parsed fields.
@@ -35,7 +38,8 @@ abstract class DateTimeParser internal constructor() {
 }
 
 /**
- * Create a [DateTimeParser]
+ * Define a custom [DateTimeParser].
+ * @see DateTimeParsers
  */
 inline fun dateTimeParser(builder: DateTimeParserBuilder.() -> Unit): DateTimeParser {
     return DateTimeParserBuilderImpl().apply(builder).build()

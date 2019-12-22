@@ -305,7 +305,7 @@ fun Instant(millisecondsSinceUnixEpoch: LongMilliseconds): Instant {
  * using this method.
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date or time is invalid
  */
 fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
 

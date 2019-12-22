@@ -8,6 +8,11 @@ import io.islandtime.zone.TimeZoneRulesException
 import kotlinx.cinterop.convert
 import platform.Foundation.*
 
+/**
+ * Convert an Island Time [Year] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun Year.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -15,6 +20,11 @@ fun Year.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents 
     }
 }
 
+/**
+ * Convert an Island Time [YearMonth] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun YearMonth.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -23,6 +33,11 @@ fun YearMonth.toNSDateComponents(includeCalendar: Boolean = false): NSDateCompon
     }
 }
 
+/**
+ * Convert an Island Time [Date] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun Date.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -30,6 +45,11 @@ fun Date.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents 
     }
 }
 
+/**
+ * Convert an Island Time [Time] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun Time.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -37,6 +57,11 @@ fun Time.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents 
     }
 }
 
+/**
+ * Convert an Island Time [DateTime] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun DateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -44,6 +69,11 @@ fun DateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCompone
     }
 }
 
+/**
+ * Convert an Island Time [OffsetTime] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun OffsetTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -52,6 +82,11 @@ fun OffsetTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCompo
     }
 }
 
+/**
+ * Convert an Island Time [OffsetDateTime] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun OffsetDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -60,6 +95,11 @@ fun OffsetDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateC
     }
 }
 
+/**
+ * Convert an Island Time [ZonedDateTime] to an equivalent `NSDateComponents` object.
+ * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
+ * @return an equivalent `NSDateComponents` object
+ */
 fun ZonedDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents {
     return NSDateComponents().also {
         if (includeCalendar) it.calendar = NSCalendar(NSCalendarIdentifierISO8601)
@@ -68,88 +108,159 @@ fun ZonedDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCo
     }
 }
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [Date].
+ */
 fun NSDateComponents.toIslandDate(): Date {
     return Date(year.convert(), month.convert<Int>(), day.convert())
 }
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [Time].
+ */
 fun NSDateComponents.toIslandTime(): Time {
     return Time(hour.convert(), minute.convert(), second.convert(), nanosecond.convert())
 }
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [DateTime].
+ */
 fun NSDateComponents.toIslandDateTime(): DateTime {
     return DateTime(toIslandDate(), toIslandTime())
 }
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [OffsetDateTime].
+ * @throws DateTimeException if the `timeZone` property is absent.
+ */
 fun NSDateComponents.toIslandOffsetDateTime() = toIslandOffsetDateTimeOrNull()
     ?: throw DateTimeException("The 'timeZone' property must be non-null")
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [OffsetDateTime] or `null` if the `timeZone` property is
+ * absent.
+ */
 fun NSDateComponents.toIslandOffsetDateTimeOrNull(): OffsetDateTime? {
-    return timeZone?.let { OffsetDateTime(toIslandDateTime(), it.toIslandUtcOffset()) }
+    return timeZone?.let {
+        val dateTime = toIslandDateTime()
+        OffsetDateTime(dateTime, it.toIslandTimeZone().rules.offsetAt(dateTime))
+    }
 }
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [ZonedDateTime].
+ * @throws DateTimeException if the `timeZone` property is absent.
+ */
 fun NSDateComponents.toIslandZonedDateTime() = toIslandZonedDateTimeOrNull()
-    ?: throw TimeZoneRulesException("The 'timeZone' property must be non-null")
+    ?: throw DateTimeException("The 'timeZone' property must be non-null")
 
+/**
+ * Convert an `NSDateComponents` object to an Island Time [ZonedDateTime] or `null` if the `timeZone` property is
+ * absent.
+ */
 fun NSDateComponents.toIslandZonedDateTimeOrNull(): ZonedDateTime? {
     return timeZone?.let { ZonedDateTime(toIslandDateTime(), it.toIslandTimeZone()) }
 }
 
+/**
+ * Convert an Island Time [TimePoint] to an `NSDate`.
+ */
 fun <T> TimePoint<T>.toNSDate(): NSDate {
     return NSDate.dateWithTimeIntervalSince1970(
         unixEpochSecond.toDouble() + unixEpochNanoOfSecond.toDouble() / NANOSECONDS_PER_SECOND
     )
 }
 
+/**
+ * Convert an `NSDate` to an Island Time [Instant].
+ */
 fun NSDate.toIslandInstant(): Instant {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
     return Instant.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond)
 }
 
+/**
+ * Convert an `NSDate` to an Island Time [DateTime] at the specified UTC offset.
+ */
 fun NSDate.toIslandDateTimeAt(offset: UtcOffset): DateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
     return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
-fun NSDate.toIslandDateTimeAt(nsTimeZone: NSTimeZone) = toIslandDateTimeAt(nsTimeZone.toIslandUtcOffset())
+/**
+ * Convert an `NSDate` to an Island Time [DateTime] at the specified time zone.
+ */
+fun NSDate.toIslandDateTimeAt(nsTimeZone: NSTimeZone) = toIslandDateTimeAt(nsTimeZone.toIslandUtcOffsetAt(this))
 
+/**
+ * Convert an `NSDate` to an Island Time [OffsetDateTime] at the specified UTC offset.
+ */
 fun NSDate.toIslandOffsetDateTimeAt(offset: UtcOffset): OffsetDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
     return OffsetDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
-fun NSDate.toIslandOffsetDateTimeAt(nsTimeZone: NSTimeZone) = toIslandOffsetDateTimeAt(nsTimeZone.toIslandUtcOffset())
+/**
+ * Convert an `NSDate` to an Island Time [OffsetDateTime] at the specified time zone.
+ */
+fun NSDate.toIslandOffsetDateTimeAt(nsTimeZone: NSTimeZone): OffsetDateTime {
+    return toIslandOffsetDateTimeAt(nsTimeZone.toIslandUtcOffsetAt(this))
+}
 
+/**
+ * Convert an `NSDate` to an Island Time [ZonedDateTime] at the specified time zone.
+ */
 fun NSDate.toIslandZonedDateTimeAt(zone: TimeZone): ZonedDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
     return ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
 }
 
+/**
+ * Convert an `NSDate` to an Island Time [ZonedDateTime] at the specified time zone.
+ */
 fun NSDate.toIslandZonedDateTimeAt(nsTimeZone: NSTimeZone) = toIslandZonedDateTimeAt(nsTimeZone.toIslandTimeZone())
 
+/**
+ * Convert an Island Time [UtcOffset] into an equivalent `NSTimeZone` with a fixed UTC offset.
+ *
+ * Note that `NSTimeZone`will round the `totalSeconds` value to the nearest minute.
+ */
 fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(totalSeconds.value.convert())
 
-fun NSTimeZone.toIslandUtcOffset(): UtcOffset = UtcOffset(secondsFromGMT.convert<Int>().seconds)
+@Deprecated(
+    message = "This operation is ambiguous. An NSDate must be provided.",
+    replaceWith = ReplaceWith("this.toIslandUtcOffsetAt()"),
+    level = DeprecationLevel.ERROR
+)
+fun NSTimeZone.toIslandUtcOffset(): UtcOffset = throw UnsupportedOperationException("Should not be called")
 
 /**
- * Convert an Apple `NSTimeZone` to an Island Time [TimeZone] with the same identifier.
+ * Convert an `NSTimeZone` to an Island Time [UtcOffset] with the same shift from UTC at the provided date.
+ */
+fun NSTimeZone.toIslandUtcOffsetAt(date: NSDate): UtcOffset {
+    return secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
+}
+
+/**
+ * Convert an NSTimeZone` to an Island Time [TimeZone] with the same identifier.
  */
 fun NSTimeZone.toIslandTimeZone(): TimeZone = name.toTimeZone()
 
 /**
- * Convert an Island Time [TimeZone] to an Apple `NSTimeZone`.
+ * Convert an Island Time [TimeZone] to an `NSTimeZone`.
  *
- * @throws TimeZoneRulesException if the identifier isn't recognized as valid for an [NSTimeZone]
+ * @throws TimeZoneRulesException if the identifier isn't recognized as valid for an `NSTimeZone`
  */
 fun TimeZone.toNSTimeZone(): NSTimeZone = toNSTimeZoneOrNull()
     ?: throw TimeZoneRulesException("The identifier '$id' could not be converted to an NSTimeZone")
 
 /**
- * Convert an Island Time [TimeZone] to an Apple [NSTimeZone] or `null` if the identifier isn't recognized as valid for
- * an [NSTimeZone].
+ * Convert an Island Time [TimeZone] to an `NSTimeZone` or `null` if the identifier isn't recognized as valid for an
+ * `NSTimeZone`.
  */
 fun TimeZone.toNSTimeZoneOrNull(): NSTimeZone? {
     return if (this is TimeZone.FixedOffset) {

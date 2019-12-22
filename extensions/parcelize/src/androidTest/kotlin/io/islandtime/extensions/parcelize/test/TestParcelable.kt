@@ -3,7 +3,7 @@ package io.islandtime.extensions.parcelize.test
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 
 inline fun <reified T : Parcelable> testParcelable(parcelable: T) {
     val inBundle = Bundle().apply { putParcelable("data", parcelable) }
@@ -17,5 +17,5 @@ inline fun <reified T : Parcelable> testParcelable(parcelable: T) {
     }
 
     val result = outBundle.getParcelable<T>("data")
-    Truth.assertThat(result).isEqualTo(parcelable)
+    assertThat(result).isEqualTo(parcelable)
 }
