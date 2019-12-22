@@ -11,6 +11,9 @@ import io.islandtime.measures.*
 import kotlinx.cinterop.convert
 import platform.Foundation.*
 
+/**
+ * A time zone rules provider that draws from the database included on Darwin platforms.
+ */
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     private val timeZoneRules: MutableMap<String, TimeZoneRules> = frozenHashMap()
 

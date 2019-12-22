@@ -59,11 +59,19 @@ class MonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `firstDayOfYearIn() works correctly`() {
+    fun `firstDayOfYearIn() returns the first day of yera for the month`() {
         assertEquals(1, Month.JANUARY.firstDayOfYearIn(1950))
         assertEquals(1, Month.JANUARY.firstDayOfYearIn(2000))
         assertEquals(244, Month.SEPTEMBER.firstDayOfYearIn(2001))
         assertEquals(245, Month.SEPTEMBER.firstDayOfYearIn(2000))
+    }
+
+    @Test
+    fun `lastDayOfYearIn() returns the last day of year for the month`() {
+        assertEquals(59, Month.FEBRUARY.lastDayOfYearIn(2019))
+        assertEquals(60, Month.FEBRUARY.lastDayOfYearIn(2020))
+        assertEquals(365, Month.DECEMBER.lastDayOfYearIn(2019))
+        assertEquals(366, Month.DECEMBER.lastDayOfYearIn(2020))
     }
 
     @Test
