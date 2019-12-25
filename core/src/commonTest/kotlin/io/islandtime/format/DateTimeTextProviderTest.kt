@@ -47,6 +47,25 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `parsableTextFor() returns an empty list when no styles are specified`() {
+        assertTrue { DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, emptySet(), en_US).isEmpty() }
+    }
+
+    @Test
+    fun `parsableTextFor() returns an empty list when the field has no text representation`() {
+        assertTrue {
+            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_MONTH, TextStyle.FULL, en_US).isEmpty()
+        }
+        assertTrue {
+            DateTimeTextProvider.parsableTextFor(
+                DateTimeField.YEAR,
+                setOf(TextStyle.FULL, TextStyle.NARROW),
+                en_US
+            ).isEmpty()
+        }
+    }
+
+    @Test
     fun `month text in en-US`() {
         listOf(
             TextStyle.FULL to "January",
@@ -89,6 +108,89 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `parsable month text is returned in descending order by length`() {
+        val expected = listOf(
+            "September" to 9L,
+            "February" to 2L,
+            "November" to 11L,
+            "December" to 12L,
+            "January" to 1L,
+            "October" to 10L,
+            "August" to 8L,
+            "March" to 3L,
+            "April" to 4L,
+            "June" to 6L,
+            "July" to 7L,
+            "May" to 5L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.MONTH_OF_YEAR, TextStyle.FULL, en_US)
+        )
+
+        // Do this a second time to verify that caching worked properly
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.MONTH_OF_YEAR, TextStyle.FULL, en_US)
+        )
+    }
+
+    @Test
+    fun `parsable month text is consolidated when possible when multiple styles are requested`() {
+        val expected = listOf(
+            "September" to 9L,
+            "February" to 2L,
+            "November" to 11L,
+            "December" to 12L,
+            "January" to 1L,
+            "October" to 10L,
+            "August" to 8L,
+            "March" to 3L,
+            "April" to 4L,
+            "June" to 6L,
+            "July" to 7L,
+            "May" to 5L,
+            "Jan" to 1L,
+            "Feb" to 2L,
+            "Mar" to 3L,
+            "Apr" to 4L,
+            "Jun" to 6L,
+            "Jul" to 7L,
+            "Aug" to 8L,
+            "Sep" to 9L,
+            "Oct" to 10L,
+            "Nov" to 11L,
+            "Dec" to 12L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(
+                DateTimeField.MONTH_OF_YEAR,
+                setOf(TextStyle.FULL, TextStyle.FULL_STANDALONE, TextStyle.SHORT, TextStyle.SHORT_STANDALONE),
+                en_US
+            )
+        )
+    }
+
+    @Test
+    fun `parsable month text does not include strings with conflicting values`() {
+        val expected = listOf(
+            "F" to 2L,
+            "S" to 9L,
+            "O" to 10L,
+            "N" to 11L,
+            "D" to 12L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.MONTH_OF_YEAR, TextStyle.NARROW, en_US)
+        )
+    }
+
+    @Test
     fun `day of week text in en-US`() {
         listOf(
             TextStyle.FULL to "Monday",
@@ -107,6 +209,11 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                 DateTimeTextProvider.dayOfWeekTextFor(1L, it.first, en_US)?.removeSuffix(".")
             )
         }
+
+        assertEquals(
+            "Sunday",
+            DateTimeTextProvider.dayOfWeekTextFor(7L, TextStyle.FULL, en_US)
+        )
     }
 
     @Test
@@ -131,6 +238,73 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `parsable day of week text is returned in descending order by length`() {
+        val expected = listOf(
+            "Wednesday" to 3L,
+            "Thursday" to 4L,
+            "Saturday" to 6L,
+            "Tuesday" to 2L,
+            "Monday" to 1L,
+            "Friday" to 5L,
+            "Sunday" to 7L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, TextStyle.FULL, en_US)
+        )
+
+        // Do this a second time to verify that caching worked properly
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, TextStyle.FULL, en_US)
+        )
+    }
+
+    @Test
+    fun `parsable day of week text is consolidated when possible when multiple styles are requested`() {
+        val expected = listOf(
+            "Wednesday" to 3L,
+            "Thursday" to 4L,
+            "Saturday" to 6L,
+            "Tuesday" to 2L,
+            "Monday" to 1L,
+            "Friday" to 5L,
+            "Sunday" to 7L,
+            "Mon" to 1L,
+            "Tue" to 2L,
+            "Wed" to 3L,
+            "Thu" to 4L,
+            "Fri" to 5L,
+            "Sat" to 6L,
+            "Sun" to 7L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(
+                DateTimeField.DAY_OF_WEEK,
+                setOf(TextStyle.FULL, TextStyle.FULL_STANDALONE, TextStyle.SHORT, TextStyle.SHORT_STANDALONE),
+                en_US
+            )
+        )
+    }
+
+    @Test
+    fun `parsable day of week text does not include strings with conflicting values`() {
+        val expected = listOf(
+            "M" to 1L,
+            "W" to 3L,
+            "F" to 5L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, TextStyle.NARROW, en_US)
+        )
+    }
+
+    @Test
     fun `am-pm text in en-US`() {
         TextStyle.values().forEach {
             assertEquals(
@@ -150,6 +324,25 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         assertEquals(
             "PM",
             DateTimeTextProvider.amPmTextFor(1L, en_US)
+        )
+    }
+
+    @Test
+    fun `parsable am-pm text is returned in descending order by length`() {
+        val expected = listOf(
+            "AM" to 0L,
+            "PM" to 1L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.AM_PM_OF_DAY, TextStyle.FULL, en_US)
+        )
+
+        // Do this a second time to verify that caching worked properly
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.AM_PM_OF_DAY, TextStyle.FULL, en_US)
         )
     }
 
@@ -197,6 +390,25 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                 )
             }
         }
+    }
+
+    @Test
+    fun `parsable era text is returned in descending order by length`() {
+        val expected = listOf(
+            "Before Christ" to 0L,
+            "Anno Domini" to 1L
+        )
+
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.ERA, TextStyle.FULL, en_US)
+        )
+
+        // Do this a second time to verify that caching worked properly
+        assertEquals(
+            expected,
+            DateTimeTextProvider.parsableTextFor(DateTimeField.ERA, TextStyle.FULL, en_US)
+        )
     }
 
     @Test

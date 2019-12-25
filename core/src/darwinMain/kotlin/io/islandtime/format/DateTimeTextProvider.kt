@@ -9,15 +9,9 @@ import platform.Foundation.*
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private val narrowEraTextSymbols = listOf("B", "A")
 
-//    override fun textIteratorFor(
-//        field: DateTimeField,
-//        style: TextStyle,
-//        locale: Locale
-//    ): Iterator<Map.Entry<String, Long>>? {
-//        return when (field) {
-//            DateTimeField.DAY_OF_WEEK -> dayOfWeekTextListFor(style, locale)?.values
-//        }
-//    }
+    override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: NSLocale): ParsableTextList {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         if (value !in 1L..7L) {

@@ -6,6 +6,8 @@ import io.islandtime.locale.Locale
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
 
+typealias ParsableTextList = List<Pair<String, Long>>
+
 /**
  * An abstraction that allows localized date-time text to be supplied from different data sources.
  */
@@ -30,7 +32,35 @@ interface DateTimeTextProvider {
         }
     }
 
-//    fun textIteratorFor(field: DateTimeField, style: TextStyle, locale: Locale): Iterator<Map.Entry<String, Long>>?
+    /**
+     * Get a list of all localized text in a particular style along with the values associated that text. The list will
+     * be sorted in descending order by the length of text, making it suitable for parsing.
+     *
+     * Any text with conflicting values will be excluded. For example, the English narrow month name "M" could be
+     * `March` or `May`, so any attempt to parse it would be ambiguous.
+     *
+     * @param field the field to get text for
+     * @param style the style of the text
+     * @param locale the locale
+     * @return the list of parsable text -- empty if the field is invalid
+     */
+    fun parsableTextFor(field: DateTimeField, style: TextStyle, locale: Locale): ParsableTextList {
+        return parsableTextFor(field, setOf(style), locale)
+    }
+
+    /**
+     * Get a list of all localized text in a set of styles along with the values associated that text. The list will
+     * be sorted in descending order by the length of text, making it suitable for parsing.
+     *
+     * Any text with conflicting values will be excluded. For example, the English narrow month name "M" could be
+     * `March` or `May`, so any attempt to parse it would be ambiguous.
+     *
+     * @param field the field to get text for
+     * @param styles the set of styles to include
+     * @param locale the locale
+     * @return the list of parsable text -- empty if the field is invalid or no styles are specified
+     */
+    fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList
 
     /**
      * Get the localized day of the week text for a given ISO day of week number.
