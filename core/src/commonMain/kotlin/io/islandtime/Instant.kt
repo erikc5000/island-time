@@ -317,8 +317,11 @@ fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toInstant(parser: DateTimeParser): Instant {
-    val result = parser.parse(this)
+fun String.toInstant(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): Instant {
+    val result = parser.parse(this, settings)
     return result.toInstant() ?: throwParserFieldResolutionException<Instant>(this)
 }
 

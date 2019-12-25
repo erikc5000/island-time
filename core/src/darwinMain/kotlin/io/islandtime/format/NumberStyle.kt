@@ -1,6 +1,6 @@
-package io.islandtime.parser
+package io.islandtime.format
 
 import io.islandtime.locale.Locale
 
-actual val Locale.numberParserStyle: NumberParserStyle
+actual val Locale.numberStyle: NumberStyle
     get() = TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

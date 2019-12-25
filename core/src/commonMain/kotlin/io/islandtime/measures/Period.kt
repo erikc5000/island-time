@@ -318,8 +318,11 @@ operator fun Int.times(period: Period) = period * this
 
 fun String.toPeriod() = toPeriod(DateTimeParsers.Iso.PERIOD)
 
-fun String.toPeriod(parser: DateTimeParser): Period {
-    val result = parser.parse(this)
+fun String.toPeriod(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): Period {
+    val result = parser.parse(this, settings)
     return result.toPeriod() ?: throwParserFieldResolutionException<Period>(this)
 }
 

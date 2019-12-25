@@ -2,9 +2,7 @@ package io.islandtime
 
 import io.islandtime.internal.*
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseResult
-import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.DateTimeInterval
 
@@ -642,8 +640,11 @@ fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
 /**
  * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the necessary fields
  */
-fun String.toDateTime(parser: DateTimeParser): DateTime {
-    val result = parser.parse(this)
+fun String.toDateTime(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): DateTime {
+    val result = parser.parse(this, settings)
     return result.toDateTime() ?: throwParserFieldResolutionException<DateTime>(this)
 }
 

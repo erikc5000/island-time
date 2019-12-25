@@ -391,8 +391,11 @@ fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
 fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
 
-fun String.toDate(parser: DateTimeParser): Date {
-    val result = parser.parse(this)
+fun String.toDate(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): Date {
+    val result = parser.parse(this, settings)
     return result.toDate() ?: throwParserFieldResolutionException<Date>(this)
 }
 

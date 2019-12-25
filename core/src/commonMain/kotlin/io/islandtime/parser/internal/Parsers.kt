@@ -1,5 +1,9 @@
 package io.islandtime.parser.internal
 
+import io.islandtime.base.DateTimeField
+import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.NumberStyle
+import io.islandtime.format.TextStyle
 import io.islandtime.parser.*
 
 internal object EmptyDateTimeParser : DateTimeParser() {
@@ -114,6 +118,35 @@ internal class StringLiteralParser(
     override val isLiteral: Boolean get() = true
 }
 
+internal class LocalizedTextParser(
+    private val field: DateTimeField,
+    private val styles: Set<TextStyle>,
+    private val provider: DateTimeTextProvider = DateTimeTextProvider.Companion
+) : DateTimeParser() {
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        if (position >= text.length) {
+            return position.inv()
+        }
+
+        val remainingLength = text.length - position
+        val possibleValues = provider.parsableTextFor(field, styles, context.locale)
+
+        if (possibleValues.isEmpty()) {
+            return position.inv()
+        }
+
+        for ((string, value) in possibleValues) {
+            if (string.length <= remainingLength && text.subSequence(position, position + string.length) == string) {
+                context.result.fields[field] = value
+                return position + string.length
+            }
+        }
+
+        return position.inv()
+    }
+}
+
 internal class StringParser(
     private val length: IntRange,
     private val onEachChar: List<DateTimeParseResult.(char: Char, index: Int) -> StringParseAction>,
@@ -198,7 +231,7 @@ internal abstract class AbstractNumberParser(
 ) : DateTimeParser() {
 
     protected fun parseSign(
-        numberStyle: NumberParserStyle,
+        numberStyle: NumberStyle,
         text: CharSequence,
         position: Int
     ): ParseSignResult {
@@ -536,3 +569,8 @@ private val FACTOR = arrayOf(
     100_000_000_000_000_000L,
     1_000_000_000_000_000_000L
 )
+
+internal fun Char.toDigit(numberStyle: NumberStyle): Int {
+    val digit = this - numberStyle.zeroDigit
+    return if (digit in 0..9) digit else -1
+}

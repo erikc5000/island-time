@@ -239,10 +239,13 @@ fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extende
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed interval is invalid
  */
-fun String.toDateTimeInterval(parser: GroupedDateTimeParser): DateTimeInterval {
-    val results = parser.parse(this).expectingGroupCount<DateTimeInterval>(2, this)
+fun String.toDateTimeInterval(
+    parser: GroupedDateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): DateTimeInterval {
+    val results = parser.parse(this, settings).expectingGroupCount<DateTimeInterval>(2, this)
 
     val start = when {
         results[0].isEmpty() -> null
