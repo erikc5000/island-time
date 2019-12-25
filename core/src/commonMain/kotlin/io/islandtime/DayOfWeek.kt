@@ -64,9 +64,24 @@ enum class DayOfWeek {
         return localizedName(style, locale) ?: number.toString()
     }
 
+    /**
+     * Add days to this day of the week, wrapping when the beginning or end of the week is reached.
+     */
     operator fun plus(days: IntDays) = plus(days.value % DAYS_PER_WEEK)
+
+    /**
+     * Add days to this day of the week, wrapping when the beginning or end of the week is reached.
+     */
     operator fun plus(days: LongDays) = plus((days.value % DAYS_PER_WEEK).toInt())
+
+    /**
+     * Subtract days from this day of the week, wrapping when the beginning or end of the week is reached.
+     */
     operator fun minus(days: IntDays) = plus(-(days.value % DAYS_PER_WEEK))
+
+    /**
+     * Subtract days from this day of the week, wrapping when the beginning or end of the week is reached.
+     */
     operator fun minus(days: LongDays) = plus(-(days.value % DAYS_PER_WEEK).toInt())
 
     private fun plus(daysToAdd: Int): DayOfWeek {

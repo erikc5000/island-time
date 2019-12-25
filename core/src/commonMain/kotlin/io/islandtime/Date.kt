@@ -372,25 +372,52 @@ fun Date(year: Int, dayOfYear: Int): Date {
     return Date(year, month, dayOfMonth)
 }
 
+/**
+ * Convert an [Instant] into the [Date] represented by it at a particular UTC offset.
+ */
 fun Instant.toDateAt(offset: UtcOffset): Date {
-    var adjustedSeconds = unixEpochSecond + offset.totalSeconds.value
-
-    if (nanoOfSecondsSinceUnixEpoch.isNegative()) {
-        adjustedSeconds -= 1
-    }
-
+    val adjustedSeconds = unixEpochSecond + offset.totalSeconds.value
     val unixEpochDay = adjustedSeconds floorDiv SECONDS_PER_DAY
     return Date.fromUnixEpochDay(unixEpochDay)
 }
 
+/**
+ * Convert an [Instant] into the [Date] represented by it in a particular time zone.
+ */
 fun Instant.toDateAt(zone: TimeZone): Date {
     return this.toDateAt(zone.rules.offsetAt(this))
 }
 
+/**
+ * Combine a [YearMonth] with a day of the month to create a [Date].
+ * @param day the day of the month
+ * @return a [Date]
+ */
 fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
+/**
+ * Convert a string to a [Date].
+ *
+ * The string is assumed to be an ISO-8601 calendar date in extended format. For example, `2010-10-05`. The output of
+ * [Date.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed date is invalid
+ */
 fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
 
+/**
+ * Convert a string to a [Date] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * Any custom parser must be capable of supplying one of the following field combinations:
+ * - [DateTimeField.YEAR], [DateTimeField.MONTH_OF_YEAR], [DateTimeField.DAY_OF_MONTH]
+ * - [DateTimeField.YEAR], [DateTimeField.DAY_OF_YEAR]
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time is invalid
+ */
 fun String.toDate(
     parser: DateTimeParser,
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
