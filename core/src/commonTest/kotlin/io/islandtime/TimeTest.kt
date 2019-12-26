@@ -1,12 +1,14 @@
 package io.islandtime
 
+import io.islandtime.internal.NANOSECONDS_PER_DAY
+import io.islandtime.internal.SECONDS_PER_DAY
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.*
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class TimeTest : AbstractIslandTimeTest() {
     @Test
@@ -34,6 +36,18 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `Time_fromSecondOfDay() throws an exception when the second value is invalid`() {
+        assertFailsWith<DateTimeException> { Time.fromSecondOfDay(-1) }
+        assertFailsWith<DateTimeException> { Time.fromSecondOfDay(SECONDS_PER_DAY) }
+    }
+
+    @Test
+    fun `Time_fromSecondOfDay() throws an exception when the nanosecond value is invalid`() {
+        assertFailsWith<DateTimeException> { Time.fromSecondOfDay(0, -1) }
+        assertFailsWith<DateTimeException> { Time.fromSecondOfDay(0, 1_000_000_000) }
+    }
+
+    @Test
     fun `Time_fromSecondOfDay() creates a Time from a second of the day value`() {
         assertEquals(
             Time(1, 1, 1, 1),
@@ -42,11 +56,24 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `Time_fromNanosecondOfDay() throws an exception when the nanosecond value is invalid`() {
+        assertFailsWith<DateTimeException> { Time.fromNanosecondOfDay(-1L) }
+        assertFailsWith<DateTimeException> { Time.fromNanosecondOfDay(NANOSECONDS_PER_DAY) }
+    }
+
+    @Test
     fun `Time_fromNanosecondOfDay() creates a Time from a nanosecond of the day value`() {
         assertEquals(
             Time(0, 0, 1, 1),
             Time.fromNanosecondOfDay(1_000_000_001L)
         )
+    }
+
+    @Test
+    fun `can be compared`() {
+        assertTrue { Time(0, 0) < Time(1, 0) }
+        assertTrue { Time(0, 1) < Time(0, 2) }
+        assertTrue { Time(0, 0, 1) < Time(0, 0, 2) }
     }
 
     @Test
@@ -212,6 +239,7 @@ class TimeTest : AbstractIslandTimeTest() {
             Time(0, 1),
             Time(23, 59) + 2.minutes
         )
+        assertEquals(Time.NOON, Time.NOON + 24.hours.inMinutes)
     }
 
     @Test
@@ -244,6 +272,7 @@ class TimeTest : AbstractIslandTimeTest() {
             Time(0, 0, 1),
             Time(23, 59, 59) + 2.seconds
         )
+        assertEquals(Time.NOON, Time.NOON + 24.hours.inSeconds)
     }
 
     @Test
@@ -281,6 +310,8 @@ class TimeTest : AbstractIslandTimeTest() {
             Time.fromNanosecondOfDay(25_975_807_000_000L),
             Time.MIDNIGHT + Long.MAX_VALUE.milliseconds
         )
+
+        assertEquals(Time.NOON, Time.NOON + 24.hours.inMilliseconds)
     }
 
     @Test
@@ -328,6 +359,8 @@ class TimeTest : AbstractIslandTimeTest() {
             Time(0, 0, 0, 100_111),
             Time(23, 59, 59, 999_900_111) + 200.microseconds
         )
+
+        assertEquals(Time.NOON, Time.NOON + 24.hours.inMicroseconds)
     }
 
     @Test
@@ -360,6 +393,8 @@ class TimeTest : AbstractIslandTimeTest() {
             Time(0, 0, 0, 100),
             Time(23, 59, 59, 999_999_900) + 200.nanoseconds
         )
+
+        assertEquals(Time.NOON, Time.NOON + 24.hours.inNanoseconds)
     }
 
     @Test
@@ -390,6 +425,26 @@ class TimeTest : AbstractIslandTimeTest() {
     fun `String_toTime() throws an exception when given an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toTime() }
         assertFailsWith<DateTimeParseException> { "".toTime(DateTimeParsers.Iso.TIME) }
+    }
+
+    @Test
+    fun `String_toTime() throws an exception when the parser can't supply all required fields`() {
+        assertFailsWith<DateTimeParseException> { "14".toTime(dateTimeParser { minuteOfHour(2) }) }
+    }
+
+    @Test
+    fun `String_toTime() throws an exception if parsed values cause overflow`() {
+        val parser = dateTimeParser {
+            hourOfDay()
+            +':'
+            minuteOfHour()
+            +':'
+            fractionalSecondOfMinute()
+        }
+
+        assertFailsWith<DateTimeException> { "50000000000:00:00.0".toTime(parser) }
+        assertFailsWith<DateTimeException> { "0:50000000000:00.0".toTime(parser) }
+        assertFailsWith<DateTimeException> { "0:00:50000000000.0".toTime(parser) }
     }
 
     @Test
