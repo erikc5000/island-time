@@ -4,6 +4,8 @@ import io.islandtime.base.DateTimeField
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.NumberStyle
 import io.islandtime.format.TextStyle
+import io.islandtime.internal.negateExact
+import io.islandtime.internal.plusExact
 import io.islandtime.parser.*
 
 internal object EmptyDateTimeParser : DateTimeParser() {
@@ -160,14 +162,12 @@ internal class StringParser(
 
         var currentPosition = position
 
-        while (currentPosition < text.length &&
-            (length.isEmpty() || currentPosition - position <= length.last)
-        ) {
+        while (currentPosition < text.length && (length.isEmpty() || currentPosition - position <= length.last)) {
             if (onEachChar.any {
                     it(
                         context.result,
                         text[currentPosition],
-                        currentPosition
+                        currentPosition - position
                     ) == StringParseAction.REJECT_AND_STOP
                 }
             ) {
@@ -177,7 +177,7 @@ internal class StringParser(
         }
 
         if (!length.isEmpty() && currentPosition - position !in length) {
-            return currentPosition.inv()
+            return position.inv()
         }
 
         onParsed.forEach { it(context.result, text.substring(position, currentPosition)) }
@@ -287,24 +287,28 @@ internal class FixedLengthNumberParser(
 
         var value = 0L
 
-        for (i in length downTo 1) {
-            if (currentPosition >= text.length) {
-                return currentPosition.inv()
+        try {
+            for (i in length downTo 1) {
+                if (currentPosition >= text.length) {
+                    return currentPosition.inv()
+                }
+
+                val char = text[currentPosition]
+                val digit = char.toDigit(context.settings.numberStyle)
+
+                if (digit < 0) {
+                    return currentPosition.inv()
+                }
+
+                value = value plusExact digit * FACTOR[i]
+                currentPosition++
             }
 
-            val char = text[currentPosition]
-            val digit = char.toDigit(context.settings.numberStyle)
-
-            if (digit < 0) {
-                return currentPosition.inv()
+            if (signResult == ParseSignResult.NEGATIVE) {
+                value = value.negateExact()
             }
-
-            value += digit * FACTOR[i]
-            currentPosition++
-        }
-
-        if (signResult == ParseSignResult.NEGATIVE) {
-            value = -value
+        } catch (e: ArithmeticException) {
+            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         onParsed.forEach { it(context.result, value) }
@@ -359,15 +363,19 @@ internal class VariableLengthNumberParser(
 
         var value = 0L
 
-        for (i in numberLength downTo 1) {
-            val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberStyle)
-            value += digit * FACTOR[i]
-            currentPosition++
-        }
+        try {
+            for (i in numberLength downTo 1) {
+                val char = text[currentPosition]
+                val digit = char.toDigit(settings.numberStyle)
+                value = value plusExact digit * FACTOR[i]
+                currentPosition++
+            }
 
-        if (signResult == ParseSignResult.NEGATIVE) {
-            value = -value
+            if (signResult == ParseSignResult.NEGATIVE) {
+                value = value.negateExact()
+            }
+        } catch (e: ArithmeticException) {
+            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         onParsed.forEach { it(context.result, value) }
@@ -431,15 +439,19 @@ internal class DecimalNumberParser(
 
         var wholeResult = 0L
 
-        for (i in wholeNumberLength downTo 1) {
-            val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberStyle)
-            wholeResult += digit * FACTOR[i]
-            currentPosition++
-        }
+        try {
+            for (i in wholeNumberLength downTo 1) {
+                val char = text[currentPosition]
+                val digit = char.toDigit(settings.numberStyle)
+                wholeResult = wholeResult plusExact digit * FACTOR[i]
+                currentPosition++
+            }
 
-        if (signResult == ParseSignResult.NEGATIVE) {
-            wholeResult = -wholeResult
+            if (signResult == ParseSignResult.NEGATIVE) {
+                wholeResult = wholeResult.negateExact()
+            }
+        } catch (e: ArithmeticException) {
+            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         if (currentPosition < textLength && maxFractionLength > 0) {
