@@ -127,14 +127,12 @@ internal class StringParser(
 
         var currentPosition = position
 
-        while (currentPosition < text.length &&
-            (length.isEmpty() || currentPosition - position <= length.last)
-        ) {
+        while (currentPosition < text.length && (length.isEmpty() || currentPosition - position <= length.last)) {
             if (onEachChar.any {
                     it(
                         context.result,
                         text[currentPosition],
-                        currentPosition
+                        currentPosition - position
                     ) == StringParseAction.REJECT_AND_STOP
                 }
             ) {
@@ -144,7 +142,7 @@ internal class StringParser(
         }
 
         if (!length.isEmpty() && currentPosition - position !in length) {
-            return currentPosition.inv()
+            return position.inv()
         }
 
         onParsed.forEach { it(context.result, text.substring(position, currentPosition)) }
