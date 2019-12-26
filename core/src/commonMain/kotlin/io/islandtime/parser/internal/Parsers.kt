@@ -1,5 +1,7 @@
 package io.islandtime.parser.internal
 
+import io.islandtime.internal.negateExact
+import io.islandtime.internal.plusExact
 import io.islandtime.parser.*
 
 internal object EmptyDateTimeParser : DateTimeParser() {
@@ -252,24 +254,28 @@ internal class FixedLengthNumberParser(
 
         var value = 0L
 
-        for (i in length downTo 1) {
-            if (currentPosition >= text.length) {
-                return currentPosition.inv()
+        try {
+            for (i in length downTo 1) {
+                if (currentPosition >= text.length) {
+                    return currentPosition.inv()
+                }
+
+                val char = text[currentPosition]
+                val digit = char.toDigit(context.settings.numberConverter)
+
+                if (digit < 0) {
+                    return currentPosition.inv()
+                }
+
+                value = value plusExact digit * FACTOR[i]
+                currentPosition++
             }
 
-            val char = text[currentPosition]
-            val digit = char.toDigit(context.settings.numberConverter)
-
-            if (digit < 0) {
-                return currentPosition.inv()
+            if (signResult == ParseSignResult.NEGATIVE) {
+                value = value.negateExact()
             }
-
-            value += digit * FACTOR[i]
-            currentPosition++
-        }
-
-        if (signResult == ParseSignResult.NEGATIVE) {
-            value = -value
+        } catch (e: ArithmeticException) {
+            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         onParsed.forEach { it(context.result, value) }
@@ -324,15 +330,19 @@ internal class VariableLengthNumberParser(
 
         var value = 0L
 
-        for (i in numberLength downTo 1) {
-            val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberConverter)
-            value += digit * FACTOR[i]
-            currentPosition++
-        }
+        try {
+            for (i in numberLength downTo 1) {
+                val char = text[currentPosition]
+                val digit = char.toDigit(settings.numberConverter)
+                value = value plusExact digit * FACTOR[i]
+                currentPosition++
+            }
 
-        if (signResult == ParseSignResult.NEGATIVE) {
-            value = -value
+            if (signResult == ParseSignResult.NEGATIVE) {
+                value = value.negateExact()
+            }
+        } catch (e: ArithmeticException) {
+            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         onParsed.forEach { it(context.result, value) }
@@ -396,15 +406,19 @@ internal class DecimalNumberParser(
 
         var wholeResult = 0L
 
-        for (i in wholeNumberLength downTo 1) {
-            val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberConverter)
-            wholeResult += digit * FACTOR[i]
-            currentPosition++
-        }
+        try {
+            for (i in wholeNumberLength downTo 1) {
+                val char = text[currentPosition]
+                val digit = char.toDigit(settings.numberConverter)
+                wholeResult = wholeResult plusExact digit * FACTOR[i]
+                currentPosition++
+            }
 
-        if (signResult == ParseSignResult.NEGATIVE) {
-            wholeResult = -wholeResult
+            if (signResult == ParseSignResult.NEGATIVE) {
+                wholeResult = wholeResult.negateExact()
+            }
+        } catch (e: ArithmeticException) {
+            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         if (currentPosition < textLength && maxFractionLength > 0) {
