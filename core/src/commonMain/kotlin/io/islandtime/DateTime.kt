@@ -330,40 +330,40 @@ class DateTime(
     operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
 
     operator fun minus(years: LongYears): DateTime {
-        return if (years.value == Long.MIN_VALUE) {
-            this + Long.MAX_VALUE.years + 1.years
+        return if (years.value == 0L) {
+            this
         } else {
-            plus(years.negateUnchecked())
+            copy(date = date - years)
         }
     }
 
     operator fun minus(months: IntMonths) = plus(months.toLongMonths().negateUnchecked())
 
     operator fun minus(months: LongMonths): DateTime {
-        return if (months.value == Long.MIN_VALUE) {
-            this + Long.MAX_VALUE.months + 1.months
+        return if (months.value == 0L) {
+            this
         } else {
-            plus(months.negateUnchecked())
+            copy(date = date - months)
         }
     }
     
     operator fun minus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
 
     operator fun minus(weeks: LongWeeks): DateTime {
-        return if (weeks.value == Long.MIN_VALUE) {
-            this + Long.MAX_VALUE.weeks + 1.weeks
+        return if (weeks.value == 0L) {
+            this
         } else {
-            plus(weeks.negateUnchecked())
+            copy(date = date - weeks)
         }
     }
 
     operator fun minus(days: IntDays) = plus(days.toLongDays().negateUnchecked())
 
     operator fun minus(days: LongDays): DateTime {
-        return if (days.value == Long.MIN_VALUE) {
-            this + Long.MAX_VALUE.days + 1.days
+        return if (days.value == 0L) {
+            this
         } else {
-            plus(days.negateUnchecked())
+            copy(date = date - days)
         }
     }
 
@@ -507,7 +507,8 @@ class DateTime(
     ) = DateTime(date.copy(year, monthNumber, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Get the number of seconds relative to the Unix epoch of `1970-01-01T00:00Z`.
+     * The number of seconds relative to the Unix epoch of `1970-01-01T00:00Z` at a particular offset. This is a "floor"
+     * value, so 1 nanosecond before the Unix epoch will be at a distance of 1 second.
      *
      * @param offset the offset from UTC
      * @see nanoOfSecondsSinceUnixEpoch
@@ -520,8 +521,8 @@ class DateTime(
     }
 
     /**
-     * Get the number of additional nanoseconds that should be applied on top of the number of seconds since the Unix
-     * Epoch returned by [secondsSinceUnixEpochAt].
+     * The number of additional nanoseconds that should be applied on top of the number of seconds since the Unix epoch
+     * returned by [secondsSinceUnixEpochAt].
      * @see secondsSinceUnixEpochAt
      * @see unixEpochNanoOfSecond
      */
@@ -529,18 +530,18 @@ class DateTime(
         get() = nanosecond.nanoseconds
 
     /**
-     * Get the number of milliseconds relative to the Unix epoch of `1970-01-01T00:00Z`.
-     * @throws ArithmeticException if the number of milliseconds can't be expressed without overflow
+     * The number of milliseconds relative to the Unix epoch of `1970-01-01T00:00Z` at a particular offset. This is a
+     * "floor" value, so 1 nanosecond before the Unix epoch will be at a distance of 1 millisecond.
+     * @param offset the offset from UTC
      */
     fun millisecondsSinceUnixEpochAt(offset: UtcOffset): LongMilliseconds {
-        return date.daysSinceUnixEpoch +
-            time.secondsSinceStartOfDay +
-            time.nanosecondsSinceStartOfDay.inMilliseconds -
-            offset.totalSeconds
+        return (date.daysSinceUnixEpoch.inMillisecondsUnchecked.value +
+            time.nanosecondsSinceStartOfDay.inMilliseconds.value -
+            offset.totalSeconds.inMilliseconds.value).milliseconds
     }
 
     /**
-     * Get the second of the Unix Epoch.
+     * The second of the Unix epoch.
      *
      * @param offset the offset from UTC
      * @see nanoOfSecondsSinceUnixEpoch
@@ -549,20 +550,35 @@ class DateTime(
     fun unixEpochSecondAt(offset: UtcOffset): Long = secondsSinceUnixEpochAt(offset).value
 
     /**
-     * Get the nanosecond of the second of the Unix Epoch.
+     * The nanosecond of the second of the Unix Epoch.
      * @see nanoOfSecondsSinceUnixEpoch
      * @see unixEpochSecondAt
      */
     val unixEpochNanoOfSecond: Int get() = nanosecond
 
+    /**
+     * The millisecond of the Unix epoch.
+     * @param offset the offset from UTC
+     */
     fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
+    /**
+     * The [Instant] represented by this date-time at a particular offset from UTC.
+     * @param offset the offset from UTC
+     */
     fun instantAt(offset: UtcOffset): Instant {
         return Instant.fromUnixEpochSecond(unixEpochSecondAt(offset), nanosecond)
     }
 
     companion object {
+        /**
+         * The smallest supported [DateTime], which can be used as a "far past" sentinel.
+         */
         val MIN = DateTime(Date.MIN, Time.MIN)
+
+        /**
+         * The largest supported [DateTime], which can be used as a "far future" sentinel.
+         */
         val MAX = DateTime(Date.MAX, Time.MAX)
 
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): DateTime {
