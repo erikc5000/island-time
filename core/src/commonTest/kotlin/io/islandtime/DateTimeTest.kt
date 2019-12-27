@@ -24,6 +24,80 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `can be constructed from unix epoch millisecond`() {
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at Time(1, 0),
+            DateTime.fromUnixEpochMillisecond(0L, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at Time(1, 0),
+            DateTime.fromMillisecondsSinceUnixEpoch(0L.milliseconds, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(1, 0, 0, 1_000_000),
+            DateTime.fromUnixEpochMillisecond(1L, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(1, 0, 0, 1_000_000),
+            DateTime.fromMillisecondsSinceUnixEpoch(1L.milliseconds, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(0, 59, 59, 999_000_000),
+            DateTime.fromUnixEpochMillisecond(-1L, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(0, 59, 59, 999_000_000),
+            DateTime.fromMillisecondsSinceUnixEpoch((-1L).milliseconds, 1.hours.asUtcOffset())
+        )
+    }
+
+    @Test
+    fun `can be constructed from unix epoch second`() {
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at Time(1, 0),
+            DateTime.fromUnixEpochSecond(0L, 0, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at Time(1, 0),
+            DateTime.fromSecondsSinceUnixEpoch(0L.seconds, 0.nanoseconds, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(1, 0, 0, 1),
+            DateTime.fromUnixEpochSecond(0L, 1, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(1, 0, 0, 1),
+            DateTime.fromSecondsSinceUnixEpoch(0L.seconds, 1.nanoseconds, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(0, 59, 59, 999_999_999),
+            DateTime.fromUnixEpochSecond(0L, -1, 1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(0, 59, 59, 999_999_999),
+            DateTime.fromSecondsSinceUnixEpoch(0L.seconds, (-1).nanoseconds, 1.hours.asUtcOffset())
+        )
+    }
+
+    @Test
     fun `at infix combines date with time`() {
         val today = Date(2019, Month.JANUARY, 1)
 
@@ -64,6 +138,99 @@ class DateTimeTest : AbstractIslandTimeTest() {
         val (date, time) = DateTime(2000, Month.JANUARY, 1, 9, 0)
         assertEquals(Date(2000, Month.JANUARY, 1), date)
         assertEquals(Time(9, 0), time)
+    }
+
+    @Test
+    fun `secondsSinceUnixEpochAt() returns the number of seconds since the unix epoch`() {
+        assertEquals(
+            1L.seconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 1))
+                .secondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            0L.seconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 999_999_999))
+                .secondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            0L.seconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0))
+                .secondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            (-1L).seconds,
+            (Date(1970, Month.JANUARY, 1) at Time(0, 59, 59, 999_999_999))
+                .secondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+    }
+
+    @Test
+    fun `millisecondsSinceUnixEpochAt() returns the number of milliseconds since the unix epoch`() {
+        assertEquals(
+            1L.milliseconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_999_999))
+                .millisecondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            1L.milliseconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_000_000))
+                .millisecondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            0L.milliseconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 999_999))
+                .millisecondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            0L.milliseconds,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0))
+                .millisecondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            (-1L).milliseconds,
+            (Date(1970, Month.JANUARY, 1) at Time(0, 59, 59, 999_999_999))
+                .millisecondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
+    }
+
+    @Test
+    fun `unixEpochMillisecondAt() returns the millisecond of the unix epoch`() {
+        assertEquals(
+            1L,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_999_999))
+                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            1L,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_000_000))
+                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            0L,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 999_999))
+                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            0L,
+            (Date(1970, Month.JANUARY, 1) at Time(1, 0))
+                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+        )
+
+        assertEquals(
+            (-1L).milliseconds,
+            (Date(1970, Month.JANUARY, 1) at Time(0, 59, 59, 999_999_999))
+                .millisecondsSinceUnixEpochAt(1.hours.asUtcOffset())
+        )
     }
 
     @Test
@@ -142,6 +309,154 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `throws an exception when subtraction puts the date-time out of range`() {
+        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.hours }
+        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.minutes }
+        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.seconds }
+        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.milliseconds }
+        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.microseconds }
+        assertFailsWith<DateTimeException> { DateTime.MAX - Long.MIN_VALUE.nanoseconds }
+    }
+
+    @Test
+    fun `adding or subtracting zero years has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.years)
+        assertEquals(date, date + 0L.years)
+        assertEquals(date, date - 0.years)
+        assertEquals(date, date - 0L.years)
+    }
+
+    @Test
+    fun `add positive years`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1974, Month.DECEMBER, 1) at Time.NOON,
+            date + 5.years
+        )
+
+        assertEquals(
+            Date(1974, Month.DECEMBER, 1) at Time.NOON,
+            date + 5L.years
+        )
+    }
+
+    @Test
+    fun `add negative years`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1964, Month.DECEMBER, 1) at Time.NOON,
+            date + (-5).years
+        )
+
+        assertEquals(
+            Date(1964, Month.DECEMBER, 1) at Time.NOON,
+            date + (-5L).years
+        )
+    }
+
+    @Test
+    fun `subtract positive years`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1964, Month.DECEMBER, 1) at Time.NOON,
+            date - 5.years
+        )
+
+        assertEquals(
+            Date(1964, Month.DECEMBER, 1) at Time.NOON,
+            date - 5L.years
+        )
+    }
+
+    @Test
+    fun `subtract negative years`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1974, Month.DECEMBER, 1) at Time.NOON,
+            date - (-5).years
+        )
+
+        assertEquals(
+            Date(1974, Month.DECEMBER, 1) at Time.NOON,
+            date - (-5L).years
+        )
+    }
+
+    @Test
+    fun `adding or subtracting zero months has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.months)
+        assertEquals(date, date + 0L.months)
+        assertEquals(date, date - 0.months)
+        assertEquals(date, date - 0L.months)
+    }
+
+    @Test
+    fun `add positive months`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1970, Month.MAY, 1) at Time.NOON,
+            date + 5.months
+        )
+
+        assertEquals(
+            Date(1970, Month.MAY, 1) at Time.NOON,
+            date + 5L.months
+        )
+    }
+
+    @Test
+    fun `add negative months`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1969, Month.JULY, 1) at Time.NOON,
+            date + (-5).months
+        )
+
+        assertEquals(
+            Date(1969, Month.JULY, 1) at Time.NOON,
+            date + (-5L).months
+        )
+    }
+
+    @Test
+    fun `subtract positive months`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1969, Month.JULY, 1) at Time.NOON,
+            date - 5.months
+        )
+
+        assertEquals(
+            Date(1969, Month.JULY, 1) at Time.NOON,
+            date - 5L.months
+        )
+    }
+
+    @Test
+    fun `subtract negative months`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1970, Month.MAY, 1) at Time.NOON,
+            date - (-5).months
+        )
+
+        assertEquals(
+            Date(1970, Month.MAY, 1) at Time.NOON,
+            date - (-5L).months
+        )
+    }
+
+    @Test
     fun `adding or subtracting zero weeks has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.weeks)
@@ -211,9 +526,81 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `add zero hours`() {
+    fun `adding or subtracting zero days has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.days)
+        assertEquals(date, date + 0L.days)
+        assertEquals(date, date - 0.days)
+        assertEquals(date, date - 0L.days)
+    }
+
+    @Test
+    fun `add positive days`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 6) at Time.NOON,
+            date + 5.days
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 6) at Time.NOON,
+            date + 5L.days
+        )
+    }
+
+    @Test
+    fun `add negative days`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1969, Month.NOVEMBER, 26) at Time.NOON,
+            date + (-5).days
+        )
+
+        assertEquals(
+            Date(1969, Month.NOVEMBER, 26) at Time.NOON,
+            date + (-5L).days
+        )
+    }
+
+    @Test
+    fun `subtract positive days`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1969, Month.NOVEMBER, 26) at Time.NOON,
+            date - 5.days
+        )
+
+        assertEquals(
+            Date(1969, Month.NOVEMBER, 26) at Time.NOON,
+            date - 5L.days
+        )
+    }
+
+    @Test
+    fun `subtract negative days`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 6) at Time.NOON,
+            date - (-5).days
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 6) at Time.NOON,
+            date - (-5L).days
+        )
+    }
+
+    @Test
+    fun `adding or subtracting zero hours has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.hours)
+        assertEquals(date, date + 0L.hours)
+        assertEquals(date, date - 0.hours)
+        assertEquals(date, date - 0L.hours)
     }
 
     @Test
@@ -240,6 +627,15 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `adding or subtracting zero minutes has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.minutes)
+        assertEquals(date, date + 0L.minutes)
+        assertEquals(date, date - 0.minutes)
+        assertEquals(date, date - 0L.minutes)
+    }
+
+    @Test
     fun `add minutes`() {
         assertEquals(
             Date(1969, Month.DECEMBER, 2) at Time(0, 10),
@@ -251,6 +647,11 @@ class DateTimeTest : AbstractIslandTimeTest() {
                 Time(1, 10, 1, 1),
             (Date(1969, Month.DECEMBER, 1) at
                 Time(23, 40, 1, 1)) + 90.minutes
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 2) at Time(23, 40),
+            (Date(1969, Month.DECEMBER, 1) at Time(23, 40)) + 1.days.inMinutes
         )
     }
 
@@ -265,6 +666,15 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `adding or subtracting zero seconds has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.seconds)
+        assertEquals(date, date + 0L.seconds)
+        assertEquals(date, date - 0.seconds)
+        assertEquals(date, date - 0L.seconds)
+    }
+
+    @Test
     fun `add seconds`() {
         assertEquals(
             Date(1969, Month.DECEMBER, 2) at Time.MIDNIGHT,
@@ -276,6 +686,11 @@ class DateTimeTest : AbstractIslandTimeTest() {
                 Time(23, 41, 31, 1),
             (Date(1969, Month.DECEMBER, 1) at
                 Time(23, 40, 1, 1)) + 90.seconds
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 2) at Time(23, 40),
+            (Date(1969, Month.DECEMBER, 1) at Time(23, 40)) + 1.days.inSeconds
         )
     }
 
@@ -295,6 +710,91 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `adding or subtracting zero milliseconds has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.milliseconds)
+        assertEquals(date, date + 0L.milliseconds)
+        assertEquals(date, date - 0.milliseconds)
+        assertEquals(date, date - 0L.milliseconds)
+    }
+
+    @Test
+    fun `add milliseconds`() {
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at Time.MIDNIGHT,
+            (Date(1969, Month.DECEMBER, 31) at
+                Time(23, 59, 59, 999_000_000)) + 1.milliseconds
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(0, 59, 59, 999_999_999),
+            (Date(1969, Month.DECEMBER, 31) at Time.MAX) + 1.hours.inMilliseconds
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 2) at Time(23, 40),
+            (Date(1969, Month.DECEMBER, 1) at Time(23, 40)) + 1.days.inMilliseconds
+        )
+    }
+
+    @Test
+    fun `subtract milliseconds`() {
+        assertEquals(
+            DateTime(2018, Month.MARCH, 11, 23, 59, 0, 999_000_000),
+            DateTime(2018, Month.MARCH, 12, 0, 1, 1, 1_000_000) -
+                (2.minutes + 2.milliseconds)
+        )
+    }
+
+    @Test
+    fun `adding or subtracting zero microseconds has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.microseconds)
+        assertEquals(date, date + 0L.microseconds)
+        assertEquals(date, date - 0.microseconds)
+        assertEquals(date, date - 0L.microseconds)
+    }
+
+    @Test
+    fun `add microseconds`() {
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at Time.MIDNIGHT,
+            (Date(1969, Month.DECEMBER, 31) at
+                Time(23, 59, 59, 999_999_000)) + 1.microseconds
+        )
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 1) at
+                Time(0, 59, 59, 999_999_999),
+            (Date(1969, Month.DECEMBER, 31) at Time.MAX) + 1.hours.inMicroseconds
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 2) at Time(23, 40),
+            (Date(1969, Month.DECEMBER, 1) at Time(23, 40)) + 1.days.inMicroseconds
+        )
+    }
+
+    @Test
+    fun `subtract microseconds`() {
+        assertEquals(
+            DateTime(2018, Month.MARCH, 11, 23, 59, 0, 999_999_000),
+            DateTime(2018, Month.MARCH, 12, 0, 1, 1, 1_000) -
+                (2.minutes + 2.microseconds)
+        )
+    }
+
+    @Test
+    fun `adding or subtracting zero nanoseconds has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.nanoseconds)
+        assertEquals(date, date + 0L.nanoseconds)
+        assertEquals(date, date - 0.nanoseconds)
+        assertEquals(date, date - 0L.nanoseconds)
+    }
+
+    @Test
     fun `add nanoseconds`() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at Time.MIDNIGHT,
@@ -305,6 +805,11 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1970, Month.JANUARY, 1) at
                 Time(0, 59, 59, 999_999_999),
             (Date(1969, Month.DECEMBER, 31) at Time.MAX) + 1.hours.inNanoseconds
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 2) at Time(23, 40),
+            (Date(1969, Month.DECEMBER, 1) at Time(23, 40)) + 1.days.inNanoseconds
         )
     }
 
@@ -338,6 +843,13 @@ class DateTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `String_toDateTime() throws an exception when given an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toDateTime() }
+    }
+
+    @Test
+    fun `String_toDateTime() throws an exception when the parser can't supply required fields`() {
+        assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.UTC_OFFSET) }
+        assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.TIME) }
+        assertFailsWith<DateTimeParseException> { "2009-10-08".toDateTime(DateTimeParsers.Iso.DATE) }
     }
 
     @Test
