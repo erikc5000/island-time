@@ -10,7 +10,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     @Test
     fun `UtcOffset() requires all values to have the same sign`() {
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes) }
-        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes, 5.seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, (-30).minutes, 5.seconds) }
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes, (-5).seconds) }
         assertFailsWith<DateTimeException> { UtcOffset(2.hours, 0.minutes, (-5).seconds) }
         assertFailsWith<DateTimeException> { UtcOffset(2.hours, (-30).minutes, 5.seconds) }
@@ -23,14 +23,23 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     fun `UtcOffset() requires each component to be valid individually`() {
         assertFailsWith<DateTimeException> { UtcOffset(19.hours) }
         assertFailsWith<DateTimeException> { UtcOffset(2.hours, 60.minutes) }
+        assertFailsWith<DateTimeException> { UtcOffset((-2).hours, (-60).minutes) }
+        assertFailsWith<DateTimeException> { UtcOffset(2.hours, 0.minutes, 60.seconds) }
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 0.minutes, (-60).seconds) }
     }
 
     @Test
     fun `UtcOffset() creates an offset with the sum of all components`() {
         assertEquals(3_600.seconds, UtcOffset(1.hours).totalSeconds)
+        assertEquals(3_660.seconds, UtcOffset(1.hours, 1.minutes).totalSeconds)
+        assertEquals((-3_660).seconds, UtcOffset((-1).hours, (-1).minutes).totalSeconds)
+        assertEquals(3_661.seconds, UtcOffset(1.hours, 1.minutes, 1.seconds).totalSeconds)
+        assertEquals(3_601.seconds, UtcOffset(1.hours, 0.minutes, 1.seconds).totalSeconds)
+        assertEquals((-3_601).seconds, UtcOffset((-1).hours, 0.minutes, (-1).seconds).totalSeconds)
         assertEquals(3_661.seconds, UtcOffset(1.hours, 1.minutes, 1.seconds).totalSeconds)
         assertEquals((-3_661).seconds, UtcOffset((-1).hours, (-1).minutes, (-1).seconds).totalSeconds)
+        assertEquals(61.seconds, UtcOffset(0.hours, 1.minutes, 1.seconds).totalSeconds)
+        assertEquals((-61).seconds, UtcOffset(0.hours, (-1).minutes, (-1).seconds).totalSeconds)
     }
 
     @Test
@@ -137,6 +146,11 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
         assertFailsWith<DateTimeParseException> { "--01:00".toUtcOffset() }
         assertFailsWith<DateTimeParseException> { "+1:00".toUtcOffset() }
         assertFailsWith<DateTimeParseException> { "+010:00".toUtcOffset() }
+    }
+
+    @Test
+    fun `String_toUtcOffset() throws an exception when the parser can't supplied all required fields`() {
+        assertFailsWith<DateTimeParseException> { "04".toUtcOffset(DateTimeParsers.Iso.TIME) }
     }
 
     @Test

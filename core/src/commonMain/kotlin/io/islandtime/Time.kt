@@ -148,14 +148,8 @@ class Time(
         return if (wrappedNanos.value == 0L) {
             this
         } else {
-            val currentNanoOfDay = nanosecondOfDay
-            val newNanoOfDay = (wrappedNanos.value + currentNanoOfDay + NANOSECONDS_PER_DAY) % NANOSECONDS_PER_DAY
-
-            if (currentNanoOfDay == newNanoOfDay) {
-                this
-            } else {
-                fromNanosecondOfDay(newNanoOfDay)
-            }
+            val newNanoOfDay = (wrappedNanos.value + nanosecondOfDay + NANOSECONDS_PER_DAY) % NANOSECONDS_PER_DAY
+            fromNanosecondOfDay(newNanoOfDay)
         }
     }
 
