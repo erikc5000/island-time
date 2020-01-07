@@ -7,6 +7,7 @@ import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
+@Suppress("PrivatePropertyName")
 class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     private val en_US = localeOf("en-US")
     private val de_DE = localeOf("de-DE")
