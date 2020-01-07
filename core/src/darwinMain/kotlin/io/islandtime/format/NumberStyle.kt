@@ -10,9 +10,17 @@ actual val Locale.numberStyle: NumberStyle
         val formatter = NSNumberFormatter().also { it.locale = this }
 
         return NumberStyle(
-            zeroDigit = formatter.stringFromNumber(NSNumber(int = 0))?.firstOrNull() ?: '0',
-            plusSign = listOf(formatter.plusSign.firstOrNull() ?: '+'),
-            minusSign = listOf(formatter.minusSign.firstOrNull() ?: '-'),
-            decimalSeparator = listOf(decimalSeparator.firstOrNull() ?: '.')
+            zeroDigit = formatter.stringFromNumber(NSNumber(int = 0))?.singleOrNull() ?: '0',
+            plusSign = listOf(formatter.plusSign.singleOrElse { '+' }),
+            minusSign = listOf(formatter.minusSign.singleOrElse { '-' }),
+            decimalSeparator = listOf(decimalSeparator.singleOrElse { '.' })
         )
     }
+
+private inline fun String.singleOrElse(default: () -> Char): Char {
+    return if (length == 1) {
+        this[0]
+    } else {
+        default()
+    }
+}
