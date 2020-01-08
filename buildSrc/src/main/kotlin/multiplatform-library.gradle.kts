@@ -76,7 +76,7 @@ afterEvaluate {
         }
     }
 
-    tasks.named("jacocoTestReport", JacocoReport::class).configure {
+    tasks.withType<JacocoReport>().configureEach {
         classDirectories.setFrom(
             fileTree("${buildDir}/classes/kotlin/jvm/") {
                 exclude("**/*Test*.*")
