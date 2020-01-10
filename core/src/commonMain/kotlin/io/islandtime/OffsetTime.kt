@@ -1,9 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseResult
-import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
 
 /**
@@ -175,8 +173,11 @@ infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 
 fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
 
-fun String.toOffsetTime(parser: DateTimeParser): OffsetTime {
-    val result = parser.parse(this)
+fun String.toOffsetTime(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): OffsetTime {
+    val result = parser.parse(this, settings)
     return result.toOffsetTime() ?: throwParserFieldResolutionException<OffsetTime>(this)
 }
 

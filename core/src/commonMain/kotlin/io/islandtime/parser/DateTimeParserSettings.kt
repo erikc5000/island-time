@@ -1,45 +1,27 @@
 package io.islandtime.parser
 
+import io.islandtime.format.NumberStyle
+import io.islandtime.locale.Locale
+import io.islandtime.locale.defaultLocale
+
 /**
- * Settings that control the parsing behavior during a particular operation.
+ * Settings that control the parsing behavior.
+ * @property numberStyle Defines the set of characters that should be used when parsing numbers.
+ * @property locale A function that will be invoked to provide a locale if one is needed during parsing.
  */
 data class DateTimeParserSettings(
-    val chars: Chars = Chars.DEFAULT,
-    val numberConverter: NumberConverter = NumberConverter.Default
+    val numberStyle: NumberStyle = NumberStyle.DEFAULT,
+    val locale: () -> Locale = { defaultLocale() }
 ) {
-    data class Chars(
-        val zero: List<Char>,
-        val plusSign: List<Char>,
-        val minusSign: List<Char>,
-        val decimalSeparator: List<Char>
-    ) {
-        companion object {
-            val DEFAULT = Chars(
-                zero = listOf('0'),
-                plusSign = listOf('+'),
-                minusSign = listOf('-', '−'),
-                decimalSeparator = listOf('.', ',')
-            )
-        }
-    }
-
-    interface NumberConverter {
-        fun convertToDigit(char: Char): Int
-
-        companion object Default : NumberConverter {
-            override fun convertToDigit(char: Char): Int {
-                val digit = char.toInt() - 48
-
-                return if (digit > 9 || digit < 0) {
-                    -1
-                } else {
-                    digit
-                }
-            }
-        }
-    }
+    constructor(
+        numberStyle: NumberStyle = NumberStyle.DEFAULT,
+        locale: Locale
+    ) : this(numberStyle, { locale })
 
     companion object {
+        /**
+         * The default parser settings.
+         */
         val DEFAULT = DateTimeParserSettings()
     }
 }

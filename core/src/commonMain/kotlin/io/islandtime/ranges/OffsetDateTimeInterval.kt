@@ -134,10 +134,14 @@ fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed interval is invalid
  */
-fun String.toOffsetDateTimeInterval(parser: GroupedDateTimeParser): OffsetDateTimeInterval {
-    val results = parser.parse(this).expectingGroupCount<OffsetDateTimeInterval>(2, this)
+fun String.toOffsetDateTimeInterval(
+    parser: GroupedDateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): OffsetDateTimeInterval {
+    val results = parser.parse(this, settings)
+        .expectingGroupCount<OffsetDateTimeInterval>(2, this)
 
     val start = when {
         results[0].isEmpty() -> null

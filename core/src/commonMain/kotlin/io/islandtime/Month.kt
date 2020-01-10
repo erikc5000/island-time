@@ -1,5 +1,9 @@
 package io.islandtime
 
+import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.TextStyle
+import io.islandtime.locale.Locale
+import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntMonths
 import io.islandtime.measures.LongMonths
@@ -93,6 +97,34 @@ enum class Month {
             JANUARY, FEBRUARY -> firstDayOfCommonYear
             else -> firstDayOfCommonYear + 1
         }
+
+    /**
+     * The localized name of the month, if available for the locale in the specified style. The result depends on the
+     * configured [DateTimeTextProvider] and may differ between platforms.
+     *
+     * @param style the style of text
+     * @param locale the locale
+     * @return the localized name or `null` if unavailable for the specified locale
+     * @see displayName
+     */
+    fun localizedName(style: TextStyle, locale: Locale = defaultLocale()): String? {
+        return DateTimeTextProvider.monthTextFor(number.toLong(), style, locale)
+    }
+
+    /**
+     * A textual representation of the month, suitable for display purposes. The localized name will be returned, if
+     * available. If not, the ISO month number (1-12) will be returned instead.
+     *
+     * The result depends on the configured [DateTimeTextProvider] and may differ between platforms.
+     *
+     * @param style the style of text
+     * @param locale the locale
+     * @return the localized name or [number] if unavailable for the specified locale
+     * @see localizedName
+     */
+    fun displayName(style: TextStyle, locale: Locale = defaultLocale()): String {
+        return localizedName(style, locale) ?: number.toString()
+    }
 
     /**
      * Get the number of days in the month for a particular year.

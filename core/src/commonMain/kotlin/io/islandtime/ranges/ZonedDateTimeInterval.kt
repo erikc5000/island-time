@@ -148,10 +148,14 @@ fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.I
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed interval is invalid
  */
-fun String.toZonedDateTimeInterval(parser: GroupedDateTimeParser): ZonedDateTimeInterval {
-    val results = parser.parse(this).expectingGroupCount<ZonedDateTimeInterval>(2, this)
+fun String.toZonedDateTimeInterval(
+    parser: GroupedDateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): ZonedDateTimeInterval {
+    val results = parser.parse(this, settings)
+        .expectingGroupCount<ZonedDateTimeInterval>(2, this)
 
     val start = when {
         results[0].isEmpty() -> null

@@ -647,8 +647,11 @@ fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONE
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toZonedDateTime(parser: DateTimeParser): ZonedDateTime {
-    val result = parser.parse(this)
+fun String.toZonedDateTime(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): ZonedDateTime {
+    val result = parser.parse(this, settings)
     return result.toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTime>(this)
 }
 

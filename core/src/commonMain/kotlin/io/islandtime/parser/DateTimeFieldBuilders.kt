@@ -2,6 +2,7 @@ package io.islandtime.parser
 
 import io.islandtime.MAX_TIME_ZONE_STRING_LENGTH
 import io.islandtime.base.DateTimeField
+import io.islandtime.format.TextStyle
 
 /**
  * Parse a year with a variable number of digits.
@@ -34,6 +35,54 @@ inline fun DateTimeParserBuilder.year(
 }
 
 /**
+ * Parse a year of era with a variable number of digits.
+ *
+ * The result will be associated with [DateTimeField.YEAR_OF_ERA].
+ */
+inline fun DateTimeParserBuilder.yearOfEra(
+    length: IntRange = 1..19,
+    crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
+) {
+    wholeNumber(length) {
+        associateWith(DateTimeField.YEAR_OF_ERA)
+        builder()
+    }
+}
+
+/**
+ * Parse a year of era with a fixed number of digits.
+ *
+ * The result will be associated with [DateTimeField.YEAR_OF_ERA].
+ */
+inline fun DateTimeParserBuilder.yearOfEra(
+    length: Int,
+    crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
+) {
+    wholeNumber(length) {
+        associateWith(DateTimeField.YEAR_OF_ERA)
+        builder()
+    }
+}
+
+/**
+ * Parse an era from its textual representation in any of the specified styles.
+ *
+ * The result will be associated with [DateTimeField.ERA].
+ */
+fun DateTimeParserBuilder.era(styles: Set<TextStyle>) {
+    localizedText(DateTimeField.ERA, styles)
+}
+
+/**
+ * Parse an era from its textual representation in a specific style.
+ *
+ * The result will be associated with [DateTimeField.ERA].
+ */
+fun DateTimeParserBuilder.era(style: TextStyle) {
+    localizedText(DateTimeField.ERA, setOf(style))
+}
+
+/**
  * Parse a month of year value with a variable number of digits.
  *
  * The result will be associated with [DateTimeField.MONTH_OF_YEAR].
@@ -61,6 +110,24 @@ inline fun DateTimeParserBuilder.monthNumber(
         associateWith(DateTimeField.MONTH_OF_YEAR)
         builder()
     }
+}
+
+/**
+ * Parse a month from its textual representation in any of the specified styles.
+ *
+ * The result will be associated with [DateTimeField.MONTH_OF_YEAR].
+ */
+fun DateTimeParserBuilder.localizedMonth(styles: Set<TextStyle>) {
+    localizedText(DateTimeField.MONTH_OF_YEAR, styles)
+}
+
+/**
+ * Parse a month from its textual representation in a specific style.
+ *
+ * The result will be associated with [DateTimeField.MONTH_OF_YEAR].
+ */
+fun DateTimeParserBuilder.localizedMonth(style: TextStyle) {
+    localizedText(DateTimeField.MONTH_OF_YEAR, setOf(style))
 }
 
 /**
@@ -136,6 +203,33 @@ inline fun DateTimeParserBuilder.dayOfWeekNumber(
         associateWith(DateTimeField.DAY_OF_WEEK)
         builder()
     }
+}
+
+/**
+ * Parse a day of the week from its textual representation in any of the specified styles.
+ *
+ * The result will be associated with [DateTimeField.DAY_OF_WEEK].
+ */
+fun DateTimeParserBuilder.localizedDayOfWeek(styles: Set<TextStyle>) {
+    localizedText(DateTimeField.DAY_OF_WEEK, styles)
+}
+
+/**
+ * Parse a day of the week from its textual representation in a specific style.
+ *
+ * The result will be associated with [DateTimeField.DAY_OF_WEEK].
+ */
+fun DateTimeParserBuilder.localizedDayOfWeek(style: TextStyle) {
+    localizedText(DateTimeField.DAY_OF_WEEK, setOf(style))
+}
+
+/**
+ * Parse the AM or PM of the day from its textual representation.
+ *
+ * The result will be associated with [DateTimeField.AM_PM_OF_DAY].
+ */
+fun DateTimeParserBuilder.amPm() {
+    localizedText(DateTimeField.AM_PM_OF_DAY, setOf(TextStyle.FULL))
 }
 
 /**

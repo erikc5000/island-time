@@ -1,12 +1,19 @@
 package io.islandtime
 
+import io.islandtime.format.TextStyle
+import io.islandtime.locale.localeOf
 import io.islandtime.measures.days
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+@Suppress("PrivatePropertyName")
 class DayOfWeekTest : AbstractIslandTimeTest() {
+    private val en_US = localeOf("en-US")
+    private val de_DE = localeOf("de-DE")
+    private val ar_EG = localeOf("ar-EG")
+
     @Test
     fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {
         assertFailsWith<DateTimeException> { 0.toDayOfWeek() }
@@ -22,9 +29,27 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Day of week number matches ISO-8601`() {
+    fun `number property matches ISO-8601 day of week number`() {
         assertEquals(1, DayOfWeek.MONDAY.number)
         assertEquals(3, DayOfWeek.WEDNESDAY.number)
+    }
+
+    @Test
+    fun `localizedNumber() matches locale`() {
+        assertEquals(1, DayOfWeek.SUNDAY.localizedNumber(en_US))
+        assertEquals(7, DayOfWeek.SATURDAY.localizedNumber(en_US))
+
+        assertEquals(1, DayOfWeek.MONDAY.localizedNumber(de_DE))
+        assertEquals(7, DayOfWeek.SUNDAY.localizedNumber(de_DE))
+
+        assertEquals(1, DayOfWeek.SATURDAY.localizedNumber(ar_EG))
+        assertEquals(7, DayOfWeek.FRIDAY.localizedNumber(ar_EG))
+    }
+
+    @Test
+    fun `localizedName() and displayName() get localized text from the provider`() {
+        assertEquals("Wednesday", DayOfWeek.WEDNESDAY.localizedName(TextStyle.FULL_STANDALONE, en_US))
+        assertEquals("Wed", DayOfWeek.WEDNESDAY.displayName(TextStyle.SHORT_STANDALONE, en_US))
     }
 
     @Test

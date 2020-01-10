@@ -1,44 +1,99 @@
 package io.islandtime
 
-import co.touchlab.stately.concurrency.AtomicReference
+import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.PlatformDateTimeTextProvider
 import io.islandtime.zone.PlatformTimeZoneRulesProvider
-import io.islandtime.zone.TimeZoneRulesException
 import io.islandtime.zone.TimeZoneRulesProvider
+import kotlinx.atomicfu.atomic
 
 /**
  * Global configuration for Island Time.
  */
 object IslandTime {
-    private val provider = AtomicReference<TimeZoneRulesProvider?>(null)
-
     internal val timeZoneRulesProvider: TimeZoneRulesProvider
-        get() = provider.get() ?: provider.run {
-            compareAndSet(null, PlatformTimeZoneRulesProvider)
-            get() ?: throw IllegalStateException("Failed to initialize the platform time zone rules provider")
+        get() = settings.timeZoneRulesProvider
+
+    internal val dateTimeTextProvider: DateTimeTextProvider
+        get() = settings.dateTimeTextProvider
+
+    @Suppress("ObjectPropertyName")
+    private val _settings = atomic<Settings?>(null)
+
+    private var settings: Settings
+        set(value) {
+            if (!_settings.compareAndSet(null, value)) {
+                throw IllegalStateException("Island Time has already been initialized")
+            }
+        }
+        get() = _settings.value ?: run {
+            _settings.compareAndSet(null, Settings())
+            _settings.value ?: throw IllegalStateException("Failed to initialize Island Time")
         }
 
     /**
-     * Initialize Island Time with a specific time zone rules provider.
+     * Initialize Island Time.
      *
      * This method should be called prior to any of use of the library, usually during an application's initialization
-     * process. If Island Time is not explicitly initialized, the [PlatformTimeZoneRulesProvider] will be used.
+     * process. If Island Time is not explicitly initialized, the [PlatformTimeZoneRulesProvider] and all other default
+     * settings will be used.
      *
-     * @throws TimeZoneRulesException if a provider has already been initialized
-     * @see TimeZoneRulesProvider
+     * @throws IllegalStateException if Island Time has already been initialized
+     */
+    fun initialize(block: Initializer.() -> Unit) {
+        settings = InitializerImpl().apply(block).build()
+    }
+
+    /**
+     * Initialize Island Time with a specific time zone rules provider, leaving all other settings in their default
+     * state.
+     *
+     * This method should be called prior to any of use of the library, usually during an application's initialization
+     * process. If Island Time is not explicitly initialized, the [PlatformTimeZoneRulesProvider] and all other default
+     * settings will be used.
+     *
+     * @throws IllegalStateException if Island Time has already been initialized
+     * @see initialize
      */
     fun initializeWith(provider: TimeZoneRulesProvider) {
-        if (!this.provider.compareAndSet(null, provider)) {
-            throw TimeZoneRulesException("A time zone rules provider has already been initialized")
-        }
+        settings = Settings(timeZoneRulesProvider = provider)
     }
 
     /**
      * Reset Island Time to an uninitialized state.
      *
-     * This method is intended to be used to clean up custom time zone rules providers in tests. It shouldn't be
-     * necessary to call this in production.
+     * This method is intended to be used to clean up custom providers in tests. It shouldn't be necessary to call this
+     * in production.
      */
     fun reset() {
-        provider.set(null)
+        _settings.getAndSet(null)
     }
+
+    /**
+     * Controls the settings that Island Time is initialized with.
+     */
+    interface Initializer {
+        /**
+         * The time zone rules provider to use.
+         */
+        var timeZoneRulesProvider: TimeZoneRulesProvider
+
+        /**
+         * The date-time text provider to use.
+         */
+        var dateTimeTextProvider: DateTimeTextProvider
+    }
+
+    private class InitializerImpl : Initializer {
+        override var timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider
+        override var dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider
+
+        fun build(): Settings {
+            return Settings(timeZoneRulesProvider, dateTimeTextProvider)
+        }
+    }
+
+    private data class Settings(
+        val timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider,
+        val dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider
+    )
 }
