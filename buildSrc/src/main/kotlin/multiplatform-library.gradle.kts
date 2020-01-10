@@ -71,8 +71,19 @@ val emptySourcesJar by tasks.registering(Jar::class) {
 
 afterEvaluate {
     publishing {
-        publications.withType<MavenPublication>().named("kotlinMultiplatform") {
-            artifact(emptySourcesJar.get())
+        val pomMppArtifactId: String? by project
+
+        publications.withType<MavenPublication>().configureEach {
+            if (name == "kotlinMultiplatform") {
+                if (pomMppArtifactId != null) {
+                    artifactId = pomMppArtifactId
+                }
+                artifact(emptySourcesJar.get())
+            } else {
+                if (pomMppArtifactId != null) {
+                    artifactId = "${pomMppArtifactId}-$name"
+                }
+            }
         }
     }
 
