@@ -182,6 +182,16 @@ interface DateTimeParserBuilder {
      * Use a parser that has been defined outside of this builder.
      */
     fun childParser(childParser: DateTimeParser)
+
+    /**
+     * Force parsing to be case-sensitive within this block.
+     */
+    fun caseSensitive(builder: DateTimeParserBuilder.() -> Unit)
+
+    /**
+     * Force parsing to be case-insensitive within this block.
+     */
+    fun caseInsensitive(builder: DateTimeParserBuilder.() -> Unit)
 }
 
 @DateTimeParserDsl
