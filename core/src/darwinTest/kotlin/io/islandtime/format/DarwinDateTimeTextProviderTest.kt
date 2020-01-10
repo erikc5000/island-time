@@ -7,6 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DarwinDateTimeTextProviderTest : AbstractIslandTimeTest() {
+    @Suppress("PrivatePropertyName")
     private val en_US = localeOf("en-US")
 
     @Test

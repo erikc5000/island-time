@@ -8,6 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class LocalizedTextParserTest {
+    @Suppress("PropertyName")
     val en_US = localeOf("en-US")
 
     @Test

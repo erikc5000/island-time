@@ -7,6 +7,7 @@ import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
+@Suppress("PrivatePropertyName")
 class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     private val en_US = localeOf("en-US")
     private val de_DE = localeOf("de-DE")
@@ -150,11 +151,11 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
             "April" to 4L,
             "June" to 6L,
             "July" to 7L,
-            "May" to 5L,
             "Jan" to 1L,
             "Feb" to 2L,
             "Mar" to 3L,
             "Apr" to 4L,
+            "May" to 5L,
             "Jun" to 6L,
             "Jul" to 7L,
             "Aug" to 8L,

@@ -15,6 +15,9 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private val narrowEraSymbols = arrayOf("B", "A")
     private val englishLongEraSymbols = arrayOf("Before Christ", "Anno Domini")
 
+    private val descendingTextComparator =
+        compareByDescending<Pair<String, Long>> { it.first.length }.thenBy { it.second }
+
     private data class ParsableTextKey(
         val field: DateTimeField,
         val styles: Set<TextStyle>,
@@ -47,7 +50,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
                 } else {
                     null
                 }
-            }.sortedByDescending { it.first.length }
+            }.sortedWith(descendingTextComparator)
         }
     }
 
@@ -171,6 +174,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 
             return Array(12) {
                 dateFormat.run {
+                    calendar.set(Calendar.DAY_OF_MONTH, 1)
                     calendar.set(Calendar.MONTH, it)
                     format(calendar.time)
                 }

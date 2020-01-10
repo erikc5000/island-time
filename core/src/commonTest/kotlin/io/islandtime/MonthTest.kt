@@ -78,7 +78,7 @@ class MonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `localizedName() and displayName() get localized text from the provider`() {
-        val en_US = localeOf("en-US")
+        @Suppress("LocalVariableName") val en_US = localeOf("en-US")
         assertEquals("April", Month.APRIL.localizedName(TextStyle.FULL_STANDALONE, en_US))
         assertEquals("Jun", Month.JUNE.displayName(TextStyle.SHORT_STANDALONE, en_US))
     }

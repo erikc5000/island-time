@@ -6,6 +6,7 @@ import io.islandtime.test.AbstractIslandTimeTest
 import org.junit.Test
 import kotlin.test.assertNull
 
+@Suppress("PrivatePropertyName")
 class JvmDateTimeTextProviderTest : AbstractIslandTimeTest() {
     private val en_US = localeOf("en-US")
     private val de_DE = localeOf("de-DE")

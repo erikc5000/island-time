@@ -8,7 +8,12 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
+@Suppress("PrivatePropertyName")
 class DayOfWeekTest : AbstractIslandTimeTest() {
+    private val en_US = localeOf("en-US")
+    private val de_DE = localeOf("de-DE")
+    private val ar_EG = localeOf("ar-EG")
+
     @Test
     fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {
         assertFailsWith<DateTimeException> { 0.toDayOfWeek() }
@@ -28,10 +33,6 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
         assertEquals(1, DayOfWeek.MONDAY.number)
         assertEquals(3, DayOfWeek.WEDNESDAY.number)
     }
-
-    private val en_US = localeOf("en-US")
-    private val de_DE = localeOf("de-DE")
-    private val ar_EG = localeOf("ar-EG")
 
     @Test
     fun `localizedNumber() matches locale`() {

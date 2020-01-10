@@ -71,7 +71,7 @@ interface DateTimeTextProvider {
      * @return the localized day of week text or `null` if unavailable
      * @throws DateTimeException if the value is not a valid day of the week number
      */
-    fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String?
+    fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? = null
 
     /**
      * Get the localized month text for a given ISO month number.
@@ -82,7 +82,7 @@ interface DateTimeTextProvider {
      * @return the localized month text or `null` if unavailable
      * @throws DateTimeException if the value is not a valid month number
      */
-    fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String?
+    fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? = null
 
     /**
      * Get the localized AM/PM text.
@@ -92,7 +92,7 @@ interface DateTimeTextProvider {
      * @return the localized AM/PM text or `null` if unavailable
      * @throws DateTimeException if the value is not `0` or `1`
      */
-    fun amPmTextFor(value: Long, locale: Locale): String?
+    fun amPmTextFor(value: Long, locale: Locale): String? = null
 
     /**
      * Get the localized ISO era text.
@@ -103,7 +103,7 @@ interface DateTimeTextProvider {
      * @return the localized era text or `null` if unavailable
      * @throws DateTimeException if the value is not `0` or `1`
      */
-    fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String?
+    fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? = null
 
     /**
      * Get the localized time zone text.
@@ -113,7 +113,7 @@ interface DateTimeTextProvider {
      * @param locale the locale
      * @return the localized time zone text or `null` if unavailable in the specified style
      */
-    fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String?
+    fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? = null
 
     companion object : DateTimeTextProvider by IslandTime.dateTimeTextProvider
 }
