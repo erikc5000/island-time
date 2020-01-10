@@ -303,8 +303,11 @@ fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toTime(parser: DateTimeParser): Time {
-    val result = parser.parse(this)
+fun String.toTime(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): Time {
+    val result = parser.parse(this, settings)
     return result.toTime() ?: throwParserFieldResolutionException<Time>(this)
 }
 

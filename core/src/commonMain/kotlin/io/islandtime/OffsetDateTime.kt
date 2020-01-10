@@ -2,9 +2,7 @@ package io.islandtime
 
 import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseResult
-import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
 
@@ -385,8 +383,11 @@ fun ZonedDateTime.asOffsetDateTime() = OffsetDateTime(dateTime, offset)
 
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
-fun String.toOffsetDateTime(parser: DateTimeParser): OffsetDateTime {
-    val result = parser.parse(this)
+fun String.toOffsetDateTime(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): OffsetDateTime {
+    val result = parser.parse(this, settings)
     return result.toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTime>(this)
 }
 

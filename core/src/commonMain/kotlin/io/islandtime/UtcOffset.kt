@@ -141,8 +141,11 @@ fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
 /**
  * Create a [UtcOffset] from a string using a specific parser.
  */
-fun String.toUtcOffset(parser: DateTimeParser): UtcOffset {
-    val result = parser.parse(this)
+fun String.toUtcOffset(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): UtcOffset {
+    val result = parser.parse(this, settings)
     return result.toUtcOffset() ?: throwParserFieldResolutionException<UtcOffset>(this)
 }
 

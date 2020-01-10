@@ -2,6 +2,8 @@ plugins {
     `multiplatform-library`
 }
 
+apply(plugin = "kotlinx-atomicfu")
+
 kotlin {
     jvm {
         withJava()
@@ -14,7 +16,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
                 implementation(kotlin("reflect"))
-                implementation("co.touchlab:stately:0.9.5")
             }
         }
 
@@ -41,6 +42,7 @@ kotlin {
 
         val darwinMain by getting {
             dependencies {
+                implementation("co.touchlab:stately:0.9.5")
                 implementation("co.touchlab:stately-collections:0.9.5")
             }
         }

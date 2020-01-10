@@ -203,10 +203,13 @@ fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.Extended.YEAR_MONTH)
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed year-month is invalid
  */
-fun String.toYearMonth(parser: DateTimeParser): YearMonth {
-    val result = parser.parse(this)
+fun String.toYearMonth(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): YearMonth {
+    val result = parser.parse(this, settings)
     return result.toYearMonth() ?: throwParserFieldResolutionException<YearMonth>(this)
 }
 

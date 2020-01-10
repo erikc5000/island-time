@@ -1,6 +1,8 @@
 package io.islandtime.parser
 
 import io.islandtime.base.DateTimeField
+import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.TextStyle
 
 @DslMarker
 annotation class DateTimeParserDsl
@@ -22,9 +24,11 @@ interface DateTimeParserBuilder {
      * Parse a character indicating the sign of a number.
      *
      * The characters associated with a number's sign are controlled by the [DateTimeParserSettings]. By default, this
-     * is '+', '-', or '−' as specified in ISO-8601.
+     * is '+', '-', or '−' as specified in ISO-8601. The characters may be overridden by using a different
+     * [NumberStyle].
      *
      * @param builder configure parser behavior
+     * @see NumberStyle
      */
     fun sign(builder: SignParserBuilder.() -> Unit = {})
 
@@ -32,9 +36,11 @@ interface DateTimeParserBuilder {
      * Parse a decimal separator character.
      *
      * The characters associated with a decimal separator are controlled by the [DateTimeParserSettings]. By default,
-     * this is '.' or ',' as specified in ISO-8601.
+     * this is '.' or ',' as specified in ISO-8601. The characters may be overridden by using a different
+     * [NumberStyle].
      *
      * @param builder configure parser behavior
+     * @see NumberStyle
      */
     fun decimalSeparator(builder: LiteralParserBuilder.() -> Unit = {})
 
@@ -133,6 +139,22 @@ interface DateTimeParserBuilder {
      * @param builder configure the parser behavior
      */
     fun literal(string: String, builder: LiteralParserBuilder.() -> Unit = {})
+
+    /**
+     * Parse localized text associated with a particular [DateTimeField] in any of the specified styles. If successful,
+     * the field's value will be populated. If no text is known for the field or a match can't be found, the parsing
+     * operation will return an error.
+     *
+     * The locale used when matching text is determined by the [DateTimeParserSettings] in use. Text is provided by the
+     * configured [DateTimeTextProvider]. Be mindful that this text may differ between platforms and devices. If at
+     * all possible, non-localized representations should be used instead.
+     *
+     * @param field the field to match text for
+     * @param styles the styles of text to match
+     * @see DateTimeParserSettings.locale
+     * @see DateTimeTextProvider
+     */
+    fun localizedText(field: DateTimeField, styles: Set<TextStyle>)
 
     /**
      * Make parsing optional within a block.

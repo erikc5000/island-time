@@ -1,5 +1,7 @@
 package io.islandtime
 
+import io.islandtime.format.TimeZoneTextStyle
+import io.islandtime.locale.localeOf
 import io.islandtime.measures.hours
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.zone.TimeZoneRulesException
@@ -83,6 +85,34 @@ class TimeZoneTest : AbstractIslandTimeTest() {
             val zone = TimeZone(it)
             assertEquals(zone, zone.validated())
         }
+    }
+
+    @Test
+    fun `localizedName() and displayName() get localized text from the provider`() {
+        assertEquals(
+            "Greenwich Mean Time",
+            TimeZone("Europe/London").localizedName(TimeZoneTextStyle.STANDARD, localeOf("en-GB"))
+        )
+        assertEquals(
+            "Greenwich Mean Time",
+            TimeZone("Europe/London").displayName(TimeZoneTextStyle.STANDARD, localeOf("en-GB"))
+        )
+    }
+
+    @Test
+    fun `displayName() returns the ID on a fixed offset zone`() {
+        assertEquals(
+            "+01:00",
+            TimeZone("+01:00").displayName(TimeZoneTextStyle.STANDARD, localeOf("en-GB"))
+        )
+    }
+
+    @Test
+    fun `displayName() returns the ID on an invalid zone`() {
+        assertEquals(
+            "America/Buffalo",
+            TimeZone("America/Buffalo").displayName(TimeZoneTextStyle.STANDARD, localeOf("en-US"))
+        )
     }
 
     @Test

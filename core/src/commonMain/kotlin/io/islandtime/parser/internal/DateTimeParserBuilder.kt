@@ -1,5 +1,7 @@
 package io.islandtime.parser.internal
 
+import io.islandtime.base.DateTimeField
+import io.islandtime.format.TextStyle
 import io.islandtime.parser.*
 
 @PublishedApi
@@ -54,6 +56,10 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
 
     override fun literal(string: String, builder: LiteralParserBuilder.() -> Unit) {
         parsers += StringLiteralParserBuilderImpl(string).apply(builder).build()
+    }
+
+    override fun localizedText(field: DateTimeField, styles: Set<TextStyle>) {
+        parsers += LocalizedTextParser(field, styles)
     }
 
     override fun optional(builder: DateTimeParserBuilder.() -> Unit) {

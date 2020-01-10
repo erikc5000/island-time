@@ -10,6 +10,7 @@ import io.islandtime.measures.Duration.Companion.create
 import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
+import io.islandtime.parser.DateTimeParserSettings
 import io.islandtime.parser.DateTimeParsers
 import kotlin.math.absoluteValue
 
@@ -640,8 +641,11 @@ fun String.toDuration() = toDuration(DateTimeParsers.Iso.DURATION)
 /**
  * Convert a string to a [Duration] using [parser].
  */
-fun String.toDuration(parser: DateTimeParser): Duration {
-    val result = parser.parse(this)
+fun String.toDuration(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): Duration {
+    val result = parser.parse(this, settings)
     return result.toDuration()
 }
 

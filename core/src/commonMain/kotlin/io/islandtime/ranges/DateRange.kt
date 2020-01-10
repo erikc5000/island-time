@@ -172,10 +172,13 @@ fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed range is invalid
  */
-fun String.toDateRange(parser: GroupedDateTimeParser): DateRange {
-    val results = parser.parse(this).expectingGroupCount<DateTimeInterval>(2, this)
+fun String.toDateRange(
+    parser: GroupedDateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): DateRange {
+    val results = parser.parse(this, settings).expectingGroupCount<DateTimeInterval>(2, this)
 
     val start = when {
         results[0].isEmpty() -> null

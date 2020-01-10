@@ -88,10 +88,13 @@ fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed interval is invalid
  */
-fun String.toInstantInterval(parser: GroupedDateTimeParser): InstantInterval {
-    val results = parser.parse(this).expectingGroupCount<InstantInterval>(2, this)
+fun String.toInstantInterval(
+    parser: GroupedDateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): InstantInterval {
+    val results = parser.parse(this, settings).expectingGroupCount<InstantInterval>(2, this)
 
     val start = when {
         results[0].isEmpty() -> null

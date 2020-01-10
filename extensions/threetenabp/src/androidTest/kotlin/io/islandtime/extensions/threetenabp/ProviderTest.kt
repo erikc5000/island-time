@@ -4,10 +4,8 @@ import org.junit.Test
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.common.truth.Truth.assertThat
 import io.islandtime.IslandTime
-import io.islandtime.zone.TimeZoneRulesException
 import io.islandtime.zone.TimeZoneRulesProvider
 import org.junit.After
-import org.junit.Before
 
 class AndroidThreeTenProviderTest {
     private val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
@@ -25,7 +23,7 @@ class AndroidThreeTenProviderTest {
         assertThat(TimeZoneRulesProvider.availableRegionIds).isNotEmpty()
     }
 
-    @Test(expected = TimeZoneRulesException::class)
+    @Test(expected = IllegalStateException::class)
     fun doubleInitializationCausesException() {
         IslandTime.initializeWith(AndroidThreeTenProvider(context))
         IslandTime.initializeWith(AndroidThreeTenProvider(context))

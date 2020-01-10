@@ -418,8 +418,11 @@ fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toDate(parser: DateTimeParser): Date {
-    val result = parser.parse(this)
+fun String.toDate(
+    parser: DateTimeParser,
+    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+): Date {
+    val result = parser.parse(this, settings)
     return result.toDate() ?: throwParserFieldResolutionException<Date>(this)
 }
 

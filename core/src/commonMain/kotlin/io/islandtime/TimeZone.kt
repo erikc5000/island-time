@@ -1,5 +1,9 @@
 package io.islandtime
 
+import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.TimeZoneTextStyle
+import io.islandtime.locale.Locale
+import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
 import io.islandtime.parser.*
@@ -48,6 +52,45 @@ sealed class TimeZone : Comparable<TimeZone> {
      * @see isValid
      */
     fun validated(): TimeZone = apply { validate() }
+
+    /**
+     * The localized name of the time zone, if available for the locale in the specified style. The result depends on
+     * the configured [DateTimeTextProvider] and may differ between platforms.
+     *
+     * Example output for the "America/New_York" ID and "en-US" locale:
+     * - Standard: "Eastern Standard Time"
+     * - Short standard: "EST"
+     * - Daylight Saving: "Eastern Daylight Time"
+     * - Short daylight saving: "EDT"
+     * - Generic: "Eastern Time"
+     * - Short generic: "ET"
+     *
+     * @see displayName
+     */
+    fun localizedName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String? {
+        return DateTimeTextProvider.timeZoneTextFor(this, style, locale)
+    }
+
+    /**
+     * A textual representation of the time zone, suitable for display purposes. The localized name will be returned, if
+     * available for the locale in the specified style. If not, the [id] will be returned instead.
+     *
+     * The result depends on the configured [DateTimeTextProvider] and may differ between platforms.
+     *
+     * Example output for the "America/New_York" ID and "en-US" locale:
+     * - Standard: "Eastern Standard Time"
+     * - Short standard: "EST"
+     * - Daylight Saving: "Eastern Daylight Time"
+     * - Short daylight saving: "EDT"
+     * - Generic: "Eastern Time"
+     * - Short generic: "ET"
+     *
+     * @see localizedName
+     * @see id
+     */
+    fun displayName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String {
+        return localizedName(style, locale) ?: id
+    }
 
     /**
      * Get a normalized time zone.
