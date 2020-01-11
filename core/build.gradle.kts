@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     `multiplatform-library`
 }
@@ -49,33 +51,31 @@ kotlin {
     }
 }
 
-tasks.withType<org.jetbrains.dokka.gradle.DokkaTask> {
-    doFirst {
-        multiplatform {
-            create("global") {
-                perPackageOption {
-                    prefix = "io.islandtime.internal"
-                    suppress = true
-                }
+tasks.withType<DokkaTask>().configureEach {
+    multiplatform {
+        create("global") {
+            perPackageOption {
+                prefix = "io.islandtime.internal"
+                suppress = true
+            }
 
-                perPackageOption {
-                    prefix = "io.islandtime.measures.internal"
-                    suppress = true
-                }
+            perPackageOption {
+                prefix = "io.islandtime.measures.internal"
+                suppress = true
+            }
 
-                perPackageOption {
-                    prefix = "io.islandtime.parser.internal"
-                    suppress = true
-                }
+            perPackageOption {
+                prefix = "io.islandtime.parser.internal"
+                suppress = true
+            }
 
-                perPackageOption {
-                    prefix = "io.islandtime.ranges.internal"
-                    suppress = true
-                }
+            perPackageOption {
+                prefix = "io.islandtime.ranges.internal"
+                suppress = true
+            }
 
-                perPackageOption {
-                    includes = listOf("packages.md")
-                }
+            perPackageOption {
+                includes = listOf("packages.md")
             }
         }
     }
