@@ -42,7 +42,7 @@ matrix:
       script: ./gradlew core:build
       deploy:
         provider: script
-        script: ./gradlew core:publishAllPublicationsToMavenRepository extensions:serialization:publishAllPublicationsToMavenRepository
+        script: ./gradlew core:publishAllPublicationsToMavenRepository extensions:serialization:publishAllPublicationsToMavenRepository --stacktrace --debug
         skip_cleanup: true
         on:
           branch: master
