@@ -41,17 +41,28 @@ class LocalizedTextParserTest {
     }
 
     @Test
+    fun `parses case-insensitive localized months`() {
+        val parser = dateTimeParser {
+            localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.FULL))
+        }
+
+        val result = parser.parse("januarY", DateTimeParserSettings(locale = en_US, isCaseSensitive = false))
+        assertEquals(1, result.fields.size)
+        assertEquals(1L, result.fields[DateTimeField.MONTH_OF_YEAR])
+    }
+
+    @Test
     fun `reports an error when no match is found`() {
         val parser = dateTimeParser {
             +'a'
-            localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.NARROW))
+            localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.SHORT))
         }
 
         val exception = assertFailsWith<DateTimeParseException> {
-            parser.parse("aJ", DateTimeParserSettings(locale = en_US))
+            parser.parse("ajan", DateTimeParserSettings(locale = en_US))
         }
         assertEquals(1, exception.errorIndex)
-        assertEquals("aJ", exception.parsedString)
+        assertEquals("ajan", exception.parsedString)
     }
 
     @Test

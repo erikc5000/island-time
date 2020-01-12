@@ -87,6 +87,14 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         parsers += childParser
     }
 
+    override fun caseSensitive(builder: DateTimeParserBuilder.() -> Unit) {
+        buildCaseSensitiveParser(true, builder)
+    }
+
+    override fun caseInsensitive(builder: DateTimeParserBuilder.() -> Unit) {
+        buildCaseSensitiveParser(false, builder)
+    }
+
     fun build(): DateTimeParser {
         return buildElement() ?: EmptyDateTimeParser
     }
@@ -96,6 +104,14 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
             0 -> null
             1 -> parsers.first()
             else -> CompositeDateTimeParser(parsers)
+        }
+    }
+
+    private fun buildCaseSensitiveParser(isCaseSensitive: Boolean, builder: DateTimeParserBuilder.() -> Unit) {
+        val childParser = DateTimeParserBuilderImpl().apply(builder).buildElement()
+
+        if (childParser != null) {
+            parsers += CaseSensitiveDateTimeParser(isCaseSensitive, childParser)
         }
     }
 }
