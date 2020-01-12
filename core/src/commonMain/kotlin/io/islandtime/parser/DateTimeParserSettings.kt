@@ -11,12 +11,14 @@ import io.islandtime.locale.defaultLocale
  */
 data class DateTimeParserSettings(
     val numberStyle: NumberStyle = NumberStyle.DEFAULT,
-    val locale: () -> Locale = { defaultLocale() }
+    val locale: () -> Locale = { defaultLocale() },
+    val isCaseSensitive: Boolean = true
 ) {
     constructor(
         numberStyle: NumberStyle = NumberStyle.DEFAULT,
-        locale: Locale
-    ) : this(numberStyle, { locale })
+        locale: Locale,
+        isCaseSensitive: Boolean = true
+    ) : this(numberStyle, { locale }, isCaseSensitive)
 
     companion object {
         /**

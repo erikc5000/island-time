@@ -77,6 +77,21 @@ internal class AnyOfDateTimeParser(
     }
 }
 
+internal class CaseSensitiveDateTimeParser(
+    private val isCaseSensitive: Boolean,
+    private val childParser: DateTimeParser
+) : DateTimeParser() {
+
+    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+        val previousCaseSensitivity = context.isCaseSensitive
+        context.isCaseSensitive = isCaseSensitive
+        val currentPosition = childParser.parse(context, text, position)
+        context.isCaseSensitive = previousCaseSensitivity
+
+        return currentPosition
+    }
+}
+
 internal class CharLiteralParser(
     private val char: Char,
     private val onParsed: List<DateTimeParseResult.() -> Unit>
@@ -88,7 +103,7 @@ internal class CharLiteralParser(
         } else {
             val charFound = text[position]
 
-            if (char == charFound) {
+            if (charFound.equals(char, ignoreCase = !context.isCaseSensitive)) {
                 onParsed.forEach { it(context.result) }
                 position + 1
             } else {
@@ -108,7 +123,7 @@ internal class StringLiteralParser(
     override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length ||
             string.length > text.length - position ||
-            text.subSequence(position, position + string.length) != string
+            !text.regionMatches(position, string, 0, string.length, !context.isCaseSensitive)
         ) {
             position.inv()
         } else {
@@ -139,7 +154,9 @@ internal class LocalizedTextParser(
         }
 
         for ((string, value) in possibleValues) {
-            if (string.length <= remainingLength && text.subSequence(position, position + string.length) == string) {
+            if (string.length <= remainingLength &&
+                text.regionMatches(position, string, 0, string.length, !context.isCaseSensitive)
+            ) {
                 context.result.fields[field] = value
                 return position + string.length
             }
