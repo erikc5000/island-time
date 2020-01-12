@@ -37,9 +37,13 @@ matrix:
     - os: osx
       osx_image: xcode11
       language: java
-      install: ./gradlew core:assemble extensions:serialization:assemble
+      install:
+        - ./gradlew core:assemble
+        - ./gradlew extensions:serialization:assemble
       env: ORG_GRADLE_PROJECT_iosDevice="iPhone 11"
-      script: ./gradlew core:build extensions:serialization:build
+      script:
+        - ./gradlew core:build
+        - ./gradlew extensions:serialization:build
       deploy:
         provider: script
         script: ./gradlew core:publishAllPublicationsToMavenRepository extensions:serialization:publishAllPublicationsToMavenRepository
