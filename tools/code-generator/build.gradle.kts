@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.squareup:kotlinpoet:1.4.4")
+    implementation("com.squareup:kotlinpoet:1.5.0")
 }
 
 application {

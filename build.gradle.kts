@@ -31,7 +31,7 @@ allprojects {
     
     tasks.withType(AbstractTestTask::class).configureEach {
         testLogging {
-            events = setOf(TestLogEvent.FAILED, TestLogEvent.SKIPPED, TestLogEvent.PASSED)
+            events = setOf(TestLogEvent.FAILED)
             exceptionFormat = TestExceptionFormat.FULL
             showStackTraces = true
         }

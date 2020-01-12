@@ -57,33 +57,31 @@ if (HostManager.hostIsMac) {
     registerIosTestTask(if (ideaActive) "darwin" else "iosX64")
 }
 
-tasks.withType<DokkaTask> {
-    doFirst {
-        multiplatform {
-            kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
-        }
-    }
-}
-
 val emptySourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
 }
 
-afterEvaluate {
-    publishing {
-        val pomMppArtifactId: String? by project
+publishing {
+    val pomMppArtifactId: String? by project
 
-        publications.withType<MavenPublication>().configureEach {
-            if (name == "kotlinMultiplatform") {
-                if (pomMppArtifactId != null) {
-                    artifactId = pomMppArtifactId
-                }
-                artifact(emptySourcesJar.get())
-            } else {
-                if (pomMppArtifactId != null) {
-                    artifactId = "${pomMppArtifactId}-$name"
-                }
+    publications.withType<MavenPublication>().configureEach {
+        if (name == "kotlinMultiplatform") {
+            if (pomMppArtifactId != null) {
+                artifactId = pomMppArtifactId
             }
+            artifact(emptySourcesJar.get())
+        } else {
+            if (pomMppArtifactId != null) {
+                artifactId = "${pomMppArtifactId}-$name"
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    tasks.withType<DokkaTask>().configureEach {
+        multiplatform {
+            kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
         }
     }
 
