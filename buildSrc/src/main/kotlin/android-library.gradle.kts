@@ -47,9 +47,4 @@ afterEvaluate {
             }
         }
     }
-
-    // Disable module metadata since it seems to be broken at the moment
-    tasks.named("generateMetadataFileForReleaseAarPublication") {
-        enabled = false
-    }
 }
