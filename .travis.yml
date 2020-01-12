@@ -37,12 +37,12 @@ matrix:
     - os: osx
       osx_image: xcode11
       language: java
-      install: ./gradlew core:assemble
+      install: ./gradlew core:assemble extensions:serialization:assemble
       env: ORG_GRADLE_PROJECT_iosDevice="iPhone 11"
-      script: ./gradlew core:build
+      script: ./gradlew core:build extensions:serialization:build
       deploy:
         provider: script
-        script: yes | ./gradlew core:publishAllPublicationsToMavenRepository extensions:serialization:publishAllPublicationsToMavenRepository --scan
+        script: ./gradlew core:publishAllPublicationsToMavenRepository extensions:serialization:publishAllPublicationsToMavenRepository
         skip_cleanup: true
         on:
           branch: master
