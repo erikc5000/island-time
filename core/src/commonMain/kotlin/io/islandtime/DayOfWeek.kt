@@ -29,10 +29,17 @@ enum class DayOfWeek {
     val number: Int get() = ordinal + 1
 
     /**
+     * The day of week number (1-7) according to the current system settings. Typically, the week will start on either
+     * Monday, Sunday, or Saturday.
+     */
+    val localizedNumber: Int
+        get() = (this - (systemDefaultFirstDayOfWeek().number - 1).days).number
+
+    /**
      * The day of week number (1-7) according to the specified locale. Typically, the week will start on either Monday,
      * Sunday, or Saturday. The number returned may differ between platforms.
      */
-    fun localizedNumber(locale: Locale = defaultLocale()): Int {
+    fun localizedNumber(locale: Locale): Int {
         return (this - (locale.firstDayOfWeek.number - 1).days).number
     }
 
@@ -108,4 +115,4 @@ fun Int.toDayOfWeek(): DayOfWeek {
 }
 
 internal expect val Locale.firstDayOfWeek: DayOfWeek
-internal expect val Locale.lastDayOfWeek: DayOfWeek
+internal expect fun systemDefaultFirstDayOfWeek(): DayOfWeek

@@ -2,7 +2,7 @@ package io.islandtime.operators
 
 import io.islandtime.*
 import io.islandtime.locale.Locale
-import io.islandtime.locale.defaultLocale
+import io.islandtime.measures.days
 
 /**
  * The date at the start of the year that this date falls in.
@@ -39,14 +39,30 @@ val Date.startOfWeek: Date get() = previousOrSame(DayOfWeek.MIN)
 val Date.endOfWeek: Date get() = nextOrSame(DayOfWeek.MAX)
 
 /**
- * The date at the start of the week that this date falls in. The first day of the week will be determined by [locale].
+ * The date at the start of the week that this date falls in. The first day of the week will be determined by the user's
+ * system settings. This may differ from the first day of the week associated with the default locale on platforms that
+ * allow the user to customize this.
  */
-fun Date.localizedStartOfWeek(locale: Locale = defaultLocale()): Date = previousOrSame(locale.firstDayOfWeek)
+val Date.localizedStartOfWeek: Date
+    get() = previousOrSame(systemDefaultFirstDayOfWeek())
 
 /**
- * The date at the end of the week that this date falls in. The last day of the week will be determined by [locale].
+ * The date at the start of the week that this date falls in. The first day of the week will be determined by [locale].
  */
-fun Date.localizedEndOfWeek(locale: Locale = defaultLocale()): Date = nextOrSame(locale.lastDayOfWeek)
+fun Date.localizedStartOfWeek(locale: Locale): Date = previousOrSame(locale.firstDayOfWeek)
+
+/**
+ * The date at the end of the week that this date falls in. The first day of the week will be determined by the user's
+ * system settings. This may differ from the first day of the week associated with the default locale on platforms that
+ * allow the user to customize this.
+ */
+val Date.localizedEndOfWeek: Date
+    get() = nextOrSame(systemDefaultFirstDayOfWeek() + 6.days)
+
+/**
+ * The date at the end of the week that this date falls in. The first day of the week will be determined by [locale].
+ */
+fun Date.localizedEndOfWeek(locale: Locale): Date = nextOrSame(locale.firstDayOfWeek + 6.days)
 
 /**
  * The date-time at the first instant of the year that this date-time falls in.
@@ -82,9 +98,17 @@ val DateTime.startOfWeek: DateTime
 
 /**
  * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
+ * determined by the user's system settings. This may differ from the first day of the week associated with the default
+ * locale on platforms that allow the user to customize this.
+ */
+val DateTime.localizedStartOfWeek: DateTime
+    get() = copy(date = date.localizedStartOfWeek, time = Time.MIDNIGHT)
+
+/**
+ * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
  * determined by [locale].
  */
-fun DateTime.localizedStartOfWeek(locale: Locale = defaultLocale()): DateTime =
+fun DateTime.localizedStartOfWeek(locale: Locale): DateTime =
     copy(date = date.localizedStartOfWeek(locale), time = Time.MIDNIGHT)
 
 /**
@@ -97,9 +121,17 @@ val DateTime.endOfWeek: DateTime
 
 /**
  * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
+ * will be determined by the user's system settings. This may differ from the first day of the week associated with the
+ * default locale on platforms that allow the user to customize this.
+ */
+val DateTime.localizedEndOfWeek: DateTime
+    get() = copy(date = date.localizedEndOfWeek, time = Time.MAX)
+
+/**
+ * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
  * will be determined by [locale].
  */
-fun DateTime.localizedEndOfWeek(locale: Locale = defaultLocale()): DateTime =
+fun DateTime.localizedEndOfWeek(locale: Locale): DateTime =
     copy(date = date.localizedEndOfWeek(locale), time = Time.MAX)
 
 /**
@@ -136,9 +168,17 @@ val OffsetDateTime.startOfWeek: OffsetDateTime
 
 /**
  * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
+ * determined by the user's system settings. This may differ from the first day of the week associated with the default
+ * locale on platforms that allow the user to customize this.
+ */
+val OffsetDateTime.localizedStartOfWeek: OffsetDateTime
+    get() = copy(dateTime = dateTime.localizedStartOfWeek)
+
+/**
+ * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
  * determined by [locale].
  */
-fun OffsetDateTime.localizedStartOfWeek(locale: Locale = defaultLocale()): OffsetDateTime =
+fun OffsetDateTime.localizedStartOfWeek(locale: Locale): OffsetDateTime =
     copy(dateTime = dateTime.localizedStartOfWeek(locale))
 
 /**
@@ -148,6 +188,14 @@ fun OffsetDateTime.localizedStartOfWeek(locale: Locale = defaultLocale()): Offse
  */
 val OffsetDateTime.endOfWeek: OffsetDateTime
     get() = copy(dateTime = dateTime.endOfWeek)
+
+/**
+ * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
+ * will be determined by the user's system settings. This may differ from the first day of the week associated with the
+ * default locale on platforms that allow the user to customize this.
+ */
+val OffsetDateTime.localizedEndOfWeek: OffsetDateTime
+    get() = copy(dateTime = dateTime.localizedEndOfWeek)
 
 /**
  * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
@@ -190,9 +238,17 @@ val ZonedDateTime.startOfWeek: ZonedDateTime
 
 /**
  * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
+ * determined by the user's system settings. This may differ from the first day of the week associated with the default
+ * locale on platforms that allow the user to customize this.
+ */
+val ZonedDateTime.localizedStartOfWeek: ZonedDateTime
+    get() = date.localizedStartOfWeek.startOfDayAt(zone)
+
+/**
+ * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
  * determined by [locale].
  */
-fun ZonedDateTime.localizedStartOfWeek(locale: Locale = defaultLocale()): ZonedDateTime =
+fun ZonedDateTime.localizedStartOfWeek(locale: Locale): ZonedDateTime =
     date.localizedStartOfWeek(locale).startOfDayAt(zone)
 
 /**
@@ -205,7 +261,14 @@ val ZonedDateTime.endOfWeek: ZonedDateTime
 
 /**
  * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
+ * will be determined by the user's system settings. This may differ from the first day of the week associated with the
+ * default locale on platforms that allow the user to customize this.
+ */
+val ZonedDateTime.localizedEndOfWeek: ZonedDateTime
+    get() = date.localizedEndOfWeek.endOfDayAt(zone)
+
+/**
+ * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
  * will be determined by [locale].
  */
-fun ZonedDateTime.localizedEndOfWeek(locale: Locale = defaultLocale()): ZonedDateTime =
-    date.localizedEndOfWeek(locale).endOfDayAt(zone)
+fun ZonedDateTime.localizedEndOfWeek(locale: Locale): ZonedDateTime = date.localizedEndOfWeek(locale).endOfDayAt(zone)
