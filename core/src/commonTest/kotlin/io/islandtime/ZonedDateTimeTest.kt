@@ -650,4 +650,30 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().asZonedDateTime()
         )
     }
+
+    @Test
+    fun `Date_startOfDayAt() creates a ZonedDateTime at the start of the day in a particular time zone`() {
+        assertEquals(
+            ZonedDateTime(
+                DateTime(2019, 5, 20, 0, 0),
+                nyZone
+            ),
+            Date(2019, 5, 20).startOfDayAt(nyZone)
+        )
+
+        // TODO: Add tests where transitions occur during midnight
+    }
+
+    @Test
+    fun `Date_endOfDayAt() creates a ZonedDateTime at the end of the day in a particular time zone`() {
+        assertEquals(
+            ZonedDateTime(
+                DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),
+                nyZone
+            ),
+            Date(2019, 5, 20).endOfDayAt(nyZone)
+        )
+
+        // TODO: Add tests where transitions occur during midnight
+    }
 }
