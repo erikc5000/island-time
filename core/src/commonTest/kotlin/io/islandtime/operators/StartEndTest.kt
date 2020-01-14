@@ -96,7 +96,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_startOfWeek() returns the date at the start of the week in locale`() {
+    fun `Date_localizedStartOfWeek() returns the date at the start of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -121,7 +121,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_startOfWeek() returns the date-time at the start of the week in locale`() {
+    fun `DateTime_localizedStartOfWeek() returns the date-time at the start of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -151,7 +151,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_startOfWeek() returns the date-time at the start of the week in locale`() {
+    fun `OffsetDateTime_localizedStartOfWeek() returns the date-time at the start of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -185,7 +185,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_startOfWeek() returns the date-time at the start of the week in locale`() {
+    fun `ZonedDateTime_localizedStartOfWeek() returns the date-time at the start of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -292,7 +292,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_endOfWeek() returns the date at the end of the week in locale`() {
+    fun `Date_localizedEndOfWeek() returns the date at the end of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -317,7 +317,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_endOfWeek() returns the date-time at the end of the week in locale`() {
+    fun `DateTime_localizedEndOfWeek() returns the date-time at the end of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -347,7 +347,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_endOfWeek() returns the date-time at the end of the week in locale`() {
+    fun `OffsetDateTime_localizedEndOfWeek() returns the date-time at the end of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -381,7 +381,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_endOfWeek() returns the date-time at the end of the week in locale`() {
+    fun `ZonedDateTime_localizedEndOfWeek() returns the date-time at the end of the week in locale`() {
         val sundayFirstLocale = localeOf("en-US")
 
         assertEquals(
@@ -401,53 +401,5 @@ class StartEndTest : AbstractIslandTimeTest() {
                 .at(nyZone)
                 .localizedEndOfWeek(mondayFirstLocale)
         )
-    }
-
-    @Test
-    fun `Date_startOfDay returns the DateTime at midnight of same day`() {
-        assertEquals(
-            DateTime(
-                Date(2019, Month.JULY, 1),
-                Time.MIDNIGHT
-            ),
-            Date(2019, Month.JULY, 1).startOfDay
-        )
-    }
-
-    @Test
-    fun `Date_endOfDay returns the DateTime just before the end of the same day`() {
-        assertEquals(
-            DateTime(
-                Date(2019, Month.JULY, 1),
-                Time(23, 59, 59, 999_999_999)
-            ),
-            Date(2019, Month.JULY, 1).endOfDay
-        )
-    }
-
-    @Test
-    fun `Date_startOfDayAt() creates a ZonedDateTime at the start of the day in a particular time zone`() {
-        assertEquals(
-            ZonedDateTime(
-                DateTime(2019, 5, 20, 0, 0),
-                nyZone
-            ),
-            Date(2019, 5, 20).startOfDayAt(nyZone)
-        )
-
-        // TODO: Add tests where transitions occur during midnight
-    }
-
-    @Test
-    fun `Date_endOfDayAt() creates a ZonedDateTime at the end of the day in a particular time zone`() {
-        assertEquals(
-            ZonedDateTime(
-                DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),
-                nyZone
-            ),
-            Date(2019, 5, 20).endOfDayAt(nyZone)
-        )
-
-        // TODO: Add tests where transitions occur during midnight
     }
 }

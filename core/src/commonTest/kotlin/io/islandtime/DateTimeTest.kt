@@ -897,4 +897,26 @@ class DateTimeTest : AbstractIslandTimeTest() {
             "2019-001T02:30".toDateTime(parser)
         )
     }
+
+    @Test
+    fun `Date_startOfDay returns the DateTime at midnight of same day`() {
+        assertEquals(
+            DateTime(
+                Date(2019, Month.JULY, 1),
+                Time.MIDNIGHT
+            ),
+            Date(2019, Month.JULY, 1).startOfDay
+        )
+    }
+
+    @Test
+    fun `Date_endOfDay returns the DateTime just before the end of the same day`() {
+        assertEquals(
+            DateTime(
+                Date(2019, Month.JULY, 1),
+                Time(23, 59, 59, 999_999_999)
+            ),
+            Date(2019, Month.JULY, 1).endOfDay
+        )
+    }
 }

@@ -10,4 +10,4 @@ internal actual val Locale.firstDayOfWeek
         return DayOfWeek.SUNDAY + (gregorianCalendar.firstDayOfWeek - 1).days
     }
 
-internal actual val Locale.lastDayOfWeek: DayOfWeek get() = firstDayOfWeek + 6.days
+internal actual fun systemDefaultFirstDayOfWeek(): DayOfWeek = Locale.getDefault().firstDayOfWeek
