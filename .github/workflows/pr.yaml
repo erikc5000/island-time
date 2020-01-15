@@ -8,9 +8,6 @@ on:
 jobs:
   macos-build:
     runs-on: macOS-latest
-    strategy:
-      matrix:
-        api-level: [21, 29]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -26,7 +23,7 @@ jobs:
       - name: Build and test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
+          api-level: 21
           script: ./gradlew build connectedCheck
 
 env:

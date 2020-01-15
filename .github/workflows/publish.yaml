@@ -8,9 +8,6 @@ on:
 jobs:
   macos-build:
     runs-on: macOS-latest
-    strategy:
-      matrix:
-        api-level: [21, 29]
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -26,13 +23,15 @@ jobs:
       - name: Build and test
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: ${{ matrix.api-level }}
+          api-level: 21
           script: ./gradlew build connectedCheck
 
       - name: Publish
         env:
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_USERNAME }}
-          ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD: ${{ secrets.ORG_GRADLE_PROJECT_SONATYPE_NEXUS_PASSWORD }}
+          ORG_GRADLE_PROJECT_repositoryUsername: ${{ secrets.ORG_GRADLE_PROJECT_repositoryUsername }}
+          ORG_GRADLE_PROJECT_repositoryPassword: ${{ secrets.ORG_GRADLE_PROJECT_repositoryPassword }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_signingPassword }}
         run: ./gradlew publishAllPublicationsToMavenRepository
 
 env:
