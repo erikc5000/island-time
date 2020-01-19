@@ -557,7 +557,7 @@ private fun buildIsoIntervalParser(elementParser: DateTimeParser): GroupedDateTi
                 anyOf({ unboundedDesignator() }, { childParser(elementParser) })
             }
         }, {
-            groups(2) {}
+            repeat(2) { group {} }
         })
     }
 }

@@ -11,14 +11,6 @@ internal class GroupedDateTimeParserBuilderImpl : GroupedDateTimeParserBuilder {
         parsers += DateTimeParserBuilderImpl().apply(builder).build()
     }
 
-    override fun groups(count: Int, builder: DateTimeParserBuilder.(index: Int) -> Unit) {
-        require(count > 0) { "count must be greater than 0" }
-
-        for (i in 0 until count) {
-            parsers += DateTimeParserBuilderImpl().apply { builder(i) }.build()
-        }
-    }
-
     override fun literal(char: Char) {
         parsers += CharLiteralParserBuilderImpl(char).build()
     }
