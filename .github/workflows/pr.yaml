@@ -1,0 +1,30 @@
+name: Test pull request
+
+on:
+  pull_request:
+    paths-ignore:
+      - '*.md'
+
+jobs:
+  macos-build:
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Cache Gradle
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build and test
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 21
+          script: ./gradlew build connectedCheck
+
+env:
+  ORG_GRADLE_PROJECT_iosDevice: "iPhone 11"
