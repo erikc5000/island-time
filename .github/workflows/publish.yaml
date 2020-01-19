@@ -1,4 +1,4 @@
-name: Test and publish
+name: Publish
 
 on:
   push:
@@ -20,12 +20,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Build and test
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 21
-          script: ./gradlew build connectedCheck
-
       - name: Publish
         env:
           ORG_GRADLE_PROJECT_repositoryUsername: ${{ secrets.ORG_GRADLE_PROJECT_repositoryUsername }}
@@ -33,6 +27,3 @@ jobs:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_signingPassword }}
         run: ./gradlew publishAllPublicationsToMavenRepository
-
-env:
-  ORG_GRADLE_PROJECT_iosDevice: "iPhone 11"
