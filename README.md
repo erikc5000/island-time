@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.com/erikc5000/island-time.svg?branch=master)](https://travis-ci.com/erikc5000/island-time) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core)
+![Build Status](https://github.com/erikc5000/island-time/workflows/Test%20and%20publish/badge.svg) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core)
 
 # Island Time
 A Kotlin Multiplatform library for working with dates and times, heavily inspired by the java.time library.
