@@ -204,14 +204,6 @@ interface GroupedDateTimeParserBuilder {
     fun group(builder: DateTimeParserBuilder.() -> Unit)
 
     /**
-     * Create one or more distinct parse results using the same block.
-     *
-     * @param builder define the parsers that should be associated with this result
-     * @throws IllegalArgumentException if count is less than 1
-     */
-    fun groups(count: Int, builder: DateTimeParserBuilder.(index: Int) -> Unit)
-
-    /**
      * Parse a [Char] literal.
      */
     operator fun Char.unaryPlus() {
