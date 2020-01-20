@@ -26,4 +26,6 @@ jobs:
           ORG_GRADLE_PROJECT_repositoryPassword: ${{ secrets.ORG_GRADLE_PROJECT_repositoryPassword }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.ORG_GRADLE_PROJECT_signingKey }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.ORG_GRADLE_PROJECT_signingPassword }}
-        run: ./gradlew publishAllPublicationsToMavenRepository
+        run: |
+          ./gradlew assemble
+          ./gradlew publishAllPublicationsToMavenRepository
