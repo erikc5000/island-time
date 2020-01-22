@@ -22,7 +22,7 @@ dependencies {
     implementation(project(":core"))
     implementation(kotlin("stdlib-jdk8"))
 
-    api("com.jakewharton.threetenabp:threetenabp:1.2.1")
+    api("com.jakewharton.threetenabp:threetenabp:1.2.2")
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit"))
