@@ -221,6 +221,18 @@ val Int.centuries: IntCenturies
   get() = IntCenturies(this)
 
 /**
+ * Multiply by a number of centuries.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(centuries: IntCenturies) = centuries * this
+
+/**
+ * Multiply by a number of centuries.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(centuries: IntCenturies) = centuries * this
+
+/**
  * A number of centuries.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -432,3 +444,15 @@ inline class LongCenturies(
  */
 val Long.centuries: LongCenturies
   get() = LongCenturies(this)
+
+/**
+ * Multiply by a number of centuries.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(centuries: LongCenturies) = centuries * this
+
+/**
+ * Multiply by a number of centuries.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(centuries: LongCenturies) = centuries * this

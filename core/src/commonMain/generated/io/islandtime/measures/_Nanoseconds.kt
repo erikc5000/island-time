@@ -351,6 +351,18 @@ val Int.nanoseconds: IntNanoseconds
   get() = IntNanoseconds(this)
 
 /**
+ * Multiply by a number of nanoseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(nanoseconds: IntNanoseconds) = nanoseconds * this
+
+/**
+ * Multiply by a number of nanoseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(nanoseconds: IntNanoseconds) = nanoseconds * this
+
+/**
  * A number of nanoseconds.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -682,3 +694,15 @@ inline class LongNanoseconds(
  */
 val Long.nanoseconds: LongNanoseconds
   get() = LongNanoseconds(this)
+
+/**
+ * Multiply by a number of nanoseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(nanoseconds: LongNanoseconds) = nanoseconds * this
+
+/**
+ * Multiply by a number of nanoseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(nanoseconds: LongNanoseconds) = nanoseconds * this

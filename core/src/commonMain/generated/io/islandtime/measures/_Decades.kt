@@ -218,6 +218,18 @@ val Int.decades: IntDecades
   get() = IntDecades(this)
 
 /**
+ * Multiply by a number of decades.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(decades: IntDecades) = decades * this
+
+/**
+ * Multiply by a number of decades.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(decades: IntDecades) = decades * this
+
+/**
  * A number of decades.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -428,3 +440,15 @@ inline class LongDecades(
  */
 val Long.decades: LongDecades
   get() = LongDecades(this)
+
+/**
+ * Multiply by a number of decades.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(decades: LongDecades) = decades * this
+
+/**
+ * Multiply by a number of decades.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(decades: LongDecades) = decades * this

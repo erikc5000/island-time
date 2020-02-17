@@ -274,6 +274,18 @@ val Int.hours: IntHours
   get() = IntHours(this)
 
 /**
+ * Multiply by a number of hours.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(hours: IntHours) = hours * this
+
+/**
+ * Multiply by a number of hours.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(hours: IntHours) = hours * this
+
+/**
  * A number of hours.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -547,3 +559,15 @@ inline class LongHours(
  */
 val Long.hours: LongHours
   get() = LongHours(this)
+
+/**
+ * Multiply by a number of hours.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(hours: LongHours) = hours * this
+
+/**
+ * Multiply by a number of hours.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(hours: LongHours) = hours * this

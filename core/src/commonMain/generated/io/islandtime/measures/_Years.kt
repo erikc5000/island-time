@@ -222,6 +222,18 @@ val Int.years: IntYears
   get() = IntYears(this)
 
 /**
+ * Multiply by a number of years.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(years: IntYears) = years * this
+
+/**
+ * Multiply by a number of years.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(years: IntYears) = years * this
+
+/**
  * A number of years.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -436,3 +448,15 @@ inline class LongYears(
  */
 val Long.years: LongYears
   get() = LongYears(this)
+
+/**
+ * Multiply by a number of years.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(years: LongYears) = years * this
+
+/**
+ * Multiply by a number of years.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(years: LongYears) = years * this

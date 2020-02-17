@@ -69,6 +69,11 @@ class NanosecondsTest {
         assertFailsWith<ArithmeticException> { Long.MAX_VALUE.nanoseconds * 2 }
         assertFailsWith<ArithmeticException> { Long.MAX_VALUE.nanoseconds * 2L }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE.nanoseconds * -1 }
+
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE * Int.MIN_VALUE.nanoseconds }
+        assertFailsWith<ArithmeticException> { 2 * Long.MAX_VALUE.nanoseconds }
+        assertFailsWith<ArithmeticException> { 2L * Long.MAX_VALUE.nanoseconds }
+        assertFailsWith<ArithmeticException> { -1 * Long.MIN_VALUE.nanoseconds }
     }
 
     @Test

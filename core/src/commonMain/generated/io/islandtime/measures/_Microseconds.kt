@@ -329,6 +329,18 @@ val Int.microseconds: IntMicroseconds
   get() = IntMicroseconds(this)
 
 /**
+ * Multiply by a number of microseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(microseconds: IntMicroseconds) = microseconds * this
+
+/**
+ * Multiply by a number of microseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(microseconds: IntMicroseconds) = microseconds * this
+
+/**
  * A number of microseconds.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -645,3 +657,15 @@ inline class LongMicroseconds(
  */
 val Long.microseconds: LongMicroseconds
   get() = LongMicroseconds(this)
+
+/**
+ * Multiply by a number of microseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(microseconds: LongMicroseconds) = microseconds * this
+
+/**
+ * Multiply by a number of microseconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(microseconds: LongMicroseconds) = microseconds * this
