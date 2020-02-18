@@ -4,6 +4,7 @@
 package io.islandtime.jvm
 
 import io.islandtime.*
+import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.measures.*
 
 fun java.time.Instant.toIslandInstant(): Instant {
@@ -123,18 +124,104 @@ fun Period.toJavaPeriod(): java.time.Period {
     return java.time.Period.of(years.value, months.value, days.value)
 }
 
+/**
+ * Convert to an equivalent Island Time [YearMonth].
+ */
 fun java.time.YearMonth.toIslandYearMonth(): YearMonth {
     return YearMonth(year, monthValue)
 }
 
+/**
+ * Convert to an equivalent Java [YearMonth].
+ */
 fun YearMonth.toJavaYearMonth(): java.time.YearMonth {
     return java.time.YearMonth.of(year, monthNumber)
 }
 
+/**
+ * Convert to an equivalent Island Time [Year].
+ */
 fun java.time.Year.toIslandYear(): Year {
     return Year(value)
 }
 
+/**
+ * Convert to an equivalent Java `Year`.
+ */
 fun Year.toJavaYear(): java.time.Year {
     return java.time.Year.of(value)
 }
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntDays.toJavaDuration(): java.time.Duration = java.time.Duration.ofDays(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongDays.toJavaDuration(): java.time.Duration = java.time.Duration.ofDays(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntHours.toJavaDuration(): java.time.Duration = java.time.Duration.ofHours(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongHours.toJavaDuration(): java.time.Duration = java.time.Duration.ofHours(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntMinutes.toJavaDuration(): java.time.Duration = java.time.Duration.ofMinutes(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongMinutes.toJavaDuration(): java.time.Duration = java.time.Duration.ofMinutes(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntSeconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofSeconds(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongSeconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofSeconds(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntMilliseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofMillis(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongMilliseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofMillis(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntMicroseconds.toJavaDuration(): java.time.Duration = this.toLongMicroseconds().toJavaDuration()
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongMicroseconds.toJavaDuration(): java.time.Duration {
+    val seconds = this.inSeconds
+    val nanoOfSeconds = (this % MICROSECONDS_PER_SECOND).inNanoseconds
+    return java.time.Duration.ofSeconds(seconds.value, nanoOfSeconds.value)
+}
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value)

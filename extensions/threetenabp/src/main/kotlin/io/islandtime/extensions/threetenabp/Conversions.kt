@@ -122,18 +122,104 @@ fun Period.toJavaPeriod(): org.threeten.bp.Period {
     return org.threeten.bp.Period.of(years.value, months.value, days.value)
 }
 
+/**
+ * Convert to an equivalent Island Time [YearMonth].
+ */
 fun org.threeten.bp.YearMonth.toIslandYearMonth(): YearMonth {
     return YearMonth(year, monthValue)
 }
 
+/**
+ * Convert to an equivalent Java [YearMonth].
+ */
 fun YearMonth.toJavaYearMonth(): org.threeten.bp.YearMonth {
     return org.threeten.bp.YearMonth.of(year, monthNumber)
 }
 
+/**
+ * Convert to an equivalent Island Time [Year].
+ */
 fun org.threeten.bp.Year.toIslandYear(): Year {
     return Year(value)
 }
 
+/**
+ * Convert to an equivalent Java `Year`.
+ */
 fun Year.toJavaYear(): org.threeten.bp.Year {
     return org.threeten.bp.Year.of(value)
 }
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntDays.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofDays(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongDays.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofDays(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntHours.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofHours(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongHours.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofHours(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntMinutes.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofMinutes(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongMinutes.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofMinutes(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntSeconds.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofSeconds(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongSeconds.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofSeconds(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntMilliseconds.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofMillis(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongMilliseconds.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofMillis(value)
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntMicroseconds.toJavaDuration(): org.threeten.bp.Duration = this.toLongMicroseconds().toJavaDuration()
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongMicroseconds.toJavaDuration(): org.threeten.bp.Duration {
+    val seconds = this.inSeconds
+    val nanoOfSeconds = (this % 1_000_000).inNanoseconds
+    return org.threeten.bp.Duration.ofSeconds(seconds.value, nanoOfSeconds.value)
+}
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun IntNanoseconds.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofNanos(value.toLong())
+
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
+fun LongNanoseconds.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofNanos(value)
