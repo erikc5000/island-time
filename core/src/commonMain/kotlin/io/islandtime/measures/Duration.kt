@@ -268,6 +268,10 @@ class Duration private constructor(
         }
     }
 
+    /**
+     * Multiply by a scalar value.
+     * @throws ArithmeticException if overflow occurs
+     */
     operator fun times(scalar: Int): Duration {
         return when (scalar) {
             0 -> ZERO
@@ -282,6 +286,10 @@ class Duration private constructor(
         }
     }
 
+    /**
+     * Divide by a scalar value.
+     * @throws ArithmeticException if division by zero or overflow occurs
+     */
     operator fun div(scalar: Int): Duration {
         return when (scalar) {
             0 -> throw ArithmeticException("Division by zero")
@@ -631,6 +639,10 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     return this
 }
 
+/**
+ * Multiply by a duration.
+ * @throws ArithmeticException if overflow occurs
+ */
 operator fun Int.times(duration: Duration) = duration * this
 
 /**
