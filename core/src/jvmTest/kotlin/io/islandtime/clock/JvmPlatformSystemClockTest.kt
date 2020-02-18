@@ -1,8 +1,7 @@
-package io.islandtime.jvm.clock
+package io.islandtime.clock
 
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
-import io.islandtime.clock.toIslandTimeZone
 import io.islandtime.test.AbstractIslandTimeTest
 import org.junit.Test
 import kotlin.test.assertEquals
