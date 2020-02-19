@@ -151,6 +151,66 @@ fun Year.toJavaYear(): org.threeten.bp.Year {
 }
 
 /**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntCenturies.toJavaPeriod(): org.threeten.bp.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongCenturies.toJavaPeriod(): org.threeten.bp.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntDecades.toJavaPeriod(): org.threeten.bp.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongDecades.toJavaPeriod(): org.threeten.bp.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntYears.toJavaPeriod(): org.threeten.bp.Period = org.threeten.bp.Period.ofYears(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongYears.toJavaPeriod(): org.threeten.bp.Period = this.toIntYears().toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntMonths.toJavaPeriod(): org.threeten.bp.Period = org.threeten.bp.Period.ofMonths(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongMonths.toJavaPeriod(): org.threeten.bp.Period = this.toIntMonths().toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntWeeks.toJavaPeriod(): org.threeten.bp.Period = org.threeten.bp.Period.ofWeeks(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongWeeks.toJavaPeriod(): org.threeten.bp.Period = this.toIntWeeks().toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntDays.toJavaPeriod(): org.threeten.bp.Period = org.threeten.bp.Period.ofDays(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongDays.toJavaPeriod(): org.threeten.bp.Period = this.toIntDays().toJavaPeriod()
+
+/**
  * Convert to an equivalent Java `Duration`.
  */
 fun IntDays.toJavaDuration(): org.threeten.bp.Duration = org.threeten.bp.Duration.ofDays(value.toLong())

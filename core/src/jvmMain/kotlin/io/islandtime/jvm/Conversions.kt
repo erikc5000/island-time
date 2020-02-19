@@ -153,6 +153,66 @@ fun Year.toJavaYear(): java.time.Year {
 }
 
 /**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntCenturies.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongCenturies.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntDecades.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongDecades.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntYears.toJavaPeriod(): java.time.Period = java.time.Period.ofYears(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongYears.toJavaPeriod(): java.time.Period = this.toIntYears().toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntMonths.toJavaPeriod(): java.time.Period = java.time.Period.ofMonths(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongMonths.toJavaPeriod(): java.time.Period = this.toIntMonths().toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntWeeks.toJavaPeriod(): java.time.Period = java.time.Period.ofWeeks(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongWeeks.toJavaPeriod(): java.time.Period = this.toIntWeeks().toJavaPeriod()
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun IntDays.toJavaPeriod(): java.time.Period = java.time.Period.ofDays(value)
+
+/**
+ * Convert to an equivalent Java `Period`.
+ */
+fun LongDays.toJavaPeriod(): java.time.Period = this.toIntDays().toJavaPeriod()
+
+/**
  * Convert to an equivalent Java `Duration`.
  */
 fun IntDays.toJavaDuration(): java.time.Duration = java.time.Duration.ofDays(value.toLong())

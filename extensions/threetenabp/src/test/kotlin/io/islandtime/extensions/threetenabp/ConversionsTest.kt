@@ -28,6 +28,72 @@ class ConversionsTest {
     }
 
     @Test
+    fun `converts centuries to Java Period`() {
+        assertEquals(org.threeten.bp.Period.ZERO, 0.centuries.toJavaPeriod())
+        assertEquals(org.threeten.bp.Period.ZERO, 0L.centuries.toJavaPeriod())
+
+        val period = 1.centuries.toJavaPeriod()
+        assertEquals(100, period.years)
+        assertEquals(0, period.months)
+        assertEquals(0, period.days)
+    }
+
+    @Test
+    fun `converts decades to Java Period`() {
+        assertEquals(org.threeten.bp.Period.ZERO, 0.decades.toJavaPeriod())
+        assertEquals(org.threeten.bp.Period.ZERO, 0L.decades.toJavaPeriod())
+
+        val period = 1.decades.toJavaPeriod()
+        assertEquals(10, period.years)
+        assertEquals(0, period.months)
+        assertEquals(0, period.days)
+    }
+
+    @Test
+    fun `converts years to Java Period`() {
+        assertEquals(org.threeten.bp.Period.ZERO, 0.years.toJavaPeriod())
+        assertEquals(org.threeten.bp.Period.ZERO, 0L.years.toJavaPeriod())
+
+        val period = 1.years.toJavaPeriod()
+        assertEquals(1, period.years)
+        assertEquals(0, period.months)
+        assertEquals(0, period.days)
+    }
+
+    @Test
+    fun `converts months to Java Period`() {
+        assertEquals(org.threeten.bp.Period.ZERO, 0.months.toJavaPeriod())
+        assertEquals(org.threeten.bp.Period.ZERO, 0L.months.toJavaPeriod())
+
+        val period = 1.months.toJavaPeriod()
+        assertEquals(0, period.years)
+        assertEquals(1, period.months)
+        assertEquals(0, period.days)
+    }
+
+    @Test
+    fun `converts weeks to Java Period`() {
+        assertEquals(org.threeten.bp.Period.ZERO, 0.weeks.toJavaPeriod())
+        assertEquals(org.threeten.bp.Period.ZERO, 0L.weeks.toJavaPeriod())
+
+        val period = 1.weeks.toJavaPeriod()
+        assertEquals(0, period.years)
+        assertEquals(0, period.months)
+        assertEquals(7, period.days)
+    }
+
+    @Test
+    fun `converts days to Java Period`() {
+        assertEquals(org.threeten.bp.Period.ZERO, 0.days.toJavaPeriod())
+        assertEquals(org.threeten.bp.Period.ZERO, 0L.days.toJavaPeriod())
+
+        val period = 1.days.toJavaPeriod()
+        assertEquals(0, period.years)
+        assertEquals(0, period.months)
+        assertEquals(1, period.days)
+    }
+
+    @Test
     fun `converts days to Java Duration`() {
         assertEquals(org.threeten.bp.Duration.ZERO, 0.days.toJavaDuration())
         assertEquals(org.threeten.bp.Duration.ZERO, 0L.days.toJavaDuration())
