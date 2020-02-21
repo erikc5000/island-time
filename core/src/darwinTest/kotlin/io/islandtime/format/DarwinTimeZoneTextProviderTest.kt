@@ -6,7 +6,7 @@ import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class DarwinDateTimeTextProviderTest : AbstractIslandTimeTest() {
+class DarwinTimeZoneTextProviderTest : AbstractIslandTimeTest() {
     @Suppress("PrivatePropertyName")
     private val en_US = localeOf("en-US")
 
@@ -16,11 +16,11 @@ class DarwinDateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             "Eastern Time",
-            DateTimeTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.GENERIC, en_US)
+            TimeZoneTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.GENERIC, en_US)
         )
         assertEquals(
             "ET",
-            DateTimeTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.SHORT_GENERIC, en_US)
+            TimeZoneTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.SHORT_GENERIC, en_US)
         )
     }
 }
