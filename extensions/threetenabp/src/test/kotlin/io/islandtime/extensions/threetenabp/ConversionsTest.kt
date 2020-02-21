@@ -1,12 +1,39 @@
 package io.islandtime.extensions.threetenabp
 
-import io.islandtime.Month
-import io.islandtime.Date
+import io.islandtime.*
 import io.islandtime.measures.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ConversionsTest {
+    @Test
+    fun `converts Java Instant to Instant`() {
+        listOf(
+            org.threeten.bp.Instant.EPOCH to Instant.UNIX_EPOCH,
+            org.threeten.bp.Instant.ofEpochSecond(1, 999_999_999) to
+                Instant(1L.seconds, 999_999_999.nanoseconds),
+            org.threeten.bp.Instant.ofEpochSecond(-1) to Instant((-1L).seconds),
+            org.threeten.bp.Instant.ofEpochSecond(0, -999_999_999) to
+                Instant(0L.seconds, (-999_999_999).nanoseconds)
+        ).forEach { (javaInstant, islandInstant) ->
+            assertEquals(islandInstant, javaInstant.toIslandInstant())
+        }
+    }
+
+    @Test
+    fun `converts Instant to Java Instant`() {
+        listOf(
+            Instant.UNIX_EPOCH to org.threeten.bp.Instant.EPOCH,
+            Instant(1L.seconds, 999_999_999.nanoseconds) to
+                org.threeten.bp.Instant.ofEpochSecond(1, 999_999_999),
+            Instant((-1L).seconds) to org.threeten.bp.Instant.ofEpochSecond(-1),
+            Instant(0L.seconds, (-999_999_999).nanoseconds) to
+                org.threeten.bp.Instant.ofEpochSecond(0, -999_999_999)
+        ).forEach { (islandInstant, javaInstant) ->
+            assertEquals(javaInstant, islandInstant.toJavaInstant())
+        }
+    }
+
     @Test
     fun `converts Date to Java LocalDate`() {
         val islandDate = Date(2019, Month.MAY, 3)
@@ -25,6 +52,90 @@ class ConversionsTest {
         assertEquals(javaDate.year, islandDate.year)
         assertEquals(javaDate.monthValue, islandDate.monthNumber)
         assertEquals(javaDate.dayOfMonth, islandDate.dayOfMonth)
+    }
+
+    @Test
+    fun `converts Time to Java Time`() {
+        listOf(
+            Time.MIDNIGHT to org.threeten.bp.LocalTime.MIDNIGHT,
+            Time.NOON to org.threeten.bp.LocalTime.NOON,
+            Time.MAX to org.threeten.bp.LocalTime.MAX,
+            Time(1, 2, 3, 4) to
+                org.threeten.bp.LocalTime.of(1, 2, 3, 4)
+        ).forEach { (islandTime, javaTime) ->
+            assertEquals(javaTime, islandTime.toJavaLocalTime())
+        }
+    }
+
+    @Test
+    fun `converts Java Time to Time`() {
+        listOf(
+            org.threeten.bp.LocalTime.MIDNIGHT to Time.MIDNIGHT,
+            org.threeten.bp.LocalTime.NOON to Time.NOON,
+            org.threeten.bp.LocalTime.MAX to Time.MAX,
+            org.threeten.bp.LocalTime.of(1, 2, 3, 4) to
+                Time(1, 2, 3, 4)
+        ).forEach { (javaTime, islandTime) ->
+            assertEquals(islandTime, javaTime.toIslandTime())
+        }
+    }
+
+    @Test
+    fun `converts Java ZoneOffset to UtcOffset`() {
+        assertEquals(
+            UtcOffset(1.hours, 2.minutes, 3.seconds),
+            org.threeten.bp.ZoneOffset.ofHoursMinutesSeconds(1, 2, 3).toIslandUtcOffset()
+        )
+
+        assertEquals(
+            UtcOffset((-1).hours, (-2).minutes, (-3).seconds),
+            org.threeten.bp.ZoneOffset.ofHoursMinutesSeconds(-1, -2, -3).toIslandUtcOffset()
+        )
+    }
+
+    @Test
+    fun `converts UtcOffset to Java ZoneOffset`() {
+        assertEquals(
+            org.threeten.bp.ZoneOffset.ofHoursMinutesSeconds(1, 2, 3),
+            UtcOffset(1.hours, 2.minutes, 3.seconds).toJavaZoneOffset()
+        )
+
+        assertEquals(
+            org.threeten.bp.ZoneOffset.ofHoursMinutesSeconds(-1, -2, -3),
+            UtcOffset((-1).hours, (-2).minutes, (-3).seconds).toJavaZoneOffset()
+        )
+    }
+
+    @Test
+    fun `converts Java Duration to Duration`() {
+        assertEquals(
+            durationOf((-1).seconds, (-1).nanoseconds),
+            org.threeten.bp.Duration.ofSeconds(-1, -1).toIslandDuration()
+        )
+    }
+
+    @Test
+    fun `converts Duration to Java Duration`() {
+        assertEquals(
+            org.threeten.bp.Duration.ofSeconds(-1, -1),
+            durationOf((-1).seconds, (-1).nanoseconds).toJavaDuration()
+        )
+    }
+
+    @Test
+    fun `converts Java Period to Period`() {
+        assertEquals(
+            periodOf(1.years, 2.months, 3.days),
+            org.threeten.bp.Period.of(1, 2, 3).toIslandPeriod()
+        )
+    }
+
+    @Test
+    fun `converts Period to Java Period`() {
+        assertEquals(
+            org.threeten.bp.Period.of(1, 2, 3),
+            periodOf(1.years, 2.months, 3.days).toJavaPeriod()
+        )
     }
 
     @Test
@@ -97,6 +208,7 @@ class ConversionsTest {
     fun `converts days to Java Duration`() {
         assertEquals(org.threeten.bp.Duration.ZERO, 0.days.toJavaDuration())
         assertEquals(org.threeten.bp.Duration.ZERO, 0L.days.toJavaDuration())
+
         assertEquals(1L, 1.days.toJavaDuration().toDays())
         assertEquals(-1L, (-1L).days.toJavaDuration().toDays())
     }

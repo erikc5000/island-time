@@ -7,6 +7,34 @@ import kotlin.test.assertEquals
 
 class ConversionsTest {
     @Test
+    fun `converts Java Instant to Instant`() {
+        listOf(
+            java.time.Instant.EPOCH to Instant.UNIX_EPOCH,
+            java.time.Instant.ofEpochSecond(1, 999_999_999) to
+                Instant(1L.seconds, 999_999_999.nanoseconds),
+            java.time.Instant.ofEpochSecond(-1) to Instant((-1L).seconds),
+            java.time.Instant.ofEpochSecond(0, -999_999_999) to
+                Instant(0L.seconds, (-999_999_999).nanoseconds)
+        ).forEach { (javaInstant, islandInstant) ->
+            assertEquals(islandInstant, javaInstant.toIslandInstant())
+        }
+    }
+
+    @Test
+    fun `converts Instant to Java Instant`() {
+        listOf(
+            Instant.UNIX_EPOCH to java.time.Instant.EPOCH,
+            Instant(1L.seconds, 999_999_999.nanoseconds) to
+                java.time.Instant.ofEpochSecond(1, 999_999_999),
+            Instant((-1L).seconds) to java.time.Instant.ofEpochSecond(-1),
+            Instant(0L.seconds, (-999_999_999).nanoseconds) to
+                java.time.Instant.ofEpochSecond(0, -999_999_999)
+        ).forEach { (islandInstant, javaInstant) ->
+            assertEquals(javaInstant, islandInstant.toJavaInstant())
+        }
+    }
+
+    @Test
     fun `converts Date to Java LocalDate`() {
         val islandDate = Date(2019, Month.MAY, 3)
         val javaDate = islandDate.toJavaLocalDate()
@@ -25,12 +53,132 @@ class ConversionsTest {
         assertEquals(javaDate.monthValue, islandDate.monthNumber)
         assertEquals(javaDate.dayOfMonth, islandDate.dayOfMonth)
     }
-    
+
+    @Test
+    fun `converts Time to Java Time`() {
+        listOf(
+            Time.MIDNIGHT to java.time.LocalTime.MIDNIGHT,
+            Time.NOON to java.time.LocalTime.NOON,
+            Time.MAX to java.time.LocalTime.MAX,
+            Time(1, 2, 3, 4) to
+                java.time.LocalTime.of(1, 2, 3, 4)
+        ).forEach { (islandTime, javaTime) ->
+            assertEquals(javaTime, islandTime.toJavaLocalTime())
+        }
+    }
+
+    @Test
+    fun `converts Java Time to Time`() {
+        listOf(
+            java.time.LocalTime.MIDNIGHT to Time.MIDNIGHT,
+            java.time.LocalTime.NOON to Time.NOON,
+            java.time.LocalTime.MAX to Time.MAX,
+            java.time.LocalTime.of(1, 2, 3, 4) to
+                Time(1, 2, 3, 4)
+        ).forEach { (javaTime, islandTime) ->
+            assertEquals(islandTime, javaTime.toIslandTime())
+        }
+    }
+
+    @Test
+    fun `converts Java ZoneOffset to UtcOffset`() {
+        assertEquals(
+            UtcOffset(1.hours, 2.minutes, 3.seconds),
+            java.time.ZoneOffset.ofHoursMinutesSeconds(1, 2, 3).toIslandUtcOffset()
+        )
+
+        assertEquals(
+            UtcOffset((-1).hours, (-2).minutes, (-3).seconds),
+            java.time.ZoneOffset.ofHoursMinutesSeconds(-1, -2, -3).toIslandUtcOffset()
+        )
+    }
+
+    @Test
+    fun `converts UtcOffset to Java ZoneOffset`() {
+        assertEquals(
+            java.time.ZoneOffset.ofHoursMinutesSeconds(1, 2, 3),
+            UtcOffset(1.hours, 2.minutes, 3.seconds).toJavaZoneOffset()
+        )
+
+        assertEquals(
+            java.time.ZoneOffset.ofHoursMinutesSeconds(-1, -2, -3),
+            UtcOffset((-1).hours, (-2).minutes, (-3).seconds).toJavaZoneOffset()
+        )
+    }
+
+    @Test
+    fun `converts TimeZone to Java ZoneId`() {
+        assertEquals(
+            java.time.ZoneId.of("America/New_York"),
+            TimeZone("America/New_York").toJavaZoneId()
+        )
+
+        assertEquals(
+            java.time.ZoneId.of("GMT"),
+            TimeZone("GMT").toJavaZoneId()
+        )
+
+        assertEquals(
+            java.time.ZoneId.of("+01:00"),
+            TimeZone("+01:00").toJavaZoneId()
+        )
+    }
+
+    @Test
+    fun `converts Java ZoneId to TimeZone`() {
+        assertEquals(
+            TimeZone("America/New_York"),
+            java.time.ZoneId.of("America/New_York").toIslandTimeZone()
+        )
+
+        assertEquals(
+            TimeZone("GMT"),
+            java.time.ZoneId.of("GMT").toIslandTimeZone()
+        )
+
+        assertEquals(
+            TimeZone("+01:00"),
+            java.time.ZoneId.of("+01:00").toIslandTimeZone()
+        )
+    }
+
+    @Test
+    fun `converts Java Duration to Duration`() {
+        assertEquals(
+            durationOf((-1).seconds, (-1).nanoseconds),
+            java.time.Duration.ofSeconds(-1, -1).toIslandDuration()
+        )
+    }
+
+    @Test
+    fun `converts Duration to Java Duration`() {
+        assertEquals(
+            java.time.Duration.ofSeconds(-1, -1),
+            durationOf((-1).seconds, (-1).nanoseconds).toJavaDuration()
+        )
+    }
+
+    @Test
+    fun `converts Java Period to Period`() {
+        assertEquals(
+            periodOf(1.years, 2.months, 3.days),
+            java.time.Period.of(1, 2, 3).toIslandPeriod()
+        )
+    }
+
+    @Test
+    fun `converts Period to Java Period`() {
+        assertEquals(
+            java.time.Period.of(1, 2, 3),
+            periodOf(1.years, 2.months, 3.days).toJavaPeriod()
+        )
+    }
+
     @Test
     fun `converts centuries to Java Period`() {
         assertEquals(java.time.Period.ZERO, 0.centuries.toJavaPeriod())
         assertEquals(java.time.Period.ZERO, 0L.centuries.toJavaPeriod())
-        
+
         val period = 1.centuries.toJavaPeriod()
         assertEquals(100, period.years)
         assertEquals(0, period.months)
@@ -41,7 +189,7 @@ class ConversionsTest {
     fun `converts decades to Java Period`() {
         assertEquals(java.time.Period.ZERO, 0.decades.toJavaPeriod())
         assertEquals(java.time.Period.ZERO, 0L.decades.toJavaPeriod())
-        
+
         val period = 1.decades.toJavaPeriod()
         assertEquals(10, period.years)
         assertEquals(0, period.months)
@@ -96,7 +244,7 @@ class ConversionsTest {
     fun `converts days to Java Duration`() {
         assertEquals(java.time.Duration.ZERO, 0.days.toJavaDuration())
         assertEquals(java.time.Duration.ZERO, 0L.days.toJavaDuration())
-        
+
         assertEquals(1L, 1.days.toJavaDuration().toDays())
         assertEquals(-1L, (-1L).days.toJavaDuration().toDays())
     }

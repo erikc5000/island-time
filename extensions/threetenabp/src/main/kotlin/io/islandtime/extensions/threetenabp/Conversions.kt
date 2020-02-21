@@ -5,30 +5,51 @@ package io.islandtime.extensions.threetenabp
 import io.islandtime.*
 import io.islandtime.measures.*
 
+/**
+ * Convert to an equivalent Island Time [Instant].
+ */
 fun org.threeten.bp.Instant.toIslandInstant(): Instant {
     return Instant.fromUnixEpochSecond(epochSecond, nano)
 }
 
+/**
+ * Convert to an equivalent Java `Instant`.
+ */
 fun Instant.toJavaInstant(): org.threeten.bp.Instant {
     return org.threeten.bp.Instant.ofEpochSecond(unixEpochSecond, unixEpochNanoOfSecond.toLong())
 }
 
+/**
+ * Convert to an equivalent Island Time [Date].
+ */
 fun org.threeten.bp.LocalDate.toIslandDate(): Date {
     return Date(year, monthValue, dayOfMonth)
 }
 
+/**
+ * Convert to an equivalent Java `LocalDate`.
+ */
 fun Date.toJavaLocalDate(): org.threeten.bp.LocalDate {
     return org.threeten.bp.LocalDate.of(year, monthNumber, dayOfMonth)
 }
 
+/**
+ * Convert to an equivalent Island Time [Time].
+ */
 fun org.threeten.bp.LocalTime.toIslandTime(): Time {
     return Time(hour, minute, second, nano)
 }
 
+/**
+ * Convert to an equivalent Java `LocalTime`.
+ */
 fun Time.toJavaLocalTime(): org.threeten.bp.LocalTime {
     return org.threeten.bp.LocalTime.of(hour, minute, second, nanosecond)
 }
 
+/**
+ * Convert to an equivalent Island Time [DateTime].
+ */
 fun org.threeten.bp.LocalDateTime.toIslandDateTime(): DateTime {
     return DateTime(
         Date(year, monthValue, dayOfMonth),
@@ -36,10 +57,16 @@ fun org.threeten.bp.LocalDateTime.toIslandDateTime(): DateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `LocalDateTime`.
+ */
 fun DateTime.toJavaLocalDateTime(): org.threeten.bp.LocalDateTime {
     return org.threeten.bp.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond)
 }
 
+/**
+ * Convert to an equivalent Island Time [OffsetTime].
+ */
 fun org.threeten.bp.OffsetTime.toIslandOffsetTime(): OffsetTime {
     return OffsetTime(
         Time(hour, minute, second, nano),
@@ -47,6 +74,9 @@ fun org.threeten.bp.OffsetTime.toIslandOffsetTime(): OffsetTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `OffsetTime`.
+ */
 fun OffsetTime.toJavaOffsetTime(): org.threeten.bp.OffsetTime {
     return org.threeten.bp.OffsetTime.of(
         org.threeten.bp.LocalTime.of(hour, minute, second, nanosecond),
@@ -54,6 +84,9 @@ fun OffsetTime.toJavaOffsetTime(): org.threeten.bp.OffsetTime {
     )
 }
 
+/**
+ * Convert to an equivalent Island Time [OffsetDateTime].
+ */
 fun org.threeten.bp.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
     return OffsetDateTime(
         DateTime(
@@ -64,6 +97,9 @@ fun org.threeten.bp.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `OffsetDateTime`.
+ */
 fun OffsetDateTime.toJavaOffsetDateTime(): org.threeten.bp.OffsetDateTime {
     return org.threeten.bp.OffsetDateTime.of(
         org.threeten.bp.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
@@ -71,6 +107,9 @@ fun OffsetDateTime.toJavaOffsetDateTime(): org.threeten.bp.OffsetDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Island Time [ZonedDateTime].
+ */
 fun org.threeten.bp.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.fromLocal(
         DateTime(
@@ -82,6 +121,9 @@ fun org.threeten.bp.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `ZonedDateTime`.
+ */
 fun ZonedDateTime.toJavaZonedDateTime(): org.threeten.bp.ZonedDateTime {
     return org.threeten.bp.ZonedDateTime.ofLocal(
         org.threeten.bp.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
@@ -90,34 +132,58 @@ fun ZonedDateTime.toJavaZonedDateTime(): org.threeten.bp.ZonedDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Island Time [UtcOffset].
+ */
 fun org.threeten.bp.ZoneOffset.toIslandUtcOffset(): UtcOffset {
     return UtcOffset(totalSeconds.seconds)
 }
 
+/**
+ * Convert to an equivalent Java `ZoneOffset`.
+ */
 fun UtcOffset.toJavaZoneOffset(): org.threeten.bp.ZoneOffset {
     return org.threeten.bp.ZoneOffset.ofTotalSeconds(totalSeconds.value)
 }
 
+/**
+ * Convert to an equivalent Java `ZoneId`.
+ */
 fun TimeZone.toJavaZoneId(): org.threeten.bp.ZoneId {
     return org.threeten.bp.ZoneId.of(id)
 }
 
+/**
+ * Convert to an equivalent Island Time [TimeZone].
+ */
 fun org.threeten.bp.ZoneId.toIslandTimeZone(): TimeZone {
     return TimeZone(id)
 }
 
+/**
+ * Convert to an equivalent Island Time [Duration].
+ */
 fun org.threeten.bp.Duration.toIslandDuration(): Duration {
     return durationOf(seconds.seconds, nano.nanoseconds)
 }
 
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
 fun Duration.toJavaDuration(): org.threeten.bp.Duration {
     return org.threeten.bp.Duration.ofSeconds(seconds.value, nanosecondAdjustment.value.toLong())
 }
 
+/**
+ * Convert to an equivalent Island Time [Period].
+ */
 fun org.threeten.bp.Period.toIslandPeriod(): Period {
     return periodOf(years.years, months.months, days.days)
 }
 
+/**
+ * Convert to an equivalent Java `Period`.
+ */
 fun Period.toJavaPeriod(): org.threeten.bp.Period {
     return org.threeten.bp.Period.of(years.value, months.value, days.value)
 }
@@ -130,7 +196,7 @@ fun org.threeten.bp.YearMonth.toIslandYearMonth(): YearMonth {
 }
 
 /**
- * Convert to an equivalent Java [YearMonth].
+ * Convert to an equivalent Java `YearMonth`.
  */
 fun YearMonth.toJavaYearMonth(): org.threeten.bp.YearMonth {
     return org.threeten.bp.YearMonth.of(year, monthNumber)

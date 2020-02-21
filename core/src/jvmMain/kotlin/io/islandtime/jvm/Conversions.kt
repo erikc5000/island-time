@@ -7,30 +7,51 @@ import io.islandtime.*
 import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.measures.*
 
+/**
+ * Convert to an equivalent Island Time [Instant].
+ */
 fun java.time.Instant.toIslandInstant(): Instant {
     return Instant.fromUnixEpochSecond(epochSecond, nano)
 }
 
+/**
+ * Convert to an equivalent Java `Instant`.
+ */
 fun Instant.toJavaInstant(): java.time.Instant {
     return java.time.Instant.ofEpochSecond(unixEpochSecond, unixEpochNanoOfSecond.toLong())
 }
 
+/**
+ * Convert to an equivalent Island Time [Date].
+ */
 fun java.time.LocalDate.toIslandDate(): Date {
     return Date(year, monthValue, dayOfMonth)
 }
 
+/**
+ * Convert to an equivalent Java `LocalDate`.
+ */
 fun Date.toJavaLocalDate(): java.time.LocalDate {
     return java.time.LocalDate.of(year, monthNumber, dayOfMonth)
 }
 
+/**
+ * Convert to an equivalent Island Time [Time].
+ */
 fun java.time.LocalTime.toIslandTime(): Time {
     return Time(hour, minute, second, nano)
 }
 
+/**
+ * Convert to an equivalent Java `LocalTime`.
+ */
 fun Time.toJavaLocalTime(): java.time.LocalTime {
     return java.time.LocalTime.of(hour, minute, second, nanosecond)
 }
 
+/**
+ * Convert to an equivalent Island Time [DateTime].
+ */
 fun java.time.LocalDateTime.toIslandDateTime(): DateTime {
     return DateTime(
         Date(year, monthValue, dayOfMonth),
@@ -38,10 +59,16 @@ fun java.time.LocalDateTime.toIslandDateTime(): DateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `LocalDateTime`.
+ */
 fun DateTime.toJavaLocalDateTime(): java.time.LocalDateTime {
     return java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond)
 }
 
+/**
+ * Convert to an equivalent Island Time [OffsetTime].
+ */
 fun java.time.OffsetTime.toIslandOffsetTime(): OffsetTime {
     return OffsetTime(
         Time(hour, minute, second, nano),
@@ -49,6 +76,9 @@ fun java.time.OffsetTime.toIslandOffsetTime(): OffsetTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `OffsetTime`.
+ */
 fun OffsetTime.toJavaOffsetTime(): java.time.OffsetTime {
     return java.time.OffsetTime.of(
         java.time.LocalTime.of(hour, minute, second, nanosecond),
@@ -56,6 +86,9 @@ fun OffsetTime.toJavaOffsetTime(): java.time.OffsetTime {
     )
 }
 
+/**
+ * Convert to an equivalent Island Time [OffsetDateTime].
+ */
 fun java.time.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
     return OffsetDateTime(
         DateTime(
@@ -66,6 +99,9 @@ fun java.time.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `OffsetDateTime`.
+ */
 fun OffsetDateTime.toJavaOffsetDateTime(): java.time.OffsetDateTime {
     return java.time.OffsetDateTime.of(
         java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
@@ -73,6 +109,9 @@ fun OffsetDateTime.toJavaOffsetDateTime(): java.time.OffsetDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Island Time [ZonedDateTime].
+ */
 fun java.time.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.fromLocal(
         DateTime(
@@ -84,6 +123,9 @@ fun java.time.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Java `ZonedDateTime`.
+ */
 fun ZonedDateTime.toJavaZonedDateTime(): java.time.ZonedDateTime {
     return java.time.ZonedDateTime.ofLocal(
         java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
@@ -92,34 +134,58 @@ fun ZonedDateTime.toJavaZonedDateTime(): java.time.ZonedDateTime {
     )
 }
 
+/**
+ * Convert to an equivalent Island Time [UtcOffset].
+ */
 fun java.time.ZoneOffset.toIslandUtcOffset(): UtcOffset {
     return UtcOffset(totalSeconds.seconds)
 }
 
+/**
+ * Convert to an equivalent Java `ZoneOffset`.
+ */
 fun UtcOffset.toJavaZoneOffset(): java.time.ZoneOffset {
     return java.time.ZoneOffset.ofTotalSeconds(totalSeconds.value)
 }
 
+/**
+ * Convert to an equivalent Java `ZoneId`.
+ */
 fun TimeZone.toJavaZoneId(): java.time.ZoneId {
     return java.time.ZoneId.of(id)
 }
 
+/**
+ * Convert to an equivalent Island Time [TimeZone].
+ */
 fun java.time.ZoneId.toIslandTimeZone(): TimeZone {
     return TimeZone(id)
 }
 
+/**
+ * Convert to an equivalent Island Time [Duration].
+ */
 fun java.time.Duration.toIslandDuration(): Duration {
     return durationOf(seconds.seconds, nano.nanoseconds)
 }
 
+/**
+ * Convert to an equivalent Java `Duration`.
+ */
 fun Duration.toJavaDuration(): java.time.Duration {
     return java.time.Duration.ofSeconds(seconds.value, nanosecondAdjustment.value.toLong())
 }
 
+/**
+ * Convert to an equivalent Island Time [Period].
+ */
 fun java.time.Period.toIslandPeriod(): Period {
     return periodOf(years.years, months.months, days.days)
 }
 
+/**
+ * Convert to an equivalent Java `Period`.
+ */
 fun Period.toJavaPeriod(): java.time.Period {
     return java.time.Period.of(years.value, months.value, days.value)
 }
@@ -132,7 +198,7 @@ fun java.time.YearMonth.toIslandYearMonth(): YearMonth {
 }
 
 /**
- * Convert to an equivalent Java [YearMonth].
+ * Convert to an equivalent Java `YearMonth`.
  */
 fun YearMonth.toJavaYearMonth(): java.time.YearMonth {
     return java.time.YearMonth.of(year, monthNumber)
