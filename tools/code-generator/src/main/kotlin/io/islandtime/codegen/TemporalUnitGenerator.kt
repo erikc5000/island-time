@@ -2,7 +2,7 @@ package io.islandtime.codegen
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import java.lang.IllegalStateException
+import kotlin.IllegalStateException
 import kotlin.reflect.KClass
 
 private val INT_TYPE_NAME = Int::class.asTypeName()
@@ -52,6 +52,8 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
                 when (it) {
                     is TypeSpec -> addType(it)
                     is PropertySpec -> addProperty(it)
+                    is FunSpec -> addFunction(it)
+                    else -> throw IllegalStateException("Invalid type encountered!")
                 }
             }
     }
@@ -87,6 +89,8 @@ abstract class TemporalUnitClassGenerator(
     val companionObjectTypeSpec by lazy(::buildCompanionObjectTypeSpec)
 
     val primitiveExtensionPropertySpec by lazy(::buildPrimitiveExtensionPropertySpec)
+    val timesIntExtensionFunSpec by lazy { buildTimesExtensionFunSpec(Int::class) }
+    val timesLongExtensionFunSpec by lazy { buildTimesExtensionFunSpec(Long::class) }
 
     private val baseClassSpecList
         get() = listOf(
@@ -117,7 +121,9 @@ abstract class TemporalUnitClassGenerator(
 
     fun build() = listOf(
         buildClass(),
-        primitiveExtensionPropertySpec
+        primitiveExtensionPropertySpec,
+        timesIntExtensionFunSpec,
+        timesLongExtensionFunSpec
     )
 
     fun buildClass() = buildClassTypeSpec(className) {
@@ -812,6 +818,23 @@ fun TemporalUnitClassGenerator.buildPrimitiveExtensionPropertySpec() = buildProp
     getter(buildGetterFunSpec {
         addStatement("return %T(this)", className)
     })
+}
+
+fun TemporalUnitClassGenerator.buildTimesExtensionFunSpec(
+    scalarPrimitive: KClass<*>
+) = buildFunSpec("times") {
+    receiver(scalarPrimitive)
+    addModifiers(KModifier.OPERATOR)
+    addKdoc(
+        """
+            Multiply by a number of ${description.lowerCaseName}.
+            @throws ArithmeticException if overflow occurs
+        """.trimIndent()
+    )
+
+    val unit = ParameterSpec(description.lowerCaseName, className)
+    addParameter(unit)
+    addStatement("return %N * this", unit)
 }
 
 fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {

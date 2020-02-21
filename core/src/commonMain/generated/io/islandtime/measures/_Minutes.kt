@@ -279,6 +279,18 @@ val Int.minutes: IntMinutes
   get() = IntMinutes(this)
 
 /**
+ * Multiply by a number of minutes.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(minutes: IntMinutes) = minutes * this
+
+/**
+ * Multiply by a number of minutes.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(minutes: IntMinutes) = minutes * this
+
+/**
  * A number of minutes.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -556,3 +568,15 @@ inline class LongMinutes(
  */
 val Long.minutes: LongMinutes
   get() = LongMinutes(this)
+
+/**
+ * Multiply by a number of minutes.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(minutes: LongMinutes) = minutes * this
+
+/**
+ * Multiply by a number of minutes.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(minutes: LongMinutes) = minutes * this

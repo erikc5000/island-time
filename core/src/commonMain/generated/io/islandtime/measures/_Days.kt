@@ -303,6 +303,18 @@ val Int.days: IntDays
   get() = IntDays(this)
 
 /**
+ * Multiply by a number of days.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(days: IntDays) = days * this
+
+/**
+ * Multiply by a number of days.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(days: IntDays) = days * this
+
+/**
  * A number of days.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -597,3 +609,15 @@ inline class LongDays(
  */
 val Long.days: LongDays
   get() = LongDays(this)
+
+/**
+ * Multiply by a number of days.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(days: LongDays) = days * this
+
+/**
+ * Multiply by a number of days.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(days: LongDays) = days * this

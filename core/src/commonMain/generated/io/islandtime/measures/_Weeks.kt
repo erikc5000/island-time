@@ -175,6 +175,18 @@ val Int.weeks: IntWeeks
   get() = IntWeeks(this)
 
 /**
+ * Multiply by a number of weeks.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(weeks: IntWeeks) = weeks * this
+
+/**
+ * Multiply by a number of weeks.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(weeks: IntWeeks) = weeks * this
+
+/**
  * A number of weeks.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -344,3 +356,15 @@ inline class LongWeeks(
  */
 val Long.weeks: LongWeeks
   get() = LongWeeks(this)
+
+/**
+ * Multiply by a number of weeks.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(weeks: LongWeeks) = weeks * this
+
+/**
+ * Multiply by a number of weeks.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(weeks: LongWeeks) = weeks * this
