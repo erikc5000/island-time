@@ -278,6 +278,18 @@ val Int.seconds: IntSeconds
   get() = IntSeconds(this)
 
 /**
+ * Multiply by a number of seconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(seconds: IntSeconds) = seconds * this
+
+/**
+ * Multiply by a number of seconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(seconds: IntSeconds) = seconds * this
+
+/**
  * A number of seconds.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -561,3 +573,15 @@ inline class LongSeconds(
  */
 val Long.seconds: LongSeconds
   get() = LongSeconds(this)
+
+/**
+ * Multiply by a number of seconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(seconds: LongSeconds) = seconds * this
+
+/**
+ * Multiply by a number of seconds.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(seconds: LongSeconds) = seconds * this

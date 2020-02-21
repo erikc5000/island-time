@@ -228,6 +228,18 @@ val Int.months: IntMonths
   get() = IntMonths(this)
 
 /**
+ * Multiply by a number of months.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(months: IntMonths) = months * this
+
+/**
+ * Multiply by a number of months.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(months: IntMonths) = months * this
+
+/**
  * A number of months.
  */
 @Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
@@ -448,3 +460,15 @@ inline class LongMonths(
  */
 val Long.months: LongMonths
   get() = LongMonths(this)
+
+/**
+ * Multiply by a number of months.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Int.times(months: LongMonths) = months * this
+
+/**
+ * Multiply by a number of months.
+ * @throws ArithmeticException if overflow occurs
+ */
+operator fun Long.times(months: LongMonths) = months * this
