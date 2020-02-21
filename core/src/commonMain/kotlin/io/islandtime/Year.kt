@@ -85,8 +85,8 @@ inline class Year(val value: Int) : Comparable<Year> {
     }
 
     companion object {
-        const val MIN_VALUE = 1
-        const val MAX_VALUE = 9999
+        const val MIN_VALUE = -999_999_999
+        const val MAX_VALUE = 999_999_999
 
         val MIN = Year(MIN_VALUE)
         val MAX = Year(MAX_VALUE)
