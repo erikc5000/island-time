@@ -193,7 +193,7 @@ class YearMonth(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.Extended.YEAR_MONTH)
+fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
 
 /**
  * Convert a string to a [YearMonth] using a specific parser.

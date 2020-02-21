@@ -140,6 +140,7 @@ class YearTest : AbstractIslandTimeTest() {
     @Test
     fun `toString() returns the year with a minimum of 4 digits as required by ISO-8601`() {
         assertEquals("2008", Year(2008).toString())
+        assertEquals("9999", Year(9999).toString())
         assertEquals("0001", Year(1).toString())
     }
 
@@ -150,17 +151,40 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYear() throws an exception when parsing an improperly formatted string`() {
-        assertFailsWith<DateTimeParseException> { "1".toYear() }
-        assertFailsWith<DateTimeParseException> { "01".toYear() }
-        assertFailsWith<DateTimeParseException> { "001".toYear() }
-        assertFailsWith<DateTimeParseException> { " 2008".toYear() }
-        assertFailsWith<DateTimeParseException> { "+2008".toYear() }
-        assertFailsWith<DateTimeParseException> { "2008-".toYear() }
+        listOf(
+            "1",
+            "01",
+            "001",
+            " 2008",
+            "2008-",
+            "Y2008",
+            "+01234567890",
+            "+12345678901",
+            "-01234567890",
+            "-12345678901",
+            "Y01234567890",
+            "Y12345678901",
+            "Y-01234567890",
+            "Y-12345678901"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toYear() }
+        }
     }
 
     @Test
     fun `String_toYear() throws an exception when the year is outside the supported range`() {
-        assertFailsWith<DateTimeException> { "0000".toYear() }
+        listOf(
+            "0000",
+            "+0000",
+            "-0000",
+            "-0001",
+            "-9999",
+            "+10000",
+            "Y10000",
+            "Y-10000"
+        ).forEach {
+            assertFailsWith<DateTimeException> { it.toYear() }
+        }
     }
 
     @Test

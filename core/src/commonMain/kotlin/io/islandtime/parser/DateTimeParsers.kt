@@ -130,15 +130,43 @@ object DateTimeParsers {
          * Example:
          * - `2008-09`
          */
-        val YEAR_MONTH get() = Extended.YEAR_MONTH
+        val YEAR_MONTH = dateTimeParser {
+            anyOf({
+                // Expanded representation requiring sign
+                year(5..10) { enforceSignStyle(SignStyle.ALWAYS) }
+            }, {
+                // Standard 4-digit year
+                year(4)
+            })
+            +'-'
+            monthNumber(2) {
+                enforceSignStyle(SignStyle.NEVER)
+            }
+        }
 
         /**
-         * Parse an ISO-8601 year.
+         * Parse an ISO-8601 standalone year.
          *
-         * Only 4-digit years are currently supported.
+         * Examples:
+         * - `2008`
+         * - '0001`
+         * - `0000`
+         * - `-0001`
+         * - `+0123456789`
+         * - `Y12345`
          */
         val YEAR = dateTimeParser {
-            year(4) { enforceSignStyle(SignStyle.NEVER) }
+            anyOf({
+                // Expanded representation requiring sign
+                year(5..10) { enforceSignStyle(SignStyle.ALWAYS) }
+            }, {
+                // Standard 4-digit year
+                year(4)
+            }, {
+                // Letter-prefixed year allowed in ISO-8601-2 (for standalone year only)
+                +'Y'
+                year(5..10)
+            })
         }
 
         /**
@@ -236,7 +264,7 @@ object DateTimeParsers {
         object Basic {
             val CALENDAR_DATE = dateTimeParser {
                 year(4) {
-                    enforceSignStyle(SignStyle.NEVER)
+                    enforceSignStyle(SignStyle.NEGATIVE_ONLY)
                 }
                 monthNumber(2) {
                     enforceSignStyle(SignStyle.NEVER)
@@ -380,9 +408,7 @@ object DateTimeParsers {
 
         object Extended {
             val CALENDAR_DATE = dateTimeParser {
-                year(4) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
+                year(4..10)
                 +'-'
                 monthNumber(2) {
                     enforceSignStyle(SignStyle.NEVER)
@@ -508,22 +534,6 @@ object DateTimeParsers {
             val INSTANT = dateTimeParser {
                 childParser(DATE_TIME)
                 utcDesignator()
-            }
-
-            /**
-             * Parse an ISO-8601 year-month. The standard supports only extended format.
-             *
-             * Example:
-             * - `2008-09`
-             */
-            val YEAR_MONTH = dateTimeParser {
-                year(4) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
-                +'-'
-                monthNumber(2) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
             }
 
             /**
