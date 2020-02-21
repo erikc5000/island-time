@@ -1,7 +1,6 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
-import io.islandtime.TimeZone
 import io.islandtime.base.DateTimeField
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
@@ -94,17 +93,6 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
 
         return allEraTextFor(style, locale)[value.toInt()]
-    }
-
-    override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
-        return if (zone is TimeZone.FixedOffset || !zone.isValid || style.isGeneric()) {
-            null
-        } else {
-            val javaTzStyle = if (style.isShort()) java.util.TimeZone.SHORT else java.util.TimeZone.LONG
-            val isDaylightSaving = style.isDaylightSaving()
-
-            return java.util.TimeZone.getTimeZone(zone.id).getDisplayName(isDaylightSaving, javaTzStyle, locale)
-        }
     }
 
     private fun supports(field: DateTimeField): Boolean {

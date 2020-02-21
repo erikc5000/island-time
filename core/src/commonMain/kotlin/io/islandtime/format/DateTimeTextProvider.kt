@@ -4,7 +4,6 @@ import io.islandtime.IslandTime
 import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
 import io.islandtime.DateTimeException
-import io.islandtime.TimeZone
 
 typealias ParsableTextList = List<Pair<String, Long>>
 
@@ -104,16 +103,6 @@ interface DateTimeTextProvider {
      * @throws DateTimeException if the value is not `0` or `1`
      */
     fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? = null
-
-    /**
-     * Get the localized time zone text.
-     *
-     * @param zone the time zone
-     * @param style the style of the text
-     * @param locale the locale
-     * @return the localized time zone text or `null` if unavailable in the specified style
-     */
-    fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? = null
 
     companion object : DateTimeTextProvider by IslandTime.dateTimeTextProvider
 }
