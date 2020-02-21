@@ -2,7 +2,6 @@ package io.islandtime.format
 
 import co.touchlab.stately.collections.frozenHashMap
 import io.islandtime.DateTimeException
-import io.islandtime.TimeZone
 import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
 import platform.Foundation.*
@@ -20,7 +19,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         val locale: Locale
     )
 
-    override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: NSLocale): ParsableTextList {
+    override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
         if (styles.isEmpty() || !supports(field)) {
             return emptyList()
         }
@@ -81,25 +80,6 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
 
         return allEraTextFor(style, locale)?.get(value.toInt())
-    }
-
-    override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
-        return if (zone is TimeZone.Region) {
-            NSTimeZone.timeZoneWithName(zone.id)?.run {
-                val darwinStyle = when (style) {
-                    TimeZoneTextStyle.STANDARD -> NSTimeZoneNameStyle.NSTimeZoneNameStyleStandard
-                    TimeZoneTextStyle.SHORT_STANDARD -> NSTimeZoneNameStyle.NSTimeZoneNameStyleShortStandard
-                    TimeZoneTextStyle.DAYLIGHT_SAVING -> NSTimeZoneNameStyle.NSTimeZoneNameStyleDaylightSaving
-                    TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING -> NSTimeZoneNameStyle.NSTimeZoneNameStyleShortDaylightSaving
-                    TimeZoneTextStyle.GENERIC -> NSTimeZoneNameStyle.NSTimeZoneNameStyleGeneric
-                    TimeZoneTextStyle.SHORT_GENERIC -> NSTimeZoneNameStyle.NSTimeZoneNameStyleShortGeneric
-                }
-
-                localizedName(darwinStyle, locale)
-            }
-        } else {
-            null
-        }
     }
 
     private fun supports(field: DateTimeField): Boolean {

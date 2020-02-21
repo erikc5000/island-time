@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
@@ -55,7 +55,7 @@ sealed class TimeZone : Comparable<TimeZone> {
 
     /**
      * The localized name of the time zone, if available for the locale in the specified style. The result depends on
-     * the configured [DateTimeTextProvider] and may differ between platforms.
+     * the configured [TimeZoneTextProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
      * - Standard: "Eastern Standard Time"
@@ -68,14 +68,14 @@ sealed class TimeZone : Comparable<TimeZone> {
      * @see displayName
      */
     fun localizedName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String? {
-        return DateTimeTextProvider.timeZoneTextFor(this, style, locale)
+        return TimeZoneTextProvider.timeZoneTextFor(this, style, locale)
     }
 
     /**
      * A textual representation of the time zone, suitable for display purposes. The localized name will be returned, if
      * available for the locale in the specified style. If not, the [id] will be returned instead.
      *
-     * The result depends on the configured [DateTimeTextProvider] and may differ between platforms.
+     * The result depends on the configured [TimeZoneTextProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
      * - Standard: "Eastern Standard Time"
