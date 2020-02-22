@@ -109,7 +109,7 @@ class YearMonth(
      */
     override fun toString(): String {
         return buildString(7) {
-            appendZeroPadded(year, 4)
+            appendYear(year)
             append('-')
             appendZeroPadded(monthNumber, 2)
         }

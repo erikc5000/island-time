@@ -5,6 +5,7 @@ import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
+import kotlin.math.absoluteValue
 
 inline class Year(val value: Int) : Comparable<Year> {
 
@@ -81,7 +82,17 @@ inline class Year(val value: Int) : Comparable<Year> {
     override fun compareTo(other: Year) = value - other.value
 
     override fun toString(): String {
-        return value.toZeroPaddedString(4)
+        val absValue = value.absoluteValue
+
+        return when {
+            absValue < 1000 -> if (value < 0) {
+                "-${absValue.toZeroPaddedString(4)}"
+            } else {
+                absValue.toZeroPaddedString(4)
+            }
+            value > 9999 -> "+$value"
+            else -> value.toString()
+        }
     }
 
     companion object {
@@ -127,6 +138,19 @@ internal fun checkValidYear(year: Long): Int {
 
 internal fun isValidYear(year: Long): Boolean {
     return year in Year.MIN_VALUE..Year.MAX_VALUE
+}
+
+internal fun StringBuilder.appendYear(year: Int): StringBuilder {
+    val absValue = year.absoluteValue
+
+    return when {
+        absValue < 1000 -> {
+            if (year < 0) append('-')
+            append(absValue.toZeroPaddedString(4))
+        }
+        year > 9999 -> append('+').append(year)
+        else -> append(year)
+    }
 }
 
 private fun getInvalidYearMessage(year: Long): String {
