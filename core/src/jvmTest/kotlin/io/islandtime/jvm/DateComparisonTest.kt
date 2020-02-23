@@ -11,7 +11,12 @@ class DateComparisonTest {
     private val javaDates = listOf(
         LocalDate.of(2019, java.time.Month.MAY, 3),
         LocalDate.of(1970, java.time.Month.JANUARY, 1),
-        LocalDate.of(1952, java.time.Month.FEBRUARY, 29)
+        LocalDate.of(1952, java.time.Month.FEBRUARY, 29),
+        LocalDate.of(1, java.time.Month.JANUARY, 15),
+        LocalDate.of(0, java.time.Month.JANUARY, 15),
+        LocalDate.of(-1, java.time.Month.DECEMBER, 15),
+        LocalDate.MIN,
+        LocalDate.MAX
     )
 
     private inline fun List<LocalDate>.compareWithIsland(action: (javaDate: LocalDate, islandDate: Date) -> Unit) {

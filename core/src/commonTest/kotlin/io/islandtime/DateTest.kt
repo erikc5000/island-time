@@ -277,14 +277,18 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when adding or subtracting days puts the date out of range`() {
-        assertFailsWith<DateTimeException> { Date.MAX + 1.days }
-        assertFailsWith<DateTimeException> { Date.MIN - 1.days }
-        assertFailsWith<DateTimeException> { Date(Year.MAX_VALUE, Month.JANUARY, 28) + Int.MAX_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(Year.MIN_VALUE, Month.JANUARY, 28) + Int.MIN_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(Year.MIN_VALUE, Month.JANUARY, 28) - Int.MAX_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(Year.MAX_VALUE, Month.JANUARY, 28) - Int.MIN_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.days }
+        listOf(
+            { Date.MAX + 1.days },
+            { Date.MIN - 1.days },
+            { Date(Year.MAX_VALUE, Month.JANUARY, 28) + Int.MAX_VALUE.days },
+            { Date(Year.MIN_VALUE, Month.JANUARY, 28) + Int.MIN_VALUE.days },
+            { Date(Year.MIN_VALUE, Month.JANUARY, 28) - Int.MAX_VALUE.days },
+            { Date(Year.MAX_VALUE, Month.JANUARY, 28) - Int.MIN_VALUE.days },
+            { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.days },
+            { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.days }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
     }
 
     @Test

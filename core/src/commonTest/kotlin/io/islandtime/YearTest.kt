@@ -12,8 +12,8 @@ import kotlin.test.*
 
 class YearTest : AbstractIslandTimeTest() {
     private val invalidYears = listOf(
-        -1_000_000_000,
-        1_000_000_000,
+        Year.MIN_VALUE - 1,
+        Year.MAX_VALUE + 1,
         Int.MAX_VALUE,
         Int.MIN_VALUE
     )
@@ -217,8 +217,8 @@ class YearTest : AbstractIslandTimeTest() {
         val customParser = dateTimeParser { year() }
 
         listOf(
-            "1000000000",
-            "-1000000000",
+            "${Year.MAX_VALUE + 1}",
+            "${Year.MIN_VALUE - 1}",
             "${Long.MAX_VALUE}",
             "${Long.MIN_VALUE}"
         ).forEach {
