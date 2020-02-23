@@ -30,10 +30,10 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when initialized with an invalid year`() {
-        assertFailsWith<DateTimeException> { YearMonth(10000, Month.JANUARY) }
-        assertFailsWith<DateTimeException> { YearMonth(0, Month.DECEMBER) }
-        assertFailsWith<DateTimeException> { YearMonth(10000, 1) }
-        assertFailsWith<DateTimeException> { YearMonth(0, 12) }
+        assertFailsWith<DateTimeException> { YearMonth(1_000_000_000, Month.JANUARY) }
+        assertFailsWith<DateTimeException> { YearMonth(-1_000_000_000, Month.DECEMBER) }
+        assertFailsWith<DateTimeException> { YearMonth(1_000_000_000, 1) }
+        assertFailsWith<DateTimeException> { YearMonth(-1_000_000_000, 12) }
     }
 
     @Test
@@ -113,10 +113,10 @@ class YearMonthTest : AbstractIslandTimeTest() {
     @Test
     fun `copy() throws an exception if the new year is invalid`() {
         assertFailsWith<DateTimeException> {
-            YearMonth(2010, Month.DECEMBER).copy(year = 0)
+            YearMonth(2010, Month.DECEMBER).copy(year = -1_000_000_000)
         }
         assertFailsWith<DateTimeException> {
-            YearMonth(2010, Month.DECEMBER).copy(year = 10_000)
+            YearMonth(2010, Month.DECEMBER).copy(year = 1_000_000_000)
         }
     }
 
@@ -161,17 +161,17 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when adding months puts the YearMonth out of range`() {
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.JANUARY) + 8000.years.inMonths
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) + (-2000).years.inMonths
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).months
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.months
+        listOf(
+            { YearMonth.MAX + 1.months },
+            { YearMonth.MAX + 1L.months },
+            { YearMonth.MIN + (-1).months },
+            { YearMonth.MIN + (-1L).months },
+            { YearMonth(999_992_000, Month.JANUARY) + 8000.years.inMonths },
+            { YearMonth(-999_998_000, Month.DECEMBER) + (-2000).years.inMonths },
+            { YearMonth(999_992_000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).months },
+            { YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.months }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
         }
     }
 
@@ -211,20 +211,18 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when subtracting months puts the YearMonth out of range`() {
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.JANUARY) - 2000.years.inMonths
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) - (-8000).years.inMonths
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(1, Month.DECEMBER) - (Int.MAX_VALUE + 1L).months
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(1, Month.DECEMBER) - Long.MAX_VALUE.months
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(9999, Month.DECEMBER) - Long.MIN_VALUE.months
+        listOf(
+            { YearMonth.MIN - 1.months },
+            { YearMonth.MIN - 1L.months },
+            { YearMonth.MAX - (-1).months },
+            { YearMonth.MAX - (-1L).months },
+            { YearMonth(-999_998_000, Month.JANUARY) - 2000.years.inMonths },
+            { YearMonth(999_992_000, Month.DECEMBER) - (-8000).years.inMonths },
+            { YearMonth(-999_000_000, Month.DECEMBER) - (Int.MAX_VALUE + 1L).months },
+            { YearMonth(1, Month.DECEMBER) - Long.MAX_VALUE.months },
+            { YearMonth(9999, Month.DECEMBER) - Long.MIN_VALUE.months }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
         }
     }
 
@@ -269,17 +267,17 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when adding years puts the YearMonth out of range`() {
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.JANUARY) + 8000.years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) + (-2000).years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.years
+        listOf(
+            { YearMonth.MAX + 1.years },
+            { YearMonth.MAX + 1L.years },
+            { YearMonth.MIN + (-1).years },
+            { YearMonth.MIN + (-1L).years },
+            { YearMonth(999_992_000, Month.JANUARY) + 8000.years },
+            { YearMonth(-999_998_000, Month.DECEMBER) + (-2000).years },
+            { YearMonth(999_992_000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).years },
+            { YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.years }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
         }
     }
 
@@ -319,20 +317,18 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when subtracting years puts the YearMonth out of range`() {
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.JANUARY) - 2000.years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(2000, Month.DECEMBER) - (-8000).years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(1, Month.DECEMBER) - (Int.MAX_VALUE + 1L).years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(1, Month.DECEMBER) - Long.MAX_VALUE.years
-        }
-        assertFailsWith<DateTimeException> {
-            YearMonth(9999, Month.DECEMBER) - Long.MIN_VALUE.years
+        listOf(
+            { YearMonth.MIN - 1.years },
+            { YearMonth.MIN - 1L.years },
+            { YearMonth.MAX - (-1).years },
+            { YearMonth.MAX - (-1L).years },
+            { YearMonth(-999_998_000, Month.JANUARY) - 2000.years },
+            { YearMonth(999_992_000, Month.DECEMBER) - (-8000).years },
+            { YearMonth(1, Month.DECEMBER) - (Int.MAX_VALUE + 1L).years },
+            { YearMonth(1, Month.DECEMBER) - Long.MAX_VALUE.years },
+            { YearMonth(9999, Month.DECEMBER) - Long.MIN_VALUE.years }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
         }
     }
 
@@ -348,21 +344,21 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended year month representation`() {
-        assertEquals(
-            "2000-02",
-            YearMonth(2000, Month.FEBRUARY).toString()
-        )
-
-        assertEquals(
-            "0001-01",
-            YearMonth(1, Month.JANUARY).toString()
-        )
-
-        assertEquals(
-            "9999-12",
-            YearMonth(9999, Month.DECEMBER).toString()
-        )
+    fun `toString() returns an ISO-8601 year month representation`() {
+        listOf(
+            YearMonth(2000, Month.FEBRUARY) to "2000-02",
+            YearMonth(9999, Month.DECEMBER) to "9999-12",
+            YearMonth(1, Month.JANUARY) to "0001-01",
+            YearMonth(0, Month.JANUARY) to "0000-01",
+            YearMonth(-1, Month.JANUARY) to "-0001-01",
+            YearMonth(-9999, Month.JANUARY) to "-9999-01",
+            YearMonth(10_000, Month.JANUARY) to "+10000-01",
+            YearMonth(-10_000, Month.DECEMBER) to "-10000-12",
+            YearMonth(999_999_999, Month.DECEMBER) to "+999999999-12",
+            YearMonth(-999_999_999, Month.JANUARY) to "-999999999-01"
+        ).forEach { (yearMonth, string) ->
+            assertEquals(string, yearMonth.toString())
+        }
     }
 
     @Test
@@ -378,8 +374,8 @@ class YearMonthTest : AbstractIslandTimeTest() {
             " 2012-05",
             "2012-05-",
             "12-05",
-            "10000-01",
-            "+0001-01"
+            "Y10000-05",
+            "Y-10000-05"
         ).forEach {
             assertFailsWith<DateTimeParseException> { it.toYearMonth() }
         }
@@ -387,7 +383,9 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYearMonth() throws an exception when the year is out of range`() {
-        assertFailsWith<DateTimeException> { "0000-01".toYearMonth() }
+        listOf("+1000000000-01", "-1000000000-12").forEach {
+            assertFailsWith<DateTimeParseException> { it.toYearMonth() }
+        }
     }
 
     @Test
@@ -398,9 +396,21 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYearMonth() parses ISO-8601 extended format year months by default`() {
-        assertEquals(YearMonth(2012, Month.MAY), "2012-05".toYearMonth())
-        assertEquals(YearMonth(1, Month.JANUARY), "0001-01".toYearMonth())
-        assertEquals(YearMonth(9999, Month.DECEMBER), "9999-12".toYearMonth())
+    fun `String_toYearMonth() parses ISO-8601 year months by default`() {
+        listOf(
+            "2012-05" to YearMonth(2012, Month.MAY),
+            "9999-12" to YearMonth(9999, Month.DECEMBER),
+            "0001-01" to YearMonth(1, Month.JANUARY),
+            "0000-01" to YearMonth(0, Month.JANUARY),
+            "+0000-01" to YearMonth(0, Month.JANUARY),
+            "-0000-01" to YearMonth(0, Month.JANUARY),
+            "-0001-01" to YearMonth(-1, Month.JANUARY),
+            "+10000-01" to YearMonth(10_000, Month.JANUARY),
+            "-10000-01" to YearMonth(-10_000, Month.JANUARY),
+            "+${Year.MAX_VALUE}-12" to YearMonth(Year.MAX_VALUE, Month.DECEMBER),
+            "${Year.MIN_VALUE}-01" to YearMonth(Year.MIN_VALUE, Month.JANUARY)
+        ).forEach { (string, expected) ->
+            assertEquals(expected, string.toYearMonth())
+        }
     }
 }

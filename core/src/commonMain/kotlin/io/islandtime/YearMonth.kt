@@ -109,7 +109,7 @@ class YearMonth(
      */
     override fun toString(): String {
         return buildString(7) {
-            appendZeroPadded(year, 4)
+            appendYear(year)
             append('-')
             appendZeroPadded(monthNumber, 2)
         }
@@ -193,7 +193,7 @@ class YearMonth(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.Extended.YEAR_MONTH)
+fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
 
 /**
  * Convert a string to a [YearMonth] using a specific parser.

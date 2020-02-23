@@ -309,22 +309,85 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `throws an exception when addition puts the date-time out of range`() {
+        listOf(
+            { DateTime.MIN + (-1).years },
+            { DateTime.MIN + (-1).months },
+            { DateTime.MIN + (-1).weeks },
+            { DateTime.MIN + (-1).days },
+            { DateTime.MIN + (-1).hours },
+            { DateTime.MIN + (-1).minutes },
+            { DateTime.MIN + (-1).seconds },
+            { DateTime.MIN + (-1).milliseconds },
+            { DateTime.MIN + (-1).microseconds },
+            { DateTime.MIN + (-1).nanoseconds },
+            { DateTime.MAX + 1.years },
+            { DateTime.MAX + 1.months },
+            { DateTime.MAX + 1.weeks },
+            { DateTime.MAX + 1.days },
+            { DateTime.MAX + 1.hours },
+            { DateTime.MAX + 1.minutes },
+            { DateTime.MAX + 1.seconds },
+            { DateTime.MAX + 1.milliseconds },
+            { DateTime.MAX + 1.microseconds },
+            { DateTime.MAX + 1.nanoseconds },
+            { DateTime.MIN + Long.MIN_VALUE.hours },
+            { DateTime.MIN + Long.MIN_VALUE.minutes },
+            { DateTime.MIN + Long.MIN_VALUE.seconds },
+            { DateTime.MIN + Long.MIN_VALUE.milliseconds },
+            { DateTime.MIN + Long.MIN_VALUE.microseconds },
+            { DateTime.MIN + Long.MIN_VALUE.nanoseconds }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
     fun `throws an exception when subtraction puts the date-time out of range`() {
-        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.hours }
-        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.minutes }
-        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.seconds }
-        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.milliseconds }
-        assertFailsWith<DateTimeException> { DateTime.MIN - Long.MIN_VALUE.microseconds }
-        assertFailsWith<DateTimeException> { DateTime.MAX - Long.MIN_VALUE.nanoseconds }
+        listOf(
+            { DateTime.MIN - 1.years },
+            { DateTime.MIN - 1.months },
+            { DateTime.MIN - 1.weeks },
+            { DateTime.MIN - 1.days },
+            { DateTime.MIN - 1.hours },
+            { DateTime.MIN - 1.minutes },
+            { DateTime.MIN - 1.seconds },
+            { DateTime.MIN - 1.milliseconds },
+            { DateTime.MIN - 1.microseconds },
+            { DateTime.MIN - 1.nanoseconds },
+            { DateTime.MAX - (-1).years },
+            { DateTime.MAX - (-1).months },
+            { DateTime.MAX - (-1).weeks },
+            { DateTime.MAX - (-1).days },
+            { DateTime.MAX - (-1).hours },
+            { DateTime.MAX - (-1).minutes },
+            { DateTime.MAX - (-1).seconds },
+            { DateTime.MAX - (-1).milliseconds },
+            { DateTime.MAX - (-1).microseconds },
+            { DateTime.MAX - (-1).nanoseconds },
+            { DateTime.MAX - Long.MIN_VALUE.hours },
+            { DateTime.MAX - Long.MIN_VALUE.minutes },
+            { DateTime.MAX - Long.MIN_VALUE.seconds },
+            { DateTime.MAX - Long.MIN_VALUE.milliseconds },
+            { DateTime.MAX - Long.MIN_VALUE.microseconds },
+            { DateTime.MAX - Long.MIN_VALUE.nanoseconds }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
     }
 
     @Test
     fun `adding or subtracting zero years has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
-        assertEquals(date, date + 0.years)
-        assertEquals(date, date + 0L.years)
-        assertEquals(date, date - 0.years)
-        assertEquals(date, date - 0L.years)
+
+        listOf(
+            { date + 0.years },
+            { date + 0L.years },
+            { date - 0.years },
+            { date - 0L.years }
+        ).forEach {
+            assertEquals(date, it())
+        }
     }
 
     @Test
