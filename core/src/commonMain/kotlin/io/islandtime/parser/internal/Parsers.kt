@@ -247,24 +247,6 @@ internal class SignParser(
     override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
-internal class DecimalSeparatorParser(
-    private val onParsed: List<DateTimeParseResult.() -> Unit>
-) : DateTimeParser() {
-
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        val numberStyle = context.settings.numberStyle
-
-        return if (position < text.length && text[position] in numberStyle.decimalSeparator) {
-            onParsed.forEach { it(context.result) }
-            position + 1
-        } else {
-            position.inv()
-        }
-    }
-
-    override val isConst: Boolean get() = onParsed.isEmpty()
-}
-
 internal abstract class AbstractNumberParser(
     private val signStyle: SignStyle?
 ) : DateTimeParser() {
@@ -545,61 +527,6 @@ internal class DecimalNumberParser(
             onParsed.forEach { it(context.result, wholeResult, 0L) }
             currentPosition
         }
-    }
-
-    override val isConst: Boolean get() = onParsed.isEmpty()
-}
-
-internal class FractionParser internal constructor(
-    private val minLength: Int,
-    private val maxLength: Int,
-    private val scale: Int,
-    private val onParsed: List<DateTimeParseResult.(parsed: Long) -> Unit>
-) : DateTimeParser() {
-
-    init {
-        require(minLength <= maxLength) { "minLength must be <= maxLength" }
-        require(minLength in 1..9) { "minLength must be from 1-9" }
-        require(maxLength in 1..9) { "maxLength must be from 1-9" }
-
-        require(scale in 1..9) { "scale must be from 1-9" }
-    }
-
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        val textLength = text.length
-        var currentPosition = position
-
-        if (currentPosition >= textLength) {
-            return currentPosition.inv()
-        }
-
-        val settings = context.settings
-        var numberLength = 0
-
-        for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberStyle) < 0) {
-                break
-            }
-            numberLength++
-        }
-
-        if (numberLength < minLength) {
-            return (currentPosition + numberLength).inv()
-        } else if (numberLength > maxLength) {
-            return (currentPosition + maxLength).inv()
-        }
-
-        var value = 0L
-
-        for (i in scale downTo scale - numberLength + 1) {
-            val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberStyle)
-            value += digit * FACTOR[i]
-            currentPosition++
-        }
-
-        onParsed.forEach { it(context.result, value) }
-        return currentPosition
     }
 
     override val isConst: Boolean get() = onParsed.isEmpty()

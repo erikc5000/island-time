@@ -3,6 +3,7 @@ package io.islandtime.parser
 import io.islandtime.base.DateTimeField
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
+import io.islandtime.format.NumberStyle
 
 @DslMarker
 annotation class DateTimeParserDsl
@@ -33,18 +34,6 @@ interface DateTimeParserBuilder {
     fun sign(builder: SignParserBuilder.() -> Unit = {})
 
     /**
-     * Parse a decimal separator character.
-     *
-     * The characters associated with a decimal separator are controlled by the [DateTimeParserSettings]. By default,
-     * this is '.' or ',' as specified in ISO-8601. The characters may be overridden by using a different
-     * [NumberStyle].
-     *
-     * @param builder configure parser behavior
-     * @see NumberStyle
-     */
-    fun decimalSeparator(builder: LiteralParserBuilder.() -> Unit = {})
-
-    /**
      * Parse a whole number of fixed length.
      *
      * @param length the number of characters to parse, excluding any sign
@@ -71,29 +60,21 @@ interface DateTimeParserBuilder {
      *
      * If the minimum [fractionLength] is zero, a decimal separator isn't required.
      *
+     * The characters associated with a decimal separator are controlled by the [DateTimeParserSettings]. By default,
+     * this is '.' or ',' as specified in ISO-8601. The characters may be overridden by using a different
+     * [NumberStyle].
+     *
      * @param wholeLength the number of digits to parse from the whole part, excluding sign
      * @param fractionLength the number of digits to parse from the fraction part
      * @param fractionScale the number of digits to normalize the fraction to -- by default 9, indicating nanoseconds
      * @param builder configure parser behavior
+     * @see NumberStyle
      */
     fun decimalNumber(
         wholeLength: IntRange = 1..19,
         fractionLength: IntRange = 0..9,
         fractionScale: Int = 9,
         builder: DecimalNumberParserBuilder.() -> Unit = {}
-    )
-
-    /**
-     * Parse the fractional part of a number.
-     *
-     * @param length the number of digits in the fraction
-     * @param scale the number of digits to normalize the fraction to -- by default 9, indicating nanoseconds
-     * @param builder configure parser behavior
-     */
-    fun fraction(
-        length: IntRange = 1..9,
-        scale: Int = 9,
-        builder: FractionParserBuilder.() -> Unit = {}
     )
 
     /**
@@ -260,12 +241,15 @@ interface SignParserBuilder {
 }
 
 @DateTimeParserDsl
-interface WholeNumberParserBuilder {
+interface NumberParserBuilder {
     /**
      * Enforce a particular sign style.
      */
     fun enforceSignStyle(signStyle: SignStyle)
+}
 
+@DateTimeParserDsl
+interface WholeNumberParserBuilder : NumberParserBuilder {
     /**
      * Perform an action when parsing succeeds.
      */
@@ -280,12 +264,7 @@ interface WholeNumberParserBuilder {
 }
 
 @DateTimeParserDsl
-interface DecimalNumberParserBuilder {
-    /**
-     * Enforce a particular sign style.
-     */
-    fun enforceSignStyle(signStyle: SignStyle)
-
+interface DecimalNumberParserBuilder : NumberParserBuilder {
     /**
      * Perform an action when parsing succeeds.
      */
@@ -300,21 +279,6 @@ interface DecimalNumberParserBuilder {
             fields[wholeField] = whole
             fields[fractionField] = fraction
         }
-    }
-}
-
-@DateTimeParserDsl
-interface FractionParserBuilder {
-    /**
-     * Perform an action when parsing succeeds.
-     */
-    fun onParsed(action: DateTimeParseResult.(parsed: Long) -> Unit)
-
-    /**
-     * Associate the result with a particular [DateTimeField], populating its value when parsing succeeds.
-     */
-    fun associateWith(field: DateTimeField) {
-        onParsed { fields[field] = it }
     }
 }
 

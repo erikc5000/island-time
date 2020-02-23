@@ -12,10 +12,6 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         parsers += SignParserBuilderImpl().apply(builder).build()
     }
 
-    override fun decimalSeparator(builder: LiteralParserBuilder.() -> Unit) {
-        parsers += DecimalSeparatorParserBuilderImpl().apply(builder).build()
-    }
-
     override fun wholeNumber(
         length: Int,
         builder: WholeNumberParserBuilder.() -> Unit
@@ -40,10 +36,6 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
             fractionLength.last,
             fractionScale
         ).apply(builder).build()
-    }
-
-    override fun fraction(length: IntRange, scale: Int, builder: FractionParserBuilder.() -> Unit) {
-        parsers += FractionParserBuilderImpl(length.first, length.last, scale).apply(builder).build()
     }
 
     override fun string(length: IntRange, builder: StringParserBuilder.() -> Unit) {
