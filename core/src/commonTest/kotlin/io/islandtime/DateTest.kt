@@ -8,8 +8,14 @@ import kotlin.test.*
 class DateTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when constructed with an invalid year`() {
-        assertFailsWith<DateTimeException> { Date(-1, Month.JANUARY, 1) }
-        assertFailsWith<DateTimeException> { Date(10000, Month.JANUARY, 1) }
+        listOf(
+            { Date(-1_000_000_000, Month.JANUARY, 1) },
+            { Date(1_000_000_000, Month.DECEMBER, 31) },
+            { Date(Int.MIN_VALUE, Month.JANUARY, 1) },
+            { Date(Int.MAX_VALUE, Month.DECEMBER, 31) }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
     }
 
     @Test
@@ -255,20 +261,34 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when adding or subtracting days causes overflow`() {
-        assertFailsWith<ArithmeticException> { Date(9999, Month.JANUARY, 28) + Long.MAX_VALUE.days }
-        assertFailsWith<ArithmeticException> { Date(1, Month.JANUARY, 28) + Long.MIN_VALUE.days }
+        listOf(
+            { Date.MAX + Long.MAX_VALUE.days },
+            { Date.MIN + Long.MIN_VALUE.days },
+            { Date(9999, Month.JANUARY, 28) + Long.MAX_VALUE.days },
+            { Date(1, Month.JANUARY, 28) + Long.MIN_VALUE.days },
+            { Date.MAX - Long.MIN_VALUE.days },
+            { Date.MIN - Long.MAX_VALUE.days },
+            { Date(1, Month.JANUARY, 28) - Long.MAX_VALUE.days },
+            { Date(9999, Month.JANUARY, 28) - Long.MIN_VALUE.days }
+        ).forEach {
+            assertFailsWith<ArithmeticException> { it() }
+        }
     }
 
     @Test
     fun `throws an exception when adding or subtracting days puts the date out of range`() {
-        assertFailsWith<DateTimeException> { Date.MAX + 1.days }
-        assertFailsWith<DateTimeException> { Date.MIN - 1.days }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) + Int.MAX_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) + Int.MIN_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Int.MAX_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Int.MIN_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.days }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.days }
+        listOf(
+            { Date.MAX + 1.days },
+            { Date.MIN - 1.days },
+            { Date(Year.MAX_VALUE, Month.JANUARY, 28) + Int.MAX_VALUE.days },
+            { Date(Year.MIN_VALUE, Month.JANUARY, 28) + Int.MIN_VALUE.days },
+            { Date(Year.MIN_VALUE, Month.JANUARY, 28) - Int.MAX_VALUE.days },
+            { Date(Year.MAX_VALUE, Month.JANUARY, 28) - Int.MIN_VALUE.days },
+            { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.days },
+            { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.days }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
     }
 
     @Test
@@ -345,10 +365,10 @@ class DateTest : AbstractIslandTimeTest() {
     fun `throws an exception when adding or subtracting weeks puts the date out of range`() {
         assertFailsWith<DateTimeException> { Date.MAX + 1.weeks }
         assertFailsWith<DateTimeException> { Date.MIN - 1.weeks }
-        assertFailsWith<DateTimeException> { Date(1000, Month.JANUARY, 28) + Int.MAX_VALUE.weeks }
-        assertFailsWith<DateTimeException> { Date(6000, Month.JANUARY, 28) + Int.MIN_VALUE.weeks }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Int.MAX_VALUE.weeks }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Int.MIN_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(999_991_000, Month.JANUARY, 28) + Int.MAX_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(-999_000_000, Month.JANUARY, 28) + Int.MIN_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(-999_000_000, Month.JANUARY, 28) - Int.MAX_VALUE.weeks }
+        assertFailsWith<DateTimeException> { Date(999_000_000, Month.JANUARY, 28) - Int.MIN_VALUE.weeks }
     }
 
     @Test
@@ -407,14 +427,14 @@ class DateTest : AbstractIslandTimeTest() {
     fun `throws an exception when adding or subtracting months puts the date out of range`() {
         assertFailsWith<DateTimeException> { Date.MAX + 1.months }
         assertFailsWith<DateTimeException> { Date.MIN - 1.months }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) + Int.MAX_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) + Int.MIN_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) + Long.MAX_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) + Long.MIN_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Int.MAX_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Int.MIN_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.months }
-        assertFailsWith<DateTimeException> { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MAX_VALUE, Month.JANUARY, 28) + Int.MAX_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MIN_VALUE, Month.JANUARY, 28) + Int.MIN_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MAX_VALUE, Month.JANUARY, 28) + Long.MAX_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MIN_VALUE, Month.JANUARY, 28) + Long.MIN_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MIN_VALUE, Month.JANUARY, 28) - Int.MAX_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MAX_VALUE, Month.JANUARY, 28) - Int.MIN_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MAX_VALUE, Month.JANUARY, 28) - Long.MAX_VALUE.months }
+        assertFailsWith<DateTimeException> { Date(Year.MIN_VALUE, Month.JANUARY, 28) - Long.MIN_VALUE.months }
     }
 
     @Test
@@ -661,8 +681,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `String_toDate() throws an exception when unexpected characters exist before a valid string`() {
         assertFailsWith<DateTimeParseException> { " 2010-02-20".toDate() }
         assertFailsWith<DateTimeParseException> { "T2010-10-20".toDate() }
-        assertFailsWith<DateTimeParseException> { "-0001-10-20".toDate() }
-        assertFailsWith<DateTimeParseException> { "+0000-10-20".toDate() }
     }
 
     @Test
@@ -694,15 +712,26 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDate() parses valid ISO-8601 extended date strings by default`() {
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate())
+        listOf(
+            "2000-02-29" to Date(2000, Month.FEBRUARY, 29),
+            "+999999999-12-31" to Date(999_999_999, Month.DECEMBER, 31),
+            "-999999999-01-01" to Date(-999_999_999, Month.JANUARY, 1)
+        ).forEach { (string, result) ->
+            assertEquals(result, string.toDate())
+        }
     }
 
     @Test
     fun `String_toDate() parses valid strings with explicit parser`() {
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-02-29".toDate(DateTimeParsers.Iso.DATE))
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "20000229".toDate(DateTimeParsers.Iso.DATE))
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000-060".toDate(DateTimeParsers.Iso.DATE))
-        assertEquals(Date(2000, Month.FEBRUARY, 29), "2000060".toDate(DateTimeParsers.Iso.DATE))
+        listOf(
+            "2000-02-29",
+            "20000229",
+            "2000-060",
+            "+2000-060",
+            "2000060"
+        ).forEach {
+            assertEquals(Date(2000, Month.FEBRUARY, 29), it.toDate(DateTimeParsers.Iso.DATE))
+        }
     }
 
     @Test

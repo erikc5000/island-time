@@ -322,6 +322,10 @@ class Date(
          * @throws DateTimeException if outside of the supported date range
          */
         fun fromUnixEpochDay(day: Long): Date {
+            if (day !in -365243219162L..365241780471L) {
+                throw DateTimeException("The Unix epoch day '$day' is outside the supported range")
+            }
+
             var zeroDay = day + DAYS_FROM_0000_TO_1970
             // find the march-based year
             zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four year cycle
@@ -348,7 +352,7 @@ class Date(
             val dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
             yearEst += (marchMonth0 / 10).toLong()
 
-            return Date(yearEst.toInt(), month, dom)
+            return Date(checkValidYear(yearEst), month, dom)
         }
     }
 }
@@ -455,7 +459,7 @@ internal const val MAX_DATE_STRING_LENGTH = 10
 
 internal fun StringBuilder.appendDate(date: Date): StringBuilder {
     with(date) {
-        appendZeroPadded(year, 4)
+        appendYear(year)
         append('-')
         appendZeroPadded(monthNumber, 2)
         append('-')
@@ -464,7 +468,7 @@ internal fun StringBuilder.appendDate(date: Date): StringBuilder {
     return this
 }
 
-internal inline val Date.monthsSinceYear0 get() = year * 12 + month.ordinal
+internal inline val Date.monthsSinceYear0: Long get() = year * 12L + month.ordinal
 
 private fun checkValidDayOfMonth(year: Int, month: Month, dayOfMonth: Int): Int {
     if (dayOfMonth !in month.dayRangeIn(year)) {

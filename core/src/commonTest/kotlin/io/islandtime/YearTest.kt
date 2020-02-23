@@ -6,20 +6,30 @@ import io.islandtime.measures.years
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.dateTimeParser
 import io.islandtime.parser.monthNumber
+import io.islandtime.parser.year
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class YearTest : AbstractIslandTimeTest() {
+    private val invalidYears = listOf(
+        Year.MIN_VALUE - 1,
+        Year.MAX_VALUE + 1,
+        Int.MAX_VALUE,
+        Int.MIN_VALUE
+    )
+
     @Test
     fun `isValid can be used to check if the Year was initialized with an invalid value`() {
-        assertFalse { Year(0).isValid }
-        assertFalse { Year(10_000).isValid }
+        invalidYears.forEach {
+            assertFalse { Year(it).isValid }
+        }
     }
 
     @Test
     fun `validated() throws an exception if the current value is invalid`() {
-        assertFailsWith<DateTimeException> { Year(0).validated() }
-        assertFailsWith<DateTimeException> { Year(10_000).validated() }
+        invalidYears.forEach {
+            assertFailsWith<DateTimeException> { Year(it).validated() }
+        }
     }
 
     @Test
@@ -96,8 +106,18 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when adding years puts the year outside the supported range`() {
-        assertFailsWith<DateTimeException> { Year(9999) + 1.years }
-        assertFailsWith<DateTimeException> { Year(1) + (-1).years }
+        listOf(
+            { Year.MAX + 1.years },
+            { Year.MAX + 1L.years },
+            { Year.MAX + Int.MAX_VALUE.years },
+            { Year.MAX + Long.MAX_VALUE.years },
+            { Year.MIN + (-1).years },
+            { Year.MIN + (-1L).years },
+            { Year.MIN + Int.MIN_VALUE.years },
+            { Year.MIN + Long.MIN_VALUE.years }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
     }
 
     @Test
@@ -117,8 +137,18 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when subtracting years puts the year outside the supported range`() {
-        assertFailsWith<DateTimeException> { Year(9999) - (-1).years }
-        assertFailsWith<DateTimeException> { Year(1) - 1.years }
+        listOf(
+            { Year.MAX - (-1).years },
+            { Year.MAX - (-1L).years },
+            { Year.MAX - Int.MIN_VALUE.years },
+            { Year.MAX - Long.MIN_VALUE.years },
+            { Year.MIN - 1.years },
+            { Year.MIN - 1L.years },
+            { Year.MIN - Int.MAX_VALUE.years },
+            { Year.MIN - Long.MAX_VALUE.years }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
     }
 
     @Test
@@ -139,8 +169,20 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `toString() returns the year with a minimum of 4 digits as required by ISO-8601`() {
-        assertEquals("2008", Year(2008).toString())
-        assertEquals("0001", Year(1).toString())
+        listOf(
+            2008 to "2008",
+            1 to "0001",
+            0 to "0000",
+            -1 to "-0001",
+            9999 to "9999",
+            -9999 to "-9999",
+            10_000 to "+10000",
+            -10_000 to "-10000",
+            999_999_999 to "+999999999",
+            -999_999_999 to "-999999999"
+        ).forEach { (year, string) ->
+            assertEquals(string, Year(year).toString())
+        }
     }
 
     @Test
@@ -150,23 +192,60 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYear() throws an exception when parsing an improperly formatted string`() {
-        assertFailsWith<DateTimeParseException> { "1".toYear() }
-        assertFailsWith<DateTimeParseException> { "01".toYear() }
-        assertFailsWith<DateTimeParseException> { "001".toYear() }
-        assertFailsWith<DateTimeParseException> { " 2008".toYear() }
-        assertFailsWith<DateTimeParseException> { "+2008".toYear() }
-        assertFailsWith<DateTimeParseException> { "2008-".toYear() }
+        listOf(
+            "1",
+            "01",
+            "001",
+            " 2008",
+            "2008-",
+            "Y2008",
+            "+01234567890",
+            "+12345678901",
+            "-01234567890",
+            "-12345678901",
+            "Y0123456789",
+            "Y1234567890",
+            "Y-0123456789",
+            "Y-1234567890"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { it.toYear() }
+        }
     }
 
     @Test
     fun `String_toYear() throws an exception when the year is outside the supported range`() {
-        assertFailsWith<DateTimeException> { "0000".toYear() }
+        val customParser = dateTimeParser { year() }
+
+        listOf(
+            "${Year.MAX_VALUE + 1}",
+            "${Year.MIN_VALUE - 1}",
+            "${Long.MAX_VALUE}",
+            "${Long.MIN_VALUE}"
+        ).forEach {
+            assertFailsWith<DateTimeException> { it.toYear(customParser) }
+        }
     }
 
     @Test
     fun `String_toYear() converts an ISO-8601 year string to a Year`() {
-        assertEquals(Year(1), "0001".toYear())
-        assertEquals(Year(2010), "2010".toYear())
+        listOf(
+            "2010" to 2010,
+            "0001" to 1,
+            "0000" to 0,
+            "+0000" to 0,
+            "-0000" to 0,
+            "-0001" to -1,
+            "-9999" to -9999,
+            "+10000" to 10000,
+            "Y10000" to 10000,
+            "Y-10000" to -10000,
+            "+999999999" to 999_999_999,
+            "-999999999" to -999_999_999,
+            "Y999999999" to 999_999_999,
+            "Y-999999999" to -999_999_999
+        ).forEach { (parsed, expected) ->
+            assertEquals(Year(expected), parsed.toYear())
+        }
     }
 
     @Test
