@@ -438,8 +438,8 @@ internal class DecimalNumberParser(
 
     init {
         require(minWholeLength <= maxWholeLength) { "minWholeLength must be <= maxWholeLength" }
-        require(minWholeLength in 1..MAX_LONG_DIGITS) { "minWholeLength must be from 1-19" }
-        require(maxWholeLength in 1..MAX_LONG_DIGITS) { "maxWholeLength must be from 1-19" }
+        require(minWholeLength in 0..MAX_LONG_DIGITS) { "minWholeLength must be from 0-19" }
+        require(maxWholeLength in 0..MAX_LONG_DIGITS) { "maxWholeLength must be from 0-19" }
 
         require(minFractionLength <= maxFractionLength) { "minFractionLength must be <= maxFractionLength" }
         require(minFractionLength in 0..9) { "minFractionLength must be from 0-9" }
@@ -514,36 +514,37 @@ internal class DecimalNumberParser(
                     fractionNumberLength++
                 }
 
-                if (fractionNumberLength < minFractionLength) {
-                    return (currentPosition + fractionNumberLength).inv()
-                } else if (fractionNumberLength > maxFractionLength) {
-                    return (currentPosition + maxFractionLength).inv()
+                return when {
+                    fractionNumberLength < minFractionLength -> (currentPosition + fractionNumberLength).inv()
+                    fractionNumberLength > maxFractionLength -> (currentPosition + maxFractionLength).inv()
+                    fractionNumberLength == 0 && wholeNumberLength == 0 -> currentPosition
+                    else -> {
+                        var fractionResult = 0L
+
+                        for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
+                            val char = text[currentPosition]
+                            val digit = char.toDigit(settings.numberStyle)
+                            fractionResult += digit * FACTOR[i]
+                            currentPosition++
+                        }
+
+                        if (signResult == ParseSignResult.NEGATIVE) {
+                            fractionResult = -fractionResult
+                        }
+
+                        onParsed.forEach { it(context.result, wholeResult, fractionResult) }
+                        currentPosition
+                    }
                 }
-
-                var fractionResult = 0L
-
-                for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
-                    val char = text[currentPosition]
-                    val digit = char.toDigit(settings.numberStyle)
-                    fractionResult += digit * FACTOR[i]
-                    currentPosition++
-                }
-
-                if (signResult == ParseSignResult.NEGATIVE) {
-                    fractionResult = -fractionResult
-                }
-
-                onParsed.forEach { it(context.result, wholeResult, fractionResult) }
-                return currentPosition
-            } else if (minFractionLength > 0) {
-                return currentPosition.inv()
             }
-        } else if (minFractionLength > 0) {
-            return currentPosition.inv()
         }
 
-        onParsed.forEach { it(context.result, wholeResult, 0L) }
-        return currentPosition
+        return if (minFractionLength > 0 || wholeNumberLength == 0) {
+            currentPosition.inv()
+        } else {
+            onParsed.forEach { it(context.result, wholeResult, 0L) }
+            currentPosition
+        }
     }
 
     override val isConst: Boolean get() = onParsed.isEmpty()
