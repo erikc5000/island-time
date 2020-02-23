@@ -12,14 +12,14 @@ object DateTimeParsers {
          * Parse ISO-8601 calendar dates in either basic or extended format.
          */
         val CALENDAR_DATE = dateTimeParser {
-            anyOf(Basic.CALENDAR_DATE, Extended.CALENDAR_DATE)
+            anyOf(Extended.CALENDAR_DATE, Basic.CALENDAR_DATE)
         }
 
         /**
          * Parse ISO-8601 ordinal dates in either basic or extended format.
          */
         val ORDINAL_DATE = dateTimeParser {
-            anyOf(Basic.ORDINAL_DATE, Extended.ORDINAL_DATE)
+            anyOf(Extended.ORDINAL_DATE, Basic.ORDINAL_DATE)
         }
 
         /**
@@ -33,7 +33,7 @@ object DateTimeParsers {
          * Parse an ISO-8601 time of day in either basic or extended format.
          */
         val TIME = dateTimeParser {
-            anyOf(Basic.TIME, Extended.TIME)
+            anyOf(Extended.TIME, Basic.TIME)
         }
 
         /**
@@ -77,14 +77,14 @@ object DateTimeParsers {
          * Parse an ISO-8601 date and time of day in either basic or extended format.
          */
         val DATE_TIME = dateTimeParser {
-            anyOf(Basic.DATE_TIME, Extended.DATE_TIME)
+            anyOf(Extended.DATE_TIME, Basic.DATE_TIME)
         }
 
         /**
          * Parse an ISO-8601 time of day and UTC offset in either basic or extended format.
          */
         val OFFSET_TIME = dateTimeParser {
-            anyOf(Basic.OFFSET_TIME, Extended.OFFSET_TIME)
+            anyOf(Extended.OFFSET_TIME, Basic.OFFSET_TIME)
         }
 
         /**
@@ -96,7 +96,7 @@ object DateTimeParsers {
          * - `20080901 1830-04`
          */
         val OFFSET_DATE_TIME = dateTimeParser {
-            anyOf(Basic.OFFSET_DATE_TIME, Extended.OFFSET_DATE_TIME)
+            anyOf(Extended.OFFSET_DATE_TIME, Basic.OFFSET_DATE_TIME)
         }
 
         /**
@@ -109,7 +109,7 @@ object DateTimeParsers {
          * - `20080901 1830-04[America/New_York]`
          */
         val ZONED_DATE_TIME = dateTimeParser {
-            anyOf(Basic.ZONED_DATE_TIME, Extended.ZONED_DATE_TIME)
+            anyOf(Extended.ZONED_DATE_TIME, Basic.ZONED_DATE_TIME)
         }
 
         /**
@@ -121,7 +121,7 @@ object DateTimeParsers {
          * - `20010510 0024Z`
          */
         val INSTANT = dateTimeParser {
-            anyOf(Basic.INSTANT, Extended.INSTANT)
+            anyOf(Extended.INSTANT, Basic.INSTANT)
         }
 
         /**
@@ -233,23 +233,23 @@ object DateTimeParsers {
          * - (empty string)
          */
         val DATE_RANGE = groupedDateTimeParser {
-            anyOf(Basic.DATE_RANGE, Extended.DATE_RANGE)
+            anyOf(Extended.DATE_RANGE, Basic.DATE_RANGE)
         }
 
         val DATE_TIME_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.DATE_TIME_INTERVAL, Extended.DATE_TIME_INTERVAL)
+            anyOf(Extended.DATE_TIME_INTERVAL, Basic.DATE_TIME_INTERVAL)
         }
 
         val OFFSET_DATE_TIME_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.OFFSET_DATE_TIME_INTERVAL, Extended.OFFSET_DATE_TIME_INTERVAL)
+            anyOf(Extended.OFFSET_DATE_TIME_INTERVAL, Basic.OFFSET_DATE_TIME_INTERVAL)
         }
 
         val ZONED_DATE_TIME_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.ZONED_DATE_TIME_INTERVAL, Extended.ZONED_DATE_TIME_INTERVAL)
+            anyOf(Extended.ZONED_DATE_TIME_INTERVAL, Basic.ZONED_DATE_TIME_INTERVAL)
         }
 
         val INSTANT_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.INSTANT_INTERVAL, Extended.INSTANT_INTERVAL)
+            anyOf(Extended.INSTANT_INTERVAL, Basic.INSTANT_INTERVAL)
         }
 
         object Basic {
