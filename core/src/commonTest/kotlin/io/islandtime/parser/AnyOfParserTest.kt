@@ -44,7 +44,7 @@ class AnyOfParserTest {
     }
 
     @Test
-    fun `allows empty child parsers`() {
+    fun `empty child parsers are allowed`() {
         val parser = dateTimeParser {
             anyOf({ +' ' }, {})
         }
