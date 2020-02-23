@@ -12,6 +12,8 @@ internal object EmptyDateTimeParser : DateTimeParser() {
     override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
         return position
     }
+
+    override val isConst: Boolean get() = true
 }
 
 internal class CompositeDateTimeParser(
@@ -31,6 +33,8 @@ internal class CompositeDateTimeParser(
 
         return currentPosition
     }
+
+    override val isConst: Boolean = childParsers.all { it.isConst }
 }
 
 internal class OptionalDateTimeParser(
@@ -42,16 +46,20 @@ internal class OptionalDateTimeParser(
             return position
         }
 
-        val previousResult = context.result.deepCopy()
+        val previousResult = if (isConst) null else context.result.deepCopy()
         val currentPosition = childParser.parse(context, text, position)
 
         return if (currentPosition < 0) {
-            context.result = previousResult
+            if (previousResult != null) {
+                context.result = previousResult
+            }
             position
         } else {
             currentPosition
         }
     }
+
+    override val isConst: Boolean get() = childParser.isConst
 }
 
 internal class AnyOfDateTimeParser(
@@ -62,11 +70,13 @@ internal class AnyOfDateTimeParser(
         var currentPosition = position
 
         for (parser in childParsers) {
-            val previousResult = context.result.deepCopy()
+            val previousResult = if (isConst) null else context.result.deepCopy()
             currentPosition = parser.parse(context, text, currentPosition)
 
             if (currentPosition < 0) {
-                context.result = previousResult
+                if (previousResult != null) {
+                    context.result = previousResult
+                }
                 currentPosition = position
             } else {
                 return currentPosition
@@ -75,6 +85,8 @@ internal class AnyOfDateTimeParser(
 
         return position.inv()
     }
+
+    override val isConst: Boolean = childParsers.all { it.isConst }
 }
 
 internal class CaseSensitiveDateTimeParser(
@@ -90,6 +102,8 @@ internal class CaseSensitiveDateTimeParser(
 
         return currentPosition
     }
+
+    override val isConst: Boolean get() = childParser.isConst
 }
 
 internal class CharLiteralParser(
@@ -113,6 +127,8 @@ internal class CharLiteralParser(
     }
 
     override val isLiteral: Boolean get() = true
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class StringLiteralParser(
@@ -133,6 +149,8 @@ internal class StringLiteralParser(
     }
 
     override val isLiteral: Boolean get() = true
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class LocalizedTextParser(
@@ -225,6 +243,8 @@ internal class SignParser(
             }
         }
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class DecimalSeparatorParser(
@@ -241,6 +261,8 @@ internal class DecimalSeparatorParser(
             position.inv()
         }
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal abstract class AbstractNumberParser(
@@ -331,6 +353,8 @@ internal class FixedLengthNumberParser(
         onParsed.forEach { it(context.result, value) }
         return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class VariableLengthNumberParser(
@@ -398,6 +422,8 @@ internal class VariableLengthNumberParser(
         onParsed.forEach { it(context.result, value) }
         return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class DecimalNumberParser(
@@ -519,6 +545,8 @@ internal class DecimalNumberParser(
         onParsed.forEach { it(context.result, wholeResult, 0L) }
         return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class FractionParser internal constructor(
@@ -572,6 +600,8 @@ internal class FractionParser internal constructor(
         onParsed.forEach { it(context.result, value) }
         return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 private const val MAX_LONG_DIGITS = 19
