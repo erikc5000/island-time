@@ -78,9 +78,8 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     }
 
     override fun anyOf(vararg childParsers: DateTimeParser) {
-        if (childParsers.isNotEmpty()) {
-            parsers += AnyOfDateTimeParser(childParsers)
-        }
+        require(childParsers.size >= 2) { "anyOf() requires at least 2 child parsers" }
+        parsers += AnyOfDateTimeParser(childParsers)
     }
 
     override fun childParser(childParser: DateTimeParser) {
