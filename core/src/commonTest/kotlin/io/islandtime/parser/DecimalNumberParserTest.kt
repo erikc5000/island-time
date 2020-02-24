@@ -123,10 +123,11 @@ class DecimalNumberParserTest {
 
         listOf(
             "45",
-            "-34 ",
+            "-34",
+            "0.0004",
+            "-1.0001",
             "100-",
             "0.",
-            "0.0004",
             "0/0"
         ).forEach {
             assertFailsWith<DateTimeParseException> { parser1.parse(it) }
@@ -134,9 +135,16 @@ class DecimalNumberParserTest {
 
         val parser2 = dateTimeParser {
             decimalNumber(fractionLength = 2..4)
+            +' '
         }
 
-        assertFailsWith<DateTimeParseException> { parser2.parse("0.1") }
+        listOf(
+            "0.1 ",
+            "0.12345 ",
+            "0.1234567890 "
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { parser2.parse(it) }
+        }
 
         val parser3 = dateTimeParser {
             decimalNumber(fractionLength = 0..0)
