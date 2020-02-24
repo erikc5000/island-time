@@ -32,7 +32,15 @@ abstract class DateTimeParser internal constructor() {
         return context.result
     }
 
+    /**
+     * Is this a literal parser?
+     */
     internal open val isLiteral: Boolean get() = false
+
+    /**
+     * Returns `true` if the parser never populates values in the result.
+     */
+    internal open val isConst: Boolean get() = false
 
     internal abstract fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int
 }

@@ -14,18 +14,6 @@ internal class SignParserBuilderImpl : SignParserBuilder {
     }
 }
 
-internal class DecimalSeparatorParserBuilderImpl : LiteralParserBuilder {
-    private val onParsed = mutableListOf<DateTimeParseResult.() -> Unit>()
-
-    override fun onParsed(action: DateTimeParseResult.() -> Unit) {
-        onParsed += action
-    }
-
-    fun build(): DateTimeParser {
-        return DecimalSeparatorParser(onParsed)
-    }
-}
-
 internal abstract class WholeNumberParserBuilderImpl : WholeNumberParserBuilder {
     protected val onParsed = mutableListOf<DateTimeParseResult.(parsed: Long) -> Unit>()
     protected var signStyle: SignStyle? = null
@@ -94,27 +82,6 @@ internal class DecimalNumberParserBuilderImpl(
             maxFractionLength,
             fractionScale,
             signStyle,
-            onParsed
-        )
-    }
-}
-
-internal class FractionParserBuilderImpl(
-    private val minLength: Int,
-    private val maxLength: Int,
-    private val scale: Int
-) : FractionParserBuilder {
-    private val onParsed = mutableListOf<DateTimeParseResult.(parsed: Long) -> Unit>()
-
-    override fun onParsed(action: DateTimeParseResult.(parsed: Long) -> Unit) {
-        onParsed += action
-    }
-
-    fun build(): DateTimeParser {
-        return FractionParser(
-            minLength,
-            maxLength,
-            scale,
             onParsed
         )
     }

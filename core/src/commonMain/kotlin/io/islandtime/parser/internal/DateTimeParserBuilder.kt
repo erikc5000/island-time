@@ -12,10 +12,6 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         parsers += SignParserBuilderImpl().apply(builder).build()
     }
 
-    override fun decimalSeparator(builder: LiteralParserBuilder.() -> Unit) {
-        parsers += DecimalSeparatorParserBuilderImpl().apply(builder).build()
-    }
-
     override fun wholeNumber(
         length: Int,
         builder: WholeNumberParserBuilder.() -> Unit
@@ -40,10 +36,6 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
             fractionLength.last,
             fractionScale
         ).apply(builder).build()
-    }
-
-    override fun fraction(length: IntRange, scale: Int, builder: FractionParserBuilder.() -> Unit) {
-        parsers += FractionParserBuilderImpl(length.first, length.last, scale).apply(builder).build()
     }
 
     override fun string(length: IntRange, builder: StringParserBuilder.() -> Unit) {
@@ -71,16 +63,13 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     }
 
     override fun anyOf(vararg builders: DateTimeParserBuilder.() -> Unit) {
-        val childParsers = builders.mapNotNull {
-            DateTimeParserBuilderImpl().apply(it).buildElement()
-        }
+        val childParsers = builders.map { DateTimeParserBuilderImpl().apply(it).build() }
         anyOf(*childParsers.toTypedArray())
     }
 
     override fun anyOf(vararg childParsers: DateTimeParser) {
-        if (childParsers.isNotEmpty()) {
-            parsers += AnyOfDateTimeParser(childParsers)
-        }
+        require(childParsers.size >= 2) { "anyOf() requires at least 2 child parsers" }
+        parsers += AnyOfDateTimeParser(childParsers)
     }
 
     override fun childParser(childParser: DateTimeParser) {

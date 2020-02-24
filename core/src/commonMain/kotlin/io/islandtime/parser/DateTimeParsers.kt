@@ -12,14 +12,14 @@ object DateTimeParsers {
          * Parse ISO-8601 calendar dates in either basic or extended format.
          */
         val CALENDAR_DATE = dateTimeParser {
-            anyOf(Basic.CALENDAR_DATE, Extended.CALENDAR_DATE)
+            anyOf(Extended.CALENDAR_DATE, Basic.CALENDAR_DATE)
         }
 
         /**
          * Parse ISO-8601 ordinal dates in either basic or extended format.
          */
         val ORDINAL_DATE = dateTimeParser {
-            anyOf(Basic.ORDINAL_DATE, Extended.ORDINAL_DATE)
+            anyOf(Extended.ORDINAL_DATE, Basic.ORDINAL_DATE)
         }
 
         /**
@@ -33,7 +33,7 @@ object DateTimeParsers {
          * Parse an ISO-8601 time of day in either basic or extended format.
          */
         val TIME = dateTimeParser {
-            anyOf(Basic.TIME, Extended.TIME)
+            anyOf(Extended.TIME, Basic.TIME)
         }
 
         /**
@@ -77,14 +77,14 @@ object DateTimeParsers {
          * Parse an ISO-8601 date and time of day in either basic or extended format.
          */
         val DATE_TIME = dateTimeParser {
-            anyOf(Basic.DATE_TIME, Extended.DATE_TIME)
+            anyOf(Extended.DATE_TIME, Basic.DATE_TIME)
         }
 
         /**
          * Parse an ISO-8601 time of day and UTC offset in either basic or extended format.
          */
         val OFFSET_TIME = dateTimeParser {
-            anyOf(Basic.OFFSET_TIME, Extended.OFFSET_TIME)
+            anyOf(Extended.OFFSET_TIME, Basic.OFFSET_TIME)
         }
 
         /**
@@ -96,7 +96,7 @@ object DateTimeParsers {
          * - `20080901 1830-04`
          */
         val OFFSET_DATE_TIME = dateTimeParser {
-            anyOf(Basic.OFFSET_DATE_TIME, Extended.OFFSET_DATE_TIME)
+            anyOf(Extended.OFFSET_DATE_TIME, Basic.OFFSET_DATE_TIME)
         }
 
         /**
@@ -109,7 +109,7 @@ object DateTimeParsers {
          * - `20080901 1830-04[America/New_York]`
          */
         val ZONED_DATE_TIME = dateTimeParser {
-            anyOf(Basic.ZONED_DATE_TIME, Extended.ZONED_DATE_TIME)
+            anyOf(Extended.ZONED_DATE_TIME, Basic.ZONED_DATE_TIME)
         }
 
         /**
@@ -121,7 +121,7 @@ object DateTimeParsers {
          * - `20010510 0024Z`
          */
         val INSTANT = dateTimeParser {
-            anyOf(Basic.INSTANT, Extended.INSTANT)
+            anyOf(Extended.INSTANT, Basic.INSTANT)
         }
 
         /**
@@ -131,11 +131,9 @@ object DateTimeParsers {
          * - `2008-09`
          */
         val YEAR_MONTH = dateTimeParser {
-            childParser(EXPANDED_YEAR)
+            childParser(ISO_EXPANDED_YEAR_COMPONENT)
             +'-'
-            monthNumber(2) {
-                enforceSignStyle(SignStyle.NEVER)
-            }
+            childParser(ISO_MONTH_COMPONENT)
         }
 
         /**
@@ -152,7 +150,7 @@ object DateTimeParsers {
          */
         val YEAR = dateTimeParser {
             anyOf({
-                childParser(EXPANDED_YEAR)
+                childParser(ISO_EXPANDED_YEAR_COMPONENT)
             }, {
                 // Letter-prefixed year allowed in ISO-8601-2 (for standalone year only)
                 +'Y'
@@ -233,49 +231,45 @@ object DateTimeParsers {
          * - (empty string)
          */
         val DATE_RANGE = groupedDateTimeParser {
-            anyOf(Basic.DATE_RANGE, Extended.DATE_RANGE)
+            anyOf(Extended.DATE_RANGE, Basic.DATE_RANGE)
         }
 
         val DATE_TIME_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.DATE_TIME_INTERVAL, Extended.DATE_TIME_INTERVAL)
+            anyOf(Extended.DATE_TIME_INTERVAL, Basic.DATE_TIME_INTERVAL)
         }
 
         val OFFSET_DATE_TIME_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.OFFSET_DATE_TIME_INTERVAL, Extended.OFFSET_DATE_TIME_INTERVAL)
+            anyOf(Extended.OFFSET_DATE_TIME_INTERVAL, Basic.OFFSET_DATE_TIME_INTERVAL)
         }
 
         val ZONED_DATE_TIME_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.ZONED_DATE_TIME_INTERVAL, Extended.ZONED_DATE_TIME_INTERVAL)
+            anyOf(Extended.ZONED_DATE_TIME_INTERVAL, Basic.ZONED_DATE_TIME_INTERVAL)
         }
 
         val INSTANT_INTERVAL = groupedDateTimeParser {
-            anyOf(Basic.INSTANT_INTERVAL, Extended.INSTANT_INTERVAL)
+            anyOf(Extended.INSTANT_INTERVAL, Basic.INSTANT_INTERVAL)
         }
 
         object Basic {
             val CALENDAR_DATE = dateTimeParser {
-                year(4) {
-                    enforceSignStyle(SignStyle.NEGATIVE_ONLY)
-                }
-                monthNumber(2) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
-                dayOfMonth(2) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
+                childParser(ISO_STANDARD_YEAR_COMPONENT)
+                childParser(ISO_MONTH_COMPONENT)
+                childParser(ISO_DAY_OF_MONTH_COMPONENT)
             }
 
             val ORDINAL_DATE = dateTimeParser {
-                year(4) {
-                    enforceSignStyle(SignStyle.NEGATIVE_ONLY)
-                }
-                dayOfYear(3) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
+                childParser(ISO_STANDARD_YEAR_COMPONENT)
+                childParser(ISO_DAY_OF_YEAR_COMPONENT)
             }
 
             val DATE = dateTimeParser {
-                anyOf(CALENDAR_DATE, ORDINAL_DATE)
+                childParser(ISO_STANDARD_YEAR_COMPONENT)
+                anyOf({
+                    childParser(ISO_MONTH_COMPONENT)
+                    childParser(ISO_DAY_OF_MONTH_COMPONENT)
+                }, {
+                    childParser(ISO_DAY_OF_YEAR_COMPONENT)
+                })
             }
 
             val TIME = dateTimeParser {
@@ -399,27 +393,29 @@ object DateTimeParsers {
 
         object Extended {
             val CALENDAR_DATE = dateTimeParser {
-                childParser(EXPANDED_YEAR)
+                childParser(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
-                monthNumber(2) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
+                childParser(ISO_MONTH_COMPONENT)
                 +'-'
-                dayOfMonth(2) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
+                childParser(ISO_DAY_OF_MONTH_COMPONENT)
             }
 
             val ORDINAL_DATE = dateTimeParser {
-                childParser(EXPANDED_YEAR)
+                childParser(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
-                dayOfYear(3) {
-                    enforceSignStyle(SignStyle.NEVER)
-                }
+                childParser(ISO_DAY_OF_YEAR_COMPONENT)
             }
 
             val DATE = dateTimeParser {
-                anyOf(CALENDAR_DATE, ORDINAL_DATE)
+                childParser(ISO_EXPANDED_YEAR_COMPONENT)
+                +'-'
+                anyOf({
+                    childParser(ISO_MONTH_COMPONENT)
+                    +'-'
+                    childParser(ISO_DAY_OF_MONTH_COMPONENT)
+                }, {
+                    childParser(ISO_DAY_OF_YEAR_COMPONENT)
+                })
             }
 
             val TIME = dateTimeParser {
@@ -545,7 +541,13 @@ object DateTimeParsers {
     }
 }
 
-private val EXPANDED_YEAR = dateTimeParser {
+private val ISO_STANDARD_YEAR_COMPONENT = dateTimeParser {
+    year(4) {
+        enforceSignStyle(SignStyle.NEGATIVE_ONLY)
+    }
+}
+
+private val ISO_EXPANDED_YEAR_COMPONENT = dateTimeParser {
     anyOf({
         // Expanded representation requiring sign
         year(5..9) { enforceSignStyle(SignStyle.ALWAYS) }
@@ -553,6 +555,24 @@ private val EXPANDED_YEAR = dateTimeParser {
         // Standard 4-digit year
         year(4)
     })
+}
+
+private val ISO_MONTH_COMPONENT = dateTimeParser {
+    monthNumber(2) {
+        enforceSignStyle(SignStyle.NEVER)
+    }
+}
+
+private val ISO_DAY_OF_MONTH_COMPONENT = dateTimeParser {
+    dayOfMonth(2) {
+        enforceSignStyle(SignStyle.NEVER)
+    }
+}
+
+private val ISO_DAY_OF_YEAR_COMPONENT = dateTimeParser {
+    dayOfYear(3) {
+        enforceSignStyle(SignStyle.NEVER)
+    }
 }
 
 private fun buildIsoIntervalParser(elementParser: DateTimeParser): GroupedDateTimeParser {

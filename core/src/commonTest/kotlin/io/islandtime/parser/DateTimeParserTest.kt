@@ -9,7 +9,7 @@ import kotlin.test.assertTrue
 class DateTimeParserTest {
     @Test
     fun `parses empty strings when the parser is empty`() {
-        val result = dateTimeParser { }.parse("")
+        val result = dateTimeParser {}.parse("")
         assertTrue { result.isEmpty() }
     }
 

@@ -12,6 +12,8 @@ internal object EmptyDateTimeParser : DateTimeParser() {
     override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
         return position
     }
+
+    override val isConst: Boolean get() = true
 }
 
 internal class CompositeDateTimeParser(
@@ -31,6 +33,8 @@ internal class CompositeDateTimeParser(
 
         return currentPosition
     }
+
+    override val isConst: Boolean = childParsers.all { it.isConst }
 }
 
 internal class OptionalDateTimeParser(
@@ -42,16 +46,20 @@ internal class OptionalDateTimeParser(
             return position
         }
 
-        val previousResult = context.result.deepCopy()
+        val previousResult = if (isConst) null else context.result.deepCopy()
         val currentPosition = childParser.parse(context, text, position)
 
         return if (currentPosition < 0) {
-            context.result = previousResult
+            if (previousResult != null) {
+                context.result = previousResult
+            }
             position
         } else {
             currentPosition
         }
     }
+
+    override val isConst: Boolean get() = childParser.isConst
 }
 
 internal class AnyOfDateTimeParser(
@@ -62,11 +70,13 @@ internal class AnyOfDateTimeParser(
         var currentPosition = position
 
         for (parser in childParsers) {
-            val previousResult = context.result.deepCopy()
+            val previousResult = if (isConst) null else context.result.deepCopy()
             currentPosition = parser.parse(context, text, currentPosition)
 
             if (currentPosition < 0) {
-                context.result = previousResult
+                if (previousResult != null) {
+                    context.result = previousResult
+                }
                 currentPosition = position
             } else {
                 return currentPosition
@@ -75,6 +85,8 @@ internal class AnyOfDateTimeParser(
 
         return position.inv()
     }
+
+    override val isConst: Boolean = childParsers.all { it.isConst }
 }
 
 internal class CaseSensitiveDateTimeParser(
@@ -90,6 +102,8 @@ internal class CaseSensitiveDateTimeParser(
 
         return currentPosition
     }
+
+    override val isConst: Boolean get() = childParser.isConst
 }
 
 internal class CharLiteralParser(
@@ -113,6 +127,8 @@ internal class CharLiteralParser(
     }
 
     override val isLiteral: Boolean get() = true
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class StringLiteralParser(
@@ -133,6 +149,8 @@ internal class StringLiteralParser(
     }
 
     override val isLiteral: Boolean get() = true
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class LocalizedTextParser(
@@ -225,22 +243,8 @@ internal class SignParser(
             }
         }
     }
-}
 
-internal class DecimalSeparatorParser(
-    private val onParsed: List<DateTimeParseResult.() -> Unit>
-) : DateTimeParser() {
-
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        val numberStyle = context.settings.numberStyle
-
-        return if (position < text.length && text[position] in numberStyle.decimalSeparator) {
-            onParsed.forEach { it(context.result) }
-            position + 1
-        } else {
-            position.inv()
-        }
-    }
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal abstract class AbstractNumberParser(
@@ -331,6 +335,8 @@ internal class FixedLengthNumberParser(
         onParsed.forEach { it(context.result, value) }
         return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class VariableLengthNumberParser(
@@ -398,6 +404,8 @@ internal class VariableLengthNumberParser(
         onParsed.forEach { it(context.result, value) }
         return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 internal class DecimalNumberParser(
@@ -412,8 +420,8 @@ internal class DecimalNumberParser(
 
     init {
         require(minWholeLength <= maxWholeLength) { "minWholeLength must be <= maxWholeLength" }
-        require(minWholeLength in 1..MAX_LONG_DIGITS) { "minWholeLength must be from 1-19" }
-        require(maxWholeLength in 1..MAX_LONG_DIGITS) { "maxWholeLength must be from 1-19" }
+        require(minWholeLength in 0..MAX_LONG_DIGITS) { "minWholeLength must be from 0-19" }
+        require(maxWholeLength in 0..MAX_LONG_DIGITS) { "maxWholeLength must be from 0-19" }
 
         require(minFractionLength <= maxFractionLength) { "minFractionLength must be <= maxFractionLength" }
         require(minFractionLength in 0..9) { "minFractionLength must be from 0-9" }
@@ -471,107 +479,58 @@ internal class DecimalNumberParser(
             throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
-        if (currentPosition < textLength && maxFractionLength > 0) {
-            if (text[currentPosition] in settings.numberStyle.decimalSeparator) {
-                currentPosition++
+        if (currentPosition < textLength &&
+            maxFractionLength > 0 &&
+            text[currentPosition] in settings.numberStyle.decimalSeparator
+        ) {
+            currentPosition++
 
-                if (currentPosition >= textLength) {
-                    return currentPosition.inv()
-                }
-
-                var fractionNumberLength = 0
-
-                for (i in currentPosition until textLength) {
-                    if (text[i].toDigit(settings.numberStyle) < 0) {
-                        break
-                    }
-                    fractionNumberLength++
-                }
-
-                if (fractionNumberLength < minFractionLength) {
-                    return (currentPosition + fractionNumberLength).inv()
-                } else if (fractionNumberLength > maxFractionLength) {
-                    return (currentPosition + maxFractionLength).inv()
-                }
-
-                var fractionResult = 0L
-
-                for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
-                    val char = text[currentPosition]
-                    val digit = char.toDigit(settings.numberStyle)
-                    fractionResult += digit * FACTOR[i]
-                    currentPosition++
-                }
-
-                if (signResult == ParseSignResult.NEGATIVE) {
-                    fractionResult = -fractionResult
-                }
-
-                onParsed.forEach { it(context.result, wholeResult, fractionResult) }
-                return currentPosition
-            } else if (minFractionLength > 0) {
+            if (currentPosition >= textLength) {
                 return currentPosition.inv()
             }
-        } else if (minFractionLength > 0) {
-            return currentPosition.inv()
-        }
 
-        onParsed.forEach { it(context.result, wholeResult, 0L) }
-        return currentPosition
-    }
-}
+            var fractionNumberLength = 0
 
-internal class FractionParser internal constructor(
-    private val minLength: Int,
-    private val maxLength: Int,
-    private val scale: Int,
-    private val onParsed: List<DateTimeParseResult.(parsed: Long) -> Unit>
-) : DateTimeParser() {
-
-    init {
-        require(minLength <= maxLength) { "minLength must be <= maxLength" }
-        require(minLength in 1..9) { "minLength must be from 1-9" }
-        require(maxLength in 1..9) { "maxLength must be from 1-9" }
-
-        require(scale in 1..9) { "scale must be from 1-9" }
-    }
-
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
-        val textLength = text.length
-        var currentPosition = position
-
-        if (currentPosition >= textLength) {
-            return currentPosition.inv()
-        }
-
-        val settings = context.settings
-        var numberLength = 0
-
-        for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberStyle) < 0) {
-                break
+            for (i in currentPosition until textLength) {
+                if (text[i].toDigit(settings.numberStyle) < 0) {
+                    break
+                }
+                fractionNumberLength++
             }
-            numberLength++
+
+            return when {
+                fractionNumberLength < minFractionLength -> (currentPosition + fractionNumberLength).inv()
+                fractionNumberLength > maxFractionLength -> (currentPosition + maxFractionLength).inv()
+                fractionNumberLength == 0 && wholeNumberLength == 0 -> currentPosition.inv()
+                else -> {
+                    var fractionResult = 0L
+
+                    for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
+                        val char = text[currentPosition]
+                        val digit = char.toDigit(settings.numberStyle)
+                        fractionResult += digit * FACTOR[i]
+                        currentPosition++
+                    }
+
+                    if (signResult == ParseSignResult.NEGATIVE) {
+                        fractionResult = -fractionResult
+                    }
+
+                    onParsed.forEach { it(context.result, wholeResult, fractionResult) }
+                    currentPosition
+                }
+            }
         }
 
-        if (numberLength < minLength) {
-            return (currentPosition + numberLength).inv()
-        } else if (numberLength > maxLength) {
-            return (currentPosition + maxLength).inv()
+        return if (minFractionLength > 0 || wholeNumberLength == 0) {
+            currentPosition.inv()
+        } else {
+            onParsed.forEach { it(context.result, wholeResult, 0L) }
+            currentPosition
         }
-
-        var value = 0L
-
-        for (i in scale downTo scale - numberLength + 1) {
-            val char = text[currentPosition]
-            val digit = char.toDigit(settings.numberStyle)
-            value += digit * FACTOR[i]
-            currentPosition++
-        }
-
-        onParsed.forEach { it(context.result, value) }
-        return currentPosition
     }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
 private const val MAX_LONG_DIGITS = 19

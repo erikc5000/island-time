@@ -22,9 +22,9 @@ class DecimalNumberParserTest {
     }
 
     @Test
-    fun `throws an exception if whole range is outside of 1-19`() {
+    fun `throws an exception if whole range is outside of 0-19`() {
         assertFailsWith<IllegalArgumentException> {
-            dateTimeParser { decimalNumber(wholeLength = 0..4) }
+            dateTimeParser { decimalNumber(wholeLength = -1..4) }
         }
 
         assertFailsWith<IllegalArgumentException> {
@@ -63,14 +63,39 @@ class DecimalNumberParserTest {
                     fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
                 }
             }
+            +' '
         }
 
-        val result1 = parser.parse("0.1")
+        val result1 = parser.parse("0.1 ")
         assertEquals(0L, result1.fields[DateTimeField.SECOND_OF_MINUTE])
         assertEquals(100_000_000L, result1.fields[DateTimeField.NANOSECOND_OF_SECOND])
 
-        val result2 = parser.parse("-5.000000001")
+        val result2 = parser.parse("-5.000000001 ")
         assertEquals(-5L, result2.fields[DateTimeField.SECOND_OF_MINUTE])
+        assertEquals(-1L, result2.fields[DateTimeField.NANOSECOND_OF_SECOND])
+
+        val result3 = parser.parse("10 ")
+        assertEquals(10L, result3.fields[DateTimeField.SECOND_OF_MINUTE])
+        assertEquals(0L, result3.fields[DateTimeField.NANOSECOND_OF_SECOND])
+    }
+
+    @Test
+    fun `allows decimal numbers with a zero length whole component`() {
+        val parser = dateTimeParser {
+            decimalNumber(0..19) {
+                onParsed { whole, fraction ->
+                    fields[DateTimeField.SECOND_OF_MINUTE] = whole
+                    fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
+                }
+            }
+        }
+
+        val result1 = parser.parse(".1")
+        assertEquals(0L, result1.fields[DateTimeField.SECOND_OF_MINUTE])
+        assertEquals(100_000_000L, result1.fields[DateTimeField.NANOSECOND_OF_SECOND])
+
+        val result2 = parser.parse("-.000000001")
+        assertEquals(0L, result2.fields[DateTimeField.SECOND_OF_MINUTE])
         assertEquals(-1L, result2.fields[DateTimeField.NANOSECOND_OF_SECOND])
     }
 
@@ -80,10 +105,14 @@ class DecimalNumberParserTest {
             decimalNumber(wholeLength = 2..3)
         }
 
-        assertFailsWith<DateTimeParseException> { parser.parse("4") }
-        assertFailsWith<DateTimeParseException> { parser.parse("0.3") }
-        assertFailsWith<DateTimeParseException> { parser.parse("4000.02") }
-        assertFailsWith<DateTimeParseException> { parser.parse("-1.0004") }
+        listOf(
+            "4",
+            "0.3",
+            "4000.02",
+            "-1.0004"
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { parser.parse(it) }
+        }
     }
 
     @Test
@@ -94,9 +123,11 @@ class DecimalNumberParserTest {
 
         listOf(
             "45",
-            "0.",
-            ".",
+            "-34",
             "0.0004",
+            "-1.0001",
+            "100-",
+            "0.",
             "0/0"
         ).forEach {
             assertFailsWith<DateTimeParseException> { parser1.parse(it) }
@@ -104,9 +135,24 @@ class DecimalNumberParserTest {
 
         val parser2 = dateTimeParser {
             decimalNumber(fractionLength = 2..4)
+            +' '
         }
 
-        assertFailsWith<DateTimeParseException> { parser2.parse("0.1") }
+        listOf(
+            "0.1 ",
+            "0.12345 ",
+            "0.1234567890 "
+        ).forEach {
+            assertFailsWith<DateTimeParseException> { parser2.parse(it) }
+        }
+
+        val parser3 = dateTimeParser {
+            decimalNumber(fractionLength = 0..0)
+            +' '
+        }
+
+        val exception = assertFailsWith<DateTimeParseException> { parser3.parse("0.1 ") }
+        assertEquals(1, exception.errorIndex)
     }
 
     @Test
@@ -130,6 +176,52 @@ class DecimalNumberParserTest {
         val exception = assertFailsWith<DateTimeParseException> { parser.parse(" ") }
         assertEquals(1, exception.errorIndex)
         assertEquals(" ", exception.parsedString)
+    }
+
+    @Test
+    fun `reports an error if the whole and fractional parts are both absent`() {
+        val parser1 = dateTimeParser {
+            decimalNumber(0..19) {
+                onParsed { whole, fraction ->
+                    fields[DateTimeField.SECOND_OF_MINUTE] = whole
+                    fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
+                }
+            }
+        }
+
+        listOf(
+            "-",
+            "+",
+            "-.",
+            "+.",
+            "."
+        ).forEach {
+            val exception = assertFailsWith<DateTimeParseException> { parser1.parse(it) }
+            assertEquals(it.length, exception.errorIndex)
+        }
+
+        val parser2 = dateTimeParser {
+            childParser(parser1)
+            +' '
+        }
+
+        listOf(
+            "- ",
+            "+ ",
+            "-. ",
+            "+. ",
+            ". "
+        ).forEach {
+            val exception = assertFailsWith<DateTimeParseException> { parser2.parse(it) }
+            assertEquals(it.length - 1, exception.errorIndex)
+        }
+    }
+
+    @Test
+    fun `reports an error when a trailing decimal separator is found`() {
+        val parser = dateTimeParser { decimalNumber() }
+        val exception = assertFailsWith<DateTimeParseException> { parser.parse("-4.") }
+        assertEquals(3, exception.errorIndex)
     }
 
     @Test

@@ -6,9 +6,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.todo
 
+@Suppress("PrivatePropertyName")
 class ParsersTest {
-    val en_US = localeOf("en-US")
-    val hi_IN_u_nu_native = localeOf("hi-IN-u-nu-native")
+    private val en_US = localeOf("en-US")
+    private val hi_IN_u_nu_native = localeOf("hi-IN-u-nu-native")
 
     @Test
     fun `Char_toDigit() converts a character to a digit according to NumberStyle`() {
