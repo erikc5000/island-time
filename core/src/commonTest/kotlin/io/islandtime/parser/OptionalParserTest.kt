@@ -31,6 +31,22 @@ class OptionalParserTest {
     }
 
     @Test
+    fun `marked as const when child parser is const`() {
+        val parser = dateTimeParser {
+            +' '
+            optional {
+                +' '
+            }
+            +'!'
+        }
+
+        assertTrue { parser.isConst }
+
+        val result = parser.parse(" !")
+        assertTrue { result.isEmpty() }
+    }
+
+    @Test
     fun `empty blocks are allowed`() {
         val result = dateTimeParser { optional {} }.parse("")
         assertTrue { result.isEmpty() }
