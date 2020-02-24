@@ -63,17 +63,18 @@ class DecimalNumberParserTest {
                     fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
                 }
             }
+            +' '
         }
 
-        val result1 = parser.parse("0.1")
+        val result1 = parser.parse("0.1 ")
         assertEquals(0L, result1.fields[DateTimeField.SECOND_OF_MINUTE])
         assertEquals(100_000_000L, result1.fields[DateTimeField.NANOSECOND_OF_SECOND])
 
-        val result2 = parser.parse("-5.000000001")
+        val result2 = parser.parse("-5.000000001 ")
         assertEquals(-5L, result2.fields[DateTimeField.SECOND_OF_MINUTE])
         assertEquals(-1L, result2.fields[DateTimeField.NANOSECOND_OF_SECOND])
 
-        val result3 = parser.parse("10")
+        val result3 = parser.parse("10 ")
         assertEquals(10L, result3.fields[DateTimeField.SECOND_OF_MINUTE])
         assertEquals(0L, result3.fields[DateTimeField.NANOSECOND_OF_SECOND])
     }
@@ -122,6 +123,8 @@ class DecimalNumberParserTest {
 
         listOf(
             "45",
+            "-34 ",
+            "100-",
             "0.",
             "0.0004",
             "0/0"
@@ -134,6 +137,14 @@ class DecimalNumberParserTest {
         }
 
         assertFailsWith<DateTimeParseException> { parser2.parse("0.1") }
+
+        val parser3 = dateTimeParser {
+            decimalNumber(fractionLength = 0..0)
+            +' '
+        }
+
+        val exception = assertFailsWith<DateTimeParseException> { parser3.parse("0.1 ") }
+        assertEquals(1, exception.errorIndex)
     }
 
     @Test
@@ -161,7 +172,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `reports an error if the whole and fractional parts are both absent`() {
-        val parser = dateTimeParser {
+        val parser1 = dateTimeParser {
             decimalNumber(0..19) {
                 onParsed { whole, fraction ->
                     fields[DateTimeField.SECOND_OF_MINUTE] = whole
@@ -177,8 +188,24 @@ class DecimalNumberParserTest {
             "+.",
             "."
         ).forEach {
-            val exception = assertFailsWith<DateTimeParseException> { parser.parse(it) }
+            val exception = assertFailsWith<DateTimeParseException> { parser1.parse(it) }
             assertEquals(it.length, exception.errorIndex)
+        }
+
+        val parser2 = dateTimeParser {
+            childParser(parser1)
+            +' '
+        }
+
+        listOf(
+            "- ",
+            "+ ",
+            "-. ",
+            "+. ",
+            ". "
+        ).forEach {
+            val exception = assertFailsWith<DateTimeParseException> { parser2.parse(it) }
+            assertEquals(it.length - 1, exception.errorIndex)
         }
     }
 

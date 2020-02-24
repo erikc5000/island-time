@@ -479,44 +479,45 @@ internal class DecimalNumberParser(
             throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
-        if (currentPosition < textLength && maxFractionLength > 0) {
-            if (text[currentPosition] in settings.numberStyle.decimalSeparator) {
-                currentPosition++
+        if (currentPosition < textLength &&
+            maxFractionLength > 0 &&
+            text[currentPosition] in settings.numberStyle.decimalSeparator
+        ) {
+            currentPosition++
 
-                if (currentPosition >= textLength) {
-                    return currentPosition.inv()
+            if (currentPosition >= textLength) {
+                return currentPosition.inv()
+            }
+
+            var fractionNumberLength = 0
+
+            for (i in currentPosition until textLength) {
+                if (text[i].toDigit(settings.numberStyle) < 0) {
+                    break
                 }
+                fractionNumberLength++
+            }
 
-                var fractionNumberLength = 0
+            return when {
+                fractionNumberLength < minFractionLength -> (currentPosition + fractionNumberLength).inv()
+                fractionNumberLength > maxFractionLength -> (currentPosition + maxFractionLength).inv()
+                fractionNumberLength == 0 && wholeNumberLength == 0 -> currentPosition.inv()
+                else -> {
+                    var fractionResult = 0L
 
-                for (i in currentPosition until textLength) {
-                    if (text[i].toDigit(settings.numberStyle) < 0) {
-                        break
+                    for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
+                        val char = text[currentPosition]
+                        val digit = char.toDigit(settings.numberStyle)
+                        fractionResult += digit * FACTOR[i]
+                        currentPosition++
                     }
-                    fractionNumberLength++
-                }
 
-                return when {
-                    fractionNumberLength < minFractionLength -> (currentPosition + fractionNumberLength).inv()
-                    fractionNumberLength > maxFractionLength -> (currentPosition + maxFractionLength).inv()
-                    fractionNumberLength == 0 && wholeNumberLength == 0 -> currentPosition
-                    else -> {
-                        var fractionResult = 0L
-
-                        for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
-                            val char = text[currentPosition]
-                            val digit = char.toDigit(settings.numberStyle)
-                            fractionResult += digit * FACTOR[i]
-                            currentPosition++
-                        }
-
-                        if (signResult == ParseSignResult.NEGATIVE) {
-                            fractionResult = -fractionResult
-                        }
-
-                        onParsed.forEach { it(context.result, wholeResult, fractionResult) }
-                        currentPosition
+                    if (signResult == ParseSignResult.NEGATIVE) {
+                        fractionResult = -fractionResult
                     }
+
+                    onParsed.forEach { it(context.result, wholeResult, fractionResult) }
+                    currentPosition
                 }
             }
         }

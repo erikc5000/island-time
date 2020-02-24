@@ -63,9 +63,7 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     }
 
     override fun anyOf(vararg builders: DateTimeParserBuilder.() -> Unit) {
-        val childParsers = builders.map {
-            DateTimeParserBuilderImpl().apply(it).build()
-        }
+        val childParsers = builders.map { DateTimeParserBuilderImpl().apply(it).build() }
         anyOf(*childParsers.toTypedArray())
     }
 
