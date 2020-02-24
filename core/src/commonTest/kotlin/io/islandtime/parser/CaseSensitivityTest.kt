@@ -3,6 +3,7 @@ package io.islandtime.parser
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class CaseSensitivityTest {
     @Test
@@ -56,5 +57,16 @@ class CaseSensitivityTest {
 
         val exception = assertFailsWith<DateTimeParseException> { parser.parse("tt") }
         assertEquals(1, exception.errorIndex)
+    }
+
+    @Test
+    fun `empty blocks are allowed`() {
+        val parser = dateTimeParser {
+            caseSensitive {}
+            caseInsensitive {}
+        }
+
+        val result = parser.parse("")
+        assertTrue { result.isEmpty() }
     }
 }
