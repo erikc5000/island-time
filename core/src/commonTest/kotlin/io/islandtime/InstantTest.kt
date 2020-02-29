@@ -223,6 +223,16 @@ class InstantTest : AbstractIslandTimeTest() {
             "2019-08-19T23:07:27.821Z",
             Instant.fromUnixEpochMillisecond(1566256047821L).toString()
         )
+
+        assertEquals(
+            "+1000000000-12-31T23:59:59.999999999Z",
+            Instant.MAX.toString()
+        )
+
+        assertEquals(
+            "-1000000000-01-01T00:00Z",
+            Instant.MIN.toString()
+        )
     }
 
     @Test

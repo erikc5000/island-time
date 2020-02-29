@@ -256,15 +256,6 @@ class Instant private constructor(
     }
 }
 
-internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
-
-internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
-    val dateTime = instant.toDateTimeAt(UtcOffset.ZERO)
-    appendDateTime(dateTime)
-    append('Z')
-    return this
-}
-
 /**
  * Create the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
@@ -333,5 +324,32 @@ internal fun DateTimeParseResult.toInstant(): Instant? {
         dateTime.instantAt(offset)
     } else {
         null
+    }
+}
+internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
+
+internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
+    val secondOfUnixEpoch = instant.unixEpochSecond
+    val nanosecond = instant.unixEpochNanoOfSecond
+
+    return withComponentizedSecondOfUnixEpoch(secondOfUnixEpoch) { year, monthNumber, day, hour, minute, second ->
+        appendDate(year, monthNumber, day)
+        append('T')
+        appendTime(hour, minute, second, nanosecond)
+        append('Z')
+    }
+}
+
+internal inline fun <T> withComponentizedSecondOfUnixEpoch(
+    secondOfUnixEpoch: Long,
+    block: (year: Int, monthNumber: Int, dayOfMonth: Int, hour: Int, minute: Int, second: Int) -> T
+): T {
+    val dayOfUnixEpoch = secondOfUnixEpoch floorDiv SECONDS_PER_DAY
+    val secondOfDay = (secondOfUnixEpoch floorMod SECONDS_PER_DAY).toInt()
+
+    return withComponentizedDayOfUnixEpoch(dayOfUnixEpoch) { year, monthNumber, dayOfMonth ->
+        secondOfDay.seconds.toComponents { hours, minutes, seconds ->
+            block(year, monthNumber, dayOfMonth, hours.value, minutes.value, seconds.value)
+        }
     }
 }
