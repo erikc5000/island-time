@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateTimeField
 import io.islandtime.base.TimePoint
 import io.islandtime.internal.*
 import io.islandtime.measures.*
@@ -316,16 +317,28 @@ fun String.toInstant(
     return result.toInstant() ?: throwParserFieldResolutionException<Instant>(this)
 }
 
+private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
+
 internal fun DateTimeParseResult.toInstant(): Instant? {
+    // FIXME: Require the year field here for now and make it fits within DateTime's supported range
+    val parsedYear = fields[DateTimeField.YEAR] ?: return null
+
+    fields[DateTimeField.YEAR] = parsedYear % 10_000
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
 
+    // Restore the original parsed year
+    fields[DateTimeField.YEAR] = parsedYear
+
     return if (dateTime != null && offset != null) {
-        dateTime.instantAt(offset)
+        val secondOfEpoch = dateTime.unixEpochSecondAt(offset) +
+                ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
+        Instant.fromUnixEpochSecond(secondOfEpoch, dateTime.nanosecond)
     } else {
         null
     }
 }
+
 internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
 
 internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
