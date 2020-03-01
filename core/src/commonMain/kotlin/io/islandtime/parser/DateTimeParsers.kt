@@ -550,7 +550,7 @@ private val ISO_STANDARD_YEAR_COMPONENT = dateTimeParser {
 private val ISO_EXPANDED_YEAR_COMPONENT = dateTimeParser {
     anyOf({
         // Expanded representation requiring sign
-        year(5..9) { enforceSignStyle(SignStyle.ALWAYS) }
+        year(5..10) { enforceSignStyle(SignStyle.ALWAYS) }
     }, {
         // Standard 4-digit year
         year(4)

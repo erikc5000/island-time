@@ -95,32 +95,10 @@ class Date(
      */
     inline val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
 
-    //
-    // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
-    //
-
     /**
      * The day of the Unix epoch.
      */
-    val unixEpochDay: Long
-        get() {
-            var total = DAYS_IN_COMMON_YEAR * year
-
-            if (year >= 0) {
-                total += (year + 3) / 4 - (year + 99) / 100 + (year + 399) / 400
-            } else {
-                total -= year / -4 - year / -100 + year / -400
-            }
-
-            total += ((367 * monthNumber - 362) / MONTHS_PER_YEAR)
-            total += dayOfMonth - 1
-
-            if (monthNumber > 2) {
-                total -= if (isInLeapYear) 1 else 2
-            }
-
-            return total - DAYS_FROM_0000_TO_1970
-        }
+    val unixEpochDay: Long get() = getDayOfUnixEpochFrom(year, monthNumber, dayOfMonth)
 
     /**
      * Return a [Date] with [period] added to it.
@@ -311,12 +289,8 @@ class Date(
             return fromUnixEpochDay(days.value)
         }
 
-        //
-        // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
-        //
-
         /**
-         * Create a [Date] from the day of the Unix epoch
+         * Create a [Date] from the day of the Unix epoch.
          * @param day the day of the Unix epoch
          * @return a new [Date]
          * @throws DateTimeException if outside of the supported date range
@@ -326,33 +300,9 @@ class Date(
                 throw DateTimeException("The Unix epoch day '$day' is outside the supported range")
             }
 
-            var zeroDay = day + DAYS_FROM_0000_TO_1970
-            // find the march-based year
-            zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four year cycle
-            var adjust: Long = 0
-            if (zeroDay < 0) {
-                // adjust negative years to positive for calculation
-                val adjustCycles = (zeroDay + 1) / DAYS_PER_400_YEAR_CYCLE - 1
-                adjust = adjustCycles * 400
-                zeroDay += -adjustCycles * DAYS_PER_400_YEAR_CYCLE
+            return withComponentizedDayOfUnixEpoch(day) { year, month, dayOfMonth ->
+                Date(year, month, dayOfMonth)
             }
-            var yearEst = (400 * zeroDay + 591) / DAYS_PER_400_YEAR_CYCLE
-            var doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
-            if (doyEst < 0) {
-                // fix estimate
-                yearEst--
-                doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
-            }
-            yearEst += adjust  // reset any negative year
-            val marchDoy0 = doyEst.toInt()
-
-            // convert march-based values back to january-based
-            val marchMonth0 = (marchDoy0 * 5 + 2) / 153
-            val month = (marchMonth0 + 2) % 12 + 1
-            val dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
-            yearEst += (marchMonth0 / 10).toLong()
-
-            return Date(checkValidYear(yearEst), month, dom)
         }
     }
 }
@@ -458,14 +408,76 @@ internal fun DateTimeParseResult.toDate(): Date? {
 internal const val MAX_DATE_STRING_LENGTH = 10
 
 internal fun StringBuilder.appendDate(date: Date): StringBuilder {
-    with(date) {
-        appendYear(year)
-        append('-')
-        appendZeroPadded(monthNumber, 2)
-        append('-')
-        appendZeroPadded(dayOfMonth, 2)
+    return with(date) {
+        appendDate(year, monthNumber, dayOfMonth)
     }
+}
+
+internal fun StringBuilder.appendDate(year: Int, monthNumber: Int, dayOfMonth: Int): StringBuilder {
+    appendYear(year)
+    append('-')
+    appendZeroPadded(monthNumber, 2)
+    append('-')
+    appendZeroPadded(dayOfMonth, 2)
     return this
+}
+
+//
+// Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
+//
+fun getDayOfUnixEpochFrom(year: Int, monthNumber: Int, dayOfMonth: Int): Long {
+    var total = DAYS_IN_COMMON_YEAR * year
+
+    if (year >= 0) {
+        total += (year + 3) / 4 - (year + 99) / 100 + (year + 399) / 400
+    } else {
+        total -= year / -4 - year / -100 + year / -400
+    }
+
+    total += ((367 * monthNumber - 362) / MONTHS_PER_YEAR)
+    total += dayOfMonth - 1
+
+    if (monthNumber > 2) {
+        total -= if (isLeapYear(year)) 1 else 2
+    }
+
+    return total - DAYS_FROM_0000_TO_1970
+}
+
+//
+// Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
+//
+internal inline fun <T> withComponentizedDayOfUnixEpoch(
+    day: Long,
+    block: (year: Int, month: Int, day: Int) -> T
+): T {
+    var zeroDay = day + DAYS_FROM_0000_TO_1970
+    // find the march-based year
+    zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four year cycle
+    var adjust: Long = 0
+    if (zeroDay < 0) {
+        // adjust negative years to positive for calculation
+        val adjustCycles = (zeroDay + 1) / DAYS_PER_400_YEAR_CYCLE - 1
+        adjust = adjustCycles * 400
+        zeroDay += -adjustCycles * DAYS_PER_400_YEAR_CYCLE
+    }
+    var yearEst = (400 * zeroDay + 591) / DAYS_PER_400_YEAR_CYCLE
+    var doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
+    if (doyEst < 0) {
+        // fix estimate
+        yearEst--
+        doyEst = zeroDay - (365 * yearEst + yearEst / 4 - yearEst / 100 + yearEst / 400)
+    }
+    yearEst += adjust  // reset any negative year
+    val marchDoy0 = doyEst.toInt()
+
+    // convert march-based values back to january-based
+    val marchMonth0 = (marchDoy0 * 5 + 2) / 153
+    val month = (marchMonth0 + 2) % 12 + 1
+    val dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1
+    yearEst += (marchMonth0 / 10).toLong()
+
+    return block(yearEst.toIntExact(), month, dom)
 }
 
 internal inline val Date.monthsSinceYear0: Long get() = year * 12L + month.ordinal
