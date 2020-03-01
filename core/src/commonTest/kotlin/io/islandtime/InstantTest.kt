@@ -1,8 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.*
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -223,6 +222,16 @@ class InstantTest : AbstractIslandTimeTest() {
             "2019-08-19T23:07:27.821Z",
             Instant.fromUnixEpochMillisecond(1566256047821L).toString()
         )
+
+        assertEquals(
+            "+1000000000-12-31T23:59:59.999999999Z",
+            Instant.MAX.toString()
+        )
+
+        assertEquals(
+            "-1000000000-01-01T00:00Z",
+            Instant.MIN.toString()
+        )
     }
 
     @Test
@@ -232,7 +241,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() throws an exception when format is unexpected`() {
+    fun `String_toInstant() throws an exception when the format is unexpected`() {
         listOf(
             "20191205 0304",
             "2019-12-05T03:04",
@@ -248,7 +257,9 @@ class InstantTest : AbstractIslandTimeTest() {
             "2000-01-01T24:00Z",
             "2000-01-01T08:60Z",
             "2000-13-01T08:59Z",
-            "2000-01-32T08:59Z"
+            "2000-01-32T08:59Z",
+            "+1000000001-01-01T00:00Z",
+            "-1000000001-12-31T23:59:59.999999999Z"
         ).forEach {
             assertFailsWith<DateTimeException> { it.toInstant() }
         }
@@ -265,6 +276,16 @@ class InstantTest : AbstractIslandTimeTest() {
             Instant.fromUnixEpochMillisecond(1566256047821L),
             "2019-08-19T23:07:27.821Z".toInstant()
         )
+
+        assertEquals(
+            Instant.MAX,
+            "+1000000000-12-31T23:59:59.999999999Z".toInstant()
+        )
+
+        assertEquals(
+            Instant.MIN,
+            "-1000000000-01-01T00:00Z".toInstant()
+        )
     }
 
     @Test
@@ -278,5 +299,32 @@ class InstantTest : AbstractIslandTimeTest() {
             Instant.fromUnixEpochMillisecond(1566256047821L),
             "20190819T230727.821Z".toInstant(DateTimeParsers.Iso.INSTANT)
         )
+    }
+
+    @Test
+    fun `String_toInstant() throws an exception when required fields are missing`() {
+        val parser1 = dateTimeParser {
+            monthNumber(2)
+            +'-'
+            dayOfMonth(2)
+            +'T'
+            childParser(DateTimeParsers.Iso.Extended.TIME)
+            childParser(DateTimeParsers.Iso.Extended.UTC_OFFSET)
+        }
+
+        val exception1 = assertFailsWith<DateTimeParseException> {
+            "01-01T03:30+01".toInstant(parser1)
+        }
+        assertEquals(0, exception1.errorIndex)
+
+        val exception2 = assertFailsWith<DateTimeParseException> {
+            "2001-01-01T03:30".toInstant(DateTimeParsers.Iso.DATE_TIME)
+        }
+        assertEquals(0, exception2.errorIndex)
+
+        val exception3 = assertFailsWith<DateTimeParseException> {
+            "PT5S".toInstant(DateTimeParsers.Iso.DURATION)
+        }
+        assertEquals(0, exception3.errorIndex)
     }
 }
