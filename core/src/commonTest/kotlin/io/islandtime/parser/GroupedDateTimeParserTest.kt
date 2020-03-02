@@ -82,7 +82,7 @@ class GroupedDateTimeParserTest {
         val result = parser.parse("5 is the month of the year")
 
         assertEquals(1, result.size)
-        assertEquals(5L, result[0].properties[DateProperty.MonthOfYear])
+        assertEquals(5L, result[0][DateProperty.MonthOfYear])
     }
 
     @Test

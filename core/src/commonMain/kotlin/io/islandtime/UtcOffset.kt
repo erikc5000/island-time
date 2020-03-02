@@ -161,14 +161,14 @@ fun String.toUtcOffset(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): UtcOffset {
     val result = parser.parse(this, settings)
-    return result.toUtcOffset() ?: throwParserFieldResolutionException<UtcOffset>(this)
+    return result.toUtcOffset() ?: throwParserPropertyResolutionException<UtcOffset>(this)
 }
 
 /**
  * Resolve a parser result into a [UtcOffset].
  *
- * Required fields are [UtcOffsetProperty.TotalSeconds] or [UtcOffsetProperty.Sign] in conjunction with any combination
- * of [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds].
+ * Required properties are [UtcOffsetProperty.TotalSeconds] or [UtcOffsetProperty.Sign] in conjunction with any
+ * combination of [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds].
  */
 internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
     val totalSeconds = this[UtcOffsetProperty.TotalSeconds]

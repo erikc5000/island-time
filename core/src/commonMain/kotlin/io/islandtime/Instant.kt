@@ -313,7 +313,7 @@ fun String.toInstant(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): Instant {
     val result = parser.parse(this, settings)
-    return result.toInstant() ?: throwParserFieldResolutionException<Instant>(this)
+    return result.toInstant() ?: throwParserPropertyResolutionException<Instant>(this)
 }
 
 private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L

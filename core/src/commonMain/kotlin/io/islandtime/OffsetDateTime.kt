@@ -1,14 +1,10 @@
 package io.islandtime
 
 import io.islandtime.base.*
-import io.islandtime.internal.SECONDS_PER_HOUR
-import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
-import kotlin.math.absoluteValue
-import kotlin.math.sign
 
 /**
  * A date and time of day with an offset from UTC.
@@ -417,7 +413,7 @@ fun String.toOffsetDateTime(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): OffsetDateTime {
     val result = parser.parse(this, settings)
-    return result.toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTime>(this)
+    return result.toOffsetDateTime() ?: throwParserPropertyResolutionException<OffsetDateTime>(this)
 }
 
 internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {

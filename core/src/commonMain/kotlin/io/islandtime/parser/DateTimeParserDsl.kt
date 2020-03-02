@@ -235,13 +235,6 @@ interface SignParserBuilder {
     fun onParsed(action: DateTimeParseResult.(parsed: Int) -> Unit)
 
     /**
-     * Associate the result with a particular [TemporalProperty], setting it to `-1` when negative or `1` when positive.
-     */
-    fun associateWith(property: TemporalProperty<Long>) {
-        onParsed { this[property] = it.toLong() }
-    }
-
-    /**
      * Associate the result with a particular [NumberProperty], setting it to `-1L` when negative or `1L` when positive.
      */
     fun associateWith(property: NumberProperty) {

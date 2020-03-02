@@ -9,11 +9,11 @@ class DateTimeParseException(
     cause: Throwable? = null
 ) : DateTimeException(message, cause)
 
-internal inline fun <reified T> throwParserFieldResolutionException(parsedText: String): Nothing {
+internal inline fun <reified T> throwParserPropertyResolutionException(parsedText: String): Nothing {
     val objectType = T::class.simpleName ?: "Unknown"
 
     throw DateTimeParseException(
-        "The provided parser was unable to supply the fields needed to resolve an object of type '$objectType'",
+        "The provided parser was unable to supply the properties needed to resolve an object of type '$objectType'",
         parsedText
     )
 }

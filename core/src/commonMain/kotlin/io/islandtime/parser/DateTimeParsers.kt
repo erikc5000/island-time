@@ -140,7 +140,7 @@ object DateTimeParsers {
 
         /**
          * Parse an ISO-8601 standalone year. Note that not all formats supported by this parser are valid when a year
-         * is combined with other fields.
+         * is combined with other properties.
          *
          * Examples:
          * - `2008`

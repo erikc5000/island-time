@@ -252,7 +252,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() throws an exception when fields are out of range`() {
+    fun `String_toInstant() throws an exception when properties are out of range`() {
         listOf(
             "2000-01-01T24:00Z",
             "2000-01-01T08:60Z",
@@ -302,7 +302,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() throws an exception when required fields are missing`() {
+    fun `String_toInstant() throws an exception when required properties are missing`() {
         val parser1 = dateTimeParser {
             monthNumber(2)
             +'-'

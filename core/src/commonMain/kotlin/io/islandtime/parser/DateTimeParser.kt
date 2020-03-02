@@ -4,15 +4,15 @@ import io.islandtime.parser.internal.DateTimeParseContext
 import io.islandtime.parser.internal.DateTimeParserBuilderImpl
 
 /**
- * A parser that converts text into a collection of date-time fields that are understood throughout Island Time.
+ * A parser that converts text into a collection of properties that are understood throughout Island Time.
  */
 abstract class DateTimeParser internal constructor() {
     /**
-     * Parse [text] into a [DateTimeParseResult] containing all parsed fields.
+     * Parse [text] into a [DateTimeParseResult] containing all parsed properties.
      *
      * @param text text to parse
      * @param settings customize parsing behavior
-     * @return a result containing all of the parsed fields
+     * @return a result containing all of the parsed properties
      * @throws DateTimeParseException if parsing failed
      */
     fun parse(

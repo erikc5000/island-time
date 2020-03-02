@@ -245,7 +245,7 @@ fun String.toYearMonth(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): YearMonth {
     val result = parser.parse(this, settings)
-    return result.toYearMonth() ?: throwParserFieldResolutionException<YearMonth>(this)
+    return result.toYearMonth() ?: throwParserPropertyResolutionException<YearMonth>(this)
 }
 
 internal fun DateTimeParseResult.toYearMonth(): YearMonth? {

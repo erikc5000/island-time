@@ -3,7 +3,7 @@ package io.islandtime
 import io.islandtime.base.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.ZonedDateTimeInterval
 
 /**
@@ -687,7 +687,7 @@ fun String.toZonedDateTime(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): ZonedDateTime {
     val result = parser.parse(this, settings)
-    return result.toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTime>(this)
+    return result.toZonedDateTime() ?: throwParserPropertyResolutionException<ZonedDateTime>(this)
 }
 
 internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {

@@ -8,7 +8,7 @@ class GroupedDateTimeParser internal constructor(
     private val isAnyOf: Boolean = false
 ) {
     /**
-     * Parse [text] into a list of results, each containing the parsed fields associated with a particular group.
+     * Parse [text] into a list of results, each containing the parsed properties associated with a particular group.
      *
      * @param text text to parse
      * @param settings customize parsing behavior
@@ -99,8 +99,8 @@ class GroupedDateTimeParser internal constructor(
 /**
  * Create a [GroupedDateTimeParser].
  *
- * A grouped parser is capable of grouping the parsed fields into separate results, allowing fields to be reused within
- * the same character sequence.
+ * A grouped parser is capable of grouping the parsed properties into separate results, allowing the same property to be
+ * reused multiple times within a character sequence.
  */
 inline fun groupedDateTimeParser(
     builder: GroupedDateTimeParserBuilder.() -> Unit

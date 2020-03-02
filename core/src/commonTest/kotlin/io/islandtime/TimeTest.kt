@@ -428,7 +428,7 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toTime() throws an exception when the parser can't supply all required fields`() {
+    fun `String_toTime() throws an exception when the parser can't supply all required properties`() {
         assertFailsWith<DateTimeParseException> { "14".toTime(dateTimeParser { minuteOfHour(2) }) }
     }
 

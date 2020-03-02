@@ -410,7 +410,7 @@ fun String.toDate(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): Date {
     val result = parser.parse(this, settings)
-    return result.toDate() ?: throwParserFieldResolutionException<Date>(this)
+    return result.toDate() ?: throwParserPropertyResolutionException<Date>(this)
 }
 
 internal fun DateTimeParseResult.toDate(): Date? {

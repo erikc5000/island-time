@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 
 /**
  * A time of day with an offset from UTC.
@@ -178,7 +178,7 @@ fun String.toOffsetTime(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): OffsetTime {
     val result = parser.parse(this, settings)
-    return result.toOffsetTime() ?: throwParserFieldResolutionException<OffsetTime>(this)
+    return result.toOffsetTime() ?: throwParserPropertyResolutionException<OffsetTime>(this)
 }
 
 internal fun DateTimeParseResult.toOffsetTime(): OffsetTime? {

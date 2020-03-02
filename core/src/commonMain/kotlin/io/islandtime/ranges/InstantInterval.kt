@@ -98,13 +98,13 @@ fun String.toInstantInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0][DateProperty.IsFarPast] == true -> InstantInterval.UNBOUNDED.start
-        else -> results[0].toInstant() ?: throwParserFieldResolutionException<InstantInterval>(this)
+        else -> results[0].toInstant() ?: throwParserPropertyResolutionException<InstantInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1][DateProperty.IsFarFuture] == true -> InstantInterval.UNBOUNDED.endExclusive
-        else -> results[1].toInstant() ?: throwParserFieldResolutionException<InstantInterval>(this)
+        else -> results[1].toInstant() ?: throwParserPropertyResolutionException<InstantInterval>(this)
     }
 
     return when {

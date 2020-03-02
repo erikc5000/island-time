@@ -250,13 +250,13 @@ fun String.toDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0][DateProperty.IsFarPast] == true -> DateTimeInterval.UNBOUNDED.start
-        else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
+        else -> results[0].toDateTime() ?: throwParserPropertyResolutionException<DateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1][DateProperty.IsFarFuture] == true -> DateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
+        else -> results[1].toDateTime() ?: throwParserPropertyResolutionException<DateTimeInterval>(this)
     }
 
     return when {

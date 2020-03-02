@@ -34,8 +34,8 @@ class LocalizedTextParserTest {
             parsers.forEachIndexed { index, parser ->
                 val textToParse = if (index == 1) " ${it.first}a" else it.first
                 val result = parser.parse(textToParse, DateTimeParserSettings(locale = en_US))
-                assertEquals(1, result.properties.size)
-                assertEquals(it.second, result.properties[DateProperty.MonthOfYear])
+                assertEquals(1, result.size)
+                assertEquals(it.second, result[DateProperty.MonthOfYear])
             }
         }
     }
@@ -47,8 +47,8 @@ class LocalizedTextParserTest {
         }
 
         val result = parser.parse("januarY", DateTimeParserSettings(locale = en_US, isCaseSensitive = false))
-        assertEquals(1, result.properties.size)
-        assertEquals(1L, result.properties[DateProperty.MonthOfYear])
+        assertEquals(1, result.size)
+        assertEquals(1L, result[DateProperty.MonthOfYear])
     }
 
     @Test

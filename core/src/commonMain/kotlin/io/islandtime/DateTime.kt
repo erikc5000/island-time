@@ -4,7 +4,7 @@ import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.DateTimeInterval
 
 /**
@@ -681,14 +681,14 @@ val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
 
 /**
- * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the necessary fields
+ * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the required properties.
  */
 fun String.toDateTime(
     parser: DateTimeParser,
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): DateTime {
     val result = parser.parse(this, settings)
-    return result.toDateTime() ?: throwParserFieldResolutionException<DateTime>(this)
+    return result.toDateTime() ?: throwParserPropertyResolutionException<DateTime>(this)
 }
 
 internal fun DateTimeParseResult.toDateTime(): DateTime? {

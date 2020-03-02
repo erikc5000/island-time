@@ -149,7 +149,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toUtcOffset() throws an exception when the parser can't supplied all required fields`() {
+    fun `String_toUtcOffset() throws an exception when the parser can't supplied all required properties`() {
         assertFailsWith<DateTimeParseException> { "04".toUtcOffset(DateTimeParsers.Iso.TIME) }
     }
 

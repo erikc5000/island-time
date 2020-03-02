@@ -401,7 +401,7 @@ fun DateTimeParserBuilder.utcOffsetSign() {
  */
 fun DateTimeParserBuilder.utcDesignator() {
     literal('Z') {
-        onParsed { properties[UtcOffsetProperty.TotalSeconds] = 0L }
+        onParsed { this[UtcOffsetProperty.TotalSeconds] = 0L }
     }
 }
 

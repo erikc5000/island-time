@@ -7,7 +7,7 @@ import io.islandtime.endOfDayAt
 import io.islandtime.startOfDayAt
 import io.islandtime.parser.*
 import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
@@ -160,13 +160,13 @@ fun String.toZonedDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0][DateProperty.IsFarPast] == true -> ZonedDateTimeInterval.UNBOUNDED.start
-        else -> results[0].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+        else -> results[0].toZonedDateTime() ?: throwParserPropertyResolutionException<ZonedDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1][DateProperty.IsFarFuture] == true -> ZonedDateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+        else -> results[1].toZonedDateTime() ?: throwParserPropertyResolutionException<ZonedDateTimeInterval>(this)
     }
 
     return when {

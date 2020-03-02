@@ -1,6 +1,7 @@
 package io.islandtime.measures
 
-import io.islandtime.base.DurationProperty
+import io.islandtime.base.*
+import io.islandtime.base.throwUnsupportedTemporalPropertyException
 import io.islandtime.internal.*
 import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
@@ -25,7 +26,8 @@ import kotlin.math.absoluteValue
 class Duration private constructor(
     val seconds: LongSeconds,
     val nanosecondAdjustment: IntNanoseconds = 0.nanoseconds
-) : Comparable<Duration> {
+) : Temporal,
+    Comparable<Duration> {
 
     /**
      * Is this duration zero?
@@ -379,6 +381,22 @@ class Duration private constructor(
         ) -> T
     ): T {
         return action(seconds, nanosecondAdjustment)
+    }
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            DurationProperty.Seconds,
+            DurationProperty.NanosecondOfSeconds -> true
+            else -> false
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            DurationProperty.Seconds -> seconds.value
+            DurationProperty.NanosecondOfSeconds -> nanosecondAdjustment.value.toLong()
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
     }
 
     override fun equals(other: Any?): Boolean {

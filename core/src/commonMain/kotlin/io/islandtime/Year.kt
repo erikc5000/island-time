@@ -143,7 +143,7 @@ fun String.toYear(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): Year {
     val result = parser.parse(this, settings)
-    return result.toYear() ?: throwParserFieldResolutionException<Year>(this)
+    return result.toYear() ?: throwParserPropertyResolutionException<Year>(this)
 }
 
 internal fun DateTimeParseResult.toYear(): Year? {

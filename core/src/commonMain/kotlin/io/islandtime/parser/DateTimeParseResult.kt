@@ -19,7 +19,5 @@ inline class DateTimeParseResult(
 
     inline operator fun <reified T> get(property: TemporalProperty<T>): T? = properties[property] as T?
 
-    internal fun deepCopy() = DateTimeParseResult().apply {
-        properties.putAll(this@DateTimeParseResult.properties)
-    }
+    internal fun deepCopy() = DateTimeParseResult(properties.toMutableMap())
 }

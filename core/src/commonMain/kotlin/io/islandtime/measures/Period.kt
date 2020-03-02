@@ -1,11 +1,12 @@
 package io.islandtime.measures
 
-import io.islandtime.base.DurationProperty
+import io.islandtime.base.*
+import io.islandtime.base.throwUnsupportedTemporalPropertyException
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.internal.timesExact
 import io.islandtime.internal.toIntExact
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 
 /**
  * A date-based period of time, such as "2 years, 5 months, 16 days". Unlike [Duration], which uses exact increments,
@@ -19,7 +20,7 @@ class Period private constructor(
     val years: IntYears = 0.years,
     val months: IntMonths = 0.months,
     val days: IntDays = 0.days
-) {
+) : Temporal {
 
     /**
      * The total number of months in this period, including years.
@@ -113,6 +114,24 @@ class Period private constructor(
         } else {
             create(newYears, newMonths, days)
         }
+    }
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            DurationProperty.Years,
+            DurationProperty.Months,
+            DurationProperty.Days -> true
+            else -> false
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            DurationProperty.Years -> years.value
+            DurationProperty.Months -> months.value
+            DurationProperty.Days -> days.value
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }.toLong()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -323,7 +342,7 @@ fun String.toPeriod(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): Period {
     val result = parser.parse(this, settings)
-    return result.toPeriod() ?: throwParserFieldResolutionException<Period>(this)
+    return result.toPeriod() ?: throwParserPropertyResolutionException<Period>(this)
 }
 
 internal fun DateTimeParseResult.toPeriod(): Period? {

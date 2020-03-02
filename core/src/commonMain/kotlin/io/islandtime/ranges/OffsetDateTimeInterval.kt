@@ -5,7 +5,7 @@ import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
@@ -146,13 +146,13 @@ fun String.toOffsetDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0][DateProperty.IsFarPast] == true -> OffsetDateTimeInterval.UNBOUNDED.start
-        else -> results[0].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+        else -> results[0].toOffsetDateTime() ?: throwParserPropertyResolutionException<OffsetDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1][DateProperty.IsFarFuture] == true -> OffsetDateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+        else -> results[1].toOffsetDateTime() ?: throwParserPropertyResolutionException<OffsetDateTimeInterval>(this)
     }
 
     return when {

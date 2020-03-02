@@ -909,7 +909,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateTime() throws an exception when the parser can't supply required fields`() {
+    fun `String_toDateTime() throws an exception when the parser can't supply required properties`() {
         assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.UTC_OFFSET) }
         assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.TIME) }
         assertFailsWith<DateTimeParseException> { "2009-10-08".toDateTime(DateTimeParsers.Iso.DATE) }

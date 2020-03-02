@@ -372,7 +372,7 @@ fun String.toTime(
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
 ): Time {
     val result = parser.parse(this, settings)
-    return result.toTime() ?: throwParserFieldResolutionException<Time>(this)
+    return result.toTime() ?: throwParserPropertyResolutionException<Time>(this)
 }
 
 internal fun DateTimeParseResult.toTime(): Time? {

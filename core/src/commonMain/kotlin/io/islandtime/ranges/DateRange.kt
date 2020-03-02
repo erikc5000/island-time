@@ -9,7 +9,7 @@ import io.islandtime.measures.*
 import io.islandtime.monthsSinceYear0
 import io.islandtime.parser.*
 import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserFieldResolutionException
+import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 import kotlin.random.nextLong
@@ -183,13 +183,13 @@ fun String.toDateRange(
     val start = when {
         results[0].isEmpty() -> null
         results[0][DateProperty.IsFarPast] == true -> Date.MIN
-        else -> results[0].toDate() ?: throwParserFieldResolutionException<DateRange>(this)
+        else -> results[0].toDate() ?: throwParserPropertyResolutionException<DateRange>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1][DateProperty.IsFarFuture] == true -> Date.MAX
-        else -> results[1].toDate() ?: throwParserFieldResolutionException<DateRange>(this)
+        else -> results[1].toDate() ?: throwParserPropertyResolutionException<DateRange>(this)
     }
 
     return when {
