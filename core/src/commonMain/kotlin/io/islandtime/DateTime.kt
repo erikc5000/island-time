@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -18,7 +19,8 @@ class DateTime(
     val date: Date,
     /** The time of day. */
     val time: Time
-) : Comparable<DateTime> {
+) : Temporal,
+    Comparable<DateTime> {
 
     /**
      * Create a [DateTime].
@@ -429,6 +431,31 @@ class DateTime(
     operator fun component2() = time
 
     operator fun rangeTo(other: DateTime) = DateTimeInterval.withInclusiveEnd(this, other)
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            is DateProperty, is TimeProperty -> true
+            else -> false
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            is DateProperty.IsFarPast -> this == MIN
+            is DateProperty.IsFarFuture -> this == MAX
+            is DateProperty -> date.get(property)
+            is TimeProperty -> time.get(property)
+            else -> super.get(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is DateProperty -> date.get(property)
+            is TimeProperty -> time.get(property)
+            else -> super.get(property)
+        }
+    }
 
     override fun compareTo(other: DateTime): Int {
         val dateDiff = date.compareTo(other.date)

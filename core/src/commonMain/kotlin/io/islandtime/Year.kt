@@ -1,13 +1,13 @@
 package io.islandtime
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.*
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 import kotlin.math.absoluteValue
 
-inline class Year(val value: Int) : Comparable<Year> {
+inline class Year(val value: Int) : Temporal, Comparable<Year> {
 
     /**
      * Is this year within the supported range?
@@ -79,6 +79,38 @@ inline class Year(val value: Int) : Comparable<Year> {
         return this
     }
 
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return if (property is DateProperty) {
+            when (property) {
+                is DateProperty.Year,
+                is DateProperty.YearOfEra,
+                is DateProperty.Era,
+                is DateProperty.IsFarPast,
+                is DateProperty.IsFarFuture -> true
+                else -> false
+            }
+        } else {
+            false
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            is DateProperty.IsFarPast -> this == MIN
+            is DateProperty.IsFarFuture -> this == MAX
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is DateProperty.Year -> value
+            is DateProperty.YearOfEra -> if (value >= 1) value else 1 - value
+            is DateProperty.Era -> if (value >= 1) 1 else 0
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }.toLong()
+    }
+
     override fun compareTo(other: Year) = value - other.value
 
     override fun toString(): String {
@@ -115,7 +147,7 @@ fun String.toYear(
 }
 
 internal fun DateTimeParseResult.toYear(): Year? {
-    val value = fields[DateTimeField.YEAR]
+    val value = this[DateProperty.Year]
 
     return if (value != null) {
         Year(checkValidYear(value))

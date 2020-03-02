@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -19,7 +19,8 @@ class YearMonth(
     val year: Int,
     /** The month of the year. */
     val month: Month
-) : Comparable<YearMonth> {
+) : Temporal,
+    Comparable<YearMonth> {
 
     init {
         checkValidYear(year)
@@ -85,6 +86,40 @@ class YearMonth(
      * The [Date] representing the last day in this year-month.
      */
     val endDate: Date get() = Date(year, month, month.lastDayIn(year))
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return if (property is DateProperty) {
+            when (property) {
+                is DateProperty.Year,
+                is DateProperty.YearOfEra,
+                is DateProperty.Era,
+                is DateProperty.MonthOfYear,
+                is DateProperty.IsFarPast,
+                is DateProperty.IsFarFuture -> true
+                else -> false
+            }
+        } else {
+            false
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            is DateProperty.IsFarPast -> this == MIN
+            is DateProperty.IsFarFuture -> this == MAX
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is DateProperty.Year -> year
+            is DateProperty.YearOfEra -> if (year >= 1) year else 1 - year
+            is DateProperty.Era -> if (year >= 1) 1 else 0
+            is DateProperty.MonthOfYear -> monthNumber
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }.toLong()
+    }
 
     override fun compareTo(other: YearMonth): Int {
         val yearDiff = year - other.year
@@ -198,7 +233,7 @@ fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
 /**
  * Convert a string to a [YearMonth] using a specific parser.
  *
- * The parser must be capable of supplying [DateTimeField.YEAR] and [DateTimeField.MONTH_OF_YEAR].
+ * The parser must be capable of supplying values for [DateProperty.Year] and [DateProperty.MonthOfYear].
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -214,8 +249,8 @@ fun String.toYearMonth(
 }
 
 internal fun DateTimeParseResult.toYearMonth(): YearMonth? {
-    val year = fields[DateTimeField.YEAR]
-    val month = fields[DateTimeField.MONTH_OF_YEAR]
+    val year = this[DateProperty.Year]
+    val month = this[DateProperty.MonthOfYear]
 
     return if (year != null && month != null) {
         try {

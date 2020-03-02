@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.endOfDayAt
 import io.islandtime.startOfDayAt
@@ -159,13 +159,13 @@ fun String.toZonedDateTimeInterval(
 
     val start = when {
         results[0].isEmpty() -> null
-        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.start
+        results[0][DateProperty.IsFarPast] == true -> ZonedDateTimeInterval.UNBOUNDED.start
         else -> results[0].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
-        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.endExclusive
+        results[1][DateProperty.IsFarFuture] == true -> ZonedDateTimeInterval.UNBOUNDED.endExclusive
         else -> results[1].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
     }
 

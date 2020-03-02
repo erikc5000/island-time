@@ -1,12 +1,13 @@
 package io.islandtime
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.*
 import io.islandtime.internal.SECONDS_PER_HOUR
 import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import kotlin.math.sign
 
 /**
  * The time shift between a local time and UTC.
@@ -17,7 +18,7 @@ import io.islandtime.parser.*
  * @see validate
  * @see validated
  */
-inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
+inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcOffset> {
 
     /**
      * Check if this offset is within the supported range.
@@ -58,6 +59,20 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
         return action(hours, minutes, seconds)
     }
 
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property is UtcOffsetProperty
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is UtcOffsetProperty.Sign -> totalSeconds.value.sign
+            is UtcOffsetProperty.Hours -> totalSeconds.absoluteValue.inHours.value
+            is UtcOffsetProperty.Minutes -> (totalSeconds.absoluteValue.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE
+            is UtcOffsetProperty.Seconds -> totalSeconds.absoluteValue.value % SECONDS_PER_MINUTE
+            is UtcOffsetProperty.TotalSeconds -> totalSeconds.value
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }.toLong()
+    }
 
     override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
 
@@ -152,23 +167,22 @@ fun String.toUtcOffset(
 /**
  * Resolve a parser result into a [UtcOffset].
  *
- * Required fields are [DateTimeField.UTC_OFFSET_TOTAL_SECONDS] or [DateTimeField.UTC_OFFSET_SIGN] in conjunction with
- * any combination of [DateTimeField.UTC_OFFSET_HOURS], [DateTimeField.UTC_OFFSET_MINUTES], and
- * [DateTimeField.UTC_OFFSET_SECONDS].
+ * Required fields are [UtcOffsetProperty.TotalSeconds] or [UtcOffsetProperty.Sign] in conjunction with any combination
+ * of [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds].
  */
 internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
-    val totalSeconds = fields[DateTimeField.UTC_OFFSET_TOTAL_SECONDS]
+    val totalSeconds = this[UtcOffsetProperty.TotalSeconds]
 
     if (totalSeconds != null) {
         return UtcOffset(totalSeconds.toIntExact().seconds).validated()
     }
 
-    val sign = fields[DateTimeField.UTC_OFFSET_SIGN]
+    val sign = this[UtcOffsetProperty.Sign]
 
     if (sign != null) {
-        val hours = (fields[DateTimeField.UTC_OFFSET_HOURS]?.toIntExact() ?: 0).hours
-        val minutes = (fields[DateTimeField.UTC_OFFSET_MINUTES]?.toIntExact() ?: 0).minutes
-        val seconds = (fields[DateTimeField.UTC_OFFSET_SECONDS]?.toIntExact() ?: 0).seconds
+        val hours = (this[UtcOffsetProperty.Hours]?.toIntExact() ?: 0).hours
+        val minutes = (this[UtcOffsetProperty.Minutes]?.toIntExact() ?: 0).minutes
+        val seconds = (this[UtcOffsetProperty.Seconds]?.toIntExact() ?: 0).seconds
 
         return if (sign < 0L) {
             UtcOffset(-hours, -minutes, -seconds).validated()

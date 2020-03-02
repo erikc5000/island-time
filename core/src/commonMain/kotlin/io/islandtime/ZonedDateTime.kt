@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.base.TimePoint
+import io.islandtime.base.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
@@ -118,6 +118,41 @@ class ZonedDateTime private constructor(
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            is DateProperty,
+            is TimeProperty,
+            is UtcOffsetProperty,
+            is TimeZoneProperty -> true
+            else -> super.has(property)
+        }
+    }
+
+    override fun <T> get(property: TemporalProperty<T>): T {
+        return when (property) {
+            is TimeZoneProperty -> zone.get(property)
+            else -> super.get(property)
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            is DateProperty, is TimeProperty -> dateTime.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            is TimeZoneProperty -> zone.get(property)
+            else -> super.get(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is DateProperty, is TimeProperty -> dateTime.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            is TimeZoneProperty -> zone.get(property)
+            else -> super.get(property)
+        }
+    }
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
@@ -660,7 +695,7 @@ internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
     val offset = this.toUtcOffset()
 
     return if (dateTime != null && offset != null) {
-        val zone = timeZoneId?.toTimeZone() ?: offset.asTimeZone()
+        val zone = this[TimeZoneProperty.Id]?.toTimeZone() ?: offset.asTimeZone()
 
         // Check if the offset is valid for the time zone as we understand it and if not, adjust the date-time and
         // offset to valid values while preserving the instant of the parsed value

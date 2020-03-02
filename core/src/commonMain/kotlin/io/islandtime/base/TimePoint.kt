@@ -8,7 +8,7 @@ import io.islandtime.measures.*
  * An implementor of this interface contains enough information to represent an instant in time. As such, any time
  * point can be compared to another on the timeline and duration units can be added or subtracted.
  */
-interface TimePoint<T> {
+interface TimePoint<T> : Temporal {
     /**
      * The number of seconds since the Unix epoch of 1970-01-01T00:00Z
      */
@@ -89,6 +89,17 @@ interface TimePoint<T> {
     operator fun minus(microseconds: LongMicroseconds): T
     operator fun minus(nanoseconds: IntNanoseconds): T
     operator fun minus(nanoseconds: LongNanoseconds): T
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property is TimePointProperty
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
 
     companion object {
         /**

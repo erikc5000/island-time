@@ -3,12 +3,11 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.MAX_INSTANT_STRING_LENGTH
 import io.islandtime.appendInstant
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.endOfDayAt
 import io.islandtime.startOfDayAt
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.toInstant
 import kotlin.random.Random
@@ -98,13 +97,13 @@ fun String.toInstantInterval(
 
     val start = when {
         results[0].isEmpty() -> null
-        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> InstantInterval.UNBOUNDED.start
+        results[0][DateProperty.IsFarPast] == true -> InstantInterval.UNBOUNDED.start
         else -> results[0].toInstant() ?: throwParserFieldResolutionException<InstantInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
-        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> InstantInterval.UNBOUNDED.endExclusive
+        results[1][DateProperty.IsFarFuture] == true -> InstantInterval.UNBOUNDED.endExclusive
         else -> results[1].toInstant() ?: throwParserFieldResolutionException<InstantInterval>(this)
     }
 

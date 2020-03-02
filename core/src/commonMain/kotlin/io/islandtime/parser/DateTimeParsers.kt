@@ -1,5 +1,7 @@
 package io.islandtime.parser
 
+import io.islandtime.base.DateProperty
+
 /**
  * A set of predefined parsers.
  */
@@ -579,11 +581,11 @@ private fun buildIsoIntervalParser(elementParser: DateTimeParser): GroupedDateTi
     return groupedDateTimeParser {
         anyOf({
             group {
-                anyOf({ unboundedDesignator() }, { childParser(elementParser) })
+                anyOf({ unboundedDesignator(DateProperty.IsFarPast) }, { childParser(elementParser) })
             }
             +'/'
             group {
-                anyOf({ unboundedDesignator() }, { childParser(elementParser) })
+                anyOf({ unboundedDesignator(DateProperty.IsFarFuture) }, { childParser(elementParser) })
             }
         }, {
             repeat(2) { group {} }

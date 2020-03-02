@@ -1,5 +1,8 @@
 package io.islandtime
 
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
+import io.islandtime.base.TimeZoneProperty
 import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.locale.Locale
@@ -15,7 +18,7 @@ import io.islandtime.zone.TimeZoneRulesProvider
 /**
  * A time zone.
  */
-sealed class TimeZone : Comparable<TimeZone> {
+sealed class TimeZone : Temporal, Comparable<TimeZone> {
 
     /**
      * An ID that uniquely identifies the time zone.
@@ -100,6 +103,18 @@ sealed class TimeZone : Comparable<TimeZone> {
      * @throws TimeZoneRulesException if the current time zone rules provider doesn't support [id]
      */
     abstract fun normalized(): TimeZone
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property is TimeZoneProperty
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T> get(property: TemporalProperty<T>): T {
+        return when (property) {
+            is TimeZoneProperty.Id -> id as T
+            else -> super.get(property)
+        }
+    }
 
     override fun compareTo(other: TimeZone): Int {
         return id.compareTo(other.id)

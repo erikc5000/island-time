@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -17,7 +17,7 @@ class DateTimeParserTest {
     fun `throws an exception when there are unexpected characters after all parsers complete`() {
         val parser = dateTimeParser {
             wholeNumber(1) {
-                associateWith(DateTimeField.DAY_OF_WEEK)
+                associateWith(DateProperty.DayOfWeek)
             }
         }
 

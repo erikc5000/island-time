@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -29,18 +29,18 @@ class AnyOfParserTest {
         val parser = dateTimeParser {
             anyOf({
                 wholeNumber {
-                    associateWith(DateTimeField.YEAR)
+                    associateWith(DateProperty.Year)
                 }
             }, {
                 wholeNumber(4) {
-                    associateWith(DateTimeField.MONTH_OF_YEAR)
+                    associateWith(DateProperty.MonthOfYear)
                 }
             })
         }
 
         val result = parser.parse("2301")
-        assertEquals(1, result.fields.size)
-        assertEquals(2301, result.fields[DateTimeField.YEAR])
+        assertEquals(1, result.size)
+        assertEquals(2301L, result[DateProperty.Year])
     }
 
     @Test

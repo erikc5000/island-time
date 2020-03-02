@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -24,7 +24,8 @@ class Time(
     val second: Int = 0,
     /** The nanosecond of the second. */
     val nanosecond: Int = 0
-) : Comparable<Time> {
+) : Temporal,
+    Comparable<Time> {
 
     init {
         if (hour !in 0 until HOURS_PER_DAY) {
@@ -186,6 +187,39 @@ class Time(
     operator fun component3() = second
     operator fun component4() = nanosecond
 
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property is TimeProperty
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            TimeProperty.MillisecondOfDay -> nanosecondOfDay / NANOSECONDS_PER_MILLISECOND
+            TimeProperty.MicrosecondOfDay -> nanosecondOfDay / NANOSECONDS_PER_MICROSECOND
+            TimeProperty.NanosecondOfDay -> nanosecondOfDay
+            else -> getInt(property).toLong()
+        }
+    }
+
+    private fun getInt(property: NumberProperty): Int {
+        return when (property) {
+            TimeProperty.AmPmOfDay -> hour / 12
+            TimeProperty.HourOfDay -> hour
+            TimeProperty.HourOfAmPm -> hour % 12
+            TimeProperty.ClockHourOfDay -> if (hour == 0) 24 else hour
+            TimeProperty.ClockHourOfAmPm -> {
+                val hourOfAmPm = hour % 12
+                if (hourOfAmPm == 0) 12 else hourOfAmPm
+            }
+            TimeProperty.MinuteOfHour -> minute
+            TimeProperty.SecondOfDay -> secondOfDay
+            TimeProperty.SecondOfMinute -> second
+            TimeProperty.MillisecondOfSecond -> nanosecond / NANOSECONDS_PER_MILLISECOND
+            TimeProperty.MicrosecondOfSecond -> nanosecond / NANOSECONDS_PER_MICROSECOND
+            TimeProperty.NanosecondOfSecond -> nanosecond
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         return this === other ||
                 (other is Time &&
@@ -342,14 +376,14 @@ fun String.toTime(
 }
 
 internal fun DateTimeParseResult.toTime(): Time? {
-    val hour = fields[DateTimeField.HOUR_OF_DAY]
+    val hour = this[TimeProperty.HourOfDay]
 
     // TODO: Add support for SECOND_OF_DAY, NANOSECOND_OF_DAY, and so forth
     if (hour != null) {
         return try {
-            val minute = fields[DateTimeField.MINUTE_OF_HOUR]?.toIntExact() ?: 0
-            val second = fields[DateTimeField.SECOND_OF_MINUTE]?.toIntExact() ?: 0
-            val nanosecond = fields[DateTimeField.NANOSECOND_OF_SECOND]?.toIntExact() ?: 0
+            val minute = this[TimeProperty.MinuteOfHour]?.toIntExact() ?: 0
+            val second = this[TimeProperty.SecondOfMinute]?.toIntExact() ?: 0
+            val nanosecond = this[TimeProperty.NanosecondOfSecond]?.toIntExact() ?: 0
             Time(hour.toIntExact(), minute, second, nanosecond)
         } catch (e: ArithmeticException) {
             throw DateTimeException(e.message, e)

@@ -1,5 +1,6 @@
 package io.islandtime.parser
 
+import io.islandtime.base.TimeZoneProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -22,13 +23,13 @@ class StringParserTest {
                     assertEquals(char, expectedCharMap[index]!!)
                     StringParseAction.ACCEPT_AND_CONTINUE
                 }
-                onParsed { timeZoneId = it }
+                onParsed { this[TimeZoneProperty.Id] = it }
             }
         }
 
         val result = parser.parse(" Test")
-        assertTrue { result.fields.isEmpty() }
-        assertEquals("Test", result.timeZoneId)
+        assertTrue { result.size == 1 }
+        assertEquals("Test", result[TimeZoneProperty.Id])
     }
 
     @Test
@@ -41,14 +42,14 @@ class StringParserTest {
                     assertEquals(0, index)
                     StringParseAction.REJECT_AND_STOP
                 }
-                onParsed { timeZoneId = it }
+                onParsed { this[TimeZoneProperty.Id] = it }
             }
             +'.'
         }
 
         val result = parser.parse(" .")
-        assertTrue { result.fields.isEmpty() }
-        assertTrue { result.timeZoneId!!.isEmpty() }
+        assertTrue { result.size == 1 }
+        assertTrue { result[TimeZoneProperty.Id]!!.isEmpty() }
     }
 
     @Test
@@ -77,7 +78,7 @@ class StringParserTest {
                         StringParseAction.REJECT_AND_STOP
                     }
                 }
-                onParsed { timeZoneId = it }
+                onParsed { this[TimeZoneProperty.Id] = it }
             }
             +'.'
         }
@@ -99,7 +100,7 @@ class StringParserTest {
                         StringParseAction.REJECT_AND_STOP
                     }
                 }
-                onParsed { timeZoneId = it }
+                onParsed { this[TimeZoneProperty.Id] = it }
             }
             +'.'
         }

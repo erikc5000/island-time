@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -16,7 +16,7 @@ class GroupedDateTimeParserTest {
     fun `throws an exception when there are unexpected characters after all parsers complete`() {
         val parser = groupedDateTimeParser {
             group {
-                wholeNumber(1) { associateWith(DateTimeField.DAY_OF_WEEK) }
+                wholeNumber(1) { associateWith(DateProperty.DayOfWeek) }
             }
         }
 
@@ -73,7 +73,7 @@ class GroupedDateTimeParserTest {
     fun `results from a single group are populated correctly`() {
         val parser = groupedDateTimeParser {
             group {
-                wholeNumber { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 +" is the month"
             }
             +" of the year"
@@ -82,22 +82,22 @@ class GroupedDateTimeParserTest {
         val result = parser.parse("5 is the month of the year")
 
         assertEquals(1, result.size)
-        assertEquals(5L, result[0].fields[DateTimeField.MONTH_OF_YEAR])
+        assertEquals(5L, result[0].properties[DateProperty.MonthOfYear])
     }
 
     @Test
     fun `results from a multiple groups are populated correctly`() {
         val parser = groupedDateTimeParser {
             group {
-                wholeNumber { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 +'/'
-                wholeNumber { associateWith(DateTimeField.YEAR) }
+                wholeNumber { associateWith(DateProperty.Year) }
             }
             +" - "
             group {
-                wholeNumber { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 +'/'
-                wholeNumber { associateWith(DateTimeField.YEAR) }
+                wholeNumber { associateWith(DateProperty.Year) }
             }
         }
 
@@ -105,21 +105,11 @@ class GroupedDateTimeParserTest {
 
         assertEquals(2, result.size)
 
-        assertEquals(
-            listOf(
-                DateTimeField.MONTH_OF_YEAR to 12L,
-                DateTimeField.YEAR to 2010L
-            ),
-            result[0].fields.toList().sortedBy { it.second }
-        )
+        assertEquals(12L, result[0][DateProperty.MonthOfYear])
+        assertEquals(2010L, result[0][DateProperty.Year])
 
-        assertEquals(
-            listOf(
-                DateTimeField.MONTH_OF_YEAR to 4L,
-                DateTimeField.YEAR to 2011L
-            ),
-            result[1].fields.toList().sortedBy { it.second }
-        )
+        assertEquals(4L, result[1][DateProperty.MonthOfYear])
+        assertEquals(2011L, result[1][DateProperty.Year])
     }
 
     @Test
@@ -127,11 +117,11 @@ class GroupedDateTimeParserTest {
         val parser = groupedDateTimeParser {
             +"Month: "
             group {
-                wholeNumber(2) { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }
             }
             +" DoW: "
             group {
-                wholeNumber(1) { associateWith(DateTimeField.DAY_OF_WEEK) }
+                wholeNumber(1) { associateWith(DateProperty.DayOfWeek) }
             }
         }
 
@@ -146,11 +136,11 @@ class GroupedDateTimeParserTest {
     fun `anyOf() enables reuse of existing grouped parsers`() {
         val existingParser = groupedDateTimeParser {
             group {
-                wholeNumber(2) { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }
             }
             +'/'
             group {
-                wholeNumber(4) { associateWith(DateTimeField.YEAR) }
+                wholeNumber(4) { associateWith(DateProperty.Year) }
             }
         }
 
@@ -165,23 +155,23 @@ class GroupedDateTimeParserTest {
         assertEquals(4, result.size)
 
         assertEquals(
-            listOf(DateTimeField.MONTH_OF_YEAR to 2L),
-            result[0].fields.toList()
+            listOf(DateProperty.MonthOfYear to 2L),
+            result[0].properties.toList()
         )
 
         assertEquals(
-            listOf(DateTimeField.YEAR to 2000L),
-            result[1].fields.toList()
+            listOf(DateProperty.Year to 2000L),
+            result[1].properties.toList()
         )
 
         assertEquals(
-            listOf(DateTimeField.MONTH_OF_YEAR to 3L),
-            result[2].fields.toList()
+            listOf(DateProperty.MonthOfYear to 3L),
+            result[2].properties.toList()
         )
 
         assertEquals(
-            listOf(DateTimeField.YEAR to 2001L),
-            result[3].fields.toList()
+            listOf(DateProperty.Year to 2001L),
+            result[3].properties.toList()
         )
     }
 
@@ -190,37 +180,37 @@ class GroupedDateTimeParserTest {
         val parser = groupedDateTimeParser {
             anyOf({
                 group {
-                    wholeNumber(2) { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                    wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }
                 }
                 +'/'
                 group {
-                    wholeNumber(4) { associateWith(DateTimeField.YEAR) }
+                    wholeNumber(4) { associateWith(DateProperty.Year) }
                 }
             }, {
                 group {
-                    wholeNumber { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                    wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 }
                 +'-'
                 group {
-                    wholeNumber { associateWith(DateTimeField.YEAR) }
+                    wholeNumber { associateWith(DateProperty.Year) }
                 }
             })
             +" - "
             anyOf({
                 group {
-                    wholeNumber(2) { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                    wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }
                 }
                 +'/'
                 group {
-                    wholeNumber(4) { associateWith(DateTimeField.YEAR) }
+                    wholeNumber(4) { associateWith(DateProperty.Year) }
                 }
             }, {
                 group {
-                    wholeNumber { associateWith(DateTimeField.MONTH_OF_YEAR) }
+                    wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 }
                 +'-'
                 group {
-                    wholeNumber { associateWith(DateTimeField.YEAR) }
+                    wholeNumber { associateWith(DateProperty.Year) }
                 }
             })
         }
@@ -236,23 +226,23 @@ class GroupedDateTimeParserTest {
             assertEquals(4, result.size)
 
             assertEquals(
-                listOf(DateTimeField.MONTH_OF_YEAR to 2L),
-                result[0].fields.toList()
+                listOf(DateProperty.MonthOfYear to 2L),
+                result[0].properties.toList()
             )
 
             assertEquals(
-                listOf(DateTimeField.YEAR to 2000L),
-                result[1].fields.toList()
+                listOf(DateProperty.Year to 2000L),
+                result[1].properties.toList()
             )
 
             assertEquals(
-                listOf(DateTimeField.MONTH_OF_YEAR to 3L),
-                result[2].fields.toList()
+                listOf(DateProperty.MonthOfYear to 3L),
+                result[2].properties.toList()
             )
 
             assertEquals(
-                listOf(DateTimeField.YEAR to 2001L),
-                result[3].fields.toList()
+                listOf(DateProperty.Year to 2001L),
+                result[3].properties.toList()
             )
         }
     }

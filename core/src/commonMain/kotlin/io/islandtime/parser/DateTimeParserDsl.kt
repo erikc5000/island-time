@@ -1,6 +1,8 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.BooleanProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.TemporalProperty
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.format.NumberStyle
@@ -122,20 +124,20 @@ interface DateTimeParserBuilder {
     fun literal(string: String, builder: LiteralParserBuilder.() -> Unit = {})
 
     /**
-     * Parse localized text associated with a particular [DateTimeField] in any of the specified styles. If successful,
-     * the field's value will be populated. If no text is known for the field or a match can't be found, the parsing
-     * operation will return an error.
+     * Parse localized text associated with a particular [NumberProperty] in any of the specified styles. If
+     * successful, the property's value will be populated. If no text is known for the property or a match can't be found,
+     * the parsing operation will return an error.
      *
      * The locale used when matching text is determined by the [DateTimeParserSettings] in use. Text is provided by the
      * configured [DateTimeTextProvider]. Be mindful that this text may differ between platforms and devices. If at
      * all possible, non-localized representations should be used instead.
      *
-     * @param field the field to match text for
+     * @param property the property to match text for
      * @param styles the styles of text to match
      * @see DateTimeParserSettings.locale
      * @see DateTimeTextProvider
      */
-    fun localizedText(field: DateTimeField, styles: Set<TextStyle>)
+    fun localizedText(property: NumberProperty, styles: Set<TextStyle>)
 
     /**
      * Make parsing optional within a block.
@@ -233,10 +235,17 @@ interface SignParserBuilder {
     fun onParsed(action: DateTimeParseResult.(parsed: Int) -> Unit)
 
     /**
-     * Associate the result with a particular [DateTimeField], setting it to `-1L` when negative or `1L` when positive.
+     * Associate the result with a particular [TemporalProperty], setting it to `-1` when negative or `1` when positive.
      */
-    fun associateWith(field: DateTimeField) {
-        onParsed { fields[field] = it.toLong() }
+    fun associateWith(property: TemporalProperty<Long>) {
+        onParsed { this[property] = it.toLong() }
+    }
+
+    /**
+     * Associate the result with a particular [NumberProperty], setting it to `-1L` when negative or `1L` when positive.
+     */
+    fun associateWith(property: NumberProperty) {
+        onParsed { this[property] = it.toLong() }
     }
 }
 
@@ -256,10 +265,17 @@ interface WholeNumberParserBuilder : NumberParserBuilder {
     fun onParsed(action: DateTimeParseResult.(parsed: Long) -> Unit)
 
     /**
-     * Associate the result with a particular [DateTimeField], populating its value when parsing succeeds.
+     * Associate the result with a particular [TemporalProperty], populating its value when parsing succeeds.
      */
-    fun associateWith(field: DateTimeField) {
-        onParsed { fields[field] = it }
+    fun associateWith(property: TemporalProperty<Long>) {
+        onParsed { this[property] = it }
+    }
+
+    /**
+     * Associate the result with a particular [NumberProperty], populating its value when parsing succeeds.
+     */
+    fun associateWith(property: NumberProperty) {
+        onParsed { this[property] = it }
     }
 }
 
@@ -271,13 +287,13 @@ interface DecimalNumberParserBuilder : NumberParserBuilder {
     fun onParsed(action: DateTimeParseResult.(whole: Long, fraction: Long) -> Unit)
 
     /**
-     * Associate both the whole and fractional part of the result with a particular [DateTimeField], populating their
+     * Associate both the whole and fractional part of the result with a particular [NumberProperty], populating their
      * values when parsing succeeds.
      */
-    fun associateWith(wholeField: DateTimeField, fractionField: DateTimeField) {
+    fun associateWith(wholeProperty: NumberProperty, fractionProperty: NumberProperty) {
         onParsed { whole, fraction ->
-            fields[wholeField] = whole
-            fields[fractionField] = fraction
+            this[wholeProperty] = whole
+            this[fractionProperty] = fraction
         }
     }
 }
@@ -306,9 +322,9 @@ interface LiteralParserBuilder {
     fun onParsed(action: DateTimeParseResult.() -> Unit)
 
     /**
-     * Associate the result with a particular [DateTimeField], setting its value to `1L` when parsing succeeds.
+     * Associate the result with a particular [BooleanProperty], setting its value to `true` when parsing succeeds.
      */
-    fun associateWith(field: DateTimeField) {
-        onParsed { fields[field] = 1L }
+    fun associateWith(property: BooleanProperty) {
+        onParsed { this[property] = true }
     }
 }

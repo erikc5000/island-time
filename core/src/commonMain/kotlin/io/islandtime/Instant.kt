@@ -1,7 +1,6 @@
 package io.islandtime
 
-import io.islandtime.base.DateTimeField
-import io.islandtime.base.TimePoint
+import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.plusWithOverflow
@@ -321,14 +320,14 @@ private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
 
 internal fun DateTimeParseResult.toInstant(): Instant? {
     // FIXME: Require the year field here for now and make it fits within DateTime's supported range
-    val parsedYear = fields[DateTimeField.YEAR] ?: return null
+    val parsedYear = this[DateProperty.Year] ?: return null
 
-    fields[DateTimeField.YEAR] = parsedYear % 10_000
+    this[DateProperty.Year] = parsedYear % 10_000
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
 
     // Restore the original parsed year
-    fields[DateTimeField.YEAR] = parsedYear
+    this[DateProperty.Year] = parsedYear
 
     return if (dateTime != null && offset != null) {
         val secondOfEpoch = dateTime.unixEpochSecondAt(offset) +
@@ -363,6 +362,23 @@ internal inline fun <T> withComponentizedSecondOfUnixEpoch(
     return withComponentizedDayOfUnixEpoch(dayOfUnixEpoch) { year, monthNumber, dayOfMonth ->
         secondOfDay.seconds.toComponents { hours, minutes, seconds ->
             block(year, monthNumber, dayOfMonth, hours.value, minutes.value, seconds.value)
+        }
+    }
+}
+
+internal class ComponentizedInstant(
+    val year: Int,
+    val month: Month,
+    val dayOfMonth: Int,
+    val hour: Int,
+    val minute: Int,
+    val second: Int,
+    val nanosecond: Int
+) : Temporal {
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            is DateProperty, is TimeProperty, is UtcOffsetProperty -> true
+            else -> false
         }
     }
 }

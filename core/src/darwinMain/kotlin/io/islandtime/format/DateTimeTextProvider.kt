@@ -2,7 +2,9 @@ package io.islandtime.format
 
 import co.touchlab.stately.collections.frozenHashMap
 import io.islandtime.DateTimeException
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.TimeProperty
 import io.islandtime.locale.Locale
 import platform.Foundation.*
 
@@ -14,24 +16,24 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         compareByDescending<Pair<String, Long>> { it.first.length }.thenBy { it.second }
 
     private data class ParsableTextKey(
-        val field: DateTimeField,
+        val property: NumberProperty,
         val styles: Set<TextStyle>,
         val locale: Locale
     )
 
-    override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
-        if (styles.isEmpty() || !supports(field)) {
+    override fun parsableTextFor(property: NumberProperty, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
+        if (styles.isEmpty() || !supports(property)) {
             return emptyList()
         }
 
-        val key = ParsableTextKey(field, styles, locale)
+        val key = ParsableTextKey(property, styles, locale)
 
         return parsableText.getOrPut(key) {
             val valueMap = mutableMapOf<String, MutableSet<Long>>()
 
             styles.forEach { style ->
-                allTextFor(field, style, locale)?.forEachIndexed { index, symbol ->
-                    valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(field, index)
+                allTextFor(property, style, locale)?.forEachIndexed { index, symbol ->
+                    valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(property, index)
                 }
             }
 
@@ -82,30 +84,30 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return allEraTextFor(style, locale)?.get(value.toInt())
     }
 
-    private fun supports(field: DateTimeField): Boolean {
-        return when (field) {
-            DateTimeField.MONTH_OF_YEAR,
-            DateTimeField.DAY_OF_WEEK,
-            DateTimeField.AM_PM_OF_DAY,
-            DateTimeField.ERA -> true
+    private fun supports(property: NumberProperty): Boolean {
+        return when (property) {
+            DateProperty.MonthOfYear,
+            DateProperty.DayOfWeek,
+            TimeProperty.AmPmOfDay,
+            DateProperty.Era -> true
             else -> false
         }
     }
 
-    private fun allTextFor(field: DateTimeField, style: TextStyle, locale: Locale): List<String>? {
-        return when (field) {
-            DateTimeField.MONTH_OF_YEAR -> allMonthTextFor(style, locale)
-            DateTimeField.DAY_OF_WEEK -> allDayOfWeekTextFor(style, locale)
-            DateTimeField.AM_PM_OF_DAY -> allAmPmTextFor(locale)
-            DateTimeField.ERA -> allEraTextFor(style, locale)
+    private fun allTextFor(property: NumberProperty, style: TextStyle, locale: Locale): List<String>? {
+        return when (property) {
+            DateProperty.MonthOfYear -> allMonthTextFor(style, locale)
+            DateProperty.DayOfWeek -> allDayOfWeekTextFor(style, locale)
+            TimeProperty.AmPmOfDay -> allAmPmTextFor(locale)
+            DateProperty.Era -> allEraTextFor(style, locale)
             else -> throw IllegalStateException("Unexpected field")
         }
     }
 
-    private fun valueForArrayIndex(field: DateTimeField, index: Int): Long {
-        return when (field) {
-            DateTimeField.MONTH_OF_YEAR -> index + 1L
-            DateTimeField.DAY_OF_WEEK -> if (index == 0) 7L else index.toLong()
+    private fun valueForArrayIndex(property: NumberProperty, index: Int): Long {
+        return when (property) {
+            DateProperty.MonthOfYear -> index + 1L
+            DateProperty.DayOfWeek -> if (index == 0) 7L else index.toLong()
             else -> index.toLong()
         }
     }

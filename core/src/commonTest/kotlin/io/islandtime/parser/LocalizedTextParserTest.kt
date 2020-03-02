@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.localeOf
 import kotlin.test.Test
@@ -15,11 +15,11 @@ class LocalizedTextParserTest {
     fun `parses localized months`() {
         val parsers = listOf(
             dateTimeParser {
-                localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.FULL, TextStyle.SHORT))
+                localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL, TextStyle.SHORT))
             },
             dateTimeParser {
                 +' '
-                localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.FULL, TextStyle.SHORT))
+                localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL, TextStyle.SHORT))
                 +'a'
             }
         )
@@ -34,8 +34,8 @@ class LocalizedTextParserTest {
             parsers.forEachIndexed { index, parser ->
                 val textToParse = if (index == 1) " ${it.first}a" else it.first
                 val result = parser.parse(textToParse, DateTimeParserSettings(locale = en_US))
-                assertEquals(1, result.fields.size)
-                assertEquals(it.second, result.fields[DateTimeField.MONTH_OF_YEAR])
+                assertEquals(1, result.properties.size)
+                assertEquals(it.second, result.properties[DateProperty.MonthOfYear])
             }
         }
     }
@@ -43,19 +43,19 @@ class LocalizedTextParserTest {
     @Test
     fun `parses case-insensitive localized months`() {
         val parser = dateTimeParser {
-            localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.FULL))
+            localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL))
         }
 
         val result = parser.parse("januarY", DateTimeParserSettings(locale = en_US, isCaseSensitive = false))
-        assertEquals(1, result.fields.size)
-        assertEquals(1L, result.fields[DateTimeField.MONTH_OF_YEAR])
+        assertEquals(1, result.properties.size)
+        assertEquals(1L, result.properties[DateProperty.MonthOfYear])
     }
 
     @Test
     fun `reports an error when no match is found`() {
         val parser = dateTimeParser {
             +'a'
-            localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.SHORT))
+            localizedText(DateProperty.MonthOfYear, setOf(TextStyle.SHORT))
         }
 
         val exception = assertFailsWith<DateTimeParseException> {
@@ -69,7 +69,7 @@ class LocalizedTextParserTest {
     fun `reports an error when the end of the text is hit before parsing`() {
         val parser = dateTimeParser {
             +' '
-            localizedText(DateTimeField.MONTH_OF_YEAR, setOf(TextStyle.NARROW))
+            localizedText(DateProperty.MonthOfYear, setOf(TextStyle.NARROW))
         }
 
         val exception = assertFailsWith<DateTimeParseException> {
@@ -83,7 +83,7 @@ class LocalizedTextParserTest {
     fun `reports an error when no parsable text is available`() {
         val parser = dateTimeParser {
             +' '
-            localizedText(DateTimeField.YEAR, setOf(TextStyle.FULL))
+            localizedText(DateProperty.Year, setOf(TextStyle.FULL))
         }
 
         val exception = assertFailsWith<DateTimeParseException> {

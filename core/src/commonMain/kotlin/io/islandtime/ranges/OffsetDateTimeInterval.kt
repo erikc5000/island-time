@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.expectingGroupCount
@@ -145,13 +145,13 @@ fun String.toOffsetDateTimeInterval(
 
     val start = when {
         results[0].isEmpty() -> null
-        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.start
+        results[0][DateProperty.IsFarPast] == true -> OffsetDateTimeInterval.UNBOUNDED.start
         else -> results[0].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
-        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.endExclusive
+        results[1][DateProperty.IsFarFuture] == true -> OffsetDateTimeInterval.UNBOUNDED.endExclusive
         else -> results[1].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
     }
 

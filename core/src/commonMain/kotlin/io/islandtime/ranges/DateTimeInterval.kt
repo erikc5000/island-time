@@ -2,7 +2,7 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.MAX_DATE_TIME_STRING_LENGTH
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.parser.*
@@ -249,13 +249,13 @@ fun String.toDateTimeInterval(
 
     val start = when {
         results[0].isEmpty() -> null
-        results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.start
+        results[0][DateProperty.IsFarPast] == true -> DateTimeInterval.UNBOUNDED.start
         else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
-        results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.endExclusive
+        results[1][DateProperty.IsFarFuture] == true -> DateTimeInterval.UNBOUNDED.endExclusive
         else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
     }
 

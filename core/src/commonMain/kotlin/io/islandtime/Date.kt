@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -21,7 +21,8 @@ class Date(
     /** The month of the year. */
     val month: Month,
     private val day: Int
-) : Comparable<Date> {
+) : Temporal,
+    Comparable<Date> {
 
     init {
         checkValidYear(year)
@@ -40,6 +41,38 @@ class Date(
         monthNumber: Int,
         day: Int
     ) : this(year, monthNumber.toMonth(), day)
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property is DateProperty
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            DateProperty.IsFarPast -> this == MIN
+            DateProperty.IsFarFuture -> this == MAX
+            else -> super.get(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            DateProperty.DayOfUnixEpoch -> unixEpochDay
+            else -> getInt(property).toLong()
+        }
+    }
+
+    private fun getInt(property: NumberProperty): Int {
+        return when (property) {
+            DateProperty.Year -> year
+            DateProperty.YearOfEra -> if (year >= 1) year else 1 - year
+            DateProperty.MonthOfYear -> monthNumber
+            DateProperty.DayOfWeek -> dayOfWeek.number
+            DateProperty.DayOfMonth -> dayOfMonth
+            DateProperty.DayOfYear -> dayOfYear
+            DateProperty.Era -> if (year >= 1) 1 else 0
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
 
     /**
      * The day of the week.
@@ -366,8 +399,8 @@ fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * Any custom parser must be capable of supplying one of the following field combinations:
- * - [DateTimeField.YEAR], [DateTimeField.MONTH_OF_YEAR], [DateTimeField.DAY_OF_MONTH]
- * - [DateTimeField.YEAR], [DateTimeField.DAY_OF_YEAR]
+ * - [DateProperty.Year], [DateProperty.MonthOfYear], [DateProperty.DayOfMonth]
+ * - [DateProperty.Year], [DateProperty.DayOfYear]
  *
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
@@ -381,18 +414,18 @@ fun String.toDate(
 }
 
 internal fun DateTimeParseResult.toDate(): Date? {
-    val year = fields[DateTimeField.YEAR]
+    val year = this[DateProperty.Year]
 
     if (year != null) {
-        val month = fields[DateTimeField.MONTH_OF_YEAR]
-        val dayOfMonth = fields[DateTimeField.DAY_OF_MONTH]
+        val month = this[DateProperty.MonthOfYear]
+        val dayOfMonth = this[DateProperty.DayOfMonth]
 
         try {
             if (month != null && dayOfMonth != null) {
                 return Date(year.toIntExact(), month.toIntExact().toMonth(), dayOfMonth.toIntExact())
             }
 
-            val dayOfYear = fields[DateTimeField.DAY_OF_YEAR]
+            val dayOfYear = this[DateProperty.DayOfYear]
 
             if (dayOfYear != null) {
                 return Date(year.toIntExact(), dayOfYear.toIntExact())

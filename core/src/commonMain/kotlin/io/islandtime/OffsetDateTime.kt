@@ -1,10 +1,14 @@
 package io.islandtime
 
-import io.islandtime.base.TimePoint
+import io.islandtime.base.*
+import io.islandtime.internal.SECONDS_PER_HOUR
+import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
+import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 /**
  * A date and time of day with an offset from UTC.
@@ -261,6 +265,31 @@ class OffsetDateTime(
     override operator fun minus(nanoseconds: IntNanoseconds) = copy(dateTime = dateTime - nanoseconds)
 
     operator fun rangeTo(other: OffsetDateTime) = OffsetDateTimeInterval.withInclusiveEnd(this, other)
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            is DateProperty,
+            is TimeProperty,
+            is UtcOffsetProperty -> true
+            else -> super.has(property)
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            is DateProperty, is TimeProperty -> dateTime.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            else -> super.get(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is DateProperty, is TimeProperty -> dateTime.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            else -> super.get(property)
+        }
+    }
 
     override fun toString() = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
         appendOffsetDateTime(this@OffsetDateTime)

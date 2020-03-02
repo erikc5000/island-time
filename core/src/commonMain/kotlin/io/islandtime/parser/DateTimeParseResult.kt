@@ -1,18 +1,25 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.TemporalProperty
 
 /**
  * The result of a parsing operation.
  */
-data class DateTimeParseResult(
-    val fields: MutableMap<DateTimeField, Long> = hashMapOf(),
-    var timeZoneId: String? = null
+inline class DateTimeParseResult(
+    @PublishedApi
+    internal val properties: MutableMap<TemporalProperty<*>, Any> = hashMapOf()
 ) {
-    fun isEmpty() = fields.isEmpty() && timeZoneId == null
+    fun isEmpty() = properties.isEmpty()
     fun isNotEmpty() = !isEmpty()
+    val size: Int get() = properties.size
 
-    internal fun deepCopy() = DateTimeParseResult(timeZoneId = timeZoneId).apply {
-        fields.putAll(this@DateTimeParseResult.fields)
+    inline operator fun <reified T> set(property: TemporalProperty<T>, value: T) {
+        properties[property] = value as Any
+    }
+
+    inline operator fun <reified T> get(property: TemporalProperty<T>): T? = properties[property] as T?
+
+    internal fun deepCopy() = DateTimeParseResult().apply {
+        properties.putAll(this@DateTimeParseResult.properties)
     }
 }

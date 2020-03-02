@@ -1,6 +1,6 @@
 package io.islandtime.measures
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DurationProperty
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.internal.timesExact
 import io.islandtime.internal.toIntExact
@@ -327,11 +327,11 @@ fun String.toPeriod(
 }
 
 internal fun DateTimeParseResult.toPeriod(): Period? {
-    val sign = fields[DateTimeField.PERIOD_SIGN]?.toInt() ?: 1
-    val yearsValue = fields[DateTimeField.PERIOD_OF_YEARS]
-    val monthsValue = fields[DateTimeField.PERIOD_OF_MONTHS]
-    val weeksValue = fields[DateTimeField.PERIOD_OF_WEEKS]
-    val daysValue = fields[DateTimeField.PERIOD_OF_DAYS]
+    val sign = this[DurationProperty.Sign]?.toInt() ?: 1
+    val yearsValue = this[DurationProperty.Years]
+    val monthsValue = this[DurationProperty.Months]
+    val weeksValue = this[DurationProperty.Weeks]
+    val daysValue = this[DurationProperty.Days]
 
     // Make sure we got at least one supported field out of the parser
     return if (yearsValue == null && monthsValue == null && weeksValue == null && daysValue == null) {

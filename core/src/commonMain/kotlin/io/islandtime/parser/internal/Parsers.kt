@@ -1,6 +1,6 @@
 package io.islandtime.parser.internal
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.NumberProperty
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.NumberStyle
 import io.islandtime.format.TextStyle
@@ -154,7 +154,7 @@ internal class StringLiteralParser(
 }
 
 internal class LocalizedTextParser(
-    private val field: DateTimeField,
+    private val property: NumberProperty,
     private val styles: Set<TextStyle>,
     private val provider: DateTimeTextProvider = DateTimeTextProvider.Companion
 ) : DateTimeParser() {
@@ -165,7 +165,7 @@ internal class LocalizedTextParser(
         }
 
         val remainingLength = text.length - position
-        val possibleValues = provider.parsableTextFor(field, styles, context.locale)
+        val possibleValues = provider.parsableTextFor(property, styles, context.locale)
 
         if (possibleValues.isEmpty()) {
             return position.inv()
@@ -175,7 +175,7 @@ internal class LocalizedTextParser(
             if (string.length <= remainingLength &&
                 text.regionMatches(position, string, 0, string.length, !context.isCaseSensitive)
             ) {
-                context.result.fields[field] = value
+                context.result[property] = value
                 return position + string.length
             }
         }

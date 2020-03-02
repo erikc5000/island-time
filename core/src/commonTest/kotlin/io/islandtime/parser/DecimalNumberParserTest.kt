@@ -1,6 +1,7 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DurationProperty
+import io.islandtime.base.TimeProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -59,24 +60,24 @@ class DecimalNumberParserTest {
         val parser = dateTimeParser {
             decimalNumber {
                 onParsed { whole, fraction ->
-                    fields[DateTimeField.SECOND_OF_MINUTE] = whole
-                    fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
+                    set(TimeProperty.SecondOfMinute, whole)
+                    set(TimeProperty.NanosecondOfSecond, fraction)
                 }
             }
             +' '
         }
 
         val result1 = parser.parse("0.1 ")
-        assertEquals(0L, result1.fields[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(100_000_000L, result1.fields[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(0L, result1[TimeProperty.SecondOfMinute])
+        assertEquals(100_000_000L, result1[TimeProperty.NanosecondOfSecond])
 
         val result2 = parser.parse("-5.000000001 ")
-        assertEquals(-5L, result2.fields[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(-1L, result2.fields[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(-5L, result2[TimeProperty.SecondOfMinute])
+        assertEquals(-1L, result2[TimeProperty.NanosecondOfSecond])
 
         val result3 = parser.parse("10 ")
-        assertEquals(10L, result3.fields[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(0L, result3.fields[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(10L, result3[TimeProperty.SecondOfMinute])
+        assertEquals(0L, result3[TimeProperty.NanosecondOfSecond])
     }
 
     @Test
@@ -84,19 +85,19 @@ class DecimalNumberParserTest {
         val parser = dateTimeParser {
             decimalNumber(0..19) {
                 onParsed { whole, fraction ->
-                    fields[DateTimeField.SECOND_OF_MINUTE] = whole
-                    fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
+                    set(TimeProperty.SecondOfMinute, whole)
+                    set(TimeProperty.NanosecondOfSecond, fraction)
                 }
             }
         }
 
         val result1 = parser.parse(".1")
-        assertEquals(0L, result1.fields[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(100_000_000L, result1.fields[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(0L, result1[TimeProperty.SecondOfMinute])
+        assertEquals(100_000_000L, result1[TimeProperty.NanosecondOfSecond])
 
         val result2 = parser.parse("-.000000001")
-        assertEquals(0L, result2.fields[DateTimeField.SECOND_OF_MINUTE])
-        assertEquals(-1L, result2.fields[DateTimeField.NANOSECOND_OF_SECOND])
+        assertEquals(0L, result2[TimeProperty.SecondOfMinute])
+        assertEquals(-1L, result2[TimeProperty.NanosecondOfSecond])
     }
 
     @Test
@@ -159,11 +160,11 @@ class DecimalNumberParserTest {
     fun `fractionScale controls the magnitude of the fractional part`() {
         val parser = dateTimeParser {
             decimalNumber(fractionScale = 3) {
-                onParsed { _, fraction -> fields[DateTimeField.MILLISECOND_OF_SECOND] = fraction }
+                onParsed { _, fraction -> set(TimeProperty.MillisecondOfSecond, fraction) }
             }
         }
 
-        assertEquals(300L, parser.parse("0.3").fields[DateTimeField.MILLISECOND_OF_SECOND])
+        assertEquals(300L, parser.parse("0.3")[TimeProperty.MillisecondOfSecond])
     }
 
     @Test
@@ -183,8 +184,8 @@ class DecimalNumberParserTest {
         val parser1 = dateTimeParser {
             decimalNumber(0..19) {
                 onParsed { whole, fraction ->
-                    fields[DateTimeField.SECOND_OF_MINUTE] = whole
-                    fields[DateTimeField.NANOSECOND_OF_SECOND] = fraction
+                    set(TimeProperty.SecondOfMinute, whole)
+                    set(TimeProperty.NanosecondOfSecond, fraction)
                 }
             }
         }
@@ -230,7 +231,7 @@ class DecimalNumberParserTest {
             +' '
             decimalNumber {
                 onParsed { whole, _ ->
-                    fields[DateTimeField.DURATION_OF_HOURS] = whole
+                    set(DurationProperty.Hours, whole)
                 }
             }
         }

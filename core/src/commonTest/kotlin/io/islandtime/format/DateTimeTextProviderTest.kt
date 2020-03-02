@@ -1,7 +1,8 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
+import io.islandtime.base.TimeProperty
 import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
@@ -15,50 +16,50 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     @Test
     fun `textFor() throws an exception when value is out of range`() {
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.MONTH_OF_YEAR, 0L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.MonthOfYear, 0L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.MONTH_OF_YEAR, 13L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.MonthOfYear, 13L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 0L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 0L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 8L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 8L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.AM_PM_OF_DAY, -1L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(TimeProperty.AmPmOfDay, -1L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.AM_PM_OF_DAY, 2L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(TimeProperty.AmPmOfDay, 2L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.ERA, -1L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.Era, -1L, TextStyle.FULL, en_US)
         }
         assertFailsWith<DateTimeException> {
-            DateTimeTextProvider.textFor(DateTimeField.ERA, 2L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.Era, 2L, TextStyle.FULL, en_US)
         }
     }
 
     @Test
     fun `textFor() returns null when the field has no text representation`() {
-        assertNull(DateTimeTextProvider.textFor(DateTimeField.DAY_OF_MONTH, 1L, TextStyle.FULL, en_US))
-        assertNull(DateTimeTextProvider.textFor(DateTimeField.YEAR, 2010L, TextStyle.FULL, en_US))
+        assertNull(DateTimeTextProvider.textFor(DateProperty.DayOfMonth, 1L, TextStyle.FULL, en_US))
+        assertNull(DateTimeTextProvider.textFor(DateProperty.Year, 2010L, TextStyle.FULL, en_US))
     }
 
     @Test
     fun `parsableTextFor() returns an empty list when no styles are specified`() {
-        assertTrue { DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, emptySet(), en_US).isEmpty() }
+        assertTrue { DateTimeTextProvider.parsableTextFor(DateProperty.DayOfWeek, emptySet(), en_US).isEmpty() }
     }
 
     @Test
     fun `parsableTextFor() returns an empty list when the field has no text representation`() {
         assertTrue {
-            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_MONTH, TextStyle.FULL, en_US).isEmpty()
+            DateTimeTextProvider.parsableTextFor(DateProperty.DayOfMonth, TextStyle.FULL, en_US).isEmpty()
         }
         assertTrue {
             DateTimeTextProvider.parsableTextFor(
-                DateTimeField.YEAR,
+                DateProperty.Year,
                 setOf(TextStyle.FULL, TextStyle.NARROW),
                 en_US
             ).isEmpty()
@@ -77,7 +78,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(
                 it.second,
-                DateTimeTextProvider.textFor(DateTimeField.MONTH_OF_YEAR, 1L, it.first, en_US)
+                DateTimeTextProvider.textFor(DateProperty.MonthOfYear, 1L, it.first, en_US)
             )
             assertEquals(
                 it.second,
@@ -98,7 +99,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(
                 it.second,
-                DateTimeTextProvider.textFor(DateTimeField.MONTH_OF_YEAR, 1L, it.first, pl_PL)
+                DateTimeTextProvider.textFor(DateProperty.MonthOfYear, 1L, it.first, pl_PL)
             )
             assertEquals(
                 it.second,
@@ -126,13 +127,13 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.MONTH_OF_YEAR, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.MonthOfYear, TextStyle.FULL, en_US)
         )
 
         // Do this a second time to verify that caching worked properly
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.MONTH_OF_YEAR, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.MonthOfYear, TextStyle.FULL, en_US)
         )
     }
 
@@ -167,7 +168,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         assertEquals(
             expected,
             DateTimeTextProvider.parsableTextFor(
-                DateTimeField.MONTH_OF_YEAR,
+                DateProperty.MonthOfYear,
                 setOf(TextStyle.FULL, TextStyle.FULL_STANDALONE, TextStyle.SHORT, TextStyle.SHORT_STANDALONE),
                 en_US
             )
@@ -186,7 +187,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.MONTH_OF_YEAR, TextStyle.NARROW, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.MonthOfYear, TextStyle.NARROW, en_US)
         )
     }
 
@@ -202,7 +203,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(
                 it.second,
-                DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 1L, it.first, en_US)?.removeSuffix(".")
+                DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 1L, it.first, en_US)?.removeSuffix(".")
             )
             assertEquals(
                 it.second,
@@ -228,7 +229,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(
                 it.second,
-                DateTimeTextProvider.textFor(DateTimeField.DAY_OF_WEEK, 1L, it.first, de_DE)?.removeSuffix(".")
+                DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 1L, it.first, de_DE)?.removeSuffix(".")
             )
             assertEquals(
                 it.second,
@@ -251,13 +252,13 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.DayOfWeek, TextStyle.FULL, en_US)
         )
 
         // Do this a second time to verify that caching worked properly
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.DayOfWeek, TextStyle.FULL, en_US)
         )
     }
 
@@ -283,7 +284,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         assertEquals(
             expected,
             DateTimeTextProvider.parsableTextFor(
-                DateTimeField.DAY_OF_WEEK,
+                DateProperty.DayOfWeek,
                 setOf(TextStyle.FULL, TextStyle.FULL_STANDALONE, TextStyle.SHORT, TextStyle.SHORT_STANDALONE),
                 en_US
             )
@@ -300,7 +301,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, TextStyle.NARROW, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.DayOfWeek, TextStyle.NARROW, en_US)
         )
     }
 
@@ -309,11 +310,11 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
         TextStyle.values().forEach {
             assertEquals(
                 "AM",
-                DateTimeTextProvider.textFor(DateTimeField.AM_PM_OF_DAY, 0L, it, en_US)
+                DateTimeTextProvider.textFor(TimeProperty.AmPmOfDay, 0L, it, en_US)
             )
             assertEquals(
                 "PM",
-                DateTimeTextProvider.textFor(DateTimeField.AM_PM_OF_DAY, 1L, it, en_US)
+                DateTimeTextProvider.textFor(TimeProperty.AmPmOfDay, 1L, it, en_US)
             )
         }
 
@@ -336,13 +337,13 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.AM_PM_OF_DAY, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(TimeProperty.AmPmOfDay, TextStyle.FULL, en_US)
         )
 
         // Do this a second time to verify that caching worked properly
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.AM_PM_OF_DAY, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(TimeProperty.AmPmOfDay, TextStyle.FULL, en_US)
         )
     }
 
@@ -359,7 +360,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
             it.second.forEachIndexed { index, eraValue ->
                 assertEquals(
                     eraValue,
-                    DateTimeTextProvider.textFor(DateTimeField.ERA, index.toLong(), it.first, en_US)
+                    DateTimeTextProvider.textFor(DateProperty.Era, index.toLong(), it.first, en_US)
                 )
                 assertEquals(
                     eraValue,
@@ -382,7 +383,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
             it.second.forEachIndexed { index, eraValue ->
                 assertEquals(
                     eraValue,
-                    DateTimeTextProvider.textFor(DateTimeField.ERA, index.toLong(), it.first, de_DE)
+                    DateTimeTextProvider.textFor(DateProperty.Era, index.toLong(), it.first, de_DE)
                 )
                 assertEquals(
                     eraValue,
@@ -401,13 +402,13 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.ERA, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.Era, TextStyle.FULL, en_US)
         )
 
         // Do this a second time to verify that caching worked properly
         assertEquals(
             expected,
-            DateTimeTextProvider.parsableTextFor(DateTimeField.ERA, TextStyle.FULL, en_US)
+            DateTimeTextProvider.parsableTextFor(DateProperty.Era, TextStyle.FULL, en_US)
         )
     }
 }

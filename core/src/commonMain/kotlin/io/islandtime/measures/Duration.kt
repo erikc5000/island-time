@@ -1,6 +1,6 @@
 package io.islandtime.measures
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DurationProperty
 import io.islandtime.internal.*
 import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
@@ -663,11 +663,11 @@ fun String.toDuration(
 
 internal fun DateTimeParseResult.toDuration(): Duration {
     // TODO: Make sure we have at least one component
-    val days = (fields[DateTimeField.PERIOD_OF_DAYS] ?: 0L).days
-    val hours = (fields[DateTimeField.DURATION_OF_HOURS] ?: 0L).hours
-    val minutes = (fields[DateTimeField.DURATION_OF_MINUTES] ?: 0L).minutes
-    val seconds = (fields[DateTimeField.DURATION_OF_SECONDS] ?: 0L).seconds
-    val nanoseconds = (fields[DateTimeField.NANOSECOND_OF_SECOND] ?: 0L).nanoseconds
+    val days = (this[DurationProperty.Days] ?: 0L).days
+    val hours = (this[DurationProperty.Hours] ?: 0L).hours
+    val minutes = (this[DurationProperty.Minutes] ?: 0L).minutes
+    val seconds = (this[DurationProperty.Seconds] ?: 0L).seconds
+    val nanoseconds = (this[DurationProperty.NanosecondOfSeconds] ?: 0L).nanoseconds
 
     return durationOf(
         days + hours + minutes + seconds,

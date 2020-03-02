@@ -1,6 +1,7 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateTimeField
+import io.islandtime.base.DateProperty
+import io.islandtime.base.DurationProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -22,42 +23,42 @@ class WholeNumberParserTest {
     fun `fixed length parser parses exact number of digits`() {
         val dowParser = dateTimeParser {
             wholeNumber(1) {
-                associateWith(DateTimeField.DAY_OF_WEEK)
+                associateWith(DateProperty.DayOfWeek)
             }
         }
 
-        assertEquals(9, dowParser.parse("9").fields[DateTimeField.DAY_OF_WEEK])
+        assertEquals(9, dowParser.parse("9")[DateProperty.DayOfWeek])
 
         val dateParser = dateTimeParser {
             wholeNumber(3) {
-                associateWith(DateTimeField.DAY_OF_YEAR)
+                associateWith(DateProperty.DayOfYear)
             }
             wholeNumber(4) {
-                associateWith(DateTimeField.YEAR)
+                associateWith(DateProperty.Year)
             }
         }
 
         val result = dateParser.parse("0653000")
-        assertEquals(65, result.fields[DateTimeField.DAY_OF_YEAR])
-        assertEquals(3000, result.fields[DateTimeField.YEAR])
+        assertEquals(65, result[DateProperty.DayOfYear])
+        assertEquals(3000, result[DateProperty.Year])
     }
 
     @Test
     fun `fixed length parser doesn't enforce sign style by default`() {
         val dowParser1 = dateTimeParser {
             wholeNumber(1) {
-                associateWith(DateTimeField.DAY_OF_WEEK)
+                associateWith(DateProperty.DayOfWeek)
             }
         }
 
-        assertEquals(9, dowParser1.parse("+9").fields[DateTimeField.DAY_OF_WEEK])
+        assertEquals(9, dowParser1.parse("+9")[DateProperty.DayOfWeek])
 
         val dowParser2 = dateTimeParser {
             wholeNumber(1) {
-                associateWith(DateTimeField.DAY_OF_WEEK)
+                associateWith(DateProperty.DayOfWeek)
             }
         }
-        assertEquals(-9, dowParser2.parse("-9").fields[DateTimeField.DAY_OF_WEEK])
+        assertEquals(-9, dowParser2.parse("-9")[DateProperty.DayOfWeek])
     }
 
     @Test
@@ -65,13 +66,13 @@ class WholeNumberParserTest {
         listOf(
             dateTimeParser {
                 wholeNumber(1) {
-                    associateWith(DateTimeField.DAY_OF_WEEK)
+                    associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEVER)
                 }
             },
             dateTimeParser {
                 wholeNumber {
-                    associateWith(DateTimeField.DAY_OF_WEEK)
+                    associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEVER)
                 }
             }
@@ -86,20 +87,20 @@ class WholeNumberParserTest {
         listOf(
             dateTimeParser {
                 wholeNumber(1) {
-                    associateWith(DateTimeField.DAY_OF_WEEK)
+                    associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEGATIVE_ONLY)
                 }
             },
             dateTimeParser {
                 wholeNumber {
-                    associateWith(DateTimeField.DAY_OF_WEEK)
+                    associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEGATIVE_ONLY)
                 }
             }
         ).forEach { parser ->
             assertFailsWith<DateTimeParseException> { parser.parse("+9") }
-            assertEquals(9, parser.parse("9").fields[DateTimeField.DAY_OF_WEEK])
-            assertEquals(-9, parser.parse("-9").fields[DateTimeField.DAY_OF_WEEK])
+            assertEquals(9, parser.parse("9")[DateProperty.DayOfWeek])
+            assertEquals(-9, parser.parse("-9")[DateProperty.DayOfWeek])
         }
     }
 
@@ -108,20 +109,20 @@ class WholeNumberParserTest {
         listOf(
             dateTimeParser {
                 wholeNumber(1) {
-                    associateWith(DateTimeField.DAY_OF_WEEK)
+                    associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.ALWAYS)
                 }
             },
             dateTimeParser {
                 wholeNumber {
-                    associateWith(DateTimeField.DAY_OF_WEEK)
+                    associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.ALWAYS)
                 }
             }
         ).forEach { parser ->
-            assertEquals(9, parser.parse("+9").fields[DateTimeField.DAY_OF_WEEK])
+            assertEquals(9, parser.parse("+9")[DateProperty.DayOfWeek])
             assertFailsWith<DateTimeParseException> { parser.parse("9") }
-            assertEquals(-9, parser.parse("-9").fields[DateTimeField.DAY_OF_WEEK])
+            assertEquals(-9, parser.parse("-9")[DateProperty.DayOfWeek])
         }
     }
 
@@ -147,29 +148,29 @@ class WholeNumberParserTest {
     fun `variable length parser parses digits within length`() {
         val parser = dateTimeParser {
             wholeNumber(1..3) {
-                associateWith(DateTimeField.DAY_OF_YEAR)
+                associateWith(DateProperty.DayOfYear)
             }
         }
 
-        assertEquals(4, parser.parse("4").fields[DateTimeField.DAY_OF_YEAR])
-        assertEquals(400, parser.parse("400").fields[DateTimeField.DAY_OF_YEAR])
+        assertEquals(4, parser.parse("4")[DateProperty.DayOfYear])
+        assertEquals(400, parser.parse("400")[DateProperty.DayOfYear])
 
         val parserWithLiteral = dateTimeParser {
             wholeNumber(1..3) {
-                associateWith(DateTimeField.DAY_OF_YEAR)
+                associateWith(DateProperty.DayOfYear)
             }
             +'M'
         }
 
-        assertEquals(-2, parserWithLiteral.parse("-2M").fields[DateTimeField.DAY_OF_YEAR])
-        assertEquals(-20, parserWithLiteral.parse("-20M").fields[DateTimeField.DAY_OF_YEAR])
+        assertEquals(-2, parserWithLiteral.parse("-2M")[DateProperty.DayOfYear])
+        assertEquals(-20, parserWithLiteral.parse("-20M")[DateProperty.DayOfYear])
     }
 
     @Test
     fun `variable length parser throws an exception if minimum number of digits can't be parsed`() {
         val parser = dateTimeParser {
             wholeNumber(2..3) {
-                associateWith(DateTimeField.DAY_OF_YEAR)
+                associateWith(DateProperty.DayOfYear)
             }
             +"DOY"
         }
@@ -182,10 +183,10 @@ class WholeNumberParserTest {
     fun `variable length parser throws an exception if consecutive digits exceed the maximum`() {
         val parser = dateTimeParser {
             wholeNumber(2..3) {
-                associateWith(DateTimeField.DAY_OF_YEAR)
+                associateWith(DateProperty.DayOfYear)
             }
             wholeNumber(1..4) {
-                associateWith(DateTimeField.YEAR)
+                associateWith(DateProperty.Year)
             }
         }
 
@@ -216,12 +217,12 @@ class WholeNumberParserTest {
             dateTimeParser {
                 +' '
                 wholeNumber(19) {
-                    onParsed { fields[DateTimeField.DURATION_OF_HOURS] = it }
+                    onParsed { this[DurationProperty.Hours] = it }
                 }
             }, dateTimeParser {
                 +' '
                 wholeNumber {
-                    onParsed { fields[DateTimeField.DURATION_OF_HOURS] = it }
+                    onParsed { this[DurationProperty.Hours] = it }
                 }
             }
         )

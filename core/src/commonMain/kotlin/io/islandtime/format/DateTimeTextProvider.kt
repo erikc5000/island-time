@@ -1,9 +1,11 @@
 package io.islandtime.format
 
 import io.islandtime.IslandTime
-import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
 import io.islandtime.DateTimeException
+import io.islandtime.base.DateProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.TimeProperty
 
 typealias ParsableTextList = List<Pair<String, Long>>
 
@@ -12,21 +14,21 @@ typealias ParsableTextList = List<Pair<String, Long>>
  */
 interface DateTimeTextProvider {
     /**
-     * Get localized text for the specified field, value, style, and locale.
+     * Get localized text for the specified property, value, style, and locale.
      *
-     * @param field the field to get text for
-     * @param value the value of the field
+     * @param property the property to get text for
+     * @param value the value of the property
      * @param style the style of the text
      * @param locale the locale
      * @return the localized text or `null` if unavailable
-     * @throws DateTimeException if the value if out of range for the specified field
+     * @throws DateTimeException if the value if out of range for the specified property
      */
-    fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
-        return when (field) {
-            DateTimeField.DAY_OF_WEEK -> dayOfWeekTextFor(value, style, locale)
-            DateTimeField.MONTH_OF_YEAR -> monthTextFor(value, style, locale)
-            DateTimeField.AM_PM_OF_DAY -> amPmTextFor(value, locale)
-            DateTimeField.ERA -> eraTextFor(value, style, locale)
+    fun textFor(property: NumberProperty, value: Long, style: TextStyle, locale: Locale): String? {
+        return when (property) {
+            DateProperty.DayOfWeek -> dayOfWeekTextFor(value, style, locale)
+            DateProperty.MonthOfYear -> monthTextFor(value, style, locale)
+            TimeProperty.AmPmOfDay -> amPmTextFor(value, locale)
+            DateProperty.Era -> eraTextFor(value, style, locale)
             else -> null
         }
     }
@@ -38,13 +40,13 @@ interface DateTimeTextProvider {
      * Any text with conflicting values will be excluded. For example, the English narrow month name "M" could be
      * `March` or `May`, so any attempt to parse it would be ambiguous.
      *
-     * @param field the field to get text for
+     * @param property the property to get text for
      * @param style the style of the text
      * @param locale the locale
-     * @return the list of parsable text -- empty if the field is invalid
+     * @return the list of parsable text -- empty if the property is invalid
      */
-    fun parsableTextFor(field: DateTimeField, style: TextStyle, locale: Locale): ParsableTextList {
-        return parsableTextFor(field, setOf(style), locale)
+    fun parsableTextFor(property: NumberProperty, style: TextStyle, locale: Locale): ParsableTextList {
+        return parsableTextFor(property, setOf(style), locale)
     }
 
     /**
@@ -54,12 +56,12 @@ interface DateTimeTextProvider {
      * Any text with conflicting values will be excluded. For example, the English narrow month name "M" could be
      * `March` or `May`, so any attempt to parse it would be ambiguous.
      *
-     * @param field the field to get text for
+     * @param property the property to get text for
      * @param styles the set of styles to include
      * @param locale the locale
-     * @return the list of parsable text -- empty if the field is invalid or no styles are specified
+     * @return the list of parsable text -- empty if the property is invalid or no styles are specified
      */
-    fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList
+    fun parsableTextFor(property: NumberProperty, styles: Set<TextStyle>, locale: Locale): ParsableTextList
 
     /**
      * Get the localized day of the week text for a given ISO day of week number.
