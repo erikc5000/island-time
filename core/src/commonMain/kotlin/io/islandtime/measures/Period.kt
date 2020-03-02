@@ -118,10 +118,18 @@ class Period private constructor(
 
     override fun has(property: TemporalProperty<*>): Boolean {
         return when (property) {
+            DurationProperty.IsZero,
             DurationProperty.Years,
             DurationProperty.Months,
             DurationProperty.Days -> true
             else -> false
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            DurationProperty.IsZero -> isZero()
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 

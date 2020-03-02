@@ -385,16 +385,24 @@ class Duration private constructor(
 
     override fun has(property: TemporalProperty<*>): Boolean {
         return when (property) {
+            DurationProperty.IsZero,
             DurationProperty.Seconds,
-            DurationProperty.NanosecondOfSeconds -> true
+            DurationProperty.Nanoseconds -> true
             else -> false
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            DurationProperty.IsZero -> isZero()
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 
     override fun get(property: NumberProperty): Long {
         return when (property) {
             DurationProperty.Seconds -> seconds.value
-            DurationProperty.NanosecondOfSeconds -> nanosecondAdjustment.value.toLong()
+            DurationProperty.Nanoseconds -> nanosecondAdjustment.value.toLong()
             else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
@@ -685,7 +693,7 @@ internal fun DateTimeParseResult.toDuration(): Duration {
     val hours = (this[DurationProperty.Hours] ?: 0L).hours
     val minutes = (this[DurationProperty.Minutes] ?: 0L).minutes
     val seconds = (this[DurationProperty.Seconds] ?: 0L).seconds
-    val nanoseconds = (this[DurationProperty.NanosecondOfSeconds] ?: 0L).nanoseconds
+    val nanoseconds = (this[DurationProperty.Nanoseconds] ?: 0L).nanoseconds
 
     return durationOf(
         days + hours + minutes + seconds,

@@ -523,7 +523,7 @@ inline fun DateTimeParserBuilder.durationOfSeconds(
  * Parse a duration of fractional seconds.
  *
  * The number of whole seconds will be associated with [DurationProperty.Seconds] while any fractional part will be
- * associated with [DurationProperty.NanosecondOfSeconds]. The decimal separator character will be determined by the
+ * associated with [DurationProperty.Nanoseconds]. The decimal separator character will be determined by the
  * [DateTimeParserSettings].
  */
 inline fun DateTimeParserBuilder.durationOfFractionalSeconds(
@@ -533,7 +533,7 @@ inline fun DateTimeParserBuilder.durationOfFractionalSeconds(
     crossinline builder: DecimalNumberParserBuilder.() -> Unit = {}
 ) {
     decimalNumber(wholeLength, fractionLength, fractionScale) {
-        associateWith(DurationProperty.Seconds, DurationProperty.NanosecondOfSeconds)
+        associateWith(DurationProperty.Seconds, DurationProperty.Nanoseconds)
         builder()
     }
 }

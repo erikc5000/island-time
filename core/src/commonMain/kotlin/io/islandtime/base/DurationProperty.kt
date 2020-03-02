@@ -44,5 +44,10 @@ sealed class DurationProperty {
     /**
      * A duration of nanoseconds.
      */
-    object NanosecondOfSeconds : NumberProperty
+    object Nanoseconds : NumberProperty
+
+    /**
+     * Is this duration zero?
+     */
+    object IsZero : BooleanProperty
 }
