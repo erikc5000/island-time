@@ -3,6 +3,7 @@ package io.islandtime.parser.internal
 import io.islandtime.base.NumberProperty
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.NumberStyle
+import io.islandtime.format.SignStyle
 import io.islandtime.format.TextStyle
 import io.islandtime.internal.negateExact
 import io.islandtime.internal.plusExact

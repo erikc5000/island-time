@@ -6,15 +6,10 @@ import io.islandtime.base.TemporalProperty
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.format.NumberStyle
+import io.islandtime.format.SignStyle
 
 @DslMarker
 annotation class DateTimeParserDsl
-
-enum class SignStyle {
-    NEGATIVE_ONLY,
-    NEVER,
-    ALWAYS
-}
 
 enum class StringParseAction {
     ACCEPT_AND_CONTINUE,

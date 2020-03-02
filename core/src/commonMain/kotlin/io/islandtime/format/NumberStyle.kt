@@ -3,6 +3,15 @@ package io.islandtime.format
 import io.islandtime.locale.Locale
 
 /**
+ * The parsing or formatting behavior surrounding a number's sign.
+ */
+enum class SignStyle {
+    NEGATIVE_ONLY,
+    NEVER,
+    ALWAYS
+}
+
+/**
  * Defines the set of characters that should be used when parsing or formatting numbers.
  *
  * @property zeroDigit The character that represents zero.
