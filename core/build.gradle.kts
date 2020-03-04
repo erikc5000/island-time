@@ -44,8 +44,8 @@ kotlin {
 
         val darwinMain by getting {
             dependencies {
-                implementation("co.touchlab:stately:0.9.5")
-                implementation("co.touchlab:stately-collections:0.9.5")
+                implementation("co.touchlab:stately:1.0.x")
+                implementation("co.touchlab:stately-collections:1.0.x")
             }
         }
     }
