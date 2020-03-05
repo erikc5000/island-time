@@ -1,6 +1,6 @@
 package io.islandtime.format
 
-import co.touchlab.stately.collections.frozenHashMap
+import co.touchlab.stately.isolate.IsolateState
 import io.islandtime.DateTimeException
 import io.islandtime.base.DateTimeField
 import io.islandtime.locale.Locale
@@ -8,7 +8,7 @@ import platform.Foundation.*
 
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private val narrowEraTextSymbols = listOf("B", "A")
-    private val parsableText = frozenHashMap<ParsableTextKey, ParsableTextList>()
+    private val parsableText = IsolateState { hashMapOf<ParsableTextKey, ParsableTextList>() }
 
     private val descendingTextComparator =
         compareByDescending<Pair<String, Long>> { it.first.length }.thenBy { it.second }
@@ -26,22 +26,24 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 
         val key = ParsableTextKey(field, styles, locale)
 
-        return parsableText.getOrPut(key) {
-            val valueMap = mutableMapOf<String, MutableSet<Long>>()
+        return parsableText.access {
+            it.getOrPut(key) {
+                val valueMap = hashMapOf<String, MutableSet<Long>>()
 
-            styles.forEach { style ->
-                allTextFor(field, style, locale)?.forEachIndexed { index, symbol ->
-                    valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(field, index)
+                styles.forEach { style ->
+                    allTextFor(field, style, locale)?.forEachIndexed { index, symbol ->
+                        valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(field, index)
+                    }
                 }
+
+                valueMap.mapNotNull {
+                    if (it.value.size == 1) {
+                        it.key to it.value.first()
+                    } else {
+                        null
+                    }
+                }.sortedWith(descendingTextComparator)
             }
-
-            valueMap.mapNotNull {
-                if (it.value.size == 1) {
-                    it.key to it.value.first()
-                } else {
-                    null
-                }
-            }.sortedWith(descendingTextComparator)
         }
     }
 
