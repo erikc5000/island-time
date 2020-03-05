@@ -1,7 +1,6 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
-import org.jetbrains.kotlin.konan.target.HostManager
 
 plugins {
     kotlin("multiplatform")
@@ -53,10 +52,6 @@ kotlin {
     }
 }
 
-if (HostManager.hostIsMac) {
-    registerIosTestTask(if (ideaActive) "darwin" else "iosX64")
-}
-
 val emptySourcesJar by tasks.registering(Jar::class) {
     archiveClassifier.set("sources")
 }
@@ -94,18 +89,5 @@ afterEvaluate {
 
         sourceDirectories.setFrom(kotlin.sourceSets["commonMain"].kotlin.sourceDirectories)
         executionData.setFrom("${buildDir}/jacoco/jvmTest.exec")
-    }
-}
-
-fun registerIosTestTask(iosTargetName: String) {
-    val iosTest by tasks.registering(RunIosTestsTask::class) {
-        val kotlinNativeTarget = kotlin.targets[iosTargetName] as KotlinNativeTarget
-        val testBinariesTaskName = kotlinNativeTarget.compilations[SourceSet.TEST_SOURCE_SET_NAME].binariesTaskName
-        dependsOn(tasks.named(testBinariesTaskName))
-        binary = kotlinNativeTarget.binaries.getTest(NativeBuildType.DEBUG).outputFile
-    }
-
-    tasks.named(LifecycleBasePlugin.CHECK_TASK_NAME) {
-        dependsOn(iosTest)
     }
 }
