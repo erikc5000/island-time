@@ -5,7 +5,8 @@ import kotlinx.serialization.*
 
 @Serializer(forClass = Duration::class)
 object DurationSerializer : KSerializer<Duration> {
-    override val descriptor: SerialDescriptor = PrimitiveDescriptor("Duration", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveDescriptor("io.islandtime.measures.DurationSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Duration) {
         encoder.encodeString(value.toString())

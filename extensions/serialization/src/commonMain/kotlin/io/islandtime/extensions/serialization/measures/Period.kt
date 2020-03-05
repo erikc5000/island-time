@@ -5,7 +5,8 @@ import kotlinx.serialization.*
 
 @Serializer(forClass = Period::class)
 object PeriodSerializer : KSerializer<Period> {
-    override val descriptor: SerialDescriptor = PrimitiveDescriptor("Period", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor =
+        PrimitiveDescriptor("io.islandtime.measures.PeriodSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Period) {
         encoder.encodeString(value.toString())

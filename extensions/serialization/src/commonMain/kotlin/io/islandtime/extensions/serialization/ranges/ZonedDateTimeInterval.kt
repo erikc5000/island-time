@@ -8,7 +8,7 @@ import kotlinx.serialization.*
 @Serializer(forClass = Date::class)
 object ZonedDateTimeIntervalSerializer : KSerializer<ZonedDateTimeInterval> {
     override val descriptor: SerialDescriptor =
-        PrimitiveDescriptor("ZonedDateTimeInterval", PrimitiveKind.STRING)
+        PrimitiveDescriptor("io.islandtime.ZonedDateTimeIntervalSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ZonedDateTimeInterval) {
         encoder.encodeString(value.toString())
