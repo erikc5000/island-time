@@ -3,7 +3,6 @@ package io.islandtime.extensions.serialization.measures
 import io.islandtime.measures.*
 import kotlinx.serialization.*
 
-@Serializer(forClass = Period::class)
 object PeriodSerializer : KSerializer<Period> {
     override val descriptor: SerialDescriptor =
         PrimitiveDescriptor("io.islandtime.measures.PeriodSerializer", PrimitiveKind.STRING)

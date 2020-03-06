@@ -4,7 +4,6 @@ import io.islandtime.Instant
 import io.islandtime.toInstant
 import kotlinx.serialization.*
 
-@Serializer(forClass = Instant::class)
 object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor =
         PrimitiveDescriptor("io.islandtime.InstantSerializer", PrimitiveKind.STRING)

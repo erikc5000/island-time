@@ -4,7 +4,6 @@ import io.islandtime.YearMonth
 import io.islandtime.toYearMonth
 import kotlinx.serialization.*
 
-@Serializer(forClass = YearMonth::class)
 object YearMonthSerializer : KSerializer<YearMonth> {
     override val descriptor: SerialDescriptor =
         PrimitiveDescriptor("io.islandtime.YearMonthSerializer", PrimitiveKind.STRING)

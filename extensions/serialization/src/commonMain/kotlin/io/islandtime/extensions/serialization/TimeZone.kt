@@ -4,7 +4,6 @@ import io.islandtime.TimeZone
 import io.islandtime.toTimeZone
 import kotlinx.serialization.*
 
-@Serializer(forClass = TimeZone::class)
 object TimeZoneSerializer : KSerializer<TimeZone> {
     override val descriptor: SerialDescriptor =
         PrimitiveDescriptor("io.islandtime.TimeZoneSerializer", PrimitiveKind.STRING)

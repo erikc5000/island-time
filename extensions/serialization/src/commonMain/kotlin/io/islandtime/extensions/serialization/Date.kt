@@ -4,7 +4,6 @@ import io.islandtime.Date
 import io.islandtime.toDate
 import kotlinx.serialization.*
 
-@Serializer(forClass = Date::class)
 object DateSerializer : KSerializer<Date> {
     override val descriptor: SerialDescriptor =
         PrimitiveDescriptor("io.islandtime.DateSerializer", PrimitiveKind.STRING)

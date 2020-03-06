@@ -4,7 +4,6 @@ import io.islandtime.OffsetTime
 import io.islandtime.toOffsetTime
 import kotlinx.serialization.*
 
-@Serializer(forClass = OffsetTime::class)
 object OffsetTimeSerializer : KSerializer<OffsetTime> {
     override val descriptor: SerialDescriptor =
         PrimitiveDescriptor("io.islandtime.OffsetTimeSerializer", PrimitiveKind.STRING)
