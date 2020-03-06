@@ -39,7 +39,7 @@ val Date.startOfWeek: Date get() = previousOrSame(DayOfWeek.MIN)
 val Date.endOfWeek: Date get() = nextOrSame(DayOfWeek.MAX)
 
 /**
- * The date at the start of the week that this date falls in. The first day of the week will be determined by the user's
+ * The date at the start of the week that this date falls in. The first day of the week will be determined by the
  * system settings. This may differ from the first day of the week associated with the default locale on platforms that
  * allow the user to customize this.
  */
@@ -52,9 +52,9 @@ val Date.localizedStartOfWeek: Date
 fun Date.localizedStartOfWeek(locale: Locale): Date = previousOrSame(locale.firstDayOfWeek)
 
 /**
- * The date at the end of the week that this date falls in. The first day of the week will be determined by the user's
- * system settings. This may differ from the first day of the week associated with the default locale on platforms that
- * allow the user to customize this.
+ * The date at the end of the week that this date falls in. The first day of the week will be determined by the
+ * system settings. The first day of the week will be determined by the system settings. This may differ from the first
+ * day of the week associated with the default locale on platforms that allow this to be customized.
  */
 val Date.localizedEndOfWeek: Date
     get() = nextOrSame(systemDefaultFirstDayOfWeek() + 6.days)
@@ -98,8 +98,8 @@ val DateTime.startOfWeek: DateTime
 
 /**
  * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
- * determined by the user's system settings. This may differ from the first day of the week associated with the default
- * locale on platforms that allow the user to customize this.
+ * determined by the system settings. This may differ from the first day of the week associated with the default locale
+ * on platforms that allow this to be customized.
  */
 val DateTime.localizedStartOfWeek: DateTime
     get() = copy(date = date.localizedStartOfWeek, time = Time.MIDNIGHT)
@@ -121,8 +121,8 @@ val DateTime.endOfWeek: DateTime
 
 /**
  * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
- * will be determined by the user's system settings. This may differ from the first day of the week associated with the
- * default locale on platforms that allow the user to customize this.
+ * will be determined by the system settings. This may differ from the first day of the week associated with the default
+ * locale on platforms that allow this to be customized.
  */
 val DateTime.localizedEndOfWeek: DateTime
     get() = copy(date = date.localizedEndOfWeek, time = Time.MAX)
