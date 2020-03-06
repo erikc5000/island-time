@@ -14,7 +14,7 @@ import io.islandtime.parser.*
  * @param second the second of the minute
  * @param nanosecond the nanosecond of the second
  * @throws DateTimeException if the time is invalid
-*/
+ */
 class Time(
     /** The hour of the day. */
     val hour: Int,
@@ -62,9 +62,9 @@ class Time(
     val nanosecondOfDay: Long
         get() {
             return hour.toLong() * NANOSECONDS_PER_HOUR +
-                minute.toLong() * NANOSECONDS_PER_MINUTE +
-                second.toLong() * NANOSECONDS_PER_SECOND +
-                nanosecond
+                    minute.toLong() * NANOSECONDS_PER_MINUTE +
+                    second.toLong() * NANOSECONDS_PER_SECOND +
+                    nanosecond
         }
 
     /**
@@ -127,11 +127,11 @@ class Time(
     }
 
     operator fun plus(seconds: IntSeconds) = plus(seconds.toLongSeconds())
-    
+
     operator fun plus(milliseconds: LongMilliseconds): Time {
         return plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanosecondsUnchecked)
     }
-    
+
     operator fun plus(milliseconds: IntMilliseconds) = plus(milliseconds.toLongMilliseconds())
 
     operator fun plus(microseconds: LongMicroseconds): Time {
@@ -188,11 +188,11 @@ class Time(
 
     override fun equals(other: Any?): Boolean {
         return this === other ||
-            (other is Time &&
-                hour == other.hour &&
-                minute == other.minute &&
-                second == other.second &&
-                nanosecond == other.nanosecond)
+                (other is Time &&
+                        hour == other.hour &&
+                        minute == other.minute &&
+                        second == other.second &&
+                        nanosecond == other.nanosecond)
     }
 
     override fun hashCode(): Int {
@@ -249,25 +249,44 @@ class Time(
         val NOON = Time(12, 0)
 
         /**
-         * Create the [Time] representing a number of seconds since the start of the day and optionally, the number of
-         * nanoseconds within that second.
+         * Create a [Time] from the second of the day and optionally, the number of nanoseconds within that second.
          *
+         * @param secondOfDay the second of the day
+         * @param nanosecond the nanosecond of the second, from 0 - 999,999,999
+         * @return a new [Time]
          * @throws DateTimeException if the time is invalid
          */
         fun fromSecondOfDay(secondOfDay: Int, nanosecond: Int = 0): Time {
-            if (secondOfDay !in 0 until SECONDS_PER_DAY) {
-                throw DateTimeException("'$secondOfDay' is not a valid second of the day")
-            }
-
-            val hour = secondOfDay / SECONDS_PER_HOUR
-            val minute = (secondOfDay / SECONDS_PER_MINUTE) % MINUTES_PER_HOUR
-            val second = secondOfDay % SECONDS_PER_MINUTE
-            return Time(hour, minute, second, nanosecond)
+            return fromSecondsSinceStartOfDay(secondOfDay.seconds, nanosecond.nanoseconds)
         }
 
         /**
-         * Create the [Time] representing a number of nanoseconds since the start of the day.
+         * Create the [Time] at a number of seconds since the start of the day and optionally, a number of additional
+         * nanoseconds.
          *
+         * @param seconds the number of seconds since the start of the day
+         * @param nanosecondAdjustment the number of additional nanoseconds, from 0 - 999,999,999
+         * @return a new [Time]
+         * @throws DateTimeException if the time is invalid
+         */
+        fun fromSecondsSinceStartOfDay(
+            seconds: IntSeconds,
+            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds
+        ): Time {
+            if (seconds.value !in 0 until SECONDS_PER_DAY) {
+                throw DateTimeException("'${seconds.value}' is not a valid second of the day")
+            }
+
+            return seconds.toComponents { hours, minutes, secondsPart ->
+                Time(hours.value, minutes.value, secondsPart.value, nanosecondAdjustment.value)
+            }
+        }
+
+        /**
+         * Create a [Time] from the nanosecond of the day.
+         *
+         * @param nanosecondOfDay the nanosecond of the day
+         * @return a new [Time]
          * @throws DateTimeException if the time is invalid
          */
         fun fromNanosecondOfDay(nanosecondOfDay: Long): Time {
@@ -280,6 +299,17 @@ class Time(
             val second = ((nanosecondOfDay / NANOSECONDS_PER_SECOND) % SECONDS_PER_MINUTE).toInt()
             val nanosecond = (nanosecondOfDay % NANOSECONDS_PER_SECOND).toInt()
             return Time(hour, minute, second, nanosecond)
+        }
+
+        /**
+         * Create the [Time] at a number of nanoseconds since the start of the day.
+         *
+         * @param nanoseconds the number of nanoseconds since the start of the day
+         * @return a new [Time]
+         * @throws DateTimeException if the time is invalid
+         */
+        fun fromNanosecondsSinceStartOfDay(nanoseconds: LongNanoseconds): Time {
+            return fromNanosecondOfDay(nanoseconds.value)
         }
     }
 }
@@ -332,25 +362,35 @@ internal fun DateTimeParseResult.toTime(): Time? {
 internal const val MAX_TIME_STRING_LENGTH = 18
 
 internal fun StringBuilder.appendTime(time: Time): StringBuilder {
-    with(time) {
-        appendZeroPadded(hour, 2)
+    return with(time) {
+        appendTime(hour, minute, second, nanosecond)
+    }
+}
+
+internal fun StringBuilder.appendTime(
+    hour: Int,
+    minute: Int,
+    second: Int,
+    nanosecond: Int
+): StringBuilder {
+    appendZeroPadded(hour, 2)
+    append(':')
+    appendZeroPadded(minute, 2)
+
+    if (second > 0 || nanosecond > 0) {
         append(':')
-        appendZeroPadded(minute, 2)
+        appendZeroPadded(second, 2)
 
-        if (second > 0 || nanosecond > 0) {
-            append(':')
-            appendZeroPadded(second, 2)
+        if (nanosecond > 0) {
+            append('.')
 
-            if (nanosecond > 0) {
-                append('.')
-
-                when {
-                    nanosecond % 1_000_000 == 0 -> appendZeroPadded(nanosecond / 1_000_000, 3)
-                    nanosecond % 1_000 == 0 -> appendZeroPadded(nanosecond / 1_000, 6)
-                    else -> appendZeroPadded(nanosecond, 9)
-                }
+            when {
+                nanosecond % 1_000_000 == 0 -> appendZeroPadded(nanosecond / 1_000_000, 3)
+                nanosecond % 1_000 == 0 -> appendZeroPadded(nanosecond / 1_000, 6)
+                else -> appendZeroPadded(nanosecond, 9)
             }
         }
     }
+
     return this
 }

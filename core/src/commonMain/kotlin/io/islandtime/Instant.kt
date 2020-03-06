@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateTimeField
 import io.islandtime.base.TimePoint
 import io.islandtime.internal.*
 import io.islandtime.measures.*
@@ -256,15 +257,6 @@ class Instant private constructor(
     }
 }
 
-internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
-
-internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
-    val dateTime = instant.toDateTimeAt(UtcOffset.ZERO)
-    appendDateTime(dateTime)
-    append('Z')
-    return this
-}
-
 /**
  * Create the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
@@ -325,13 +317,52 @@ fun String.toInstant(
     return result.toInstant() ?: throwParserFieldResolutionException<Instant>(this)
 }
 
+private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
+
 internal fun DateTimeParseResult.toInstant(): Instant? {
+    // FIXME: Require the year field here for now and make it fits within DateTime's supported range
+    val parsedYear = fields[DateTimeField.YEAR] ?: return null
+
+    fields[DateTimeField.YEAR] = parsedYear % 10_000
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
 
+    // Restore the original parsed year
+    fields[DateTimeField.YEAR] = parsedYear
+
     return if (dateTime != null && offset != null) {
-        dateTime.instantAt(offset)
+        val secondOfEpoch = dateTime.unixEpochSecondAt(offset) +
+                ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
+        Instant.fromUnixEpochSecond(secondOfEpoch, dateTime.nanosecond)
     } else {
         null
+    }
+}
+
+internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
+
+internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
+    val secondOfUnixEpoch = instant.unixEpochSecond
+    val nanosecond = instant.unixEpochNanoOfSecond
+
+    return withComponentizedSecondOfUnixEpoch(secondOfUnixEpoch) { year, monthNumber, day, hour, minute, second ->
+        appendDate(year, monthNumber, day)
+        append('T')
+        appendTime(hour, minute, second, nanosecond)
+        append('Z')
+    }
+}
+
+internal inline fun <T> withComponentizedSecondOfUnixEpoch(
+    secondOfUnixEpoch: Long,
+    block: (year: Int, monthNumber: Int, dayOfMonth: Int, hour: Int, minute: Int, second: Int) -> T
+): T {
+    val dayOfUnixEpoch = secondOfUnixEpoch floorDiv SECONDS_PER_DAY
+    val secondOfDay = (secondOfUnixEpoch floorMod SECONDS_PER_DAY).toInt()
+
+    return withComponentizedDayOfUnixEpoch(dayOfUnixEpoch) { year, monthNumber, dayOfMonth ->
+        secondOfDay.seconds.toComponents { hours, minutes, seconds ->
+            block(year, monthNumber, dayOfMonth, hours.value, minutes.value, seconds.value)
+        }
     }
 }

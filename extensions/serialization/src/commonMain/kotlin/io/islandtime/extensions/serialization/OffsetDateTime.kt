@@ -3,14 +3,13 @@ package io.islandtime.extensions.serialization
 import io.islandtime.OffsetDateTime
 import io.islandtime.toOffsetDateTime
 import kotlinx.serialization.*
-import kotlinx.serialization.internal.StringDescriptor
 
-@Serializer(forClass = OffsetDateTime::class)
 object OffsetDateTimeSerializer : KSerializer<OffsetDateTime> {
-    override val descriptor: SerialDescriptor = StringDescriptor.withName("OffsetDateTime")
+    override val descriptor: SerialDescriptor =
+        PrimitiveDescriptor("io.islandtime.OffsetDateTimeSerializer", PrimitiveKind.STRING)
 
-    override fun serialize(encoder: Encoder, obj: OffsetDateTime) {
-        encoder.encodeString(obj.toString())
+    override fun serialize(encoder: Encoder, value: OffsetDateTime) {
+        encoder.encodeString(value.toString())
     }
 
     override fun deserialize(decoder: Decoder): OffsetDateTime {

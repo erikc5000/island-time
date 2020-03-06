@@ -384,7 +384,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     @Test
     fun `String_toYearMonth() throws an exception when the year is out of range`() {
         listOf("+1000000000-01", "-1000000000-12").forEach {
-            assertFailsWith<DateTimeParseException> { it.toYearMonth() }
+            assertFailsWith<DateTimeException> { it.toYearMonth() }
         }
     }
 
