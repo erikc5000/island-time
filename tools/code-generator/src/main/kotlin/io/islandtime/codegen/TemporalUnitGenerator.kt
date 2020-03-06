@@ -265,7 +265,6 @@ fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString")
     )
 }
 
-@UseExperimental(kotlin.time.ExperimentalTime::class)
 fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() = buildFunSpec("toKotlinDuration") {
     addAnnotation(ClassName("kotlin.time", "ExperimentalTime"))
     addKdoc("Convert to a [kotlin.time.Duration].")
