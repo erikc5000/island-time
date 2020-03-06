@@ -17,7 +17,6 @@ kotlin {
 
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation(kotlin("reflect"))
             }
         }
 
