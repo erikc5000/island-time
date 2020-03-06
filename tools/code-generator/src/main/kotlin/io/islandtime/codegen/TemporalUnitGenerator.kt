@@ -53,7 +53,7 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
                     is TypeSpec -> addType(it)
                     is PropertySpec -> addProperty(it)
                     is FunSpec -> addFunction(it)
-                    else -> throw IllegalStateException("Invalid type encountered!")
+                    else -> throw IllegalStateException("Invalid type '${it.javaClass.simpleName}' encountered!")
                 }
             }
     }
@@ -76,6 +76,7 @@ abstract class TemporalUnitClassGenerator(
     val isPositiveFunSpec by lazy(::buildIsPositiveFunSpec)
     val compareToFunSpec by lazy(::buildCompareToFunSpec)
     val toStringFunSpec by lazy(::buildToStringFunSpec)
+    val toKotlinDurationFunSpec by lazy(::buildToKotlinDurationFunSpec)
 
     val unaryMinusFunSpec by lazy(::buildUnaryMinusFunSpec)
     val negateUncheckedFunSpec by lazy(::buildNegateUncheckedFunSpec)
@@ -92,39 +93,50 @@ abstract class TemporalUnitClassGenerator(
     val timesIntExtensionFunSpec by lazy { buildTimesExtensionFunSpec(Int::class) }
     val timesLongExtensionFunSpec by lazy { buildTimesExtensionFunSpec(Long::class) }
 
-    private val baseClassSpecList
-        get() = listOf(
-            valuePropertySpec,
-            absoluteValuePropertySpec,
-            isZeroFunSpec,
-            isNegativeFunSpec,
-            isPositiveFunSpec,
-            compareToFunSpec,
-            toStringFunSpec,
-            unaryMinusFunSpec,
-            negateUncheckedFunSpec,
-            timesIntFunSpec,
-            timesLongFunSpec,
-            divIntFunSpec,
-            divLongFunSpec,
-            remIntFunSpec,
-            remLongFunSpec,
-            companionObjectTypeSpec
-        ) +
-            buildPlusMinusOperatorFunSpecs() +
-            buildUnitConversionSpecs() +
-            buildToComponentsFunctions()
+    private val baseClassSpecList: List<Any>
+        get() {
+            val list = listOf(
+                valuePropertySpec,
+                absoluteValuePropertySpec,
+                isZeroFunSpec,
+                isNegativeFunSpec,
+                isPositiveFunSpec,
+                compareToFunSpec,
+                toStringFunSpec,
+                unaryMinusFunSpec,
+                negateUncheckedFunSpec,
+                timesIntFunSpec,
+                timesLongFunSpec,
+                divIntFunSpec,
+                divLongFunSpec,
+                remIntFunSpec,
+                remLongFunSpec,
+                companionObjectTypeSpec
+            ) +
+                buildPlusMinusOperatorFunSpecs() +
+                buildUnitConversionSpecs() +
+                buildToComponentsFunctions()
+
+            return if (description.isTimeBased) {
+                list + toKotlinDurationFunSpec
+            } else {
+                list
+            }
+        }
 
     protected open fun allClassSpecs(): List<Any> {
         return baseClassSpecList
     }
 
-    fun build() = listOf(
-        buildClass(),
-        primitiveExtensionPropertySpec,
-        timesIntExtensionFunSpec,
-        timesLongExtensionFunSpec
-    )
+    protected open fun allExtensionSpecs(): List<Any> {
+        return listOf(
+            primitiveExtensionPropertySpec,
+            timesIntExtensionFunSpec,
+            timesLongExtensionFunSpec
+        )
+    }
+
+    fun build() = listOf(buildClass()) + allExtensionSpecs()
 
     fun buildClass() = buildClassTypeSpec(className) {
         addKdoc("A number of ${description.lowerCaseName}.")
@@ -257,6 +269,14 @@ fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString")
             buildWholeToStringCodeBlock()
         }
     )
+}
+
+@UseExperimental(kotlin.time.ExperimentalTime::class)
+fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() = buildFunSpec("toKotlinDuration") {
+    addAnnotation(ClassName("kotlin.time", "ExperimentalTime"))
+    addKdoc("Convert to a [kotlin.time.Duration].")
+    returns(kotlin.time.Duration::class)
+    addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerCaseName))
 }
 
 fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = buildCodeBlock {

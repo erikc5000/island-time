@@ -27,6 +27,9 @@ import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.minutes
 
 /**
  * A number of minutes.
@@ -248,6 +251,12 @@ inline class IntMinutes(
     val minutes = (this - days - hours)
     return action(days, hours, minutes)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.minutes
 
   /**
    * Convert to [LongMinutes].
@@ -526,6 +535,12 @@ inline class LongMinutes(
     val minutes = (this - days - hours).toIntMinutesUnchecked()
     return action(days, hours, minutes)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.minutes
 
   /**
    * Convert to [IntMinutes].

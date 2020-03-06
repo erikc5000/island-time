@@ -27,6 +27,9 @@ import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
 /**
  * A number of seconds.
@@ -247,6 +250,12 @@ inline class IntSeconds(
     val seconds = (this - days - hours - minutes)
     return action(days, hours, minutes, seconds)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.seconds
 
   /**
    * Convert to [LongSeconds].
@@ -531,6 +540,12 @@ inline class LongSeconds(
     val seconds = (this - days - hours - minutes).toIntSecondsUnchecked()
     return action(days, hours, minutes, seconds)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.seconds
 
   /**
    * Convert to [IntSeconds].

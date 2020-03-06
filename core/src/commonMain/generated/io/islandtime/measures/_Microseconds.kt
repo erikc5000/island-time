@@ -28,6 +28,9 @@ import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.microseconds
 
 /**
  * A number of microseconds.
@@ -298,6 +301,12 @@ inline class IntMicroseconds(
         milliseconds).toIntMicrosecondsUnchecked()
     return action(days, hours, minutes, seconds, milliseconds, microseconds)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.microseconds
 
   /**
    * Convert to [LongMicroseconds].
@@ -615,6 +624,12 @@ inline class LongMicroseconds(
         milliseconds).toIntMicrosecondsUnchecked()
     return action(days, hours, minutes, seconds, milliseconds, microseconds)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.microseconds
 
   /**
    * Convert to [IntMicroseconds].

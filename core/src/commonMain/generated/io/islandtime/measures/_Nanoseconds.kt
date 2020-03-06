@@ -28,6 +28,9 @@ import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.nanoseconds
 
 /**
  * A number of nanoseconds.
@@ -320,6 +323,12 @@ inline class IntNanoseconds(
         microseconds).toIntNanosecondsUnchecked()
     return action(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.nanoseconds
 
   /**
    * Convert to [LongNanoseconds].
@@ -652,6 +661,12 @@ inline class LongNanoseconds(
         microseconds).toIntNanosecondsUnchecked()
     return action(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.nanoseconds
 
   /**
    * Convert to [IntNanoseconds].

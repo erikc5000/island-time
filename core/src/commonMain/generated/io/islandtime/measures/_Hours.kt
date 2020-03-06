@@ -27,6 +27,9 @@ import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.hours
 
 /**
  * A number of hours.
@@ -243,6 +246,12 @@ inline class IntHours(
     val hours = (this - days)
     return action(days, hours)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.hours
 
   /**
    * Convert to [LongHours].
@@ -517,6 +526,12 @@ inline class LongHours(
     val hours = (this - days).toIntHoursUnchecked()
     return action(days, hours)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.hours
 
   /**
    * Convert to [IntHours].

@@ -28,6 +28,9 @@ import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.days
 
 /**
  * A number of days.
@@ -272,6 +275,12 @@ inline class IntDays(
     val days = (this - weeks)
     return action(weeks, days)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.days
 
   /**
    * Convert to [LongDays].
@@ -567,6 +576,12 @@ inline class LongDays(
     val days = (this - weeks).toIntDaysUnchecked()
     return action(weeks, days)
   }
+
+  /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): Duration = value.days
 
   /**
    * Convert to [IntDays].
