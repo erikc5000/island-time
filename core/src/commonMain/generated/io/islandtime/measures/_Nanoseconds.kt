@@ -24,7 +24,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -35,7 +34,6 @@ import kotlin.time.nanoseconds
 /**
  * A number of nanoseconds.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntNanoseconds(
   /**
    * The underlying value.
@@ -374,7 +372,6 @@ operator fun Long.times(nanoseconds: IntNanoseconds) = nanoseconds * this
 /**
  * A number of nanoseconds.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongNanoseconds(
   /**
    * The underlying value.

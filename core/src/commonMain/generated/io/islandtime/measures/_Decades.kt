@@ -20,7 +20,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -28,7 +27,6 @@ import kotlin.math.absoluteValue
 /**
  * A number of decades.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntDecades(
   /**
    * The underlying value.
@@ -232,7 +230,6 @@ operator fun Long.times(decades: IntDecades) = decades * this
 /**
  * A number of decades.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongDecades(
   /**
    * The underlying value.

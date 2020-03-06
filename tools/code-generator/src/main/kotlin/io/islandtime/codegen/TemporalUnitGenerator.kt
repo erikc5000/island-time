@@ -141,11 +141,6 @@ abstract class TemporalUnitClassGenerator(
     fun buildClass() = buildClassTypeSpec(className) {
         addKdoc("A number of ${description.lowerCaseName}.")
         addModifiers(KModifier.INLINE)
-        addAnnotation(
-            buildAnnotationSpec(Suppress::class) {
-                addMember("%S", "NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-            }
-        )
         primaryConstructor(constructorFunSpec)
         addSuperinterface(ClassName("kotlin", "Comparable").parameterizedBy(className))
 
@@ -228,7 +223,6 @@ fun TemporalUnitClassGenerator.buildAbsoluteValuePropertySpec() = buildPropertyS
 }
 
 fun TemporalUnitClassGenerator.buildConstructorFunSpec() = buildConstructorFunSpec {
-    // addModifiers(KModifier.INTERNAL)
     addParameter(valuePropertySpec.name, valuePropertySpec.type)
 }
 
@@ -275,7 +269,7 @@ fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString")
 fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() = buildFunSpec("toKotlinDuration") {
     addAnnotation(ClassName("kotlin.time", "ExperimentalTime"))
     addKdoc("Convert to a [kotlin.time.Duration].")
-    returns(kotlin.time.Duration::class)
+    returns(ClassName("kotlin.time", "Duration"))
     addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerCaseName))
 }
 

@@ -20,7 +20,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -28,7 +27,6 @@ import kotlin.math.absoluteValue
 /**
  * A number of months.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntMonths(
   /**
    * The underlying value.
@@ -242,7 +240,6 @@ operator fun Long.times(months: IntMonths) = months * this
 /**
  * A number of months.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongMonths(
   /**
    * The underlying value.

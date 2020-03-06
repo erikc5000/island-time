@@ -23,7 +23,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -34,7 +33,6 @@ import kotlin.time.minutes
 /**
  * A number of minutes.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntMinutes(
   /**
    * The underlying value.
@@ -302,7 +300,6 @@ operator fun Long.times(minutes: IntMinutes) = minutes * this
 /**
  * A number of minutes.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongMinutes(
   /**
    * The underlying value.

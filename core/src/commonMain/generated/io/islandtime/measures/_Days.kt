@@ -24,7 +24,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -35,7 +34,6 @@ import kotlin.time.days
 /**
  * A number of days.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntDays(
   /**
    * The underlying value.
@@ -326,7 +324,6 @@ operator fun Long.times(days: IntDays) = days * this
 /**
  * A number of days.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongDays(
   /**
    * The underlying value.
