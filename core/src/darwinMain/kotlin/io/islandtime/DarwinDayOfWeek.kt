@@ -10,7 +10,7 @@ internal actual val Locale.firstDayOfWeek: DayOfWeek
 
 internal actual fun systemDefaultFirstDayOfWeek(): DayOfWeek = NSCalendar.currentCalendar.firstDayOfWeek
 
-@UseExperimental(ExperimentalUnsignedTypes::class)
+@OptIn(ExperimentalUnsignedTypes::class)
 private val NSCalendar.firstDayOfWeek: DayOfWeek
     get() {
         val sundayIndexedWeekNumber = firstWeekday.toInt()

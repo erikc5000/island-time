@@ -1,6 +1,6 @@
 package io.islandtime.zone
 
-import co.touchlab.stately.collections.frozenHashMap
+import co.touchlab.stately.isolate.IsolateState
 import io.islandtime.*
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
@@ -15,7 +15,7 @@ import platform.Foundation.*
  * A time zone rules provider that draws from the database included on Darwin platforms.
  */
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
-    private val timeZoneRules: MutableMap<String, TimeZoneRules> = frozenHashMap()
+    private val timeZoneRules = IsolateState { hashMapOf<String, TimeZoneRules>() }
 
     @Suppress("UNCHECKED_CAST")
     private val cachedRegionIds = (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
@@ -25,12 +25,20 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     override fun hasRulesFor(regionId: String) = NSTimeZone.timeZoneWithName(regionId) != null
 
     override fun rulesFor(regionId: String): TimeZoneRules {
-        return timeZoneRules.getOrPut(regionId) {
-            // TODO: May overwrite -- putIfAbsent() analog would be better here
-            DarwinTimeZoneRules(
-                NSTimeZone.timeZoneWithName(regionId)
-                    ?: throw TimeZoneRulesException("No time zone exists with region ID '$regionId'")
-            )
+        // FIXME: This is a workaround for an issue with Stately
+        val tzRules = DarwinTimeZoneRules(
+            NSTimeZone.timeZoneWithName(regionId)
+                ?: throw TimeZoneRulesException("No time zone exists with region ID '$regionId'")
+        )
+
+        return timeZoneRules.access {
+            it.getOrPut(regionId) {
+                tzRules
+//                DarwinTimeZoneRules(
+//                    NSTimeZone.timeZoneWithName(regionId)
+//                        ?: throw TimeZoneRulesException("No time zone exists with region ID '$regionId'")
+//                )
+            }
         }
     }
 }
@@ -38,9 +46,10 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
 private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
     private val calendar = NSCalendar(NSCalendarIdentifierISO8601).also { it.timeZone = timeZone }
-    private inline val timeZone: NSTimeZone get() = calendar.timeZone
 
-    private val transitionsInYear: MutableMap<Int, List<TimeZoneOffsetTransition>> = frozenHashMap()
+    private val timeZone: NSTimeZone get() = calendar.timeZone
+
+    private val transitionsInYear = IsolateState { hashMapOf<Int, List<TimeZoneOffsetTransition>>() }
 
     override fun offsetAt(dateTime: DateTime): UtcOffset {
         val date = dateTime.toNSDateOrNull(calendar)
@@ -63,18 +72,17 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     override fun offsetAt(instant: Instant) = offsetAt(instant.toNSDate())
 
     override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
-        return transitionsInYear
-            .getOrPut(dateTime.year) {
-                // TODO: May overwrite -- putIfAbsent() analog would be better here
+        return transitionsInYear.access { map ->
+            map.getOrPut(dateTime.year) {
                 findTransitionsIn(dateTime.year)
-            }
-            .singleOrNull {
+            }.singleOrNull {
                 if (it.isGap) {
                     dateTime >= it.dateTimeBefore && dateTime < it.dateTimeAfter
                 } else {
                     dateTime >= it.dateTimeAfter && dateTime < it.dateTimeBefore
                 }
             }
+        }
     }
 
     override fun validOffsetsAt(dateTime: DateTime): List<UtcOffset> {
@@ -146,9 +154,9 @@ private class DarwinTimeZoneOffsetTransition(
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is DarwinTimeZoneOffsetTransition &&
-                dateTimeBefore == other.dateTimeBefore &&
-                offsetBefore == other.offsetBefore &&
-                offsetAfter == other.offsetAfter)
+            dateTimeBefore == other.dateTimeBefore &&
+            offsetBefore == other.offsetBefore &&
+            offsetAfter == other.offsetAfter)
     }
 
     override fun hashCode(): Int {
