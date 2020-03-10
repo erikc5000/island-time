@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.calendar.WeekSettings
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.localeOf
 import io.islandtime.measures.days
@@ -35,15 +36,28 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `localizedNumber() matches locale`() {
-        assertEquals(1, DayOfWeek.SUNDAY.localizedNumber(en_US))
-        assertEquals(7, DayOfWeek.SATURDAY.localizedNumber(en_US))
+    fun `number() matches week settings`() {
+        assertEquals(1, DayOfWeek.SUNDAY.number(WeekSettings.SUNDAY_START))
+        assertEquals(7, DayOfWeek.SATURDAY.number(WeekSettings.SUNDAY_START))
 
-        assertEquals(1, DayOfWeek.MONDAY.localizedNumber(de_DE))
-        assertEquals(7, DayOfWeek.SUNDAY.localizedNumber(de_DE))
+        assertEquals(1, DayOfWeek.MONDAY.number(WeekSettings.ISO))
+        assertEquals(7, DayOfWeek.SUNDAY.number(WeekSettings.ISO))
 
-        assertEquals(1, DayOfWeek.SATURDAY.localizedNumber(ar_EG))
-        assertEquals(7, DayOfWeek.FRIDAY.localizedNumber(ar_EG))
+        val saturdayFirst = WeekSettings(DayOfWeek.SATURDAY, 1)
+        assertEquals(1, DayOfWeek.SATURDAY.number(saturdayFirst))
+        assertEquals(7, DayOfWeek.FRIDAY.number(saturdayFirst))
+    }
+
+    @Test
+    fun `number() matches locale`() {
+        assertEquals(1, DayOfWeek.SUNDAY.number(en_US))
+        assertEquals(7, DayOfWeek.SATURDAY.number(en_US))
+
+        assertEquals(1, DayOfWeek.MONDAY.number(de_DE))
+        assertEquals(7, DayOfWeek.SUNDAY.number(de_DE))
+
+        assertEquals(1, DayOfWeek.SATURDAY.number(ar_EG))
+        assertEquals(7, DayOfWeek.FRIDAY.number(ar_EG))
     }
 
     @Test

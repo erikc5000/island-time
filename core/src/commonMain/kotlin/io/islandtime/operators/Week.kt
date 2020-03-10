@@ -4,6 +4,7 @@ import io.islandtime.Date
 import io.islandtime.DateTime
 import io.islandtime.OffsetDateTime
 import io.islandtime.ZonedDateTime
+import io.islandtime.calendar.WeekSettings
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
 import io.islandtime.ranges.*
@@ -17,19 +18,14 @@ val Date.weekRange: DateRange
     get() = with(startOfWeek) { this..this + 6.days }
 
 /**
- * The date range of the week that this date falls within. The first day of the week will be determined by the system
- * settings. This may differ from the first day of the week associated with the default locale on platforms that allow
- * this to be customized.
+ * The date range of the week that this date falls within. The first day of the week will be determined by [settings].
  */
-val Date.localizedWeekRange: DateRange
-    get() = with(localizedStartOfWeek) { this..this + 6.days }
+fun Date.weekRange(settings: WeekSettings): DateRange = with(startOfWeek(settings)) { this..this + 6.days }
 
 /**
  * The date range of the week that this date falls within. The first day of the week will be determined by [locale].
  */
-fun Date.localizedWeekRange(locale: Locale): DateRange {
-    return with(localizedStartOfWeek(locale)) { this..this + 6.days }
-}
+fun Date.weekRange(locale: Locale): DateRange = with(startOfWeek(locale)) { this..this + 6.days }
 
 /**
  * The interval of the ISO week that this date-time falls within.
@@ -40,18 +36,18 @@ val DateTime.weekInterval: DateTimeInterval
     get() = with(startOfWeek) { this until this + 7.days }
 
 /**
- * The interval of the week that this date-time falls within. The first day of the week will be determined by the system
- * settings. This may differ from the first day of the week associated with the default locale on platforms that allow
- * this to be customized.
+ * The interval of the week that this date-time falls within. The first day of the week will be determined by
+ * [settings].
  */
-val DateTime.localizedWeekInterval: DateTimeInterval
-    get() = with(localizedStartOfWeek) { this until this + 7.days }
+fun DateTime.weekInterval(settings: WeekSettings): DateTimeInterval {
+    return with(startOfWeek(settings)) { this until this + 7.days }
+}
 
 /**
  * The interval of the week that this date falls within. The first day of the week will be determined by [locale].
  */
-fun DateTime.localizedWeekInterval(locale: Locale): DateTimeInterval {
-    return with(localizedStartOfWeek(locale)) { this until this + 7.days }
+fun DateTime.weekInterval(locale: Locale): DateTimeInterval {
+    return with(startOfWeek(locale)) { this until this + 7.days }
 }
 
 /**
@@ -64,19 +60,19 @@ val OffsetDateTime.weekInterval: OffsetDateTimeInterval
     get() = with(startOfWeek) { this until this + 7.days }
 
 /**
- * The interval of the week that this date-time falls within. The first day of the week will be determined by the system
- * settings. This may differ from the first day of the week associated with the default locale on platforms that allow
- * this to be customized. The offset will be preserved in both the start and end date-times.
+ * The interval of the week that this date-time falls within. The first day of the week will be determined by
+ * [settings]. The offset will be preserved in both the start and end date-times.
  */
-val OffsetDateTime.localizedWeekInterval: OffsetDateTimeInterval
-    get() = with(localizedStartOfWeek) { this until this + 7.days }
+fun OffsetDateTime.weekInterval(settings: WeekSettings): OffsetDateTimeInterval {
+    return with(startOfWeek(settings)) { this until this + 7.days }
+}
 
 /**
  * The interval of the week that this date falls within. The first day of the week will be determined by [locale]. The
  * offset will be preserved in both the start and end date-times.
  */
-fun OffsetDateTime.localizedWeekInterval(locale: Locale): OffsetDateTimeInterval {
-    return with(localizedStartOfWeek(locale)) { this until this + 7.days }
+fun OffsetDateTime.weekInterval(locale: Locale): OffsetDateTimeInterval {
+    return with(startOfWeek(locale)) { this until this + 7.days }
 }
 
 /**
@@ -89,17 +85,17 @@ val ZonedDateTime.weekInterval: ZonedDateTimeInterval
     get() = with(startOfWeek) { this until this + 7.days }
 
 /**
- * The interval of the week that this date-time falls within. The first day of the week will be determined by the system
- * settings. This may differ from the first day of the week associated with the default locale on platforms that allow
- * this to be customized. The zone will be preserved in both the start and end date-times.
+ * The interval of the week that this date-time falls within. The first day of the week will be determined by
+ * [settings]. The zone will be preserved in both the start and end date-times.
  */
-val ZonedDateTime.localizedWeekInterval: ZonedDateTimeInterval
-    get() = with(localizedStartOfWeek) { this until this + 7.days }
+fun ZonedDateTime.weekInterval(settings: WeekSettings): ZonedDateTimeInterval {
+    return with(startOfWeek(settings)) { this until this + 7.days }
+}
 
 /**
  * The interval of the week that this date falls within. The first day of the week will be determined by [locale]. The
  * zone will be preserved in both the start and end date-times.
  */
-fun ZonedDateTime.localizedWeekInterval(locale: Locale): ZonedDateTimeInterval {
-    return with(localizedStartOfWeek(locale)) { this until this + 7.days }
+fun ZonedDateTime.weekInterval(locale: Locale): ZonedDateTimeInterval {
+    return with(startOfWeek(locale)) { this until this + 7.days }
 }
