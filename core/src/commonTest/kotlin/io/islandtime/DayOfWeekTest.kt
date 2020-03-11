@@ -37,7 +37,7 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
 
         val saturdayStart = WeekSettings(DayOfWeek.SATURDAY, 1)
         assertEquals(DayOfWeek.SATURDAY, 1.toDayOfWeek(saturdayStart))
-        assertEquals(DayOfWeek.SUNDAY, 7.toDayOfWeek(saturdayStart))
+        assertEquals(DayOfWeek.FRIDAY, 7.toDayOfWeek(saturdayStart))
     }
 
     @Test
