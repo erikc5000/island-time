@@ -30,6 +30,17 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `Int_toDayOfWeek() with settings`() {
+        assertEquals(DayOfWeek.SUNDAY, 1.toDayOfWeek(WeekSettings.SUNDAY_START))
+        assertEquals(DayOfWeek.MONDAY, 2.toDayOfWeek(WeekSettings.SUNDAY_START))
+        assertEquals(DayOfWeek.SATURDAY, 7.toDayOfWeek(WeekSettings.SUNDAY_START))
+
+        val saturdayStart = WeekSettings(DayOfWeek.SATURDAY, 1)
+        assertEquals(DayOfWeek.SATURDAY, 1.toDayOfWeek(saturdayStart))
+        assertEquals(DayOfWeek.SUNDAY, 7.toDayOfWeek(saturdayStart))
+    }
+
+    @Test
     fun `number property matches ISO-8601 day of week number`() {
         assertEquals(1, DayOfWeek.MONDAY.number)
         assertEquals(3, DayOfWeek.WEDNESDAY.number)
