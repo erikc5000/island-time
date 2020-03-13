@@ -2,6 +2,7 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.measures.*
+import io.islandtime.parser.*
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -30,6 +31,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `equality works correctly`() {
+        assertNotEquals<TimeInterval<*>>(DateTimeInterval.UNBOUNDED, InstantInterval.UNBOUNDED)
         assertEquals(DateTimeInterval.EMPTY, DateTimeInterval.EMPTY)
         assertNotEquals(DateTimeInterval.UNBOUNDED, DateTimeInterval.EMPTY)
         assertNotEquals(DateTimeInterval.EMPTY, DateTimeInterval.UNBOUNDED)
@@ -101,7 +103,6 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
         val range = start until end
 
         assertEquals(start, range.start)
-//        assertEquals(end - 1.nanoseconds, range.endInclusive)
         assertEquals(end, range.endExclusive)
     }
 
@@ -112,6 +113,31 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
         val range = start..end
         val randomDateTime = range.random()
         assertTrue { randomDateTime in range }
+    }
+
+    @Test
+    fun `asDuration() returns a zeroed out duration when the range is empty`() {
+        assertEquals(Duration.ZERO, DateTimeInterval.EMPTY.asDuration())
+    }
+
+    @Test
+    fun `asDuration() throws an exception when the range is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> {
+            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).asDuration()
+        }
+    }
+
+    @Test
+    fun `duration is correct when bounded`() {
+        assertEquals(
+            10.minutes.asDuration(),
+            ("2019-10-11T09:15".toDateTime() until "2019-10-11T09:25".toDateTime()).asDuration()
+        )
+
+        assertEquals(
+            10.minutes.asDuration(),
+            durationBetween("2019-10-11T09:15".toDateTime(), "2019-10-11T09:25".toDateTime())
+        )
     }
 
     @Test
@@ -168,8 +194,214 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `years between two date-times`() {
+        val start = DateTime(2019, Month.MARCH, 1, 13, 0)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1.years, (start until end1).lengthInYears)
+        assertEquals(1.years, yearsBetween(start, end1))
+
+        assertEquals(0.years, (start until end2).lengthInYears)
+        assertEquals(0.years, yearsBetween(start, end2))
+    }
+
+    @Test
+    fun `months between two date-times`() {
+        val start = DateTime(2020, Month.FEBRUARY, 1, 13, 0)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1.months, (start until end1).lengthInMonths)
+        assertEquals(1.months, monthsBetween(start, end1))
+
+        assertEquals(0.months, (start until end2).lengthInMonths)
+        assertEquals(0.months, monthsBetween(start, end2))
+    }
+
+    @Test
+    fun `weeks between two date-times`() {
+        val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0)
+        val end1 = DateTime(2020, Month.MARCH, 7, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 7, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.weeks, (start until end1).lengthInWeeks)
+        assertEquals(1L.weeks, weeksBetween(start, end1))
+
+        assertEquals(0L.weeks, (start until end2).lengthInWeeks)
+        assertEquals(0L.weeks, weeksBetween(start, end2))
+    }
+
+    @Test
+    fun `days between two date-times`() {
+        val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.days, (start until end1).lengthInDays)
+        assertEquals(1L.days, daysBetween(start, end1))
+
+        assertEquals(0L.days, (start until end2).lengthInDays)
+        assertEquals(0L.days, daysBetween(start, end2))
+    }
+
+    @Test
+    fun `hours between two date-times`() {
+        val start = DateTime(2020, Month.MARCH, 1, 12, 0)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.hours, (start until end1).lengthInHours)
+        assertEquals(1L.hours, hoursBetween(start, end1))
+
+        assertEquals(0L.hours, (start until end2).lengthInHours)
+        assertEquals(0L.hours, hoursBetween(start, end2))
+    }
+
+    @Test
+    fun `minutes between two date-times`() {
+        val start = DateTime(2020, Month.MARCH, 1, 12, 59)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.minutes, (start until end1).lengthInMinutes)
+        assertEquals(1L.minutes, minutesBetween(start, end1))
+
+        assertEquals(0L.minutes, (start until end2).lengthInMinutes)
+        assertEquals(0L.minutes, minutesBetween(start, end2))
+    }
+
+    @Test
+    fun `seconds between two date-times`() {
+        val start = DateTime(2020, Month.MARCH, 1, 12, 59, 59)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.seconds, (start until end1).lengthInSeconds)
+        assertEquals(1L.seconds, secondsBetween(start, end1))
+
+        assertEquals(0L.seconds, (start until end2).lengthInSeconds)
+        assertEquals(0L.seconds, secondsBetween(start, end2))
+    }
+
+    @Test
+    fun `milliseconds between two date-times`() {
+        val start = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_000_000)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.milliseconds, (start until end1).lengthInMilliseconds)
+        assertEquals(1L.milliseconds, millisecondsBetween(start, end1))
+
+        assertEquals(0L.milliseconds, (start until end2).lengthInMilliseconds)
+        assertEquals(0L.milliseconds, millisecondsBetween(start, end2))
+    }
+
+    @Test
+    fun `microseconds between two date-times`() {
+        val start = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_000)
+        val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1L.microseconds, (start until end1).lengthInMicroseconds)
+        assertEquals(1L.microseconds, microsecondsBetween(start, end1))
+
+        assertEquals(0L.microseconds, (start until end2).lengthInMicroseconds)
+        assertEquals(0L.microseconds, microsecondsBetween(start, end2))
+    }
+
+    @Test
     fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end date-times are the same`() {
         val dateTime = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
         assertEquals(1L.nanoseconds, (dateTime..dateTime).lengthInNanoseconds)
+    }
+
+    @Test
+    fun `toString() returns an ISO-8601 time interval representation`() {
+        assertEquals(
+            "2000-12-31T00:00/2001-01-02T00:00",
+            (DateTime(2000, 12, 31, 0, 0) until
+                DateTime(2001, 1, 2, 0, 0)).toString()
+        )
+
+        assertEquals(
+            "../2001-01-02T00:00",
+            (DateTime.MIN until DateTime(2001, 1, 2, 0, 0)).toString()
+        )
+
+        assertEquals(
+            "2000-12-31T00:00/..",
+            (DateTime(2000, 12, 31, 0, 0) until DateTime.MAX).toString()
+        )
+
+        assertEquals(
+            "../..",
+            (DateTime.MIN until DateTime.MAX).toString()
+        )
+
+        assertEquals(
+            "../..",
+            DateTimeInterval.UNBOUNDED.toString()
+        )
+
+        assertEquals(
+            "",
+            DateTimeInterval.EMPTY.toString()
+        )
+    }
+
+    @Test
+    fun `String_toDateTimeInterval() converts an empty string to an empty interval`() {
+        assertEquals(DateTimeInterval.EMPTY, "".toDateTimeInterval())
+    }
+
+    @Test
+    fun `String_toDateTimeInterval() throws an exception when the format is invalid`() {
+        assertFailsWith<DateTimeParseException> { "2000-01-01/2000-01-01".toDateTimeInterval() }
+        assertFailsWith<DateTimeParseException> { "2000-01-01T00:00/20000101T01".toDateTimeInterval() }
+    }
+
+    @Test
+    fun `String_toDateTimeInterval() parses ISO-8601 time interval strings in extended format by default`() {
+        assertEquals(
+            DateTime(1969, 12, 31, 0, 0) until
+                DateTime(1970, 1, 2, 0, 0),
+            "1969-12-31T00:00/1970-01-02T00:00".toDateTimeInterval()
+        )
+        assertEquals(
+            DateTime.MIN until DateTime(1970, 1, 2, 0, 0),
+            "../1970-01-02T00:00".toDateTimeInterval()
+        )
+        assertEquals(
+            DateTime(1969, 12, 31, 0, 0) until DateTime.MAX,
+            "1969-12-31T00:00/..".toDateTimeInterval()
+        )
+        assertEquals(
+            DateTime(1969, 12, 31, 0, 0)..DateTime.MAX,
+            "1969-12-31T00:00/..".toDateTimeInterval()
+        )
+        assertEquals(DateTimeInterval.UNBOUNDED, "../..".toDateTimeInterval())
+    }
+
+    @Test
+    fun `String_toDateTimeInterval() throws an exception when required properties are missing`() {
+        val customParser = groupedDateTimeParser {
+            group {
+                optional {
+                    anyOf(DateTimeParsers.Iso.DATE_TIME, DateTimeParsers.Iso.YEAR)
+                }
+            }
+            +'/'
+            group {
+                optional {
+                    anyOf(DateTimeParsers.Iso.DATE_TIME, DateTimeParsers.Iso.YEAR)
+                }
+            }
+        }
+
+        assertFailsWith<DateTimeParseException> { "2001/2002-11-04T13:23".toDateTimeInterval(customParser) }
+        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01/2002".toDateTimeInterval(customParser) }
+        assertFailsWith<DateTimeParseException> { "/2002-11-04T13:23".toDateTimeInterval(customParser) }
+        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01/".toDateTimeInterval(customParser) }
     }
 }
