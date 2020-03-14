@@ -42,6 +42,10 @@ class DateTimeInterval(
             start == other.start && endExclusive == other.endExclusive)
     }
 
+    override fun hashCode(): Int {
+        return if (isEmpty()) -1 else (31 * start.hashCode() + endExclusive.hashCode())
+    }
+
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */

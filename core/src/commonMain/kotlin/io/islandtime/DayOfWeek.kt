@@ -1,5 +1,7 @@
 package io.islandtime
 
+import io.islandtime.calendar.WeekSettings
+import io.islandtime.calendar.firstDayOfWeek
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.internal.DAYS_PER_WEEK
@@ -29,19 +31,16 @@ enum class DayOfWeek {
     val number: Int get() = ordinal + 1
 
     /**
-     * The day of week number (1-7) according to the current system settings. Typically, the week will start on either
+     * The day of week number (1-7) according to the provided [settings]. Typically, the week will start on either
      * Monday, Sunday, or Saturday.
      */
-    val localizedNumber: Int
-        get() = (this - (systemDefaultFirstDayOfWeek().number - 1).days).number
+    fun number(settings: WeekSettings): Int = (this - (settings.firstDayOfWeek.number - 1).days).number
 
     /**
      * The day of week number (1-7) according to the specified locale. Typically, the week will start on either Monday,
      * Sunday, or Saturday. The number returned may differ between platforms.
      */
-    fun localizedNumber(locale: Locale): Int {
-        return (this - (locale.firstDayOfWeek.number - 1).days).number
-    }
+    fun number(locale: Locale): Int = (this - (locale.firstDayOfWeek.number - 1).days).number
 
     /**
      * The localized name of the day, if available for the locale in the specified style. The result depends on the
@@ -114,5 +113,13 @@ fun Int.toDayOfWeek(): DayOfWeek {
     return DayOfWeek.values()[this - 1]
 }
 
-internal expect val Locale.firstDayOfWeek: DayOfWeek
-internal expect fun systemDefaultFirstDayOfWeek(): DayOfWeek
+/**
+ * Convert a day of week number (1-7) to a [DayOfWeek] according to the week definition provided by [settings].
+ */
+fun Int.toDayOfWeek(settings: WeekSettings): DayOfWeek {
+    if (this !in DayOfWeek.MIN.number..DayOfWeek.MAX.number) {
+        throw DateTimeException("'$this' is not a valid day of week number")
+    }
+
+    return settings.firstDayOfWeek + (this - 1).days
+}

@@ -4,19 +4,20 @@
 A Kotlin Multiplatform library for working with dates and times, heavily inspired by the java.time library.
 
 Features:
-- A set of date-time primitives such as `Date`, `Time`, `DateTime`, `Instant`, and `ZonedDateTime`
+- A full set of date-time primitives such as `Date`, `Time`, `DateTime`, `Instant`, and `ZonedDateTime`
 - Time zone database support
 - Date ranges and time intervals, integrating with Kotlin ranges and progressions
 - Read and write strings in ISO formats
 - DSL-based definition of custom parsers
-- Operators like `date.next(MONDAY)` or `dateTime.startOfWeek`
-- Works on JVM, Android, iOS, and macOS
+- Access to localized text for names of months, days of the week, time zones, etc.
+- Operators like `date.next(MONDAY)`, `dateTime.startOfWeek`, or `date.weekRange(WeekSettings.systemDefault())`
+- Conversion to and from platform-specific date-time types
+- Works on JVM, Android, iOS, macOS, tvOS, and watchOS
 
 Current limitations:
-- No custom and/or localized format strings
-- No localized week fields
+- No custom format strings (must write platform-specific code to do this)
+- Doesn't support all week-related fields or week-based dates
 - Only supports the ISO calendar system
-- Year range currently restricted to 1-9999
 
 Island Time is still early in development and "moving fast" so to speak. The API is likely to experience changes between minor version increments.
 
@@ -27,27 +28,33 @@ This project publishes Gradle metadata, so you can use the common artifact and i
 Common: _(Kotlin Gradle DSL)_
 ```
 dependencies {
-    implementation("io.islandtime:core:0.1.0")
+    implementation("io.islandtime:core:0.2.0")
+
+    // Optional: A set of serializers for use with kotlinx.serialization
+    implementation("io.islandtime:serialization-extensions:0.2.0")
 }
 ```
 
-On Android specifically, you'll probably want to add the following (more on this in [Initialization](#initialization)):
+On Android specifically, if you're using a version of Android Studio prior to 4.0, you'll need to add a dependency on the Android JSR-310 backport to provide Island Time with the required time zone database (more on this in [Initialization](#initialization)).
 
 Android: _(Kotlin Gradle DSL)_
 ```
 dependencies {
-    // Until java.time library desugaring is added to D8, Android relies on
-    // ThreeTenABP (https://github.com/JakeWharton/ThreeTenABP) to supply the
-    // time zone database
-    implementation("io.islandtime:threetenabp-extensions:0.1.0")
+    // The following is only necessary if using a version of Android Studio
+    // prior to 4.0 or if core library desugaring is turned off.
+    implementation("io.islandtime:threetenabp-extensions:0.2.0")
+
+    // Optional: A set of parcelers for use with the @Parcelize feature provided
+    // by the Kotlin Android Extensions
+    implementation("io.islandtime:parcelize-extensions:0.2.0")
 }
 ```
 
 _**Important:**_ Due to the experimental status of inline classes, which are used in the public API, the version of Kotlin that you use in your project must match the version used by Island Time -- even for non-native targets.
 
-Island Time 0.1.x builds are based on Kotlin 1.3.60. Also note that Island Time requires a JVM target of 1.8 or above.
+Island Time 0.2.x builds are based on Kotlin 1.3.70. Also note that Island Time requires a JVM target of 1.8 or above.
 
-Current supported platforms are JVM, Android, iOS ARM64/x64, and macOS x64.
+Current supported platforms are JVM, Android, iOS ARM64/x64, macOS x64, watchOS x64, and tvOS x86.
 
 Snapshot builds are available on the Sonatype OSS Snapshot Repository (https://oss.sonatype.org/content/repositories/snapshots/).
 
@@ -56,13 +63,24 @@ Snapshot builds are available on the Sonatype OSS Snapshot Repository (https://o
 
 ## Initialization
 
-Prior to using Island Time, it may be initialized with a custom `TimeZoneRulesProvider`. The platform default provider will be used if this isn't specified explicitly.
+Prior to using Island Time, it may be initialized with custom providers for time zone rules or localized text. The platform default providers will be used for any that aren't specified explicitly. It's only necessary to initialize Island Time if you're using custom providers.
 
-On Android, using the default provider will trigger an exception at runtime with any version below API 26-- unless you're using an Android Gradle Plugin 4.0 alpha build with `coreLibraryDesugaringEnabled = true`. Until AGP 4.0 and java.time desugaring becomes stable, it's recommended that you use the `AndroidThreeTenProvider` in `threetenabp-extensions` instead, which uses the Android JSR-310 backport under the hood to provide time zone data. Generally, initialization should be performed during `Application.onCreate()`.
+```kotlin
+IslandTime.initialize {
+    // Here, we're overriding all of the platform default providers with our own
+    timeZoneRulesProvider = MyTimeZoneRulesProvider
+    dateTimeTextProvider = MyDateTimeTextProvider
+    timeZoneTextProvider = MyTimeZoneTextProvider
+}
+```
+
+On Android, using the default provider will trigger an exception at runtime with any version below API 26 -- unless you're using Android Studio 4.0 or above with `coreLibraryDesugaringEnabled = true`. Until AS 4.0 and java.time desugaring becomes stable, it's recommended that you use the `AndroidThreeTenProvider` in `threetenabp-extensions` instead, which uses the Android JSR-310 backport under the hood to provide time zone data. Generally, initialization should be performed during `Application.onCreate()`.
 
 ```kotlin
 // Note that it isn't necessary to call AndroidThreeTen.init() separately
-IslandTime.initializeWith(AndroidThreeTenProvider(context))
+IslandTime.initialize {
+    timeZoneRulesProvider = AndroidThreeTenProvider(context)
+}
 ```
 
 For further information on the Android backport, see https://github.com/JakeWharton/ThreeTenABP.
@@ -188,6 +206,12 @@ val nextWednesday = today.next(DayOfWeek.WEDNESDAY)
 val lastSundayOrToday = today.previousOrSame(DayOfWeek.SUNDAY)
 val startOfMonth = today.startOfMonth
 val endOfMonth = today.endOfMonth
+
+// Date range of the week assuming the ISO week definition (starts on Monday)
+val isoWeekRange: DateRange = today.weekRange
+
+// Saturday, Sunday, or Monday start according to the system settings
+val defaultWeekRange: DateRange = today.weekRange(WeekSettings.systemDefault())
 ```
 
 ### Writing to ISO-8601 Representation
@@ -197,6 +221,19 @@ ISO-8601 is the international standard for dates and times. In Island Time, call
 ```kotlin
 val isoTimestamp = Instant.now().toString() // 2019-10-28T08:34:03.389Z
 val isoDuration = durationOf(5.hours + 4.seconds).toString() // PT5H4S
+```
+
+### Localized Text
+
+```kotlin
+// These examples assume a default locale of "en_US"
+val nyZone = TimeZone("America/New_York")
+val shortStandardName = nyZone.localizedName(TimeZoneTextStyle.SHORT_STANDARD) // EST
+val genericName = nyZone.localizedName(TimeZoneTextStyle.GENERIC) // Eastern Time
+
+val monthName = Month.JANUARY.displayName(TextStyle.LONG) // January
+val dowName = DayOfWeek.FRIDAY.localizedText(TextStyle.SHORT) // Fri
+
 ```
 
 ### Parsing
@@ -211,13 +248,13 @@ val dateTime = "20000101 0909".toDateTime(DateTimeParsers.Iso.Basic.DATE_TIME)
 // Custom parsers can also be defined, but must supply a combination of DateTimeFields that the type can interpret
 val customParser = dateTimeParser {
     monthNumber(2)
-    anyOf({ +'-' }, { +' ' })
+    anyOf({ +'/' }, { +' ' })
     dayOfMonth(2)
-    anyOf({ +'-' }, { +' ' })
+    anyOf({ +'/' }, { +' ' })
     year(4)
 }
 
-val date = "10-01-2019".toDate(customParser)
+val date = "10/01/2019".toDate(customParser)
 ```
 
 ### Date Ranges
@@ -311,6 +348,7 @@ A set of extensions are available that allow you to convert to and from platform
 java.time / ThreeTenABP:
 ```kotlin
 val javaLocalDate = Date(2019, OCTOBER, 24).toJavaLocalDate()
+val javaDuration = 5.hours.toJavaDuration()
 val islandDate = LocalDate.of(2019, OCTOBER, 24).toIslandDate()
 ```
 

@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.calendar.WeekSettings
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.localeOf
 import io.islandtime.measures.days
@@ -29,21 +30,45 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `Int_toDayOfWeek() with settings`() {
+        assertEquals(DayOfWeek.SUNDAY, 1.toDayOfWeek(WeekSettings.SUNDAY_START))
+        assertEquals(DayOfWeek.MONDAY, 2.toDayOfWeek(WeekSettings.SUNDAY_START))
+        assertEquals(DayOfWeek.SATURDAY, 7.toDayOfWeek(WeekSettings.SUNDAY_START))
+
+        val saturdayStart = WeekSettings(DayOfWeek.SATURDAY, 1)
+        assertEquals(DayOfWeek.SATURDAY, 1.toDayOfWeek(saturdayStart))
+        assertEquals(DayOfWeek.FRIDAY, 7.toDayOfWeek(saturdayStart))
+    }
+
+    @Test
     fun `number property matches ISO-8601 day of week number`() {
         assertEquals(1, DayOfWeek.MONDAY.number)
         assertEquals(3, DayOfWeek.WEDNESDAY.number)
     }
 
     @Test
-    fun `localizedNumber() matches locale`() {
-        assertEquals(1, DayOfWeek.SUNDAY.localizedNumber(en_US))
-        assertEquals(7, DayOfWeek.SATURDAY.localizedNumber(en_US))
+    fun `number() matches week settings`() {
+        assertEquals(1, DayOfWeek.SUNDAY.number(WeekSettings.SUNDAY_START))
+        assertEquals(7, DayOfWeek.SATURDAY.number(WeekSettings.SUNDAY_START))
 
-        assertEquals(1, DayOfWeek.MONDAY.localizedNumber(de_DE))
-        assertEquals(7, DayOfWeek.SUNDAY.localizedNumber(de_DE))
+        assertEquals(1, DayOfWeek.MONDAY.number(WeekSettings.ISO))
+        assertEquals(7, DayOfWeek.SUNDAY.number(WeekSettings.ISO))
 
-        assertEquals(1, DayOfWeek.SATURDAY.localizedNumber(ar_EG))
-        assertEquals(7, DayOfWeek.FRIDAY.localizedNumber(ar_EG))
+        val saturdayFirst = WeekSettings(DayOfWeek.SATURDAY, 1)
+        assertEquals(1, DayOfWeek.SATURDAY.number(saturdayFirst))
+        assertEquals(7, DayOfWeek.FRIDAY.number(saturdayFirst))
+    }
+
+    @Test
+    fun `number() matches locale`() {
+        assertEquals(1, DayOfWeek.SUNDAY.number(en_US))
+        assertEquals(7, DayOfWeek.SATURDAY.number(en_US))
+
+        assertEquals(1, DayOfWeek.MONDAY.number(de_DE))
+        assertEquals(7, DayOfWeek.SUNDAY.number(de_DE))
+
+        assertEquals(1, DayOfWeek.SATURDAY.number(ar_EG))
+        assertEquals(7, DayOfWeek.FRIDAY.number(ar_EG))
     }
 
     @Test

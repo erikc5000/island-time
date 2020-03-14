@@ -17,7 +17,6 @@ kotlin {
 
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation(kotlin("reflect"))
             }
         }
 
@@ -38,14 +37,13 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.google.truth:truth:1.0")
+                implementation(Libs.googleTruth)
             }
         }
 
         val darwinMain by getting {
             dependencies {
-                implementation("co.touchlab:stately:0.9.5")
-                implementation("co.touchlab:stately-collections:0.9.5")
+                implementation(Libs.statelyIsolate)
             }
         }
     }

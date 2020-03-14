@@ -458,28 +458,6 @@ internal fun StringBuilder.appendDate(year: Int, monthNumber: Int, dayOfMonth: I
 //
 // Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
 //
-fun getDayOfUnixEpochFrom(year: Int, monthNumber: Int, dayOfMonth: Int): Long {
-    var total = DAYS_IN_COMMON_YEAR * year
-
-    if (year >= 0) {
-        total += (year + 3) / 4 - (year + 99) / 100 + (year + 399) / 400
-    } else {
-        total -= year / -4 - year / -100 + year / -400
-    }
-
-    total += ((367 * monthNumber - 362) / MONTHS_PER_YEAR)
-    total += dayOfMonth - 1
-
-    if (monthNumber > 2) {
-        total -= if (isLeapYear(year)) 1 else 2
-    }
-
-    return total - DAYS_FROM_0000_TO_1970
-}
-
-//
-// Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
-//
 internal inline fun <T> withComponentizedDayOfUnixEpoch(
     day: Long,
     block: (year: Int, month: Int, day: Int) -> T
@@ -514,6 +492,28 @@ internal inline fun <T> withComponentizedDayOfUnixEpoch(
 }
 
 internal inline val Date.monthsSinceYear0: Long get() = year * 12L + month.ordinal
+
+//
+// Adapted from https://github.com/ThreeTen/threetenbp/blob/master/src/main/java/org/threeten/bp/LocalDate.java
+//
+private fun getDayOfUnixEpochFrom(year: Int, monthNumber: Int, dayOfMonth: Int): Long {
+    var total = DAYS_IN_COMMON_YEAR * year
+
+    if (year >= 0) {
+        total += (year + 3) / 4 - (year + 99) / 100 + (year + 399) / 400
+    } else {
+        total -= year / -4 - year / -100 + year / -400
+    }
+
+    total += ((367 * monthNumber - 362) / MONTHS_PER_YEAR)
+    total += dayOfMonth - 1
+
+    if (monthNumber > 2) {
+        total -= if (isLeapYear(year)) 1 else 2
+    }
+
+    return total - DAYS_FROM_0000_TO_1970
+}
 
 private fun checkValidDayOfMonth(year: Int, month: Month, dayOfMonth: Int): Int {
     if (dayOfMonth !in month.dayRangeIn(year)) {

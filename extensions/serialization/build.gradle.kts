@@ -1,6 +1,6 @@
 plugins {
     `multiplatform-library`
-    kotlin("plugin.serialization") version "1.3.61"
+    kotlin("plugin.serialization") version Versions.kotlin
 }
 
 kotlin {
@@ -9,7 +9,7 @@ kotlin {
             dependencies {
                 implementation(project(":core"))
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.14.0")
+                implementation(Libs.Serialization.common)
             }
         }
 
@@ -23,7 +23,7 @@ kotlin {
         val jvmMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-jdk8"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0")
+                implementation(Libs.Serialization.jvm)
             }
         }
 
@@ -36,7 +36,7 @@ kotlin {
 
         val darwinMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:0.14.0")
+                implementation(Libs.Serialization.native)
             }
         }
     }

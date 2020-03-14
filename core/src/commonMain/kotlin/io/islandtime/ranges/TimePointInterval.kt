@@ -25,7 +25,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
 
     override fun equals(other: Any?): Boolean {
         return other is TimePointInterval<*> && (isEmpty() && other.isEmpty() ||
-            _start == other._start && _endExclusive == other._endExclusive)
+            ((hasUnboundedStart() && other.hasUnboundedStart()) ||  _start == other._start) &&
+            ((hasUnboundedEnd() && other.hasUnboundedEnd()) || _endExclusive == other._endExclusive))
     }
 
     override fun hashCode(): Int {
