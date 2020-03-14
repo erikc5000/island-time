@@ -5,17 +5,28 @@ internal infix fun Long.minusExact(other: Int): Long = this minusExact other.toL
 
 /**
  * Append a number to a string, padding it with zeros as necessary to reach a desired length
- * @param number The number to pad -- must be positive or zero
- * @param length Minimum length of the appended string
+ * @param number the number to pad -- must be positive or zero
+ * @param length minimum length of the appended string
  */
 internal fun StringBuilder.appendZeroPadded(number: Int, length: Int): StringBuilder {
-    require(length <= 10) { "length must be <= 10" }
     val requiredPadding = length - number.lengthInDigits
 
     if (requiredPadding > 0) {
         append(ZERO_PAD[requiredPadding])
     }
 
+    return append(number)
+}
+
+/**
+ * Append a number to a string, padding it with [padChar] as necessary to reach a desired length
+ * @param number the number to pad -- must be positive or zero
+ * @param length minimum length of the appended string
+ * @param padChar the character to pad with
+ */
+internal fun StringBuilder.appendWithPaddedStart(number: Long, length: Int, padChar: Char): StringBuilder {
+    val requiredPadding = length - number.lengthInDigits
+    repeat(requiredPadding) { append(padChar) }
     return append(number)
 }
 
@@ -37,6 +48,29 @@ private inline val Int.lengthInDigits
         else -> 10
     }
 
+private inline val Long.lengthInDigits
+    get() = when {
+        this < 10L -> 1
+        this < 100L -> 2
+        this < 1_000L -> 3
+        this < 10_000L -> 4
+        this < 100_000L -> 5
+        this < 1_000_000L -> 6
+        this < 10_000_000L -> 7
+        this < 100_000_000L -> 8
+        this < 1_000_000_000L -> 9
+        this < 10_000_000_000L -> 10
+        this < 100_000_000_000L -> 11
+        this < 1_000_000_000_000L -> 12
+        this < 10_000_000_000_000L -> 13
+        this < 100_000_000_000_000L -> 14
+        this < 1_000_000_000_000_000L -> 15
+        this < 10_000_000_000_000_000L -> 16
+        this < 100_000_000_000_000_000L -> 17
+        this < 1_000_000_000_000_000_000L -> 18
+        else -> 19
+    }
+
 private val ZERO_PAD = arrayOf(
     "",
     "0",
@@ -47,5 +81,6 @@ private val ZERO_PAD = arrayOf(
     "000000",
     "0000000",
     "00000000",
-    "000000000"
+    "000000000",
+    "0000000000"
 )

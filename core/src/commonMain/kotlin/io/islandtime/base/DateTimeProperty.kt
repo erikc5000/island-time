@@ -199,5 +199,14 @@ sealed class UtcOffsetProperty {
  * A property of a time zone.
  */
 sealed class TimeZoneProperty {
+    /**
+     * The ID associated with the time zone. This is generally an IANA time zone database identifier or fixed UTC
+     * offset.
+     */
     object Id : StringProperty
+
+    /**
+     * Is this a fixed offset time zone?
+     */
+    object IsFixedOffset : BooleanProperty
 }

@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.BooleanProperty
 import io.islandtime.base.Temporal
 import io.islandtime.base.TemporalProperty
 import io.islandtime.base.TimeZoneProperty
@@ -111,7 +112,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
     @Suppress("UNCHECKED_CAST")
     override fun <T> get(property: TemporalProperty<T>): T {
         return when (property) {
-            is TimeZoneProperty.Id -> id as T
+            TimeZoneProperty.Id -> id as T
             else -> super.get(property)
         }
     }
@@ -146,6 +147,13 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
             }
         }
 
+        override fun get(property: BooleanProperty): Boolean {
+            return when (property) {
+                TimeZoneProperty.IsFixedOffset -> false
+                else -> super.get(property)
+            }
+        }
+
         override fun equals(other: Any?): Boolean {
             return this === other || (other is Region && id == other.id)
         }
@@ -175,6 +183,13 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
         override val rules: TimeZoneRules get() = FixedTimeZoneRules(offset)
         override fun normalized() = this
 
+        override fun get(property: BooleanProperty): Boolean {
+            return when (property) {
+                TimeZoneProperty.IsFixedOffset -> true
+                else -> super.get(property)
+            }
+        }
+
         override fun equals(other: Any?): Boolean {
             return this === other || (other is FixedOffset && offset == other.offset)
         }
@@ -189,7 +204,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
         val UTC: TimeZone = FixedOffset(UtcOffset.ZERO)
 
         @Suppress("FunctionName")
-        fun FixedOffset(id: String): TimeZone {
+        fun FixedOffset(id: String): FixedOffset {
             return try {
                 FixedOffset(id.toUtcOffset(FIXED_TIME_ZONE_PARSER))
             } catch (e: DateTimeParseException) {
