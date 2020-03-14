@@ -37,13 +37,13 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-                implementation("com.google.truth:truth:1.0")
+                implementation(Libs.googleTruth)
             }
         }
 
         val darwinMain by getting {
             dependencies {
-                implementation("co.touchlab:stately-isolate:1.0.0-a2")
+                implementation(Libs.statelyIsolate)
             }
         }
     }
