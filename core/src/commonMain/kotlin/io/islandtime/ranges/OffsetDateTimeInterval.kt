@@ -188,29 +188,46 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
 infix fun OffsetDateTime.until(to: OffsetDateTime) = OffsetDateTimeInterval(this, to)
 
 /**
- * Get the [Period] between two date-times, ignoring the offsets.
+ * Get the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the starting
+ * date-time.
  */
 fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
-    return periodBetween(start.dateTime, endExclusive.dateTime)
+    return periodBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
 /**
- * Get the number of whole years between two date-times, ignoring the offsets.
+ * Get the number of whole years between two date-times, adjusting the offset of [endExclusive] if necessary to match
+ * the starting date-time.
  */
 fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears {
-    return yearsBetween(start.dateTime, endExclusive.dateTime)
+    return yearsBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
 /**
- * Get the number of whole months between two date-times, ignoring the offsets.
+ * Get the number of whole months between two date-times, adjusting the offset of [endExclusive] if necessary to match
+ * the starting date-time.
  */
 fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonths {
-    return monthsBetween(start.dateTime, endExclusive.dateTime)
+    return monthsBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
 /**
- * Get the number whole weeks between two date-times, ignoring the offsets.
+ * Get the number whole weeks between two date-times, adjusting the offset of [endExclusive] if necessary to match the
+ * starting date-time.
  */
 fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongWeeks {
-    return daysBetween(start, endExclusive).inWeeks
+    return weeksBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
+}
+
+/**
+ * Get the number whole days between two date-times, adjusting the offset of [endExclusive] if necessary to match the
+ * starting date-time.
+ */
+fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongDays {
+    return daysBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
+}
+
+private fun adjustedEndDateTime(start: OffsetDateTime, endExclusive: OffsetDateTime): DateTime {
+    val offsetDelta = start.offset.totalSeconds - endExclusive.offset.totalSeconds
+    return endExclusive.dateTime + offsetDelta
 }

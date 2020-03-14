@@ -1,7 +1,11 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
+import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
+import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.groupedDateTimeParser
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -159,8 +163,257 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `years between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2019, Month.MARCH, 1, 13, 0) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 14, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1.years, (start until end1).lengthInYears)
+        assertEquals(1.years, yearsBetween(start, end1))
+
+        assertEquals(0.years, (start until end2).lengthInYears)
+        assertEquals(0.years, yearsBetween(start, end2))
+    }
+
+    @Test
+    fun `months between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2020, Month.FEBRUARY, 1, 13, 0) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 14, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1.months, (start until end1).lengthInMonths)
+        assertEquals(1.months, monthsBetween(start, end1))
+
+        assertEquals(0.months, (start until end2).lengthInMonths)
+        assertEquals(0.months, monthsBetween(start, end2))
+    }
+
+    @Test
+    fun `weeks between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 7, 14, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 7) at
+            Time(13, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.weeks, (start until end1).lengthInWeeks)
+        assertEquals(1L.weeks, weeksBetween(start, end1))
+
+        assertEquals(0L.weeks, (start until end2).lengthInWeeks)
+        assertEquals(0L.weeks, weeksBetween(start, end2))
+    }
+
+    @Test
+    fun `days between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 14, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.days, (start until end1).lengthInDays)
+        assertEquals(1L.days, daysBetween(start, end1))
+
+        assertEquals(0L.days, (start until end2).lengthInDays)
+        assertEquals(0L.days, daysBetween(start, end2))
+    }
+
+    @Test
+    fun `hours between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2020, Month.MARCH, 1, 13, 0) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 15, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(14, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.hours, (start until end1).lengthInHours)
+        assertEquals(1L.hours, hoursBetween(start, end1))
+
+        assertEquals(0L.hours, (start until end2).lengthInHours)
+        assertEquals(0L.hours, hoursBetween(start, end2))
+    }
+
+    @Test
+    fun `minutes between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2020, Month.MARCH, 1, 13, 59) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 15, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(14, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.minutes, (start until end1).lengthInMinutes)
+        assertEquals(1L.minutes, minutesBetween(start, end1))
+
+        assertEquals(0L.minutes, (start until end2).lengthInMinutes)
+        assertEquals(0L.minutes, minutesBetween(start, end2))
+    }
+
+    @Test
+    fun `seconds between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2020, Month.MARCH, 1, 13, 59, 59) at offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 15, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(14, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.seconds, (start until end1).lengthInSeconds)
+        assertEquals(1L.seconds, secondsBetween(start, end1))
+
+        assertEquals(0L.seconds, (start until end2).lengthInSeconds)
+        assertEquals(0L.seconds, secondsBetween(start, end2))
+    }
+
+    @Test
+    fun `milliseconds between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = Date(2020, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_000_000) at
+            offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 15, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(14, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.milliseconds, (start until end1).lengthInMilliseconds)
+        assertEquals(1L.milliseconds, millisecondsBetween(start, end1))
+
+        assertEquals(0L.milliseconds, (start until end2).lengthInMilliseconds)
+        assertEquals(0L.milliseconds, millisecondsBetween(start, end2))
+    }
+
+    @Test
+    fun `microseconds between two date-times`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = Date(2020, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_999_000) at
+            offset1
+        val end1 = DateTime(2020, Month.MARCH, 1, 15, 0) at offset2
+        val end2 = Date(2020, Month.MARCH, 1) at
+            Time(14, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1L.microseconds, (start until end1).lengthInMicroseconds)
+        assertEquals(1L.microseconds, microsecondsBetween(start, end1))
+
+        assertEquals(0L.microseconds, (start until end2).lengthInMicroseconds)
+        assertEquals(0L.microseconds, microsecondsBetween(start, end2))
+    }
+
+    @Test
     fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end instant are the same`() {
-        val instant = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-4).hours)
+        val instant = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
+    }
+
+    @Test
+    fun `toString() returns an ISO-8601 time interval representation`() {
+        val offset = UtcOffset((-5).hours)
+        val start = Date(2000, 12, 31) at MIDNIGHT at offset
+        val end = Date(2001, 1, 2) at MIDNIGHT at offset
+
+        assertEquals(
+            "2000-12-31T00:00-05:00/2001-01-02T00:00-05:00",
+            (start until end).toString()
+        )
+
+        assertEquals(
+            "../2001-01-02T00:00-05:00",
+            (DateTime.MIN at offset until end).toString()
+        )
+
+        assertEquals(
+            "2000-12-31T00:00-05:00/..",
+            (start until (DateTime.MAX at offset)).toString()
+        )
+
+        assertEquals(
+            "../..",
+            (DateTime.MIN until DateTime.MAX).toString()
+        )
+
+        assertEquals(
+            "../..",
+            OffsetDateTimeInterval.UNBOUNDED.toString()
+        )
+
+        assertEquals(
+            "",
+            OffsetDateTimeInterval.EMPTY.toString()
+        )
+    }
+
+    @Test
+    fun `String_toOffsetDateTimeInterval() converts an empty string to an empty interval`() {
+        assertEquals(OffsetDateTimeInterval.EMPTY, "".toOffsetDateTimeInterval())
+    }
+
+    @Test
+    fun `String_toOffsetDateTimeInterval() throws an exception when the format is invalid`() {
+        assertFailsWith<DateTimeParseException> { "2000-01-01/2000-01-01".toOffsetDateTimeInterval() }
+        assertFailsWith<DateTimeParseException> { "2000-01-01T00:00/2000-01-01T01:00".toOffsetDateTimeInterval() }
+        assertFailsWith<DateTimeParseException> { "2000-01-01T00:00+04/20000101T01-01".toOffsetDateTimeInterval() }
+    }
+
+    @Test
+    fun `String_toOffsetDateTimeInterval() parses ISO-8601 time interval strings in extended format by default`() {
+        val offset = UtcOffset((-5).hours)
+        val start = Date(1969, 12, 31) at MIDNIGHT at offset
+        val end = Date(1970, 1, 2) at MIDNIGHT at offset
+
+        assertEquals(
+            start until end,
+            "1969-12-31T00:00-05:00/1970-01-02T00:00-05:00".toOffsetDateTimeInterval()
+        )
+        assertEquals(
+            OffsetDateTime.MIN until end,
+            "../1970-01-02T00:00-05:00".toOffsetDateTimeInterval()
+        )
+        assertEquals(
+            start until OffsetDateTime.MAX,
+            "1969-12-31T00:00-05:00/..".toOffsetDateTimeInterval()
+        )
+        assertEquals(OffsetDateTimeInterval.UNBOUNDED, "../..".toOffsetDateTimeInterval())
+    }
+
+    @Test
+    fun `String_toOffsetDateTimeInterval() throws an exception when required properties are missing`() {
+        val customParser = groupedDateTimeParser {
+            group {
+                optional {
+                    anyOf(DateTimeParsers.Iso.OFFSET_DATE_TIME, DateTimeParsers.Iso.YEAR)
+                }
+            }
+            +'/'
+            group {
+                optional {
+                    anyOf(DateTimeParsers.Iso.OFFSET_DATE_TIME, DateTimeParsers.Iso.YEAR)
+                }
+            }
+        }
+
+        assertFailsWith<DateTimeParseException> { "2001/2002-11-04T13:23+01".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01-04/2002".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<DateTimeParseException> { "/2002-11-04T13:23-04".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01-07/".toOffsetDateTimeInterval(customParser) }
     }
 }
