@@ -2,8 +2,10 @@ package io.islandtime.darwin
 
 import io.islandtime.*
 import io.islandtime.base.TimePoint
+import io.islandtime.internal.MICROSECONDS_PER_SECOND
+import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.measures.seconds
+import io.islandtime.measures.*
 import io.islandtime.zone.TimeZoneRulesException
 import kotlinx.cinterop.convert
 import platform.Foundation.*
@@ -268,6 +270,95 @@ fun TimeZone.toNSTimeZoneOrNull(): NSTimeZone? {
     } else {
         NSTimeZone.timeZoneWithName(id)
     }
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun Duration.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
+    seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntDays.toNSTimeInterval(): NSTimeInterval = this.toLongDays().inSecondsUnchecked.value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongDays.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntHours.toNSTimeInterval(): NSTimeInterval = this.toLongHours().inSecondsUnchecked.value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongHours.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntMinutes.toNSTimeInterval(): NSTimeInterval = this.toLongMinutes().inSecondsUnchecked.value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongMinutes.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntSeconds.toNSTimeInterval(): NSTimeInterval = value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongSeconds.toNSTimeInterval(): NSTimeInterval = value.toDouble()
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntMilliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
+    seconds.value.toDouble() + milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongMilliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
+    seconds.value.toDouble() + milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntMicroseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
+    seconds.value.toDouble() + microseconds.value.toDouble() / MICROSECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongMicroseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
+    seconds.value.toDouble() + microseconds.value.toDouble() / MICROSECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun IntNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
+    seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSTimeInterval`.
+ */
+fun LongNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
+    seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
 }
 
 private fun NSDateComponents.populateFrom(date: Date) {

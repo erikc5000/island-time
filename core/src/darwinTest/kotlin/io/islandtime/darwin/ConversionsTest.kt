@@ -1,7 +1,7 @@
 package io.islandtime.darwin
 
 import io.islandtime.*
-import io.islandtime.measures.seconds
+import io.islandtime.measures.*
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlinx.cinterop.convert
 import platform.Foundation.*
@@ -225,6 +225,101 @@ class ConversionsTest : AbstractIslandTimeTest() {
             NSDate.dateWithTimeIntervalSince1970(1572546943.0)
                 .toIslandZonedDateTimeAt(NSTimeZone.timeZoneWithName("America/New_York")!!)
         )
+    }
+
+    @Test
+    fun `convert Duration to NSTimeInterval`() {
+        assertEquals(0.0, Duration.ZERO.toNSTimeInterval())
+        assertEquals(1.0, 1.seconds.asDuration().toNSTimeInterval())
+        assertEquals(-1.0, (-1).seconds.asDuration().toNSTimeInterval())
+        assertEquals(0.000_000_001, 1.nanoseconds.asDuration().toNSTimeInterval())
+        assertEquals(-0.000_000_001, (-1).nanoseconds.asDuration().toNSTimeInterval())
+        assertEquals(Long.MAX_VALUE.toDouble() + 0.999_999_999, Duration.MAX.toNSTimeInterval())
+        assertEquals(Long.MIN_VALUE.toDouble() - 0.999_999_999, Duration.MIN.toNSTimeInterval())
+    }
+
+    @Test
+    fun `convert days to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 86_400.0,
+            -1 to -86_400.0
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.days.toNSTimeInterval())
+            assertEquals(expected, value.toLong().days.toNSTimeInterval())
+        }
+    }
+
+    @Test
+    fun `convert hours to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 3600.0,
+            -1 to -3600.0
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.hours.toNSTimeInterval())
+            assertEquals(expected, value.toLong().hours.toNSTimeInterval())
+        }
+    }
+
+    @Test
+    fun `convert minutes to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 60.0,
+            -1 to -60.0
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.minutes.toNSTimeInterval())
+            assertEquals(expected, value.toLong().minutes.toNSTimeInterval())
+        }
+    }
+
+    @Test
+    fun `convert seconds to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 1.0,
+            -1 to -1.0
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.seconds.toNSTimeInterval())
+            assertEquals(expected, value.toLong().seconds.toNSTimeInterval())
+        }
+    }
+
+    @Test
+    fun `convert milliseconds to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 0.001,
+            -1 to -0.001
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.milliseconds.toNSTimeInterval())
+            assertEquals(expected, value.toLong().milliseconds.toNSTimeInterval())
+        }
+    }
+
+    @Test
+    fun `convert microseconds to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 0.000001,
+            -1 to -0.000001
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.microseconds.toNSTimeInterval())
+            assertEquals(expected, value.toLong().microseconds.toNSTimeInterval())
+        }
+    }
+
+    @Test
+    fun `convert nanoseconds to NSTimeInterval`() {
+        listOf(
+            0 to 0.0,
+            1 to 0.000000001,
+            -1 to -0.000000001
+        ).forEach { (value, expected) ->
+            assertEquals(expected, value.nanoseconds.toNSTimeInterval())
+            assertEquals(expected, value.toLong().nanoseconds.toNSTimeInterval())
+        }
     }
 
     private fun validateNSDateComponents(
