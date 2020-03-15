@@ -24,15 +24,16 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.ExperimentalTime
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.microseconds as kotlinMicroseconds
 
 /**
  * A number of microseconds.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntMicroseconds(
   /**
    * The underlying value.
@@ -300,6 +301,12 @@ inline class IntMicroseconds(
   }
 
   /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): KotlinDuration = value.kotlinMicroseconds
+
+  /**
    * Convert to [LongMicroseconds].
    */
   fun toLongMicroseconds() = LongMicroseconds(value.toLong())
@@ -343,7 +350,6 @@ operator fun Long.times(microseconds: IntMicroseconds) = microseconds * this
 /**
  * A number of microseconds.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongMicroseconds(
   /**
    * The underlying value.
@@ -617,6 +623,12 @@ inline class LongMicroseconds(
   }
 
   /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): KotlinDuration = value.kotlinMicroseconds
+
+  /**
    * Convert to [IntMicroseconds].
    * @throws ArithmeticException if overflow occurs
    */
@@ -669,3 +681,10 @@ operator fun Int.times(microseconds: LongMicroseconds) = microseconds * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(microseconds: LongMicroseconds) = microseconds * this
+
+/**
+ * Convert to Island Time [LongMicroseconds].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandMicroseconds() =
+    LongMicroseconds(this.toLong(kotlin.time.DurationUnit.MICROSECONDS))
