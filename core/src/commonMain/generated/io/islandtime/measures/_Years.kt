@@ -20,7 +20,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -28,7 +27,6 @@ import kotlin.math.absoluteValue
 /**
  * A number of years.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntYears(
   /**
    * The underlying value.
@@ -236,7 +234,6 @@ operator fun Long.times(years: IntYears) = years * this
 /**
  * A number of years.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongYears(
   /**
    * The underlying value.

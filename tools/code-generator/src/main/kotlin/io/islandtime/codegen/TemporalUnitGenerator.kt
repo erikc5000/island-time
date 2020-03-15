@@ -2,9 +2,12 @@ package io.islandtime.codegen
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import java.util.*
 import kotlin.IllegalStateException
 import kotlin.reflect.KClass
 
+private val KOTLIN_DURATION_CLASS_NAME = ClassName("kotlin.time", "Duration")
+private val EXPERIMENTAL_TIME_CLASS_NAME = ClassName("kotlin.time", "ExperimentalTime")
 private val INT_TYPE_NAME = Int::class.asTypeName()
 private val LONG_TYPE_NAME = Long::class.asTypeName()
 
@@ -43,6 +46,11 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
     ) {
         addHeader("${pluralName}Kt")
 
+        if (isTimeBased) {
+            addAliasedImport(KOTLIN_DURATION_CLASS_NAME, "KotlinDuration")
+            addAliasedImport(ClassName("kotlin.time", lowerCaseName), "kotlin$pluralName")
+        }
+
         listOf(
             IntTemporalUnitClassGenerator(this@toFileSpec),
             LongTemporalUnitClassGenerator(this@toFileSpec)
@@ -53,7 +61,7 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
                     is TypeSpec -> addType(it)
                     is PropertySpec -> addProperty(it)
                     is FunSpec -> addFunction(it)
-                    else -> throw IllegalStateException("Invalid type encountered!")
+                    else -> throw IllegalStateException("Invalid type '${it.javaClass.simpleName}' encountered!")
                 }
             }
     }
@@ -76,6 +84,7 @@ abstract class TemporalUnitClassGenerator(
     val isPositiveFunSpec by lazy(::buildIsPositiveFunSpec)
     val compareToFunSpec by lazy(::buildCompareToFunSpec)
     val toStringFunSpec by lazy(::buildToStringFunSpec)
+    val toKotlinDurationFunSpec by lazy(::buildToKotlinDurationFunSpec)
 
     val unaryMinusFunSpec by lazy(::buildUnaryMinusFunSpec)
     val negateUncheckedFunSpec by lazy(::buildNegateUncheckedFunSpec)
@@ -92,48 +101,54 @@ abstract class TemporalUnitClassGenerator(
     val timesIntExtensionFunSpec by lazy { buildTimesExtensionFunSpec(Int::class) }
     val timesLongExtensionFunSpec by lazy { buildTimesExtensionFunSpec(Long::class) }
 
-    private val baseClassSpecList
-        get() = listOf(
-            valuePropertySpec,
-            absoluteValuePropertySpec,
-            isZeroFunSpec,
-            isNegativeFunSpec,
-            isPositiveFunSpec,
-            compareToFunSpec,
-            toStringFunSpec,
-            unaryMinusFunSpec,
-            negateUncheckedFunSpec,
-            timesIntFunSpec,
-            timesLongFunSpec,
-            divIntFunSpec,
-            divLongFunSpec,
-            remIntFunSpec,
-            remLongFunSpec,
-            companionObjectTypeSpec
-        ) +
-            buildPlusMinusOperatorFunSpecs() +
-            buildUnitConversionSpecs() +
-            buildToComponentsFunctions()
+    private val baseClassSpecList: List<Any>
+        get() {
+            val list = listOf(
+                valuePropertySpec,
+                absoluteValuePropertySpec,
+                isZeroFunSpec,
+                isNegativeFunSpec,
+                isPositiveFunSpec,
+                compareToFunSpec,
+                toStringFunSpec,
+                unaryMinusFunSpec,
+                negateUncheckedFunSpec,
+                timesIntFunSpec,
+                timesLongFunSpec,
+                divIntFunSpec,
+                divLongFunSpec,
+                remIntFunSpec,
+                remLongFunSpec,
+                companionObjectTypeSpec
+            ) +
+                buildPlusMinusOperatorFunSpecs() +
+                buildUnitConversionSpecs() +
+                buildToComponentsFunctions()
+
+            return if (description.isTimeBased) {
+                list + toKotlinDurationFunSpec
+            } else {
+                list
+            }
+        }
 
     protected open fun allClassSpecs(): List<Any> {
         return baseClassSpecList
     }
 
-    fun build() = listOf(
-        buildClass(),
-        primitiveExtensionPropertySpec,
-        timesIntExtensionFunSpec,
-        timesLongExtensionFunSpec
-    )
+    protected open fun allExtensionSpecs(): List<Any> {
+        return listOf(
+            primitiveExtensionPropertySpec,
+            timesIntExtensionFunSpec,
+            timesLongExtensionFunSpec
+        )
+    }
+
+    fun build() = listOf(buildClass()) + allExtensionSpecs()
 
     fun buildClass() = buildClassTypeSpec(className) {
         addKdoc("A number of ${description.lowerCaseName}.")
         addModifiers(KModifier.INLINE)
-        addAnnotation(
-            buildAnnotationSpec(Suppress::class) {
-                addMember("%S", "NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
-            }
-        )
         primaryConstructor(constructorFunSpec)
         addSuperinterface(ClassName("kotlin", "Comparable").parameterizedBy(className))
 
@@ -171,6 +186,8 @@ class LongTemporalUnitClassGenerator(
     val toIntFunSpec by lazy(::buildToIntFunSpec)
     val toIntUncheckedFunSpec by lazy(::buildToIntUncheckedFunSpec)
 
+    val kotlinDurationExtensionFunSpec by lazy(::buildKotlinDurationExtensionFunSpec)
+
     override fun allClassSpecs(): List<Any> {
         return super.allClassSpecs() + listOf(
             toIntUnitFunSpec,
@@ -178,6 +195,14 @@ class LongTemporalUnitClassGenerator(
             toIntFunSpec,
             toIntUncheckedFunSpec
         )
+    }
+
+    override fun allExtensionSpecs(): List<Any> {
+        return if (description.isTimeBased) {
+            super.allExtensionSpecs() + listOf(kotlinDurationExtensionFunSpec)
+        } else {
+            super.allExtensionSpecs()
+        }
     }
 }
 
@@ -216,7 +241,6 @@ fun TemporalUnitClassGenerator.buildAbsoluteValuePropertySpec() = buildPropertyS
 }
 
 fun TemporalUnitClassGenerator.buildConstructorFunSpec() = buildConstructorFunSpec {
-    // addModifiers(KModifier.INTERNAL)
     addParameter(valuePropertySpec.name, valuePropertySpec.type)
 }
 
@@ -257,6 +281,13 @@ fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString")
             buildWholeToStringCodeBlock()
         }
     )
+}
+
+fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() = buildFunSpec("toKotlinDuration") {
+    addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
+    addKdoc("Convert to a [${KOTLIN_DURATION_CLASS_NAME.canonicalName}].")
+    returns(KOTLIN_DURATION_CLASS_NAME)
+    addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerCaseName))
 }
 
 fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = buildCodeBlock {
@@ -836,6 +867,17 @@ fun TemporalUnitClassGenerator.buildTimesExtensionFunSpec(
     addParameter(unit)
     addStatement("return %N * this", unit)
 }
+
+fun TemporalUnitClassGenerator.buildKotlinDurationExtensionFunSpec() =
+    buildFunSpec("toIsland${description.pluralName}") {
+        receiver(KOTLIN_DURATION_CLASS_NAME)
+        addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
+        addKdoc("Convert to Island Time [%T].", className)
+        addStatement(
+            "return %T(this.toLong(kotlin.time.DurationUnit.${description.pluralName.toUpperCase(Locale.US)}))",
+            className
+        )
+    }
 
 fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
     return TemporalUnitDescription.values()

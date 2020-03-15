@@ -18,7 +18,6 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -26,7 +25,6 @@ import kotlin.math.absoluteValue
 /**
  * A number of weeks.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntWeeks(
   /**
    * The underlying value.
@@ -189,7 +187,6 @@ operator fun Long.times(weeks: IntWeeks) = weeks * this
 /**
  * A number of weeks.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongWeeks(
   /**
    * The underlying value.

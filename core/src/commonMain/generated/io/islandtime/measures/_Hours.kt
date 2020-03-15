@@ -23,15 +23,16 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.ExperimentalTime
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.hours as kotlinHours
 
 /**
  * A number of hours.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntHours(
   /**
    * The underlying value.
@@ -245,6 +246,12 @@ inline class IntHours(
   }
 
   /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): KotlinDuration = value.kotlinHours
+
+  /**
    * Convert to [LongHours].
    */
   fun toLongHours() = LongHours(value.toLong())
@@ -288,7 +295,6 @@ operator fun Long.times(hours: IntHours) = hours * this
 /**
  * A number of hours.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongHours(
   /**
    * The underlying value.
@@ -519,6 +525,12 @@ inline class LongHours(
   }
 
   /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): KotlinDuration = value.kotlinHours
+
+  /**
    * Convert to [IntHours].
    * @throws ArithmeticException if overflow occurs
    */
@@ -571,3 +583,9 @@ operator fun Int.times(hours: LongHours) = hours * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(hours: LongHours) = hours * this
+
+/**
+ * Convert to Island Time [LongHours].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandHours() = LongHours(this.toLong(kotlin.time.DurationUnit.HOURS))

@@ -1,5 +1,7 @@
 package io.islandtime.codegen
 
+import java.util.*
+
 enum class TemporalUnitDescription(
     val pluralName: String,
     val conversionFactor: Int,
@@ -43,7 +45,7 @@ enum class TemporalUnitDescription(
     val intName: String get() = "Int$pluralName"
     val longName: String get() = "Long$pluralName"
     open val singularName: String get() = pluralName.dropLast(1)
-    val lowerCaseName: String get() = pluralName.toLowerCase()
+    val lowerCaseName: String get() = pluralName.toLowerCase(Locale.US)
     val valueName: String get() = "value"
     val inUnitPropertyName: String get() = "in$pluralName"
     val inUnitUncheckedPropertyName: String get() = "${inUnitPropertyName}Unchecked"
@@ -85,7 +87,7 @@ data class TemporalUnitConversion(
     val constantName: String
         get() {
             val (smallerUnit, largerUnit) = smallerUnitToLargerUnit()
-            return "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".toUpperCase()
+            return "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".toUpperCase(Locale.US)
         }
 
     val operator: ConversionOperator
