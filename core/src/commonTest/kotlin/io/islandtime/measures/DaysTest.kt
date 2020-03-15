@@ -61,4 +61,13 @@ class DaysTest {
         assertEquals((-1).kotlinDays, (-1L).days.toKotlinDuration())
         assertEquals(Long.MIN_VALUE.kotlinDays, Long.MIN_VALUE.days.toKotlinDuration())
     }
+
+    @ExperimentalTime
+    @Test
+    fun `conversion from Kotlin Duration`() {
+        assertEquals(0L.days, 0.kotlinDays.toIslandDays())
+        assertEquals(1L.days, 1.kotlinDays.toIslandDays())
+        assertEquals((-1L).days, (-1L).kotlinDays.toIslandDays())
+        assertEquals(Long.MIN_VALUE.days, Long.MIN_VALUE.kotlinDays.toIslandDays())
+    }
 }

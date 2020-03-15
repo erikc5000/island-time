@@ -27,9 +27,9 @@ import kotlin.String
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.days
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.days as kotlinDays
 
 /**
  * A number of days.
@@ -278,7 +278,7 @@ inline class IntDays(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.days
+  fun toKotlinDuration(): KotlinDuration = value.kotlinDays
 
   /**
    * Convert to [LongDays].
@@ -578,7 +578,7 @@ inline class LongDays(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.days
+  fun toKotlinDuration(): KotlinDuration = value.kotlinDays
 
   /**
    * Convert to [IntDays].
@@ -633,3 +633,9 @@ operator fun Int.times(days: LongDays) = days * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(days: LongDays) = days * this
+
+/**
+ * Convert to Island Time [LongDays].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandDays() = LongDays(this.toLong(kotlin.time.DurationUnit.DAYS))

@@ -27,9 +27,9 @@ import kotlin.String
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.milliseconds
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.milliseconds as kotlinMilliseconds
 
 /**
  * A number of milliseconds.
@@ -283,7 +283,7 @@ inline class IntMilliseconds(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.milliseconds
+  fun toKotlinDuration(): KotlinDuration = value.kotlinMilliseconds
 
   /**
    * Convert to [LongMilliseconds].
@@ -591,7 +591,7 @@ inline class LongMilliseconds(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.milliseconds
+  fun toKotlinDuration(): KotlinDuration = value.kotlinMilliseconds
 
   /**
    * Convert to [IntMilliseconds].
@@ -646,3 +646,10 @@ operator fun Int.times(milliseconds: LongMilliseconds) = milliseconds * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(milliseconds: LongMilliseconds) = milliseconds * this
+
+/**
+ * Convert to Island Time [LongMilliseconds].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandMilliseconds() =
+    LongMilliseconds(this.toLong(kotlin.time.DurationUnit.MILLISECONDS))

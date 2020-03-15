@@ -244,4 +244,13 @@ class NanosecondsTest {
         assertEquals((-1).kotlinNanoseconds, (-1L).nanoseconds.toKotlinDuration())
         assertEquals(Long.MIN_VALUE.kotlinNanoseconds, Long.MIN_VALUE.nanoseconds.toKotlinDuration())
     }
+
+    @ExperimentalTime
+    @Test
+    fun `conversion from Kotlin Duration`() {
+        assertEquals(0L.nanoseconds, 0.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals(1L.nanoseconds, 1.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals((-1L).nanoseconds, (-1L).kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals(Long.MIN_VALUE.nanoseconds, Long.MIN_VALUE.kotlinNanoseconds.toIslandNanoseconds())
+    }
 }

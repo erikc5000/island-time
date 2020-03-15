@@ -2,9 +2,12 @@ package io.islandtime.codegen
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import java.util.*
 import kotlin.IllegalStateException
 import kotlin.reflect.KClass
 
+private val KOTLIN_DURATION_CLASS_NAME = ClassName("kotlin.time", "Duration")
+private val EXPERIMENTAL_TIME_CLASS_NAME = ClassName("kotlin.time", "ExperimentalTime")
 private val INT_TYPE_NAME = Int::class.asTypeName()
 private val LONG_TYPE_NAME = Long::class.asTypeName()
 
@@ -42,6 +45,11 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
         "_$pluralName"
     ) {
         addHeader("${pluralName}Kt")
+
+        if (isTimeBased) {
+            addAliasedImport(KOTLIN_DURATION_CLASS_NAME, "KotlinDuration")
+            addAliasedImport(ClassName("kotlin.time", lowerCaseName), "kotlin$pluralName")
+        }
 
         listOf(
             IntTemporalUnitClassGenerator(this@toFileSpec),
@@ -178,6 +186,8 @@ class LongTemporalUnitClassGenerator(
     val toIntFunSpec by lazy(::buildToIntFunSpec)
     val toIntUncheckedFunSpec by lazy(::buildToIntUncheckedFunSpec)
 
+    val kotlinDurationExtensionFunSpec by lazy(::buildKotlinDurationExtensionFunSpec)
+
     override fun allClassSpecs(): List<Any> {
         return super.allClassSpecs() + listOf(
             toIntUnitFunSpec,
@@ -185,6 +195,14 @@ class LongTemporalUnitClassGenerator(
             toIntFunSpec,
             toIntUncheckedFunSpec
         )
+    }
+
+    override fun allExtensionSpecs(): List<Any> {
+        return if (description.isTimeBased) {
+            super.allExtensionSpecs() + listOf(kotlinDurationExtensionFunSpec)
+        } else {
+            super.allExtensionSpecs()
+        }
     }
 }
 
@@ -266,9 +284,9 @@ fun TemporalUnitClassGenerator.buildToStringFunSpec() = buildFunSpec("toString")
 }
 
 fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() = buildFunSpec("toKotlinDuration") {
-    addAnnotation(ClassName("kotlin.time", "ExperimentalTime"))
-    addKdoc("Convert to a [kotlin.time.Duration].")
-    returns(ClassName("kotlin.time", "Duration"))
+    addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
+    addKdoc("Convert to a [${KOTLIN_DURATION_CLASS_NAME.canonicalName}].")
+    returns(KOTLIN_DURATION_CLASS_NAME)
     addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerCaseName))
 }
 
@@ -849,6 +867,17 @@ fun TemporalUnitClassGenerator.buildTimesExtensionFunSpec(
     addParameter(unit)
     addStatement("return %N * this", unit)
 }
+
+fun TemporalUnitClassGenerator.buildKotlinDurationExtensionFunSpec() =
+    buildFunSpec("toIsland${description.pluralName}") {
+        receiver(KOTLIN_DURATION_CLASS_NAME)
+        addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
+        addKdoc("Convert to Island Time [%T].", className)
+        addStatement(
+            "return %T(this.toLong(kotlin.time.DurationUnit.${description.pluralName.toUpperCase(Locale.US)}))",
+            className
+        )
+    }
 
 fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
     return TemporalUnitDescription.values()

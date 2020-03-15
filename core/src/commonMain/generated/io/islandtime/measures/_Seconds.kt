@@ -26,9 +26,9 @@ import kotlin.String
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.seconds as kotlinSeconds
 
 /**
  * A number of seconds.
@@ -253,7 +253,7 @@ inline class IntSeconds(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.seconds
+  fun toKotlinDuration(): KotlinDuration = value.kotlinSeconds
 
   /**
    * Convert to [LongSeconds].
@@ -542,7 +542,7 @@ inline class LongSeconds(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.seconds
+  fun toKotlinDuration(): KotlinDuration = value.kotlinSeconds
 
   /**
    * Convert to [IntSeconds].
@@ -597,3 +597,9 @@ operator fun Int.times(seconds: LongSeconds) = seconds * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(seconds: LongSeconds) = seconds * this
+
+/**
+ * Convert to Island Time [LongSeconds].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandSeconds() = LongSeconds(this.toLong(kotlin.time.DurationUnit.SECONDS))

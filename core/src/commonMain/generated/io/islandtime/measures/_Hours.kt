@@ -26,9 +26,9 @@ import kotlin.String
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlin.time.hours
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.hours as kotlinHours
 
 /**
  * A number of hours.
@@ -249,7 +249,7 @@ inline class IntHours(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.hours
+  fun toKotlinDuration(): KotlinDuration = value.kotlinHours
 
   /**
    * Convert to [LongHours].
@@ -528,7 +528,7 @@ inline class LongHours(
    * Convert to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): Duration = value.hours
+  fun toKotlinDuration(): KotlinDuration = value.kotlinHours
 
   /**
    * Convert to [IntHours].
@@ -583,3 +583,9 @@ operator fun Int.times(hours: LongHours) = hours * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(hours: LongHours) = hours * this
+
+/**
+ * Convert to Island Time [LongHours].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandHours() = LongHours(this.toLong(kotlin.time.DurationUnit.HOURS))
