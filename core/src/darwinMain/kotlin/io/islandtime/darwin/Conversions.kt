@@ -6,6 +6,9 @@ import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.*
+import io.islandtime.ranges.InstantInterval
+import io.islandtime.ranges.TimePointInterval
+import io.islandtime.ranges.until
 import io.islandtime.zone.TimeZoneRulesException
 import kotlinx.cinterop.convert
 import platform.Foundation.*
@@ -359,6 +362,33 @@ fun IntNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, 
  */
 fun LongNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
     seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
+}
+
+/**
+ * Convert to an equivalent `NSDateInterval`.
+ * @throws UnsupportedOperationException if the interval is unbounded
+ */
+fun <T : TimePoint<T>> TimePointInterval<T>.toNSDateInterval(): NSDateInterval {
+    return toNSDateIntervalOrNull()
+        ?: throw UnsupportedOperationException("An unbounded interval cannot be converted to an NSDateInterval")
+}
+
+/**
+ * Convert to an equivalent `NSDateInterval` or `null` if the interval is unbounded.
+ */
+fun <T : TimePoint<T>> TimePointInterval<T>.toNSDateIntervalOrNull(): NSDateInterval? {
+    return if (isBounded()) {
+        NSDateInterval(start.toNSDate(), endExclusive.toNSDate())
+    } else {
+        null
+    }
+}
+
+/**
+ * Convert to an equivalent Island Time [InstantInterval].
+ */
+fun NSDateInterval.toIslandInstantInterval(): InstantInterval {
+    return startDate.toIslandInstant() until endDate.toIslandInstant()
 }
 
 private fun NSDateComponents.populateFrom(date: Date) {

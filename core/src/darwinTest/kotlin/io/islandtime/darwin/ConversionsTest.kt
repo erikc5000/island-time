@@ -2,6 +2,8 @@ package io.islandtime.darwin
 
 import io.islandtime.*
 import io.islandtime.measures.*
+import io.islandtime.ranges.InstantInterval
+import io.islandtime.ranges.until
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlinx.cinterop.convert
 import platform.Foundation.*
@@ -320,6 +322,38 @@ class ConversionsTest : AbstractIslandTimeTest() {
             assertEquals(expected, value.nanoseconds.toNSTimeInterval())
             assertEquals(expected, value.toLong().nanoseconds.toNSTimeInterval())
         }
+    }
+
+    @Test
+    fun `convert an InstantInterval to an NSDateInterval`() {
+        assertEquals(0.0, InstantInterval.EMPTY.toNSDateInterval().duration)
+
+        assertEquals(
+            NSDateInterval(
+                NSDate.dateWithTimeIntervalSince1970(0.0),
+                NSDate.dateWithTimeIntervalSince1970(1.0)
+            ),
+            (Instant.UNIX_EPOCH until Instant(1L.seconds)).toNSDateInterval()
+        )
+
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.toNSDateInterval() }
+        assertNull(InstantInterval.UNBOUNDED.toNSDateIntervalOrNull())
+    }
+
+    @Test
+    fun `convert an NSDateInterval to an InstantInterval`() {
+        assertEquals(
+            InstantInterval.EMPTY,
+            NSDateInterval(NSDate.dateWithTimeIntervalSince1970(0.0), 0.0).toIslandInstantInterval()
+        )
+
+        assertEquals(
+            Instant.UNIX_EPOCH until Instant(1L.seconds),
+            NSDateInterval(
+                NSDate.dateWithTimeIntervalSince1970(0.0),
+                NSDate.dateWithTimeIntervalSince1970(1.0)
+            ).toIslandInstantInterval()
+        )
     }
 
     private fun validateNSDateComponents(
