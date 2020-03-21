@@ -54,7 +54,7 @@ kotlin {
     // Workaround for https://youtrack.jetbrains.com/issue/KT-36721
     targets.withType<KotlinNativeTarget>().configureEach {
         val moduleName = "${project.group}.${project.name}"
-        compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-Xmodule-name", moduleName)
+        compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-module-name", moduleName)
     }
 }
 
