@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.3.70"
+    const val kotlin = "1.3.71"
     const val serialization = "0.20.0"
     const val androidxTest = "1.2.0"
     const val googleTruth = "1.0.1"
