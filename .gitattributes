@@ -1,2 +1,0 @@
-# Workaround for Gradle precompiled script plugin EOL issue (#12248)
-buildSrc/src/main/kotlin/*.build.kts text eol=lf
