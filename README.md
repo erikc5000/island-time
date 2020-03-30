@@ -1,4 +1,4 @@
-![Build Status](https://github.com/erikc5000/island-time/workflows/Publish/badge.svg) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core)
+[![Build Status](https://github.com/erikc5000/island-time/workflows/Publish/badge.svg)](https://github.com/erikc5000/island-time/actions?query=workflow%3APublish) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core)
 
 # Island Time
 A Kotlin Multiplatform library for working with dates and times, heavily inspired by the java.time library.
@@ -28,10 +28,10 @@ This project publishes Gradle metadata, so you can use the common artifact and i
 Common: _(Kotlin Gradle DSL)_
 ```
 dependencies {
-    implementation("io.islandtime:core:0.2.0")
+    implementation("io.islandtime:core:0.2.1")
 
     // Optional: A set of serializers for use with kotlinx.serialization
-    implementation("io.islandtime:serialization-extensions:0.2.0")
+    implementation("io.islandtime:serialization-extensions:0.2.1")
 }
 ```
 
@@ -42,17 +42,17 @@ Android: _(Kotlin Gradle DSL)_
 dependencies {
     // The following is only necessary if using a version of Android Studio
     // prior to 4.0 or if core library desugaring is turned off.
-    implementation("io.islandtime:threetenabp-extensions:0.2.0")
+    implementation("io.islandtime:threetenabp-extensions:0.2.1")
 
     // Optional: A set of parcelers for use with the @Parcelize feature provided
     // by the Kotlin Android Extensions
-    implementation("io.islandtime:parcelize-extensions:0.2.0")
+    implementation("io.islandtime:parcelize-extensions:0.2.1")
 }
 ```
 
 _**Important:**_ Due to the experimental status of inline classes, which are used in the public API, the version of Kotlin that you use in your project must match the version used by Island Time -- even for non-native targets.
 
-Island Time 0.2.x builds are based on Kotlin 1.3.70. Also note that Island Time requires a JVM target of 1.8 or above.
+Island Time 0.2.x builds are based on Kotlin 1.3.7x. Also note that Island Time requires a JVM target of 1.8 or above.
 
 Current supported platforms are JVM, Android, iOS ARM64/x64, macOS x64, watchOS x64, and tvOS x86.
 
