@@ -4,7 +4,7 @@ object Versions {
     const val androidxTest = "1.2.0"
     const val googleTruth = "1.0.1"
     const val threetenabp = "1.2.3"
-    const val stately = "1.0.0-a2"
+    const val stately = "1.0.0-a3"
     const val kotlinpoet = "1.5.0"
 }
 
