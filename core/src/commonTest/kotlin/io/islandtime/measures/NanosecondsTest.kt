@@ -4,6 +4,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
+import kotlin.time.ExperimentalTime
+import kotlin.time.nanoseconds as kotlinNanoseconds
 
 class NanosecondsTest {
     @Test
@@ -232,5 +234,23 @@ class NanosecondsTest {
                 assertEquals(it.second[1].nanoseconds, nanoseconds)
             }
         }
+    }
+
+    @ExperimentalTime
+    @Test
+    fun `conversion to Kotlin Duration`() {
+        assertEquals(0.kotlinNanoseconds, 0.nanoseconds.toKotlinDuration())
+        assertEquals(1.kotlinNanoseconds, 1.nanoseconds.toKotlinDuration())
+        assertEquals((-1).kotlinNanoseconds, (-1L).nanoseconds.toKotlinDuration())
+        assertEquals(Long.MIN_VALUE.kotlinNanoseconds, Long.MIN_VALUE.nanoseconds.toKotlinDuration())
+    }
+
+    @ExperimentalTime
+    @Test
+    fun `conversion from Kotlin Duration`() {
+        assertEquals(0L.nanoseconds, 0.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals(1L.nanoseconds, 1.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals((-1L).nanoseconds, (-1L).kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals(Long.MIN_VALUE.nanoseconds, Long.MIN_VALUE.kotlinNanoseconds.toIslandNanoseconds())
     }
 }

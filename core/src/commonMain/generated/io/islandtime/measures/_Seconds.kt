@@ -23,15 +23,16 @@ import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
-import kotlin.Suppress
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
+import kotlin.time.ExperimentalTime
+import kotlin.time.Duration as KotlinDuration
+import kotlin.time.seconds as kotlinSeconds
 
 /**
  * A number of seconds.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class IntSeconds(
   /**
    * The underlying value.
@@ -249,6 +250,12 @@ inline class IntSeconds(
   }
 
   /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): KotlinDuration = value.kotlinSeconds
+
+  /**
    * Convert to [LongSeconds].
    */
   fun toLongSeconds() = LongSeconds(value.toLong())
@@ -292,7 +299,6 @@ operator fun Long.times(seconds: IntSeconds) = seconds * this
 /**
  * A number of seconds.
  */
-@Suppress("NON_PUBLIC_PRIMARY_CONSTRUCTOR_OF_INLINE_CLASS")
 inline class LongSeconds(
   /**
    * The underlying value.
@@ -533,6 +539,12 @@ inline class LongSeconds(
   }
 
   /**
+   * Convert to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  fun toKotlinDuration(): KotlinDuration = value.kotlinSeconds
+
+  /**
    * Convert to [IntSeconds].
    * @throws ArithmeticException if overflow occurs
    */
@@ -585,3 +597,9 @@ operator fun Int.times(seconds: LongSeconds) = seconds * this
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(seconds: LongSeconds) = seconds * this
+
+/**
+ * Convert to Island Time [LongSeconds].
+ */
+@ExperimentalTime
+fun KotlinDuration.toIslandSeconds() = LongSeconds(this.toLong(kotlin.time.DurationUnit.SECONDS))

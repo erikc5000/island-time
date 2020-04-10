@@ -1,6 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform")
@@ -49,6 +48,12 @@ kotlin {
 
     configure(darwinTargets) {
         compilations["main"].kotlinOptions.freeCompilerArgs += "-Xobjc-generics"
+    }
+
+    // Workaround for https://youtrack.jetbrains.com/issue/KT-36721
+    targets.withType<KotlinNativeTarget>().configureEach {
+        val moduleName = "${project.group}.${project.name}"
+        compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-module-name", moduleName)
     }
 }
 

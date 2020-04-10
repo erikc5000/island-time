@@ -407,6 +407,11 @@ class Duration private constructor(
         }
     }
 
+    @kotlin.time.ExperimentalTime
+    fun toKotlinDuration(): kotlin.time.Duration {
+        return seconds.toKotlinDuration() + nanosecondAdjustment.toKotlinDuration()
+    }
+
     override fun equals(other: Any?): Boolean {
         return other === this ||
             (other is Duration &&
@@ -628,6 +633,13 @@ fun IntSeconds.asDuration() = durationOf(this)
 fun IntMilliseconds.asDuration() = durationOf(this)
 fun IntMicroseconds.asDuration() = durationOf(this)
 fun IntNanoseconds.asDuration() = durationOf(this)
+
+@kotlin.time.ExperimentalTime
+fun kotlin.time.Duration.toIslandDuration(): Duration {
+    return toComponents { seconds, nanoseconds ->
+        durationOf(seconds.seconds, nanoseconds.nanoseconds)
+    }
+}
 
 internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
     duration.toComponents { hours, minutes, seconds, nanoseconds ->
