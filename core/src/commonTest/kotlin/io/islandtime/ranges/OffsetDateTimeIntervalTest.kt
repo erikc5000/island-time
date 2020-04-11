@@ -35,7 +35,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `inclusive end creation handles unbounded correctly`() {
         val offset = UtcOffset((-4).hours)
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at offset
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at offset
         val max = DateTime.MAX at offset
 
         assertTrue { (start..max).hasUnboundedEnd() }
@@ -45,8 +45,8 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within bounded range`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-4).hours)
-        val end = Date(2019, Month.MARCH, 12) at Time.MIDNIGHT at UtcOffset((-4).hours)
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at UtcOffset((-4).hours)
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -56,7 +56,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within range with unbounded end`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-4).hours)
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
         val end = DateTime.MAX at UtcOffset((-4).hours)
 
         assertTrue { start in start..end }
@@ -68,7 +68,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `contains() returns true for dates within range with unbounded start`() {
         val start = DateTime.MIN at UtcOffset((-4).hours)
-        val end = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-4).hours)
+        val end = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -79,8 +79,8 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns false for out of range dates`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-5).hours)
-        val end = Date(2019, Month.MARCH, 12) at Time.MIDNIGHT at UtcOffset((-4).hours)
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-5).hours)
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at UtcOffset((-4).hours)
 
         assertFalse { start - 1.nanoseconds in start..end }
         assertFalse { end + 1.nanoseconds in start..end }
@@ -90,8 +90,8 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `until infix operator constructs an interval with non-inclusive end`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT at UtcOffset((-4).hours)
-        val end = Date(2019, Month.MARCH, 12) at Time.MIDNIGHT at UtcOffset((-4).hours)
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at UtcOffset((-4).hours)
         val range = start until end
 
         assertEquals(start, range.start)
@@ -101,8 +101,8 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `random() returns a zoned date-time within range`() {
-        val start = Date(2019, Month.NOVEMBER, 1) at Time.MIDNIGHT at UtcOffset((-4).hours)
-        val end = Date(2019, Month.NOVEMBER, 20) at Time.MIDNIGHT at UtcOffset((-5).hours)
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
+        val end = Date(2019, Month.NOVEMBER, 20) at MIDNIGHT at UtcOffset((-5).hours)
         val range = start..end
         val randomInstant = range.random()
         assertTrue { randomInstant in range }
