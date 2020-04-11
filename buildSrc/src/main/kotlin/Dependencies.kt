@@ -7,6 +7,7 @@ object Versions {
     const val threetenabp = "1.2.3"
     const val stately = "1.0.0-a3"
     const val kotlinpoet = "1.5.0"
+    const val androidDesugarJdkLibs = "1.0.5"
 }
 
 object Libs {
@@ -27,4 +28,5 @@ object Libs {
     const val threetenabp = "com.jakewharton.threetenabp:threetenabp:${Versions.threetenabp}"
     const val statelyIsolate = "co.touchlab:stately-isolate:${Versions.stately}"
     const val kotlinpoet = "com.squareup:kotlinpoet:${Versions.kotlinpoet}"
+    const val androidDesugarJdkLibs = "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
 }
