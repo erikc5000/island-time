@@ -225,7 +225,7 @@ infix fun Date.until(to: Date) = DateRange(this, to - 1L.days)
  * Get the [Period] between two dates.
  */
 fun periodBetween(start: Date, endExclusive: Date): Period {
-    var totalMonths = endExclusive.monthsSinceYear0.toLong() - start.monthsSinceYear0
+    var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
     val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
 
     val days = when {

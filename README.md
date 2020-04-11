@@ -132,13 +132,13 @@ Unless you're doing calculations with particularly long durations at a high prec
 
 ##### DSL-based parser definition
 
-While Island Time doesn't yet support custom formats, it does support support custom parsers, which can be defined using a DSL rather than the traditional format strings.
+While Island Time doesn't yet support custom formats, it does support custom parsers, which can be defined using a DSL rather than the traditional format strings.
 
 ```kotlin
 val customParser = dateTimeParser {
-    monthNumber() { enforceSignStyle(SignStyle.NEVER) }
+    monthNumber { enforceSignStyle(SignStyle.NEVER) }
     anyOf({ +'-' }, { +'/' })
-    dayOfMonth() { enforceSignStyle(SignStyle.NEVER) }
+    dayOfMonth { enforceSignStyle(SignStyle.NEVER) }
     anyOf({ +'-' }, { +' ' })
     year(length = 4) { enforceSignStyle(SignStyle.NEVER) }
 }
@@ -278,7 +278,7 @@ for (date in today until today + 1.years step 1.months) {
 }
 
 val randomDate = (today..today + 1.months).random()
-val totalDays: IntDays = (today until today + 6.months).lengthInDays
+val totalDays: LongDays = (today until today + 6.months).lengthInDays
 val period: Period = (today..today + 1.months).asPeriod()
 ```
 
