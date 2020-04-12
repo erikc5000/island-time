@@ -51,8 +51,7 @@ internal fun Parcel.readZonedDateTime(): ZonedDateTime {
 }
 
 internal fun Parcel.writeZonedDateTime(zonedDateTime: ZonedDateTime) {
-    writeDate(zonedDateTime.date)
-    writeTime(zonedDateTime.time)
+    writeDateTime(zonedDateTime.dateTime)
     writeInt(zonedDateTime.offset.totalSeconds.value)
     writeString(zonedDateTime.zone.id)
 }

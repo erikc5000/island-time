@@ -48,7 +48,6 @@ internal fun Parcel.readOffsetDateTime(): OffsetDateTime {
 }
 
 internal fun Parcel.writeOffsetDateTime(offsetDateTime: OffsetDateTime) {
-    writeDate(offsetDateTime.date)
-    writeTime(offsetDateTime.time)
+    writeDateTime(offsetDateTime.dateTime)
     writeInt(offsetDateTime.offset.totalSeconds.value)
 }
