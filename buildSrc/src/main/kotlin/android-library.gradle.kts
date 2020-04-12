@@ -1,11 +1,6 @@
 repositories {
     google()
-
-    jcenter {
-        content {
-            includeGroup("org.jetbrains.trove4j")
-        }
-    }
+    jcenter()
 }
 
 plugins {
