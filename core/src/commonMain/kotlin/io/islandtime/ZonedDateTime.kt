@@ -129,7 +129,7 @@ class ZonedDateTime private constructor(
         }
     }
 
-    override fun <T> get(property: TemporalProperty<T>): T {
+    override fun <T> get(property: ObjectProperty<T>): T {
         return when (property) {
             is TimeZoneProperty -> zone.get(property)
             else -> super.get(property)

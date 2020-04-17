@@ -1,9 +1,6 @@
 package io.islandtime
 
-import io.islandtime.format.DateTimeTextProvider
-import io.islandtime.format.PlatformDateTimeTextProvider
-import io.islandtime.format.PlatformTimeZoneTextProvider
-import io.islandtime.format.TimeZoneTextProvider
+import io.islandtime.format.*
 import io.islandtime.zone.PlatformTimeZoneRulesProvider
 import io.islandtime.zone.TimeZoneRulesProvider
 import kotlinx.atomicfu.atomic
@@ -17,6 +14,9 @@ object IslandTime {
 
     internal val dateTimeTextProvider: DateTimeTextProvider
         get() = settings.dateTimeTextProvider
+
+    internal val dateTimeFormatStyleProvider: DateTimeFormatStyleProvider
+        get() = settings.dateTimeFormatStyleProvider
 
     internal val timeZoneTextProvider: TimeZoneTextProvider
         get() = settings.timeZoneTextProvider
@@ -88,6 +88,11 @@ object IslandTime {
         var dateTimeTextProvider: DateTimeTextProvider
 
         /**
+         * The date-time format style provider to use.
+         */
+        var dateTimeFormatStyleProvider: DateTimeFormatStyleProvider
+
+        /**
          * The time zone text provider to use.
          */
         var timeZoneTextProvider: TimeZoneTextProvider
@@ -96,16 +101,23 @@ object IslandTime {
     private class InitializerImpl : Initializer {
         override var timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider
         override var dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider
+        override var dateTimeFormatStyleProvider: DateTimeFormatStyleProvider = PlatformDateTimeFormatStyleProvider
         override var timeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
 
         fun build(): Settings {
-            return Settings(timeZoneRulesProvider, dateTimeTextProvider, timeZoneTextProvider)
+            return Settings(
+                timeZoneRulesProvider,
+                dateTimeTextProvider,
+                dateTimeFormatStyleProvider,
+                timeZoneTextProvider
+            )
         }
     }
 
     private data class Settings(
         val timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider,
         val dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider,
+        val dateTimeFormatStyleProvider: DateTimeFormatStyleProvider = PlatformDateTimeFormatStyleProvider,
         val timeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
     )
 }

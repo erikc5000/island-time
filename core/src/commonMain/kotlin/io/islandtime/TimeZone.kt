@@ -1,9 +1,6 @@
 package io.islandtime
 
-import io.islandtime.base.BooleanProperty
-import io.islandtime.base.Temporal
-import io.islandtime.base.TemporalProperty
-import io.islandtime.base.TimeZoneProperty
+import io.islandtime.base.*
 import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.locale.Locale
@@ -109,8 +106,8 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
         return property is TimeZoneProperty
     }
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T> get(property: TemporalProperty<T>): T {
+    override fun <T> get(property: ObjectProperty<T>): T {
+        @Suppress("UNCHECKED_CAST")
         return when (property) {
             TimeZoneProperty.Id -> id as T
             else -> super.get(property)

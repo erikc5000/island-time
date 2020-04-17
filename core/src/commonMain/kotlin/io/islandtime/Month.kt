@@ -1,7 +1,10 @@
 package io.islandtime
 
+import io.islandtime.base.*
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
+import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
+import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.IntDays
@@ -12,7 +15,7 @@ import io.islandtime.measures.days
 /**
  * A month of the year.
  */
-enum class Month {
+enum class Month : Temporal {
     JANUARY {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 1
@@ -62,7 +65,6 @@ enum class Month {
         override val lengthInCommonYear = 31.days
         override val firstDayOfCommonYear = 335
     };
-
 
     /**
      * Get the ISO month number, from 1-12.
@@ -203,6 +205,17 @@ enum class Month {
      * Subtract months from this month, wrapping when the beginning or end of the year is reached.
      */
     operator fun minus(months: LongMonths) = plus(-(months.value % 12).toInt())
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property == DateProperty.MonthOfYear
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            DateProperty.MonthOfYear -> number.toLong()
+            else -> super.get(property)
+        }
+    }
 
     private fun plus(monthsToAdd: Int): Month {
         return values()[(ordinal + (monthsToAdd + 12)) % 12]

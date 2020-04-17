@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.parser.throwParserPropertyResolutionException
@@ -12,7 +13,7 @@ class OffsetTime(
     val time: Time,
     /** The offset from UTC. */
     val offset: UtcOffset
-) {
+) : Temporal {
 
     init {
         offset.validate()
@@ -97,6 +98,18 @@ class OffsetTime(
     operator fun minus(microseconds: IntMicroseconds) = copy(time = time - microseconds)
     operator fun minus(nanoseconds: LongNanoseconds) = copy(time = time - nanoseconds)
     operator fun minus(nanoseconds: IntNanoseconds) = copy(time = time - nanoseconds)
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property is TimeProperty || property is UtcOffsetProperty
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is TimeProperty -> time.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            else -> super.get(property)
+        }
+    }
 
     /**
      * Compare to another [OffsetTime] based on timeline order, ignoring offset differences.

@@ -168,6 +168,24 @@ class Instant private constructor(
 
     operator fun rangeTo(other: Instant) = InstantInterval.withInclusiveEnd(this, other)
 
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return when (property) {
+            TimeProperty.MillisecondOfSecond,
+            TimeProperty.MicrosecondOfSecond,
+            TimeProperty.NanosecondOfSecond -> true
+            else -> super.has(property)
+        }
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return when (property) {
+            TimeProperty.MillisecondOfSecond -> nanoOfSecond.toLong() / NANOSECONDS_PER_MILLISECOND
+            TimeProperty.MicrosecondOfSecond -> nanoOfSecond.toLong() / NANOSECONDS_PER_MICROSECOND
+            TimeProperty.NanosecondOfSecond -> nanoOfSecond.toLong()
+            else -> super.get(property)
+        }
+    }
+
     override fun compareTo(other: Instant): Int {
         val secondsDiff = second.compareTo(other.second)
 

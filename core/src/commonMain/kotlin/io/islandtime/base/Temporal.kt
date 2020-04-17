@@ -21,11 +21,19 @@ interface NumberProperty : TemporalProperty<Long>
 interface BooleanProperty : TemporalProperty<Boolean>
 
 /**
+ * A property associated with an object value.
+ */
+interface ObjectProperty<T> : TemporalProperty<T>
+
+/**
  * A property associated with a `String` value.
  */
-interface StringProperty : TemporalProperty<String>
+typealias StringProperty = ObjectProperty<String>
 
-class TemporalPropertyException(message: String? = null) : DateTimeException(message)
+class TemporalPropertyException(
+    message: String? = null,
+    cause: Throwable? = null
+) : DateTimeException(message, cause)
 
 /**
  * A framework-level interface providing access to the properties of a date, time, or measurement of time.
@@ -33,7 +41,7 @@ class TemporalPropertyException(message: String? = null) : DateTimeException(mes
 interface Temporal {
     fun has(property: TemporalProperty<*>): Boolean = false
 
-    fun <T> get(property: TemporalProperty<T>): T {
+    fun <T> get(property: ObjectProperty<T>): T {
         throwUnsupportedTemporalPropertyException(property)
     }
 

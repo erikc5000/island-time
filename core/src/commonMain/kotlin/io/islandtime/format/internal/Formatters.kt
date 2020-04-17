@@ -8,15 +8,15 @@ import io.islandtime.format.*
 import kotlin.math.absoluteValue
 
 object EmptyDateTimeFormatter : DateTimeFormatter() {
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {}
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {}
 }
 
 internal class CompositeDateTimeFormatter(
     private val childFormatters: List<DateTimeFormatter>
 ) : DateTimeFormatter() {
 
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
-        childFormatters.forEach { it.print(context, stringBuilder) }
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
+        childFormatters.forEach { it.format(context, stringBuilder) }
     }
 }
 
@@ -25,9 +25,9 @@ internal class OnlyIfDateTimeFormatter(
     private val childFormatter: DateTimeFormatter
 ) : DateTimeFormatter() {
 
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         if (condition(context.temporal)) {
-            childFormatter.print(context, stringBuilder)
+            childFormatter.format(context, stringBuilder)
         }
     }
 }
@@ -35,7 +35,7 @@ internal class OnlyIfDateTimeFormatter(
 internal class CharLiteralFormatter(
     private val literal: Char
 ) : DateTimeFormatter() {
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         stringBuilder.append(literal)
     }
 }
@@ -43,7 +43,7 @@ internal class CharLiteralFormatter(
 internal class StringLiteralFormatter(
     private val literal: String
 ) : DateTimeFormatter() {
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         stringBuilder.append(literal)
     }
 }
@@ -61,7 +61,7 @@ internal class WholeNumberFormatter(
         require(maxLength in 1..19) { "maxLength must be in 1..19" }
     }
 
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
         printSign(value, context.settings.numberStyle, stringBuilder)
 
@@ -116,7 +116,7 @@ internal class DecimalNumberFormatter(
     private val fractionScale: Int,
     private val signStyle: SignStyle
 ) : DateTimeFormatter() {
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         val wholeValue = context.temporal.get(wholeProperty)
         val fractionValue = context.temporal.get(fractionProperty)
     }
@@ -125,7 +125,7 @@ internal class DecimalNumberFormatter(
 internal class StringFormatter(
     private val property: StringProperty
 ) : DateTimeFormatter() {
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
         stringBuilder.append(value)
     }
@@ -136,7 +136,7 @@ internal class LocalizedTextFormatter(
     private val style: TextStyle,
     private val provider: DateTimeTextProvider? = null
 ) : DateTimeFormatter() {
-    override fun print(context: PrintContext, stringBuilder: StringBuilder) {
+    override fun format(context: PrintContext, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
         val text = getProvider().textFor(property, value, style, context.locale)
         stringBuilder.append(text)
