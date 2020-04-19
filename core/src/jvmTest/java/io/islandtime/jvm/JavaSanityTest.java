@@ -5,9 +5,11 @@ import io.islandtime.Month;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalQueries;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.islandtime.jvm.IslandTimeUtils.*;
+import static io.islandtime.jvm.Conversions.*;
 
 public class JavaSanityTest {
     @Test
@@ -28,5 +30,13 @@ public class JavaSanityTest {
         assertThat(islandDate.getYear()).isEqualTo(javaDate.getYear());
         assertThat(islandDate.getMonth().getNumber()).isEqualTo(javaDate.getMonthValue());
         assertThat(islandDate.getDayOfMonth()).isEqualTo(javaDate.getDayOfMonth());
+    }
+
+    @Test
+    public void convertIslandDateToJavaTemporalAccessor() {
+        Date islandDate = new Date(2020, Month.MAY, 20);
+        TemporalAccessor temporalAccessor = toJavaTemporalAccessor(islandDate);
+        assertThat(temporalAccessor.query(TemporalQueries.localDate()))
+                .isEqualTo(LocalDate.of(2020, java.time.Month.MAY, 20));
     }
 }

@@ -1,70 +1,79 @@
+@file:JvmName("Conversions")
+@file:JvmMultifileClass
 @file:Suppress("NewApi")
 
 package io.islandtime.jvm
 
 import io.islandtime.*
 import io.islandtime.base.*
+import io.islandtime.base.Temporal
+import io.islandtime.measures.seconds
+import java.time.chrono.IsoChronology
 import java.time.temporal.ChronoField
+import java.time.temporal.TemporalAccessor as JavaTemporalAccessor
+import java.time.temporal.TemporalField as JavaTemporalField
+import java.time.temporal.TemporalQueries as JavaTemporalQueries
+import java.time.temporal.TemporalQuery as JavaTemporalQuery
+import java.time.temporal.UnsupportedTemporalTypeException as JavaUnsupportedTemporalTypeException
 
-fun Temporal.asJavaTemporalAccessor(): java.time.temporal.TemporalAccessor {
-    return object : java.time.temporal.TemporalAccessor {
-        override fun isSupported(field: java.time.temporal.TemporalField?): Boolean {
+@JvmName("toJavaTemporalAccessor")
+fun Temporal.asJavaTemporalAccessor(): JavaTemporalAccessor {
+    return object : JavaTemporalAccessor {
+        override fun isSupported(field: JavaTemporalField?): Boolean {
             return when (field) {
-                is ChronoField -> field.toIslandTimeProperty()?.let { has(it) } ?: false
+                is ChronoField -> field.toIslandNumberProperty()?.let { has(it) } ?: false
                 null -> false
                 else -> field.isSupportedBy(this)
             }
         }
 
-        override fun getLong(field: java.time.temporal.TemporalField): Long {
+        override fun getLong(field: JavaTemporalField): Long {
             return when (field) {
-                is ChronoField -> field.toIslandTimeProperty()?.let {
+                is ChronoField -> field.toIslandNumberProperty()?.let {
                     try {
                         get(it)
                     } catch (e: TemporalPropertyException) {
                         null
                     }
-                } ?: throw java.time.temporal.UnsupportedTemporalTypeException("'$field' is not supported")
+                } ?: throw JavaUnsupportedTemporalTypeException("'$field' is not supported")
                 else -> field.getFrom(this)
             }
         }
 
         @Suppress("UNCHECKED_CAST")
-        override fun <R : Any?> query(query: java.time.temporal.TemporalQuery<R>?): R {
+        override fun <R : Any?> query(query: JavaTemporalQuery<R>?): R {
             return when (query) {
-                java.time.temporal.TemporalQueries.chronology() -> when (this@asJavaTemporalAccessor) {
+                JavaTemporalQueries.chronology() -> when (this@asJavaTemporalAccessor) {
                     is Year,
                     is YearMonth,
                     is Date,
                     is DateTime,
                     is OffsetDateTime,
                     is ZonedDateTime,
-                    is Month -> java.time.chrono.IsoChronology.INSTANCE
+                    is Month -> IsoChronology.INSTANCE
                     else -> null
                 } as R
-                java.time.temporal.TemporalQueries.zoneId(),
-                java.time.temporal.TemporalQueries.zone() -> when {
-                    has(TimeZoneProperty.Id) -> java.time.ZoneId.of(get(TimeZoneProperty.Id))
-                    query == java.time.temporal.TemporalQueries.zone() && has(UtcOffsetProperty.TotalSeconds) ->
-                        java.time.ZoneId.from(
-                            java.time.ZoneOffset.ofTotalSeconds(get(UtcOffsetProperty.TotalSeconds).toInt())
-                        )
+                JavaTemporalQueries.zoneId(),
+                JavaTemporalQueries.zone() -> when {
+                    has(TimeZoneProperty.TimeZone) -> get(TimeZoneProperty.TimeZone).toJavaZoneId()
+                    query == JavaTemporalQueries.zone() && has(UtcOffsetProperty.TotalSeconds) ->
+                        UtcOffset(get(UtcOffsetProperty.TotalSeconds).toInt().seconds).toJavaZoneOffset()
                     else -> null
                 } as R
-                java.time.temporal.TemporalQueries.offset() -> when (this@asJavaTemporalAccessor) {
+                JavaTemporalQueries.offset() -> when (this@asJavaTemporalAccessor) {
                     is UtcOffset -> toJavaZoneOffset()
                     is OffsetDateTime -> offset.toJavaZoneOffset()
                     is ZonedDateTime -> offset.toJavaZoneOffset()
                     else -> null
                 } as R
-                java.time.temporal.TemporalQueries.localDate() -> when (this@asJavaTemporalAccessor) {
+                JavaTemporalQueries.localDate() -> when (this@asJavaTemporalAccessor) {
                     is Date -> toJavaLocalDate()
                     is DateTime -> date.toJavaLocalDate()
                     is OffsetDateTime -> date.toJavaLocalDate()
                     is ZonedDateTime -> date.toJavaLocalDate()
                     else -> null
                 } as R
-                java.time.temporal.TemporalQueries.localTime() -> when (this@asJavaTemporalAccessor) {
+                JavaTemporalQueries.localTime() -> when (this@asJavaTemporalAccessor) {
                     is Time -> toJavaLocalTime()
                     is DateTime -> time.toJavaLocalTime()
                     is OffsetTime -> time.toJavaLocalTime()
@@ -78,7 +87,7 @@ fun Temporal.asJavaTemporalAccessor(): java.time.temporal.TemporalAccessor {
     }
 }
 
-private fun ChronoField.toIslandTimeProperty(): NumberProperty? {
+private fun ChronoField.toIslandNumberProperty(): NumberProperty? {
     return when (this) {
         ChronoField.INSTANT_SECONDS -> TimePointProperty.SecondOfUnixEpoch
         ChronoField.YEAR -> DateProperty.Year

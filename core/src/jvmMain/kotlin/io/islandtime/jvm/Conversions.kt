@@ -1,4 +1,5 @@
-@file:JvmName("IslandTimeUtils")
+@file:JvmName("Conversions")
+@file:JvmMultifileClass
 @file:Suppress("NewApi")
 
 package io.islandtime.jvm
