@@ -124,15 +124,9 @@ class ZonedDateTime private constructor(
             is DateProperty,
             is TimeProperty,
             is UtcOffsetProperty,
-            is TimeZoneProperty -> true
-            else -> super.has(property)
-        }
-    }
-
-    override fun <T> get(property: ObjectProperty<T>): T {
-        return when (property) {
-            is TimeZoneProperty -> zone.get(property)
-            else -> super.get(property)
+            is TimeZoneProperty,
+            is TimePointProperty -> true
+            else -> false
         }
     }
 
@@ -141,7 +135,7 @@ class ZonedDateTime private constructor(
             is DateProperty, is TimeProperty -> dateTime.get(property)
             is UtcOffsetProperty -> offset.get(property)
             is TimeZoneProperty -> zone.get(property)
-            else -> super.get(property)
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 
@@ -150,7 +144,17 @@ class ZonedDateTime private constructor(
             is DateProperty, is TimeProperty -> dateTime.get(property)
             is UtcOffsetProperty -> offset.get(property)
             is TimeZoneProperty -> zone.get(property)
-            else -> super.get(property)
+            TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
+
+    override fun <T> get(property: ObjectProperty<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return when (property) {
+            is TimeZoneProperty -> zone.get(property)
+            TimePointProperty.Instant -> instant as T
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 

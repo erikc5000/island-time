@@ -3,11 +3,12 @@ package io.islandtime.parser
 import io.islandtime.base.DateProperty
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.localeOf
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class LocalizedTextParserTest {
+class LocalizedTextParserTest : AbstractIslandTimeTest() {
     @Suppress("PropertyName")
     val en_US = localeOf("en-US")
 
@@ -46,7 +47,11 @@ class LocalizedTextParserTest {
             localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL))
         }
 
-        val result = parser.parse("januarY", DateTimeParserSettings(locale = en_US, isCaseSensitive = false))
+        val result = parser.parse(
+            "januarY",
+            DateTimeParserSettings(locale = en_US, isCaseSensitive = false)
+        )
+
         assertEquals(1, result.size)
         assertEquals(1L, result[DateProperty.MonthOfYear])
     }

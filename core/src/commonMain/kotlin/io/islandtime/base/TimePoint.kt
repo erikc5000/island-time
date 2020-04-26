@@ -3,6 +3,21 @@ package io.islandtime.base
 import io.islandtime.measures.*
 
 /**
+ * A property of a time point.
+ */
+sealed class TimePointProperty {
+    /**
+     * The second of the Unix epoch. `0` corresponds to `1970-01-01T00:00Z`.
+     */
+    object SecondOfUnixEpoch : TimePointProperty(), NumberProperty
+
+    /**
+     * The time point represented as an [io.islandtime.Instant].
+     */
+    object Instant : TimePointProperty(), ObjectProperty<io.islandtime.Instant>
+}
+
+/**
  * An object that can be placed exactly in time.
  *
  * An implementor of this interface contains enough information to represent an instant in time. As such, any time
@@ -89,17 +104,6 @@ interface TimePoint<T> : Temporal {
     operator fun minus(microseconds: LongMicroseconds): T
     operator fun minus(nanoseconds: IntNanoseconds): T
     operator fun minus(nanoseconds: LongNanoseconds): T
-
-    override fun has(property: TemporalProperty<*>): Boolean {
-        return property is TimePointProperty
-    }
-
-    override fun get(property: NumberProperty): Long {
-        return when (property) {
-            is TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
-            else -> throwUnsupportedTemporalPropertyException(property)
-        }
-    }
 
     companion object {
         /**

@@ -1,5 +1,6 @@
 package io.islandtime
 
+import io.islandtime.base.DateProperty
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.firstDayOfWeek
 import io.islandtime.format.DateTimeTextProvider
@@ -52,7 +53,7 @@ enum class DayOfWeek {
      * @see displayName
      */
     fun localizedName(style: TextStyle, locale: Locale = defaultLocale()): String? {
-        return DateTimeTextProvider.dayOfWeekTextFor(number.toLong(), style, locale)
+        return DateTimeTextProvider.textFor(DateProperty.DayOfWeek, number.toLong(), style, locale)
     }
 
     /**

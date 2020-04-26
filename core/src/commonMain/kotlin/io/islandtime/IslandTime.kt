@@ -15,8 +15,8 @@ object IslandTime {
     internal val dateTimeTextProvider: DateTimeTextProvider
         get() = settings.dateTimeTextProvider
 
-    internal val dateTimeFormatStyleProvider: DateTimeFormatStyleProvider
-        get() = settings.dateTimeFormatStyleProvider
+    internal val dateTimeFormatProvider: DateTimeFormatProvider
+        get() = settings.dateTimeFormatProvider
 
     internal val timeZoneTextProvider: TimeZoneTextProvider
         get() = settings.timeZoneTextProvider
@@ -26,13 +26,11 @@ object IslandTime {
 
     private var settings: Settings
         set(value) {
-            if (!_settings.compareAndSet(null, value)) {
-                throw IllegalStateException("Island Time has already been initialized")
-            }
+            check(_settings.compareAndSet(null, value)) { "Island Time has already been initialized" }
         }
         get() = _settings.value ?: run {
             _settings.compareAndSet(null, Settings())
-            _settings.value ?: throw IllegalStateException("Failed to initialize Island Time")
+            checkNotNull(_settings.value) { "Failed to initialize Island Time" }
         }
 
     /**
@@ -90,7 +88,7 @@ object IslandTime {
         /**
          * The date-time format style provider to use.
          */
-        var dateTimeFormatStyleProvider: DateTimeFormatStyleProvider
+        var dateTimeFormatProvider: DateTimeFormatProvider
 
         /**
          * The time zone text provider to use.
@@ -101,14 +99,14 @@ object IslandTime {
     private class InitializerImpl : Initializer {
         override var timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider
         override var dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider
-        override var dateTimeFormatStyleProvider: DateTimeFormatStyleProvider = PlatformDateTimeFormatStyleProvider
+        override var dateTimeFormatProvider: DateTimeFormatProvider = PlatformDateTimeFormatProvider
         override var timeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
 
         fun build(): Settings {
             return Settings(
                 timeZoneRulesProvider,
                 dateTimeTextProvider,
-                dateTimeFormatStyleProvider,
+                dateTimeFormatProvider,
                 timeZoneTextProvider
             )
         }
@@ -117,7 +115,7 @@ object IslandTime {
     private data class Settings(
         val timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider,
         val dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider,
-        val dateTimeFormatStyleProvider: DateTimeFormatStyleProvider = PlatformDateTimeFormatStyleProvider,
+        val dateTimeFormatProvider: DateTimeFormatProvider = PlatformDateTimeFormatProvider,
         val timeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
     )
 }

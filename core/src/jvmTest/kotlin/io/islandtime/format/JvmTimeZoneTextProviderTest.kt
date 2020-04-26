@@ -15,7 +15,7 @@ class JvmTimeZoneTextProviderTest : AbstractIslandTimeTest() {
     fun `timeZoneTextFor() returns null for generic styles - limited by Android currently`() {
         val zone = TimeZone("America/New_York")
 
-        assertNull(TimeZoneTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.GENERIC, en_US))
-        assertNull(TimeZoneTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.SHORT_GENERIC, de_DE))
+        assertNull(TimeZoneTextProvider.textFor(zone, TimeZoneTextStyle.GENERIC, en_US))
+        assertNull(TimeZoneTextProvider.textFor(zone, TimeZoneTextStyle.SHORT_GENERIC, de_DE))
     }
 }

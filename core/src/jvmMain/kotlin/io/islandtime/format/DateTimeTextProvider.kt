@@ -1,14 +1,15 @@
 package io.islandtime.format
 
-import io.islandtime.DateTimeException
-import io.islandtime.base.*
+import io.islandtime.base.DateProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.TimeProperty
+import io.islandtime.locale.Locale
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.collections.HashMap
 
-actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
+actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
     private val monthText = ConcurrentHashMap<Locale, HashMap<TextStyle, Array<String>>>()
     private val parsableText = ConcurrentHashMap<ParsableTextKey, ParsableTextList>()
     private val narrowEraSymbols = arrayOf("B", "A")
@@ -39,7 +40,8 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 
             styles.forEach { style ->
                 allTextFor(property, style, locale).forEachIndexed { index, symbol ->
-                    valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(property, index)
+                    valueMap.getOrPut(symbol) { mutableSetOf() } +=
+                        valueForArrayIndex(property, index)
                 }
             }
 
@@ -54,10 +56,6 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     }
 
     override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        if (value !in 1L..7L) {
-            throw DateTimeException("'$value' is outside the supported day of week field range")
-        }
-
         val symbols = DateFormatSymbols.getInstance(locale)
         val index = if (value == 7L) 1 else value.toInt() + 1
 
@@ -72,40 +70,22 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     }
 
     override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        if (value !in 1L..12L) {
-            throw DateTimeException("'$value' is outside the supported month of year field range")
-        }
-
         return allMonthTextFor(style, locale)[value.toInt() - 1]
     }
 
     override fun amPmTextFor(value: Long, locale: Locale): String? {
-        if (value !in 0L..1L) {
-            throw DateTimeException("'$value' is outside the supported AM/PM range")
-        }
-
         return allAmPmTextFor(locale)[value.toInt()]
     }
 
     override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        if (value !in 0L..1L) {
-            throw DateTimeException("'$value' is outside the supported era field range")
-        }
-
         return allEraTextFor(style, locale)[value.toInt()]
     }
 
-    private fun supports(property: NumberProperty): Boolean {
-        return when (property) {
-            DateProperty.MonthOfYear,
-            DateProperty.DayOfWeek,
-            TimeProperty.AmPmOfDay,
-            DateProperty.Era -> true
-            else -> false
-        }
-    }
-
-    private fun allTextFor(property: NumberProperty, style: TextStyle, locale: Locale): Array<String> {
+    private fun allTextFor(
+        property: NumberProperty,
+        style: TextStyle,
+        locale: Locale
+    ): Array<String> {
         return when (property) {
             DateProperty.MonthOfYear -> allMonthTextFor(style, locale)
             DateProperty.DayOfWeek -> allDayOfWeekTextFor(style, locale)
@@ -175,7 +155,9 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
             val fullStandaloneArray = getTextFromDateFormat("LLLL")
             val shortArray = getNormalText(symbols.shortMonths)
             val shortStandaloneArray = getTextFromDateFormat("LLL")
-            val narrowArray = Array(fullStandaloneArray.size) { fullStandaloneArray[it].substring(0, 1) }
+            val narrowArray = Array(fullStandaloneArray.size) {
+                fullStandaloneArray[it].substring(0, 1)
+            }
 
             hashMapOf(
                 TextStyle.FULL to fullArray,
@@ -194,12 +176,13 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 
     private fun allEraTextFor(style: TextStyle, locale: Locale): Array<String> {
         return when (style) {
-            TextStyle.FULL, TextStyle.FULL_STANDALONE -> if (locale.language == Locale.ENGLISH.language) {
-                englishLongEraSymbols
-            } else {
+            TextStyle.FULL, TextStyle.FULL_STANDALONE -> when (locale.language) {
+                Locale.ENGLISH.language -> englishLongEraSymbols
+                else -> DateFormatSymbols.getInstance(locale).eras
+            }
+            TextStyle.SHORT, TextStyle.SHORT_STANDALONE -> {
                 DateFormatSymbols.getInstance(locale).eras
             }
-            TextStyle.SHORT, TextStyle.SHORT_STANDALONE -> DateFormatSymbols.getInstance(locale).eras
             TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> narrowEraSymbols
         }
     }

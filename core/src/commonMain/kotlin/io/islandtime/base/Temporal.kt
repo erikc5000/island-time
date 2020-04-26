@@ -13,7 +13,12 @@ interface TemporalProperty<T>
 /**
  * A property associated with a `Long` value.
  */
-interface NumberProperty : TemporalProperty<Long>
+interface NumberProperty : TemporalProperty<Long> {
+    /**
+     * The maximum range of possible values in the ISO calendar system.
+     */
+    val valueRange: LongRange get() = Long.MIN_VALUE..Long.MAX_VALUE
+}
 
 /**
  * A property associated with a `Boolean` value.

@@ -172,8 +172,9 @@ class Instant private constructor(
         return when (property) {
             TimeProperty.MillisecondOfSecond,
             TimeProperty.MicrosecondOfSecond,
-            TimeProperty.NanosecondOfSecond -> true
-            else -> super.has(property)
+            TimeProperty.NanosecondOfSecond,
+            is TimePointProperty -> true
+            else -> false
         }
     }
 
@@ -182,7 +183,16 @@ class Instant private constructor(
             TimeProperty.MillisecondOfSecond -> nanoOfSecond.toLong() / NANOSECONDS_PER_MILLISECOND
             TimeProperty.MicrosecondOfSecond -> nanoOfSecond.toLong() / NANOSECONDS_PER_MICROSECOND
             TimeProperty.NanosecondOfSecond -> nanoOfSecond.toLong()
-            else -> super.get(property)
+            TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
+
+    override fun <T> get(property: ObjectProperty<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return when (property) {
+            TimePointProperty.Instant -> this as T
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 

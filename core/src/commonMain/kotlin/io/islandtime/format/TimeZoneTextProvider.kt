@@ -16,10 +16,32 @@ interface TimeZoneTextProvider {
      * @param locale the locale
      * @return the localized time zone text or `null` if unavailable in the specified style
      */
-    fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? = null
+    @Deprecated(
+        "Use textFor()",
+        ReplaceWith("this.textFor(zone, style, locale)"),
+        DeprecationLevel.WARNING
+    )
+    fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+        return textFor(zone, style, locale)
+    }
 
-    companion object : TimeZoneTextProvider by IslandTime.timeZoneTextProvider
+    /**
+     * Get the localized time zone text.
+     *
+     * @param zone the time zone
+     * @param style the style of the text
+     * @param locale the locale
+     * @return the localized time zone text or `null` if unavailable in the specified style
+     */
+    fun textFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String?
+
+    companion object : TimeZoneTextProvider {
+        override fun textFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+            return IslandTime.timeZoneTextProvider.textFor(zone, style, locale)
+        }
+    }
 }
+
 /**
  * The default provider of localized time zone text for the current platform.
  */

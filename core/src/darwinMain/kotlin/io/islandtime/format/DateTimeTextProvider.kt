@@ -1,14 +1,13 @@
 package io.islandtime.format
 
 import co.touchlab.stately.isolate.IsolateState
-import io.islandtime.DateTimeException
 import io.islandtime.base.DateProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.TimeProperty
 import io.islandtime.locale.Locale
 import platform.Foundation.*
 
-actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
+actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
     private val narrowEraTextSymbols = listOf("B", "A")
     private val parsableText = IsolateState { hashMapOf<ParsableTextKey, ParsableTextList>() }
 
@@ -50,10 +49,6 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     }
 
     override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        if (value !in 1L..7L) {
-            throw DateTimeException("'$value' is outside the supported day of week field range")
-        }
-
         return allDayOfWeekTextFor(style, locale)?.run {
             val index = if (value == 7L) 0 else value.toInt()
             get(index)
@@ -61,10 +56,6 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     }
 
     override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        if (value !in 1L..12L) {
-            throw DateTimeException("'$value' is outside the supported month of year field range")
-        }
-
         return allMonthTextFor(style, locale)?.get(value.toInt() - 1)
     }
 
@@ -79,21 +70,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     }
 
     override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
-        if (value !in 0L..1L) {
-            throw DateTimeException("'$value' is outside the supported era field range")
-        }
-
         return allEraTextFor(style, locale)?.get(value.toInt())
-    }
-
-    private fun supports(property: NumberProperty): Boolean {
-        return when (property) {
-            DateProperty.MonthOfYear,
-            DateProperty.DayOfWeek,
-            TimeProperty.AmPmOfDay,
-            DateProperty.Era -> true
-            else -> false
-        }
     }
 
     private fun allTextFor(property: NumberProperty, style: TextStyle, locale: Locale): List<String>? {

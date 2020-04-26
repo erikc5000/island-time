@@ -80,10 +80,6 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                 it.second,
                 DateTimeTextProvider.textFor(DateProperty.MonthOfYear, 1L, it.first, en_US)
             )
-            assertEquals(
-                it.second,
-                DateTimeTextProvider.monthTextFor(1L, it.first, en_US)
-            )
         }
     }
 
@@ -100,10 +96,6 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
             assertEquals(
                 it.second,
                 DateTimeTextProvider.textFor(DateProperty.MonthOfYear, 1L, it.first, pl_PL)
-            )
-            assertEquals(
-                it.second,
-                DateTimeTextProvider.monthTextFor(1L, it.first, pl_PL)
             )
         }
     }
@@ -205,15 +197,11 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                 it.second,
                 DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 1L, it.first, en_US)?.removeSuffix(".")
             )
-            assertEquals(
-                it.second,
-                DateTimeTextProvider.dayOfWeekTextFor(1L, it.first, en_US)?.removeSuffix(".")
-            )
         }
 
         assertEquals(
             "Sunday",
-            DateTimeTextProvider.dayOfWeekTextFor(7L, TextStyle.FULL, en_US)
+            DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 7L, TextStyle.FULL, en_US)
         )
     }
 
@@ -230,10 +218,6 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
             assertEquals(
                 it.second,
                 DateTimeTextProvider.textFor(DateProperty.DayOfWeek, 1L, it.first, de_DE)?.removeSuffix(".")
-            )
-            assertEquals(
-                it.second,
-                DateTimeTextProvider.dayOfWeekTextFor(1L, it.first, de_DE)?.removeSuffix(".")
             )
         }
     }
@@ -317,15 +301,6 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                 DateTimeTextProvider.textFor(TimeProperty.AmPmOfDay, 1L, it, en_US)
             )
         }
-
-        assertEquals(
-            "AM",
-            DateTimeTextProvider.amPmTextFor(0L, en_US)
-        )
-        assertEquals(
-            "PM",
-            DateTimeTextProvider.amPmTextFor(1L, en_US)
-        )
     }
 
     @Test
@@ -362,10 +337,6 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                     eraValue,
                     DateTimeTextProvider.textFor(DateProperty.Era, index.toLong(), it.first, en_US)
                 )
-                assertEquals(
-                    eraValue,
-                    DateTimeTextProvider.eraTextFor(index.toLong(), it.first, en_US)
-                )
             }
         }
     }
@@ -384,10 +355,6 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
                 assertEquals(
                     eraValue,
                     DateTimeTextProvider.textFor(DateProperty.Era, index.toLong(), it.first, de_DE)
-                )
-                assertEquals(
-                    eraValue,
-                    DateTimeTextProvider.eraTextFor(index.toLong(), it.first, de_DE)
                 )
             }
         }

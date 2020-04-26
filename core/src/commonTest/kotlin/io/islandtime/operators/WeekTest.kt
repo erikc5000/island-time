@@ -4,11 +4,12 @@ import io.islandtime.*
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.locale.localeOf
 import io.islandtime.measures.hours
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @Suppress("RemoveRedundantBackticks")
-class WeekTest {
+class WeekTest : AbstractIslandTimeTest() {
     @Suppress("PrivatePropertyName")
     private val en_US = localeOf("en-US")
 

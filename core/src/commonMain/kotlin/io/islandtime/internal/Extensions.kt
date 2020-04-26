@@ -34,6 +34,10 @@ internal fun Int.toZeroPaddedString(length: Int): String {
     return buildString { appendZeroPadded(this@toZeroPaddedString, length) }
 }
 
+internal fun Long.toZeroPaddedString(length: Int): String {
+    return buildString { appendWithPaddedStart(this@toZeroPaddedString, length, '0') }
+}
+
 private inline val Int.lengthInDigits
     get() = when {
         this < 10 -> 1

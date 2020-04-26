@@ -16,11 +16,11 @@ class DarwinTimeZoneTextProviderTest : AbstractIslandTimeTest() {
 
         assertEquals(
             "Eastern Time",
-            TimeZoneTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.GENERIC, en_US)
+            TimeZoneTextProvider.textFor(zone, TimeZoneTextStyle.GENERIC, en_US)
         )
         assertEquals(
             "ET",
-            TimeZoneTextProvider.timeZoneTextFor(zone, TimeZoneTextStyle.SHORT_GENERIC, en_US)
+            TimeZoneTextProvider.textFor(zone, TimeZoneTextStyle.SHORT_GENERIC, en_US)
         )
     }
 }

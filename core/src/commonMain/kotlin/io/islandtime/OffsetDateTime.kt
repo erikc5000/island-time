@@ -266,8 +266,9 @@ class OffsetDateTime(
         return when (property) {
             is DateProperty,
             is TimeProperty,
-            is UtcOffsetProperty -> true
-            else -> super.has(property)
+            is UtcOffsetProperty,
+            is TimePointProperty -> true
+            else -> false
         }
     }
 
@@ -275,7 +276,7 @@ class OffsetDateTime(
         return when (property) {
             is DateProperty, is TimeProperty -> dateTime.get(property)
             is UtcOffsetProperty -> offset.get(property)
-            else -> super.get(property)
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 
@@ -283,7 +284,16 @@ class OffsetDateTime(
         return when (property) {
             is DateProperty, is TimeProperty -> dateTime.get(property)
             is UtcOffsetProperty -> offset.get(property)
-            else -> super.get(property)
+            TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            else -> throwUnsupportedTemporalPropertyException(property)
+        }
+    }
+
+    override fun <T> get(property: ObjectProperty<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return when (property) {
+            TimePointProperty.Instant -> instant as T
+            else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
 

@@ -151,12 +151,12 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `adjustedTo() changes the offset while preserving the instant represented by it`() {
         assertEquals(
-            DateTime(2000, Month.APRIL, 4, 7, 0) at UtcOffset.MAX,
-            DateTime(2000, Month.APRIL, 5, 1, 0).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MAX)
+            DateTime(2000, Month.APRIL, 4, 7, 0) at UtcOffset.MIN,
+            DateTime(2000, Month.APRIL, 5, 1, 0).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MIN)
         )
         assertEquals(
-            DateTime(2001, Month.MAY, 5, 19, 1) at UtcOffset.MIN,
-            DateTime(2001, Month.MAY, 5, 1, 1).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MIN)
+            DateTime(2001, Month.MAY, 5, 19, 1) at UtcOffset.MAX,
+            DateTime(2001, Month.MAY, 5, 1, 1).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MAX)
         )
     }
 

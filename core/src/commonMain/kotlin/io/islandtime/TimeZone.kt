@@ -69,7 +69,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
      * @see displayName
      */
     fun localizedName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String? {
-        return TimeZoneTextProvider.timeZoneTextFor(this, style, locale)
+        return TimeZoneTextProvider.textFor(this, style, locale)
     }
 
     /**
@@ -109,6 +109,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
     override fun <T> get(property: ObjectProperty<T>): T {
         @Suppress("UNCHECKED_CAST")
         return when (property) {
+            TimeZoneProperty.TimeZone -> this as T
             TimeZoneProperty.Id -> id as T
             else -> super.get(property)
         }

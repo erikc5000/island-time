@@ -37,13 +37,10 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     inline fun <T> toComponents(
         action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
     ): T {
-        val sign = if (totalSeconds.isNegative()) -1 else 1
-        val absTotalSeconds = totalSeconds.absoluteValue
-        val hours = (absTotalSeconds.value / SECONDS_PER_HOUR).hours
-        val minutes = ((absTotalSeconds.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
-        val seconds = absTotalSeconds % SECONDS_PER_MINUTE
-
-        return action(sign, hours, minutes, seconds)
+        return totalSeconds.absoluteValue.toComponents { hours, minutes, seconds ->
+            val sign = if (totalSeconds.isNegative()) -1 else 1
+            action(sign, hours, minutes, seconds)
+        }
     }
 
     /**
@@ -52,11 +49,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     inline fun <T> toComponents(
         action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
     ): T {
-        val hours = (totalSeconds.value / SECONDS_PER_HOUR).hours
-        val minutes = ((totalSeconds.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
-        val seconds = totalSeconds % SECONDS_PER_MINUTE
-
-        return action(hours, minutes, seconds)
+        return totalSeconds.toComponents(action)
     }
 
     override fun has(property: TemporalProperty<*>): Boolean {
@@ -106,8 +99,8 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
         val MAX_TOTAL_SECONDS = (18 * SECONDS_PER_HOUR).seconds
         val MIN_TOTAL_SECONDS = (-18 * SECONDS_PER_HOUR).seconds
 
-        val MIN = UtcOffset(MAX_TOTAL_SECONDS)
-        val MAX = UtcOffset(MIN_TOTAL_SECONDS)
+        val MIN = UtcOffset(MIN_TOTAL_SECONDS)
+        val MAX = UtcOffset(MAX_TOTAL_SECONDS)
         val ZERO = UtcOffset(0.seconds)
     }
 }

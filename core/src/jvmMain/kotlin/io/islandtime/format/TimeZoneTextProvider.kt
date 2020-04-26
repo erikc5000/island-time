@@ -2,16 +2,22 @@ package io.islandtime.format
 
 import io.islandtime.TimeZone
 import java.util.*
+import java.util.TimeZone as JavaTimeZone
 
 actual object PlatformTimeZoneTextProvider : TimeZoneTextProvider {
-    override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+    override fun textFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
         return if (zone is TimeZone.FixedOffset || !zone.isValid || style.isGeneric()) {
             null
         } else {
-            val javaTzStyle = if (style.isShort()) java.util.TimeZone.SHORT else java.util.TimeZone.LONG
-            val isDaylightSaving = style.isDaylightSaving()
-
-            return java.util.TimeZone.getTimeZone(zone.id).getDisplayName(isDaylightSaving, javaTzStyle, locale)
+            return JavaTimeZone.getTimeZone(zone.id).getDisplayName(
+                style.isDaylightSaving(),
+                style.toJavaTimeZoneStyle(),
+                locale
+            )
         }
+    }
+
+    private fun TimeZoneTextStyle.toJavaTimeZoneStyle(): Int {
+        return if (isShort()) JavaTimeZone.SHORT else JavaTimeZone.LONG
     }
 }

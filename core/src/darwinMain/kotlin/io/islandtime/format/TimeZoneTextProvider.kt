@@ -5,7 +5,7 @@ import io.islandtime.locale.Locale
 import platform.Foundation.*
 
 actual object PlatformTimeZoneTextProvider : TimeZoneTextProvider {
-    override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+    override fun textFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
         return if (zone is TimeZone.Region) {
             NSTimeZone.timeZoneWithName(zone.id)?.run {
                 val darwinStyle = when (style) {
