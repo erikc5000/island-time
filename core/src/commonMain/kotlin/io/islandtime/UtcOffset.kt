@@ -91,8 +91,8 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
         val MAX_TOTAL_SECONDS = (18 * SECONDS_PER_HOUR).seconds
         val MIN_TOTAL_SECONDS = (-18 * SECONDS_PER_HOUR).seconds
 
-        val MIN = UtcOffset(MAX_TOTAL_SECONDS)
-        val MAX = UtcOffset(MIN_TOTAL_SECONDS)
+        val MIN = UtcOffset(MIN_TOTAL_SECONDS)
+        val MAX = UtcOffset(MAX_TOTAL_SECONDS)
         val ZERO = UtcOffset(0.seconds)
     }
 }
