@@ -3,10 +3,10 @@ package io.islandtime.test
 import io.islandtime.base.*
 
 fun temporalWith(vararg properties: Pair<TemporalProperty<*>, Any>): Temporal {
-    return TestTemporal(properties.toMap())
+    return FakeTemporal(properties.toMap())
 }
 
-private class TestTemporal(private val map: Map<TemporalProperty<*>, Any>) : Temporal {
+private class FakeTemporal(private val map: Map<TemporalProperty<*>, Any>) : Temporal {
     override fun has(property: TemporalProperty<*>): Boolean {
         return map.containsKey(property)
     }
