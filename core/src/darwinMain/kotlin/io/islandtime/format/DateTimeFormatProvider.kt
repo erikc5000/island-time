@@ -55,7 +55,8 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
 
             cache.getOrPut(key) {
                 NSDateFormatter.dateFormatFromTemplate(skeleton, 0u, adjustedLocale)
-                    ?.let { pattern -> DateTimeFormatter(pattern) }
+                    .orEmpty()
+                    .let { pattern -> DateTimeFormatter(pattern) }
             }
         }
     }

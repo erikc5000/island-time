@@ -72,7 +72,7 @@ internal class WholeNumberFormatter(
     init {
         require(minLength <= maxLength) { "minLength must be <= maxLength" }
         require(minLength in 1..19) { "minLength must be in 1..19" }
-        require(maxLength in 1..19) { "maxLength must be in 1..19" }
+        require(maxLength <= 19) { "maxLength must be in 1..19" }
     }
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
@@ -81,7 +81,7 @@ internal class WholeNumberFormatter(
 
         val numberString = when {
             value == Long.MIN_VALUE -> "9223372036854775808"
-            value == 0L && minLength == 0 -> ""
+            //value == 0L && minLength == 0 -> ""
             else -> value.absoluteValue.toString()
         }
 
@@ -108,7 +108,8 @@ internal class WholeNumberFormatter(
             }
             SignStyle.NEVER -> if (value < 0) {
                 throw DateTimeException(
-                    "The value '$value' of '$property' cannot be negative according to the sign style"
+                    "The value '$value' of '$property' cannot be negative according to the sign " +
+                        "style"
                 )
             }
         }
@@ -141,7 +142,7 @@ internal class FractionFormatter(
     init {
         require(minLength <= maxLength) { "minLength must be <= maxLength" }
         require(minLength in 1..9) { "minLength must be in 1..9" }
-        require(maxLength in 1..9) { "maxLength must be in 1..9" }
+        require(maxLength <= 9) { "maxLength must be in 1..9" }
 
         var maxValue = 1
         repeat(scale) { maxValue *= 10 }
@@ -187,8 +188,7 @@ internal class TextFormatter(private val property: StringProperty) : TemporalFor
 
 internal class LocalizedDateTimeStyleFormatter(
     private val dateStyle: FormatStyle?,
-    private val timeStyle: FormatStyle?,
-    private val overrideProvider: DateTimeFormatProvider? = null
+    private val timeStyle: FormatStyle?
 ) : TemporalFormatter() {
 
     init {
@@ -197,22 +197,19 @@ internal class LocalizedDateTimeStyleFormatter(
         }
     }
 
-    private val provider get() = overrideProvider ?: DateTimeFormatProvider.Companion
-
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        provider.formatterFor(dateStyle, timeStyle, context.locale).format(context, stringBuilder)
+        DateTimeFormatProvider.formatterFor(dateStyle, timeStyle, context.locale)
+            .format(context, stringBuilder)
     }
 }
 
 internal class LocalizedDateTimeSkeletonFormatter(
-    private val skeleton: String,
-    private val overrideProvider: DateTimeFormatProvider? = null
+    private val skeleton: String
 ) : TemporalFormatter() {
 
-    private val provider get() = overrideProvider ?: DateTimeFormatProvider.Companion
-
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        provider.formatterFor(skeleton, context.locale)?.format(context, stringBuilder)
+        DateTimeFormatProvider.formatterFor(skeleton, context.locale)
+            ?.format(context, stringBuilder)
             ?: throw UnsupportedOperationException(
                 "The configured DateTimeFormatProvider does not support localized format skeletons"
             )
@@ -236,45 +233,47 @@ internal class LocalizedDateTimeTextFormatter(
 
 internal class LocalizedTimeZoneTextFormatter(
     style: TextStyle,
-    private val generic: Boolean,
-    private val overrideProvider: TimeZoneTextProvider? = null
+    private val generic: Boolean
 ) : TemporalFormatter() {
 
     private val style: TextStyle = style.asNormal()
-    private val provider get() = overrideProvider ?: TimeZoneTextProvider.Companion
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
         val temporal = context.temporal
         val zone = temporal.get(TimeZoneProperty.TimeZone)
+        var useGeneric = generic
+        var useDaylight = false
 
-        val daylight = if (!generic && temporal.has(TimePointProperty.Instant)) {
-            val instant = temporal.get(TimePointProperty.Instant)
-            zone.rules.isDaylightSavingsAt(instant)
-        } else {
-            false
+        if (!generic) {
+            if (temporal.has(TimePointProperty.Instant)) {
+                val instant = temporal.get(TimePointProperty.Instant)
+                useDaylight = zone.rules.isDaylightSavingsAt(instant)
+            } else {
+                useGeneric = true
+            }
         }
 
-        val text = style.toTimeZoneTextStyle(daylight)
-            ?.let { provider.textFor(zone, it, context.locale) }
+        val text = style.toTimeZoneTextStyle(useDaylight, useGeneric)
+            ?.let { TimeZoneTextProvider.textFor(zone, it, context.locale) }
             ?: zone.id
 
         stringBuilder.append(text)
     }
+}
 
-    private fun TextStyle.toTimeZoneTextStyle(daylight: Boolean): TimeZoneTextStyle? {
-        return when (this) {
-            TextStyle.SHORT -> when {
-                generic -> TimeZoneTextStyle.SHORT_GENERIC
-                daylight -> TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING
-                else -> TimeZoneTextStyle.SHORT_STANDARD
-            }
-            TextStyle.FULL -> when {
-                generic -> TimeZoneTextStyle.GENERIC
-                daylight -> TimeZoneTextStyle.DAYLIGHT_SAVING
-                else -> TimeZoneTextStyle.STANDARD
-            }
-            else -> null
+private fun TextStyle.toTimeZoneTextStyle(daylight: Boolean, generic: Boolean): TimeZoneTextStyle? {
+    return when (this) {
+        TextStyle.SHORT -> when {
+            generic -> TimeZoneTextStyle.SHORT_GENERIC
+            daylight -> TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING
+            else -> TimeZoneTextStyle.SHORT_STANDARD
         }
+        TextStyle.FULL -> when {
+            generic -> TimeZoneTextStyle.GENERIC
+            daylight -> TimeZoneTextStyle.DAYLIGHT_SAVING
+            else -> TimeZoneTextStyle.STANDARD
+        }
+        else -> null
     }
 }
 

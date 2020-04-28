@@ -155,6 +155,31 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `extended format, seconds = always, utc designator turned off`() {
+        val formatter = dateTimeFormatter {
+            offset(useUtcDesignatorWhenZero = false, seconds = FormatOption.ALWAYS)
+        }
+
+        listOf(
+            UtcOffset.ZERO to "+00:00:00",
+            UtcOffset(1.hours) to "+01:00:00",
+            UtcOffset((-1).hours) to "-01:00:00",
+            UtcOffset(4.hours, 30.minutes) to "+04:30:00",
+            UtcOffset((-4).hours, (-30).minutes) to "-04:30:00",
+            UtcOffset(0.hours, 0.minutes, 1.seconds) to "+00:00:01",
+            UtcOffset(0.hours, 0.minutes, (-1).seconds) to "-00:00:01",
+            UtcOffset(5.hours, 0.minutes, 1.seconds) to "+05:00:01",
+            UtcOffset((-5).hours, 0.minutes, (-1).seconds) to "-05:00:01",
+            UtcOffset(10.hours, 5.minutes, 15.seconds) to "+10:05:15",
+            UtcOffset((-10).hours, (-5).minutes, (-15).seconds) to "-10:05:15",
+            UtcOffset.MAX to "+18:00:00",
+            UtcOffset.MIN to "-18:00:00"
+        ).forEach { (offset, string) ->
+            assertEquals(string, formatter.format(offset))
+        }
+    }
+
+    @Test
     fun `basic format`() {
         val formatter = dateTimeFormatter {
             offset(format = IsoFormat.BASIC)
@@ -254,6 +279,35 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
         listOf(
             UtcOffset.ZERO to "Z",
+            UtcOffset(1.hours) to "+010000",
+            UtcOffset((-1).hours) to "-010000",
+            UtcOffset(4.hours, 30.minutes) to "+043000",
+            UtcOffset((-4).hours, (-30).minutes) to "-043000",
+            UtcOffset(0.hours, 0.minutes, 1.seconds) to "+000001",
+            UtcOffset(0.hours, 0.minutes, (-1).seconds) to "-000001",
+            UtcOffset(5.hours, 0.minutes, 1.seconds) to "+050001",
+            UtcOffset((-5).hours, 0.minutes, (-1).seconds) to "-050001",
+            UtcOffset(10.hours, 5.minutes, 15.seconds) to "+100515",
+            UtcOffset((-10).hours, (-5).minutes, (-15).seconds) to "-100515",
+            UtcOffset.MAX to "+180000",
+            UtcOffset.MIN to "-180000"
+        ).forEach { (offset, string) ->
+            assertEquals(string, formatter.format(offset))
+        }
+    }
+
+    @Test
+    fun `basic format, seconds = always, utc designator turned off`() {
+        val formatter = dateTimeFormatter {
+            offset(
+                format = IsoFormat.BASIC,
+                useUtcDesignatorWhenZero = false,
+                seconds = FormatOption.ALWAYS
+            )
+        }
+
+        listOf(
+            UtcOffset.ZERO to "+000000",
             UtcOffset(1.hours) to "+010000",
             UtcOffset((-1).hours) to "-010000",
             UtcOffset(4.hours, 30.minutes) to "+043000",
