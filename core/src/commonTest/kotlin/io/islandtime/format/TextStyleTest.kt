@@ -1,11 +1,12 @@
 package io.islandtime.format
 
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class TextStyleTest {
+class TextStyleTest : AbstractIslandTimeTest() {
     @Test
     fun `TextStyle_isStandalone() returns true for standalone styles`() {
         assertTrue { TextStyle.FULL_STANDALONE.isStandalone() }

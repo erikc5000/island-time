@@ -1,5 +1,6 @@
 package io.islandtime.format
 
+import io.islandtime.DateTimeException
 import io.islandtime.base.TimeProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.temporalWith
@@ -35,6 +36,19 @@ class FractionFormatterTest : AbstractIslandTimeTest() {
 
         assertFailsWith<IllegalArgumentException> {
             temporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 1..10) }
+        }
+    }
+
+    @Test
+    fun `throws an exception when formatting a temporal with an out-of-range value`() {
+        val formatter = temporalFormatter { fraction(TimeProperty.MillisecondOfSecond, scale = 3) }
+
+        assertFailsWith<DateTimeException> {
+            formatter.format(temporalWith(TimeProperty.MillisecondOfSecond to -1L))
+        }
+
+        assertFailsWith<DateTimeException> {
+            formatter.format(temporalWith(TimeProperty.MillisecondOfSecond to 1_000L))
         }
     }
 

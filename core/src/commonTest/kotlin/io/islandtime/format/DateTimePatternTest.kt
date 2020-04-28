@@ -7,8 +7,8 @@ import io.islandtime.measures.hours
 import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
 import io.islandtime.test.AbstractIslandTimeTest
-import io.islandtime.test.TestDateTimeTextProvider
-import io.islandtime.test.TestTimeZoneTextProvider
+import io.islandtime.test.FakeDateTimeTextProvider
+import io.islandtime.test.FakeTimeZoneTextProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -16,15 +16,15 @@ import kotlin.test.todo
 
 @Suppress("PrivatePropertyName")
 class DateTimePatternTest : AbstractIslandTimeTest(
-    testDateTimeTextProvider = TestDateTimeTextProvider,
-    testTimeZoneTextProvider = TestTimeZoneTextProvider
+    testDateTimeTextProvider = FakeDateTimeTextProvider,
+    testTimeZoneTextProvider = FakeTimeZoneTextProvider
 ) {
     private val emptyTemporal = object : Temporal {}
 
     private val zonedDateTime =
         Date(2020, Month.MARCH, 15) at
-        Time(13, 30, 1, 2_999_999) at
-        TimeZone("America/New_York")
+            Time(13, 30, 1, 2_999_999) at
+            TimeZone("America/New_York")
 
     private val en_US_settings = TemporalFormatter.Settings(locale = localeOf("en-US"))
 
@@ -89,7 +89,8 @@ class DateTimePatternTest : AbstractIslandTimeTest(
             "G" to "AD",
             "GG" to "AD",
             "GGG" to "AD",
-            "GGGG" to "Anno Domini"
+            "GGGG" to "Anno Domini",
+            "GGGGG" to "A"
         ).forEach { (pattern, result) ->
             assertEquals(result, DateTimeFormatter(pattern).format(year, en_US_settings))
         }
@@ -470,11 +471,45 @@ class DateTimePatternTest : AbstractIslandTimeTest(
     fun `throws an exception when specific non-location zone letter count is invalid`() {
         assertFailsWith<IllegalArgumentException> {
             DateTimeFormatter("zzzzz").format(zonedDateTime, en_US_settings)
-//            DateTimePattern("zzzz").toFormatter().format()
-//            DateTimeSkeleton("MMMy").toFormatter()
-//            dateTimeFormatter {
-//                usePattern("zzzz")
-//            }.format()
+        }
+    }
+
+    @Test
+    fun `formats Z correctly with zero offset`() {
+        listOf(
+            "Z" to "+0000",
+            "ZZ" to "+0000",
+            "ZZZ" to "+0000",
+            "ZZZZ" to "GMT",
+            "ZZZZZ" to "Z"
+        ).forEach { (pattern, result) ->
+            assertEquals(
+                result,
+                DateTimeFormatter(pattern).format(
+                    zonedDateTime.adjustedTo(TimeZone("Etc/UTC")),
+                    en_US_settings
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `formats Z correctly with non-zero offset`() {
+        listOf(
+            "Z" to "-0400",
+            "ZZ" to "-0400",
+            "ZZZ" to "-0400",
+            "ZZZZ" to "GMT-04:00",
+            "ZZZZZ" to "-04:00"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `throws an exception when Z is used too many times`() {
+        assertFailsWith<IllegalArgumentException> {
+            DateTimeFormatter("ZZZZZZ").format(zonedDateTime, en_US_settings)
         }
     }
 
@@ -586,6 +621,61 @@ class DateTimePatternTest : AbstractIslandTimeTest(
     fun `throws an exception when offset without Z letter count is invalid`() {
         assertFailsWith<IllegalArgumentException> {
             DateTimeFormatter("xxxxxx").format(zonedDateTime, en_US_settings)
+        }
+    }
+
+    @Test
+    fun `formats localized offset of zero correctly`() {
+        listOf(
+            "O" to "GMT",
+            "OOOO" to "GMT"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(UtcOffset.ZERO, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `formats localized offset with only hours correctly`() {
+        val offset = UtcOffset(4.hours)
+
+        listOf(
+            "O" to "GMT+4",
+            "OOOO" to "GMT+04:00"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(offset, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `formats localized offset with hours and minutes correctly`() {
+        val offset = UtcOffset((-17).hours, (-30).minutes)
+
+        listOf(
+            "O" to "GMT-17:30",
+            "OOOO" to "GMT-17:30"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(offset, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `formats localized offset with hours, minute, and seconds correctly`() {
+        val offset = UtcOffset((-4).hours, 0.minutes, (-1).seconds)
+
+        listOf(
+            "O" to "GMT-4:00:01",
+            "OOOO" to "GMT-04:00:01"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(offset, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `throws an exception when localized offset letter count is invalid`() {
+        listOf("OO", "OOO", "OOOOO").forEach {
+            assertFailsWith<IllegalArgumentException> {
+                DateTimeFormatter(it).format(zonedDateTime, en_US_settings)
+            }
         }
     }
 

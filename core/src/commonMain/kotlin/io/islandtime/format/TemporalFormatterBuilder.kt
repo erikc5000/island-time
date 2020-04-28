@@ -24,7 +24,8 @@ interface TemporalFormatterBuilder :
      * Append a whole number, padding the start with zero if necessary to satisfy [length].
      *
      * @param property the number property to append the value of
-     * @param length the number of characters to append, excluding any sign
+     * @param minLength the minimum number of characters to append, excluding any sign
+     * @param maxLength the maximum number of characters to append
      * @param builder configure formatter behavior
      */
     fun wholeNumber(
@@ -119,7 +120,7 @@ interface TemporalFormatterBuilder :
      */
     fun localizedDateTimeText(property: NumberProperty, style: TextStyle)
 
-    fun localizedTimeZoneText(style: TextStyle, generic: Boolean)
+    fun localizedTimeZoneText(style: TextStyle, generic: Boolean = false)
 }
 
 enum class LengthExceededBehavior {

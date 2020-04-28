@@ -5,7 +5,7 @@ import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.locale.Locale
 
-object TestTimeZoneTextProvider : TimeZoneTextProvider {
+object FakeTimeZoneTextProvider : TimeZoneTextProvider {
     override fun textFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
         return when (zone.id) {
             "America/New_York" -> when (style) {

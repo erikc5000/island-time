@@ -8,7 +8,7 @@ import io.islandtime.format.ParsableTextList
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
 
-object TestDateTimeTextProvider : AbstractDateTimeTextProvider() {
+object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
     override fun parsableTextFor(
         property: NumberProperty,
         styles: Set<TextStyle>,

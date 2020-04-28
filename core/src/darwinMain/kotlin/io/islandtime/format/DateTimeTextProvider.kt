@@ -1,6 +1,7 @@
 package io.islandtime.format
 
 import co.touchlab.stately.isolate.IsolateState
+import io.islandtime.DateTimeException
 import io.islandtime.base.DateProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.TimeProperty
@@ -17,25 +18,30 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
     private data class ParsableTextKey(
         val property: NumberProperty,
         val styles: Set<TextStyle>,
-        val locale: Locale
+        val locale: String
     )
 
-    override fun parsableTextFor(property: NumberProperty, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
+    override fun parsableTextFor(
+        property: NumberProperty,
+        styles: Set<TextStyle>,
+        locale: Locale
+    ): ParsableTextList {
         if (styles.isEmpty() || !supports(property)) {
             return emptyList()
         }
 
-        val key = ParsableTextKey(property, styles, locale)
+        val key = ParsableTextKey(property, styles, locale.localeIdentifier)
 
-        return parsableText.access {
-            it.getOrPut(key) {
+        return parsableText.access { cache ->
+            cache.getOrPut(key) {
                 val valueMap = hashMapOf<String, MutableSet<Long>>()
 
-            styles.forEach { style ->
-                allTextFor(property, style, locale)?.forEachIndexed { index, symbol ->
-                    valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(property, index)
+                styles.forEach { style ->
+                    allTextFor(property, style, locale)?.forEachIndexed { index, symbol ->
+                        valueMap.getOrPut(symbol) { mutableSetOf() } +=
+                            valueForArrayIndex(property, index)
+                    }
                 }
-            }
 
                 valueMap.mapNotNull {
                     if (it.value.size == 1) {
@@ -73,7 +79,11 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         return allEraTextFor(style, locale)?.get(value.toInt())
     }
 
-    private fun allTextFor(property: NumberProperty, style: TextStyle, locale: Locale): List<String>? {
+    private fun allTextFor(
+        property: NumberProperty,
+        style: TextStyle,
+        locale: Locale
+    ): List<String>? {
         return when (property) {
             DateProperty.MonthOfYear -> allMonthTextFor(style, locale)
             DateProperty.DayOfWeek -> allDayOfWeekTextFor(style, locale)
