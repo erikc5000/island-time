@@ -245,6 +245,21 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `properties have expected values`() {
+        val zonedDateTime = DateTime(2019, 3, 3, 7, 0) at denverZone
+
+        assertEquals(2019, zonedDateTime.year)
+        assertEquals(YearMonth(2019, 3), zonedDateTime.yearMonth)
+        assertEquals(Month.MARCH, zonedDateTime.month)
+        assertEquals(3, zonedDateTime.monthNumber)
+        assertEquals(3, zonedDateTime.dayOfMonth)
+        assertEquals(Date(2019, 3, 3), zonedDateTime.date)
+        assertEquals(Time(7, 0), zonedDateTime.time)
+        assertEquals(DateTime(2019, 3, 3, 7, 0), zonedDateTime.dateTime)
+        assertEquals(OffsetTime(Time(7, 0), UtcOffset((-7).hours)), zonedDateTime.offsetTime)
+    }
+
+    @Test
     fun `copy() ignores changes to the offset if it isn't valid for the time zone`() {
         assertEquals(
             ZonedDateTime.create(

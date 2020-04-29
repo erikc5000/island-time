@@ -106,6 +106,11 @@ class ZonedDateTime private constructor(
     inline val yearMonth: YearMonth get() = dateTime.yearMonth
 
     /**
+     * The combined time of day and offset.
+     */
+    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
+
+    /**
      * The [Instant] representing the same time point.
      */
     inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
