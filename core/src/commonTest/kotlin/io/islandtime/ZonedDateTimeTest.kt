@@ -99,6 +99,46 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `OffsetDateTime_dateTimeAt() returns a ZonedDateTime with a similar local date and time`() {
+        val offsetDateTime =
+            Date(2019, 3, 3) at Time(1, 0) at UtcOffset((-5).hours)
+
+        assertEquals(
+            ZonedDateTime(
+                2019,
+                3,
+                2,
+                23,
+                0,
+                0,
+                0,
+                denverZone
+            ),
+            offsetDateTime.dateTimeAt(denverZone)
+        )
+    }
+
+    @Test
+    fun `OffsetDateTime_instantAt() returns a ZonedDateTime with the same instant`() {
+        val offsetDateTime =
+            Date(2019, 3, 3) at Time(1, 0) at UtcOffset((-5).hours)
+
+        assertEquals(
+            ZonedDateTime(
+                2019,
+                3,
+                3,
+                1,
+                0,
+                0,
+                0,
+                nyZone
+            ),
+            offsetDateTime.instantAt(nyZone)
+        )
+    }
+
+    @Test
     fun `at infix creates a ZonedDateTime from a DateTime`() {
         assertEquals(
             ZonedDateTime(
@@ -484,15 +524,15 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asOffsetDateTime() converts to an equivalent OffsetDateTime`() {
+    fun `offsetDateTime property returns an equivalent OffsetDateTime`() {
         assertEquals(
             "1970-01-01T00:00Z".toOffsetDateTime(),
-            "1970-01-01T00:00Z".toZonedDateTime().asOffsetDateTime()
+            "1970-01-01T00:00Z".toZonedDateTime().offsetDateTime
         )
 
         assertEquals(
             "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime(),
-            "2017-02-28T14:00:00.123456789-07:00[America/Denver]".toZonedDateTime().asOffsetDateTime()
+            "2017-02-28T14:00:00.123456789-07:00[America/Denver]".toZonedDateTime().offsetDateTime
         )
     }
 
