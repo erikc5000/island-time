@@ -414,7 +414,12 @@ infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offse
  * database differences between systems, making it better suited for use cases involving persistence or network
  * transfer.
  */
-fun ZonedDateTime.asOffsetDateTime() = OffsetDateTime(dateTime, offset)
+@Deprecated(
+    "Use the 'offsetDateTime' property on ZonedDateTime instead.",
+    ReplaceWith("this.offsetDateTime"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTime.asOffsetDateTime() = offsetDateTime
 
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 

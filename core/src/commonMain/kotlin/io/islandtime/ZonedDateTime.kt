@@ -106,6 +106,20 @@ class ZonedDateTime private constructor(
     inline val yearMonth: YearMonth get() = dateTime.yearMonth
 
     /**
+     * The combined time of day and offset.
+     */
+    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
+
+    /**
+     * The combined date, time, and offset.
+     *
+     * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
+     * database differences between systems, making it better suited for use cases involving persistence or network
+     * transfer.
+     */
+    inline val offsetDateTime: OffsetDateTime get() = OffsetDateTime(dateTime, offset)
+
+    /**
      * The [Instant] representing the same time point.
      */
     inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
@@ -595,7 +609,8 @@ fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(
 infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
 
 /**
- * The [ZonedDateTime] at the start of this date in a particular time zone, taking into account
+ * The [ZonedDateTime] at the start of this date in a particular time zone, taking into any account daylight savings
+ * transitions.
  */
 fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
     val dateTime = this at Time.MIDNIGHT
@@ -641,20 +656,51 @@ fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
  * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
+@Deprecated(
+    "Renamed to 'dateTimeAt'.",
+    ReplaceWith("this.dateTimeAt(zone)"),
+    DeprecationLevel.WARNING
+)
 fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.fromLocal(dateTime, zone, offset)
+    return dateTimeAt(zone)
+}
+
+/**
+ * The [ZonedDateTime] with the same date and time at [zone]. The offset will be preserved if possible, but may require
+ * adjustment.
+ * @see instantAt
+ * @see asZonedDateTime
+ */
+fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
+    return ZonedDateTime.fromInstant(dateTime, offset, zone)
 }
 
 /**
  * Get the [ZonedDateTime] corresponding to the same instant represented by an [OffsetDateTime] in a particular
  * time zone
  */
+@Deprecated(
+    "Renamed to 'instantAt'.",
+    ReplaceWith("this.instantAt(zone)"),
+    DeprecationLevel.WARNING
+)
 fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
+    return instantAt(zone)
+}
+
+/**
+ * The [ZonedDateTime] representing the same instant in time at [zone]. The local date, time, and offset may differ.
+ * @see dateTimeAt
+ * @see asZonedDateTime
+ */
+fun OffsetDateTime.instantAt(zone: TimeZone): ZonedDateTime {
     return ZonedDateTime.fromInstant(dateTime, offset, zone)
 }
 
 /**
- * Convert to a [ZonedDateTime] with a fixed time zone.
+ * Convert to a [ZonedDateTime] with a fixed offset time zone.
+ * @see instantAt
+ * @see dateTimeAt
  */
 fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.fromLocal(dateTime, offset.asTimeZone(), offset)
