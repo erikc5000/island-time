@@ -44,7 +44,7 @@ class FractionFormatterTest : AbstractIslandTimeTest() {
         val formatter = temporalFormatter { fraction(TimeProperty.MillisecondOfSecond, scale = 3) }
 
         assertFailsWith<DateTimeException> {
-            formatter.format(temporalWith(TimeProperty.MillisecondOfSecond to -1L))
+            formatter.format(temporalWith(TimeProperty.MillisecondOfSecond to -1_000L))
         }
 
         assertFailsWith<DateTimeException> {

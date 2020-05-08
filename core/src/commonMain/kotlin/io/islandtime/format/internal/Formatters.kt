@@ -66,6 +66,7 @@ internal class WholeNumberFormatter(
     private val minLength: Int,
     private val maxLength: Int,
     private val signStyle: SignStyle,
+    private val lengthExceededBehavior: LengthExceededBehavior,
     private val transform: (Long) -> Long
 ) : TemporalFormatter() {
 
@@ -77,27 +78,37 @@ internal class WholeNumberFormatter(
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
         val value = transform(context.temporal.get(property))
-        stringBuilder.appendSign(value, context.settings.numberStyle)
 
-        val numberString = when {
-            value == Long.MIN_VALUE -> "9223372036854775808"
-            //value == 0L && minLength == 0 -> ""
+        val numberString = when (value) {
+            Long.MIN_VALUE -> "9223372036854775808"
             else -> value.absoluteValue.toString()
         }
 
-        if (numberString.length > maxLength) {
-            throw DateTimeException(
-                "The value '$value' of '$property' exceeds the maximum allowed length"
-            )
+        val adjustedSignStyle = if (numberString.length > maxLength) {
+            when (lengthExceededBehavior) {
+                LengthExceededBehavior.SIGN_STYLE_AWAYS -> SignStyle.ALWAYS
+                LengthExceededBehavior.THROW -> throw DateTimeException(
+                    "The value '$value' of '$property' exceeds the maximum allowed length"
+                )
+            }
+        } else {
+            signStyle
         }
 
+        val numberStyle = context.settings.numberStyle
+        stringBuilder.appendSign(value, adjustedSignStyle, numberStyle)
+
         val requiredPadding = minLength - numberString.length
-        repeat(requiredPadding) { stringBuilder.append(context.settings.numberStyle.zeroDigit) }
-        stringBuilder.appendLocalizedNumber(numberString, context.settings.numberStyle)
+        repeat(requiredPadding) { stringBuilder.append(numberStyle.zeroDigit) }
+        stringBuilder.appendLocalizedNumber(numberString, numberStyle)
     }
 
-    private fun StringBuilder.appendSign(value: Long, numberStyle: NumberStyle) {
-        when (signStyle) {
+    private fun StringBuilder.appendSign(
+        value: Long,
+        adjustedSignStyle: SignStyle,
+        numberStyle: NumberStyle
+    ) {
+        when (adjustedSignStyle) {
             SignStyle.ALWAYS -> if (value >= 0) {
                 append(numberStyle.plusSign.first())
             } else {
@@ -108,8 +119,7 @@ internal class WholeNumberFormatter(
             }
             SignStyle.NEVER -> if (value < 0) {
                 throw DateTimeException(
-                    "The value '$value' of '$property' cannot be negative according to the sign " +
-                        "style"
+                    "The value '$value' of '$property' cannot be negative according to the sign style"
                 )
             }
         }
@@ -120,13 +130,68 @@ internal class DecimalNumberFormatter(
     private val wholeProperty: NumberProperty,
     private val fractionProperty: NumberProperty,
     private val minWholeLength: Int,
-    private val fractionLength: IntRange,
-    private val fractionScale: Int,
-    private val signStyle: SignStyle
+    private val maxWholeLength: Int,
+    private val minFractionLength: Int,
+    private val maxFractionLength: Int,
+    private val fractionScale: Int
 ) : TemporalFormatter() {
+
+    init {
+        require(minWholeLength <= maxWholeLength) {
+            "minWholeLength must be <= maxWholeLength"
+        }
+        require(minWholeLength in 0..19) { "minWholeLength must be in 0..19" }
+        require(maxWholeLength in 1..19) { "maxWholeLength must be in 1..19" }
+        require(minFractionLength <= maxFractionLength) {
+            "minFractionLength must be <= maxFractionLength"
+        }
+        require(minFractionLength in 0..9) { "minFractionLength must in 0..9" }
+        require(maxFractionLength <= 9) { "maxFractionLength must in 0..9" }
+        require(fractionScale in 1..9) { "fractionScale must in 1..9" }
+    }
+
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        //val wholeValue = context.temporal.get(wholeProperty)
-        //val fractionValue = context.temporal.get(fractionProperty)
+        val wholeValue = context.temporal.get(wholeProperty)
+        val fractionValue = context.temporal.get(fractionProperty)
+        val numberStyle = context.settings.numberStyle
+
+        if (wholeValue < 0L || (wholeValue == 0L && fractionValue < 0L)) {
+            stringBuilder.append(numberStyle.minusSign.first())
+        }
+
+        if (wholeValue != 0L || minWholeLength > 0 || (wholeValue == 0L && fractionValue == 0L)) {
+            val wholeNumberString = when (wholeValue) {
+                Long.MIN_VALUE -> "9223372036854775808"
+                else -> wholeValue.absoluteValue.toString()
+            }
+
+            if (wholeNumberString.length > maxWholeLength) {
+                throw DateTimeException(
+                    "The value of $wholeProperty exceeds the maximum allowed length"
+                )
+            }
+
+            stringBuilder.appendPaddedLocalizedNumber(
+                wholeNumberString,
+                minWholeLength,
+                numberStyle
+            )
+        }
+
+        if (minFractionLength > 0 || (fractionValue != 0L && maxFractionLength > 0)) {
+            stringBuilder.appendDecimalSeparator(numberStyle)
+
+            val absFractionValue = fractionValue.absoluteValue
+            validateFractionValue(fractionProperty, absFractionValue, fractionScale)
+
+            stringBuilder.appendFraction(
+                absFractionValue,
+                minFractionLength,
+                maxFractionLength,
+                fractionScale,
+                numberStyle
+            )
+        }
     }
 }
 
@@ -137,45 +202,24 @@ internal class FractionFormatter(
     private val scale: Int
 ) : TemporalFormatter() {
 
-    private val valueRange: IntRange
-
     init {
         require(minLength <= maxLength) { "minLength must be <= maxLength" }
         require(minLength in 1..9) { "minLength must be in 1..9" }
         require(maxLength <= 9) { "maxLength must be in 1..9" }
-
-        var maxValue = 1
-        repeat(scale) { maxValue *= 10 }
-        valueRange = 0 until maxValue
+        require(scale in 1..9) { "scale must in in 1..9" }
     }
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        val value = context.temporal.get(property)
+        val value = context.temporal.get(property).absoluteValue
+        validateFractionValue(property, value, scale)
 
-        if (value !in valueRange) {
-            throw DateTimeException("The value of '$property' is outside the valid range")
-        }
-
-        var valueString = value.toZeroPaddedString(scale).take(maxLength)
-
-        for (i in valueString.length - 1 downTo minLength) {
-            if (valueString[i] == '0') {
-                valueString = valueString.removeRange(i, i + 1)
-            } else {
-                break
-            }
-        }
-
-        stringBuilder.appendLocalizedNumber(valueString, context.settings.numberStyle)
-    }
-}
-
-private fun StringBuilder.appendLocalizedNumber(number: String, numberStyle: NumberStyle) {
-    if (numberStyle.zeroDigit == '0') {
-        append(number)
-    } else {
-        val diff = numberStyle.zeroDigit - '0'
-        number.forEach { append(it + diff) }
+        stringBuilder.appendFraction(
+            value,
+            minLength,
+            maxLength,
+            scale,
+            context.settings.numberStyle
+        )
     }
 }
 
@@ -392,5 +436,71 @@ internal class LocalizedUtcOffsetFormatter(private val style: TextStyle) : Tempo
                 }
             }
         }
+    }
+}
+
+private fun validateFractionValue(property: NumberProperty, value: Long, scale: Int) {
+    if (value !in 0..maxFractionValue(scale)) {
+        throw DateTimeException("The value of '$property' is outside the valid range")
+    }
+}
+
+private fun StringBuilder.appendFraction(
+    value: Long,
+    minLength: Int,
+    maxLength: Int,
+    scale: Int,
+    numberStyle: NumberStyle
+) {
+    var valueString = value.toZeroPaddedString(scale).take(maxLength)
+
+    for (i in valueString.length - 1 downTo minLength) {
+        if (valueString[i] == '0') {
+            valueString = valueString.removeRange(i, i + 1)
+        } else {
+            break
+        }
+    }
+
+    appendLocalizedNumber(valueString, numberStyle)
+}
+
+private fun StringBuilder.appendDecimalSeparator(numberStyle: NumberStyle) {
+    append(numberStyle.decimalSeparator.first())
+}
+
+private fun maxFractionValue(scale: Int): Int {
+    return FRACTION_SCALE_TO_MAX_VALUE[scale]
+}
+
+private val FRACTION_SCALE_TO_MAX_VALUE = arrayOf(
+    0,
+    9,
+    99,
+    999,
+    9_999,
+    99_999,
+    999_999,
+    9_999_999,
+    99_999_999,
+    999_999_999
+)
+
+private fun StringBuilder.appendPaddedLocalizedNumber(
+    number: String,
+    minLength: Int,
+    numberStyle: NumberStyle
+) {
+    val requiredPadding = minLength - number.length
+    repeat(requiredPadding) { append(numberStyle.zeroDigit) }
+    appendLocalizedNumber(number, numberStyle)
+}
+
+private fun StringBuilder.appendLocalizedNumber(number: String, numberStyle: NumberStyle) {
+    if (numberStyle.zeroDigit == '0') {
+        append(number)
+    } else {
+        val diff = numberStyle.zeroDigit - '0'
+        number.forEach { append(it + diff) }
     }
 }

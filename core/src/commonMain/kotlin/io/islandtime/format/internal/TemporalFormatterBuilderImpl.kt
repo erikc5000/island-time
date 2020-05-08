@@ -32,10 +32,17 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
         fractionProperty: NumberProperty,
         wholeLength: IntRange,
         fractionLength: IntRange,
-        fractionScale: Int,
-        builder: NumberFormatterBuilder.() -> Unit
+        fractionScale: Int
     ) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        formatters += DecimalNumberFormatter(
+            wholeProperty,
+            fractionProperty,
+            wholeLength.first,
+            wholeLength.last,
+            fractionLength.first,
+            fractionLength.last,
+            fractionScale
+        )
     }
 
     override fun fraction(property: NumberProperty, length: IntRange, scale: Int) {

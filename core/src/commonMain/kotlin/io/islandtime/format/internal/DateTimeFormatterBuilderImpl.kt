@@ -70,12 +70,14 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
     override fun twoDigitYearOfEra() {
         temporalFormatterBuilder.wholeNumber(DateProperty.YearOfEra, 2) {
             signStyle = SignStyle.NEVER
-            valueMapper = { it % 100 }
+            mapValue { it % 100 }
         }
     }
 
     override fun year(minLength: Int, maxLength: Int) {
-        temporalFormatterBuilder.wholeNumber(DateProperty.Year, minLength, maxLength)
+        temporalFormatterBuilder.wholeNumber(DateProperty.Year, minLength, maxLength) {
+            lengthExceededBehavior = LengthExceededBehavior.SIGN_STYLE_AWAYS
+        }
     }
 
     override fun monthNumber(minLength: Int, maxLength: Int) {

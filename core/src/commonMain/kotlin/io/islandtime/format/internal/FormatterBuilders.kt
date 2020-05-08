@@ -14,7 +14,11 @@ internal class NumberFormatterBuilderImpl(
 
     override var signStyle: SignStyle = SignStyle.NEGATIVE_ONLY
     override var lengthExceededBehavior: LengthExceededBehavior = LengthExceededBehavior.THROW
-    override var valueMapper: (Long) -> Long = { it }
+    private var transform: (Long) -> Long = { it }
+
+    override fun mapValue(transform: (Long) -> Long) {
+        this.transform = transform
+    }
 
     fun build(): TemporalFormatter {
         return WholeNumberFormatter(
@@ -22,7 +26,8 @@ internal class NumberFormatterBuilderImpl(
             minLength,
             maxLength,
             signStyle,
-            valueMapper
+            lengthExceededBehavior,
+            transform
         )
     }
 }

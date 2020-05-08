@@ -146,4 +146,18 @@ class WholeNumberFormatterTest {
             formatter.format(temporalWith(DateProperty.Year to 2020L), settings)
         )
     }
+
+    @Test
+    fun `transform function can be applied to the value`() {
+        val formatter = temporalFormatter {
+            wholeNumber(DateProperty.Year) {
+                mapValue { it / 2 }
+            }
+        }
+
+        assertEquals(
+            "1000",
+            formatter.format(temporalWith(DateProperty.Year to 2000L))
+        )
+    }
 }

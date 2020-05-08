@@ -82,7 +82,6 @@ interface TemporalFormatterBuilder :
      * @param fractionLength the number of digits to parse from the fraction part
      * @param fractionScale the number of digits to normalize the fraction to -- by default 9,
      *                      indicating nanoseconds
-     * @param builder configure parser behavior
      * @see NumberStyle
      */
     fun decimalNumber(
@@ -90,8 +89,7 @@ interface TemporalFormatterBuilder :
         fractionProperty: NumberProperty,
         wholeLength: IntRange = 1..19,
         fractionLength: IntRange = 0..9,
-        fractionScale: Int = 9,
-        builder: NumberFormatterBuilder.() -> Unit = {}
+        fractionScale: Int = 9
     )
 
     fun fraction(property: NumberProperty, length: IntRange = 1..9, scale: Int = 9)
@@ -137,5 +135,5 @@ interface NumberFormatterBuilder {
 
     var lengthExceededBehavior: LengthExceededBehavior
 
-    var valueMapper: (Long) -> Long
+    fun mapValue(transform: (Long) -> Long)
 }
