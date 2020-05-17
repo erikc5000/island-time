@@ -1,7 +1,6 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.MAX_DATE_TIME_STRING_LENGTH
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
@@ -49,7 +48,8 @@ class DateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_DATE_TIME_STRING_LENGTH, StringBuilder::appendDateTime)
+    override fun toString() =
+        buildIsoString(MAX_DATE_TIME_STRING_LENGTH, StringBuilder::appendDateTime)
 
     /**
      * Get the [Duration] between the start and end date-time, assuming they're in the same time zone. In general, it's
@@ -235,7 +235,8 @@ class DateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
+fun String.toDateTimeInterval() =
+    toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to a [DateTimeInterval] using a specific parser.
@@ -254,13 +255,17 @@ fun String.toDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.start
-        else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
+        else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(
+            this
+        )
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
+        else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(
+            this
+        )
     }
 
     return when {
@@ -272,21 +277,43 @@ fun String.toDateTimeInterval(
 
 /**
  * Return a random date-time within the interval using the default random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see DateTimeInterval.randomOrNull
  */
 fun DateTimeInterval.random(): DateTime = random(Random)
 
 /**
+ * Return a random date-time within the interval using the default random number generator or
+ * `null` if the interval is empty or unbounded.
+ * @see DateTimeInterval.random
+ */
+fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNull(Random)
+
+/**
  * Return a random date-time within the interval using the supplied random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see DateTimeInterval.randomOrNull
  */
 fun DateTimeInterval.random(random: Random): DateTime {
-    try {
-        return DateTime.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecondAt(UtcOffset.ZERO), endExclusive.unixEpochSecondAt(UtcOffset.ZERO)),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
-            UtcOffset.ZERO
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
+    return when {
+        isUnbounded() -> throwUnboundedIntervalException()
+        isEmpty() -> throw NoSuchElementException()
+        else -> randomInternal(random)
+    }
+}
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator or
+ * `null` if the interval is empty or unbounded.
+ * @see DateTimeInterval.random
+ */
+fun DateTimeInterval.randomOrNull(random: Random): DateTime? {
+    return if (isEmpty() || isUnbounded()) {
+        null
+    } else {
+        randomInternal(random)
     }
 }
 
@@ -339,7 +366,8 @@ fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) -
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
 
-    val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
+    val nanoDiff =
+        endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
     return durationOf(secondDiff, nanoDiff)
 }
 
@@ -431,4 +459,15 @@ internal fun adjustedEndDate(start: DateTime, endExclusive: DateTime): Date {
         endExclusive.date < start.date && endExclusive.time > start.time -> endExclusive.date + 1.days
         else -> endExclusive.date
     }
+}
+
+private fun DateTimeInterval.randomInternal(random: Random): DateTime {
+    return randomInternal(
+        random,
+        secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.unixEpochNanoOfSecond },
+        creator = { second, nanosecond ->
+            DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO)
+        }
+    )
 }

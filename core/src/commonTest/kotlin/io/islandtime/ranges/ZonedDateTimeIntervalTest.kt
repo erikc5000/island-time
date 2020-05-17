@@ -97,13 +97,43 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a zoned date-time within range`() {
-        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.NOVEMBER, 20) at MIDNIGHT at "America/New_York".toTimeZone()
-        val range = start..end
-        val randomInstant = range.random()
-        assertTrue { randomInstant in range }
-        assertEquals("America/New_York".toTimeZone(), randomInstant.zone)
+    fun `random() returns a date-time within the interval`() {
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at TimeZone("America/New_York")
+        val end = Date(2019, Month.NOVEMBER, 2) at MIDNIGHT at TimeZone("America/New_York")
+        val interval = start until end
+        val randomZonedDateTime = interval.random()
+        assertTrue { randomZonedDateTime in interval }
+        assertEquals(TimeZone("America/New_York"), randomZonedDateTime.zone)
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is empty`() {
+        assertFailsWith<NoSuchElementException> { ZonedDateTimeInterval.EMPTY.random() }
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random() }
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is empty`() {
+        assertNull(ZonedDateTimeInterval.EMPTY.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is unbounded`() {
+        assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns a date-time within the interval`() {
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at TimeZone("America/New_York")
+        val end = (start + 1.nanoseconds).adjustedTo(TimeZone("Europe/London"))
+        val interval = start until end
+        val randomZonedDateTime = interval.randomOrNull()!!
+        assertTrue { randomZonedDateTime in interval }
+        assertEquals(TimeZone("America/New_York"), randomZonedDateTime.zone)
     }
 
     @Test

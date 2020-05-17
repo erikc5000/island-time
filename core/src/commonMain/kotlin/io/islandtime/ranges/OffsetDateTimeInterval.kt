@@ -4,10 +4,9 @@ import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.randomInternal
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 
@@ -28,7 +27,8 @@ class OffsetDateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_OFFSET_DATE_TIME_STRING_LENGTH, StringBuilder::appendOffsetDateTime)
+    override fun toString() =
+        buildIsoString(MAX_OFFSET_DATE_TIME_STRING_LENGTH, StringBuilder::appendOffsetDateTime)
 
     /**
      * Convert the interval into a [Period] of the same length.
@@ -126,7 +126,8 @@ class OffsetDateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
+fun String.toOffsetDateTimeInterval() =
+    toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to an [OffsetDateTimeInterval] using a specific parser.
@@ -146,13 +147,15 @@ fun String.toOffsetDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.start
-        else -> results[0].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+        else -> results[0].toOffsetDateTime()
+            ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+        else -> results[1].toOffsetDateTime()
+            ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
     }
 
     return when {
@@ -163,22 +166,46 @@ fun String.toOffsetDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the range using the default random number generator.
+ * Return a random date-time within the interval using the default random number generator. The
+ * offset of the start date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see OffsetDateTimeInterval.randomOrNull
  */
 fun OffsetDateTimeInterval.random(): OffsetDateTime = random(Random)
 
 /**
- * Return a random date-time within the range using the supplied random number generator.
+ * Return a random date-time within the interval using the default random number generator or
+ * `null` if the interval is empty or unbounded. The offset of the start date-time will be used.
+ * @see OffsetDateTimeInterval.random
+ */
+fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random)
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator. The
+ * offset of the start date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see OffsetDateTimeInterval.randomOrNull
  */
 fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
-    try {
-        return OffsetDateTime.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecond, endExclusive.unixEpochSecond),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
-            start.offset
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
+    return when {
+        isUnbounded() -> throwUnboundedIntervalException()
+        isEmpty() -> throw NoSuchElementException()
+        else -> randomInternal(random)
+    }
+}
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator or
+ * `null` if the interval is empty or unbounded. The offset of the start date-time will be used.
+ * @see OffsetDateTimeInterval.random
+ */
+fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
+    return if (isEmpty() || isUnbounded()) {
+        null
+    } else {
+        randomInternal(random)
     }
 }
 
@@ -230,4 +257,13 @@ fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongDays {
 private fun adjustedEndDateTime(start: OffsetDateTime, endExclusive: OffsetDateTime): DateTime {
     val offsetDelta = start.offset.totalSeconds - endExclusive.offset.totalSeconds
     return endExclusive.dateTime + offsetDelta
+}
+
+private fun OffsetDateTimeInterval.randomInternal(random: Random): OffsetDateTime {
+    return randomInternal(
+        random,
+        creator = { second, nanosecond ->
+            OffsetDateTime.fromUnixEpochSecond(second, nanosecond, start.offset)
+        }
+    )
 }

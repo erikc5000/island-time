@@ -1,9 +1,12 @@
 package io.islandtime.ranges.internal
 
 import io.islandtime.DateTime
+import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.TimeInterval
+import io.islandtime.ranges.TimePointInterval
+import kotlin.random.Random
 
 internal val MAX_INCLUSIVE_END_DATE_TIME = DateTime.MAX - 2.nanoseconds
 
@@ -89,6 +92,37 @@ internal inline fun <T> TimeInterval<T>.buildIsoString(
         }
     }
 }
+
+internal inline fun <T> TimeInterval<T>.randomInternal(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T {
+    val fromSecond = secondGetter(start)
+    val fromNanosecond = nanosecondGetter(start)
+    val untilSecond = secondGetter(endExclusive)
+    val untilNanosecond = nanosecondGetter(endExclusive)
+
+    val second = if (fromSecond == untilSecond) {
+        fromSecond
+    } else {
+        random.nextLong(fromSecond, untilSecond)
+    }
+
+    val nanosecond = if (fromNanosecond == untilNanosecond) {
+        fromNanosecond
+    } else {
+        random.nextInt(fromNanosecond, untilNanosecond)
+    }
+
+    return creator(second, nanosecond)
+}
+
+internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomInternal(
+    random: Random,
+    creator: (second: Long, nanosecond: Int) -> T
+): T = randomInternal(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
 
 internal fun throwUnboundedIntervalException(): Nothing {
     throw UnsupportedOperationException(

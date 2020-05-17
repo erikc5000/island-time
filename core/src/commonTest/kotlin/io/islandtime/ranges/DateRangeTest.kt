@@ -184,6 +184,32 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `random() throws an exception when the range is empty`() {
+        assertFailsWith<NoSuchElementException> { DateRange.EMPTY.random() }
+    }
+
+    @Test
+    fun `random() throws an exception when the range is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { DateRange.UNBOUNDED.random() }
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the range is empty`() {
+        assertNull(DateRange.EMPTY.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the range is unbounded`() {
+        assertNull(DateRange.UNBOUNDED.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns a date within range`() {
+        val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.FEBRUARY, 20)
+        assertTrue { range.randomOrNull()!! in range }
+    }
+
+    @Test
     fun `length properties throw an exception when the range isn't bounded`() {
         listOf(
             DateRange.UNBOUNDED,
