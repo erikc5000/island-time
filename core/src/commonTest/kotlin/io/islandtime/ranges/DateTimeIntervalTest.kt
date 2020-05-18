@@ -110,14 +110,6 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a date-time within the interval`() {
-        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT
-        val end = Date(2019, Month.NOVEMBER, 2) at MIDNIGHT
-        val interval = start until end
-        assertTrue { interval.random() in interval }
-    }
-
-    @Test
     fun `random() throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { DateTimeInterval.EMPTY.random() }
     }
@@ -138,11 +130,33 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns a date-time within the interval`() {
-        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT
-        val end = start + 1.nanoseconds
-        val interval = start until end
-        assertTrue { interval.randomOrNull()!! in interval }
+    fun `random() and randomOrNull() return a date-time within the interval`() {
+        listOf(
+            Date(2019, Month.NOVEMBER, 1) at MIDNIGHT,
+            Date(2019, Month.NOVEMBER, 1) at Time(0, 0, 0, 1),
+            Date(2019, Month.NOVEMBER, 1) at Time.MAX
+        ).forEach { start ->
+            val interval = start until start + 1.nanoseconds
+            assertEquals(start, interval.random())
+            assertEquals(start, interval.randomOrNull())
+        }
+
+        listOf(
+            Date(2019, Month.NOVEMBER, 1) at MIDNIGHT,
+            Date(2019, Month.NOVEMBER, 1) at Time(0, 0, 0, 1),
+            Date(2019, Month.NOVEMBER, 1) at Time.MAX
+        ).forEach { start ->
+            listOf(
+                start + 1.nanoseconds,
+                start + 1.seconds,
+                start + 1.seconds + 1.nanoseconds,
+                start + 1.seconds + 999_999_999.nanoseconds
+            ).forEach { end ->
+                val interval = start until end
+                assertTrue { interval.random() in interval }
+                assertTrue { interval.randomOrNull()!! in interval }
+            }
+        }
     }
 
     @Test

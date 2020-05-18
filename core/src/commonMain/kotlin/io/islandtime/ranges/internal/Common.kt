@@ -2,6 +2,7 @@ package io.islandtime.ranges.internal
 
 import io.islandtime.DateTime
 import io.islandtime.base.TimePoint
+import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.TimeInterval
@@ -104,16 +105,18 @@ internal inline fun <T> TimeInterval<T>.randomInternal(
     val untilSecond = secondGetter(endExclusive)
     val untilNanosecond = nanosecondGetter(endExclusive)
 
-    val second = if (fromSecond == untilSecond) {
-        fromSecond
-    } else {
-        random.nextLong(fromSecond, untilSecond)
-    }
+    val second =
+        if (fromSecond == untilSecond) {
+            fromSecond
+        } else {
+            random.nextLong(fromSecond, if (untilNanosecond == 0) untilSecond else untilSecond + 1)
+        }
 
-    val nanosecond = if (fromNanosecond == untilNanosecond) {
-        fromNanosecond
-    } else {
-        random.nextInt(fromNanosecond, untilNanosecond)
+    val nanosecond = when {
+        fromSecond == untilSecond -> random.nextInt(fromNanosecond, untilNanosecond)
+        second == fromSecond -> random.nextInt(fromNanosecond, NANOSECONDS_PER_SECOND)
+        second == untilSecond -> random.nextInt(0, untilNanosecond)
+        else -> random.nextInt(0, NANOSECONDS_PER_SECOND)
     }
 
     return creator(second, nanosecond)
