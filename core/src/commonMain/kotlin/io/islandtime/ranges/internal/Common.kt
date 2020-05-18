@@ -105,21 +105,18 @@ internal inline fun <T> TimeInterval<T>.randomInternal(
     val untilSecond = secondGetter(endExclusive)
     val untilNanosecond = nanosecondGetter(endExclusive)
 
-    val second =
-        if (fromSecond == untilSecond) {
-            fromSecond
-        } else {
-            random.nextLong(fromSecond, if (untilNanosecond == 0) untilSecond else untilSecond + 1)
-        }
+    val randomSecond = getRandomSecond(random, fromSecond, untilSecond, untilNanosecond)
 
-    val nanosecond = when {
-        fromSecond == untilSecond -> random.nextInt(fromNanosecond, untilNanosecond)
-        second == fromSecond -> random.nextInt(fromNanosecond, NANOSECONDS_PER_SECOND)
-        second == untilSecond -> random.nextInt(0, untilNanosecond)
-        else -> random.nextInt(0, NANOSECONDS_PER_SECOND)
-    }
+    val randomNanosecond = getRandomNanosecond(
+        random,
+        randomSecond,
+        fromSecond,
+        fromNanosecond,
+        untilSecond,
+        untilNanosecond
+    )
 
-    return creator(second, nanosecond)
+    return creator(randomSecond, randomNanosecond)
 }
 
 internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomInternal(
@@ -131,4 +128,36 @@ internal fun throwUnboundedIntervalException(): Nothing {
     throw UnsupportedOperationException(
         "An interval cannot be represented as a period or duration unless it is bounded"
     )
+}
+
+private fun getRandomSecond(
+    random: Random,
+    fromSecond: Long,
+    untilSecond: Long,
+    untilNanosecond: Int
+): Long {
+    return if (fromSecond == untilSecond) {
+        fromSecond
+    } else {
+        random.nextLong(
+            fromSecond,
+            if (untilNanosecond == 0) untilSecond else untilSecond + 1
+        )
+    }
+}
+
+private fun getRandomNanosecond(
+    random: Random,
+    randomSecond: Long,
+    fromSecond: Long,
+    fromNanosecond: Int,
+    untilSecond: Long,
+    untilNanosecond: Int
+): Int {
+    return when {
+        fromSecond == untilSecond -> random.nextInt(fromNanosecond, untilNanosecond)
+        randomSecond == fromSecond -> random.nextInt(fromNanosecond, NANOSECONDS_PER_SECOND)
+        randomSecond == untilSecond -> random.nextInt(0, untilNanosecond)
+        else -> random.nextInt(0, NANOSECONDS_PER_SECOND)
+    }
 }
