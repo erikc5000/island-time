@@ -1,16 +1,12 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.MAX_INSTANT_STRING_LENGTH
-import io.islandtime.appendInstant
 import io.islandtime.base.DateTimeField
-import io.islandtime.measures.*
-import io.islandtime.endOfDayAt
-import io.islandtime.startOfDayAt
+import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.toInstant
+import io.islandtime.ranges.internal.random
+import io.islandtime.ranges.internal.randomOrNull
 import kotlin.random.Random
 
 /**
@@ -33,7 +29,8 @@ class InstantInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
+    override fun toString() =
+        buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
 
     companion object {
         /**
@@ -117,20 +114,39 @@ fun String.toInstantInterval(
 
 /**
  * Return a random instant within the interval using the default random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(): Instant = random(Random)
 
 /**
+ * Return a random instant within the interval using the default random number generator or `null`
+ * if the interval is empty or unbounded.
+ * @see InstantInterval.random
+ */
+fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
+
+/**
  * Return a random instant within the interval using the supplied random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(random: Random): Instant {
-    try {
-        return Instant.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecond, endExclusive.unixEpochSecond),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond)
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
+    return random(random) { second, nanosecond ->
+        Instant.fromUnixEpochSecond(second, nanosecond)
+    }
+}
+
+/**
+ * Return a random instant within the interval using the supplied random number generator or `null`
+ * if the interval is empty or unbounded.
+ * @see InstantInterval.random
+ */
+fun InstantInterval.randomOrNull(random: Random): Instant? {
+    return randomOrNull(random) { second, nanosecond ->
+        Instant.fromUnixEpochSecond(second, nanosecond)
     }
 }
 
