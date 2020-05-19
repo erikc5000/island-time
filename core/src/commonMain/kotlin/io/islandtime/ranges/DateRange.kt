@@ -1,15 +1,10 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.MAX_DATE_STRING_LENGTH
-import io.islandtime.appendDate
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
-import io.islandtime.monthsSinceYear0
 import io.islandtime.parser.*
-import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 import kotlin.random.nextLong
@@ -201,18 +196,47 @@ fun String.toDateRange(
 
 /**
  * Return a random date within the range using the default random number generator.
+ * @throws NoSuchElementException if the range is empty
+ * @throws UnsupportedOperationException if the range is unbounded
+ * @see DateRange.randomOrNull
  */
 fun DateRange.random(): Date = random(Random)
 
 /**
+ * Return a random date within the range using the default random number generator or `null` if the
+ * range is empty or unbounded.
+ * @see DateRange.random
+ */
+fun DateRange.randomOrNull(): Date? = randomOrNull(Random)
+
+/**
  * Return a random date within the range using the supplied random number generator.
+ * @throws NoSuchElementException if the range is empty
+ * @throws UnsupportedOperationException if the range is unbounded
+ * @see DateRange.randomOrNull
  */
 fun DateRange.random(random: Random): Date {
+    if (isUnbounded()) throwUnboundedIntervalException()
+
     try {
         val longRange = first.unixEpochDay..last.unixEpochDay
         return Date.fromUnixEpochDay(random.nextLong(longRange))
     } catch (e: IllegalArgumentException) {
         throw NoSuchElementException(e.message)
+    }
+}
+
+/**
+ * Return a random date within the range using the supplied random number generator or `null` if
+ * the range is empty or unbounded.
+ * @see DateRange.random
+ */
+fun DateRange.randomOrNull(random: Random): Date? {
+    return if (isEmpty() || isUnbounded()) {
+        null
+    } else {
+        val longRange = first.unixEpochDay..last.unixEpochDay
+        Date.fromUnixEpochDay(random.nextLong(longRange))
     }
 }
 
@@ -225,7 +249,7 @@ infix fun Date.until(to: Date) = DateRange(this, to - 1L.days)
  * Get the [Period] between two dates.
  */
 fun periodBetween(start: Date, endExclusive: Date): Period {
-    var totalMonths = endExclusive.monthsSinceYear0.toLong() - start.monthsSinceYear0
+    var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
     val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
 
     val days = when {

@@ -1,9 +1,13 @@
 package io.islandtime.ranges.internal
 
 import io.islandtime.DateTime
+import io.islandtime.base.TimePoint
+import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.TimeInterval
+import io.islandtime.ranges.TimePointInterval
+import kotlin.random.Random
 
 internal val MAX_INCLUSIVE_END_DATE_TIME = DateTime.MAX - 2.nanoseconds
 
@@ -94,4 +98,101 @@ internal fun throwUnboundedIntervalException(): Nothing {
     throw UnsupportedOperationException(
         "An interval cannot be represented as a period or duration unless it is bounded"
     )
+}
+
+internal inline fun <T> TimeInterval<T>.random(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T {
+    return when {
+        isUnbounded() -> throwUnboundedIntervalException()
+        isEmpty() -> throw NoSuchElementException("The interval is empty")
+        else -> generateRandom(random, secondGetter, nanosecondGetter, creator)
+    }
+}
+
+internal inline fun <T> TimeInterval<T>.randomOrNull(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T? {
+    return if (isEmpty() || isUnbounded()) {
+        null
+    } else {
+        generateRandom(random, secondGetter, nanosecondGetter, creator)
+    }
+}
+
+internal inline fun <T> TimeInterval<T>.generateRandom(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T {
+    val fromSecond = secondGetter(start)
+    val fromNanosecond = nanosecondGetter(start)
+    val untilSecond = secondGetter(endExclusive)
+    val untilNanosecond = nanosecondGetter(endExclusive)
+
+    val randomSecond = getRandomSecond(random, fromSecond, untilSecond, untilNanosecond)
+
+    val randomNanosecond = getRandomNanosecond(
+        random,
+        randomSecond,
+        fromSecond,
+        fromNanosecond,
+        untilSecond,
+        untilNanosecond
+    )
+
+    return creator(randomSecond, randomNanosecond)
+}
+
+internal inline fun <T : TimePoint<T>> TimePointInterval<T>.random(
+    random: Random,
+    creator: (second: Long, nanosecond: Int) -> T
+): T {
+    return random(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
+}
+
+internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomOrNull(
+    random: Random,
+    creator: (second: Long, nanosecond: Int) -> T
+): T? {
+    return randomOrNull(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
+}
+
+private fun getRandomSecond(
+    random: Random,
+    fromSecond: Long,
+    untilSecond: Long,
+    untilNanosecond: Int
+): Long {
+    return if (fromSecond == untilSecond) {
+        fromSecond
+    } else {
+        random.nextLong(
+            fromSecond,
+            if (untilNanosecond == 0) untilSecond else untilSecond + 1
+        )
+    }
+}
+
+private fun getRandomNanosecond(
+    random: Random,
+    randomSecond: Long,
+    fromSecond: Long,
+    fromNanosecond: Int,
+    untilSecond: Long,
+    untilNanosecond: Int
+): Int {
+    return when {
+        fromSecond == untilSecond -> random.nextInt(fromNanosecond, untilNanosecond)
+        randomSecond == fromSecond -> random.nextInt(fromNanosecond, NANOSECONDS_PER_SECOND)
+        randomSecond == untilSecond -> random.nextInt(0, untilNanosecond)
+        else -> random.nextInt(0, NANOSECONDS_PER_SECOND)
+    }
 }

@@ -209,12 +209,12 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `adjustedTo() changes the offset while preserving the instant represented by it`() {
         assertEquals(
-            Time(7, 0) at UtcOffset.MAX,
-            Time(1, 0).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MAX)
+            Time(7, 0) at UtcOffset.MIN,
+            Time(1, 0).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MIN)
         )
         assertEquals(
-            Time(19, 1) at UtcOffset.MIN,
-            Time(1, 1).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MIN)
+            Time(19, 1) at UtcOffset.MAX,
+            Time(1, 1).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MAX)
         )
     }
 

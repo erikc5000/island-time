@@ -69,7 +69,11 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
         assertFalse { Instant(3L.days.inSeconds, (-1).nanoseconds) in start..end }
         assertFalse { Instant((-3L).days.inSeconds, 1.nanoseconds) in start..end }
         assertFalse {
-            OffsetDateTime.fromSecondsSinceUnixEpoch(2L.days.inSeconds, 1.nanoseconds, UtcOffset.ZERO) in start..end
+            OffsetDateTime.fromSecondsSinceUnixEpoch(
+                2L.days.inSeconds,
+                1.nanoseconds,
+                UtcOffset.ZERO
+            ) in start..end
         }
     }
 
@@ -140,9 +144,18 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
             Instant((-1L).days.inSeconds) until Instant(1L.days.inSeconds),
             "1969-12-31T00:00Z/1970-01-02T00:00Z".toInstantInterval()
         )
-        assertEquals(Instant.MIN until Instant(1L.days.inSeconds), "../1970-01-02T00:00Z".toInstantInterval())
-        assertEquals(Instant((-1L).days.inSeconds) until Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
-        assertEquals(Instant((-1L).days.inSeconds)..Instant.MAX, "1969-12-31T00:00Z/..".toInstantInterval())
+        assertEquals(
+            Instant.MIN until Instant(1L.days.inSeconds),
+            "../1970-01-02T00:00Z".toInstantInterval()
+        )
+        assertEquals(
+            Instant((-1L).days.inSeconds) until Instant.MAX,
+            "1969-12-31T00:00Z/..".toInstantInterval()
+        )
+        assertEquals(
+            Instant((-1L).days.inSeconds)..Instant.MAX,
+            "1969-12-31T00:00Z/..".toInstantInterval()
+        )
         assertEquals(InstantInterval.UNBOUNDED, "../..".toInstantInterval())
     }
 
@@ -151,6 +164,38 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
         val range = Instant((-2L).days.inSeconds)..Instant(2L.days.inSeconds)
         val randomInstant = range.random()
         assertTrue { randomInstant in range }
+    }
+
+    @Test
+    fun `random() returns a instant within the interval`() {
+        val interval = Instant((-2L).days.inSeconds) until Instant(2L.days.inSeconds)
+        assertTrue { interval.random() in interval }
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is empty`() {
+        assertFailsWith<NoSuchElementException> { InstantInterval.EMPTY.random() }
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.random() }
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is empty`() {
+        assertNull(InstantInterval.EMPTY.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is unbounded`() {
+        assertNull(InstantInterval.UNBOUNDED.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns a date within the interval`() {
+        val interval = Instant((2L).days.inSeconds)..Instant(2L.days.inSeconds)
+        assertTrue { interval.randomOrNull()!! in interval }
     }
 
     @Test
@@ -188,7 +233,10 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `convert unbounded DateRange to InstantInterval`() {
-        assertEquals(InstantInterval.UNBOUNDED, DateRange.UNBOUNDED.toInstantIntervalAt(TimeZone.UTC))
+        assertEquals(
+            InstantInterval.UNBOUNDED,
+            DateRange.UNBOUNDED.toInstantIntervalAt(TimeZone.UTC)
+        )
     }
 
     @Test
@@ -225,19 +273,24 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `convert unbounded OffsetDateTimeInterval to InstantInterval`() {
-        assertEquals(InstantInterval.UNBOUNDED, OffsetDateTimeInterval.UNBOUNDED.asInstantInterval())
+        assertEquals(
+            InstantInterval.UNBOUNDED,
+            OffsetDateTimeInterval.UNBOUNDED.asInstantInterval()
+        )
     }
 
     @Test
     fun `convert half-bounded OffsetDateTimeInterval to InstantInterval`() {
-        val offsetDateTimeInterval1 = "1968-10-05T05:00-05:00".toOffsetDateTime() until OffsetDateTime.MAX
+        val offsetDateTimeInterval1 =
+            "1968-10-05T05:00-05:00".toOffsetDateTime() until OffsetDateTime.MAX
 
         assertEquals(
             "1968-10-05T10:00Z".toInstant() until Instant.MAX,
             offsetDateTimeInterval1.asInstantInterval()
         )
 
-        val offsetDateTimeInterval2 = OffsetDateTime.MIN until "2000-01-03T10:00-05:00".toOffsetDateTime()
+        val offsetDateTimeInterval2 =
+            OffsetDateTime.MIN until "2000-01-03T10:00-05:00".toOffsetDateTime()
 
         assertEquals(
             Instant.MIN until "2000-01-03T15:00Z".toInstant(),
@@ -479,7 +532,10 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     fun `nanosecondsBetween() returns zero when both instants are the same`() {
         assertEquals(
             0L.nanoseconds,
-            nanosecondsBetween(Instant(1L.seconds, 1.nanoseconds), Instant(1L.seconds, 1.nanoseconds))
+            nanosecondsBetween(
+                Instant(1L.seconds, 1.nanoseconds),
+                Instant(1L.seconds, 1.nanoseconds)
+            )
         )
     }
 
