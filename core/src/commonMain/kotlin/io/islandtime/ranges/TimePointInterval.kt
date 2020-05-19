@@ -25,7 +25,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
 
     override fun equals(other: Any?): Boolean {
         return other is TimePointInterval<*> && (isEmpty() && other.isEmpty() ||
-            ((hasUnboundedStart() && other.hasUnboundedStart()) ||  _start == other._start) &&
+            ((hasUnboundedStart() && other.hasUnboundedStart()) || _start == other._start) &&
             ((hasUnboundedEnd() && other.hasUnboundedEnd()) || _endExclusive == other._endExclusive))
     }
 
@@ -139,7 +139,8 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
  */
 fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpoch - start.secondsSinceUnixEpoch
-    val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
+    val nanoDiff =
+        endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
     return durationOf(secondDiff, nanoDiff)
 }
 
@@ -181,7 +182,10 @@ fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): 
  * Get the number of whole milliseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> millisecondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongMilliseconds {
+fun <T1, T2> millisecondsBetween(
+    start: TimePoint<T1>,
+    endExclusive: TimePoint<T2>
+): LongMilliseconds {
     return millisecondsBetween(
         start.secondsSinceUnixEpoch,
         start.nanoOfSecondsSinceUnixEpoch,
@@ -194,7 +198,10 @@ fun <T1, T2> millisecondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T
  * Get the number of whole microseconds between two time points.
  *  @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> microsecondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongMicroseconds {
+fun <T1, T2> microsecondsBetween(
+    start: TimePoint<T1>,
+    endExclusive: TimePoint<T2>
+): LongMicroseconds {
     return microsecondsBetween(
         start.secondsSinceUnixEpoch,
         start.nanoOfSecondsSinceUnixEpoch,
@@ -207,7 +214,10 @@ fun <T1, T2> microsecondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T
  * Get the number of nanoseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> nanosecondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongNanoseconds {
+fun <T1, T2> nanosecondsBetween(
+    start: TimePoint<T1>,
+    endExclusive: TimePoint<T2>
+): LongNanoseconds {
     return nanosecondsBetween(
         start.secondsSinceUnixEpoch,
         start.nanoOfSecondsSinceUnixEpoch,

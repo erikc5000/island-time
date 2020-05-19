@@ -3,14 +3,8 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
-import io.islandtime.endOfDayAt
-import io.islandtime.startOfDayAt
 import io.islandtime.parser.*
-import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserFieldResolutionException
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
-import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
+import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
@@ -31,7 +25,8 @@ class ZonedDateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
+    override fun toString() =
+        buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
 
     /**
      * Convert the interval into a [Period] of the same length.
@@ -140,7 +135,8 @@ class ZonedDateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+fun String.toZonedDateTimeInterval() =
+    toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to a [ZonedDateTimeInterval] using a specific parser.
@@ -160,13 +156,15 @@ fun String.toZonedDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.start
-        else -> results[0].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+        else -> results[0].toZonedDateTime()
+            ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+        else -> results[1].toZonedDateTime()
+            ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
     }
 
     return when {
@@ -177,22 +175,42 @@ fun String.toZonedDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator.
+ * Return a random date-time within the interval using the default random number generator. The
+ * zone of the start date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see ZonedDateTimeInterval.randomOrNull
  */
 fun ZonedDateTimeInterval.random(): ZonedDateTime = random(Random)
 
 /**
- * Return a random date-time within the interval using the supplied random number generator.
+ * Return a random date-time within the interval using the default random number generator or
+ * `null` if the interval is empty or unbounded. The zone of the start date-time will be used.
+ * @see ZonedDateTimeInterval.random
+ */
+fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator. The
+ * zone of the start date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see ZonedDateTimeInterval.randomOrNull
  */
 fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
-    try {
-        return ZonedDateTime.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecond, endExclusive.unixEpochSecond),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
-            start.zone
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
+    return random(random) { second, nanosecond ->
+        ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
+    }
+}
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator or
+ * `null` if the interval is empty or unbounded. The zone of the start date-time will be used.
+ * @see ZonedDateTimeInterval.random
+ */
+fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
+    return randomOrNull(random) { second, nanosecond ->
+        ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
     }
 }
 
