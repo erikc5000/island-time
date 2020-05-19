@@ -4,10 +4,7 @@ import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
-import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.randomInternal
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
+import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
@@ -201,10 +198,8 @@ fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
  * @see ZonedDateTimeInterval.randomOrNull
  */
 fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
-    return when {
-        isUnbounded() -> throwUnboundedIntervalException()
-        isEmpty() -> throw NoSuchElementException()
-        else -> randomInternal(random)
+    return random(random) { second, nanosecond ->
+        ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
     }
 }
 
@@ -214,10 +209,8 @@ fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
  * @see ZonedDateTimeInterval.random
  */
 fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
-    return if (isEmpty() || isUnbounded()) {
-        null
-    } else {
-        randomInternal(random)
+    return randomOrNull(random) { second, nanosecond ->
+        ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
     }
 }
 
@@ -295,13 +288,4 @@ fun weeksBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): LongWeeks {
  */
 fun daysBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): LongDays {
     return daysBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
-
-private fun ZonedDateTimeInterval.randomInternal(random: Random): ZonedDateTime {
-    return randomInternal(
-        random,
-        creator = { second, nanosecond ->
-            ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
-        }
-    )
 }

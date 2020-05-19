@@ -5,8 +5,8 @@ import io.islandtime.base.DateTimeField
 import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.randomInternal
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
+import io.islandtime.ranges.internal.random
+import io.islandtime.ranges.internal.randomOrNull
 import kotlin.random.Random
 
 /**
@@ -29,7 +29,8 @@ class InstantInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
+    override fun toString() =
+        buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
 
     companion object {
         /**
@@ -133,10 +134,8 @@ fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
  * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(random: Random): Instant {
-    return when {
-        isUnbounded() -> throwUnboundedIntervalException()
-        isEmpty() -> throw NoSuchElementException()
-        else -> randomInternal(random)
+    return random(random) { second, nanosecond ->
+        Instant.fromUnixEpochSecond(second, nanosecond)
     }
 }
 
@@ -146,10 +145,8 @@ fun InstantInterval.random(random: Random): Instant {
  * @see InstantInterval.random
  */
 fun InstantInterval.randomOrNull(random: Random): Instant? {
-    return if (isEmpty() || isUnbounded()) {
-        null
-    } else {
-        randomInternal(random)
+    return randomOrNull(random) { second, nanosecond ->
+        Instant.fromUnixEpochSecond(second, nanosecond)
     }
 }
 
@@ -202,11 +199,4 @@ fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval {
             startInstant until endInstant
         }
     }
-}
-
-private fun InstantInterval.randomInternal(random: Random): Instant {
-    return randomInternal(
-        random,
-        creator = { second, nanosecond -> Instant.fromUnixEpochSecond(second, nanosecond) }
-    )
 }

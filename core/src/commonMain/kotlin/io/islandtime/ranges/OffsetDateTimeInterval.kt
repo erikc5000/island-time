@@ -4,10 +4,7 @@ import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
-import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.randomInternal
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
+import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
@@ -189,10 +186,8 @@ fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random
  * @see OffsetDateTimeInterval.randomOrNull
  */
 fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
-    return when {
-        isUnbounded() -> throwUnboundedIntervalException()
-        isEmpty() -> throw NoSuchElementException()
-        else -> randomInternal(random)
+    return random(random) { second, nanosecond ->
+        OffsetDateTime.fromUnixEpochSecond(second, nanosecond, start.offset)
     }
 }
 
@@ -202,10 +197,8 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
  * @see OffsetDateTimeInterval.random
  */
 fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
-    return if (isEmpty() || isUnbounded()) {
-        null
-    } else {
-        randomInternal(random)
+    return randomOrNull(random) { second, nanosecond ->
+        OffsetDateTime.fromUnixEpochSecond(second, nanosecond, start.offset)
     }
 }
 
@@ -257,13 +250,4 @@ fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongDays {
 private fun adjustedEndDateTime(start: OffsetDateTime, endExclusive: OffsetDateTime): DateTime {
     val offsetDelta = start.offset.totalSeconds - endExclusive.offset.totalSeconds
     return endExclusive.dateTime + offsetDelta
-}
-
-private fun OffsetDateTimeInterval.randomInternal(random: Random): OffsetDateTime {
-    return randomInternal(
-        random,
-        creator = { second, nanosecond ->
-            OffsetDateTime.fromUnixEpochSecond(second, nanosecond, start.offset)
-        }
-    )
 }

@@ -94,7 +94,39 @@ internal inline fun <T> TimeInterval<T>.buildIsoString(
     }
 }
 
-internal inline fun <T> TimeInterval<T>.randomInternal(
+internal fun throwUnboundedIntervalException(): Nothing {
+    throw UnsupportedOperationException(
+        "An interval cannot be represented as a period or duration unless it is bounded"
+    )
+}
+
+internal inline fun <T> TimeInterval<T>.random(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T {
+    return when {
+        isUnbounded() -> throwUnboundedIntervalException()
+        isEmpty() -> throw NoSuchElementException("The interval is empty")
+        else -> generateRandom(random, secondGetter, nanosecondGetter, creator)
+    }
+}
+
+internal inline fun <T> TimeInterval<T>.randomOrNull(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T? {
+    return if (isEmpty() || isUnbounded()) {
+        null
+    } else {
+        generateRandom(random, secondGetter, nanosecondGetter, creator)
+    }
+}
+
+internal inline fun <T> TimeInterval<T>.generateRandom(
     random: Random,
     secondGetter: (T) -> Long,
     nanosecondGetter: (T) -> Int,
@@ -119,15 +151,18 @@ internal inline fun <T> TimeInterval<T>.randomInternal(
     return creator(randomSecond, randomNanosecond)
 }
 
-internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomInternal(
+internal inline fun <T : TimePoint<T>> TimePointInterval<T>.random(
     random: Random,
     creator: (second: Long, nanosecond: Int) -> T
-): T = randomInternal(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
+): T {
+    return random(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
+}
 
-internal fun throwUnboundedIntervalException(): Nothing {
-    throw UnsupportedOperationException(
-        "An interval cannot be represented as a period or duration unless it is bounded"
-    )
+internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomOrNull(
+    random: Random,
+    creator: (second: Long, nanosecond: Int) -> T
+): T? {
+    return randomOrNull(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
 }
 
 private fun getRandomSecond(

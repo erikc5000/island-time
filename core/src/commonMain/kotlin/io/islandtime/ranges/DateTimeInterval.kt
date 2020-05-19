@@ -297,11 +297,14 @@ fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNull(Random)
  * @see DateTimeInterval.randomOrNull
  */
 fun DateTimeInterval.random(random: Random): DateTime {
-    return when {
-        isUnbounded() -> throwUnboundedIntervalException()
-        isEmpty() -> throw NoSuchElementException()
-        else -> randomInternal(random)
-    }
+    return random(
+        random,
+        secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.unixEpochNanoOfSecond },
+        creator = { second, nanosecond ->
+            DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO)
+        }
+    )
 }
 
 /**
@@ -310,11 +313,14 @@ fun DateTimeInterval.random(random: Random): DateTime {
  * @see DateTimeInterval.random
  */
 fun DateTimeInterval.randomOrNull(random: Random): DateTime? {
-    return if (isEmpty() || isUnbounded()) {
-        null
-    } else {
-        randomInternal(random)
-    }
+    return randomOrNull(
+        random,
+        secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.unixEpochNanoOfSecond },
+        creator = { second, nanosecond ->
+            DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO)
+        }
+    )
 }
 
 /**
@@ -459,15 +465,4 @@ internal fun adjustedEndDate(start: DateTime, endExclusive: DateTime): Date {
         endExclusive.date < start.date && endExclusive.time > start.time -> endExclusive.date + 1.days
         else -> endExclusive.date
     }
-}
-
-private fun DateTimeInterval.randomInternal(random: Random): DateTime {
-    return randomInternal(
-        random,
-        secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
-        nanosecondGetter = { it.unixEpochNanoOfSecond },
-        creator = { second, nanosecond ->
-            DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO)
-        }
-    )
 }
