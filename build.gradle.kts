@@ -8,7 +8,7 @@ buildscript {
     }
 
     dependencies {
-        classpath(Libs.atomicfu)
+        classpath(Libs.AtomicFU.gradlePlugin)
     }
 }
 
