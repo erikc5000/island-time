@@ -28,10 +28,10 @@ This project publishes Gradle metadata, so you can use the common artifact and i
 Common: _(Kotlin Gradle DSL)_
 ```
 dependencies {
-    implementation("io.islandtime:core:0.2.1")
+    implementation("io.islandtime:core:0.2.2")
 
     // Optional: A set of serializers for use with kotlinx.serialization
-    implementation("io.islandtime:serialization-extensions:0.2.1")
+    implementation("io.islandtime:serialization-extensions:0.2.2")
 }
 ```
 
@@ -42,11 +42,11 @@ Android: _(Kotlin Gradle DSL)_
 dependencies {
     // The following is only necessary if using a version of Android Studio
     // prior to 4.0 or if core library desugaring is turned off.
-    implementation("io.islandtime:threetenabp-extensions:0.2.1")
+    implementation("io.islandtime:threetenabp-extensions:0.2.2")
 
     // Optional: A set of parcelers for use with the @Parcelize feature provided
     // by the Kotlin Android Extensions
-    implementation("io.islandtime:parcelize-extensions:0.2.1")
+    implementation("io.islandtime:parcelize-extensions:0.2.2")
 }
 ```
 
@@ -109,7 +109,7 @@ Some notable differences from java.time:
 
 ##### `OffsetTime`, `OffsetDateTime`, and `ZonedDateTime` don't implement `Comparable`
 
-In java.time, using the `<` or `>` to compare objects of any of these classes probably doesn't do what you'd expect. In the interest of being "consistent with equals", comparison is based on a natural ordering that looks at the instant first, but then other properties of these objects such as the time or date-time to provide a fully deterministic ordering in the face of differing offsets and regions. You need to use `isBefore()` or `isAfter()` to compare based solely on timeline order and failing to do so can lead to subtle bugs -- say if using them in a `ClosedRange`.
+In java.time, using the `<` or `>` to compare objects of these classes probably doesn't do what you'd expect. In the interest of being "consistent with equals", comparison is based on a natural ordering that looks at the instant first, but then other properties of these objects such as the time or date-time to provide a fully deterministic ordering in the face of differing offsets and regions. You need to use `isBefore()` or `isAfter()` to compare based solely on timeline order and failing to do so can lead to subtle bugs -- say if using them in a `ClosedRange`.
 
 For that reason, Island Time doesn't implement `Comparable` for these classes, instead requiring you to be explicit about what order you want when it comes to sorting or use of sorted containers. The companion objects have `TIMELINE_ORDER` and `DEFAULT_SORT_ORDER` comparators available. Island Time does, however, provide `compareTo` operators that are based on timeline order for convenience. This may change since it still creates some "inconsistent with equals" issues.
 
