@@ -156,15 +156,13 @@ fun String.toZonedDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.start
-        else -> results[0].toZonedDateTime()
-            ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+        else -> results[0].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> ZonedDateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toZonedDateTime()
-            ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
+        else -> results[1].toZonedDateTime() ?: throwParserFieldResolutionException<ZonedDateTimeInterval>(this)
     }
 
     return when {
@@ -175,8 +173,8 @@ fun String.toZonedDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator. The
- * zone of the start date-time will be used.
+ * Return a random date-time within the interval using the default random number generator. The zone of the start
+ * date-time will be used.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see ZonedDateTimeInterval.randomOrNull
@@ -184,15 +182,15 @@ fun String.toZonedDateTimeInterval(
 fun ZonedDateTimeInterval.random(): ZonedDateTime = random(Random)
 
 /**
- * Return a random date-time within the interval using the default random number generator or
- * `null` if the interval is empty or unbounded. The zone of the start date-time will be used.
+ * Return a random date-time within the interval using the default random number generator or `null` if the interval is
+ * empty or unbounded. The zone of the start date-time will be used.
  * @see ZonedDateTimeInterval.random
  */
 fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
 
 /**
- * Return a random date-time within the interval using the supplied random number generator. The
- * zone of the start date-time will be used.
+ * Return a random date-time within the interval using the supplied random number generator. The zone of the start
+ * date-time will be used.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see ZonedDateTimeInterval.randomOrNull
@@ -204,8 +202,8 @@ fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
 }
 
 /**
- * Return a random date-time within the interval using the supplied random number generator or
- * `null` if the interval is empty or unbounded. The zone of the start date-time will be used.
+ * Return a random date-time within the interval using the supplied random number generator or `null` if the interval is
+ * empty or unbounded. The zone of the start date-time will be used.
  * @see ZonedDateTimeInterval.random
  */
 fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
