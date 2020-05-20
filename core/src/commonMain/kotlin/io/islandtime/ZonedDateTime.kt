@@ -3,7 +3,6 @@ package io.islandtime
 import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.ZonedDateTimeInterval
 
 /**
@@ -561,7 +560,12 @@ fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLo
 fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(dateTime, zone)
 
 /**
- * Get the [ZonedDateTime] corresponding to the local date and time in a particular time zone.
+ * Combine an instant with a time zone to create a [ZonedDateTime].
+ */
+infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
+
+/**
+ * Combine a local date and time with a time zone to create a [ZonedDateTime].
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
@@ -570,7 +574,7 @@ fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(
 infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
 
 /**
- * The [ZonedDateTime] at the start of this date in a particular time zone, taking into any account daylight savings
+ * The [ZonedDateTime] at the start of this date in a particular time zone, taking into account any daylight savings
  * transitions.
  */
 fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
@@ -585,7 +589,8 @@ fun Date.startOfDayAt(zone: TimeZone): ZonedDateTime {
 }
 
 /**
- * The [ZonedDateTime] at the last representable instant of this date in a particular time zone.
+ * The [ZonedDateTime] at the last representable instant of this date in a particular time zone, taking into account any
+ * daylight savings transitions.
  */
 fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
     val dateTime = this at Time.MAX
@@ -598,25 +603,13 @@ fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
         val transition = rules.transitionAt(dateTime)
 
         if (validOffsets.isEmpty()) {
-            ZonedDateTime.create(
-                transition!!.dateTimeBefore,
-                transition.offsetBefore,
-                zone
-            )
+            ZonedDateTime.create(transition!!.dateTimeBefore, transition.offsetBefore, zone)
         } else {
             ZonedDateTime.create(dateTime, transition!!.offsetAfter, zone)
         }
     }
 }
 
-/**
- * Get the [ZonedDateTime] corresponding to a local date, time, and offset in a particular time zone. The offset
- * will be preserved if it is valid based on the rules of the time zone.
- *
- * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
- * (meaning the local time exists twice), the earlier offset will be used.
- */
 @Deprecated(
     "Renamed to 'dateTimeAt'.",
     ReplaceWith("this.dateTimeAt(zone)"),
@@ -636,10 +629,6 @@ fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
     return ZonedDateTime.fromInstant(dateTime, offset, zone)
 }
 
-/**
- * Get the [ZonedDateTime] corresponding to the same instant represented by an [OffsetDateTime] in a particular
- * time zone
- */
 @Deprecated(
     "Renamed to 'instantAt'.",
     ReplaceWith("this.instantAt(zone)"),
@@ -668,11 +657,6 @@ fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
 }
 
 /**
- * Get the [ZonedDateTime] representing an instant in a particular time zone.
- */
-infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
-
-/**
  * Convert a string to a [ZonedDateTime].
  *
  * The string is assumed to be a complete ISO-8601 date and time representation in extended format, optionally including
@@ -681,7 +665,7 @@ infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpo
  * The output of [ZonedDateTime.toString] can be safely parsed using this method.
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date-time is invalid
  */
 fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME)
 
@@ -691,7 +675,7 @@ fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONE
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date-time is invalid
  */
 fun String.toZonedDateTime(
     parser: DateTimeParser,

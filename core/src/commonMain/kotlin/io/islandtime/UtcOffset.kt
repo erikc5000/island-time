@@ -134,12 +134,23 @@ fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
 fun IntSeconds.asUtcOffset() = UtcOffset(this)
 
 /**
- * Create a [UtcOffset] from an ISO-8601 time shift string in extended format.
+ * Convert a string to a [UtcOffset].
+ *
+ * The string is assumed to be an ISO-8601 UTC offset representation in extended format. For example, `Z`, `+05`, or
+ * `-04:30`. The output of [UtcOffset.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed UTC offset is invalid
  */
 fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
 
 /**
- * Create a [UtcOffset] from a string using a specific parser.
+ * Convert a string to a [UtcOffset] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed UTC offset is invalid
  */
 fun String.toUtcOffset(
     parser: DateTimeParser,

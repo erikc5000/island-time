@@ -3,7 +3,6 @@ package io.islandtime
 import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
 
 /**
@@ -368,17 +367,21 @@ class OffsetDateTime(
     }
 }
 
+/**
+ * Combine a local date and time with a UTC offset to create an [OffsetDateTime].
+ */
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
-infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
 
 /**
- * Convert to an [OffsetDateTime] with the same date, time of day, and offset.
- *
- * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
- * database differences between systems, making it better suited for use cases involving persistence or network
- * transfer.
+ * Combine a local date with a time and UTC offset to create an [OffsetDateTime].
  */
+infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
+
+/**
+ * Combine an instant with a UTC offset to create an [OffsetDateTime].
+ */
+infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
+
 @Deprecated(
     "Use the 'offsetDateTime' property on ZonedDateTime instead.",
     ReplaceWith("this.offsetDateTime"),
@@ -386,8 +389,27 @@ infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offse
 )
 fun ZonedDateTime.asOffsetDateTime() = offsetDateTime
 
+/**
+ * Convert a string to an [OffsetDateTime].
+ *
+ * The string is assumed to be an ISO-8601 date-time with the UTC offset in extended format. For example,
+ * `2019-05-30T02:30+01:00`. The output of [OffsetDateTime.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed date-time or offset is invalid
+ */
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
+/**
+ * Convert a string to an [OffsetDateTime] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * Any custom parser must be capable of supplying the fields necessary to resolve a [Date], [Time] and [UtcOffset].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed date-time or offset is invalid
+ */
 fun String.toOffsetDateTime(
     parser: DateTimeParser,
     settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT

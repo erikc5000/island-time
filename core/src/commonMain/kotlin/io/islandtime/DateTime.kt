@@ -3,7 +3,6 @@ package io.islandtime
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
 import io.islandtime.ranges.DateTimeInterval
 
 /**
@@ -174,9 +173,9 @@ class DateTime(
             copy(date = date + months)
         }
     }
-    
+
     operator fun plus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked)
-    
+
     operator fun plus(weeks: LongWeeks): DateTime {
         return if (weeks.value == 0L) {
             this
@@ -344,7 +343,7 @@ class DateTime(
             copy(date = date - months)
         }
     }
-    
+
     operator fun minus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
 
     operator fun minus(weeks: LongWeeks): DateTime {
@@ -648,13 +647,25 @@ val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
 val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 
 /**
- * Parse a string in ISO-8601 extended calendar date format into a [DateTime] -- for example, "2019-08-22T18:00" or
- * "2019-08-22 18:00:30.123456789"
+ * Convert a string to a [DateTime].
+ *
+ * The string is assumed to be an ISO-8601 date-time representation in extended format. For example, `2019-08-22T18:00`
+ * or `2019-08-22 18:00:30.123456789`. The output of [DateTime.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed date-time is invalid
  */
 fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
 
 /**
- * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the necessary fields
+ * Convert a string to a [DateTime] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * Any custom parser must be capable of supplying the fields necessary to resolve both a [Date] and [Time].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed date-time is invalid
  */
 fun String.toDateTime(
     parser: DateTimeParser,
