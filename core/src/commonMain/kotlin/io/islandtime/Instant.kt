@@ -307,7 +307,7 @@ fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date or time is invalid
  */
 fun String.toInstant(
     parser: DateTimeParser,
@@ -320,7 +320,7 @@ fun String.toInstant(
 private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
 
 internal fun DateTimeParseResult.toInstant(): Instant? {
-    // FIXME: Require the year field here for now and make it fits within DateTime's supported range
+    // FIXME: Require the year field here for now and make it fit within DateTime's supported range
     val parsedYear = fields[DateTimeField.YEAR] ?: return null
 
     fields[DateTimeField.YEAR] = parsedYear % 10_000
@@ -353,7 +353,7 @@ internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
     }
 }
 
-internal inline fun <T> withComponentizedSecondOfUnixEpoch(
+private inline fun <T> withComponentizedSecondOfUnixEpoch(
     secondOfUnixEpoch: Long,
     block: (year: Int, monthNumber: Int, dayOfMonth: Int, hour: Int, minute: Int, second: Int) -> T
 ): T {

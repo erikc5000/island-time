@@ -244,7 +244,7 @@ fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(
 fun NSTimeZone.toIslandUtcOffset(): UtcOffset = throw UnsupportedOperationException("Should not be called")
 
 /**
- * Convert an `NSTimeZone` to an Island Time [UtcOffset] with the same shift from UTC at the provided date.
+ * Convert an `NSTimeZone` to an Island Time [UtcOffset] at the provided date.
  */
 fun NSTimeZone.toIslandUtcOffsetAt(date: NSDate): UtcOffset {
     return secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
@@ -257,7 +257,6 @@ fun NSTimeZone.toIslandTimeZone(): TimeZone = name.toTimeZone()
 
 /**
  * Convert an Island Time [TimeZone] to an `NSTimeZone`.
- *
  * @throws TimeZoneRulesException if the identifier isn't recognized as valid for an `NSTimeZone`
  */
 fun TimeZone.toNSTimeZone(): NSTimeZone = toNSTimeZoneOrNull()
