@@ -126,31 +126,6 @@ internal inline fun <T> TimeInterval<T>.randomOrNull(
     }
 }
 
-internal inline fun <T> TimeInterval<T>.generateRandom(
-    random: Random,
-    secondGetter: (T) -> Long,
-    nanosecondGetter: (T) -> Int,
-    creator: (second: Long, nanosecond: Int) -> T
-): T {
-    val fromSecond = secondGetter(start)
-    val fromNanosecond = nanosecondGetter(start)
-    val untilSecond = secondGetter(endExclusive)
-    val untilNanosecond = nanosecondGetter(endExclusive)
-
-    val randomSecond = getRandomSecond(random, fromSecond, untilSecond, untilNanosecond)
-
-    val randomNanosecond = getRandomNanosecond(
-        random,
-        randomSecond,
-        fromSecond,
-        fromNanosecond,
-        untilSecond,
-        untilNanosecond
-    )
-
-    return creator(randomSecond, randomNanosecond)
-}
-
 internal inline fun <T : TimePoint<T>> TimePointInterval<T>.random(
     random: Random,
     creator: (second: Long, nanosecond: Int) -> T
@@ -165,7 +140,32 @@ internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomOrNull(
     return randomOrNull(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
 }
 
-private fun getRandomSecond(
+private inline fun <T> TimeInterval<T>.generateRandom(
+    random: Random,
+    secondGetter: (T) -> Long,
+    nanosecondGetter: (T) -> Int,
+    creator: (second: Long, nanosecond: Int) -> T
+): T {
+    val fromSecond = secondGetter(start)
+    val fromNanosecond = nanosecondGetter(start)
+    val untilSecond = secondGetter(endExclusive)
+    val untilNanosecond = nanosecondGetter(endExclusive)
+
+    val randomSecond = generateRandomSecond(random, fromSecond, untilSecond, untilNanosecond)
+
+    val randomNanosecond = generateRandomNanosecond(
+        random,
+        randomSecond,
+        fromSecond,
+        fromNanosecond,
+        untilSecond,
+        untilNanosecond
+    )
+
+    return creator(randomSecond, randomNanosecond)
+}
+
+private fun generateRandomSecond(
     random: Random,
     fromSecond: Long,
     untilSecond: Long,
@@ -174,14 +174,11 @@ private fun getRandomSecond(
     return if (fromSecond == untilSecond) {
         fromSecond
     } else {
-        random.nextLong(
-            fromSecond,
-            if (untilNanosecond == 0) untilSecond else untilSecond + 1
-        )
+        random.nextLong(fromSecond, if (untilNanosecond == 0) untilSecond else untilSecond + 1)
     }
 }
 
-private fun getRandomNanosecond(
+private fun generateRandomNanosecond(
     random: Random,
     randomSecond: Long,
     fromSecond: Long,
