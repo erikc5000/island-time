@@ -61,8 +61,7 @@ class DateRange(
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is DateRange && (isEmpty() && other.isEmpty() ||
-            first == other.first && last == other.last)
+        return other is DateRange && (isEmpty() && other.isEmpty() || first == other.first && last == other.last)
     }
 
     override fun hashCode(): Int {
@@ -203,8 +202,8 @@ fun String.toDateRange(
 fun DateRange.random(): Date = random(Random)
 
 /**
- * Return a random date within the range using the default random number generator or `null` if the
- * range is empty or unbounded.
+ * Return a random date within the range using the default random number generator or `null` if the range is empty or
+ * unbounded.
  * @see DateRange.random
  */
 fun DateRange.randomOrNull(): Date? = randomOrNull(Random)
@@ -227,8 +226,8 @@ fun DateRange.random(random: Random): Date {
 }
 
 /**
- * Return a random date within the range using the supplied random number generator or `null` if
- * the range is empty or unbounded.
+ * Return a random date within the range using the supplied random number generator or `null` if the range is empty or
+ * unbounded.
  * @see DateRange.random
  */
 fun DateRange.randomOrNull(random: Random): Date? {
@@ -241,7 +240,7 @@ fun DateRange.randomOrNull(random: Random): Date? {
 }
 
 /**
- * Get a range containing all of the days up to, but not including [to]
+ * Get a range containing all of the days up to, but not including [to].
  */
 infix fun Date.until(to: Date) = DateRange(this, to - 1L.days)
 

@@ -48,8 +48,7 @@ class DateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() =
-        buildIsoString(MAX_DATE_TIME_STRING_LENGTH, StringBuilder::appendDateTime)
+    override fun toString() = buildIsoString(MAX_DATE_TIME_STRING_LENGTH, StringBuilder::appendDateTime)
 
     /**
      * Get the [Duration] between the start and end date-time, assuming they're in the same time zone. In general, it's
@@ -255,17 +254,13 @@ fun String.toDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.start
-        else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(
-            this
-        )
+        else -> results[0].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> DateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(
-            this
-        )
+        else -> results[1].toDateTime() ?: throwParserFieldResolutionException<DateTimeInterval>(this)
     }
 
     return when {
@@ -301,9 +296,7 @@ fun DateTimeInterval.random(random: Random): DateTime {
         random,
         secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
         nanosecondGetter = { it.unixEpochNanoOfSecond },
-        creator = { second, nanosecond ->
-            DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO)
-        }
+        creator = { second, nanosecond -> DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO) }
     )
 }
 
@@ -317,9 +310,7 @@ fun DateTimeInterval.randomOrNull(random: Random): DateTime? {
         random,
         secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
         nanosecondGetter = { it.unixEpochNanoOfSecond },
-        creator = { second, nanosecond ->
-            DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO)
-        }
+        creator = { second, nanosecond -> DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO) }
     )
 }
 
@@ -372,8 +363,7 @@ fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) -
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
 
-    val nanoDiff =
-        endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
+    val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
     return durationOf(secondDiff, nanoDiff)
 }
 
