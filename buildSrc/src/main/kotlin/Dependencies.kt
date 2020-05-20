@@ -16,7 +16,10 @@ object Libs {
         const val native = "org.jetbrains.kotlinx:kotlinx-serialization-runtime-native:${Versions.serialization}"
     }
 
-    const val atomicfu = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfu}"
+    object AtomicFU {
+        const val gradlePlugin = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfu}"
+        const val native = "org.jetbrains.kotlinx:atomicfu-native:${Versions.atomicfu}"
+    }
 
     object AndroidxTest {
         const val runner = "androidx.test:runner:${Versions.androidxTest}"
