@@ -123,8 +123,7 @@ class OffsetDateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toOffsetDateTimeInterval() =
-    toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
+fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to an [OffsetDateTimeInterval] using a specific parser.
@@ -144,15 +143,13 @@ fun String.toOffsetDateTimeInterval(
     val start = when {
         results[0].isEmpty() -> null
         results[0].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.start
-        else -> results[0].toOffsetDateTime()
-            ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+        else -> results[0].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
     }
 
     val end = when {
         results[1].isEmpty() -> null
         results[1].fields[DateTimeField.IS_UNBOUNDED] == 1L -> OffsetDateTimeInterval.UNBOUNDED.endExclusive
-        else -> results[1].toOffsetDateTime()
-            ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
+        else -> results[1].toOffsetDateTime() ?: throwParserFieldResolutionException<OffsetDateTimeInterval>(this)
     }
 
     return when {
@@ -163,8 +160,8 @@ fun String.toOffsetDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator. The
- * offset of the start date-time will be used.
+ * Return a random date-time within the interval using the default random number generator. The offset of the start
+ * date-time will be used.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see OffsetDateTimeInterval.randomOrNull
@@ -172,15 +169,15 @@ fun String.toOffsetDateTimeInterval(
 fun OffsetDateTimeInterval.random(): OffsetDateTime = random(Random)
 
 /**
- * Return a random date-time within the interval using the default random number generator or
- * `null` if the interval is empty or unbounded. The offset of the start date-time will be used.
+ * Return a random date-time within the interval using the default random number generator or `null` if the interval is
+ * empty or unbounded. The offset of the start date-time will be used.
  * @see OffsetDateTimeInterval.random
  */
 fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random)
 
 /**
- * Return a random date-time within the interval using the supplied random number generator. The
- * offset of the start date-time will be used.
+ * Return a random date-time within the interval using the supplied random number generator. The offset of the start
+ * date-time will be used.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see OffsetDateTimeInterval.randomOrNull
@@ -192,8 +189,8 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
 }
 
 /**
- * Return a random date-time within the interval using the supplied random number generator or
- * `null` if the interval is empty or unbounded. The offset of the start date-time will be used.
+ * Return a random date-time within the interval using the supplied random number generator or `null` if the interval is
+ * empty or unbounded. The offset of the start date-time will be used.
  * @see OffsetDateTimeInterval.random
  */
 fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
