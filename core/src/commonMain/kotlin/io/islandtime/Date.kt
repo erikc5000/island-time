@@ -345,7 +345,6 @@ fun Instant.toDateAt(zone: TimeZone): Date {
 /**
  * Combine a [YearMonth] with a day of the month to create a [Date].
  * @param day the day of the month
- * @return a [Date]
  */
 fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
@@ -370,7 +369,7 @@ fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
  * - [DateTimeField.YEAR], [DateTimeField.DAY_OF_YEAR]
  *
  * @throws DateTimeParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date is invalid
  */
 fun String.toDate(
     parser: DateTimeParser,
