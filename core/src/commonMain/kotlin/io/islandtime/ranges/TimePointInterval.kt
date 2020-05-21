@@ -4,45 +4,33 @@ import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.internal.*
-import kotlin.jvm.JvmName
 
 /**
  * A half-open interval of time points.
  */
 abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
-    private val _start: T,
-    private val _endExclusive: T
-) : TimeInterval<T> {
+    override val start: T,
+    override val endExclusive: T
+) : Interval<T> {
 
-    override val start: T get() = _start
-
-    /**
-     * The last representable time point within the interval.
-     */
-    val endInclusive: T get() = if (hasUnboundedEnd()) _endExclusive else _endExclusive - 1.nanoseconds
-
-    override val endExclusive: T get() = _endExclusive
+    override val endInclusive: T
+        get() = if (hasUnboundedEnd()) endExclusive else endExclusive - 1.nanoseconds
 
     override fun equals(other: Any?): Boolean {
         return other is TimePointInterval<*> && (isEmpty() && other.isEmpty() ||
-            ((hasUnboundedStart() && other.hasUnboundedStart()) || _start == other._start) &&
-            ((hasUnboundedEnd() && other.hasUnboundedEnd()) || _endExclusive == other._endExclusive))
+            ((hasUnboundedStart() && other.hasUnboundedStart()) || start == other.start) &&
+            ((hasUnboundedEnd() && other.hasUnboundedEnd()) || endExclusive == other.endExclusive))
     }
 
     override fun hashCode(): Int {
-        return if (isEmpty()) -1 else (31 * _start.hashCode() + _endExclusive.hashCode())
+        return if (isEmpty()) -1 else (31 * start.hashCode() + endExclusive.hashCode())
     }
 
     override fun contains(value: T): Boolean {
-        return (value >= _start || hasUnboundedStart()) && (value < _endExclusive || hasUnboundedEnd())
+        return (value >= start || hasUnboundedStart()) && (value < endExclusive || hasUnboundedEnd())
     }
 
-    @JvmName("containsOther")
-    operator fun contains(value: TimePoint<*>): Boolean {
-        return (value >= _start || hasUnboundedStart()) && (value < _endExclusive || hasUnboundedEnd())
-    }
-
-    override fun isEmpty(): Boolean = _start >= _endExclusive
+    override fun isEmpty(): Boolean = start >= endExclusive
 
     /**
      * Convert the interval into a [Duration] of the same length.
@@ -51,7 +39,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     fun asDuration(): Duration {
         return when {
             isEmpty() -> Duration.ZERO
-            isBounded() -> durationBetween(_start, _endExclusive)
+            isBounded() -> durationBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
@@ -63,7 +51,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     open val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
-            isBounded() -> daysBetween(_start, _endExclusive)
+            isBounded() -> daysBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -74,7 +62,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInHours: LongHours
         get() = when {
             isEmpty() -> 0L.hours
-            isBounded() -> hoursBetween(_start, _endExclusive)
+            isBounded() -> hoursBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -85,7 +73,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInMinutes: LongMinutes
         get() = when {
             isEmpty() -> 0L.minutes
-            isBounded() -> minutesBetween(_start, _endExclusive)
+            isBounded() -> minutesBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -96,7 +84,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInSeconds: LongSeconds
         get() = when {
             isEmpty() -> 0L.seconds
-            isBounded() -> secondsBetween(_start, _endExclusive)
+            isBounded() -> secondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -107,7 +95,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInMilliseconds: LongMilliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
-            isBounded() -> millisecondsBetween(_start, _endExclusive)
+            isBounded() -> millisecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -118,7 +106,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInMicroseconds: LongMicroseconds
         get() = when {
             isEmpty() -> 0L.microseconds
-            isBounded() -> microsecondsBetween(_start, _endExclusive)
+            isBounded() -> microsecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
@@ -129,9 +117,20 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     val lengthInNanoseconds: LongNanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
-            isBounded() -> nanosecondsBetween(_start, _endExclusive)
+            isBounded() -> nanosecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
+}
+
+/**
+ * Check if this interval contains [value].
+ *
+ * This will always return `false` if [value] is `null`.
+ */
+operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*>?): Boolean {
+    return value != null &&
+        (value >= start || hasUnboundedStart()) &&
+        (value < endExclusive || hasUnboundedEnd())
 }
 
 /**

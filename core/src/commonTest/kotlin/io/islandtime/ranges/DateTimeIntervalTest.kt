@@ -34,7 +34,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `equality works correctly`() {
-        assertNotEquals<TimeInterval<*>>(DateTimeInterval.UNBOUNDED, InstantInterval.UNBOUNDED)
+        assertNotEquals<Interval<*>>(DateTimeInterval.UNBOUNDED, InstantInterval.UNBOUNDED)
         assertEquals(DateTimeInterval.EMPTY, DateTimeInterval.EMPTY)
         assertNotEquals(DateTimeInterval.UNBOUNDED, DateTimeInterval.EMPTY)
         assertNotEquals(DateTimeInterval.EMPTY, DateTimeInterval.UNBOUNDED)

@@ -23,7 +23,7 @@ private class DefaultTimePointProgressionBuilder<T : TimePoint<T>>(
 ) : TimePointProgressionBuilder<T>
 
 class TimePointSecondProgression<T : TimePoint<T>> private constructor(
-    override val first: T,
+    start: T,
     endInclusive: T,
     val step: LongSeconds
 ) : TimePointProgressionBuilder<T>,
@@ -33,11 +33,12 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
         require(!step.isZero()) { "Step must be non-zero" }
     }
 
-    override val last: T = getLastTimePointInProgression(first, endInclusive, step)
+    override val first: T = start
+    override val last: T = getLastTimePointInProgression(start, endInclusive, step)
 
     fun isEmpty(): Boolean = if (step.isPositive()) first > last else first < last
 
-    override fun iterator(): TimePointIterator<T> = TimePointSecondProgressionIterator(first, last, step)
+    override fun iterator(): Iterator<T> = TimePointSecondProgressionIterator(first, last, step)
 
     override fun toString(): String {
         return if (step.isPositive()) {
@@ -80,7 +81,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
 }
 
 class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
-    override val first: T,
+    start: T,
     endInclusive: T,
     val step: LongNanoseconds
 ) : TimePointProgressionBuilder<T>,
@@ -90,11 +91,12 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
         require(!step.isZero()) { "Step must be non-zero" }
     }
 
-    override val last: T = getLastTimePointInProgression(first, endInclusive, step)
+    override val first: T = start
+    override val last: T = getLastTimePointInProgression(start, endInclusive, step)
 
     fun isEmpty(): Boolean = if (step.isPositive()) first > last else first < last
 
-    override fun iterator(): TimePointIterator<T> = TimePointNanosecondProgressionIterator(first, last, step)
+    override fun iterator(): Iterator<T> = TimePointNanosecondProgressionIterator(first, last, step)
 
     override fun toString(): String {
         return if (step.isPositive()) {

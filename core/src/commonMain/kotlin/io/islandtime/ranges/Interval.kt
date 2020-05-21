@@ -1,13 +1,18 @@
 package io.islandtime.ranges
 
 /**
- * A half-open time interval.
+ * A time interval.
  */
-interface TimeInterval<T> {
+interface Interval<T> {
     /**
      * The start of the interval, inclusive.
      */
     val start: T
+
+    /**
+     * The end of the interval, inclusive.
+     */
+    val endInclusive: T
 
     /**
      * The end of the interval, exclusive.
@@ -46,12 +51,19 @@ interface TimeInterval<T> {
     fun isUnbounded(): Boolean = hasUnboundedStart() && hasUnboundedEnd()
 
     /**
-     * Check if [value] is within the interval based on timeline order.
+     * Check if this interval contains [value].
      */
     operator fun contains(value: T): Boolean
 
     /**
-     * Check if the interval is empty.
+     * Check if this interval is empty.
      */
     fun isEmpty(): Boolean
 }
+
+/**
+ * Check if this interval contains [value].
+ *
+ * This will always return `false` if [value] is `null`.
+ */
+fun <T> Interval<T>.contains(value: T?): Boolean = value != null && contains(value)

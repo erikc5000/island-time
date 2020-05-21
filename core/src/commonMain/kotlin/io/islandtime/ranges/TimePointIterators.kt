@@ -3,17 +3,11 @@ package io.islandtime.ranges
 import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 
-abstract class TimePointIterator<T : TimePoint<T>> : Iterator<T> {
-    override fun next() = nextTimePoint()
-
-    abstract fun nextTimePoint(): T
-}
-
 internal class TimePointSecondProgressionIterator<T : TimePoint<T>>(
     first: T,
     last: T,
     private val step: LongSeconds
-) : TimePointIterator<T>() {
+) : Iterator<T> {
 
     private val finalElement = last
     private var hasNext = if (step.isPositive()) last > first else last < first
@@ -21,7 +15,7 @@ internal class TimePointSecondProgressionIterator<T : TimePoint<T>>(
 
     override fun hasNext() = hasNext
 
-    override fun nextTimePoint(): T {
+    override fun next(): T {
         val value = next
 
         if (value.isSameInstantAs(finalElement)) {
@@ -42,7 +36,7 @@ internal class TimePointNanosecondProgressionIterator<T : TimePoint<T>>(
     first: T,
     last: T,
     private val step: LongNanoseconds
-) : TimePointIterator<T>() {
+) : Iterator<T> {
 
     private val finalElement = last
     private var hasNext = if (step.isPositive()) last > first else last < first
@@ -50,7 +44,7 @@ internal class TimePointNanosecondProgressionIterator<T : TimePoint<T>>(
 
     override fun hasNext() = hasNext
 
-    override fun nextTimePoint(): T {
+    override fun next(): T {
         val value = next
 
         if (value.isSameInstantAs(finalElement)) {

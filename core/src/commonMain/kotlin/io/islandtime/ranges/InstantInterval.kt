@@ -29,7 +29,11 @@ class InstantInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
+    override fun toString() = buildIsoString(
+        maxElementSize = MAX_INSTANT_STRING_LENGTH,
+        inclusive = false,
+        appendFunction = StringBuilder::appendInstant
+    )
 
     companion object {
         /**

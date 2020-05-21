@@ -25,8 +25,11 @@ class ZonedDateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() =
-        buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
+    override fun toString() = buildIsoString(
+        maxElementSize = MAX_ZONED_DATE_TIME_STRING_LENGTH,
+        inclusive = false,
+        appendFunction = StringBuilder::appendZonedDateTime
+    )
 
     /**
      * Convert the interval into a [Period] of the same length.

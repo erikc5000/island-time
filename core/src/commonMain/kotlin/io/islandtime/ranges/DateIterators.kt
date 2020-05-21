@@ -1,19 +1,14 @@
 package io.islandtime.ranges
 
 import io.islandtime.Date
-import io.islandtime.measures.*
-
-abstract class DateIterator : Iterator<Date> {
-    override fun next() = nextDate()
-
-    abstract fun nextDate(): Date
-}
+import io.islandtime.measures.IntDays
+import io.islandtime.measures.IntMonths
 
 internal class DateDayProgressionIterator(
-    first: LongDays,
-    last: LongDays,
+    first: Date,
+    last: Date,
     private val step: IntDays
-) : DateIterator() {
+) : Iterator<Date> {
 
     private val finalElement = last
     private var hasNext = if (step.value > 0) first <= last else first >= last
@@ -21,7 +16,7 @@ internal class DateDayProgressionIterator(
 
     override fun hasNext() = hasNext
 
-    override fun nextDate(): Date {
+    override fun next(): Date {
         val value = next
 
         if (value == finalElement) {
@@ -34,7 +29,7 @@ internal class DateDayProgressionIterator(
             next += step
         }
 
-        return Date.fromDaysSinceUnixEpoch(value)
+        return value
     }
 }
 
@@ -42,7 +37,7 @@ internal class DateMonthProgressionIterator(
     first: Date,
     last: Date,
     private val step: IntMonths
-) : DateIterator() {
+) : Iterator<Date> {
 
     private val finalElement = last
     private var hasNext = if (step.value > 0) first <= last else first >= last
@@ -50,7 +45,7 @@ internal class DateMonthProgressionIterator(
 
     override fun hasNext() = hasNext
 
-    override fun nextDate(): Date {
+    override fun next(): Date {
         val value = next
 
         if (value == finalElement) {
