@@ -112,8 +112,11 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is unbounded`() {
+    fun `random() throws an exception when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at TimeZone("America/New_York")
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval(start = dateTime).random() }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval(endExclusive = dateTime).random() }
     }
 
     @Test
@@ -122,8 +125,11 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is unbounded`() {
+    fun `randomOrNull() returns null when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at TimeZone("America/New_York")
         assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(ZonedDateTimeInterval(start = dateTime).randomOrNull())
+        assertNull(ZonedDateTimeInterval(endExclusive = dateTime).randomOrNull())
     }
 
     @Test
