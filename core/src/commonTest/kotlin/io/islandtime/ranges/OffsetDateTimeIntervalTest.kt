@@ -115,8 +115,11 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is unbounded`() {
+    fun `random() throws an exception when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval(start = dateTime).random() }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval(endExclusive = dateTime).random() }
     }
 
     @Test
@@ -125,8 +128,11 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is unbounded`() {
+    fun `randomOrNull() returns null when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         assertNull(OffsetDateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(OffsetDateTimeInterval(start = dateTime).randomOrNull())
+        assertNull(OffsetDateTimeInterval(endExclusive = dateTime).randomOrNull())
     }
 
     @Test
