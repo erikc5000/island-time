@@ -107,9 +107,9 @@ internal inline fun <T> TimeInterval<T>.random(
     creator: (second: Long, nanosecond: Int) -> T
 ): T {
     return when {
-        isUnbounded() -> throwUnboundedIntervalException()
         isEmpty() -> throw NoSuchElementException("The interval is empty")
-        else -> generateRandom(random, secondGetter, nanosecondGetter, creator)
+        isBounded() -> generateRandom(random, secondGetter, nanosecondGetter, creator)
+        else -> throwUnboundedIntervalException()
     }
 }
 
@@ -119,7 +119,7 @@ internal inline fun <T> TimeInterval<T>.randomOrNull(
     nanosecondGetter: (T) -> Int,
     creator: (second: Long, nanosecond: Int) -> T
 ): T? {
-    return if (isEmpty() || isUnbounded()) {
+    return if (isEmpty() || !isBounded()) {
         null
     } else {
         generateRandom(random, secondGetter, nanosecondGetter, creator)

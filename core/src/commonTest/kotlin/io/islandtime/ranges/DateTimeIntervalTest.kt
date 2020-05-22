@@ -115,8 +115,11 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is unbounded`() {
+    fun `random() throws an exception when the interval is not bounded`() {
+        val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
         assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval(start = dateTime).random() }
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval(endExclusive = dateTime).random() }
     }
 
     @Test
@@ -125,8 +128,11 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is unbounded`() {
+    fun `randomOrNull() returns null when the interval is not bounded`() {
+        val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
         assertNull(DateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(DateTimeInterval(start = dateTime).randomOrNull())
+        assertNull(DateTimeInterval(endExclusive = dateTime).randomOrNull())
     }
 
     @Test

@@ -178,8 +178,10 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is unbounded`() {
+    fun `random() throws an exception when the interval is not bounded`() {
         assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval(start = Instant.UNIX_EPOCH).random() }
+        assertFailsWith<UnsupportedOperationException> { InstantInterval(endExclusive = Instant.UNIX_EPOCH).random() }
     }
 
     @Test
@@ -188,8 +190,10 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is unbounded`() {
+    fun `randomOrNull() returns null when the interval is not bounded`() {
         assertNull(InstantInterval.UNBOUNDED.randomOrNull())
+        assertNull(InstantInterval(start = Instant.UNIX_EPOCH).randomOrNull())
+        assertNull(InstantInterval(endExclusive = Instant.UNIX_EPOCH).randomOrNull())
     }
 
     @Test
