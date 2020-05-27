@@ -1,12 +1,12 @@
 package io.islandtime
 
 import io.islandtime.base.DateTimeField
-import io.islandtime.internal.SECONDS_PER_HOUR
-import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import kotlin.math.absoluteValue
+import kotlin.math.sign
 
 /**
  * The time shift between a local time and UTC.
@@ -36,13 +36,9 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     inline fun <T> toComponents(
         action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
     ): T {
-        val sign = if (totalSeconds.isNegative()) -1 else 1
-        val absTotalSeconds = totalSeconds.absoluteValue
-        val hours = (absTotalSeconds.value / SECONDS_PER_HOUR).hours
-        val minutes = ((absTotalSeconds.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
-        val seconds = absTotalSeconds % SECONDS_PER_MINUTE
-
-        return action(sign, hours, minutes, seconds)
+        return totalSeconds.value.absoluteValue.seconds.toComponents { hours, minutes, seconds ->
+            action(totalSeconds.value.sign, hours, minutes, seconds)
+        }
     }
 
     /**
@@ -51,11 +47,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     inline fun <T> toComponents(
         action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
     ): T {
-        val hours = (totalSeconds.value / SECONDS_PER_HOUR).hours
-        val minutes = ((totalSeconds.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
-        val seconds = totalSeconds % SECONDS_PER_MINUTE
-
-        return action(hours, minutes, seconds)
+        return totalSeconds.toComponents(action)
     }
 
 
@@ -88,8 +80,8 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     fun validated(): UtcOffset = apply { validate() }
 
     companion object {
-        val MAX_TOTAL_SECONDS = (18 * SECONDS_PER_HOUR).seconds
-        val MIN_TOTAL_SECONDS = (-18 * SECONDS_PER_HOUR).seconds
+        val MAX_TOTAL_SECONDS = 18.hours.inSecondsUnchecked
+        val MIN_TOTAL_SECONDS = (-18).hours.inSecondsUnchecked
 
         val MIN = UtcOffset(MIN_TOTAL_SECONDS)
         val MAX = UtcOffset(MAX_TOTAL_SECONDS)
