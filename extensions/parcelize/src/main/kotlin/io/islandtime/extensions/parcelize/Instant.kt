@@ -1,7 +1,6 @@
 package io.islandtime.extensions.parcelize
 
 import android.os.Parcel
-import io.islandtime.Date
 import io.islandtime.Instant
 import kotlinx.android.parcel.Parceler
 
@@ -17,7 +16,7 @@ object NullableInstantParceler : Parceler<Instant?> {
     override fun create(parcel: Parcel): Instant? {
         return when (val second = parcel.readLong()) {
             Long.MIN_VALUE -> null
-            else -> Instant.fromUnixEpochSecond(second, parcel.readInt())
+            else -> Instant.fromSecondOfUnixEpoch(second, parcel.readInt())
         }
     }
 
@@ -31,10 +30,10 @@ object NullableInstantParceler : Parceler<Instant?> {
 }
 
 internal fun Parcel.readInstant(): Instant {
-    return Instant.fromUnixEpochSecond(readLong(), readInt())
+    return Instant.fromSecondOfUnixEpoch(readLong(), readInt())
 }
 
 internal fun Parcel.writeInstant(instant: Instant) {
-    writeLong(instant.unixEpochSecond)
-    writeInt(instant.unixEpochNanoOfSecond)
+    writeLong(instant.secondOfUnixEpoch)
+    writeInt(instant.nanosecond)
 }
