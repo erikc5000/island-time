@@ -172,7 +172,7 @@ fun NSDateComponents.toIslandZonedDateTimeOrNull(): ZonedDateTime? {
  */
 fun <T> TimePoint<T>.toNSDate(): NSDate {
     return NSDate.dateWithTimeIntervalSince1970(
-        unixEpochSecond.toDouble() + unixEpochNanoOfSecond.toDouble() / NANOSECONDS_PER_SECOND
+        secondOfUnixEpoch.toDouble() + nanosecond.toDouble() / NANOSECONDS_PER_SECOND
     )
 }
 

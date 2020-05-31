@@ -9,14 +9,14 @@ import io.islandtime.measures.*
  * Convert to an equivalent Island Time [Instant].
  */
 fun org.threeten.bp.Instant.toIslandInstant(): Instant {
-    return Instant.fromUnixEpochSecond(epochSecond, nano)
+    return Instant.fromSecondOfUnixEpoch(epochSecond, nano)
 }
 
 /**
  * Convert to an equivalent Java `Instant`.
  */
 fun Instant.toJavaInstant(): org.threeten.bp.Instant {
-    return org.threeten.bp.Instant.ofEpochSecond(unixEpochSecond, unixEpochNanoOfSecond.toLong())
+    return org.threeten.bp.Instant.ofEpochSecond(secondOfUnixEpoch, nanosecond.toLong())
 }
 
 /**

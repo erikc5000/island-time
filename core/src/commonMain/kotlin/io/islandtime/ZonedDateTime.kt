@@ -47,7 +47,7 @@ class ZonedDateTime private constructor(
     /**
      * The nanosecond of the second.
      */
-    inline val nanosecond: Int get() = dateTime.nanosecond
+    override val nanosecond: Int get() = dateTime.nanosecond
 
     /**
      * The month of the year.
@@ -121,13 +121,13 @@ class ZonedDateTime private constructor(
     /**
      * The [Instant] representing the same time point.
      */
-    inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
+    inline val instant: Instant get() = Instant.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond)
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
 
-    override val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
-        get() = dateTime.nanoOfSecondsSinceUnixEpoch
+    override val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
+        get() = dateTime.additionalNanosecondsSinceUnixEpoch
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
@@ -372,7 +372,7 @@ class ZonedDateTime private constructor(
         return if (newTimeZone == zone) {
             this
         } else {
-            fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, newTimeZone)
+            fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, newTimeZone)
         }
     }
 
@@ -383,8 +383,8 @@ class ZonedDateTime private constructor(
          * Compare by instant, then date-time, then time zone. Using this `Comparator` guarantees a deterministic order
          * when sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<ZonedDateTime> { it.unixEpochSecond }
-            .thenBy { it.unixEpochNanoOfSecond }
+        val DEFAULT_SORT_ORDER = compareBy<ZonedDateTime> { it.secondOfUnixEpoch }
+            .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
             .thenBy { it.zone }
 
@@ -430,15 +430,11 @@ class ZonedDateTime private constructor(
          * will be the same.
          */
         fun fromInstant(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): ZonedDateTime {
-            return fromUnixEpochSecond(
-                dateTime.unixEpochSecondAt(offset),
-                dateTime.nanosecond,
-                zone
-            )
+            return fromSecondOfUnixEpoch(dateTime.secondOfUnixEpochAt(offset), dateTime.nanosecond, zone)
         }
 
         /**
-         * Create a [ZonedDateTime] from a number of milliseconds since the Unix epoch of 1970-01-01T00:00Z.
+         * Create a [ZonedDateTime] from a duration of milliseconds relative to the Unix epoch at [zone].
          */
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, zone: TimeZone): ZonedDateTime {
             val offset = zone.rules.offsetAt(milliseconds)
@@ -447,12 +443,12 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] from a number of seconds and additional nanoseconds since the Unix epoch of
-         * 1970-01-01T00:00Z.
+         * Create a [ZonedDateTime] from a duration of seconds relative to the Unix epoch at [zone], optionally,
+         * with some number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
             seconds: LongSeconds,
-            nanosecondAdjustment: IntNanoseconds,
+            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds,
             zone: TimeZone
         ): ZonedDateTime {
             val offset = zone.rules.offsetAt(seconds, nanosecondAdjustment)
@@ -461,17 +457,35 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] from the millisecond of the Unix epoch.
+         * Create a [ZonedDateTime] from the millisecond of the Unix epoch at [zone].
          */
-        fun fromUnixEpochMillisecond(millisecond: Long, zone: TimeZone): ZonedDateTime {
+        fun fromMillisecondOfUnixEpoch(millisecond: Long, zone: TimeZone): ZonedDateTime {
             return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, zone)
         }
 
         /**
-         * Create a [ZonedDateTime] from the second of the Unix epoch.
+         * Create a [ZonedDateTime] from the second of the Unix epoch at [zone].
          */
+        fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int = 0, zone: TimeZone): ZonedDateTime {
+            return fromSecondsSinceUnixEpoch(second.seconds, nanosecond.nanoseconds, zone)
+        }
+
+        @Deprecated(
+            "Use fromMillisecondOfUnixEpoch() instead.",
+            ReplaceWith("ZonedDateTime.fromMillisecondOfUnixEpoch(millisecond, zone)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochMillisecond(millisecond: Long, zone: TimeZone): ZonedDateTime {
+            return fromMillisecondOfUnixEpoch(millisecond, zone)
+        }
+
+        @Deprecated(
+            "Use fromSecondOfUnixEpoch() instead.",
+            ReplaceWith("ZonedDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, zone)"),
+            DeprecationLevel.WARNING
+        )
         fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, zone: TimeZone): ZonedDateTime {
-            return fromSecondsSinceUnixEpoch(second.seconds, nanoOfSecond.nanoseconds, zone)
+            return fromSecondOfUnixEpoch(second, nanoOfSecond, zone)
         }
 
         /**
@@ -562,7 +576,7 @@ fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(
 /**
  * Combine an instant with a time zone to create a [ZonedDateTime].
  */
-infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
+infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, zone)
 
 /**
  * Combine a local date and time with a time zone to create a [ZonedDateTime].
