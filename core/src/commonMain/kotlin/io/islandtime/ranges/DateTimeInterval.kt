@@ -196,8 +196,8 @@ class DateTimeInterval(
          * An empty interval.
          */
         val EMPTY = DateTimeInterval(
-            DateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO),
-            DateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO)
+            DateTime.fromSecondOfUnixEpoch(0L, 0, UtcOffset.ZERO),
+            DateTime.fromSecondOfUnixEpoch(0L, 0, UtcOffset.ZERO)
         )
 
         /**
@@ -294,9 +294,9 @@ fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNull(Random)
 fun DateTimeInterval.random(random: Random): DateTime {
     return random(
         random,
-        secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
-        nanosecondGetter = { it.unixEpochNanoOfSecond },
-        creator = { second, nanosecond -> DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO) }
+        secondGetter = { it.secondOfUnixEpochAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.nanosecond },
+        creator = { second, nanosecond -> DateTime.fromSecondOfUnixEpoch(second, nanosecond, UtcOffset.ZERO) }
     )
 }
 
@@ -308,9 +308,9 @@ fun DateTimeInterval.random(random: Random): DateTime {
 fun DateTimeInterval.randomOrNull(random: Random): DateTime? {
     return randomOrNull(
         random,
-        secondGetter = { it.unixEpochSecondAt(UtcOffset.ZERO) },
-        nanosecondGetter = { it.unixEpochNanoOfSecond },
-        creator = { second, nanosecond -> DateTime.fromUnixEpochSecond(second, nanosecond, UtcOffset.ZERO) }
+        secondGetter = { it.secondOfUnixEpochAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.nanosecond },
+        creator = { second, nanosecond -> DateTime.fromSecondOfUnixEpoch(second, nanosecond, UtcOffset.ZERO) }
     )
 }
 
@@ -360,10 +360,12 @@ fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
  * when working with [DateTime] directly.
  */
 fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
-    val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) -
-        start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
+    val secondDiff =
+        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) - start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
 
-    val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
+    val nanoDiff =
+        endExclusive.additionalNanosecondsSinceUnixEpoch minusWithOverflow start.additionalNanosecondsSinceUnixEpoch
+
     return durationOf(secondDiff, nanoDiff)
 }
 
@@ -395,9 +397,9 @@ fun minutesBetween(start: DateTime, endExclusive: DateTime): LongMinutes {
 fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
     return secondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -411,9 +413,9 @@ fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
 fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMilliseconds {
     return millisecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -427,9 +429,9 @@ fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMillisecon
 fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicroseconds {
     return microsecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -443,9 +445,9 @@ fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicrosecon
 fun nanosecondsBetween(start: DateTime, endExclusive: DateTime): LongNanoseconds {
     return nanosecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 

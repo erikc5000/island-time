@@ -4,7 +4,7 @@ import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
-import io.islandtime.zone.*
+import io.islandtime.zone.TimeZoneRulesException
 import kotlin.test.*
 
 class ZonedDateTimeTest : AbstractIslandTimeTest() {
@@ -95,6 +95,78 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             assertEquals(4, nanosecond)
             assertEquals((-5).hours.asUtcOffset(), offset)
             assertEquals(nyZone, zone)
+        }
+    }
+
+    @Test
+    fun `can be constructed from seconds since unix epoch`() {
+        ZonedDateTime.fromSecondsSinceUnixEpoch((-1L).seconds, zone = TimeZone.UTC).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(0, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+
+        ZonedDateTime.fromSecondsSinceUnixEpoch((-1L).seconds, 1.nanoseconds, TimeZone.UTC).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(1, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from milliseconds since unix epoch`() {
+        ZonedDateTime.fromMillisecondsSinceUnixEpoch(1L.milliseconds, (-1).hours.asUtcOffset().asTimeZone()).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1_000_000, nanosecond)
+            assertEquals((-1).hours.asUtcOffset(), offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from second of unix epoch`() {
+        ZonedDateTime.fromSecondOfUnixEpoch(-1L, zone = TimeZone.UTC).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(0, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+
+        ZonedDateTime.fromSecondOfUnixEpoch(0L, 1, TimeZone.UTC).run {
+            assertEquals(1970, year)
+            assertEquals(1, dayOfYear)
+            assertEquals(0, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from millisecond of unix epoch`() {
+        ZonedDateTime.fromMillisecondOfUnixEpoch(1L, TimeZone.UTC).run {
+            assertEquals(1970, year)
+            assertEquals(1, dayOfYear)
+            assertEquals(0, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1_000_000, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
         }
     }
 

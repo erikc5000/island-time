@@ -106,7 +106,7 @@ class OffsetDateTime(
     /**
      * The nanosecond of the second.
      */
-    inline val nanosecond: Int get() = dateTime.nanosecond
+    override val nanosecond: Int get() = dateTime.nanosecond
 
     /**
      * The month of the year.
@@ -171,13 +171,13 @@ class OffsetDateTime(
     /**
      * The [Instant] representing the same time point.
      */
-    inline val instant: Instant get() = Instant.fromUnixEpochSecond(unixEpochSecond, nanosecond)
+    inline val instant: Instant get() = Instant.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond)
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
 
-    override val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
-        get() = dateTime.nanoOfSecondsSinceUnixEpoch
+    override val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
+        get() = dateTime.additionalNanosecondsSinceUnixEpoch
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
@@ -318,14 +318,21 @@ class OffsetDateTime(
     ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond), offset)
 
     companion object {
+        /**
+         * The smallest supported [OffsetDateTime], which can be used as a "far past" sentinel.
+         */
         val MIN = DateTime.MIN at UtcOffset.MAX
+
+        /**
+         * The largest supported [OffsetDateTime], which can be used as a "far future" sentinel.
+         */
         val MAX = DateTime.MAX at UtcOffset.MIN
 
         /**
          * Compare by instant, then date-time. Using this `Comparator` guarantees a deterministic order when sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<OffsetDateTime> { it.unixEpochSecond }
-            .thenBy { it.unixEpochNanoOfSecond }
+        val DEFAULT_SORT_ORDER = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
+            .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
 
         /**
@@ -333,36 +340,56 @@ class OffsetDateTime(
          */
         val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
+        /**
+         * Create an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
+         */
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): OffsetDateTime {
-            return OffsetDateTime(
-                DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset),
-                offset
-            )
+            return OffsetDateTime(DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset), offset)
         }
 
+        /**
+         * Create an [OffsetDateTime] from a duration of seconds relative to the Unix epoch at [offset], optionally,
+         * with some number of additional nanoseconds added to it.
+         */
         fun fromSecondsSinceUnixEpoch(
             seconds: LongSeconds,
-            nanosecondAdjustment: IntNanoseconds,
+            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds,
             offset: UtcOffset
         ): OffsetDateTime {
-            return OffsetDateTime(
-                DateTime.fromSecondsSinceUnixEpoch(seconds, nanosecondAdjustment, offset),
-                offset
-            )
+            return OffsetDateTime(DateTime.fromSecondsSinceUnixEpoch(seconds, nanosecondAdjustment, offset), offset)
         }
 
+        /**
+         * Create an [OffsetDateTime] from the millisecond of the Unix epoch at [offset].
+         */
+        fun fromMillisecondOfUnixEpoch(millisecond: Long, offset: UtcOffset): OffsetDateTime {
+            return OffsetDateTime(DateTime.fromMillisecondOfUnixEpoch(millisecond, offset), offset)
+        }
+
+        /**
+         * Create an [OffsetDateTime] from the second of the Unix epoch at [offset] and optionally, the nanosecond of
+         * the second.
+         */
+        fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int = 0, offset: UtcOffset): OffsetDateTime {
+            return OffsetDateTime(DateTime.fromSecondOfUnixEpoch(second, nanosecond, offset), offset)
+        }
+
+        @Deprecated(
+            "Use fromMillisecondOfUnixEpoch() instead.",
+            ReplaceWith("OffsetDateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
+            DeprecationLevel.WARNING
+        )
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): OffsetDateTime {
-            return OffsetDateTime(
-                DateTime.fromUnixEpochMillisecond(millisecond, offset),
-                offset
-            )
+            return fromMillisecondOfUnixEpoch(millisecond, offset)
         }
 
+        @Deprecated(
+            "Use fromSecondOfUnixEpoch() instead.",
+            ReplaceWith("OffsetDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, offset)"),
+            DeprecationLevel.WARNING
+        )
         fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, offset: UtcOffset): OffsetDateTime {
-            return OffsetDateTime(
-                DateTime.fromUnixEpochSecond(second, nanoOfSecond, offset),
-                offset
-            )
+            return fromSecondOfUnixEpoch(second, nanoOfSecond, offset)
         }
     }
 }

@@ -51,7 +51,7 @@ fun Date.Companion.now(clock: Clock): Date {
     val offset = clock.zone.rules.offsetAt(milliseconds)
     val unixEpochSecond = (milliseconds.value floorDiv MILLISECONDS_PER_SECOND) + offset.totalSeconds.value
     val unixEpochDay = unixEpochSecond floorDiv SECONDS_PER_DAY
-    return fromUnixEpochDay(unixEpochDay)
+    return fromDayOfUnixEpoch(unixEpochDay)
 }
 
 /**
