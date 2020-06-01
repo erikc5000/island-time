@@ -133,7 +133,7 @@ fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
  * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(random: Random): Instant {
-    return random(random, Instant.Companion::fromUnixEpochSecond)
+    return random(random, Instant.Companion::fromSecondOfUnixEpoch)
 }
 
 /**
@@ -142,7 +142,7 @@ fun InstantInterval.random(random: Random): Instant {
  * @see InstantInterval.random
  */
 fun InstantInterval.randomOrNull(random: Random): Instant? {
-    return randomOrNull(random, Instant.Companion::fromUnixEpochSecond)
+    return randomOrNull(random, Instant.Companion::fromSecondOfUnixEpoch)
 }
 
 /**

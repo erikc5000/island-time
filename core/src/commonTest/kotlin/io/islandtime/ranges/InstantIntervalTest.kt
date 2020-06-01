@@ -47,7 +47,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
         assertTrue { start in start..end }
         assertTrue { end in start..end }
         assertTrue { Instant.UNIX_EPOCH in start..end }
-        assertTrue { OffsetDateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO) in start..end }
+        assertTrue { OffsetDateTime.fromSecondOfUnixEpoch(0L, 0, UtcOffset.ZERO) in start..end }
     }
 
     @Test
@@ -58,7 +58,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
         assertTrue { start in start..end }
         assertTrue { end in start..end }
         assertTrue { Instant.UNIX_EPOCH in start..end }
-        assertTrue { OffsetDateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO) in start..end }
+        assertTrue { OffsetDateTime.fromSecondOfUnixEpoch(0L, 0, UtcOffset.ZERO) in start..end }
     }
 
     @Test
