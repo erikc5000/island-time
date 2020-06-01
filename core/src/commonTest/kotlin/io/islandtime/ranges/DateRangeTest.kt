@@ -189,8 +189,16 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the range is unbounded`() {
+    fun `random() throws an exception when the range is not bounded`() {
         assertFailsWith<UnsupportedOperationException> { DateRange.UNBOUNDED.random() }
+
+        assertFailsWith<UnsupportedOperationException> {
+            DateRange(start = Date(2020, Month.APRIL, 1)).random()
+        }
+
+        assertFailsWith<UnsupportedOperationException> {
+            DateRange(endInclusive = Date(2020, Month.APRIL, 1)).random()
+        }
     }
 
     @Test
@@ -199,8 +207,10 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the range is unbounded`() {
+    fun `randomOrNull() returns null when the range is not bounded`() {
         assertNull(DateRange.UNBOUNDED.randomOrNull())
+        assertNull(DateRange(start = Date(2020, Month.APRIL, 1)).randomOrNull())
+        assertNull(DateRange(endInclusive = Date(2020, Month.APRIL, 1)).randomOrNull())
     }
 
     @Test

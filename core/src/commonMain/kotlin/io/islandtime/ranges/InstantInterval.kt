@@ -29,8 +29,7 @@ class InstantInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() =
-        buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
+    override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
 
     companion object {
         /**
@@ -121,8 +120,8 @@ fun String.toInstantInterval(
 fun InstantInterval.random(): Instant = random(Random)
 
 /**
- * Return a random instant within the interval using the default random number generator or `null`
- * if the interval is empty or unbounded.
+ * Return a random instant within the interval using the default random number generator or `null` if the interval is
+ * empty or unbounded.
  * @see InstantInterval.random
  */
 fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
@@ -134,20 +133,16 @@ fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
  * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(random: Random): Instant {
-    return random(random) { second, nanosecond ->
-        Instant.fromUnixEpochSecond(second, nanosecond)
-    }
+    return random(random, Instant.Companion::fromSecondOfUnixEpoch)
 }
 
 /**
- * Return a random instant within the interval using the supplied random number generator or `null`
- * if the interval is empty or unbounded.
+ * Return a random instant within the interval using the supplied random number generator or `null` if the interval is
+ * empty or unbounded.
  * @see InstantInterval.random
  */
 fun InstantInterval.randomOrNull(random: Random): Instant? {
-    return randomOrNull(random) { second, nanosecond ->
-        Instant.fromUnixEpochSecond(second, nanosecond)
-    }
+    return randomOrNull(random, Instant.Companion::fromSecondOfUnixEpoch)
 }
 
 /**

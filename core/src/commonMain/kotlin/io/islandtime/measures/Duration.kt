@@ -2,10 +2,6 @@ package io.islandtime.measures
 
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.*
-import io.islandtime.internal.MICROSECONDS_PER_SECOND
-import io.islandtime.internal.MILLISECONDS_PER_SECOND
-import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.Duration.Companion.create
 import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.DateTimeParseResult
@@ -317,18 +313,9 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val days = seconds.inDays
-        val hours = (seconds - days).inHours
-        val minutes = (seconds - days - hours).inMinutes
-        val seconds = seconds - days - hours - minutes
-
-        return action(
-            days,
-            hours.toIntHoursUnchecked(),
-            minutes.toIntMinutesUnchecked(),
-            seconds.toIntSecondsUnchecked(),
-            nanosecondAdjustment
-        )
+        return seconds.toComponents { days, hours, minutes, seconds ->
+            action(days, hours, minutes, seconds, nanosecondAdjustment)
+        }
     }
 
     /**
@@ -342,16 +329,9 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val hours = seconds.inHours
-        val minutes = (seconds - hours).inMinutes
-        val seconds = seconds - hours - minutes
-
-        return action(
-            hours,
-            minutes.toIntMinutesUnchecked(),
-            seconds.toIntSecondsUnchecked(),
-            nanosecondAdjustment
-        )
+        return seconds.toComponents { hours, minutes, seconds ->
+            action(hours, minutes, seconds, nanosecondAdjustment)
+        }
     }
 
     /**
@@ -364,9 +344,9 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val minutes = seconds.inMinutes
-        val seconds = seconds - minutes
-        return action(minutes, seconds.toIntSecondsUnchecked(), nanosecondAdjustment)
+        return seconds.toComponents { minutes, seconds ->
+            action(minutes, seconds, nanosecondAdjustment)
+        }
     }
 
     /**
