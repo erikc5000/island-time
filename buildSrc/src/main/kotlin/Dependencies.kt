@@ -6,7 +6,7 @@ object Versions {
     const val googleTruth = "1.0.1"
     const val threetenabp = "1.2.3"
     const val stately = "1.0.2-a4"
-    const val kotlinpoet = "1.5.0"
+    const val kotlinpoet = "1.6.0"
 }
 
 object Libs {
