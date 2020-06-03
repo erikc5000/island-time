@@ -40,11 +40,11 @@ inline class IntSeconds(
   val value: Int
 ) : Comparable<IntSeconds> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntSeconds
-    get() = if (value < 0) IntSeconds(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    */
@@ -102,11 +102,11 @@ inline class IntSeconds(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "PT0S"
-       value == Int.MIN_VALUE -> "-PT2147483648S"
+     return when (value) {
+       0 -> "PT0S"
+       Int.MIN_VALUE -> "-PT2147483648S"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(value.absoluteValue)
          append('S')
@@ -220,8 +220,8 @@ inline class IntSeconds(
   operator fun minus(days: LongDays) = this.toLongSeconds() - days.inSeconds
 
   inline fun <T> toComponents(action: (minutes: IntMinutes, seconds: IntSeconds) -> T): T {
-    val minutes = this.inMinutes
-    val seconds = (this - minutes)
+    val minutes = (value / SECONDS_PER_MINUTE).minutes
+    val seconds = (value % SECONDS_PER_MINUTE).seconds
     return action(minutes, seconds)
   }
 
@@ -230,9 +230,9 @@ inline class IntSeconds(
     minutes: IntMinutes,
     seconds: IntSeconds
   ) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).inMinutes
-    val seconds = (this - hours - minutes)
+    val hours = (value / SECONDS_PER_HOUR).hours
+    val minutes = ((value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
+    val seconds = (value % SECONDS_PER_MINUTE).seconds
     return action(hours, minutes, seconds)
   }
 
@@ -242,10 +242,10 @@ inline class IntSeconds(
     minutes: IntMinutes,
     seconds: IntSeconds
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).inHours
-    val minutes = (this - days - hours).inMinutes
-    val seconds = (this - days - hours - minutes)
+    val days = (value / SECONDS_PER_DAY).days
+    val hours = ((value % SECONDS_PER_DAY) / SECONDS_PER_HOUR).hours
+    val minutes = ((value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).minutes
+    val seconds = (value % SECONDS_PER_MINUTE).seconds
     return action(days, hours, minutes, seconds)
   }
 
@@ -306,11 +306,11 @@ inline class LongSeconds(
   val value: Long
 ) : Comparable<LongSeconds> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongSeconds
-    get() = if (value < 0) LongSeconds(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -389,11 +389,11 @@ inline class LongSeconds(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "PT0S"
-       value == Long.MIN_VALUE -> "-PT9223372036854775808S"
+     return when (value) {
+       0L -> "PT0S"
+       Long.MIN_VALUE -> "-PT9223372036854775808S"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(value.absoluteValue)
          append('S')
@@ -509,8 +509,8 @@ inline class LongSeconds(
   operator fun minus(days: LongDays) = this - days.inSeconds
 
   inline fun <T> toComponents(action: (minutes: LongMinutes, seconds: IntSeconds) -> T): T {
-    val minutes = this.inMinutes
-    val seconds = (this - minutes).toIntSecondsUnchecked()
+    val minutes = (value / SECONDS_PER_MINUTE).minutes
+    val seconds = (value % SECONDS_PER_MINUTE).toInt().seconds
     return action(minutes, seconds)
   }
 
@@ -519,9 +519,9 @@ inline class LongSeconds(
     minutes: IntMinutes,
     seconds: IntSeconds
   ) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).toIntSecondsUnchecked().inMinutes
-    val seconds = (this - hours - minutes).toIntSecondsUnchecked()
+    val hours = (value / SECONDS_PER_HOUR).hours
+    val minutes = ((value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).toInt().minutes
+    val seconds = (value % SECONDS_PER_MINUTE).toInt().seconds
     return action(hours, minutes, seconds)
   }
 
@@ -531,10 +531,10 @@ inline class LongSeconds(
     minutes: IntMinutes,
     seconds: IntSeconds
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntSecondsUnchecked().inHours
-    val minutes = (this - days - hours).toIntSecondsUnchecked().inMinutes
-    val seconds = (this - days - hours - minutes).toIntSecondsUnchecked()
+    val days = (value / SECONDS_PER_DAY).days
+    val hours = ((value % SECONDS_PER_DAY) / SECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).toInt().minutes
+    val seconds = (value % SECONDS_PER_MINUTE).toInt().seconds
     return action(days, hours, minutes, seconds)
   }
 
