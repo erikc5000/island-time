@@ -48,12 +48,12 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
         val javaInstant = JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value)
-        return javaZoneRules.getOffset(javaInstant).toIslandUtcOffset()
+        return offsetAt(javaInstant)
     }
 
     override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
         val javaInstant = JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanoOfSeconds.value.toLong())
-        return javaZoneRules.getOffset(javaInstant).toIslandUtcOffset()
+        return offsetAt(javaInstant)
     }
 
     override fun offsetAt(instant: Instant): UtcOffset {
@@ -88,6 +88,15 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
 
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
         return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
+    }
+
+    private fun offsetAt(javaInstant: JavaInstant): UtcOffset {
+        return try {
+            javaZoneRules.getOffset(javaInstant).toIslandUtcOffset()
+        } catch (e: ArithmeticException) {
+            // Workaround for Android desugaring issue (https://issuetracker.google.com/issues/153773237)
+            UtcOffset.ZERO
+        }
     }
 }
 
