@@ -41,11 +41,11 @@ inline class IntNanoseconds(
   val value: Int
 ) : Comparable<IntNanoseconds> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntNanoseconds
-    get() = if (value < 0) IntNanoseconds(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to whole microseconds.
    */
@@ -103,16 +103,16 @@ inline class IntNanoseconds(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return if (isZero()) {
+     return if (value == 0) {
        "PT0S"
      } else {
        buildString {
          val wholePart = (value / 1000000000).absoluteValue
          val fractionalPart = (value % 1000000000).absoluteValue
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(wholePart)
-         if (fractionalPart != 0) {
+         if (fractionalPart > 0) {
            append('.')
            append(fractionalPart.toZeroPaddedString(9).dropLastWhile { it == '0' })
          }
@@ -235,8 +235,8 @@ inline class IntNanoseconds(
 
   inline fun <T> toComponents(action: (microseconds: IntMicroseconds,
       nanoseconds: IntNanoseconds) -> T): T {
-    val microseconds = this.inMicroseconds
-    val nanoseconds = (this - microseconds).toIntNanosecondsUnchecked()
+    val microseconds = (value / NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).nanoseconds
     return action(microseconds, nanoseconds)
   }
 
@@ -245,9 +245,10 @@ inline class IntNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val milliseconds = this.inMilliseconds
-    val microseconds = (this - milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - milliseconds - microseconds).toIntNanosecondsUnchecked()
+    val milliseconds = (value / NANOSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).nanoseconds
     return action(milliseconds, microseconds, nanoseconds)
   }
 
@@ -257,10 +258,11 @@ inline class IntNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val seconds = this.inSeconds
-    val milliseconds = (this - seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - seconds - milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - seconds - milliseconds - microseconds).toIntNanosecondsUnchecked()
+    val seconds = (value / NANOSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) / NANOSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).nanoseconds
     return action(seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -271,13 +273,12 @@ inline class IntNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val minutes = this.inMinutes
-    val seconds = (this - minutes).toIntNanosecondsUnchecked().inSeconds
-    val milliseconds = (this - minutes - seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - minutes - seconds -
-        milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - minutes - seconds - milliseconds -
-        microseconds).toIntNanosecondsUnchecked()
+    val minutes = (value / NANOSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % NANOSECONDS_PER_MINUTE) / NANOSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) / NANOSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).nanoseconds
     return action(minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -289,14 +290,13 @@ inline class IntNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).toIntNanosecondsUnchecked().inMinutes
-    val seconds = (this - hours - minutes).toIntNanosecondsUnchecked().inSeconds
-    val milliseconds = (this - hours - minutes - seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - hours - minutes - seconds -
-        milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - hours - minutes - seconds - milliseconds -
-        microseconds).toIntNanosecondsUnchecked()
+    val hours = (value / NANOSECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % NANOSECONDS_PER_HOUR) / NANOSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % NANOSECONDS_PER_MINUTE) / NANOSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) / NANOSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).nanoseconds
     return action(hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -309,16 +309,14 @@ inline class IntNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntNanosecondsUnchecked().inHours
-    val minutes = (this - days - hours).toIntNanosecondsUnchecked().inMinutes
-    val seconds = (this - days - hours - minutes).toIntNanosecondsUnchecked().inSeconds
-    val milliseconds = (this - days - hours - minutes -
-        seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - days - hours - minutes - seconds -
-        milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - days - hours - minutes - seconds - milliseconds -
-        microseconds).toIntNanosecondsUnchecked()
+    val days = (value / NANOSECONDS_PER_DAY).toInt().days
+    val hours = ((value % NANOSECONDS_PER_DAY) / NANOSECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % NANOSECONDS_PER_HOUR) / NANOSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % NANOSECONDS_PER_MINUTE) / NANOSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) / NANOSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).nanoseconds
     return action(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -379,11 +377,11 @@ inline class LongNanoseconds(
   val value: Long
 ) : Comparable<LongNanoseconds> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongNanoseconds
-    get() = if (value < 0) LongNanoseconds(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to whole microseconds.
    */
@@ -441,16 +439,16 @@ inline class LongNanoseconds(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return if (isZero()) {
+     return if (value == 0L) {
        "PT0S"
      } else {
        buildString {
          val wholePart = (value / 1000000000).absoluteValue
          val fractionalPart = ((value % 1000000000).toInt()).absoluteValue
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(wholePart)
-         if (fractionalPart != 0) {
+         if (fractionalPart > 0) {
            append('.')
            append(fractionalPart.toZeroPaddedString(9).dropLastWhile { it == '0' })
          }
@@ -572,8 +570,8 @@ inline class LongNanoseconds(
 
   inline fun <T> toComponents(action: (microseconds: LongMicroseconds,
       nanoseconds: IntNanoseconds) -> T): T {
-    val microseconds = this.inMicroseconds
-    val nanoseconds = (this - microseconds).toIntNanosecondsUnchecked()
+    val microseconds = (value / NANOSECONDS_PER_MICROSECOND).microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).toInt().nanoseconds
     return action(microseconds, nanoseconds)
   }
 
@@ -582,9 +580,10 @@ inline class LongNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val milliseconds = this.inMilliseconds
-    val microseconds = (this - milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - milliseconds - microseconds).toIntNanosecondsUnchecked()
+    val milliseconds = (value / NANOSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).toInt().microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).toInt().nanoseconds
     return action(milliseconds, microseconds, nanoseconds)
   }
 
@@ -594,10 +593,12 @@ inline class LongNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val seconds = this.inSeconds
-    val milliseconds = (this - seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - seconds - milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - seconds - milliseconds - microseconds).toIntNanosecondsUnchecked()
+    val seconds = (value / NANOSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) /
+        NANOSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).toInt().microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).toInt().nanoseconds
     return action(seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -608,13 +609,13 @@ inline class LongNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val minutes = this.inMinutes
-    val seconds = (this - minutes).toIntNanosecondsUnchecked().inSeconds
-    val milliseconds = (this - minutes - seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - minutes - seconds -
-        milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - minutes - seconds - milliseconds -
-        microseconds).toIntNanosecondsUnchecked()
+    val minutes = (value / NANOSECONDS_PER_MINUTE).minutes
+    val seconds = ((value % NANOSECONDS_PER_MINUTE) / NANOSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) /
+        NANOSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).toInt().microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).toInt().nanoseconds
     return action(minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -626,14 +627,14 @@ inline class LongNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).toIntNanosecondsUnchecked().inMinutes
-    val seconds = (this - hours - minutes).toIntNanosecondsUnchecked().inSeconds
-    val milliseconds = (this - hours - minutes - seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - hours - minutes - seconds -
-        milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - hours - minutes - seconds - milliseconds -
-        microseconds).toIntNanosecondsUnchecked()
+    val hours = (value / NANOSECONDS_PER_HOUR).hours
+    val minutes = ((value % NANOSECONDS_PER_HOUR) / NANOSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % NANOSECONDS_PER_MINUTE) / NANOSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) /
+        NANOSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).toInt().microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).toInt().nanoseconds
     return action(hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
 
@@ -646,16 +647,15 @@ inline class LongNanoseconds(
     microseconds: IntMicroseconds,
     nanoseconds: IntNanoseconds
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntNanosecondsUnchecked().inHours
-    val minutes = (this - days - hours).toIntNanosecondsUnchecked().inMinutes
-    val seconds = (this - days - hours - minutes).toIntNanosecondsUnchecked().inSeconds
-    val milliseconds = (this - days - hours - minutes -
-        seconds).toIntNanosecondsUnchecked().inMilliseconds
-    val microseconds = (this - days - hours - minutes - seconds -
-        milliseconds).toIntNanosecondsUnchecked().inMicroseconds
-    val nanoseconds = (this - days - hours - minutes - seconds - milliseconds -
-        microseconds).toIntNanosecondsUnchecked()
+    val days = (value / NANOSECONDS_PER_DAY).days
+    val hours = ((value % NANOSECONDS_PER_DAY) / NANOSECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % NANOSECONDS_PER_HOUR) / NANOSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % NANOSECONDS_PER_MINUTE) / NANOSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % NANOSECONDS_PER_SECOND) /
+        NANOSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = ((value % NANOSECONDS_PER_MILLISECOND) /
+        NANOSECONDS_PER_MICROSECOND).toInt().microseconds
+    val nanoseconds = (value % NANOSECONDS_PER_MICROSECOND).toInt().nanoseconds
     return action(days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds)
   }
 

@@ -32,11 +32,11 @@ inline class IntWeeks(
   val value: Int
 ) : Comparable<IntWeeks> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntWeeks
-    get() = if (value < 0) IntWeeks(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to days.
    * @throws ArithmeticException if overflow occurs
@@ -71,11 +71,11 @@ inline class IntWeeks(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0W"
-       value == Int.MIN_VALUE -> "-P2147483648W"
+     return when (value) {
+       0 -> "P0W"
+       Int.MIN_VALUE -> "-P2147483648W"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue)
          append('W')
@@ -194,11 +194,11 @@ inline class LongWeeks(
   val value: Long
 ) : Comparable<LongWeeks> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongWeeks
-    get() = if (value < 0) LongWeeks(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to days.
    * @throws ArithmeticException if overflow occurs
@@ -233,11 +233,11 @@ inline class LongWeeks(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0W"
-       value == Long.MIN_VALUE -> "-P9223372036854775808W"
+     return when (value) {
+       0L -> "P0W"
+       Long.MIN_VALUE -> "-P9223372036854775808W"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue)
          append('W')

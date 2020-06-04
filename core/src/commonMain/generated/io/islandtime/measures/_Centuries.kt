@@ -34,11 +34,11 @@ inline class IntCenturies(
   val value: Int
 ) : Comparable<IntCenturies> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntCenturies
-    get() = if (value < 0) IntCenturies(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to months.
    * @throws ArithmeticException if overflow occurs
@@ -99,11 +99,11 @@ inline class IntCenturies(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0Y"
-       value == Int.MIN_VALUE -> "-P2147483648Y"
+     return when (value) {
+       0 -> "P0Y"
+       Int.MIN_VALUE -> "-P2147483648Y"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue timesExact 100)
          append('Y')
@@ -240,11 +240,11 @@ inline class LongCenturies(
   val value: Long
 ) : Comparable<LongCenturies> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongCenturies
-    get() = if (value < 0) LongCenturies(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to months.
    * @throws ArithmeticException if overflow occurs
@@ -305,11 +305,11 @@ inline class LongCenturies(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0Y"
-       value == Long.MIN_VALUE -> "-P9223372036854775808Y"
+     return when (value) {
+       0L -> "P0Y"
+       Long.MIN_VALUE -> "-P9223372036854775808Y"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue timesExact 100)
          append('Y')
