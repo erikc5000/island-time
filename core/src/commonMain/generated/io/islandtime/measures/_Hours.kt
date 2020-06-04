@@ -40,11 +40,11 @@ inline class IntHours(
   val value: Int
 ) : Comparable<IntHours> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntHours
-    get() = if (value < 0) IntHours(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -123,11 +123,11 @@ inline class IntHours(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "PT0H"
-       value == Int.MIN_VALUE -> "-PT2147483648H"
+     return when (value) {
+       0 -> "PT0H"
+       Int.MIN_VALUE -> "-PT2147483648H"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(value.absoluteValue)
          append('H')
@@ -240,8 +240,8 @@ inline class IntHours(
   operator fun minus(days: LongDays) = this.toLongHours() - days.inHours
 
   inline fun <T> toComponents(action: (days: IntDays, hours: IntHours) -> T): T {
-    val days = this.inDays
-    val hours = (this - days)
+    val days = (value / HOURS_PER_DAY).days
+    val hours = (value % HOURS_PER_DAY).hours
     return action(days, hours)
   }
 
@@ -302,11 +302,11 @@ inline class LongHours(
   val value: Long
 ) : Comparable<LongHours> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongHours
-    get() = if (value < 0) LongHours(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -399,11 +399,11 @@ inline class LongHours(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "PT0H"
-       value == Long.MIN_VALUE -> "-PT9223372036854775808H"
+     return when (value) {
+       0L -> "PT0H"
+       Long.MIN_VALUE -> "-PT9223372036854775808H"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(value.absoluteValue)
          append('H')
@@ -519,8 +519,8 @@ inline class LongHours(
   operator fun minus(days: LongDays) = this - days.inHours
 
   inline fun <T> toComponents(action: (days: LongDays, hours: IntHours) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntHoursUnchecked()
+    val days = (value / HOURS_PER_DAY).days
+    val hours = (value % HOURS_PER_DAY).toInt().hours
     return action(days, hours)
   }
 
