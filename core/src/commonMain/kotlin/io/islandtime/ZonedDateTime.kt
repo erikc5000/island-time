@@ -501,7 +501,7 @@ class ZonedDateTime private constructor(
  * Create a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
+ * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 @Suppress("FunctionName")
@@ -520,7 +520,7 @@ fun ZonedDateTime(
  * Create a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
+ * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 @Suppress("FunctionName")
@@ -539,7 +539,7 @@ fun ZonedDateTime(
  * Create a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
+ * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 @Suppress("FunctionName")
@@ -557,7 +557,7 @@ fun ZonedDateTime(
  * Create a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
+ * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 @Suppress("FunctionName")
@@ -567,7 +567,7 @@ fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLo
  * Create a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
+ * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 @Suppress("FunctionName")
@@ -582,7 +582,7 @@ infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromSecondOfUnixEpoch(secon
  * Combine a local date and time with a time zone to create a [ZonedDateTime].
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
- * gap (meaning it doesn't exist), it will adjusted forward by the length of the gap. If it falls within an overlap
+ * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
 infix fun DateTime.at(zone: TimeZone) = ZonedDateTime.fromLocal(this, zone)
