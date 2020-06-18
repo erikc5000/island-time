@@ -40,11 +40,11 @@ inline class IntMinutes(
   val value: Int
 ) : Comparable<IntMinutes> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntMinutes
-    get() = if (value < 0) IntMinutes(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -116,11 +116,11 @@ inline class IntMinutes(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "PT0M"
-       value == Int.MIN_VALUE -> "-PT2147483648M"
+     return when (value) {
+       0 -> "PT0M"
+       Int.MIN_VALUE -> "-PT2147483648M"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(value.absoluteValue)
          append('M')
@@ -234,8 +234,8 @@ inline class IntMinutes(
   operator fun minus(days: LongDays) = this.toLongMinutes() - days.inMinutes
 
   inline fun <T> toComponents(action: (hours: IntHours, minutes: IntMinutes) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours)
+    val hours = (value / MINUTES_PER_HOUR).hours
+    val minutes = (value % MINUTES_PER_HOUR).minutes
     return action(hours, minutes)
   }
 
@@ -244,9 +244,9 @@ inline class IntMinutes(
     hours: IntHours,
     minutes: IntMinutes
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).inHours
-    val minutes = (this - days - hours)
+    val days = (value / MINUTES_PER_DAY).days
+    val hours = ((value % MINUTES_PER_DAY) / MINUTES_PER_HOUR).hours
+    val minutes = (value % MINUTES_PER_HOUR).minutes
     return action(days, hours, minutes)
   }
 
@@ -307,11 +307,11 @@ inline class LongMinutes(
   val value: Long
 ) : Comparable<LongMinutes> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongMinutes
-    get() = if (value < 0) LongMinutes(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -397,11 +397,11 @@ inline class LongMinutes(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "PT0M"
-       value == Long.MIN_VALUE -> "-PT9223372036854775808M"
+     return when (value) {
+       0L -> "PT0M"
+       Long.MIN_VALUE -> "-PT9223372036854775808M"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(value.absoluteValue)
          append('M')
@@ -517,8 +517,8 @@ inline class LongMinutes(
   operator fun minus(days: LongDays) = this - days.inMinutes
 
   inline fun <T> toComponents(action: (hours: LongHours, minutes: IntMinutes) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).toIntMinutesUnchecked()
+    val hours = (value / MINUTES_PER_HOUR).hours
+    val minutes = (value % MINUTES_PER_HOUR).toInt().minutes
     return action(hours, minutes)
   }
 
@@ -527,9 +527,9 @@ inline class LongMinutes(
     hours: IntHours,
     minutes: IntMinutes
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntMinutesUnchecked().inHours
-    val minutes = (this - days - hours).toIntMinutesUnchecked()
+    val days = (value / MINUTES_PER_DAY).days
+    val hours = ((value % MINUTES_PER_DAY) / MINUTES_PER_HOUR).toInt().hours
+    val minutes = (value % MINUTES_PER_HOUR).toInt().minutes
     return action(days, hours, minutes)
   }
 
