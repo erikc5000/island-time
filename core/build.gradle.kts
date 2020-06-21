@@ -57,8 +57,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-js"))
-                implementation("com.github.samgarasx:kotlin-moment:2.24.0-pre.2-kotlin-1.3.72")
-                implementation(npm("moment", "2.24.0"))
             }
         }
 

@@ -2,8 +2,10 @@ package io.islandtime.format
 
 import io.islandtime.DateTimeException
 import io.islandtime.base.DateTimeField
+import io.islandtime.intl.DateTimeFormat
 import io.islandtime.locale.Locale
 import io.islandtime.locale.MLocale
+import io.islandtime.objectOf
 import kotlin.collections.HashMap
 
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
@@ -169,12 +171,23 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     }
 
     private fun allEraTextFor(style: TextStyle, locale: MLocale): Array<String> {
-        return when (style) {
-            //TODO support other locales
-            TextStyle.FULL, TextStyle.FULL_STANDALONE -> englishLongEraSymbols
-            //TODO support other locales
-            TextStyle.SHORT, TextStyle.SHORT_STANDALONE -> narrowEraSymbols
-            TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> narrowEraSymbols
+        val eraStyle = when (style) {
+            TextStyle.FULL, TextStyle.FULL_STANDALONE -> "long"
+            TextStyle.SHORT, TextStyle.SHORT_STANDALONE -> "short"
+            TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> "narrow"
         }
+
+        val dtf = DateTimeFormat(locale.locale, objectOf {
+            era = eraStyle
+        })
+
+        //TODO should we resolve a old date too?
+        return dtf
+            .formatToParts()
+            ?.find { it.type == "era" }
+            ?.value
+            ?.let {
+                arrayOf(it)
+            } ?: englishLongEraSymbols
     }
 }

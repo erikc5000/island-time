@@ -1,37 +1,86 @@
 package io.islandtime.format
 
+import io.islandtime.intl.DateTimeFormat
 import io.islandtime.locale.MLocale
+import io.islandtime.locale.defaultLocale
+import io.islandtime.objectOf
+import kotlin.js.Date
 
 class DateFormatSymbols private constructor(
-    private val locale: MLocale?
+    private val locale: MLocale
 ) {
 
     companion object {
 
         fun getInstance(locale: MLocale? = null): DateFormatSymbols {
-            return DateFormatSymbols(locale)
+            return DateFormatSymbols(locale ?: defaultLocale())
         }
-
     }
 
-    val weekdays: Array<String> =
-        locale?.weekdays() ?: moment.weekdays()
+    private val amPmFormatter = DateTimeFormat(locale.locale, objectOf {
+        hour12 = true
+        hour = "2-digit"
+    })
 
-    val shortWeekdays: Array<String> =
-        locale?.weekdaysShort() ?: moment.weekdaysShort()
+    val weekdays: Array<String> = dayNameList("long")
 
-    val months : Array<String> =
-        locale?.months() ?: moment.months()
+    val shortWeekdays: Array<String> = dayNameList("short")
 
-    val shortMonthsNames : Array<String> =
-        locale?.monthsShort() ?: moment.monthsShort()
+    private fun dayNameList(format: String): Array<String> {
+        fun Date.getDayDate(day: Int): Date =
+            Date(getFullYear(), getMonth(), getDay() + day)
 
-    val apPm : Array<String> =
-        //TODO not sure if there is something similar in javascript
-        APPM
-            .values()
-            .map { it.raw }
+        val dtf = DateTimeFormat(locale.locale, objectOf {
+            weekday = format
+        })
+
+        //TODO could not find a correct day as the start
+        // this way the resulting array is not sorted correctly
+        val now = Date(2020, 1, 5)
+
+        val dayNumbers = sequenceOf(0, 1, 2, 3, 4, 5, 6)
+
+        return dayNumbers
+            .mapNotNull {
+                dtf.formatToParts(now.getDayDate(it)).find { it.type == "weekday" }?.value
+            }
+            .toList()
             .toTypedArray()
+    }
+
+    val months: Array<String> = monthsNameList("long")
+
+    val shortMonthsNames: Array<String> = monthsNameList("short")
+
+    private fun monthsNameList(format: String): Array<String> {
+        fun Date.getMonthDate(month: Int): Date =
+            Date(getFullYear(), month)
+
+        val dtf = DateTimeFormat("en-US", objectOf {
+            month = format
+        })
+
+        val now = Date(2020, 0)
+
+        val dayNumbers = sequenceOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+        return dayNumbers
+            .mapNotNull {
+                dtf.formatToParts(now.getMonthDate(it)).find { it.type == "month" }?.value
+            }
+            .toList()
+            .toTypedArray()
+    }
+
+    val apPm: Array<String>
+        get() {
+            val at10 = Date(2020, 0, 1, 10)
+            val at22 = Date(2020, 0, 1, 22)
+
+            return arrayOf(
+                amPmFormatter.formatToParts(at10).find { it.type == "dayPeriod" }?.value ?: APPM.AM.raw,
+                amPmFormatter.formatToParts(at22).find { it.type == "dayPeriod" }?.value ?: APPM.PM.raw
+            )
+        }
 }
 
 enum class CalendarDayName(
@@ -124,9 +173,9 @@ enum class CalendarMonthName(
     )
 }
 
-enum class APPM (
-    val raw : String
-){
+enum class APPM(
+    val raw: String
+) {
     AM(
         raw = "AM"
     ),
