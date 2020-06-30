@@ -4,7 +4,7 @@ object Versions {
     const val atomicfu = "0.14.2"
     const val androidxTest = "1.2.0"
     const val googleTruth = "1.0.1"
-    const val threetenabp = "1.2.3"
+    const val threetenabp = "1.2.4"
     const val stately = "1.0.2-a4"
     const val kotlinpoet = "1.6.0"
     const val androidDesugarJdkLibs = "1.0.5"
