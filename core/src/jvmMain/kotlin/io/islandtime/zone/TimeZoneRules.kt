@@ -57,7 +57,7 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
     }
 
     override fun offsetAt(instant: Instant): UtcOffset {
-        return with(instant) { offsetAt(secondsSinceUnixEpoch, nanoOfSecondsSinceUnixEpoch) }
+        return with(instant) { offsetAt(secondsSinceUnixEpoch, additionalNanosecondsSinceUnixEpoch) }
     }
 
     override fun offsetAt(dateTime: DateTime): UtcOffset {
