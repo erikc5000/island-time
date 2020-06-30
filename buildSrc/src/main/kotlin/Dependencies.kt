@@ -7,7 +7,7 @@ object Versions {
     const val threetenabp = "1.2.4"
     const val stately = "1.0.2-a4"
     const val kotlinpoet = "1.6.0"
-    const val androidDesugarJdkLibs = "1.0.5"
+    const val androidDesugarJdkLibs = "1.0.9"
 }
 
 object Libs {
