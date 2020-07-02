@@ -4,12 +4,17 @@ plugins {
 }
 
 android {
+    compileOptions {
+        coreLibraryDesugaringEnabled = true
+    }
+
     sourceSets {
         getByName("main").java.srcDirs("src/main/kotlin")
         getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
     }
 
     defaultConfig {
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -19,10 +24,11 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(Libs.androidDesugarJdkLibs)
+
     implementation(project(":core"))
     implementation(kotlin("stdlib-jdk8"))
 
-    androidTestImplementation(project(":extensions:threetenabp"))
     androidTestImplementation(Libs.AndroidxTest.runner)
     androidTestImplementation(Libs.googleTruth)
     androidTestUtil(Libs.AndroidxTest.orchestrator)
