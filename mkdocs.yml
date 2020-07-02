@@ -44,3 +44,11 @@ markdown_extensions:
   - admonition
   - pymdownx.superfences
   - pymdownx.tabbed
+
+plugins:
+  - search
+  - macros
+
+extra:
+  versions:
+    islandtime: '1.2.2'

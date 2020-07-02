@@ -9,14 +9,14 @@ Add the following dependency to your project's Gradle script:
 === "Groovy"
     ```groovy
     dependencies {
-        implementation "io.islandtime:serialization-extensions:0.2.2"
+        implementation "io.islandtime:serialization-extensions:{{ versions.islandtime }}"
     }
     ```
 
 === "Kotlin"
     ```kotlin
     dependencies {
-        implementation("io.islandtime:serialization-extensions:0.2.2")
+        implementation("io.islandtime:serialization-extensions:{{ versions.islandtime }}")
     }
     ```
 

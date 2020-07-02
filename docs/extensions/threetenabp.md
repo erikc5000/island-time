@@ -9,14 +9,14 @@ Add the following Android-only dependency to your project's Gradle script:
 === "Groovy"
     ```groovy
     dependencies {
-        implementation "io.islandtime:threetenabp-extensions:0.2.2"
+        implementation "io.islandtime:threetenabp-extensions:{{ versions.islandtime }}"
     }
     ```
 
 === "Kotlin"
     ```kotlin
     dependencies {
-        implementation("io.islandtime:threetenabp-extensions:0.2.2")
+        implementation("io.islandtime:threetenabp-extensions:{{ versions.islandtime }}")
     }
     ```
 

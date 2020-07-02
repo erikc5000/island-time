@@ -40,14 +40,14 @@ Add the following dependency to your project's Gradle script:
 === "Groovy"
     ```groovy
     dependencies {
-        implementation "io.islandtime:core:0.2.2"
+        implementation "io.islandtime:core:{{ versions.islandtime }}"
     }
     ```
 
 === "Kotlin"
     ```kotlin
     dependencies {
-        implementation("io.islandtime:core:0.2.2")
+        implementation("io.islandtime:core:{{ versions.islandtime }}")
     }
     ```
 
@@ -56,7 +56,7 @@ Add the following dependency to your project's Gradle script:
 
 ### Android
 
-#### Android Studio 4.0 or Later
+#### Android Studio 4.0 or later
 
 Make sure that [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) is enabled.
 
@@ -104,11 +104,11 @@ Make sure that [core library desugaring](https://developer.android.com/studio/pr
     }
     ```
 
-#### Android Studio 3.6 or Earlier
+#### Android Studio 3.6 or earlier
 
 You'll need to add an additional dependency on the ThreeTen Android Backport. You can find details [here](extensions/threetenabp.md).
 
-### Snapshot Builds
+### Snapshot builds
 
 Development snapshot builds are available in the Sonatype OSS Snapshot Repository. To use one, you'll need to add that repository to your project's Gradle script:
 
