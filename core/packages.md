@@ -10,6 +10,10 @@ Date-time primitives and core concepts, such as `Date`, `Time`, `Instant`, and `
 
 **Experimental**: Framework-level interfaces, allowing aspects of date and time to be abstracted. This area is unstable and likely to see significant change.
 
+# Package io.islandtime.calendar
+
+Platform-independent calendar properties.
+
 # Package io.islandtime.clock
 
 The default clock implementation, providing access to the system clock at millisecond precision and a `FixedClock` for testing purposes.
@@ -18,9 +22,17 @@ The default clock implementation, providing access to the system clock at millis
 
 Various extensions specifically for the Apple platform.
 
+# Package io.islandtime.format
+
+Classes involved in the formatting of dates and times.
+
 # Package io.islandtime.jvm
 
 Various extensions specifically for the JVM.
+
+# Package io.islandtime.locale
+
+Platform-independent locale.
 
 # Package io.islandtime.measures
 
@@ -28,7 +40,7 @@ Classes related to the measurement of time, including `Duration`, `Period`, and 
 
 # Package io.islandtime.operators
 
-A set of convenience operators for various date-time primitives, enabling things like `date.next(TUESDAY)`, `date.startOfWeek`, or `dateTime.truncatedToMilliseconds()`.
+A set of convenience operators for various date-time primitives, enabling things like `date.next(TUESDAY)`, `date.startOfWeek`, or `dateTime.truncatedTo(HOURS)`.
 
 # Package io.islandtime.parser
 
