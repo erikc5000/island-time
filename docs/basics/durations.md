@@ -4,7 +4,7 @@ In Island Time, durations are fully type-safe. The use of durations in terms of 
 
 ## Single Unit Durations
 
-Island Time provides inline classes representing each individual duration unit, backed by either a `Long` or `Int` -- such as `IntYears`, `IntHours`, or `LongNanoseconds`. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
+Island Time provides [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html) representing each individual duration unit, backed by either a `Long` or `Int` &mdash; such as `IntYears`, `IntHours`, or `LongNanoseconds`. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
 
 ```kotlin
 // The minimum necessary unit granularity is preserved when
@@ -25,13 +25,13 @@ A quantity in one unit can be broken down into parts in terms of "bigger" units 
 }
 ```
 
-Or converted to another unit:
+Or converted to another unit.
 
 ```kotlin
 val hours: IntHours = 60.minutes.inHours
 ```
 
-You can also get the duration between two date-times in terms of any given unit.
+You can also get the duration between two date-times in terms of any given unit, using functions like `hoursBetween()` or `daysBetween()`.
 
 ```kotlin
 val hours = hoursBetween(firstDateTime, secondDateTime)
@@ -40,7 +40,7 @@ val absHours = hours.absoluteValue // hours may be negative
 
 ## `Duration`
 
-The `Duration` class can be used to represent time-based durations that are potentially very large at nanosecond precision. In most cases, it's probably unnecessary to use and single unit durations will be perfectly satisfactory, but you can be assured that overflow won't happen when expressing any duration that fits within the supported time scale.
+The [`Duration`](../api/core/io.islandtime.measures/-duration/index.md) class can be used to represent time-based durations that are potentially very large at nanosecond precision. In most cases, it's probably unnecessary and single unit durations will be perfectly satisfactory, but you can be assured that overflow won't happen when expressing any duration that fits within the supported time scale.
 
 A single unit duration can be converted to a `Duration` like so:
 
@@ -63,7 +63,7 @@ val minutes: LongMinutes = duration.inMinutes
 
 ## `Period`
 
-A `Period` is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of things that you can do with it.
+A [`Period`](../api/core/io.islandtime.measures/-period/index.md) is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of things that you can do with it.
 
 ```kotlin
 val period: Period = periodOf(5.years, 13.months, 10.days)

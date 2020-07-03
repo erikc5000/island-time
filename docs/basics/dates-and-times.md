@@ -10,7 +10,7 @@ Island Time has a wide array of different date-time classes, each tailored to it
 | `YearMonth` | month | `2020-02` |
 | `Year` | year | `2020` |
 
-The `Date` class represents a date in an ambiguous region. It could be in New York City. It could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone -- hence the _ambiguous_ part.
+The `Date` class represents a date in an ambiguous region. It could be in New York City. It could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone &mdash; hence the _ambiguous_ part.
 
 ```kotlin
 // Get the current date in the local time zone of the system
@@ -35,7 +35,7 @@ val yearMonth: YearMonth = Year(2020) at Month.AUGUST
 
 ## Time of Day
 
-The `Time` class can be used to represent a time of the day in an ambiguous region. Unlike `Date`, there are no classes with reduced precision -- a `Time` is always precise to the nanosecond.
+The `Time` class can be used to represent a time of the day in an ambiguous region. Unlike `Date`, there are no classes with reduced precision &mdash; a `Time` is always precise to the nanosecond.
 
 ```kotlin
 // Get the current time in the local time zone of the system
@@ -91,11 +91,11 @@ data class DogDto(
 )
 ```
 
-To capture an instant along with the local time, you have two options -- `OffsetDateTime` and `ZonedDateTime`. Both store a date-time with an offset from UTC, however, `ZonedDateTime` is also aware of time zone rules, which is an important distinction.
+To capture an instant along with the local time, you have two options &mdash; `OffsetDateTime` and `ZonedDateTime`. Both store a date-time with an offset from UTC, however, `ZonedDateTime` is also aware of time zone rules, which is an important distinction.
 
 ### `UtcOffset` vs. `TimeZone`
 
-In Island Time, a `UtcOffset` is just a number of seconds that a local time must be adjusted forward or backward by to be equivalent to UTC. A `TimeZone` defines the rules used to determine the UTC offset. Time zones fall into two categories -- region-based (`TimeZone.Region`) and fixed offset (`TimeZone.FixedOffset`).
+In Island Time, a `UtcOffset` is just a number of seconds that a local time must be adjusted forward or backward by to be equivalent to UTC. A `TimeZone` defines the rules used to determine the UTC offset. Time zones fall into two categories &mdash; region-based (`TimeZone.Region`) and fixed offset (`TimeZone.FixedOffset`).
 
 Region-based zones have identifiers, such as "America/New_York" or "Europe/London", that correspond to entries in the [IANA Time Zone Database](https://www.iana.org/time-zones).
 
@@ -140,9 +140,9 @@ println(zonedDateTime.adjustedTo(TimeZone("America/Los_Angeles")))
 
 ## Patterns and Operators
 
-Throughout Island Time's date-time primitives, you'll find a set of patterns that remain relatively constant as well as a number of operators that simplify common tasks.
+Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of operators that simplify common tasks.
 
-### The `at` operator
+### `at`
 
 The `at` infix function can be used to build up date-time primitives from "smaller" pieces. For example, we can create a `DateTime` by combining a `Date and a `Time`.
 
@@ -165,7 +165,7 @@ val dateTime = DateTime.now().copy(dayOfMonth = 15)
 val dateTimeAtMidnight = dateTime.copy(time = Time.MIDNIGHT)
 ```
 
-### Arithmetic
+### Addition and Subtraction
 
 A [duration](durations.md) of time can be added or subtracted from a date-time primitive. Which units are supported will vary depending on whether the primitive is date-based, time-based, or both.
 
@@ -177,23 +177,6 @@ val tenSecondsLater = Instant.now() + 10.seconds
 ```
 
 When working with `ZonedDateTime`, adding a day-based period of time may cross a daylight savings time transition, in which case, adding `1.days` may not be the same as adding `24.hours`.
-
-### ISO representation
-
-Any date-time primitive can be converted to an appropriate ISO string format by simply calling `toString()`. To convert a string into a date-time primitive, use the appropriate conversion function, such as `String.toDate()` or `String.toInstant()`.
-
-```kotlin
-val date = Date.now()
-val isoString: String = date.toString
-val dateFromString: Date = isoString.toDate()
-```
-
-By default, Island Time reads and writes using ISO-8601 extended format, which is most common. [Predefined parsers](../api/core/io.islandtime.parser/-date-time-parsers/index.md) are also available that can read the less common basic format -- or both basic and extended.
-
-```kotlin
-val basicDateString = "20200305"
-val date = basicDateString.toDate(DateTimeParsers.Iso.Basic.DATE)
-```
 
 ### Start and end of time periods
 
@@ -207,7 +190,7 @@ val startOfMonth = date.startOfMonth
 val startOfDay: DateTime = date.startOfDay
 ```
 
-When it comes to weeks, we need to consider which day represents the start of the week. According to the ISO standard, that's Monday. However, depending on the locale, that may be on Sunday or Saturday instead. `WeekSettings` and `Locale` can be used to provide control over this.
+When it comes to weeks, we need to consider which day represents the start of the week. According to the ISO standard, that's Monday. However, depending on the locale, that may be on Sunday or Saturday instead. [`WeekSettings`](../api/core/io.islandtime.calendar/-week-settings/index.md) and the platform `Locale` type can be used to provide control over this.
 
 ```kotlin
 // Start of ISO week (Monday start)
@@ -221,6 +204,13 @@ val systemStart = Date.now().startOfWeek(WeekSettings.systemDefault())
 
 // Use the default associated with a particular locale
 val localeStart = Date.now().startOfWeek(explicitLocale)
+```
+
+You can also get the week period as a [range or interval](intervals.md).
+
+```kotlin
+// Get the date range of the current week
+val weekRange: DateRange = Date.now().weekRange(WeekSettings.systemDefault())
 ```
 
 ### Previous or next day of week
@@ -273,3 +263,15 @@ val roundedDownToHour = dateTime.truncatedTo(HOURS)
 val roundedDownTo100Millis = dateTime.roundedDownToNearest(100.milliseconds)
 // Output: 2020-06-30T06:32:14.1
 ```
+
+## ISO Representation
+
+Any date-time primitive can be converted to an appropriate ISO string format by simply calling `toString()`. To convert a string into a date-time primitive, use the appropriate conversion function, such as `String.toDate()` or `String.toInstant()`.
+
+```kotlin
+val date = Date.now()
+val isoString: String = date.toString
+val dateFromString: Date = isoString.toDate()
+```
+
+By default, Island Time reads and writes using ISO-8601 extended format, which is most common. [Predefined parsers](parsing.md#predefined-parsers) are also available that can handle other formats.
