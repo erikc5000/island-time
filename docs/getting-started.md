@@ -54,6 +54,8 @@ Add the following dependency to your project's Gradle script:
 !!! note
     Island Time publishes Gradle Module Metadata for all multiplatform artifacts. The listed "common" artifacts may be used in the dependency block of any target, common or platform-specific.
 
+Extensions are also available for [serialization](extensions/serialization.md) and the [`@Parcelize`](extensions/parcelize.md) feature on Android.
+
 ### Android
 
 #### Android Studio 4.0 or later

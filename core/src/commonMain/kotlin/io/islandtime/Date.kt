@@ -7,7 +7,7 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 
 /**
- * A date in an arbitrary region.
+ * A date in an ambiguous region.
  *
  * @constructor Create a [Date] from a year, month, and day of month.
  * @param year the year
