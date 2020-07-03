@@ -6,7 +6,7 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.DateTimeInterval
 
 /**
- * A date and time of day in an arbitrary region.
+ * A date and time of day in an ambiguous region.
  *
  * @constructor Create a [DateTime] by combining a [Date] and [Time].
  * @param date the date

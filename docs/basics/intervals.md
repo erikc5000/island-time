@@ -1,10 +1,10 @@
-# Time Intervals
+# Ranges and Intervals
 
 Kotlin offers first class support for ranges and Island Time takes full advantage of that, allowing you to model date ranges and time intervals in a way that feels natural.
 
-## Nomenclature: "Ranges" vs. "Intervals"
+## Terminology: "Ranges" vs. "Intervals"
 
-In Island Time, "ranges" are inclusive, implementing Kotlin's `ClosedRange`, while "intervals" are half-open with an exclusive end. When representing time-based intervals, precision differences (ie. millisecond vs nanosecond) can make an inclusive end troublesome to work with, so while you can create an interval from a closed range, it'll be stored, read, and written with an exclusive end.
+In Island Time, "ranges" are inclusive, implementing Kotlin's [`ClosedRange`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-closed-range/) interface, while "intervals" are half-open with an exclusive end. When representing time-based intervals, precision differences (ie. millisecond vs. nanosecond) can make an inclusive end troublesome to work with, so while you can create an interval from a closed range, it'll be stored, read, and written with an exclusive end.
 
 ## `DateRange`
 
@@ -43,9 +43,9 @@ val totalDays: LongDays = (today until today + 6.months).lengthInDays
 val period: Period = (today..today + 1.months).asPeriod()
 ```
 
-## Time-Based Intervals
+## Time Intervals
 
-Each of the [date-time classes](dates-and-times.md) has a corresponding interval class.
+Each of Island Time's [date-time](dates-and-times.md) classes has a corresponding interval class.
 
 | Class | Example ISO Representation |
 | --- | --- |
@@ -54,11 +54,22 @@ Each of the [date-time classes](dates-and-times.md) has a corresponding interval
 | `OffsetDateTimeInterval` | `2020-03-09T14:00-05:00/2020-03-10T17:00-04:00` |
 | `ZonedDateTimeInterval` | `2020-04-15T10:00-04:00[America/New_York]/2020-04-15T21:30+01:00[Europe/London]` |
 
-Inclusivity within a time interval is based on the instants defined by the start and end points (ie. timeline order, not natural order), which is in an important consideration for `OffsetDateTimeInterval` and `ZonedDateTimeInterval`, where there may be differing offsets.
+For `OffsetDateTimeInterval` and `ZonedDateTimeInterval`, inclusivity within a time interval is based on the instants defined by the start and end points, ignoring any local time differences (ie. timeline order, not natural order).
 
-### Iterating over time intervals
+### Converting a `DateRange` to an interval
 
-Only `InstantInterval` allows iteration, though the other types can be converted easily.
+A `DateRange` can be converted directly to an interval representing the period from the start of the first day to the end of the last day.
+
+```kotlin
+val today: Date = Date.now()
+val dateRange: DateRange = today - 1.weeks until today
+val zone: TimeZone = TimeZone.systemDefault()
+val instantInterval: InstantInterval = dateRange.toInstantIntervalAt(zone)
+```
+
+### Iterating over intervals
+
+Only `InstantInterval` allows iteration, though the other interval types can be converted easily enough.
 
 ```kotlin
 val now: ZonedDateTime = ZonedDateTime.now()
@@ -79,7 +90,7 @@ for (instant in now until then step 1.seconds) {
 
 ## Unbounded and Empty Intervals
 
-A range or interval may be unbounded on one or both ends -- or empty. The `MIN` and `MAX` sentinels can be used to indicate the "far past" or "far future".
+A range or interval may be unbounded on one or both ends &mdash; or empty. The `MIN` and `MAX` sentinels can be used to indicate the "far past" or "far future".
 
 ```kotlin
 val partiallyBoundedDateRange = "2020-04-12/..".toDateRange()
@@ -97,12 +108,12 @@ val completelyUnbounded = DateRange.UNBOUNDED
 val emptyDateRange = DateRange.EMPTY
 ```
 
-!!! note ""Unbounded" vs. "Open""
-    In ISO-8601, an "unbounded" interval is referred to as an "open" interval. This conflicts with the mathematical meaning of "open" though (ie. end points that are exclusive rather than inclusive), so we avoid using that terminology.
+!!! info ""Unbounded" vs. "Open""
+    In ISO-8601, an "unbounded" interval is referred to as an "open" interval. However, this conflicts with the mathematical meaning of "open" though (ie. end points that are exclusive rather than inclusive), so we avoid using that terminology.
 
 ## ISO Representation
 
-As with all of the other types in Island Time, calling `toString()` on an interval will return an ISO represention, which can be converted back to the appropriate interval type using methods like `String.toDateRange()`.
+As with all of the other types in Island Time, calling `toString()` on an interval will return an ISO represention, which can be converted back to the appropriate interval type using methods like `String.toDateRange()` or `String.toZonedDateTimeInterval()`.
 
 ```kotlin
 val firstDate = Date(2020, MARCH, 1)
@@ -122,4 +133,4 @@ val isoZonedIntervalString = instantInterval.toString()
 val readZonedInterval = isoZonedIntervalString.toZonedDateTimeInterval()
 ```
 
-By default, Island Time parses only ISO-8601 extended format, but [predefined parsers](../api/core/io.islandtime.parser/-date-time-parsers/index.md) are also available that can read the less common basic format -- or either format.
+By default, Island Time parses only ISO-8601 extended format, but [predefined parsers](parsing.md#predefined-parsers) are also available that can read the less common basic format &mdash; or either format.

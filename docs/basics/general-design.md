@@ -16,4 +16,4 @@ When working with dates and times, overflow is almost never a behavior that you 
 
 ## Type-Safety
 
-In general, Island Time tries to prevent non-sensical operations at compile time rather than runtime. To that end, you'll find that there are a lot more classes than there are in a number of other date-time libraries.
+In general, Island Time tries to prevent nonsensical operations at compile time rather than runtime. To that end, you'll find that there are a lot more classes than there are in a number of other date-time libraries.
