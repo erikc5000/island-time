@@ -4,17 +4,17 @@ import io.islandtime.TimeZone
 import io.islandtime.locale.Locale
 import io.islandtime.objectOf
 import kotlin.js.Date
+import kotlin.js.Math
 
 actual object PlatformTimeZoneTextProvider : TimeZoneTextProvider {
     override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
-        //TODO not sure how to support generic ones
         val zoneStyle = when (style) {
             TimeZoneTextStyle.GENERIC,
+            TimeZoneTextStyle.SHORT_GENERIC -> null
             TimeZoneTextStyle.STANDARD,
             TimeZoneTextStyle.DAYLIGHT_SAVING -> "long"
             TimeZoneTextStyle.SHORT_STANDARD,
-            TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING,
-            TimeZoneTextStyle.SHORT_GENERIC -> "short"
+            TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING -> "short"
         }
 
         return try {

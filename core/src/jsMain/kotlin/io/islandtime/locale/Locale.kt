@@ -1,20 +1,18 @@
 package io.islandtime.locale
 
-import io.islandtime.intl.DateTimeFormat
+import io.islandtime.js.internal.intl.DateTimeFormat
 
-class MLocale(
+actual class Locale(
     val locale: String
 )
 
-actual typealias Locale = MLocale
-
 actual fun defaultLocale(): Locale =
-    MLocale(DateTimeFormat().resolvedOptions().locale)
+    Locale(DateTimeFormat().resolvedOptions().locale)
 
 internal actual fun localeOf(identifier: String): Locale =
     try {
         DateTimeFormat(identifier).format()
-        MLocale(identifier)
+        Locale(identifier)
     }catch (e : Exception){
         defaultLocale()
     }

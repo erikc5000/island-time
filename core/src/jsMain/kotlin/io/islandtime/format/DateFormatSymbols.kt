@@ -1,26 +1,27 @@
 package io.islandtime.format
 
-import io.islandtime.intl.DateTimeFormat
-import io.islandtime.locale.MLocale
+import io.islandtime.js.internal.intl.DateTimeFormat
+import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
 import io.islandtime.objectOf
 import kotlin.js.Date
 
 class DateFormatSymbols private constructor(
-    private val locale: MLocale
+    private val locale: Locale
 ) {
 
     companion object {
 
-        fun getInstance(locale: MLocale? = null): DateFormatSymbols {
+        fun getInstance(locale: Locale? = null): DateFormatSymbols {
             return DateFormatSymbols(locale ?: defaultLocale())
         }
     }
 
-    private val amPmFormatter = DateTimeFormat(locale.locale, objectOf {
-        hour12 = true
-        hour = "2-digit"
-    })
+    private val amPmFormatter =
+        DateTimeFormat(locale.locale, objectOf {
+            hour12 = true
+            hour = "2-digit"
+        })
 
     val weekdays: Array<String> = dayNameList("long")
 

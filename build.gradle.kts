@@ -15,7 +15,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven("https://dl.bintray.com/samgarasx/kotlin-js-wrappers")
     }
 
     tasks.withType<JavaCompile>().configureEach {

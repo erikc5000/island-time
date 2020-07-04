@@ -4,14 +4,11 @@ package io.islandtime.zone
 
 
 import io.islandtime.*
-import io.islandtime.intl.DateTimeFormat
+import io.islandtime.js.internal.intl.DateTimeFormat
 import io.islandtime.measures.*
 import kotlin.js.Date
 
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
-
-    override val databaseVersion: String
-        get() = "1"
 
     override val availableRegionIds: Set<String>
         get() = setOf()
@@ -275,7 +272,7 @@ class IANARules(
             .let {
                 Date(
                     it.getFullYear(),
-                    1,
+                        1,
                     it.getDay(),
                     it.getHours(),
                     it.getMinutes(),

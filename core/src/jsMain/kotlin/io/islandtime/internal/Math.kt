@@ -2,10 +2,9 @@
 
 package io.islandtime.internal
 
-
 //TODO replace with Math functions
-internal actual infix fun Long.floorMod(other: Long): Long = ((this % other) + other) % other
-internal actual infix fun Int.floorMod(other: Int): Int = ((this % other) + other) % other
+internal actual infix fun Long.floorMod(other: Long): Long = this.rem(other)
+internal actual infix fun Int.floorMod(other: Int): Int = this.rem(other)
 internal actual infix fun Long.floorMod(other: Int): Long = this floorMod other.toLong()
 
 internal actual infix fun Long.floorDiv(other: Long): Long = this / other

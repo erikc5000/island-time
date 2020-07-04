@@ -1,7 +1,7 @@
 package io.islandtime.clock
 
 import io.islandtime.*
-import io.islandtime.intl.DateTimeFormat
+import io.islandtime.js.internal.intl.DateTimeFormat
 import io.islandtime.measures.IntMinutes
 import io.islandtime.measures.milliseconds
 import io.islandtime.measures.minutes
@@ -11,18 +11,6 @@ import kotlin.js.Date
 
 internal actual object PlatformSystemClock {
     actual fun currentZone(): TimeZone {
-        //TODO we better to check for Intl API support.
-        //  function hasIntl() {
-        //  try {
-        //    return typeof Intl !== "undefined" && Intl.DateTimeFormat;
-        //  } catch (e) {
-        //    return false;
-        //  }
-        //  }
-        //  if not found we can use FixedOffset
-        //  TimeZone.FixedOffset("${kotlin.js.Date().getTimezoneOffset()}")
-
-
         return findTimeZone(DateTimeFormat().resolvedOptions().timeZone)
     }
 

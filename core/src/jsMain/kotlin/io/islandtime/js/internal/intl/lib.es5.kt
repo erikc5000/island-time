@@ -1,6 +1,5 @@
-@file:JsQualifier("Intl")
 @file:Suppress("INTERFACE_WITH_SUPERCLASS", "OVERRIDING_FINAL_MEMBER", "RETURN_TYPE_MISMATCH_ON_OVERRIDE", "CONFLICTING_OVERLOADS", "EXTERNAL_DELEGATION")
-package io.islandtime.intl
+package io.islandtime.js.internal.intl
 
 import kotlin.js.*
 import kotlin.js.Json
@@ -17,7 +16,11 @@ import org.w3c.performance.*
 import org.w3c.workers.*
 import org.w3c.xhr.*
 
-external interface DateTimeFormatPart {
-    var type: String /* "day" | "dayPeriod" | "era" | "hour" | "literal" | "minute" | "month" | "second" | "timeZoneName" | "weekday" | "year" */
-    var value: String
+external interface DateConstructor {
+    @nativeInvoke
+    operator fun invoke(): String
+    var prototype: Date
+    fun parse(s: String): Number
+    fun UTC(year: Number, month: Number, date: Number = definedExternally, hours: Number = definedExternally, minutes: Number = definedExternally, seconds: Number = definedExternally, ms: Number = definedExternally): Number
+    fun now(): Number
 }

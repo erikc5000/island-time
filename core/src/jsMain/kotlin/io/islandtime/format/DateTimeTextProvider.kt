@@ -2,9 +2,8 @@ package io.islandtime.format
 
 import io.islandtime.DateTimeException
 import io.islandtime.base.DateTimeField
-import io.islandtime.intl.DateTimeFormat
+import io.islandtime.js.internal.intl.DateTimeFormat
 import io.islandtime.locale.Locale
-import io.islandtime.locale.MLocale
 import io.islandtime.objectOf
 import kotlin.collections.HashMap
 
@@ -20,13 +19,13 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private data class ParsableTextKey(
         val field: DateTimeField,
         val styles: Set<TextStyle>,
-        val locale: MLocale
+        val locale: Locale
     )
 
     override fun parsableTextFor(
         field: DateTimeField,
         styles: Set<TextStyle>,
-        locale: MLocale
+        locale: Locale
     ): ParsableTextList {
         if (styles.isEmpty() || !supports(field)) {
             return emptyList()
@@ -53,7 +52,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: MLocale): String? {
+    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         if (value !in 1L..7L) {
             throw DateTimeException("'$value' is outside the supported day of week field range")
         }
@@ -71,7 +70,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    override fun monthTextFor(value: Long, style: TextStyle, locale: MLocale): String? {
+    override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         if (value !in 1L..12L) {
             throw DateTimeException("'$value' is outside the supported month of year field range")
         }
@@ -79,7 +78,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return allMonthTextFor(style, locale)[value.toInt() - 1]
     }
 
-    override fun amPmTextFor(value: Long, locale: MLocale): String? {
+    override fun amPmTextFor(value: Long, locale: Locale): String? {
         if (value !in 0L..1L) {
             throw DateTimeException("'$value' is outside the supported AM/PM range")
         }
@@ -87,7 +86,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return allAmPmTextFor(locale)[value.toInt()]
     }
 
-    override fun eraTextFor(value: Long, style: TextStyle, locale: MLocale): String? {
+    override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         if (value !in 0L..1L) {
             throw DateTimeException("'$value' is outside the supported era field range")
         }
@@ -105,7 +104,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    private fun allTextFor(field: DateTimeField, style: TextStyle, locale: MLocale): Array<String> {
+    private fun allTextFor(field: DateTimeField, style: TextStyle, locale: Locale): Array<String> {
         return when (field) {
             DateTimeField.MONTH_OF_YEAR -> allMonthTextFor(style, locale)
             DateTimeField.DAY_OF_WEEK -> allDayOfWeekTextFor(style, locale)
@@ -123,7 +122,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    private fun allDayOfWeekTextFor(style: TextStyle, locale: MLocale): Array<String> {
+    private fun allDayOfWeekTextFor(style: TextStyle, locale: Locale): Array<String> {
         val symbols = DateFormatSymbols.getInstance(locale)
 
         val array = when (style) {
@@ -140,11 +139,11 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         return array
     }
 
-    private fun allMonthTextFor(style: TextStyle, locale: MLocale): Array<String> {
+    private fun allMonthTextFor(style: TextStyle, locale: Locale): Array<String> {
         return allMonthTextFor(locale).getValue(style)
     }
 
-    private fun allMonthTextFor(locale: MLocale): HashMap<TextStyle, Array<String>> {
+    private fun allMonthTextFor(locale: Locale): HashMap<TextStyle, Array<String>> {
         return monthText.getOrPut(locale) {
             val symbols = DateFormatSymbols.getInstance(locale)
             val fullArray = symbols.months
@@ -166,11 +165,11 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         }
     }
 
-    private fun allAmPmTextFor(locale: MLocale): Array<String> {
+    private fun allAmPmTextFor(locale: Locale): Array<String> {
         return DateFormatSymbols.getInstance(locale).apPm
     }
 
-    private fun allEraTextFor(style: TextStyle, locale: MLocale): Array<String> {
+    private fun allEraTextFor(style: TextStyle, locale: Locale): Array<String> {
         val eraStyle = when (style) {
             TextStyle.FULL, TextStyle.FULL_STANDALONE -> "long"
             TextStyle.SHORT, TextStyle.SHORT_STANDALONE -> "short"
