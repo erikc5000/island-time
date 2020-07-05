@@ -182,7 +182,7 @@ fun <T> TimePoint<T>.toNSDate(): NSDate {
 fun NSDate.toIslandInstant(): Instant {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return Instant.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond)
+    return Instant.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond)
 }
 
 /**
@@ -191,7 +191,7 @@ fun NSDate.toIslandInstant(): Instant {
 fun NSDate.toIslandDateTimeAt(offset: UtcOffset): DateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
+    return DateTime.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
 /**
@@ -205,7 +205,7 @@ fun NSDate.toIslandDateTimeAt(nsTimeZone: NSTimeZone) = toIslandDateTimeAt(nsTim
 fun NSDate.toIslandOffsetDateTimeAt(offset: UtcOffset): OffsetDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return OffsetDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
+    return OffsetDateTime.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
 /**
@@ -221,7 +221,7 @@ fun NSDate.toIslandOffsetDateTimeAt(nsTimeZone: NSTimeZone): OffsetDateTime {
 fun NSDate.toIslandZonedDateTimeAt(zone: TimeZone): ZonedDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
+    return ZonedDateTime.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond, zone)
 }
 
 /**
