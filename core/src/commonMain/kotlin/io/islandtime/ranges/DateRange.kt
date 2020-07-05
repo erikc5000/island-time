@@ -218,7 +218,7 @@ fun DateRange.random(random: Random): Date {
     if (!isBounded()) throwUnboundedIntervalException()
 
     try {
-        return Date.fromDayOfUnixEpoch(random.nextLong(start.unixEpochDay, endInclusive.unixEpochDay + 1))
+        return Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
     } catch (e: IllegalArgumentException) {
         throw NoSuchElementException(e.message)
     }
@@ -233,7 +233,7 @@ fun DateRange.randomOrNull(random: Random): Date? {
     return if (isEmpty() || !isBounded()) {
         null
     } else {
-        Date.fromDayOfUnixEpoch(random.nextLong(start.unixEpochDay, endInclusive.unixEpochDay + 1))
+        Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
     }
 }
 

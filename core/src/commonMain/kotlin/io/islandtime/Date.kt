@@ -46,7 +46,7 @@ class Date(
      */
     val dayOfWeek: DayOfWeek
         get() {
-            val zeroIndexedDayOfWeek = (unixEpochDay + 3) floorMod 7
+            val zeroIndexedDayOfWeek = (dayOfUnixEpoch + 3) floorMod 7
             return DayOfWeek.values()[zeroIndexedDayOfWeek.toInt()]
         }
 
@@ -59,6 +59,11 @@ class Date(
      * The day of the year -- also known as the ordinal date in ISO-8601.
      */
     val dayOfYear: Int get() = month.firstDayOfYearIn(year) + dayOfMonth - 1
+
+    /**
+     * The day of the Unix epoch.
+     */
+    val dayOfUnixEpoch: Long get() = getDayOfUnixEpochFrom(year, monthNumber, dayOfMonth)
 
     /**
      * The ISO month number, from 1-12.
@@ -93,12 +98,15 @@ class Date(
     /**
      * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
      */
-    inline val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
+    inline val daysSinceUnixEpoch: LongDays get() = dayOfUnixEpoch.days
 
-    /**
-     * The day of the Unix epoch.
-     */
-    val unixEpochDay: Long get() = getDayOfUnixEpochFrom(year, monthNumber, dayOfMonth)
+    @Deprecated(
+        "Use dayOfUnixEpoch instead.",
+        ReplaceWith("this.dayOfUnixEpoch"),
+        DeprecationLevel.WARNING
+    )
+    val unixEpochDay: Long
+        get() = dayOfUnixEpoch
 
     /**
      * Return a [Date] with [period] added to it.
