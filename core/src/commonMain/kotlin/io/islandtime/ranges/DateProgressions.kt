@@ -140,14 +140,14 @@ private fun getLastDateInProgression(start: Date, end: Date, step: IntDays): Dat
         step.value > 0L -> if (start >= end) {
             end
         } else {
-            val endEpochDay = end.unixEpochDay
-            Date.fromUnixEpochDay(endEpochDay - (abs(endEpochDay - start.unixEpochDay) % step.value))
+            val endEpochDay = end.dayOfUnixEpoch
+            Date.fromDayOfUnixEpoch(endEpochDay - (abs(endEpochDay - start.dayOfUnixEpoch) % step.value))
         }
         else -> if (start <= end) {
             end
         } else {
-            val endEpochDay = end.unixEpochDay
-            Date.fromUnixEpochDay(endEpochDay - (abs(start.unixEpochDay - end.unixEpochDay) % step.value))
+            val endEpochDay = end.dayOfUnixEpoch
+            Date.fromDayOfUnixEpoch(endEpochDay - (abs(start.dayOfUnixEpoch - end.dayOfUnixEpoch) % step.value))
         }
     }
 }
