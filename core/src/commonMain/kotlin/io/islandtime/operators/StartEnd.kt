@@ -5,6 +5,7 @@ import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.firstDayOfWeek
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
+import io.islandtime.operators.internal.copyIfChanged
 
 /**
  * The date at the start of the year that this date falls in.
@@ -19,12 +20,12 @@ val Date.endOfYear: Date get() = Date(year, Month.DECEMBER, 31)
 /**
  * The date at the start of the month that this date falls in.
  */
-val Date.startOfMonth: Date get() = copy(dayOfMonth = 1)
+val Date.startOfMonth: Date get() = copyIfChanged(dayOfMonth = 1)
 
 /**
  * The date at the end of the month that this date falls in.
  */
-val Date.endOfMonth: Date get() = copy(dayOfMonth = month.lastDayIn(year))
+val Date.endOfMonth: Date get() = copyIfChanged(dayOfMonth = month.lastDayIn(year))
 
 /**
  * The date at the start of the ISO week that this date falls in.
@@ -69,25 +70,25 @@ fun Date.endOfWeek(locale: Locale): Date = nextOrSame(locale.firstDayOfWeek + 6.
  * The date-time at the first instant of the year that this date-time falls in.
  */
 val DateTime.startOfYear: DateTime
-    get() = copy(date = date.startOfYear, time = Time.MIDNIGHT)
+    get() = copyIfChanged(date = date.startOfYear, time = Time.MIDNIGHT)
 
 /**
  * The date-time at the last representable instant of the year that this date-time falls in.
  */
 val DateTime.endOfYear: DateTime
-    get() = copy(date = date.endOfYear, time = Time.MAX)
+    get() = copyIfChanged(date = date.endOfYear, time = Time.MAX)
 
 /**
  * The date-time at the first instant of the month that this date-time falls in.
  */
 val DateTime.startOfMonth: DateTime
-    get() = copy(date = date.startOfMonth, time = Time.MIDNIGHT)
+    get() = copyIfChanged(date = date.startOfMonth, time = Time.MIDNIGHT)
 
 /**
  * The date-time at the last representable instant of the month that this date-time falls in.
  */
 val DateTime.endOfMonth: DateTime
-    get() = copy(date = date.endOfMonth, time = Time.MAX)
+    get() = copyIfChanged(date = date.endOfMonth, time = Time.MAX)
 
 /**
  * The date-time at the first instant of the ISO week that this date-time falls in.
@@ -95,7 +96,7 @@ val DateTime.endOfMonth: DateTime
  * The ISO week starts on Monday and ends on Sunday.
  */
 val DateTime.startOfWeek: DateTime
-    get() = copy(date = date.startOfWeek, time = Time.MIDNIGHT)
+    get() = copyIfChanged(date = date.startOfWeek, time = Time.MIDNIGHT)
 
 /**
  * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
@@ -103,7 +104,7 @@ val DateTime.startOfWeek: DateTime
  * on platforms that allow this to be customized.
  */
 fun DateTime.startOfWeek(settings: WeekSettings): DateTime {
-    return copy(date = date.startOfWeek(settings), time = Time.MIDNIGHT)
+    return copyIfChanged(date = date.startOfWeek(settings), time = Time.MIDNIGHT)
 }
 
 /**
@@ -111,7 +112,7 @@ fun DateTime.startOfWeek(settings: WeekSettings): DateTime {
  * determined by [locale].
  */
 fun DateTime.startOfWeek(locale: Locale): DateTime {
-    return copy(date = date.startOfWeek(locale), time = Time.MIDNIGHT)
+    return copyIfChanged(date = date.startOfWeek(locale), time = Time.MIDNIGHT)
 }
 
 /**
@@ -120,7 +121,7 @@ fun DateTime.startOfWeek(locale: Locale): DateTime {
  * The ISO week starts on Monday and ends on Sunday.
  */
 val DateTime.endOfWeek: DateTime
-    get() = copy(date = date.endOfWeek, time = Time.MAX)
+    get() = copyIfChanged(date = date.endOfWeek, time = Time.MAX)
 
 /**
  * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
@@ -128,7 +129,7 @@ val DateTime.endOfWeek: DateTime
  * locale on platforms that allow this to be customized.
  */
 fun DateTime.endOfWeek(settings: WeekSettings): DateTime {
-    return copy(date = date.endOfWeek(settings), time = Time.MAX)
+    return copyIfChanged(date = date.endOfWeek(settings), time = Time.MAX)
 }
 
 /**
@@ -136,32 +137,32 @@ fun DateTime.endOfWeek(settings: WeekSettings): DateTime {
  * will be determined by [locale].
  */
 fun DateTime.endOfWeek(locale: Locale): DateTime {
-    return copy(date = date.endOfWeek(locale), time = Time.MAX)
+    return copyIfChanged(date = date.endOfWeek(locale), time = Time.MAX)
 }
 
 /**
  * The date-time at the first instant of the year that this date-time falls in.
  */
 val OffsetDateTime.startOfYear: OffsetDateTime
-    get() = copy(dateTime = dateTime.startOfYear)
+    get() = copyIfChanged(dateTime = dateTime.startOfYear)
 
 /**
  * The date-time at the last representable instant of the year that this date-time falls in.
  */
 val OffsetDateTime.endOfYear: OffsetDateTime
-    get() = copy(dateTime = dateTime.endOfYear)
+    get() = copyIfChanged(dateTime = dateTime.endOfYear)
 
 /**
  * The date-time at the first instant of the month that this date-time falls in.
  */
 val OffsetDateTime.startOfMonth: OffsetDateTime
-    get() = copy(dateTime = dateTime.startOfMonth)
+    get() = copyIfChanged(dateTime = dateTime.startOfMonth)
 
 /**
  * The date-time at the last representable instant of the month that this date-time falls in.
  */
 val OffsetDateTime.endOfMonth: OffsetDateTime
-    get() = copy(dateTime = dateTime.endOfMonth)
+    get() = copyIfChanged(dateTime = dateTime.endOfMonth)
 
 /**
  * The date-time at the first instant of the ISO week that this date-time falls in.
@@ -169,7 +170,7 @@ val OffsetDateTime.endOfMonth: OffsetDateTime
  * The ISO week starts on Monday and ends on Sunday.
  */
 val OffsetDateTime.startOfWeek: OffsetDateTime
-    get() = copy(dateTime = dateTime.startOfWeek)
+    get() = copyIfChanged(dateTime = dateTime.startOfWeek)
 
 /**
  * The date-time at the first instant of the week that this date-time falls in. The first day of the week will be
@@ -177,7 +178,7 @@ val OffsetDateTime.startOfWeek: OffsetDateTime
  * locale on platforms that allow the user to customize this.
  */
 fun OffsetDateTime.startOfWeek(settings: WeekSettings): OffsetDateTime {
-    return copy(dateTime = dateTime.startOfWeek(settings))
+    return copyIfChanged(dateTime = dateTime.startOfWeek(settings))
 }
 
 /**
@@ -185,7 +186,7 @@ fun OffsetDateTime.startOfWeek(settings: WeekSettings): OffsetDateTime {
  * determined by [locale].
  */
 fun OffsetDateTime.startOfWeek(locale: Locale): OffsetDateTime {
-    return copy(dateTime = dateTime.startOfWeek(locale))
+    return copyIfChanged(dateTime = dateTime.startOfWeek(locale))
 }
 
 /**
@@ -194,7 +195,7 @@ fun OffsetDateTime.startOfWeek(locale: Locale): OffsetDateTime {
  * The ISO week starts on Monday and ends on Sunday.
  */
 val OffsetDateTime.endOfWeek: OffsetDateTime
-    get() = copy(dateTime = dateTime.endOfWeek)
+    get() = copyIfChanged(dateTime = dateTime.endOfWeek)
 
 /**
  * The date-time at the last representable instant of the week that this date-time falls in. The first day of the week
@@ -202,7 +203,7 @@ val OffsetDateTime.endOfWeek: OffsetDateTime
  * default locale on platforms that allow the user to customize this.
  */
 fun OffsetDateTime.endOfWeek(settings: WeekSettings): OffsetDateTime {
-    return copy(dateTime = dateTime.endOfWeek(settings))
+    return copyIfChanged(dateTime = dateTime.endOfWeek(settings))
 }
 
 /**
@@ -210,7 +211,7 @@ fun OffsetDateTime.endOfWeek(settings: WeekSettings): OffsetDateTime {
  * will be determined by [locale].
  */
 fun OffsetDateTime.endOfWeek(locale: Locale): OffsetDateTime {
-    return copy(dateTime = dateTime.endOfWeek(locale))
+    return copyIfChanged(dateTime = dateTime.endOfWeek(locale))
 }
 
 /**

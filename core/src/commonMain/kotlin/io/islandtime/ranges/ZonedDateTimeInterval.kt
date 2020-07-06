@@ -200,7 +200,7 @@ fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
  */
 fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
     return random(random) { second, nanosecond ->
-        ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
+        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
     }
 }
 
@@ -211,7 +211,7 @@ fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
  */
 fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
     return randomOrNull(random) { second, nanosecond ->
-        ZonedDateTime.fromUnixEpochSecond(second, nanosecond, start.zone)
+        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
     }
 }
 

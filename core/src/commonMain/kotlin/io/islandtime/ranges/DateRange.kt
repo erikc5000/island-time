@@ -120,7 +120,7 @@ class DateRange(
         /**
          * A range containing zero days.
          */
-        val EMPTY = DateRange(Date.fromUnixEpochDay(1L), Date.fromUnixEpochDay(0L))
+        val EMPTY = DateRange(Date.fromDayOfUnixEpoch(1L), Date.fromDayOfUnixEpoch(0L))
 
         /**
          * An unbounded (ie. infinite) range of dates.
@@ -202,11 +202,10 @@ fun DateRange.randomOrNull(): Date? = randomOrNull(Random)
  * @see DateRange.randomOrNull
  */
 fun DateRange.random(random: Random): Date {
-    if (isUnbounded()) throwUnboundedIntervalException()
+    if (!isBounded()) throwUnboundedIntervalException()
 
     try {
-        val longRange = first.unixEpochDay..last.unixEpochDay
-        return Date.fromUnixEpochDay(random.nextLong(longRange))
+        return Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
     } catch (e: IllegalArgumentException) {
         throw NoSuchElementException(e.message)
     }
@@ -218,11 +217,10 @@ fun DateRange.random(random: Random): Date {
  * @see DateRange.random
  */
 fun DateRange.randomOrNull(random: Random): Date? {
-    return if (isEmpty() || isUnbounded()) {
+    return if (isEmpty() || !isBounded()) {
         null
     } else {
-        val longRange = first.unixEpochDay..last.unixEpochDay
-        Date.fromUnixEpochDay(random.nextLong(longRange))
+        Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
     }
 }
 

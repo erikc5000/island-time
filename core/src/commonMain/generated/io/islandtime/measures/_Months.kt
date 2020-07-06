@@ -34,11 +34,11 @@ inline class IntMonths(
   val value: Int
 ) : Comparable<IntMonths> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntMonths
-    get() = if (value < 0) IntMonths(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to whole years.
    */
@@ -78,11 +78,11 @@ inline class IntMonths(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0M"
-       value == Int.MIN_VALUE -> "-P2147483648M"
+     return when (value) {
+       0 -> "P0M"
+       Int.MIN_VALUE -> "-P2147483648M"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue)
          append('M')
@@ -167,8 +167,8 @@ inline class IntMonths(
   operator fun minus(centuries: LongCenturies) = this.toLongMonths() - centuries.inMonths
 
   inline fun <T> toComponents(action: (years: IntYears, months: IntMonths) -> T): T {
-    val years = this.inYears
-    val months = (this - years)
+    val years = (value / MONTHS_PER_YEAR).years
+    val months = (value % MONTHS_PER_YEAR).months
     return action(years, months)
   }
 
@@ -177,9 +177,9 @@ inline class IntMonths(
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val decades = this.inDecades
-    val years = (this - decades).inYears
-    val months = (this - decades - years)
+    val decades = (value / MONTHS_PER_DECADE).decades
+    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).years
+    val months = (value % MONTHS_PER_YEAR).months
     return action(decades, years, months)
   }
 
@@ -189,10 +189,10 @@ inline class IntMonths(
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val centuries = this.inCenturies
-    val decades = (this - centuries).inDecades
-    val years = (this - centuries - decades).inYears
-    val months = (this - centuries - decades - years)
+    val centuries = (value / MONTHS_PER_CENTURY).centuries
+    val decades = ((value % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).decades
+    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).years
+    val months = (value % MONTHS_PER_YEAR).months
     return action(centuries, decades, years, months)
   }
 
@@ -247,11 +247,11 @@ inline class LongMonths(
   val value: Long
 ) : Comparable<LongMonths> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongMonths
-    get() = if (value < 0) LongMonths(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to whole years.
    */
@@ -291,11 +291,11 @@ inline class LongMonths(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0M"
-       value == Long.MIN_VALUE -> "-P9223372036854775808M"
+     return when (value) {
+       0L -> "P0M"
+       Long.MIN_VALUE -> "-P9223372036854775808M"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue)
          append('M')
@@ -387,8 +387,8 @@ inline class LongMonths(
   operator fun minus(centuries: LongCenturies) = this - centuries.inMonths
 
   inline fun <T> toComponents(action: (years: LongYears, months: IntMonths) -> T): T {
-    val years = this.inYears
-    val months = (this - years).toIntMonthsUnchecked()
+    val years = (value / MONTHS_PER_YEAR).years
+    val months = (value % MONTHS_PER_YEAR).toInt().months
     return action(years, months)
   }
 
@@ -397,9 +397,9 @@ inline class LongMonths(
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val decades = this.inDecades
-    val years = (this - decades).toIntMonthsUnchecked().inYears
-    val months = (this - decades - years).toIntMonthsUnchecked()
+    val decades = (value / MONTHS_PER_DECADE).decades
+    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt().years
+    val months = (value % MONTHS_PER_YEAR).toInt().months
     return action(decades, years, months)
   }
 
@@ -409,10 +409,10 @@ inline class LongMonths(
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val centuries = this.inCenturies
-    val decades = (this - centuries).toIntMonthsUnchecked().inDecades
-    val years = (this - centuries - decades).toIntMonthsUnchecked().inYears
-    val months = (this - centuries - decades - years).toIntMonthsUnchecked()
+    val centuries = (value / MONTHS_PER_CENTURY).centuries
+    val decades = ((value % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).toInt().decades
+    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt().years
+    val months = (value % MONTHS_PER_YEAR).toInt().months
     return action(centuries, decades, years, months)
   }
 

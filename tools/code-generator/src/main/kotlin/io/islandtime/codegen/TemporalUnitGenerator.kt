@@ -3,7 +3,6 @@ package io.islandtime.codegen
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import java.util.*
-import kotlin.IllegalStateException
 import kotlin.reflect.KClass
 
 private val KOTLIN_DURATION_CLASS_NAME = ClassName("kotlin.time", "Duration")
@@ -26,6 +25,8 @@ private fun KClass<*>.literalValueString(value: Long) = when (this) {
 
 private val TemporalUnitDescription.intClassName get() = ClassName(MEASURES_PACKAGE_NAME, intName)
 private val TemporalUnitDescription.longClassName get() = ClassName(MEASURES_PACKAGE_NAME, longName)
+
+private val TemporalUnitDescription.nextBiggest get() = TemporalUnitDescription.values()[this.ordinal + 1]
 
 private fun TemporalUnitDescription.classNameFor(primitiveType: KClass<*>): ClassName {
     return when (primitiveType) {
@@ -220,20 +221,16 @@ fun TemporalUnitClassGenerator.buildAbsoluteValuePropertySpec() = buildPropertyS
 ) {
     addKdoc(
         """
-            Get the absolute value.
+            Returns the absolute value.
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
     )
     getter(
         buildGetterFunSpec {
-            val arguments = mapOf(
-                "className" to className,
-                "value" to valuePropertySpec,
-                "negateExact" to ClassName(INTERNAL_PACKAGE_NAME, "negateExact")
-            )
+            val arguments = mapOf("value" to valuePropertySpec)
 
             addNamedCode(
-                "return if (%value:N < 0) %className:T(%value:N.%negateExact:T()) else this",
+                "return if (%value:N < 0) -this else this",
                 arguments
             )
         }
@@ -298,25 +295,23 @@ fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = buildCodeBlo
     }
 
     val arguments = mapOf(
-        "isZero" to isZeroFunSpec,
         "value" to valuePropertySpec,
         "absoluteValue" to ClassName("kotlin.math", "absoluteValue"),
-        "isNegative" to isNegativeFunSpec,
         "toZeroPaddedString" to ClassName(INTERNAL_PACKAGE_NAME, "toZeroPaddedString")
     )
 
     addNamed(
         """
-            | return if (%isZero:N()) {
+            | return if (%value:N == ${primitive.zero}) {
             |   "${description.isoPeriodZeroString}"
             | } else {
             |   buildString {
             |     val wholePart = (%value:N / ${description.isoPeriodUnitConversion.constantValue}).%absoluteValue:T
             |     val fractionalPart = (${fractionalPartConversion}).%absoluteValue:T
-            |     if (%isNegative:N()) { append('-') }
+            |     if (%value:N < 0) { append('-') }
             |     append("${description.isoPeriodPrefix}")
             |     append(wholePart)
-            |     if (fractionalPart != 0) {
+            |     if (fractionalPart > 0) {
             |       append('.')
             |       append(fractionalPart.%toZeroPaddedString:T(${description.isoPeriodDecimalPlaces}).dropLastWhile { it == '0' })
             |     }
@@ -330,10 +325,8 @@ fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = buildCodeBlo
 
 fun TemporalUnitClassGenerator.buildWholeToStringCodeBlock() = buildCodeBlock {
     val arguments = mapOf(
-        "isZero" to isZeroFunSpec,
         "value" to valuePropertySpec,
         "absoluteValue" to ClassName("kotlin.math", "absoluteValue"),
-        "isNegative" to isNegativeFunSpec,
         "timesExact" to ClassName(INTERNAL_PACKAGE_NAME, "timesExact"),
         "minValue" to "${primitiveTypeName.simpleName}.MIN_VALUE"
     )
@@ -354,11 +347,11 @@ fun TemporalUnitClassGenerator.buildWholeToStringCodeBlock() = buildCodeBlock {
 
     addNamed(
         """
-            | return when {
-            |   %isZero:N() -> "${description.isoPeriodZeroString}"
-            |   %value:N == %minValue:L -> "-${description.isoPeriodPrefix}${absoluteValueOfMinValue}${description.isoPeriodUnit}"
+            | return when (%value:N) {
+            |   ${primitive.zero} -> "${description.isoPeriodZeroString}"
+            |   %minValue:L -> "-${description.isoPeriodPrefix}${absoluteValueOfMinValue}${description.isoPeriodUnit}"
             |   else -> buildString {
-            |     if (%isNegative:N()) { append('-') }
+            |     if (%value:N < 0) { append('-') }
             |     append("${description.isoPeriodPrefix}")
             |     append($convertedValueString)
             |     append('${description.isoPeriodUnit}')
@@ -880,11 +873,13 @@ fun TemporalUnitClassGenerator.buildKotlinDurationExtensionFunSpec() =
     }
 
 fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
+    val thisUnit = this.description
+
     return TemporalUnitDescription.values()
-        .filter { it > this.description && (this.description per it).isSupported() }
+        .filter { it > thisUnit && thisUnit.per(it).isSupported() }
         .map { biggestUnit ->
             val allComponentUnits = TemporalUnitDescription.values()
-                .filter { it in description..biggestUnit }
+                .filter { it in thisUnit..biggestUnit }
                 .sortedDescending()
 
             buildFunSpec("toComponents") {
@@ -892,10 +887,14 @@ fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
                 addModifiers(KModifier.INLINE)
                 returns(TypeVariableName("T"))
 
-                val lambdaParameters = allComponentUnits.mapIndexed { index, unit ->
+                val lambdaParameters = allComponentUnits.map { currentUnit ->
                     buildParameterSpec(
-                        unit.lowerCaseName,
-                        if (index == 0 && primitive == Long::class) unit.longClassName else unit.intClassName
+                        currentUnit.lowerCaseName,
+                        if (currentUnit == biggestUnit && primitive == Long::class) {
+                            currentUnit.longClassName
+                        } else {
+                            currentUnit.intClassName
+                        }
                     )
                 }
 
@@ -904,25 +903,51 @@ fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
                     LambdaTypeName.get(parameters = lambdaParameters, returnType = TypeVariableName("T"))
                 )
 
-                allComponentUnits.forEach { unit ->
-                    val conversionComponents = listOf("this") +
-                        allComponentUnits.filter { it > unit }.map { it.lowerCaseName }
+                for (currentUnit in allComponentUnits) {
+                    val arguments = mutableMapOf<String, Any>(
+                        "value" to valuePropertySpec
+                    )
 
-                    var conversionString = conversionComponents.joinToString(" - ")
+                    val conversionString = when (currentUnit) {
+                        biggestUnit -> buildString {
+                            val conversion = thisUnit per currentUnit
+                            arguments["conversion"] = conversion.propertyClassName
+                            append("(%value:N / %conversion:T)")
 
-                    if (conversionComponents.count() > 1) {
-                        conversionString = "($conversionString)"
+                            if (primitive == Int::class && !conversion.valueFitsInInt) {
+                                append(".toInt()")
+                            }
+                        }
+                        thisUnit -> buildString {
+                            val conversion = thisUnit per thisUnit.nextBiggest
+                            arguments["conversion"] = conversion.propertyClassName
+                            append("(%value:N %% %conversion:T)")
 
-                        if (description.forceLongInOperators || primitive == Long::class) {
-                            conversionString = "$conversionString.to${description.intName}Unchecked()"
+                            if (primitive == Long::class || !conversion.valueFitsInInt) {
+                                append(".toInt()")
+                            }
+                        }
+                        else -> buildString {
+                            val conversion1 = thisUnit per currentUnit.nextBiggest
+                            val conversion2 = thisUnit per currentUnit
+
+                            arguments += mapOf(
+                                "conversion1" to conversion1.propertyClassName,
+                                "conversion2" to conversion2.propertyClassName
+                            )
+
+                            append("((%value:N %% %conversion1:T) / %conversion2:T)")
+
+                            if (primitive == Long::class || !conversion1.valueFitsInInt) {
+                                append(".toInt()")
+                            }
                         }
                     }
 
-                    if (unit != this@buildToComponentsFunctions.description) {
-                        conversionString = "$conversionString.${unit.inWholeUnitPropertyName}"
-                    }
-
-                    addStatement("val ${unit.lowerCaseName} = $conversionString")
+                    addNamedCode(
+                        "val ${currentUnit.lowerCaseName} = ${conversionString}.${currentUnit.lowerCaseName}\n",
+                        arguments
+                    )
                 }
 
                 val allVariableNames = allComponentUnits.joinToString(", ") { it.lowerCaseName }

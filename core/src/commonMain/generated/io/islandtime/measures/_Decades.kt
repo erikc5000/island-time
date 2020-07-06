@@ -34,11 +34,11 @@ inline class IntDecades(
   val value: Int
 ) : Comparable<IntDecades> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntDecades
-    get() = if (value < 0) IntDecades(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to months.
    * @throws ArithmeticException if overflow occurs
@@ -92,11 +92,11 @@ inline class IntDecades(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0Y"
-       value == Int.MIN_VALUE -> "-P2147483648Y"
+     return when (value) {
+       0 -> "P0Y"
+       Int.MIN_VALUE -> "-P2147483648Y"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue timesExact 10)
          append('Y')
@@ -181,8 +181,8 @@ inline class IntDecades(
   operator fun minus(centuries: LongCenturies) = this.toLongDecades() - centuries.inDecades
 
   inline fun <T> toComponents(action: (centuries: IntCenturies, decades: IntDecades) -> T): T {
-    val centuries = this.inCenturies
-    val decades = (this - centuries)
+    val centuries = (value / DECADES_PER_CENTURY).centuries
+    val decades = (value % DECADES_PER_CENTURY).decades
     return action(centuries, decades)
   }
 
@@ -237,11 +237,11 @@ inline class LongDecades(
   val value: Long
 ) : Comparable<LongDecades> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongDecades
-    get() = if (value < 0) LongDecades(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to months.
    * @throws ArithmeticException if overflow occurs
@@ -295,11 +295,11 @@ inline class LongDecades(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0Y"
-       value == Long.MIN_VALUE -> "-P9223372036854775808Y"
+     return when (value) {
+       0L -> "P0Y"
+       Long.MIN_VALUE -> "-P9223372036854775808Y"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue timesExact 10)
          append('Y')
@@ -391,8 +391,8 @@ inline class LongDecades(
   operator fun minus(centuries: LongCenturies) = this - centuries.inDecades
 
   inline fun <T> toComponents(action: (centuries: LongCenturies, decades: IntDecades) -> T): T {
-    val centuries = this.inCenturies
-    val decades = (this - centuries).toIntDecadesUnchecked()
+    val centuries = (value / DECADES_PER_CENTURY).centuries
+    val decades = (value % DECADES_PER_CENTURY).toInt().decades
     return action(centuries, decades)
   }
 

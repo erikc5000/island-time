@@ -187,7 +187,7 @@ fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random
  */
 fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
     return random(random) { second, nanosecond ->
-        OffsetDateTime.fromUnixEpochSecond(second, nanosecond, start.offset)
+        OffsetDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.offset)
     }
 }
 
@@ -198,7 +198,7 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
  */
 fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
     return randomOrNull(random) { second, nanosecond ->
-        OffsetDateTime.fromUnixEpochSecond(second, nanosecond, start.offset)
+        OffsetDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.offset)
     }
 }
 

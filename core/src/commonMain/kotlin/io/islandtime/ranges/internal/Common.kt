@@ -108,9 +108,9 @@ internal inline fun <T> Interval<T>.random(
     creator: (second: Long, nanosecond: Int) -> T
 ): T {
     return when {
-        isUnbounded() -> throwUnboundedIntervalException()
         isEmpty() -> throw NoSuchElementException("The interval is empty")
-        else -> generateRandom(random, secondGetter, nanosecondGetter, creator)
+        isBounded() -> generateRandom(random, secondGetter, nanosecondGetter, creator)
+        else -> throwUnboundedIntervalException()
     }
 }
 
@@ -120,7 +120,7 @@ internal inline fun <T> Interval<T>.randomOrNull(
     nanosecondGetter: (T) -> Int,
     creator: (second: Long, nanosecond: Int) -> T
 ): T? {
-    return if (isEmpty() || isUnbounded()) {
+    return if (isEmpty() || !isBounded()) {
         null
     } else {
         generateRandom(random, secondGetter, nanosecondGetter, creator)
@@ -131,14 +131,14 @@ internal inline fun <T : TimePoint<T>> TimePointInterval<T>.random(
     random: Random,
     creator: (second: Long, nanosecond: Int) -> T
 ): T {
-    return random(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
+    return random(random, { it.secondOfUnixEpoch }, { it.nanosecond }, creator)
 }
 
 internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomOrNull(
     random: Random,
     creator: (second: Long, nanosecond: Int) -> T
 ): T? {
-    return randomOrNull(random, { it.unixEpochSecond }, { it.unixEpochNanoOfSecond }, creator)
+    return randomOrNull(random, { it.secondOfUnixEpoch }, { it.nanosecond }, creator)
 }
 
 private inline fun <T> Interval<T>.generateRandom(

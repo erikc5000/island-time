@@ -6,7 +6,7 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.DateTimeInterval
 
 /**
- * A date and time of day in an arbitrary region.
+ * A date and time of day in an ambiguous region.
  *
  * @constructor Create a [DateTime] by combining a [Date] and [Time].
  * @param date the date
@@ -508,8 +508,7 @@ class DateTime(
      * value, so 1 nanosecond before the Unix epoch will be at a distance of 1 second.
      *
      * @param offset the offset from UTC
-     * @see nanoOfSecondsSinceUnixEpoch
-     * @see unixEpochSecondAt
+     * @see additionalNanosecondsSinceUnixEpoch
      */
     fun secondsSinceUnixEpochAt(offset: UtcOffset): LongSeconds {
         return (date.daysSinceUnixEpoch.inSecondsUnchecked.value +
@@ -517,13 +516,20 @@ class DateTime(
             offset.totalSeconds.value).seconds
     }
 
+    @Deprecated(
+        "Use additionalNanosecondsSinceUnixEpoch instead.",
+        ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
+        DeprecationLevel.WARNING
+    )
+    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
+        get() = additionalNanosecondsSinceUnixEpoch
+
     /**
      * The number of additional nanoseconds that should be applied on top of the number of seconds since the Unix epoch
      * returned by [secondsSinceUnixEpochAt].
      * @see secondsSinceUnixEpochAt
-     * @see unixEpochNanoOfSecond
      */
-    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
+    val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
         get() = nanosecond.nanoseconds
 
     /**
@@ -537,34 +543,48 @@ class DateTime(
             offset.totalSeconds.inMilliseconds.value).milliseconds
     }
 
+    @Deprecated(
+        "Use secondOfUnixEpochAt() instead.",
+        ReplaceWith("this.secondOfUnixEpochAt(offset)"),
+        DeprecationLevel.WARNING
+    )
+    fun unixEpochSecondAt(offset: UtcOffset): Long = secondOfUnixEpochAt(offset)
+
     /**
      * The second of the Unix epoch.
      *
      * @param offset the offset from UTC
-     * @see nanoOfSecondsSinceUnixEpoch
-     * @see unixEpochSecondAt
+     * @see additionalNanosecondsSinceUnixEpoch
      */
-    fun unixEpochSecondAt(offset: UtcOffset): Long = secondsSinceUnixEpochAt(offset).value
+    fun secondOfUnixEpochAt(offset: UtcOffset): Long = secondsSinceUnixEpochAt(offset).value
 
-    /**
-     * The nanosecond of the second of the Unix Epoch.
-     * @see nanoOfSecondsSinceUnixEpoch
-     * @see unixEpochSecondAt
-     */
-    val unixEpochNanoOfSecond: Int get() = nanosecond
+    @Deprecated(
+        "Use nanosecond instead.",
+        ReplaceWith("this.nanosecond"),
+        DeprecationLevel.WARNING
+    )
+    val unixEpochNanoOfSecond: Int
+        get() = nanosecond
+
+    @Deprecated(
+        "Use millisecondOfUnixEpoch() instead.",
+        ReplaceWith("this.millisecondOfUnixEpochAt(offset)"),
+        DeprecationLevel.WARNING
+    )
+    fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondOfUnixEpochAt(offset)
 
     /**
      * The millisecond of the Unix epoch.
      * @param offset the offset from UTC
      */
-    fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
+    fun millisecondOfUnixEpochAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
     /**
      * The [Instant] represented by this date-time at a particular offset from UTC.
      * @param offset the offset from UTC
      */
     fun instantAt(offset: UtcOffset): Instant {
-        return Instant.fromUnixEpochSecond(unixEpochSecondAt(offset), nanosecond)
+        return Instant.fromSecondOfUnixEpoch(secondOfUnixEpochAt(offset), nanosecond)
     }
 
     companion object {
@@ -578,41 +598,70 @@ class DateTime(
          */
         val MAX = DateTime(Date.MAX, Time.MAX)
 
-        fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): DateTime {
-            return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, offset)
-        }
-
-        fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): DateTime {
-            val localMilliseconds = milliseconds + offset.totalSeconds
-            val localEpochDays = (localMilliseconds.value floorDiv MILLISECONDS_PER_DAY).days
+        /**
+         * Create a [DateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
+         */
+        fun fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch: LongMilliseconds, offset: UtcOffset): DateTime {
+            val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
+            val localEpochDay = localMilliseconds.value floorDiv MILLISECONDS_PER_DAY
             val nanosecondOfDay =
                 (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.inNanosecondsUnchecked.value
-            val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
+            val date = Date.fromDayOfUnixEpoch(localEpochDay)
             val time = Time.fromNanosecondOfDay(nanosecondOfDay)
             return DateTime(date, time)
         }
 
-        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int = 0, offset: UtcOffset): DateTime {
-            return fromSecondsSinceUnixEpoch(second.seconds, nanosecondAdjustment.nanoseconds, offset)
-        }
-
         /**
-         * Create the [DateTime] that falls a given number of seconds relative to the Unix epoch, plus some number of
-         * additional nanoseconds
+         * Create a [DateTime] from a duration of seconds relative to the Unix epoch at [offset], optionally, with some
+         * number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
-            seconds: LongSeconds,
+            secondsSinceUnixEpoch: LongSeconds,
             nanosecondAdjustment: IntNanoseconds = 0.nanoseconds,
             offset: UtcOffset
         ): DateTime {
-            val adjustedSeconds = seconds + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND).seconds
-            val nanosecondOfDay = nanosecondAdjustment.value floorMod NANOSECONDS_PER_SECOND
+            val adjustedSeconds =
+                secondsSinceUnixEpoch + (nanosecondAdjustment.value floorDiv NANOSECONDS_PER_SECOND).seconds
+            val nanosecond = nanosecondAdjustment.value floorMod NANOSECONDS_PER_SECOND
             val localSeconds = adjustedSeconds + offset.totalSeconds
-            val localEpochDays = (localSeconds.value floorDiv SECONDS_PER_DAY).days
+            val localEpochDay = (localSeconds.value floorDiv SECONDS_PER_DAY)
             val secondOfDay = (localSeconds.value floorMod SECONDS_PER_DAY).toInt()
-            val date = Date.fromDaysSinceUnixEpoch(localEpochDays)
-            val time = Time.fromSecondOfDay(secondOfDay, nanosecondOfDay)
+            val date = Date.fromDayOfUnixEpoch(localEpochDay)
+            val time = Time.fromSecondOfDay(secondOfDay, nanosecond)
             return DateTime(date, time)
+        }
+
+        /**
+         * Create a [DateTime] from the millisecond of the Unix epoch at [offset].
+         */
+        fun fromMillisecondOfUnixEpoch(millisecond: Long, offset: UtcOffset): DateTime {
+            return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, offset)
+        }
+
+        /**
+         * Create a [DateTime] from the second of the Unix epoch at [offset] and optionally, the nanosecond of the
+         * second.
+         */
+        fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int = 0, offset: UtcOffset): DateTime {
+            return fromSecondsSinceUnixEpoch(second.seconds, nanosecond.nanoseconds, offset)
+        }
+
+        @Deprecated(
+            "Use fromMillisecondOfUnixEpoch() instead.",
+            ReplaceWith("DateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): DateTime {
+            return fromMillisecondOfUnixEpoch(millisecond, offset)
+        }
+
+        @Deprecated(
+            "Use fromSecondOfUnixEpoch() instead.",
+            ReplaceWith("DateTime.fromSecondOfUnixEpoch(second, nanosecondAdjustment, offset)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int = 0, offset: UtcOffset): DateTime {
+            return fromSecondOfUnixEpoch(second, nanosecondAdjustment, offset)
         }
     }
 }
@@ -630,10 +679,10 @@ fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): D
 }
 
 /**
- * Convert an instant into a [DateTime] at a particular offset from UTC.
+ * Convert to a [DateTime] at a particular offset from UTC.
  */
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
-    return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
+    return DateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, offset)
 }
 
 /**

@@ -6,7 +6,7 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 
 /**
- * A time of day in an arbitrary region.
+ * A time of day in an ambiguous region.
  *
  * @constructor Create a [Time] from its individual components.
  * @param hour the hour of day

@@ -139,7 +139,7 @@ operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*
 fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpoch - start.secondsSinceUnixEpoch
     val nanoDiff =
-        endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch minusWithOverflow start.additionalNanosecondsSinceUnixEpoch
     return durationOf(secondDiff, nanoDiff)
 }
 
@@ -171,9 +171,9 @@ fun <T1, T2> minutesBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): 
 fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongSeconds {
     return secondsBetween(
         start.secondsSinceUnixEpoch,
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpoch,
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -187,9 +187,9 @@ fun <T1, T2> millisecondsBetween(
 ): LongMilliseconds {
     return millisecondsBetween(
         start.secondsSinceUnixEpoch,
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpoch,
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -203,9 +203,9 @@ fun <T1, T2> microsecondsBetween(
 ): LongMicroseconds {
     return microsecondsBetween(
         start.secondsSinceUnixEpoch,
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpoch,
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -219,8 +219,8 @@ fun <T1, T2> nanosecondsBetween(
 ): LongNanoseconds {
     return nanosecondsBetween(
         start.secondsSinceUnixEpoch,
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpoch,
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }

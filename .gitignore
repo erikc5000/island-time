@@ -3,5 +3,7 @@
 !/.idea/codeStyles
 .gradle/
 build/
+docs/api/
+site/
 *.iml
 local.properties

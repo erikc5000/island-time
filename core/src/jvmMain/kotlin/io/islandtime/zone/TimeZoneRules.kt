@@ -2,15 +2,17 @@
 
 package io.islandtime.zone
 
-import io.islandtime.*
-import io.islandtime.measures.*
+import io.islandtime.DateTime
+import io.islandtime.Instant
+import io.islandtime.UtcOffset
 import io.islandtime.jvm.*
+import io.islandtime.measures.*
 import java.time.ZoneId
-import java.time.Instant as JavaInstant
 import java.time.zone.ZoneOffsetTransition
 import java.time.zone.ZoneRules
 import java.time.zone.ZoneRulesException
 import java.time.zone.ZoneRulesProvider
+import java.time.Instant as JavaInstant
 
 /**
  * A time zone rules provider that draws from the database built into the java.time library.
@@ -45,20 +47,17 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
     override val hasFixedOffset: Boolean get() = javaZoneRules.isFixedOffset
 
     override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
-        val offset = javaZoneRules.getOffset(JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value))
-        return offset.toIslandUtcOffset()
+        val javaInstant = JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value)
+        return offsetAt(javaInstant)
     }
 
     override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
-        val offset = javaZoneRules.getOffset(
-            JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanoOfSeconds.value.toLong())
-        )
-        return offset.toIslandUtcOffset()
+        val javaInstant = JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanoOfSeconds.value.toLong())
+        return offsetAt(javaInstant)
     }
 
     override fun offsetAt(instant: Instant): UtcOffset {
-        val offset = javaZoneRules.getOffset(instant.toJavaInstant())
-        return offset.toIslandUtcOffset()
+        return with(instant) { offsetAt(secondsSinceUnixEpoch, additionalNanosecondsSinceUnixEpoch) }
     }
 
     override fun offsetAt(dateTime: DateTime): UtcOffset {
@@ -89,6 +88,15 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
 
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
         return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
+    }
+
+    private fun offsetAt(javaInstant: JavaInstant): UtcOffset {
+        return try {
+            javaZoneRules.getOffset(javaInstant).toIslandUtcOffset()
+        } catch (e: ArithmeticException) {
+            // Workaround for Android desugaring issue (https://issuetracker.google.com/issues/153773237)
+            UtcOffset.ZERO
+        }
     }
 }
 
