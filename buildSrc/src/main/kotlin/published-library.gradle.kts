@@ -13,6 +13,11 @@ val dokka by tasks.existing(DokkaTask::class) {
     outputFormat = "html"
 }
 
+val generateMkdocsApiDocs by tasks.creating(DokkaTask::class) {
+    outputDirectory = "$rootDir/docs/api"
+    outputFormat = "gfm"
+}
+
 val javadocJar by tasks.registering(Jar::class) {
     dependsOn(dokka)
     archiveClassifier.set("javadoc")

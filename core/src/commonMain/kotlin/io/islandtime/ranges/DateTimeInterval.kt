@@ -9,10 +9,7 @@ import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
- * An interval between two arbitrary date-times.
- *
- * As no UTC offset or time zone is associated with either date-time, it's up to the application to interpret the
- * meaning.
+ * An interval between two date-times, assumed to be at the same offset from UTC.
  *
  * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */

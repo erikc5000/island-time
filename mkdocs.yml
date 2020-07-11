@@ -1,0 +1,57 @@
+site_name: Island Time
+site_url: https://islandtime.io
+repo_name: island-time
+repo_url: https://github.com/erikc5000/island-time
+site_description: 'Island Time - A Kotlin Multiplatform library for working with dates and times'
+site_author: 'Erik Christensen'
+remote_branch: gh-pages
+copyright: 'Copyright &copy; 2020 Erik Christensen'
+
+nav:
+  - 'About': index.md
+  - getting-started.md
+  - 'The Basics':
+      - 'basics/general-design.md'
+      - 'basics/dates-and-times.md'
+      - 'basics/durations.md'
+      - 'basics/intervals.md'
+      - 'basics/interop.md'
+      - 'basics/formatting.md'
+      - 'basics/parsing.md'
+  - 'Advanced Topics':
+      - 'advanced/custom-providers.md'
+  - 'Extensions':
+      - 'extensions/serialization.md'
+      - 'extensions/parcelize.md'
+      - 'extensions/threetenabp.md'
+  - 'API':
+      - 'core': 'api/core/index.md'
+      - 'parcelize-extensions': 'api/parcelize/index.md'
+      - 'serialization-extensions': 'api/serialization/index.md'
+      - 'threetenabp-extensions': 'api/threetenabp/index.md'
+
+theme:
+  name: material
+  palette:
+    primary: 'cyan'
+    accent: 'cyan'
+  logo: 'images/logo.svg'
+  favicon: 'images/logo.svg'
+  custom_dir: 'docs/theme/'
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - codehilite:
+      guess_lang: false
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.tabbed
+
+plugins:
+  - search
+  - macros
+
+extra:
+  versions:
+    islandtime: '0.2.3'

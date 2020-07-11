@@ -1,9 +1,11 @@
-name: Publish
+name: Publish to Maven
 
 on:
   push:
     branches:
       - master
+    tags:
+      - '*'
 
 jobs:
   macos-build:
