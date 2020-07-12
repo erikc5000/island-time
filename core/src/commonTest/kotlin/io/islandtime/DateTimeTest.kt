@@ -201,7 +201,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `unixEpochMillisecondAt() returns the millisecond of the unix epoch`() {
+    fun `millisecondOfUnixEpochAt() returns the millisecond of the unix epoch`() {
         assertEquals(
             1L,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_999_999))

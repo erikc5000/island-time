@@ -514,8 +514,8 @@ class RoundUpTest {
                 assertEquals(outDateTime.time at testOffset, inDateTime.time.at(testOffset).roundedUpTo(unit))
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpTo(unit)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpTo(unit)
                 )
             }
     }
@@ -534,8 +534,8 @@ class RoundUpTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
                 )
             }
     }
@@ -554,8 +554,8 @@ class RoundUpTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
                 )
             }
     }
@@ -574,8 +574,8 @@ class RoundUpTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
                 )
             }
     }
@@ -594,8 +594,8 @@ class RoundUpTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
                 )
             }
     }
@@ -614,8 +614,8 @@ class RoundUpTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
                 )
             }
     }
@@ -634,8 +634,8 @@ class RoundUpTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedUpToNearest(increment)
                 )
             }
     }
