@@ -12,15 +12,11 @@ val ideaActive get() = System.getProperty("idea.active") == "true"
 kotlin {
     jvm()
 
-    val darwinTargets = listOf(
-        iosArm64(),
-        iosX64(),
-        macosX64(),
-        watchosArm64(),
-        watchosX86(),
-        tvosArm64(),
-        tvosX64()
-    )
+    val darwinTargets = if (ideaActive) {
+        listOf(iosX64("darwin"))
+    } else {
+        listOf(iosArm64(), iosX64(), macosX64(), watchosArm64(), watchosX86(), tvosArm64(), tvosX64())
+    }
 
     sourceSets {
         all {
@@ -31,25 +27,23 @@ kotlin {
             }
         }
 
-        val commonMain by getting
-        val commonTest by getting
+        if (!ideaActive) {
+            val commonMain by getting
+            val commonTest by getting
 
-        val darwinMain by creating {
-            dependsOn(commonMain)
+            val darwinMain by creating {
+                dependsOn(commonMain)
+            }
+
+            val darwinTest by creating {
+                dependsOn(commonTest)
+            }
+
+            configure(darwinTargets) {
+                compilations["main"].defaultSourceSet.dependsOn(darwinMain)
+                compilations["test"].defaultSourceSet.dependsOn(darwinTest)
+            }
         }
-
-        val darwinTest by creating {
-            dependsOn(commonTest)
-        }
-
-        configure(darwinTargets) {
-            compilations["main"].defaultSourceSet.dependsOn(darwinMain)
-            compilations["test"].defaultSourceSet.dependsOn(darwinTest)
-        }
-    }
-
-    configure(darwinTargets) {
-        compilations["main"].kotlinOptions.freeCompilerArgs += "-Xobjc-generics"
     }
 }
 
