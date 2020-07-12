@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.DateTimeField
@@ -90,10 +92,13 @@ class Date(
      */
     val lengthOfYear: IntDays get() = lengthOfYear(year)
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = YearMonth(year, month)
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
@@ -331,7 +336,6 @@ class Date(
  * @param dayOfYear the day of the calendar year
  * @throws DateTimeException if the year or day of year are invalid
  */
-@Suppress("FunctionName")
 fun Date(year: Int, dayOfYear: Int): Date {
     checkValidYear(year)
     checkValidDayOfYear(year, dayOfYear)

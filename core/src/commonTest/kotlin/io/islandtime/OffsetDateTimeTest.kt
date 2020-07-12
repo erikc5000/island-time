@@ -205,19 +205,6 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `instant property returns an equivalent Instant`() {
-        assertEquals(
-            "1970-01-01T00:00Z".toInstant(),
-            "1970-01-01T00:00Z".toOffsetDateTime().instant
-        )
-
-        assertEquals(
-            "2017-02-28T21:00:00.123456789Z".toInstant(),
-            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().instant
-        )
-    }
-
-    @Test
     fun `adjustedTo() changes the offset while preserving the instant represented by it`() {
         assertEquals(
             DateTime(2000, Month.APRIL, 4, 7, 0) at UtcOffset.MIN,

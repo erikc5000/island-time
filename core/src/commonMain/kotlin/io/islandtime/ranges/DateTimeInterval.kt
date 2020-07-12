@@ -231,8 +231,7 @@ class DateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toDateTimeInterval() =
-    toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
+fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to a [DateTimeInterval] using a specific parser.

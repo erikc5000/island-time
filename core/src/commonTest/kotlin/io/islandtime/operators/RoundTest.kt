@@ -523,8 +523,8 @@ class RoundTest {
                 assertEquals(outDateTime.time at testOffset, inDateTime.time.at(testOffset).roundedTo(unit))
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedTo(unit)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedTo(unit)
                 )
             }
     }
@@ -543,8 +543,8 @@ class RoundTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedToNearest(increment)
                 )
             }
     }
@@ -563,8 +563,8 @@ class RoundTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedToNearest(increment)
                 )
             }
     }
@@ -583,8 +583,8 @@ class RoundTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedToNearest(increment)
                 )
             }
     }
@@ -603,8 +603,8 @@ class RoundTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedToNearest(increment)
                 )
             }
     }
@@ -623,8 +623,8 @@ class RoundTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedToNearest(increment)
                 )
             }
     }
@@ -643,8 +643,8 @@ class RoundTest {
                 )
 
                 assertEquals(
-                    outDateTime.instantAt(UtcOffset.ZERO),
-                    inDateTime.instantAt(UtcOffset.ZERO).roundedToNearest(increment)
+                    outDateTime.toInstantAt(UtcOffset.ZERO),
+                    inDateTime.toInstantAt(UtcOffset.ZERO).roundedToNearest(increment)
                 )
             }
     }
