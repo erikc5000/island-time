@@ -25,8 +25,7 @@ class ZonedDateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() =
-        buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
+    override fun toString() = buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
 
     /**
      * Convert the interval into a [Period] of the same length.
@@ -135,8 +134,7 @@ class ZonedDateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toZonedDateTimeInterval() =
-    toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to a [ZonedDateTimeInterval] using a specific parser.
@@ -221,32 +219,12 @@ infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, t
  * Convert a range of dates into a [ZonedDateTimeInterval] between the starting and ending instants in a particular
  * time zone.
  */
-fun DateRange.toZonedDateTimeIntervalAt(zone: TimeZone): ZonedDateTimeInterval {
-    return when {
-        isEmpty() -> ZonedDateTimeInterval.EMPTY
-        isUnbounded() -> ZonedDateTimeInterval.UNBOUNDED
-        start == endInclusive -> {
-            val zonedStart = start.startOfDayAt(zone)
-            val zonedEnd = zonedStart + 1.days
-            zonedStart until zonedEnd
-        }
-        else -> {
-            val start = if (hasUnboundedStart()) {
-                DateTime.MIN at zone
-            } else {
-                start.startOfDayAt(zone)
-            }
-
-            val end = if (hasUnboundedEnd()) {
-                DateTime.MAX at zone
-            } else {
-                endInclusive.endOfDayAt(zone)
-            }
-
-            start..end
-        }
-    }
-}
+@Deprecated(
+    "Use 'at' instead.",
+    ReplaceWith("this at zone"),
+    DeprecationLevel.WARNING
+)
+fun DateRange.toZonedDateTimeInterval(zone: TimeZone): ZonedDateTimeInterval = this at zone
 
 /**
  * Get the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the
