@@ -16,6 +16,7 @@ object Libs {
 
     object AtomicFU {
         const val gradlePlugin = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfu}"
+        const val runtime = "org.jetbrains.kotlinx:atomicfu:${Versions.atomicfu}"
     }
 
     object AndroidxTest {
