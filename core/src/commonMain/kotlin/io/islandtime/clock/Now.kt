@@ -26,7 +26,7 @@ fun Year.Companion.now() = now(SystemClock())
 /**
  * Get the current [Year] from the specified clock.
  */
-fun Year.Companion.now(clock: Clock) = Year(Date.now(clock).year)
+fun Year.Companion.now(clock: Clock) = Date.now(clock).toYear()
 
 /**
  * Get the current [YearMonth] from the system clock.
@@ -36,7 +36,7 @@ fun YearMonth.Companion.now() = now(SystemClock())
 /**
  * Get the current [YearMonth] from the specified clock.
  */
-fun YearMonth.Companion.now(clock: Clock) = Date.now(clock).yearMonth
+fun YearMonth.Companion.now(clock: Clock) = Date.now(clock).toYearMonth()
 
 /**
  * Get the current [Date] from the system clock.

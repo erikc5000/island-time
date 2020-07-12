@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.TimePoint
@@ -99,29 +101,43 @@ class ZonedDateTime private constructor(
      */
     inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = dateTime.yearMonth
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * The combined time of day and offset.
      */
-    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
+    @Deprecated(
+        "Use toOffsetTime() instead.",
+        ReplaceWith("this.toOffsetTime()"),
+        DeprecationLevel.WARNING
+    )
+    inline val offsetTime: OffsetTime
+        get() = toOffsetTime()
 
-    /**
-     * The combined date, time, and offset.
-     *
-     * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
-     * database differences between systems, making it better suited for use cases involving persistence or network
-     * transfer.
-     */
-    inline val offsetDateTime: OffsetDateTime get() = OffsetDateTime(dateTime, offset)
+    @Deprecated(
+        "Use toOffsetDateTime() instead.",
+        ReplaceWith("this.toOffsetDateTime()"),
+        DeprecationLevel.WARNING
+    )
+    inline val offsetDateTime: OffsetDateTime
+        get() = toOffsetDateTime()
 
     /**
      * The [Instant] representing the same time point.
      */
-    inline val instant: Instant get() = Instant.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond)
+    @Deprecated(
+        "Use toInstant() instead.",
+        ReplaceWith("this.toInstant()"),
+        DeprecationLevel.WARNING
+    )
+    inline val instant: Instant
+        get() = toInstant()
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
@@ -504,7 +520,6 @@ class ZonedDateTime private constructor(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(
     year: Int,
     month: Month,
@@ -523,7 +538,6 @@ fun ZonedDateTime(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(
     year: Int,
     monthNumber: Int,
@@ -542,7 +556,6 @@ fun ZonedDateTime(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(
     year: Int,
     dayOfYear: Int,
@@ -560,7 +573,6 @@ fun ZonedDateTime(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLocal(DateTime(date, time), zone)
 
 /**
@@ -570,7 +582,6 @@ fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLo
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(dateTime, zone)
 
 /**
@@ -625,46 +636,60 @@ fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
 }
 
 @Deprecated(
-    "Renamed to 'dateTimeAt'.",
-    ReplaceWith("this.dateTimeAt(zone)"),
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_LOCAL_TIME)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_LOCAL_TIME"
+    ),
     DeprecationLevel.WARNING
 )
 fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
-    return dateTimeAt(zone)
-}
-
-/**
- * The [ZonedDateTime] with the same date and time at [zone]. The offset will be preserved if possible, but may require
- * adjustment.
- * @see instantAt
- * @see asZonedDateTime
- */
-fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.fromInstant(dateTime, offset, zone)
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
 }
 
 @Deprecated(
-    "Renamed to 'instantAt'.",
-    ReplaceWith("this.instantAt(zone)"),
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_LOCAL_TIME)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_LOCAL_TIME"
+    ),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
+}
+
+@Deprecated(
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_INSTANT)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_INSTANT"
+    ),
     DeprecationLevel.WARNING
 )
 fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
-    return instantAt(zone)
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
 }
 
-/**
- * The [ZonedDateTime] representing the same instant in time at [zone]. The local date, time, and offset may differ.
- * @see dateTimeAt
- * @see asZonedDateTime
- */
+@Deprecated(
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_INSTANT)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_INSTANT"
+    ),
+    DeprecationLevel.WARNING
+)
 fun OffsetDateTime.instantAt(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.fromInstant(dateTime, offset, zone)
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
 }
 
 /**
- * Convert to a [ZonedDateTime] with a fixed offset time zone.
- * @see instantAt
- * @see dateTimeAt
+ * Converts this [OffsetDateTime] to an equivalent [ZonedDateTime] using a fixed-offset time zone.
+ *
+ * This comes with the caveat that a fixed-offset zone lacks knowledge of any region and will not respond to daylight
+ * savings time changes. To convert to a region-based zone, use [toZonedDateTime] instead.
+ *
+ * @see toZonedDateTime
  */
 fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.fromLocal(dateTime, offset.asTimeZone(), offset)

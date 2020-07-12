@@ -130,10 +130,12 @@ class DateTime(
      */
     inline val lengthOfYear: IntDays get() = date.lengthOfYear
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = date.yearMonth
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth get() = toYearMonth()
 
     /**
      * Return a [DateTime] with [period] added to it.
@@ -579,13 +581,12 @@ class DateTime(
      */
     fun millisecondOfUnixEpochAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
-    /**
-     * The [Instant] represented by this date-time at a particular offset from UTC.
-     * @param offset the offset from UTC
-     */
-    fun instantAt(offset: UtcOffset): Instant {
-        return Instant.fromSecondOfUnixEpoch(secondOfUnixEpochAt(offset), nanosecond)
-    }
+    @Deprecated(
+        "Use toInstantAt() instead.",
+        ReplaceWith("this.toInstantAt(offset)"),
+        DeprecationLevel.WARNING
+    )
+    fun instantAt(offset: UtcOffset): Instant = toInstantAt(offset)
 
     companion object {
         /**
@@ -679,7 +680,7 @@ fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): D
 }
 
 /**
- * Convert to a [DateTime] at a particular offset from UTC.
+ * Converts this instant to the corresponding [DateTime] at [offset].
  */
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, offset)

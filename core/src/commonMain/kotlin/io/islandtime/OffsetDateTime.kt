@@ -158,20 +158,26 @@ class OffsetDateTime(
      */
     inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = dateTime.yearMonth
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth get() = toYearMonth()
 
-    /**
-     * The combined time of day and offset.
-     */
-    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
+    @Deprecated(
+        "Use toOffsetTime() instead.",
+        ReplaceWith("this.toOffsetTime()"),
+        DeprecationLevel.WARNING
+    )
+    inline val offsetTime: OffsetTime get() = toOffsetTime()
 
-    /**
-     * The [Instant] representing the same time point.
-     */
-    inline val instant: Instant get() = Instant.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond)
+    @Deprecated(
+        "Use toInstant() instead.",
+        ReplaceWith("this.toInstant()"),
+        DeprecationLevel.WARNING
+    )
+    inline val instant: Instant get() = toInstant()
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
@@ -410,11 +416,11 @@ infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time
 infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
 
 @Deprecated(
-    "Use the 'offsetDateTime' property on ZonedDateTime instead.",
-    ReplaceWith("this.offsetDateTime"),
+    "Use 'toOffsetDateTime()' instead.",
+    ReplaceWith("this.toOffsetDateTime()"),
     DeprecationLevel.WARNING
 )
-fun ZonedDateTime.asOffsetDateTime() = offsetDateTime
+fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
 
 /**
  * Convert a string to an [OffsetDateTime].
