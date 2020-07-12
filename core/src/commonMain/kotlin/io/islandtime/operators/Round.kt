@@ -1,3 +1,6 @@
+@file:JvmMultifileClass
+@file:JvmName("OperatorsKt")
+
 package io.islandtime.operators
 
 import io.islandtime.*
@@ -9,6 +12,8 @@ import io.islandtime.internal.floorMod
 import io.islandtime.measures.*
 import io.islandtime.measures.TimeUnit.*
 import io.islandtime.operators.internal.*
+import kotlin.jvm.JvmMultifileClass
+import kotlin.jvm.JvmName
 
 /**
  * Return this time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
