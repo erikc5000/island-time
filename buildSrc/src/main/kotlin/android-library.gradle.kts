@@ -21,10 +21,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    libraryVariants.configureEach {
-        generateBuildConfigProvider?.configure {
-            enabled = false
-        }
+    buildFeatures {
+        buildConfig = false
     }
 }
 
