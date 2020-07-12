@@ -5,7 +5,6 @@ object Versions {
     const val androidxTest = "1.2.0"
     const val googleTruth = "1.0.1"
     const val threetenabp = "1.2.4"
-    const val stately = "1.0.4-a1-1.4-M3"
     const val kotlinpoet = "1.6.0"
     const val androidDesugarJdkLibs = "1.0.9"
 }
@@ -26,7 +25,6 @@ object Libs {
 
     const val googleTruth = "com.google.truth:truth:${Versions.googleTruth}"
     const val threetenabp = "com.jakewharton.threetenabp:threetenabp:${Versions.threetenabp}"
-    const val statelyIsolate = "co.touchlab:stately-isolate:${Versions.stately}"
     const val kotlinpoet = "com.squareup:kotlinpoet:${Versions.kotlinpoet}"
     const val androidDesugarJdkLibs = "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
 }

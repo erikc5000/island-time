@@ -40,12 +40,6 @@ kotlin {
                 implementation(Libs.googleTruth)
             }
         }
-
-        val darwinMain by getting {
-            dependencies {
-                implementation(Libs.statelyIsolate)
-            }
-        }
     }
 }
 
