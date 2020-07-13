@@ -388,7 +388,7 @@ fun YearMonth.atDay(day: Int) = Date(year, month, day)
  * The string is assumed to be an ISO-8601 calendar date in extended format. For example, `2010-10-05`. The output of
  * [Date.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date is invalid
  */
 fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
@@ -402,18 +402,18 @@ fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
  * - [DateProperty.Year], [DateProperty.MonthOfYear], [DateProperty.DayOfMonth]
  * - [DateProperty.Year], [DateProperty.DayOfYear]
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toDate(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): Date {
     val result = parser.parse(this, settings)
     return result.toDate() ?: throwParserPropertyResolutionException<Date>(this)
 }
 
-internal fun DateTimeParseResult.toDate(): Date? {
+internal fun TemporalParseResult.toDate(): Date? {
     val year = this[DateProperty.Year]
 
     if (year != null) {

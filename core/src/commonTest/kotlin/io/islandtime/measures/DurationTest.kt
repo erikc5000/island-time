@@ -1,6 +1,6 @@
 package io.islandtime.measures
 
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import kotlin.test.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.seconds as kotlinSeconds
@@ -495,17 +495,17 @@ class DurationTest {
 
     @Test
     fun `String_toDuration() throws an exception when string is empty`() {
-        assertFailsWith<DateTimeParseException> { "".toDuration() }
+        assertFailsWith<TemporalParseException> { "".toDuration() }
     }
 
     @Test
     fun `String_toDuration() throws an exception when string is invalid`() {
-        assertFailsWith<DateTimeParseException> { "P4Y".toDuration() }
-        assertFailsWith<DateTimeParseException> { "P4M".toDuration() }
-        assertFailsWith<DateTimeParseException> { "PT4H ".toDuration() }
-        assertFailsWith<DateTimeParseException> { " PT4H".toDuration() }
-        assertFailsWith<DateTimeParseException> { "PT4S4H".toDuration() }
-        assertFailsWith<DateTimeParseException> { "PT9Y".toDuration() }
+        assertFailsWith<TemporalParseException> { "P4Y".toDuration() }
+        assertFailsWith<TemporalParseException> { "P4M".toDuration() }
+        assertFailsWith<TemporalParseException> { "PT4H ".toDuration() }
+        assertFailsWith<TemporalParseException> { " PT4H".toDuration() }
+        assertFailsWith<TemporalParseException> { "PT4S4H".toDuration() }
+        assertFailsWith<TemporalParseException> { "PT9Y".toDuration() }
     }
 
     @Test

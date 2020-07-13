@@ -323,7 +323,7 @@ fun Instant(millisecondsSinceUnixEpoch: LongMilliseconds): Instant {
  * `2010-10-05T18:30Z` or `2010-10-05T18:30:00.123456789Z`. The output of [Instant.toString] can be safely parsed
  * using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date or time is invalid
  */
 fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
@@ -333,12 +333,12 @@ fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toInstant(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): Instant {
     val result = parser.parse(this, settings)
     return result.toInstant() ?: throwParserPropertyResolutionException<Instant>(this)
@@ -346,7 +346,7 @@ fun String.toInstant(
 
 private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
 
-internal fun DateTimeParseResult.toInstant(): Instant? {
+internal fun TemporalParseResult.toInstant(): Instant? {
     // FIXME: Require the year field here for now and make it fits within DateTime's supported range
     val parsedYear = this[DateProperty.Year] ?: return null
 
@@ -359,7 +359,7 @@ internal fun DateTimeParseResult.toInstant(): Instant? {
 
     return if (dateTime != null && offset != null) {
         val secondOfEpoch = dateTime.unixEpochSecondAt(offset) +
-                ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
+            ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
         Instant.fromUnixEpochSecond(secondOfEpoch, dateTime.nanosecond)
     } else {
         null

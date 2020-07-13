@@ -9,19 +9,19 @@ import io.islandtime.format.NumberStyle
 import io.islandtime.format.SignStyle
 
 @DslMarker
-annotation class DateTimeParserDsl
+annotation class TemporalParserDsl
 
 enum class StringParseAction {
     ACCEPT_AND_CONTINUE,
     REJECT_AND_STOP
 }
 
-@DateTimeParserDsl
-interface DateTimeParserBuilder {
+@TemporalParserDsl
+interface TemporalParserBuilder {
     /**
      * Parse a character indicating the sign of a number.
      *
-     * The characters associated with a number's sign are controlled by the [DateTimeParserSettings]. By default, this
+     * The characters associated with a number's sign are controlled by the [TemporalParser.Settings]. By default, this
      * is '+', '-', or '−' as specified in ISO-8601. The characters may be overridden by using a different
      * [NumberStyle].
      *
@@ -57,7 +57,7 @@ interface DateTimeParserBuilder {
      *
      * If the minimum [fractionLength] is zero, a decimal separator isn't required.
      *
-     * The characters associated with a decimal separator are controlled by the [DateTimeParserSettings]. By default,
+     * The characters associated with a decimal separator are controlled by the [TemporalParser.Settings]. By default,
      * this is '.' or ',' as specified in ISO-8601. The characters may be overridden by using a different
      * [NumberStyle].
      *
@@ -123,13 +123,13 @@ interface DateTimeParserBuilder {
      * successful, the property's value will be populated. If no text is known for the property or a match can't be found,
      * the parsing operation will return an error.
      *
-     * The locale used when matching text is determined by the [DateTimeParserSettings] in use. Text is provided by the
+     * The locale used when matching text is determined by the [TemporalParser.Settings] in use. Text is provided by the
      * configured [DateTimeTextProvider]. Be mindful that this text may differ between platforms and devices. If at
      * all possible, non-localized representations should be used instead.
      *
      * @param property the property to match text for
      * @param styles the styles of text to match
-     * @see DateTimeParserSettings.locale
+     * @see TemporalParser.Settings.locale
      * @see DateTimeTextProvider
      */
     fun localizedText(property: NumberProperty, styles: Set<TextStyle>)
@@ -142,44 +142,44 @@ interface DateTimeParserBuilder {
      *
      * @param builder define the parsers that should be considered 'optional'
      */
-    fun optional(builder: DateTimeParserBuilder.() -> Unit)
+    fun optional(builder: TemporalParserBuilder.() -> Unit)
 
     /**
      * Try each of the parsers defined by [builders] until one succeeds. If none succeed, parsing is considered to have
      * failed.
      */
-    fun anyOf(vararg builders: DateTimeParserBuilder.() -> Unit)
+    fun anyOf(vararg builders: TemporalParserBuilder.() -> Unit)
 
     /**
      * Try each of the parsers defined by [childParsers] until one succeeds. If none succeed, parsing is considered to
      * have failed.
      */
-    fun anyOf(vararg childParsers: DateTimeParser)
+    fun anyOf(vararg childParsers: TemporalParser)
 
     /**
      * Use a parser that has been defined outside of this builder.
      */
-    fun childParser(childParser: DateTimeParser)
+    fun childParser(childParser: TemporalParser)
 
     /**
      * Force parsing to be case-sensitive within this block.
      */
-    fun caseSensitive(builder: DateTimeParserBuilder.() -> Unit)
+    fun caseSensitive(builder: TemporalParserBuilder.() -> Unit)
 
     /**
      * Force parsing to be case-insensitive within this block.
      */
-    fun caseInsensitive(builder: DateTimeParserBuilder.() -> Unit)
+    fun caseInsensitive(builder: TemporalParserBuilder.() -> Unit)
 }
 
-@DateTimeParserDsl
-interface GroupedDateTimeParserBuilder {
+@TemporalParserDsl
+interface GroupedTemporalParserBuilder {
     /**
      * Create a distinct parse result and associate any parsed data with it.
      *
      * @param builder define the parsers that should be associated with this result
      */
-    fun group(builder: DateTimeParserBuilder.() -> Unit)
+    fun group(builder: TemporalParserBuilder.() -> Unit)
 
     /**
      * Parse a [Char] literal.
@@ -213,21 +213,21 @@ interface GroupedDateTimeParserBuilder {
      * Try each of the parsers defined by [builders] until one succeeds. If none succeed, parsing is considered to have
      * failed.
      */
-    fun anyOf(vararg builders: GroupedDateTimeParserBuilder.() -> Unit)
+    fun anyOf(vararg builders: GroupedTemporalParserBuilder.() -> Unit)
 
     /**
      * Try each of the parsers defined by [childParsers] until one succeeds and include all of its groups in the
      * parsing results. If none of the parsers succeed, parsing is considered to have failed at the starting index.
      */
-    fun anyOf(vararg childParsers: GroupedDateTimeParser)
+    fun anyOf(vararg childParsers: GroupedTemporalParser)
 }
 
-@DateTimeParserDsl
+@TemporalParserDsl
 interface SignParserBuilder {
     /**
      * Perform an action when a number's sign has been successfully parsed
      */
-    fun onParsed(action: DateTimeParseResult.(parsed: Int) -> Unit)
+    fun onParsed(action: TemporalParseResult.(parsed: Int) -> Unit)
 
     /**
      * Associate the result with a particular [NumberProperty], setting it to `-1L` when negative or `1L` when positive.
@@ -237,7 +237,7 @@ interface SignParserBuilder {
     }
 }
 
-@DateTimeParserDsl
+@TemporalParserDsl
 interface NumberParserBuilder {
     /**
      * Enforce a particular sign style.
@@ -245,12 +245,12 @@ interface NumberParserBuilder {
     fun enforceSignStyle(signStyle: SignStyle)
 }
 
-@DateTimeParserDsl
+@TemporalParserDsl
 interface WholeNumberParserBuilder : NumberParserBuilder {
     /**
      * Perform an action when parsing succeeds.
      */
-    fun onParsed(action: DateTimeParseResult.(parsed: Long) -> Unit)
+    fun onParsed(action: TemporalParseResult.(parsed: Long) -> Unit)
 
     /**
      * Associate the result with a particular [TemporalProperty], populating its value when parsing succeeds.
@@ -267,12 +267,12 @@ interface WholeNumberParserBuilder : NumberParserBuilder {
     }
 }
 
-@DateTimeParserDsl
+@TemporalParserDsl
 interface DecimalNumberParserBuilder : NumberParserBuilder {
     /**
      * Perform an action when parsing succeeds.
      */
-    fun onParsed(action: DateTimeParseResult.(whole: Long, fraction: Long) -> Unit)
+    fun onParsed(action: TemporalParseResult.(whole: Long, fraction: Long) -> Unit)
 
     /**
      * Associate both the whole and fractional part of the result with a particular [NumberProperty], populating their
@@ -286,7 +286,7 @@ interface DecimalNumberParserBuilder : NumberParserBuilder {
     }
 }
 
-@DateTimeParserDsl
+@TemporalParserDsl
 interface StringParserBuilder {
     /**
      * Execute a block as each character in the string is encountered during parsing.
@@ -294,20 +294,20 @@ interface StringParserBuilder {
      * Return [StringParseAction.ACCEPT_AND_CONTINUE] to continue parsing or [StringParseAction.REJECT_AND_STOP] to
      * reject the current character and trigger the end of parsing.
      */
-    fun onEachChar(action: DateTimeParseResult.(char: Char, index: Int) -> StringParseAction)
+    fun onEachChar(action: TemporalParseResult.(char: Char, index: Int) -> StringParseAction)
 
     /**
      * Perform an action when parsing succeeds.
      */
-    fun onParsed(action: DateTimeParseResult.(parsed: String) -> Unit)
+    fun onParsed(action: TemporalParseResult.(parsed: String) -> Unit)
 }
 
-@DateTimeParserDsl
+@TemporalParserDsl
 interface LiteralParserBuilder {
     /**
      * Perform an action when parsing succeeds.
      */
-    fun onParsed(action: DateTimeParseResult.() -> Unit)
+    fun onParsed(action: TemporalParseResult.() -> Unit)
 
     /**
      * Associate the result with a particular [BooleanProperty], setting its value to `true` when parsing succeeds.

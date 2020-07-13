@@ -205,7 +205,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
         fun FixedOffset(id: String): FixedOffset {
             return try {
                 FixedOffset(id.toUtcOffset(FIXED_TIME_ZONE_PARSER))
-            } catch (e: DateTimeParseException) {
+            } catch (e: TemporalParseException) {
                 throw TimeZoneRulesException("'$id' is an invalid ID", e)
             }
         }
@@ -240,7 +240,7 @@ internal const val MAX_TIME_ZONE_STRING_LENGTH = 50
 /**
  * A strict parser that expects an offset identical to Island Time's string representation for [UtcOffset].
  */
-private val FIXED_TIME_ZONE_PARSER = dateTimeParser {
+private val FIXED_TIME_ZONE_PARSER = temporalParser {
     utcOffsetSign()
     utcOffsetHours(2)
     +':'

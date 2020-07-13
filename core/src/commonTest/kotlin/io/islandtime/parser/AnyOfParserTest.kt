@@ -10,15 +10,15 @@ class AnyOfParserTest {
     @Test
     fun `requires at least 2 arguments`() {
         assertFailsWith<IllegalArgumentException> {
-            dateTimeParser {
+            temporalParser {
                 anyOf({ +' ' })
             }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            val childParser = dateTimeParser {}
+            val childParser = temporalParser {}
 
-            dateTimeParser {
+            temporalParser {
                 anyOf(childParser)
             }
         }
@@ -26,7 +26,7 @@ class AnyOfParserTest {
 
     @Test
     fun `succeeds when the first child parser succeeds`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             anyOf({
                 wholeNumber {
                     associateWith(DateProperty.Year)
@@ -45,7 +45,7 @@ class AnyOfParserTest {
 
     @Test
     fun `empty child parsers are allowed`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             anyOf({ +' ' }, {})
         }
 

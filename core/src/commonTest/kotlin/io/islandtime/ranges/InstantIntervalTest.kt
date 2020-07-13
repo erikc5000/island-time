@@ -2,7 +2,7 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -130,8 +130,8 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toInstantInterval() throws an exception when the format is invalid`() {
-        assertFailsWith<DateTimeParseException> { "1970-01-01/1970-01-01".toInstantInterval() }
-        assertFailsWith<DateTimeParseException> { "1970-01-01T00:00Z/19700101T00Z".toInstantInterval() }
+        assertFailsWith<TemporalParseException> { "1970-01-01/1970-01-01".toInstantInterval() }
+        assertFailsWith<TemporalParseException> { "1970-01-01T00:00Z/19700101T00Z".toInstantInterval() }
     }
 
     @Test

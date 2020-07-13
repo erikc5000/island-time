@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 class OptionalParserTest {
     @Test
     fun `optionally takes the child parser's result when successful`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             wholeNumber {
                 associateWith(DateProperty.MonthOfYear)
             }
@@ -32,7 +32,7 @@ class OptionalParserTest {
 
     @Test
     fun `marked as const when child parser is const`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             optional {
                 +' '
@@ -48,7 +48,7 @@ class OptionalParserTest {
 
     @Test
     fun `empty blocks are allowed`() {
-        val result = dateTimeParser { optional {} }.parse("")
+        val result = temporalParser { optional {} }.parse("")
         assertTrue { result.isEmpty() }
     }
 }

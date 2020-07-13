@@ -76,7 +76,7 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
 
     override fun year(minLength: Int, maxLength: Int) {
         temporalFormatterBuilder.wholeNumber(DateProperty.Year, minLength, maxLength) {
-            lengthExceededBehavior = LengthExceededBehavior.SIGN_STYLE_AWAYS
+            lengthExceededBehavior = LengthExceededBehavior.SIGN_STYLE_ALWAYS
         }
     }
 

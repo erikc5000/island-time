@@ -1,18 +1,12 @@
 package io.islandtime.measures
 
 import io.islandtime.base.*
-import io.islandtime.base.throwUnsupportedTemporalPropertyException
 import io.islandtime.internal.*
-import io.islandtime.internal.MICROSECONDS_PER_SECOND
-import io.islandtime.internal.MILLISECONDS_PER_SECOND
-import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.Duration.Companion.create
 import io.islandtime.measures.internal.plusWithOverflow
-import io.islandtime.parser.DateTimeParseResult
-import io.islandtime.parser.DateTimeParser
-import io.islandtime.parser.DateTimeParserSettings
 import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.TemporalParser
 import kotlin.math.absoluteValue
 
 /**
@@ -692,14 +686,14 @@ fun String.toDuration() = toDuration(DateTimeParsers.Iso.DURATION)
  * Convert a string to a [Duration] using [parser].
  */
 fun String.toDuration(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): Duration {
     val result = parser.parse(this, settings)
     return result.toDuration()
 }
 
-internal fun DateTimeParseResult.toDuration(): Duration {
+internal fun TemporalParseResult.toDuration(): Duration {
     // TODO: Make sure we have at least one component
     val days = (this[DurationProperty.Days] ?: 0L).days
     val hours = (this[DurationProperty.Hours] ?: 0L).hours

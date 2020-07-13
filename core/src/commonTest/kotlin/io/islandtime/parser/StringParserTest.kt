@@ -16,7 +16,7 @@ class StringParserTest {
             3 to 't'
         )
 
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             string {
                 onEachChar { char, index ->
@@ -34,7 +34,7 @@ class StringParserTest {
 
     @Test
     fun `parsing can be stopped with REJECT_AND_STOP`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             string {
                 onEachChar { char, index ->
@@ -54,21 +54,21 @@ class StringParserTest {
 
     @Test
     fun `reports an error when there are no characters to parse`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             string {
                 onEachChar { _, _ ->  StringParseAction.ACCEPT_AND_CONTINUE }
             }
         }
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse(" ") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse(" ") }
         assertEquals(1, exception.errorIndex)
         assertEquals(" ", exception.parsedString)
     }
 
     @Test
     fun `reports an error when the min length isn't satisfied`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             string(2..10) {
                 onEachChar { char, _ ->
@@ -83,14 +83,14 @@ class StringParserTest {
             +'.'
         }
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse(" T.") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse(" T.") }
         assertEquals(1, exception.errorIndex)
         assertEquals(" T.", exception.parsedString)
     }
 
     @Test
     fun `reports an error when the max length isn't satisfied`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             string(1..4) {
                 onEachChar { char, _ ->
@@ -105,7 +105,7 @@ class StringParserTest {
             +'.'
         }
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse(" TESTS.") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse(" TESTS.") }
         assertEquals(1, exception.errorIndex)
         assertEquals(" TESTS.", exception.parsedString)
     }

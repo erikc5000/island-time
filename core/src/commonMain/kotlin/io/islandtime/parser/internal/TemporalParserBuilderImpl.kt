@@ -5,8 +5,8 @@ import io.islandtime.format.TextStyle
 import io.islandtime.parser.*
 
 @PublishedApi
-internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
-    private val parsers = mutableListOf<DateTimeParser>()
+internal class TemporalParserBuilderImpl : TemporalParserBuilder {
+    private val parsers = mutableListOf<TemporalParser>()
 
     override fun sign(builder: SignParserBuilder.() -> Unit) {
         parsers += SignParserBuilderImpl().apply(builder).build()
@@ -54,41 +54,41 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         parsers += LocalizedTextParser(property, styles)
     }
 
-    override fun optional(builder: DateTimeParserBuilder.() -> Unit) {
-        val childParser = DateTimeParserBuilderImpl().apply(builder).buildElement()
+    override fun optional(builder: TemporalParserBuilder.() -> Unit) {
+        val childParser = TemporalParserBuilderImpl().apply(builder).buildElement()
 
         if (childParser != null) {
             parsers += OptionalDateTimeParser(childParser)
         }
     }
 
-    override fun anyOf(vararg builders: DateTimeParserBuilder.() -> Unit) {
-        val childParsers = builders.map { DateTimeParserBuilderImpl().apply(it).build() }
+    override fun anyOf(vararg builders: TemporalParserBuilder.() -> Unit) {
+        val childParsers = builders.map { TemporalParserBuilderImpl().apply(it).build() }
         anyOf(*childParsers.toTypedArray())
     }
 
-    override fun anyOf(vararg childParsers: DateTimeParser) {
+    override fun anyOf(vararg childParsers: TemporalParser) {
         require(childParsers.size >= 2) { "anyOf() requires at least 2 child parsers" }
         parsers += AnyOfDateTimeParser(childParsers)
     }
 
-    override fun childParser(childParser: DateTimeParser) {
+    override fun childParser(childParser: TemporalParser) {
         parsers += childParser
     }
 
-    override fun caseSensitive(builder: DateTimeParserBuilder.() -> Unit) {
+    override fun caseSensitive(builder: TemporalParserBuilder.() -> Unit) {
         buildCaseSensitiveParser(true, builder)
     }
 
-    override fun caseInsensitive(builder: DateTimeParserBuilder.() -> Unit) {
+    override fun caseInsensitive(builder: TemporalParserBuilder.() -> Unit) {
         buildCaseSensitiveParser(false, builder)
     }
 
-    fun build(): DateTimeParser {
+    fun build(): TemporalParser {
         return buildElement() ?: EmptyDateTimeParser
     }
 
-    private fun buildElement(): DateTimeParser? {
+    private fun buildElement(): TemporalParser? {
         return when (parsers.count()) {
             0 -> null
             1 -> parsers.first()
@@ -96,8 +96,8 @@ internal class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         }
     }
 
-    private fun buildCaseSensitiveParser(isCaseSensitive: Boolean, builder: DateTimeParserBuilder.() -> Unit) {
-        val childParser = DateTimeParserBuilderImpl().apply(builder).buildElement()
+    private fun buildCaseSensitiveParser(isCaseSensitive: Boolean, builder: TemporalParserBuilder.() -> Unit) {
+        val childParser = TemporalParserBuilderImpl().apply(builder).buildElement()
 
         if (childParser != null) {
             parsers += CaseSensitiveDateTimeParser(isCaseSensitive, childParser)

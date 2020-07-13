@@ -2,7 +2,9 @@ package io.islandtime
 
 import io.islandtime.base.*
 import io.islandtime.measures.*
-import io.islandtime.parser.*
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.OffsetDateTimeInterval
 
@@ -424,14 +426,14 @@ fun ZonedDateTime.asOffsetDateTime() = offsetDateTime
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
 fun String.toOffsetDateTime(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): OffsetDateTime {
     val result = parser.parse(this, settings)
     return result.toOffsetDateTime() ?: throwParserPropertyResolutionException<OffsetDateTime>(this)
 }
 
-internal fun DateTimeParseResult.toOffsetDateTime(): OffsetDateTime? {
+internal fun TemporalParseResult.toOffsetDateTime(): OffsetDateTime? {
     val dateTime = this.toDateTime()
     val utcOffset = this.toUtcOffset()
 

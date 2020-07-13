@@ -236,8 +236,8 @@ class InstantTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toInstant() throws an exception when parsing an empty string`() {
-        assertFailsWith<DateTimeParseException> { "".toInstant() }
-        assertFailsWith<DateTimeParseException> { "".toInstant(DateTimeParsers.Iso.INSTANT) }
+        assertFailsWith<TemporalParseException> { "".toInstant() }
+        assertFailsWith<TemporalParseException> { "".toInstant(DateTimeParsers.Iso.INSTANT) }
     }
 
     @Test
@@ -247,7 +247,7 @@ class InstantTest : AbstractIslandTimeTest() {
             "2019-12-05T03:04",
             "2019-12-05T12:00+00"
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toInstant() }
+            assertFailsWith<TemporalParseException> { it.toInstant() }
         }
     }
 
@@ -303,7 +303,7 @@ class InstantTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toInstant() throws an exception when required properties are missing`() {
-        val parser1 = dateTimeParser {
+        val parser1 = temporalParser {
             monthNumber(2)
             +'-'
             dayOfMonth(2)
@@ -312,17 +312,17 @@ class InstantTest : AbstractIslandTimeTest() {
             childParser(DateTimeParsers.Iso.Extended.UTC_OFFSET)
         }
 
-        val exception1 = assertFailsWith<DateTimeParseException> {
+        val exception1 = assertFailsWith<TemporalParseException> {
             "01-01T03:30+01".toInstant(parser1)
         }
         assertEquals(0, exception1.errorIndex)
 
-        val exception2 = assertFailsWith<DateTimeParseException> {
+        val exception2 = assertFailsWith<TemporalParseException> {
             "2001-01-01T03:30".toInstant(DateTimeParsers.Iso.DATE_TIME)
         }
         assertEquals(0, exception2.errorIndex)
 
-        val exception3 = assertFailsWith<DateTimeParseException> {
+        val exception3 = assertFailsWith<TemporalParseException> {
             "PT5S".toInstant(DateTimeParsers.Iso.DURATION)
         }
         assertEquals(0, exception3.errorIndex)

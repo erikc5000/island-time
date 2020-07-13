@@ -1,6 +1,6 @@
 package io.islandtime.measures
 
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import kotlin.test.*
 
 class PeriodTest {
@@ -144,7 +144,7 @@ class PeriodTest {
 
     @Test
     fun `String_toPeriod() throws an exception when string is empty`() {
-        assertFailsWith<DateTimeParseException> { "".toPeriod() }
+        assertFailsWith<TemporalParseException> { "".toPeriod() }
     }
 
     @Test
@@ -175,7 +175,7 @@ class PeriodTest {
             "-PT1H",
             "PT4S"
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toPeriod() }
+            assertFailsWith<TemporalParseException> { it.toPeriod() }
         }
     }
 

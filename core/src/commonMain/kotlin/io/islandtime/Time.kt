@@ -63,9 +63,9 @@ class Time(
     val nanosecondOfDay: Long
         get() {
             return hour.toLong() * NANOSECONDS_PER_HOUR +
-                    minute.toLong() * NANOSECONDS_PER_MINUTE +
-                    second.toLong() * NANOSECONDS_PER_SECOND +
-                    nanosecond
+                minute.toLong() * NANOSECONDS_PER_MINUTE +
+                second.toLong() * NANOSECONDS_PER_SECOND +
+                nanosecond
         }
 
     /**
@@ -222,11 +222,11 @@ class Time(
 
     override fun equals(other: Any?): Boolean {
         return this === other ||
-                (other is Time &&
-                        hour == other.hour &&
-                        minute == other.minute &&
-                        second == other.second &&
-                        nanosecond == other.nanosecond)
+            (other is Time &&
+                hour == other.hour &&
+                minute == other.minute &&
+                second == other.second &&
+                nanosecond == other.nanosecond)
     }
 
     override fun hashCode(): Int {
@@ -354,7 +354,7 @@ class Time(
  * The string is assumed to be an ISO-8601 time representation in extended format. For example, `05`, `05:30`,
  * `05:30:00`, or `05:30:00.123456789`. The output of [Time.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
@@ -364,18 +364,18 @@ fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toTime(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): Time {
     val result = parser.parse(this, settings)
     return result.toTime() ?: throwParserPropertyResolutionException<Time>(this)
 }
 
-internal fun DateTimeParseResult.toTime(): Time? {
+internal fun TemporalParseResult.toTime(): Time? {
     val hour = this[TimeProperty.HourOfDay]
 
     // TODO: Add support for SECOND_OF_DAY, NANOSECOND_OF_DAY, and so forth

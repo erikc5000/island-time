@@ -6,7 +6,10 @@ import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
-import io.islandtime.parser.*
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.TemporalParser
+import io.islandtime.parser.throwParserPropertyResolutionException
 import kotlin.math.sign
 
 /**
@@ -150,8 +153,8 @@ fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
  * Create a [UtcOffset] from a string using a specific parser.
  */
 fun String.toUtcOffset(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): UtcOffset {
     val result = parser.parse(this, settings)
     return result.toUtcOffset() ?: throwParserPropertyResolutionException<UtcOffset>(this)
@@ -163,7 +166,7 @@ fun String.toUtcOffset(
  * Required properties are [UtcOffsetProperty.TotalSeconds] or [UtcOffsetProperty.Sign] in conjunction with any
  * combination of [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds].
  */
-internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
+internal fun TemporalParseResult.toUtcOffset(): UtcOffset? {
     val totalSeconds = this[UtcOffsetProperty.TotalSeconds]
 
     if (totalSeconds != null) {

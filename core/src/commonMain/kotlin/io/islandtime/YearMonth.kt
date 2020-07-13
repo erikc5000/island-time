@@ -225,7 +225,7 @@ class YearMonth(
  * The string is assumed to be an ISO-8601 year-month in extended format. For example, `2010-05` or `1960-12`. The
  * output of [YearMonth.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
@@ -237,18 +237,18 @@ fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed year-month is invalid
  */
 fun String.toYearMonth(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): YearMonth {
     val result = parser.parse(this, settings)
     return result.toYearMonth() ?: throwParserPropertyResolutionException<YearMonth>(this)
 }
 
-internal fun DateTimeParseResult.toYearMonth(): YearMonth? {
+internal fun TemporalParseResult.toYearMonth(): YearMonth? {
     val year = this[DateProperty.Year]
     val month = this[DateProperty.MonthOfYear]
 

@@ -1,37 +1,38 @@
 package io.islandtime.parser
 
-import io.islandtime.parser.internal.DateTimeParseContext
-import io.islandtime.parser.internal.GroupedDateTimeParserBuilderImpl
+import io.islandtime.parser.internal.ParseContext
+import io.islandtime.parser.internal.GroupedTemporalParserBuilderImpl
 
-class GroupedDateTimeParser internal constructor(
+class GroupedTemporalParser internal constructor(
     private val childParsers: List<Any>,
     private val isAnyOf: Boolean = false
 ) {
     /**
-     * Parse [text] into a list of results, each containing the parsed properties associated with a particular group.
+     * Parse [text] into a list of results, each containing the parsed properties associated with a
+     * particular group.
      *
      * @param text text to parse
      * @param settings customize parsing behavior
      * @return a list of results, matching the number of groups defined in the parser
-     * @throws DateTimeParseException if parsing failed
+     * @throws TemporalParseException if parsing failed
      */
     fun parse(
         text: CharSequence,
-        settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
-    ): List<DateTimeParseResult> {
-        val context = DateTimeParseContext(settings)
+        settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
+    ): List<TemporalParseResult> {
+        val context = ParseContext(settings)
         val (endPosition, results) = parse(context, text, 0)
 
         if (endPosition < 0) {
             val errorPosition = endPosition.inv()
 
-            throw DateTimeParseException(
+            throw TemporalParseException(
                 "Parsing failed at index $errorPosition",
                 text.toString(),
                 errorPosition
             )
         } else if (endPosition < text.length) {
-            throw DateTimeParseException(
+            throw TemporalParseException(
                 "Unexpected character at index $endPosition",
                 text.toString(),
                 endPosition
@@ -42,24 +43,28 @@ class GroupedDateTimeParser internal constructor(
     }
 
     internal fun parse(
-        context: DateTimeParseContext,
+        context: ParseContext,
         text: CharSequence,
         position: Int
-    ): Pair<Int, List<DateTimeParseResult>> {
+    ): Pair<Int, List<TemporalParseResult>> {
         var currentPosition = position
-        val results = mutableListOf<DateTimeParseResult>()
+        val results = mutableListOf<TemporalParseResult>()
         var first = true
 
         for (parser in childParsers) {
             if (first) {
                 first = false
             } else {
-                context.result = DateTimeParseResult()
+                context.result = TemporalParseResult()
             }
 
             val doneParsing = when (parser) {
-                is GroupedDateTimeParser -> {
-                    val (childEndPosition, subResults) = parser.parse(context, text, currentPosition)
+                is GroupedTemporalParser -> {
+                    val (childEndPosition, subResults) = parser.parse(
+                        context,
+                        text,
+                        currentPosition
+                    )
 
                     if (childEndPosition >= 0) {
                         results += subResults
@@ -71,7 +76,7 @@ class GroupedDateTimeParser internal constructor(
 
                     (isAnyOf && childEndPosition >= 0) || (!isAnyOf && childEndPosition < 0)
                 }
-                is DateTimeParser -> {
+                is TemporalParser -> {
                     val childEndPosition = parser.parse(context, text, currentPosition)
 
                     if (childEndPosition >= 0 && !parser.isLiteral) {
@@ -97,13 +102,13 @@ class GroupedDateTimeParser internal constructor(
 }
 
 /**
- * Create a [GroupedDateTimeParser].
+ * Create a [GroupedTemporalParser].
  *
- * A grouped parser is capable of grouping the parsed properties into separate results, allowing the same property to be
- * reused multiple times within a character sequence.
+ * A grouped parser is capable of grouping the parsed properties into separate results, allowing the
+ * same property to be reused multiple times within a character sequence.
  */
-inline fun groupedDateTimeParser(
-    builder: GroupedDateTimeParserBuilder.() -> Unit
-): GroupedDateTimeParser {
-    return GroupedDateTimeParserBuilderImpl().apply(builder).build()
+inline fun groupedTemporalParser(
+    builder: GroupedTemporalParserBuilder.() -> Unit
+): GroupedTemporalParser {
+    return GroupedTemporalParserBuilderImpl().apply(builder).build()
 }

@@ -3,7 +3,6 @@ package io.islandtime
 import io.islandtime.base.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.ZonedDateTimeInterval
 
 /**
@@ -719,7 +718,7 @@ infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromUnixEpochSecond(unixEpo
  *
  * The output of [ZonedDateTime.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME)
@@ -729,18 +728,18 @@ fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONE
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toZonedDateTime(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): ZonedDateTime {
     val result = parser.parse(this, settings)
     return result.toZonedDateTime() ?: throwParserPropertyResolutionException<ZonedDateTime>(this)
 }
 
-internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
+internal fun TemporalParseResult.toZonedDateTime(): ZonedDateTime? {
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
 

@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
@@ -137,20 +137,20 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toUtcOffset() throws an exception with empty strings`() {
-        assertFailsWith<DateTimeParseException> { "".toUtcOffset() }
+        assertFailsWith<TemporalParseException> { "".toUtcOffset() }
     }
 
     @Test
     fun `String_toUtcOffset() throws an exception with invalid ISO-8601 offsets`() {
-        assertFailsWith<DateTimeParseException> { "01:00".toUtcOffset() }
-        assertFailsWith<DateTimeParseException> { "--01:00".toUtcOffset() }
-        assertFailsWith<DateTimeParseException> { "+1:00".toUtcOffset() }
-        assertFailsWith<DateTimeParseException> { "+010:00".toUtcOffset() }
+        assertFailsWith<TemporalParseException> { "01:00".toUtcOffset() }
+        assertFailsWith<TemporalParseException> { "--01:00".toUtcOffset() }
+        assertFailsWith<TemporalParseException> { "+1:00".toUtcOffset() }
+        assertFailsWith<TemporalParseException> { "+010:00".toUtcOffset() }
     }
 
     @Test
     fun `String_toUtcOffset() throws an exception when the parser can't supplied all required properties`() {
-        assertFailsWith<DateTimeParseException> { "04".toUtcOffset(DateTimeParsers.Iso.TIME) }
+        assertFailsWith<TemporalParseException> { "04".toUtcOffset(DateTimeParsers.Iso.TIME) }
     }
 
     @Test

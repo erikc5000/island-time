@@ -9,19 +9,19 @@ import kotlin.test.assertTrue
 class DateTimeParserTest {
     @Test
     fun `parses empty strings when the parser is empty`() {
-        val result = dateTimeParser {}.parse("")
+        val result = temporalParser {}.parse("")
         assertTrue { result.isEmpty() }
     }
 
     @Test
     fun `throws an exception when there are unexpected characters after all parsers complete`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             wholeNumber(1) {
                 associateWith(DateProperty.DayOfWeek)
             }
         }
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse("1 ") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse("1 ") }
         assertEquals(1, exception.errorIndex)
         assertEquals("1 ", exception.parsedString)
     }

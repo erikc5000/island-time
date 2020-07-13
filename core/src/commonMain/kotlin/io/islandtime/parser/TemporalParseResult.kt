@@ -5,7 +5,7 @@ import io.islandtime.base.TemporalProperty
 /**
  * The result of a parsing operation.
  */
-inline class DateTimeParseResult(
+inline class TemporalParseResult(
     @PublishedApi
     internal val properties: MutableMap<TemporalProperty<*>, Any> = hashMapOf()
 ) {
@@ -19,5 +19,5 @@ inline class DateTimeParseResult(
 
     inline operator fun <reified T> get(property: TemporalProperty<T>): T? = properties[property] as T?
 
-    internal fun deepCopy() = DateTimeParseResult(properties.toMutableMap())
+    internal fun deepCopy() = TemporalParseResult(properties.toMutableMap())
 }

@@ -86,7 +86,7 @@ internal class WholeNumberFormatter(
 
         val adjustedSignStyle = if (numberString.length > maxLength) {
             when (lengthExceededBehavior) {
-                LengthExceededBehavior.SIGN_STYLE_AWAYS -> SignStyle.ALWAYS
+                LengthExceededBehavior.SIGN_STYLE_ALWAYS -> SignStyle.ALWAYS
                 LengthExceededBehavior.THROW -> throw DateTimeException(
                     "The value '$value' of '$property' exceeds the maximum allowed length"
                 )

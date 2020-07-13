@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.zone.*
@@ -600,7 +600,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toZonedDateTime() throws an exception when the string is empty`() {
-        assertFailsWith<DateTimeParseException> { "".toZonedDateTime() }
+        assertFailsWith<TemporalParseException> { "".toZonedDateTime() }
     }
 
     @Test
@@ -617,7 +617,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             "2019-12-05T12:00+01:00:00[]",
             "2019-12-05T12:00+01:00:00[America/New_York/one_more/characters/than_supported]"
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toZonedDateTime() }
+            assertFailsWith<TemporalParseException> { it.toZonedDateTime() }
         }
     }
 

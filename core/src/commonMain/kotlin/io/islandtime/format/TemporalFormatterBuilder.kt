@@ -123,7 +123,7 @@ interface TemporalFormatterBuilder :
 
 enum class LengthExceededBehavior {
     THROW,
-    SIGN_STYLE_AWAYS
+    SIGN_STYLE_ALWAYS
 }
 
 @IslandTimeFormatDsl

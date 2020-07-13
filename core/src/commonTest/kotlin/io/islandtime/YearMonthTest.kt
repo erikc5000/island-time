@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.ranges.DateRange
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -363,7 +363,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYearMonth() throws an exception when parsing an empty string`() {
-        assertFailsWith<DateTimeParseException> { "".toYearMonth() }
+        assertFailsWith<TemporalParseException> { "".toYearMonth() }
     }
 
     @Test
@@ -377,7 +377,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
             "Y10000-05",
             "Y-10000-05"
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toYearMonth() }
+            assertFailsWith<TemporalParseException> { it.toYearMonth() }
         }
     }
 

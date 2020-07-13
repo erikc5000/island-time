@@ -3,7 +3,7 @@ package io.islandtime.ranges
 import io.islandtime.Date
 import io.islandtime.Month
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
@@ -152,7 +152,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
             "2015-05-05/2016-10-10/2019-11-10",
             "1950-11-09/1989-056" // Ordinal dates not supported by default
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toDateRange() }
+            assertFailsWith<TemporalParseException> { it.toDateRange() }
         }
     }
 
@@ -172,7 +172,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
             "/2015-05-05/2016-10-10",
             "2015-05-05/2016-10-10/2019-11-10"
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toDateRange(DateTimeParsers.Iso.DATE_RANGE) }
+            assertFailsWith<TemporalParseException> { it.toDateRange(DateTimeParsers.Iso.DATE_RANGE) }
         }
     }
 

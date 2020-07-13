@@ -1,5 +1,7 @@
 package io.islandtime.format
 
+import io.islandtime.format.internal.IsoDateTimeFormatterBuilderImpl
+
 enum class IsoFormat {
     BASIC,
     EXTENDED
@@ -26,20 +28,20 @@ enum class IsoFormat {
 //    YEAR_DAY
 //}
 
-//enum class IsoTimeDesignator {
-//    T,
-//    NONE,
-//    SPACE // Non-standard extension
-//}
-//
-//@TemporalFormatterDsl
-//interface IsoDateTimeFormatterBuilder {
-//    var format: IsoFormat
-//    var timeDesignator: IsoTimeDesignator
-//
+enum class IsoTimeDesignator(val char: Char?) {
+    T('T'),
+    NONE(null),
+    SPACE(' ') // Non-standard extension
+}
+
+@IslandTimeFormatDsl
+interface IsoDateTimeFormatterBuilder {
+    var format: IsoFormat
+    var timeDesignator: IsoTimeDesignator
+
 //    fun components(builder: IsoDateTimeComponentsFormatterBuilder.() -> Unit)
-//}
-//
+}
+
 //enum class DayPrecisionType {
 //    CALENDAR,
 //    ORDINAL
@@ -61,8 +63,8 @@ enum class IsoFormat {
 //        constructor(length: Int, val increment: Int = 1) : this(length..length, increment)
 //    }
 //}
-//
-//@TemporalFormatterDsl
+
+//@IslandTimeFormatDsl
 //interface IsoDateTimeComponentsFormatterBuilder {
 //    fun date(builder: IsoDateFormatterBuilder.() -> Unit = {})
 //
@@ -73,7 +75,7 @@ enum class IsoFormat {
 //    // Non-standard extension
 //    fun timeZoneId()
 //}
-//
+
 //@TemporalFormatterDsl
 //interface IsoDateFormatterBuilder {
 //    var precision: DatePrecision
@@ -94,14 +96,13 @@ enum class IsoFormat {
 //interface IsoExpandedYearRepresentationBuilder {
 //    //var digits
 //}
-//
-//inline fun isoDateTimeFormatter(
-//    format: IsoFormat = IsoFormat.EXTENDED,
-//    builder: IsoDateTimeFormatterBuilder.() -> Unit = {}
-//): TemporalFormatter {
-//    return dateTimeFormatter {  }
-//}
-//
+
+inline fun isoDateTimeFormatter(
+    builder: IsoDateTimeFormatterBuilder.() -> Unit = {}
+): TemporalFormatter {
+    return IsoDateTimeFormatterBuilderImpl().apply(builder).build()
+}
+
 //val formatter = isoDateTimeFormatter {
 //    format = IsoFormat.BASIC
 //    timeDesignator = IsoTimeDesignator.SPACE

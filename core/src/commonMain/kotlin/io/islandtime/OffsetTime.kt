@@ -2,7 +2,9 @@ package io.islandtime
 
 import io.islandtime.base.*
 import io.islandtime.measures.*
-import io.islandtime.parser.*
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.throwParserPropertyResolutionException
 
 /**
@@ -187,14 +189,14 @@ infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
 
 fun String.toOffsetTime(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): OffsetTime {
     val result = parser.parse(this, settings)
     return result.toOffsetTime() ?: throwParserPropertyResolutionException<OffsetTime>(this)
 }
 
-internal fun DateTimeParseResult.toOffsetTime(): OffsetTime? {
+internal fun TemporalParseResult.toOffsetTime(): OffsetTime? {
     val time = this.toTime()
     val utcOffset = this.toUtcOffset()
 

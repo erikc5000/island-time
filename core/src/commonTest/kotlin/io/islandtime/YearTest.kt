@@ -3,8 +3,8 @@ package io.islandtime
 import io.islandtime.ranges.DateRange
 import io.islandtime.measures.days
 import io.islandtime.measures.years
-import io.islandtime.parser.DateTimeParseException
-import io.islandtime.parser.dateTimeParser
+import io.islandtime.parser.TemporalParseException
+import io.islandtime.parser.temporalParser
 import io.islandtime.parser.monthNumber
 import io.islandtime.parser.year
 import io.islandtime.test.AbstractIslandTimeTest
@@ -187,7 +187,7 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYear() throws an exception when the string is empty`() {
-        assertFailsWith<DateTimeParseException> { "".toYear() }
+        assertFailsWith<TemporalParseException> { "".toYear() }
     }
 
     @Test
@@ -208,13 +208,13 @@ class YearTest : AbstractIslandTimeTest() {
             "Y-0123456789",
             "Y-1234567890"
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toYear() }
+            assertFailsWith<TemporalParseException> { it.toYear() }
         }
     }
 
     @Test
     fun `String_toYear() throws an exception when the year is outside the supported range`() {
-        val customParser = dateTimeParser { year() }
+        val customParser = temporalParser { year() }
 
         listOf(
             "${Year.MAX_VALUE + 1}",
@@ -250,7 +250,7 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYear() throws an exception when the parser fails to supply the YEAR field`() {
-        val customParser = dateTimeParser { monthNumber(2) }
-        assertFailsWith<DateTimeParseException> { "12".toYear(customParser) }
+        val customParser = temporalParser { monthNumber(2) }
+        assertFailsWith<TemporalParseException> { "12".toYear(customParser) }
     }
 }

@@ -423,18 +423,18 @@ class TimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toTime() throws an exception when given an empty string`() {
-        assertFailsWith<DateTimeParseException> { "".toTime() }
-        assertFailsWith<DateTimeParseException> { "".toTime(DateTimeParsers.Iso.TIME) }
+        assertFailsWith<TemporalParseException> { "".toTime() }
+        assertFailsWith<TemporalParseException> { "".toTime(DateTimeParsers.Iso.TIME) }
     }
 
     @Test
     fun `String_toTime() throws an exception when the parser can't supply all required properties`() {
-        assertFailsWith<DateTimeParseException> { "14".toTime(dateTimeParser { minuteOfHour(2) }) }
+        assertFailsWith<TemporalParseException> { "14".toTime(temporalParser { minuteOfHour(2) }) }
     }
 
     @Test
     fun `String_toTime() throws an exception if parsed values cause overflow`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             hourOfDay()
             +':'
             minuteOfHour()

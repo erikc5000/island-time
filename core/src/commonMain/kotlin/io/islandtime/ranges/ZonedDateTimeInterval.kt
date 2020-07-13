@@ -3,11 +3,7 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
-import io.islandtime.endOfDayAt
-import io.islandtime.startOfDayAt
 import io.islandtime.parser.*
-import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
@@ -137,7 +133,7 @@ class ZonedDateTimeInterval(
  * - `../..`
  * - (empty string)
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
@@ -147,12 +143,12 @@ fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.I
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed interval is invalid
  */
 fun String.toZonedDateTimeInterval(
-    parser: GroupedDateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: GroupedTemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): ZonedDateTimeInterval {
     val results = parser.parse(this, settings)
         .expectingGroupCount<ZonedDateTimeInterval>(2, this)
@@ -172,7 +168,7 @@ fun String.toZonedDateTimeInterval(
     return when {
         start != null && end != null -> start until end
         start == null && end == null -> ZonedDateTimeInterval.EMPTY
-        else -> throw DateTimeParseException("Intervals with unknown start or end are not supported")
+        else -> throw TemporalParseException("Intervals with unknown start or end are not supported")
     }
 }
 

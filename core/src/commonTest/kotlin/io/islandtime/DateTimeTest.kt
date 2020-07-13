@@ -1,9 +1,9 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.dateTimeParser
+import io.islandtime.parser.temporalParser
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -899,20 +899,20 @@ class DateTimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDateTime() throws an exception when the format is mixed basic and extended`() {
-        assertFailsWith<DateTimeParseException> { "20000101 00:23".toDateTime() }
-        assertFailsWith<DateTimeParseException> { "2002-02-01T0023".toDateTime() }
+        assertFailsWith<TemporalParseException> { "20000101 00:23".toDateTime() }
+        assertFailsWith<TemporalParseException> { "2002-02-01T0023".toDateTime() }
     }
 
     @Test
     fun `String_toDateTime() throws an exception when given an empty string`() {
-        assertFailsWith<DateTimeParseException> { "".toDateTime() }
+        assertFailsWith<TemporalParseException> { "".toDateTime() }
     }
 
     @Test
     fun `String_toDateTime() throws an exception when the parser can't supply required properties`() {
-        assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.UTC_OFFSET) }
-        assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.TIME) }
-        assertFailsWith<DateTimeParseException> { "2009-10-08".toDateTime(DateTimeParsers.Iso.DATE) }
+        assertFailsWith<TemporalParseException> { "08:00".toDateTime(DateTimeParsers.Iso.UTC_OFFSET) }
+        assertFailsWith<TemporalParseException> { "08:00".toDateTime(DateTimeParsers.Iso.TIME) }
+        assertFailsWith<TemporalParseException> { "2009-10-08".toDateTime(DateTimeParsers.Iso.DATE) }
     }
 
     @Test
@@ -938,7 +938,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDateTime() parses valid ISO-8601 ordinal date strings with custom parser`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             anyOf({
                 childParser(DateTimeParsers.Iso.Basic.DATE)
                 anyOf({ +'T' }, { +' ' })

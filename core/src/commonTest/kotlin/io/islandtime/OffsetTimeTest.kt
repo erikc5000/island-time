@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
@@ -167,13 +167,13 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toOffsetTime() throws an exception when the string is empty`() {
-        assertFailsWith<DateTimeParseException> { "".toOffsetTime() }
+        assertFailsWith<TemporalParseException> { "".toOffsetTime() }
     }
 
     @Test
     fun `String_toOffsetTime() throws an exception when format is unexpected`() {
-        assertFailsWith<DateTimeParseException> { "0800+01".toOffsetTime() }
-        assertFailsWith<DateTimeParseException> { "8-01".toOffsetTime() }
+        assertFailsWith<TemporalParseException> { "0800+01".toOffsetTime() }
+        assertFailsWith<TemporalParseException> { "8-01".toOffsetTime() }
     }
 
     @Test

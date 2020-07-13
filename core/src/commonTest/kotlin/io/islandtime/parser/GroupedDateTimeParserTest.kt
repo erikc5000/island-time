@@ -9,29 +9,29 @@ import kotlin.test.assertTrue
 class GroupedDateTimeParserTest {
     @Test
     fun `parses empty strings when the parser is empty`() {
-        assertTrue { groupedDateTimeParser { }.parse("").isEmpty() }
+        assertTrue { groupedTemporalParser { }.parse("").isEmpty() }
     }
 
     @Test
     fun `throws an exception when there are unexpected characters after all parsers complete`() {
-        val parser = groupedDateTimeParser {
+        val parser = groupedTemporalParser {
             group {
                 wholeNumber(1) { associateWith(DateProperty.DayOfWeek) }
             }
         }
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse("1 ") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse("1 ") }
         assertEquals(1, exception.errorIndex)
         assertEquals("1 ", exception.parsedString)
     }
 
     @Test
     fun `number of results matches the number of groups defined, even when empty`() {
-        val result1 = groupedDateTimeParser { group {} }.parse("")
+        val result1 = groupedTemporalParser { group {} }.parse("")
         assertEquals(1, result1.size)
         assertTrue { result1[0].isEmpty() }
 
-        val result2 = groupedDateTimeParser {
+        val result2 = groupedTemporalParser {
             group {}
             group {}
         }.parse("")
@@ -42,7 +42,7 @@ class GroupedDateTimeParserTest {
 
     @Test
     fun `number of results matches the number of groups defined, ignoring literals`() {
-        val result1 = groupedDateTimeParser {
+        val result1 = groupedTemporalParser {
             +' '
             group {}
         }.parse(" ")
@@ -50,7 +50,7 @@ class GroupedDateTimeParserTest {
         assertEquals(1, result1.size)
         assertTrue { result1[0].isEmpty() }
 
-        val result2 = groupedDateTimeParser {
+        val result2 = groupedTemporalParser {
             group {}
             +' '
             group {}
@@ -59,7 +59,7 @@ class GroupedDateTimeParserTest {
         assertEquals(2, result2.size)
         assertTrue { result2.all { it.isEmpty() } }
 
-        val result3 = groupedDateTimeParser {
+        val result3 = groupedTemporalParser {
             group {}
             group {}
             +' '
@@ -71,7 +71,7 @@ class GroupedDateTimeParserTest {
 
     @Test
     fun `results from a single group are populated correctly`() {
-        val parser = groupedDateTimeParser {
+        val parser = groupedTemporalParser {
             group {
                 wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 +" is the month"
@@ -87,7 +87,7 @@ class GroupedDateTimeParserTest {
 
     @Test
     fun `results from a multiple groups are populated correctly`() {
-        val parser = groupedDateTimeParser {
+        val parser = groupedTemporalParser {
             group {
                 wholeNumber { associateWith(DateProperty.MonthOfYear) }
                 +'/'
@@ -114,7 +114,7 @@ class GroupedDateTimeParserTest {
 
     @Test
     fun `error position is reported correctly`() {
-        val parser = groupedDateTimeParser {
+        val parser = groupedTemporalParser {
             +"Month: "
             group {
                 wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }
@@ -125,16 +125,16 @@ class GroupedDateTimeParserTest {
             }
         }
 
-        val exception1 = assertFailsWith<DateTimeParseException> { parser.parse("Month: 1 DoW: 4") }
+        val exception1 = assertFailsWith<TemporalParseException> { parser.parse("Month: 1 DoW: 4") }
         assertEquals(8, exception1.errorIndex)
 
-        val exception2 = assertFailsWith<DateTimeParseException> { parser.parse("Month: 10 DoW: A") }
+        val exception2 = assertFailsWith<TemporalParseException> { parser.parse("Month: 10 DoW: A") }
         assertEquals(15, exception2.errorIndex)
     }
 
     @Test
     fun `anyOf() enables reuse of existing grouped parsers`() {
-        val existingParser = groupedDateTimeParser {
+        val existingParser = groupedTemporalParser {
             group {
                 wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }
             }
@@ -144,7 +144,7 @@ class GroupedDateTimeParserTest {
             }
         }
 
-        val parser = groupedDateTimeParser {
+        val parser = groupedTemporalParser {
             anyOf(existingParser)
             +" - "
             anyOf(existingParser)
@@ -177,7 +177,7 @@ class GroupedDateTimeParserTest {
 
     @Test
     fun `anyOf() uses the the results of the first custom grouped parser to succeed`() {
-        val parser = groupedDateTimeParser {
+        val parser = groupedTemporalParser {
             anyOf({
                 group {
                     wholeNumber(2) { associateWith(DateProperty.MonthOfYear) }

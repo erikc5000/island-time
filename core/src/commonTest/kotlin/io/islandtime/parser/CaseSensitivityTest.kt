@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 class CaseSensitivityTest {
     @Test
     fun `blocks can be made case sensitive regardless of parser setting`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +'T'
             caseSensitive {
                 +'T'
@@ -16,17 +16,17 @@ class CaseSensitivityTest {
             +'T'
         }
 
-        val exception = assertFailsWith<DateTimeParseException> {
-            parser.parse("ttt", DateTimeParserSettings(isCaseSensitive = false))
+        val exception = assertFailsWith<TemporalParseException> {
+            parser.parse("ttt", TemporalParser.Settings(isCaseSensitive = false))
         }
         assertEquals(1, exception.errorIndex)
 
-        parser.parse("tTt", DateTimeParserSettings(isCaseSensitive = false))
+        parser.parse("tTt", TemporalParser.Settings(isCaseSensitive = false))
     }
 
     @Test
     fun `blocks can be made case insensitive regardless of parser setting`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +'T'
             caseInsensitive {
                 +'T'
@@ -37,13 +37,13 @@ class CaseSensitivityTest {
         parser.parse("TTT")
         parser.parse("TtT")
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse("Ttt") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse("Ttt") }
         assertEquals(2, exception.errorIndex)
     }
 
     @Test
     fun `nested case sensitivity blocks`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             caseInsensitive {
                 +"T"
                 caseSensitive {
@@ -55,13 +55,13 @@ class CaseSensitivityTest {
         parser.parse("tT")
         parser.parse("TT")
 
-        val exception = assertFailsWith<DateTimeParseException> { parser.parse("tt") }
+        val exception = assertFailsWith<TemporalParseException> { parser.parse("tt") }
         assertEquals(1, exception.errorIndex)
     }
 
     @Test
     fun `empty blocks are allowed`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             caseSensitive {}
             caseInsensitive {}
         }

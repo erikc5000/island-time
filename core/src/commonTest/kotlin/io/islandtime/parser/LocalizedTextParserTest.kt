@@ -15,10 +15,10 @@ class LocalizedTextParserTest : AbstractIslandTimeTest() {
     @Test
     fun `parses localized months`() {
         val parsers = listOf(
-            dateTimeParser {
+            temporalParser {
                 localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL, TextStyle.SHORT))
             },
-            dateTimeParser {
+            temporalParser {
                 +' '
                 localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL, TextStyle.SHORT))
                 +'a'
@@ -34,7 +34,7 @@ class LocalizedTextParserTest : AbstractIslandTimeTest() {
         ).forEach {
             parsers.forEachIndexed { index, parser ->
                 val textToParse = if (index == 1) " ${it.first}a" else it.first
-                val result = parser.parse(textToParse, DateTimeParserSettings(locale = en_US))
+                val result = parser.parse(textToParse, TemporalParser.Settings(locale = en_US))
                 assertEquals(1, result.size)
                 assertEquals(it.second, result[DateProperty.MonthOfYear])
             }
@@ -43,13 +43,13 @@ class LocalizedTextParserTest : AbstractIslandTimeTest() {
 
     @Test
     fun `parses case-insensitive localized months`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             localizedText(DateProperty.MonthOfYear, setOf(TextStyle.FULL))
         }
 
         val result = parser.parse(
             "januarY",
-            DateTimeParserSettings(locale = en_US, isCaseSensitive = false)
+            TemporalParser.Settings(locale = en_US, isCaseSensitive = false)
         )
 
         assertEquals(1, result.size)
@@ -58,13 +58,13 @@ class LocalizedTextParserTest : AbstractIslandTimeTest() {
 
     @Test
     fun `reports an error when no match is found`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +'a'
             localizedText(DateProperty.MonthOfYear, setOf(TextStyle.SHORT))
         }
 
-        val exception = assertFailsWith<DateTimeParseException> {
-            parser.parse("ajan", DateTimeParserSettings(locale = en_US))
+        val exception = assertFailsWith<TemporalParseException> {
+            parser.parse("ajan", TemporalParser.Settings(locale = en_US))
         }
         assertEquals(1, exception.errorIndex)
         assertEquals("ajan", exception.parsedString)
@@ -72,13 +72,13 @@ class LocalizedTextParserTest : AbstractIslandTimeTest() {
 
     @Test
     fun `reports an error when the end of the text is hit before parsing`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             localizedText(DateProperty.MonthOfYear, setOf(TextStyle.NARROW))
         }
 
-        val exception = assertFailsWith<DateTimeParseException> {
-            parser.parse(" ", DateTimeParserSettings(locale = en_US))
+        val exception = assertFailsWith<TemporalParseException> {
+            parser.parse(" ", TemporalParser.Settings(locale = en_US))
         }
         assertEquals(1, exception.errorIndex)
         assertEquals(" ", exception.parsedString)
@@ -86,13 +86,13 @@ class LocalizedTextParserTest : AbstractIslandTimeTest() {
 
     @Test
     fun `reports an error when no parsable text is available`() {
-        val parser = dateTimeParser {
+        val parser = temporalParser {
             +' '
             localizedText(DateProperty.Year, setOf(TextStyle.FULL))
         }
 
-        val exception = assertFailsWith<DateTimeParseException> {
-            parser.parse(" 2010", DateTimeParserSettings(locale = en_US))
+        val exception = assertFailsWith<TemporalParseException> {
+            parser.parse(" 2010", TemporalParser.Settings(locale = en_US))
         }
         assertEquals(1, exception.errorIndex)
         assertEquals(" 2010", exception.parsedString)

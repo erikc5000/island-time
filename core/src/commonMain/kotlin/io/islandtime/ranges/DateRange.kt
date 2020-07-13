@@ -1,15 +1,10 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.MAX_DATE_STRING_LENGTH
-import io.islandtime.appendDate
 import io.islandtime.base.DateProperty
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
-import io.islandtime.monthsSinceYear0
 import io.islandtime.parser.*
-import io.islandtime.parser.expectingGroupCount
-import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 import kotlin.random.nextLong
@@ -161,7 +156,7 @@ class DateRange(
  * - `../..`
  * - (empty string)
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
 fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
@@ -171,12 +166,12 @@ fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed range is invalid
  */
 fun String.toDateRange(
-    parser: GroupedDateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: GroupedTemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): DateRange {
     val results = parser.parse(this, settings).expectingGroupCount<DateTimeInterval>(2, this)
 
@@ -195,7 +190,7 @@ fun String.toDateRange(
     return when {
         start != null && end != null -> start..end
         start == null && end == null -> DateRange.EMPTY
-        else -> throw DateTimeParseException("Ranges with unknown start or end are not supported")
+        else -> throw TemporalParseException("Ranges with unknown start or end are not supported")
     }
 }
 

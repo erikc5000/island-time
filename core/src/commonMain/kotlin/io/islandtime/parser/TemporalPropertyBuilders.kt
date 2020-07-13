@@ -9,7 +9,7 @@ import io.islandtime.format.TextStyle
  *
  * The result will be associated with [DateProperty.Year].
  */
-inline fun DateTimeParserBuilder.year(
+inline fun TemporalParserBuilder.year(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -24,7 +24,7 @@ inline fun DateTimeParserBuilder.year(
  *
  * The result will be associated with [DateProperty.Year].
  */
-inline fun DateTimeParserBuilder.year(
+inline fun TemporalParserBuilder.year(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -39,7 +39,7 @@ inline fun DateTimeParserBuilder.year(
  *
  * The result will be associated with [DateProperty.YearOfEra].
  */
-inline fun DateTimeParserBuilder.yearOfEra(
+inline fun TemporalParserBuilder.yearOfEra(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -54,7 +54,7 @@ inline fun DateTimeParserBuilder.yearOfEra(
  *
  * The result will be associated with [DateProperty.YearOfEra].
  */
-inline fun DateTimeParserBuilder.yearOfEra(
+inline fun TemporalParserBuilder.yearOfEra(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -69,7 +69,7 @@ inline fun DateTimeParserBuilder.yearOfEra(
  *
  * The result will be associated with [DateProperty.Era].
  */
-fun DateTimeParserBuilder.era(styles: Set<TextStyle>) {
+fun TemporalParserBuilder.era(styles: Set<TextStyle>) {
     localizedText(DateProperty.Era, styles)
 }
 
@@ -78,7 +78,7 @@ fun DateTimeParserBuilder.era(styles: Set<TextStyle>) {
  *
  * The result will be associated with [DateProperty.Era].
  */
-fun DateTimeParserBuilder.era(style: TextStyle) {
+fun TemporalParserBuilder.era(style: TextStyle) {
     localizedText(DateProperty.Era, setOf(style))
 }
 
@@ -87,7 +87,7 @@ fun DateTimeParserBuilder.era(style: TextStyle) {
  *
  * The result will be associated with [DateProperty.MonthOfYear].
  */
-inline fun DateTimeParserBuilder.monthNumber(
+inline fun TemporalParserBuilder.monthNumber(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -102,7 +102,7 @@ inline fun DateTimeParserBuilder.monthNumber(
  *
  * The result will be associated with [DateProperty.MonthOfYear].
  */
-inline fun DateTimeParserBuilder.monthNumber(
+inline fun TemporalParserBuilder.monthNumber(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -117,7 +117,7 @@ inline fun DateTimeParserBuilder.monthNumber(
  *
  * The result will be associated with [DateProperty.MonthOfYear].
  */
-fun DateTimeParserBuilder.localizedMonth(styles: Set<TextStyle>) {
+fun TemporalParserBuilder.localizedMonth(styles: Set<TextStyle>) {
     localizedText(DateProperty.MonthOfYear, styles)
 }
 
@@ -126,7 +126,7 @@ fun DateTimeParserBuilder.localizedMonth(styles: Set<TextStyle>) {
  *
  * The result will be associated with [DateProperty.MonthOfYear].
  */
-fun DateTimeParserBuilder.localizedMonth(style: TextStyle) {
+fun TemporalParserBuilder.localizedMonth(style: TextStyle) {
     localizedText(DateProperty.MonthOfYear, setOf(style))
 }
 
@@ -135,7 +135,7 @@ fun DateTimeParserBuilder.localizedMonth(style: TextStyle) {
  *
  * The result will be associated with [DateProperty.DayOfYear].
  */
-inline fun DateTimeParserBuilder.dayOfYear(
+inline fun TemporalParserBuilder.dayOfYear(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -150,7 +150,7 @@ inline fun DateTimeParserBuilder.dayOfYear(
  *
  * The result will be associated with [DateProperty.DayOfYear].
  */
-inline fun DateTimeParserBuilder.dayOfYear(
+inline fun TemporalParserBuilder.dayOfYear(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -165,7 +165,7 @@ inline fun DateTimeParserBuilder.dayOfYear(
  *
  * The result will be associated with [DateProperty.DayOfMonth].
  */
-inline fun DateTimeParserBuilder.dayOfMonth(
+inline fun TemporalParserBuilder.dayOfMonth(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -180,7 +180,7 @@ inline fun DateTimeParserBuilder.dayOfMonth(
  *
  * The result will be associated with [DateProperty.DayOfMonth].
  */
-inline fun DateTimeParserBuilder.dayOfMonth(
+inline fun TemporalParserBuilder.dayOfMonth(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -195,7 +195,7 @@ inline fun DateTimeParserBuilder.dayOfMonth(
  *
  * The result will be associated with [DateProperty.DayOfWeek].
  */
-inline fun DateTimeParserBuilder.dayOfWeekNumber(
+inline fun TemporalParserBuilder.dayOfWeekNumber(
     length: Int = 1,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -210,7 +210,7 @@ inline fun DateTimeParserBuilder.dayOfWeekNumber(
  *
  * The result will be associated with [DateProperty.DayOfWeek].
  */
-fun DateTimeParserBuilder.localizedDayOfWeek(styles: Set<TextStyle>) {
+fun TemporalParserBuilder.localizedDayOfWeek(styles: Set<TextStyle>) {
     localizedText(DateProperty.DayOfWeek, styles)
 }
 
@@ -219,7 +219,7 @@ fun DateTimeParserBuilder.localizedDayOfWeek(styles: Set<TextStyle>) {
  *
  * The result will be associated with [DateProperty.DayOfWeek].
  */
-fun DateTimeParserBuilder.localizedDayOfWeek(style: TextStyle) {
+fun TemporalParserBuilder.localizedDayOfWeek(style: TextStyle) {
     localizedText(DateProperty.DayOfWeek, setOf(style))
 }
 
@@ -228,7 +228,7 @@ fun DateTimeParserBuilder.localizedDayOfWeek(style: TextStyle) {
  *
  * The result will be associated with [TimeProperty.AmPmOfDay].
  */
-fun DateTimeParserBuilder.amPm() {
+fun TemporalParserBuilder.amPm() {
     localizedText(TimeProperty.AmPmOfDay, setOf(TextStyle.FULL))
 }
 
@@ -237,7 +237,7 @@ fun DateTimeParserBuilder.amPm() {
  *
  * The result will be associated with [TimeProperty.HourOfDay].
  */
-inline fun DateTimeParserBuilder.hourOfDay(
+inline fun TemporalParserBuilder.hourOfDay(
     length: IntRange = 1..2,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -252,7 +252,7 @@ inline fun DateTimeParserBuilder.hourOfDay(
  *
  * The result will be associated with [TimeProperty.HourOfDay].
  */
-inline fun DateTimeParserBuilder.hourOfDay(
+inline fun TemporalParserBuilder.hourOfDay(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -267,7 +267,7 @@ inline fun DateTimeParserBuilder.hourOfDay(
  *
  * The result will be associated with [TimeProperty.MinuteOfHour].
  */
-inline fun DateTimeParserBuilder.minuteOfHour(
+inline fun TemporalParserBuilder.minuteOfHour(
     length: IntRange = 1..2,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -282,7 +282,7 @@ inline fun DateTimeParserBuilder.minuteOfHour(
  *
  * The result will be associated with [TimeProperty.MinuteOfHour].
  */
-inline fun DateTimeParserBuilder.minuteOfHour(
+inline fun TemporalParserBuilder.minuteOfHour(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -297,7 +297,7 @@ inline fun DateTimeParserBuilder.minuteOfHour(
  *
  * The result will be associated with [TimeProperty.SecondOfMinute].
  */
-inline fun DateTimeParserBuilder.secondOfMinute(
+inline fun TemporalParserBuilder.secondOfMinute(
     length: IntRange = 1..2,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -312,7 +312,7 @@ inline fun DateTimeParserBuilder.secondOfMinute(
  *
  * The result will be associated with [TimeProperty.SecondOfMinute].
  */
-inline fun DateTimeParserBuilder.secondOfMinute(
+inline fun TemporalParserBuilder.secondOfMinute(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -327,9 +327,9 @@ inline fun DateTimeParserBuilder.secondOfMinute(
  *
  * The number of whole seconds will be associated with [TimeProperty.SecondOfMinute] while any fractional part will be
  * associated with [TimeProperty.NanosecondOfSecond]. The decimal separator character will be determined by the
- * [DateTimeParserSettings].
+ * [TemporalParser.Settings].
  */
-inline fun DateTimeParserBuilder.fractionalSecondOfMinute(
+inline fun TemporalParserBuilder.fractionalSecondOfMinute(
     wholeLength: IntRange = 1..2,
     fractionLength: IntRange = 0..9,
     fractionScale: Int = 9,
@@ -346,9 +346,9 @@ inline fun DateTimeParserBuilder.fractionalSecondOfMinute(
  *
  * The number of whole seconds will be associated with [TimeProperty.SecondOfMinute] while any fractional part will be
  * associated with [TimeProperty.NanosecondOfSecond]. The decimal separator character will be determined by the
- * [DateTimeParserSettings].
+ * [TemporalParser.Settings].
  */
-inline fun DateTimeParserBuilder.fractionalSecondOfMinute(
+inline fun TemporalParserBuilder.fractionalSecondOfMinute(
     wholeLength: Int,
     fractionLength: IntRange = 0..9,
     fractionScale: Int = 9,
@@ -357,7 +357,7 @@ inline fun DateTimeParserBuilder.fractionalSecondOfMinute(
     fractionalSecondOfMinute(wholeLength..wholeLength, fractionLength, fractionScale, builder)
 }
 
-inline fun DateTimeParserBuilder.utcOffsetHours(
+inline fun TemporalParserBuilder.utcOffsetHours(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -367,7 +367,7 @@ inline fun DateTimeParserBuilder.utcOffsetHours(
     }
 }
 
-inline fun DateTimeParserBuilder.utcOffsetMinutes(
+inline fun TemporalParserBuilder.utcOffsetMinutes(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -377,7 +377,7 @@ inline fun DateTimeParserBuilder.utcOffsetMinutes(
     }
 }
 
-inline fun DateTimeParserBuilder.utcOffsetSeconds(
+inline fun TemporalParserBuilder.utcOffsetSeconds(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -390,7 +390,7 @@ inline fun DateTimeParserBuilder.utcOffsetSeconds(
 /**
  * Parses a number's sign and populates [UtcOffsetProperty.Sign] with `-1L`, if negative or `1L`, if positive.
  */
-fun DateTimeParserBuilder.utcOffsetSign() {
+fun TemporalParserBuilder.utcOffsetSign() {
     sign {
         associateWith(UtcOffsetProperty.Sign)
     }
@@ -399,7 +399,7 @@ fun DateTimeParserBuilder.utcOffsetSign() {
 /**
  * Parses the character 'Z' and populates [UtcOffsetProperty.TotalSeconds] with `0L`.
  */
-fun DateTimeParserBuilder.utcDesignator() {
+fun TemporalParserBuilder.utcDesignator() {
     literal('Z') {
         onParsed { this[UtcOffsetProperty.TotalSeconds] = 0L }
     }
@@ -408,7 +408,7 @@ fun DateTimeParserBuilder.utcDesignator() {
 /**
  * Parses a number's sign and populates [DurationProperty.Sign] with `-1L`, if negative or `1L`, if positive.
  */
-fun DateTimeParserBuilder.periodSign() {
+fun TemporalParserBuilder.periodSign() {
     sign {
         associateWith(DurationProperty.Sign)
     }
@@ -419,7 +419,7 @@ fun DateTimeParserBuilder.periodSign() {
  *
  * The number of years will be associated with [DurationProperty.Years].
  */
-inline fun DateTimeParserBuilder.periodOfYears(
+inline fun TemporalParserBuilder.periodOfYears(
     length: IntRange = 1..10,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -434,7 +434,7 @@ inline fun DateTimeParserBuilder.periodOfYears(
  *
  * The number of months will be associated with [DurationProperty.Months].
  */
-inline fun DateTimeParserBuilder.periodOfMonths(
+inline fun TemporalParserBuilder.periodOfMonths(
     length: IntRange = 1..10,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -449,7 +449,7 @@ inline fun DateTimeParserBuilder.periodOfMonths(
  *
  * The number of weeks will be associated with [DurationProperty.Weeks].
  */
-inline fun DateTimeParserBuilder.periodOfWeeks(
+inline fun TemporalParserBuilder.periodOfWeeks(
     length: IntRange = 1..10,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -464,7 +464,7 @@ inline fun DateTimeParserBuilder.periodOfWeeks(
  *
  * The number of days will be associated with [DurationProperty.Days].
  */
-inline fun DateTimeParserBuilder.periodOfDays(
+inline fun TemporalParserBuilder.periodOfDays(
     length: IntRange = 1..10,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -479,7 +479,7 @@ inline fun DateTimeParserBuilder.periodOfDays(
  *
  * The number of hours will be associated with [DurationProperty.Hours].
  */
-inline fun DateTimeParserBuilder.durationOfHours(
+inline fun TemporalParserBuilder.durationOfHours(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -494,7 +494,7 @@ inline fun DateTimeParserBuilder.durationOfHours(
  *
  * The number of minutes will be associated with [DurationProperty.Minutes].
  */
-inline fun DateTimeParserBuilder.durationOfMinutes(
+inline fun TemporalParserBuilder.durationOfMinutes(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -509,7 +509,7 @@ inline fun DateTimeParserBuilder.durationOfMinutes(
  *
  * The number of seconds will be associated with [DurationProperty.Seconds].
  */
-inline fun DateTimeParserBuilder.durationOfSeconds(
+inline fun TemporalParserBuilder.durationOfSeconds(
     length: IntRange = 1..19,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
@@ -524,9 +524,9 @@ inline fun DateTimeParserBuilder.durationOfSeconds(
  *
  * The number of whole seconds will be associated with [DurationProperty.Seconds] while any fractional part will be
  * associated with [DurationProperty.Nanoseconds]. The decimal separator character will be determined by the
- * [DateTimeParserSettings].
+ * [TemporalParser.Settings].
  */
-inline fun DateTimeParserBuilder.durationOfFractionalSeconds(
+inline fun TemporalParserBuilder.durationOfFractionalSeconds(
     wholeLength: IntRange = 1..19,
     fractionLength: IntRange = 0..9,
     fractionScale: Int = 9,
@@ -544,7 +544,7 @@ inline fun DateTimeParserBuilder.durationOfFractionalSeconds(
  * The format should match that defined in the IANA time zone database. The parsed string will be associated with
  * [TimeZoneProperty.Id].
  */
-fun DateTimeParserBuilder.timeZoneId() {
+fun TemporalParserBuilder.timeZoneId() {
     string(length = 1..MAX_TIME_ZONE_STRING_LENGTH) {
         onEachChar { char, index ->
             if (index == 0) {
@@ -573,7 +573,7 @@ fun DateTimeParserBuilder.timeZoneId() {
 /**
  * Parses the string ".." and populates the provided [BooleanProperty] with `true`.
  */
-fun DateTimeParserBuilder.unboundedDesignator(property: BooleanProperty) {
+fun TemporalParserBuilder.unboundedDesignator(property: BooleanProperty) {
     literal("..") {
         associateWith(property)
     }

@@ -9,8 +9,8 @@ import io.islandtime.internal.negateExact
 import io.islandtime.internal.plusExact
 import io.islandtime.parser.*
 
-internal object EmptyDateTimeParser : DateTimeParser() {
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+internal object EmptyDateTimeParser : TemporalParser() {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         return position
     }
 
@@ -18,10 +18,10 @@ internal object EmptyDateTimeParser : DateTimeParser() {
 }
 
 internal class CompositeDateTimeParser(
-    private val childParsers: List<DateTimeParser>
-) : DateTimeParser() {
+    private val childParsers: List<TemporalParser>
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         var currentPosition = position
 
         for (parser in childParsers) {
@@ -39,10 +39,10 @@ internal class CompositeDateTimeParser(
 }
 
 internal class OptionalDateTimeParser(
-    private val childParser: DateTimeParser
-) : DateTimeParser() {
+    private val childParser: TemporalParser
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
             return position
         }
@@ -64,10 +64,10 @@ internal class OptionalDateTimeParser(
 }
 
 internal class AnyOfDateTimeParser(
-    private val childParsers: Array<out DateTimeParser>
-) : DateTimeParser() {
+    private val childParsers: Array<out TemporalParser>
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         var currentPosition = position
 
         for (parser in childParsers) {
@@ -92,10 +92,10 @@ internal class AnyOfDateTimeParser(
 
 internal class CaseSensitiveDateTimeParser(
     private val isCaseSensitive: Boolean,
-    private val childParser: DateTimeParser
-) : DateTimeParser() {
+    private val childParser: TemporalParser
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         val previousCaseSensitivity = context.isCaseSensitive
         context.isCaseSensitive = isCaseSensitive
         val currentPosition = childParser.parse(context, text, position)
@@ -109,10 +109,10 @@ internal class CaseSensitiveDateTimeParser(
 
 internal class CharLiteralParser(
     private val char: Char,
-    private val onParsed: List<DateTimeParseResult.() -> Unit>
-) : DateTimeParser() {
+    private val onParsed: List<TemporalParseResult.() -> Unit>
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length) {
             position.inv()
         } else {
@@ -134,10 +134,10 @@ internal class CharLiteralParser(
 
 internal class StringLiteralParser(
     private val string: String,
-    private val onParsed: List<DateTimeParseResult.() -> Unit>
-) : DateTimeParser() {
+    private val onParsed: List<TemporalParseResult.() -> Unit>
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length ||
             string.length > text.length - position ||
             !text.regionMatches(position, string, 0, string.length, !context.isCaseSensitive)
@@ -158,9 +158,9 @@ internal class LocalizedTextParser(
     private val property: NumberProperty,
     private val styles: Set<TextStyle>,
     private val provider: DateTimeTextProvider = DateTimeTextProvider.Companion
-) : DateTimeParser() {
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
             return position.inv()
         }
@@ -187,11 +187,11 @@ internal class LocalizedTextParser(
 
 internal class StringParser(
     private val length: IntRange,
-    private val onEachChar: List<DateTimeParseResult.(char: Char, index: Int) -> StringParseAction>,
-    private val onParsed: List<DateTimeParseResult.(parsed: String) -> Unit>
-) : DateTimeParser() {
+    private val onEachChar: List<TemporalParseResult.(char: Char, index: Int) -> StringParseAction>,
+    private val onParsed: List<TemporalParseResult.(parsed: String) -> Unit>
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
             return position.inv()
         }
@@ -222,10 +222,10 @@ internal class StringParser(
 }
 
 internal class SignParser(
-    private val onParsed: List<DateTimeParseResult.(parsed: Int) -> Unit>
-) : DateTimeParser() {
+    private val onParsed: List<TemporalParseResult.(parsed: Int) -> Unit>
+) : TemporalParser() {
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length) {
             position.inv()
         } else {
@@ -250,7 +250,7 @@ internal class SignParser(
 
 internal abstract class AbstractNumberParser(
     private val signStyle: SignStyle?
-) : DateTimeParser() {
+) : TemporalParser() {
 
     protected fun parseSign(
         numberStyle: NumberStyle,
@@ -283,7 +283,7 @@ internal abstract class AbstractNumberParser(
 
 internal class FixedLengthNumberParser(
     private val length: Int,
-    private val onParsed: List<DateTimeParseResult.(parsed: Long) -> Unit>,
+    private val onParsed: List<TemporalParseResult.(parsed: Long) -> Unit>,
     signStyle: SignStyle?
 ) : AbstractNumberParser(signStyle) {
 
@@ -291,7 +291,7 @@ internal class FixedLengthNumberParser(
         require(length in 1..MAX_LONG_DIGITS) { "length must be from 1-19" }
     }
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         val textLength = text.length
         var currentPosition = position
 
@@ -330,7 +330,7 @@ internal class FixedLengthNumberParser(
                 value = value.negateExact()
             }
         } catch (e: ArithmeticException) {
-            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
+            throw TemporalParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         onParsed.forEach { it(context.result, value) }
@@ -343,7 +343,7 @@ internal class FixedLengthNumberParser(
 internal class VariableLengthNumberParser(
     private val minLength: Int,
     private val maxLength: Int,
-    private val onParsed: List<DateTimeParseResult.(parsed: Long) -> Unit>,
+    private val onParsed: List<TemporalParseResult.(parsed: Long) -> Unit>,
     signStyle: SignStyle?
 ) : AbstractNumberParser(signStyle) {
 
@@ -353,7 +353,7 @@ internal class VariableLengthNumberParser(
         require(maxLength in 1..MAX_LONG_DIGITS) { "maxLength must be from 1-19" }
     }
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         val textLength = text.length
         var currentPosition = position
 
@@ -399,7 +399,7 @@ internal class VariableLengthNumberParser(
                 value = value.negateExact()
             }
         } catch (e: ArithmeticException) {
-            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
+            throw TemporalParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         onParsed.forEach { it(context.result, value) }
@@ -416,13 +416,13 @@ internal class DecimalNumberParser(
     private val maxFractionLength: Int,
     private val fractionScale: Int,
     signStyle: SignStyle?,
-    private val onParsed: List<DateTimeParseResult.(whole: Long, fraction: Long) -> Unit>
+    private val onParsed: List<TemporalParseResult.(whole: Long, fraction: Long) -> Unit>
 ) : AbstractNumberParser(signStyle) {
 
     init {
         require(minWholeLength <= maxWholeLength) { "minWholeLength must be <= maxWholeLength" }
         require(minWholeLength in 0..MAX_LONG_DIGITS) { "minWholeLength must be from 0-19" }
-        require(maxWholeLength in 0..MAX_LONG_DIGITS) { "maxWholeLength must be from 0-19" }
+        require(maxWholeLength in 1..MAX_LONG_DIGITS) { "maxWholeLength must be from 1-19" }
 
         require(minFractionLength <= maxFractionLength) { "minFractionLength must be <= maxFractionLength" }
         require(minFractionLength in 0..9) { "minFractionLength must be from 0-9" }
@@ -431,7 +431,7 @@ internal class DecimalNumberParser(
         require(fractionScale in 1..9) { "fractionScale must be from 1-9" }
     }
 
-    override fun parse(context: DateTimeParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
         val textLength = text.length
         var currentPosition = position
 
@@ -477,7 +477,7 @@ internal class DecimalNumberParser(
                 wholeResult = wholeResult.negateExact()
             }
         } catch (e: ArithmeticException) {
-            throw DateTimeParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
+            throw TemporalParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
         if (currentPosition < textLength &&

@@ -3,7 +3,9 @@ package io.islandtime
 import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
-import io.islandtime.parser.*
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.ranges.DateTimeInterval
 
@@ -176,9 +178,9 @@ class DateTime(
             copy(date = date + months)
         }
     }
-    
+
     operator fun plus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked)
-    
+
     operator fun plus(weeks: LongWeeks): DateTime {
         return if (weeks.value == 0L) {
             this
@@ -346,7 +348,7 @@ class DateTime(
             copy(date = date - months)
         }
     }
-    
+
     operator fun minus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
 
     operator fun minus(weeks: LongWeeks): DateTime {
@@ -681,17 +683,17 @@ val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
 
 /**
- * Parse a string into a [DateTime] using a [DateTimeParser] capable of supplying the required properties.
+ * Parse a string into a [DateTime] using a [TemporalParser] capable of supplying the required properties.
  */
 fun String.toDateTime(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): DateTime {
     val result = parser.parse(this, settings)
     return result.toDateTime() ?: throwParserPropertyResolutionException<DateTime>(this)
 }
 
-internal fun DateTimeParseResult.toDateTime(): DateTime? {
+internal fun TemporalParseResult.toDateTime(): DateTime? {
     val date = this.toDate()
     val time = this.toTime()
 

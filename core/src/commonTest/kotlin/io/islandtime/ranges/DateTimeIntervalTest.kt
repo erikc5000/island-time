@@ -357,8 +357,8 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDateTimeInterval() throws an exception when the format is invalid`() {
-        assertFailsWith<DateTimeParseException> { "2000-01-01/2000-01-01".toDateTimeInterval() }
-        assertFailsWith<DateTimeParseException> { "2000-01-01T00:00/20000101T01".toDateTimeInterval() }
+        assertFailsWith<TemporalParseException> { "2000-01-01/2000-01-01".toDateTimeInterval() }
+        assertFailsWith<TemporalParseException> { "2000-01-01T00:00/20000101T01".toDateTimeInterval() }
     }
 
     @Test
@@ -385,7 +385,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDateTimeInterval() throws an exception when required properties are missing`() {
-        val customParser = groupedDateTimeParser {
+        val customParser = groupedTemporalParser {
             group {
                 optional {
                     anyOf(DateTimeParsers.Iso.DATE_TIME, DateTimeParsers.Iso.YEAR)
@@ -399,9 +399,9 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
             }
         }
 
-        assertFailsWith<DateTimeParseException> { "2001/2002-11-04T13:23".toDateTimeInterval(customParser) }
-        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01/2002".toDateTimeInterval(customParser) }
-        assertFailsWith<DateTimeParseException> { "/2002-11-04T13:23".toDateTimeInterval(customParser) }
-        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01/".toDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "2001/2002-11-04T13:23".toDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "2001-10-03T00:01/2002".toDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "/2002-11-04T13:23".toDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "2001-10-03T00:01/".toDateTimeInterval(customParser) }
     }
 }

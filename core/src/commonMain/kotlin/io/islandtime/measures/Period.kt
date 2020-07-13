@@ -1,11 +1,12 @@
 package io.islandtime.measures
 
 import io.islandtime.base.*
-import io.islandtime.base.throwUnsupportedTemporalPropertyException
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.internal.timesExact
 import io.islandtime.internal.toIntExact
-import io.islandtime.parser.*
+import io.islandtime.parser.DateTimeParsers
+import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.throwParserPropertyResolutionException
 
 /**
@@ -346,14 +347,14 @@ operator fun Int.times(period: Period) = period * this
 fun String.toPeriod() = toPeriod(DateTimeParsers.Iso.PERIOD)
 
 fun String.toPeriod(
-    parser: DateTimeParser,
-    settings: DateTimeParserSettings = DateTimeParserSettings.DEFAULT
+    parser: TemporalParser,
+    settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
 ): Period {
     val result = parser.parse(this, settings)
     return result.toPeriod() ?: throwParserPropertyResolutionException<Period>(this)
 }
 
-internal fun DateTimeParseResult.toPeriod(): Period? {
+internal fun TemporalParseResult.toPeriod(): Period? {
     val sign = this[DurationProperty.Sign]?.toInt() ?: 1
     val yearsValue = this[DurationProperty.Years]
     val monthsValue = this[DurationProperty.Months]

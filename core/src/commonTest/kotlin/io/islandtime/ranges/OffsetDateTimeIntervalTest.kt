@@ -3,9 +3,9 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParseException
+import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.groupedDateTimeParser
+import io.islandtime.parser.groupedTemporalParser
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -369,9 +369,9 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toOffsetDateTimeInterval() throws an exception when the format is invalid`() {
-        assertFailsWith<DateTimeParseException> { "2000-01-01/2000-01-01".toOffsetDateTimeInterval() }
-        assertFailsWith<DateTimeParseException> { "2000-01-01T00:00/2000-01-01T01:00".toOffsetDateTimeInterval() }
-        assertFailsWith<DateTimeParseException> { "2000-01-01T00:00+04/20000101T01-01".toOffsetDateTimeInterval() }
+        assertFailsWith<TemporalParseException> { "2000-01-01/2000-01-01".toOffsetDateTimeInterval() }
+        assertFailsWith<TemporalParseException> { "2000-01-01T00:00/2000-01-01T01:00".toOffsetDateTimeInterval() }
+        assertFailsWith<TemporalParseException> { "2000-01-01T00:00+04/20000101T01-01".toOffsetDateTimeInterval() }
     }
 
     @Test
@@ -397,7 +397,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toOffsetDateTimeInterval() throws an exception when required properties are missing`() {
-        val customParser = groupedDateTimeParser {
+        val customParser = groupedTemporalParser {
             group {
                 optional {
                     anyOf(DateTimeParsers.Iso.OFFSET_DATE_TIME, DateTimeParsers.Iso.YEAR)
@@ -411,9 +411,9 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             }
         }
 
-        assertFailsWith<DateTimeParseException> { "2001/2002-11-04T13:23+01".toOffsetDateTimeInterval(customParser) }
-        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01-04/2002".toOffsetDateTimeInterval(customParser) }
-        assertFailsWith<DateTimeParseException> { "/2002-11-04T13:23-04".toOffsetDateTimeInterval(customParser) }
-        assertFailsWith<DateTimeParseException> { "2001-10-03T00:01-07/".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "2001/2002-11-04T13:23+01".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "2001-10-03T00:01-04/2002".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "/2002-11-04T13:23-04".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> { "2001-10-03T00:01-07/".toOffsetDateTimeInterval(customParser) }
     }
 }

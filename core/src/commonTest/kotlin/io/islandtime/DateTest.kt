@@ -655,7 +655,7 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDate() throws an exception when given an empty string`() {
-        assertFailsWith<DateTimeParseException> { "".toDate() }
+        assertFailsWith<TemporalParseException> { "".toDate() }
     }
 
     @Test
@@ -673,33 +673,33 @@ class DateTest : AbstractIslandTimeTest() {
             "2010-10-20-",
             "2010-10-20 "
         ).forEach {
-            assertFailsWith<DateTimeParseException> { it.toDate() }
+            assertFailsWith<TemporalParseException> { it.toDate() }
         }
     }
 
     @Test
     fun `String_toDate() throws an exception when unexpected characters exist before a valid string`() {
-        assertFailsWith<DateTimeParseException> { " 2010-02-20".toDate() }
-        assertFailsWith<DateTimeParseException> { "T2010-10-20".toDate() }
+        assertFailsWith<TemporalParseException> { " 2010-02-20".toDate() }
+        assertFailsWith<TemporalParseException> { "T2010-10-20".toDate() }
     }
 
     @Test
     fun `String_toDate() throws an exception when unexpected characters exist after a valid string`() {
-        assertFailsWith<DateTimeParseException> { "2010-2-20 ".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010-10-200".toDate() }
-        assertFailsWith<DateTimeParseException> { "2010-10-20T".toDate() }
+        assertFailsWith<TemporalParseException> { "2010-2-20 ".toDate() }
+        assertFailsWith<TemporalParseException> { "2010-10-200".toDate() }
+        assertFailsWith<TemporalParseException> { "2010-10-20T".toDate() }
     }
 
     @Test
     fun `String_toDate() throws an exception when the parser cannot supply the required fields`() {
-        assertFailsWith<DateTimeParseException> { "05:06".toDate(DateTimeParsers.Iso.TIME) }
-        assertFailsWith<DateTimeParseException> { "2010".toDate(DateTimeParsers.Iso.YEAR) }
-        assertFailsWith<DateTimeParseException> { "2010-05".toDate(DateTimeParsers.Iso.YEAR_MONTH) }
+        assertFailsWith<TemporalParseException> { "05:06".toDate(DateTimeParsers.Iso.TIME) }
+        assertFailsWith<TemporalParseException> { "2010".toDate(DateTimeParsers.Iso.YEAR) }
+        assertFailsWith<TemporalParseException> { "2010-05".toDate(DateTimeParsers.Iso.YEAR_MONTH) }
     }
 
     @Test
     fun `String_toDate() throws an exception when fields overflow`() {
-        val customParser = dateTimeParser {
+        val customParser = temporalParser {
             year()
             +' '
             monthNumber()
