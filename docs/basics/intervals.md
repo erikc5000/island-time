@@ -114,7 +114,7 @@ val emptyDateRange = DateRange.EMPTY
 ```
 
 !!! info ""Unbounded" vs. "Open""
-    In ISO-8601, an "unbounded" interval is referred to as an "open" interval. However, this conflicts with the mathematical meaning of "open" though (ie. end points that are exclusive rather than inclusive), so we avoid using that terminology.
+    In ISO-8601, an "unbounded" interval is referred to as an "open" interval. However, this conflicts with the mathematical meaning of "open" (ie. end points that are exclusive rather than inclusive), so we try to avoid using that terminology.
 
 ## ISO Representation
 

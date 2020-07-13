@@ -63,7 +63,7 @@ val minutes: LongMinutes = duration.inMinutes
 
 ## `Period`
 
-A [`Period`](../api/core/io.islandtime.measures/-period/index.md) is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of things that you can do with it.
+A [`Period`](../api/core/io.islandtime.measures/-period/index.md) is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of the things that you can do with it.
 
 ```kotlin
 val period: Period = periodOf(5.years, 13.months, 10.days)
