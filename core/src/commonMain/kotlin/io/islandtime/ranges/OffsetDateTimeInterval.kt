@@ -4,9 +4,7 @@ import io.islandtime.*
 import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
-import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
+import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
@@ -26,7 +24,8 @@ class OffsetDateTimeInterval(
     /**
      * Convert this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_OFFSET_DATE_TIME_STRING_LENGTH, StringBuilder::appendOffsetDateTime)
+    override fun toString() =
+        buildIsoString(MAX_OFFSET_DATE_TIME_STRING_LENGTH, StringBuilder::appendOffsetDateTime)
 
     /**
      * Convert the interval into a [Period] of the same length.
@@ -161,22 +160,42 @@ fun String.toOffsetDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the range using the default random number generator.
+ * Return a random date-time within the interval using the default random number generator. The offset of the start
+ * date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see OffsetDateTimeInterval.randomOrNull
  */
 fun OffsetDateTimeInterval.random(): OffsetDateTime = random(Random)
 
 /**
- * Return a random date-time within the range using the supplied random number generator.
+ * Return a random date-time within the interval using the default random number generator or `null` if the interval is
+ * empty or unbounded. The offset of the start date-time will be used.
+ * @see OffsetDateTimeInterval.random
+ */
+fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random)
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator. The offset of the start
+ * date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see OffsetDateTimeInterval.randomOrNull
  */
 fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
-    try {
-        return OffsetDateTime.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecond, endExclusive.unixEpochSecond),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
-            start.offset
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
+    return random(random) { second, nanosecond ->
+        OffsetDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.offset)
+    }
+}
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator or `null` if the interval is
+ * empty or unbounded. The offset of the start date-time will be used.
+ * @see OffsetDateTimeInterval.random
+ */
+fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
+    return randomOrNull(random) { second, nanosecond ->
+        OffsetDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.offset)
     }
 }
 

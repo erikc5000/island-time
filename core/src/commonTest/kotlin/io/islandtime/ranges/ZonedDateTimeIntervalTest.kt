@@ -7,6 +7,8 @@ import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
+    private val nyZone = TimeZone("America/New_York")
+
     @Test
     fun `EMPTY returns an empty interval`() {
         assertTrue { ZonedDateTimeInterval.EMPTY.isEmpty() }
@@ -31,9 +33,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `inclusive end creation handles unbounded correctly`() {
-        val timeZone = "America/New_York".toTimeZone()
-        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at timeZone
-        val max = DateTime.MAX at timeZone
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
+        val max = DateTime.MAX at nyZone
 
         assertTrue { (start..max).hasUnboundedEnd() }
         assertFailsWith<DateTimeException> { start..max - 1.nanoseconds }
@@ -42,8 +43,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within bounded range`() {
-        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at nyZone
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -53,8 +54,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within range with unbounded end`() {
-        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = DateTime.MAX at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
+        val end = DateTime.MAX at nyZone
 
         assertTrue { start in start..end }
         assertTrue { DateTime.MAX at "Etc/UTC".toTimeZone() in start..end }
@@ -64,8 +65,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within range with unbounded start`() {
-        val start = DateTime.MIN at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = DateTime.MIN at nyZone
+        val end = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -76,8 +77,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns false for out of range dates`() {
-        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at nyZone
 
         assertFalse { start - 1.nanoseconds in start..end }
         assertFalse { end + 1.nanoseconds in start..end }
@@ -87,8 +88,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `until infix operator constructs an interval with non-inclusive end`() {
-        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at "America/New_York".toTimeZone()
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at nyZone
         val range = start until end
 
         assertEquals(start, range.start)
@@ -97,13 +98,49 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a zoned date-time within range`() {
-        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at "America/New_York".toTimeZone()
-        val end = Date(2019, Month.NOVEMBER, 20) at MIDNIGHT at "America/New_York".toTimeZone()
-        val range = start..end
-        val randomInstant = range.random()
-        assertTrue { randomInstant in range }
-        assertEquals("America/New_York".toTimeZone(), randomInstant.zone)
+    fun `random() returns a date-time within the interval`() {
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
+        val end = Date(2019, Month.NOVEMBER, 2) at MIDNIGHT at nyZone
+        val interval = start until end
+        val randomZonedDateTime = interval.random()
+        assertTrue { randomZonedDateTime in interval }
+        assertEquals(nyZone, randomZonedDateTime.zone)
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is empty`() {
+        assertFailsWith<NoSuchElementException> { ZonedDateTimeInterval.EMPTY.random() }
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval(start = dateTime).random() }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval(endExclusive = dateTime).random() }
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is empty`() {
+        assertNull(ZonedDateTimeInterval.EMPTY.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
+        assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(ZonedDateTimeInterval(start = dateTime).randomOrNull())
+        assertNull(ZonedDateTimeInterval(endExclusive = dateTime).randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns a date-time within the interval`() {
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
+        val end = (start + 1.nanoseconds).adjustedTo(TimeZone("Europe/London"))
+        val interval = start until end
+        val randomZonedDateTime = interval.randomOrNull()!!
+        assertTrue { randomZonedDateTime in interval }
+        assertEquals(nyZone, randomZonedDateTime.zone)
     }
 
     @Test
@@ -134,13 +171,13 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end instant are the same`() {
-        val instant = Date(2019, Month.MARCH, 10) at MIDNIGHT at "America/New_York".toTimeZone()
+        val instant = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }
 
     @Test
     fun `period of months during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10) at Time(1, 0) at zone
         val now = Date(2019, 4, 10) at Time(1, 0) at zone
 
@@ -154,7 +191,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `period of days during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10) at Time(1, 0) at zone
         val now = Date(2019, 3, 11) at Time(1, 0) at zone
 
@@ -168,7 +205,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `duration during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10) at Time(1, 0) at zone
         val now = Date(2019, 3, 11) at Time(1, 0) at zone
 
@@ -180,7 +217,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `period of days during daylight savings overlap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 11, 3) at Time(1, 0) at zone
         val now = Date(2019, 11, 4) at Time(1, 0) at zone
 
@@ -192,7 +229,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `duration during daylight savings overlap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 11, 3) at Time(1, 0) at zone
         val now = Date(2019, 11, 4) at Time(1, 0) at zone
 
@@ -203,7 +240,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInYears property`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2020, 3, 10).startOfDayAt(zone)
 
@@ -215,7 +252,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInMonths property during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 4, 10).startOfDayAt(zone)
 
@@ -227,7 +264,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInWeeks property during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 17).startOfDayAt(zone)
 
@@ -239,7 +276,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInDays property during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 11).startOfDayAt(zone)
 
@@ -251,7 +288,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInHours property during daylight savings gap`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = nyZone
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 10) at Time(5, 0) at zone
 

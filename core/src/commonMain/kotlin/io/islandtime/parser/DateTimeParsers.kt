@@ -40,7 +40,7 @@ object DateTimeParsers {
         }
 
         /**
-         * Parse an ISO-8601 time shift in either basic or extended format.
+         * Parse an ISO-8601 UTC offset in either basic or extended format.
          */
         val UTC_OFFSET = temporalParser {
             anyOf({

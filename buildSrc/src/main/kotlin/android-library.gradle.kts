@@ -1,11 +1,6 @@
 repositories {
     google()
-
-    jcenter {
-        content {
-            includeGroup("org.jetbrains.trove4j")
-        }
-    }
+    jcenter()
 }
 
 plugins {
@@ -26,10 +21,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    libraryVariants.configureEach {
-        generateBuildConfigProvider?.configure {
-            enabled = false
-        }
+    buildFeatures {
+        buildConfig = false
     }
 }
 

@@ -4,9 +4,7 @@ import io.islandtime.*
 import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
-import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
+import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
@@ -173,22 +171,42 @@ fun String.toZonedDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator.
+ * Return a random date-time within the interval using the default random number generator. The zone of the start
+ * date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see ZonedDateTimeInterval.randomOrNull
  */
 fun ZonedDateTimeInterval.random(): ZonedDateTime = random(Random)
 
 /**
- * Return a random date-time within the interval using the supplied random number generator.
+ * Return a random date-time within the interval using the default random number generator or `null` if the interval is
+ * empty or unbounded. The zone of the start date-time will be used.
+ * @see ZonedDateTimeInterval.random
+ */
+fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator. The zone of the start
+ * date-time will be used.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see ZonedDateTimeInterval.randomOrNull
  */
 fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
-    try {
-        return ZonedDateTime.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecond, endExclusive.unixEpochSecond),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
-            start.zone
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
+    return random(random) { second, nanosecond ->
+        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
+    }
+}
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator or `null` if the interval is
+ * empty or unbounded. The zone of the start date-time will be used.
+ * @see ZonedDateTimeInterval.random
+ */
+fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
+    return randomOrNull(random) { second, nanosecond ->
+        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
     }
 }
 
@@ -201,32 +219,12 @@ infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, t
  * Convert a range of dates into a [ZonedDateTimeInterval] between the starting and ending instants in a particular
  * time zone.
  */
-fun DateRange.toZonedDateTimeIntervalAt(zone: TimeZone): ZonedDateTimeInterval {
-    return when {
-        isEmpty() -> ZonedDateTimeInterval.EMPTY
-        isUnbounded() -> ZonedDateTimeInterval.UNBOUNDED
-        start == endInclusive -> {
-            val zonedStart = start.startOfDayAt(zone)
-            val zonedEnd = zonedStart + 1.days
-            zonedStart until zonedEnd
-        }
-        else -> {
-            val start = if (hasUnboundedStart()) {
-                DateTime.MIN at zone
-            } else {
-                start.startOfDayAt(zone)
-            }
-
-            val end = if (hasUnboundedEnd()) {
-                DateTime.MAX at zone
-            } else {
-                endInclusive.endOfDayAt(zone)
-            }
-
-            start..end
-        }
-    }
-}
+@Deprecated(
+    "Use 'at' instead.",
+    ReplaceWith("this at zone"),
+    DeprecationLevel.WARNING
+)
+fun DateRange.toZonedDateTimeInterval(zone: TimeZone): ZonedDateTimeInterval = this at zone
 
 /**
  * Get the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the

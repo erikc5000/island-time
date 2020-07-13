@@ -25,41 +25,69 @@ sealed class TimePointProperty {
  */
 interface TimePoint<T> : Temporal {
     /**
-     * The number of seconds since the Unix epoch of 1970-01-01T00:00Z
+     * The number of seconds since the Unix epoch of 1970-01-01T00:00Z.
      */
     val secondsSinceUnixEpoch: LongSeconds
 
-    /**
-     * The number of additional nanoseconds on top of [secondsSinceUnixEpoch]
-     */
-    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
+    @Deprecated(
+        "Use additionalNanosecondsSinceUnixEpoch instead.",
+        ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
+        DeprecationLevel.WARNING
+    )
+    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds get() = additionalNanosecondsSinceUnixEpoch
 
     /**
-     * The number of milliseconds since the Unix epoch of 1970-01-01T00:00Z
+     * The number of additional nanoseconds on top of [secondsSinceUnixEpoch].
+     */
+    val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
+
+    /**
+     * The number of milliseconds since the Unix epoch of 1970-01-01T00:00Z.
      */
     val millisecondsSinceUnixEpoch: LongMilliseconds
 
-    /**
-     * The second of the Unix epoch
-     */
-    val unixEpochSecond: Long get() = secondsSinceUnixEpoch.value
+    @Deprecated(
+        "Use secondOfUnixEpoch instead.",
+        ReplaceWith("this.secondOfUnixEpoch"),
+        DeprecationLevel.WARNING
+    )
+    val unixEpochSecond: Long get() = secondOfUnixEpoch
 
     /**
-     * The nanosecond of the second of the Unix epoch
+     * The second of the Unix epoch.
      */
-    val unixEpochNanoOfSecond: Int get() = nanoOfSecondsSinceUnixEpoch.value
+    val secondOfUnixEpoch: Long get() = secondsSinceUnixEpoch.value
+
+    @Deprecated(
+        "Use nanosecond instead.",
+        ReplaceWith("this.nanosecond"),
+        DeprecationLevel.WARNING
+    )
+    val unixEpochNanoOfSecond: Int get() = nanosecond
 
     /**
-     * The millisecond of the Unix epoch
+     * The nanosecond of the second.
      */
-    val unixEpochMillisecond: Long get() = millisecondsSinceUnixEpoch.value
+    val nanosecond: Int get() = additionalNanosecondsSinceUnixEpoch.value
+
+    @Deprecated(
+        "Use millisecondOfUnixEpoch instead.",
+        ReplaceWith("this.millisecondOfUnixEpoch"),
+        DeprecationLevel.WARNING
+    )
+    val unixEpochMillisecond: Long get() = millisecondOfUnixEpoch
 
     /**
-     * Check if this time point represent the same instant as [other]. Unlike the equals operator, equality is
+     * The millisecond of the Unix epoch.
+     */
+    val millisecondOfUnixEpoch: Long get() = millisecondsSinceUnixEpoch.value
+
+    /**
+     * Check if this time point represents the same instant as [other]. Unlike the equals operator, equality is
      * determined solely by timeline order.
      */
     fun isSameInstantAs(other: TimePoint<*>): Boolean {
-        return unixEpochSecond == other.unixEpochSecond && unixEpochNanoOfSecond == other.unixEpochNanoOfSecond
+        return secondOfUnixEpoch == other.secondOfUnixEpoch && nanosecond == other.nanosecond
     }
 
     /**
@@ -67,15 +95,15 @@ interface TimePoint<T> : Temporal {
      * [Comparable] interface since they don't necessarily have a natural order that's consistent with equals.
      */
     operator fun compareTo(other: TimePoint<*>): Int {
-        val second = unixEpochSecond
-        val otherSecond = other.unixEpochSecond
+        val second = secondOfUnixEpoch
+        val otherSecond = other.secondOfUnixEpoch
 
         val secondDiff = second.compareTo(otherSecond)
 
         return if (secondDiff != 0) {
             secondDiff
         } else {
-            unixEpochNanoOfSecond - other.unixEpochNanoOfSecond
+            nanosecond - other.nanosecond
         }
     }
 
@@ -109,6 +137,6 @@ interface TimePoint<T> : Temporal {
         /**
          * Compare by timeline order.
          */
-        val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.unixEpochSecond }.thenBy { it.unixEpochNanoOfSecond }
+        val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.secondOfUnixEpoch }.thenBy { it.nanosecond }
     }
 }

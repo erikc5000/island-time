@@ -1,11 +1,12 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.appendInstant
 import io.islandtime.base.DateProperty
 import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.random
+import io.islandtime.ranges.internal.randomOrNull
 import kotlin.random.Random
 
 /**
@@ -112,21 +113,36 @@ fun String.toInstantInterval(
 
 /**
  * Return a random instant within the interval using the default random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(): Instant = random(Random)
 
 /**
+ * Return a random instant within the interval using the default random number generator or `null` if the interval is
+ * empty or unbounded.
+ * @see InstantInterval.random
+ */
+fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
+
+/**
  * Return a random instant within the interval using the supplied random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see InstantInterval.randomOrNull
  */
 fun InstantInterval.random(random: Random): Instant {
-    try {
-        return Instant.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecond, endExclusive.unixEpochSecond),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond)
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
-    }
+    return random(random, Instant.Companion::fromSecondOfUnixEpoch)
+}
+
+/**
+ * Return a random instant within the interval using the supplied random number generator or `null` if the interval is
+ * empty or unbounded.
+ * @see InstantInterval.random
+ */
+fun InstantInterval.randomOrNull(random: Random): Instant? {
+    return randomOrNull(random, Instant.Companion::fromSecondOfUnixEpoch)
 }
 
 /**
@@ -134,48 +150,16 @@ fun InstantInterval.random(random: Random): Instant {
  */
 infix fun Instant.until(to: Instant) = InstantInterval(this, to)
 
-/**
- * Convert a range of dates into an [InstantInterval] between the starting and ending instants in a particular time
- * zone.
- */
-fun DateRange.toInstantIntervalAt(zone: TimeZone): InstantInterval {
-    return when {
-        isEmpty() -> InstantInterval.EMPTY
-        isUnbounded() -> InstantInterval.UNBOUNDED
-        else -> {
-            val start = if (hasUnboundedStart()) Instant.MIN else start.startOfDayAt(zone).instant
-            val end = if (hasUnboundedEnd()) Instant.MAX else endInclusive.endOfDayAt(zone).instant
-            start..end
-        }
-    }
-}
+@Deprecated(
+    "Use toInstantInterval() instead.",
+    ReplaceWith("this.toInstantInterval()"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
 
-/**
- * Convert an [OffsetDateTimeInterval] into an [InstantInterval].
- */
-fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval {
-    return when {
-        isEmpty() -> InstantInterval.EMPTY
-        isUnbounded() -> InstantInterval.UNBOUNDED
-        else -> {
-            val startInstant = if (hasUnboundedStart()) Instant.MIN else start.instant
-            val endInstant = if (hasUnboundedEnd()) Instant.MAX else endExclusive.instant
-            startInstant until endInstant
-        }
-    }
-}
-
-/**
- * Convert a [ZonedDateTimeInterval] until an [InstantInterval].
- */
-fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval {
-    return when {
-        isEmpty() -> InstantInterval.EMPTY
-        isUnbounded() -> InstantInterval.UNBOUNDED
-        else -> {
-            val startInstant = if (hasUnboundedStart()) Instant.MIN else start.instant
-            val endInstant = if (hasUnboundedEnd()) Instant.MAX else endExclusive.instant
-            startInstant until endInstant
-        }
-    }
-}
+@Deprecated(
+    "Use toInstantInterval() instead.",
+    ReplaceWith("this.toInstantInterval()"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()

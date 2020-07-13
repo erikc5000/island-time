@@ -41,11 +41,11 @@ inline class IntDays(
   val value: Int
 ) : Comparable<IntDays> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntDays
-    get() = if (value < 0) IntDays(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -144,11 +144,11 @@ inline class IntDays(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0D"
-       value == Int.MIN_VALUE -> "-P2147483648D"
+     return when (value) {
+       0 -> "P0D"
+       Int.MIN_VALUE -> "-P2147483648D"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue)
          append('D')
@@ -269,8 +269,8 @@ inline class IntDays(
   operator fun minus(weeks: LongWeeks) = this.toLongDays() - weeks.inDays
 
   inline fun <T> toComponents(action: (weeks: IntWeeks, days: IntDays) -> T): T {
-    val weeks = this.inWeeks
-    val days = (this - weeks)
+    val weeks = (value / DAYS_PER_WEEK).weeks
+    val days = (value % DAYS_PER_WEEK).days
     return action(weeks, days)
   }
 
@@ -331,11 +331,11 @@ inline class LongDays(
   val value: Long
 ) : Comparable<LongDays> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongDays
-    get() = if (value < 0) LongDays(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -441,11 +441,11 @@ inline class LongDays(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return when {
-       isZero() -> "P0D"
-       value == Long.MIN_VALUE -> "-P9223372036854775808D"
+     return when (value) {
+       0L -> "P0D"
+       Long.MIN_VALUE -> "-P9223372036854775808D"
        else -> buildString {
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("P")
          append(value.absoluteValue)
          append('D')
@@ -569,8 +569,8 @@ inline class LongDays(
   operator fun minus(weeks: LongWeeks) = this - weeks.inDays
 
   inline fun <T> toComponents(action: (weeks: LongWeeks, days: IntDays) -> T): T {
-    val weeks = this.inWeeks
-    val days = (this - weeks).toIntDaysUnchecked()
+    val weeks = (value / DAYS_PER_WEEK).weeks
+    val days = (value % DAYS_PER_WEEK).toInt().days
     return action(weeks, days)
   }
 

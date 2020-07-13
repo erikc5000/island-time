@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.*
@@ -11,33 +13,27 @@ import io.islandtime.ranges.InstantInterval
  * An instant in time with nanosecond precision.
  */
 class Instant private constructor(
-    private val second: Long,
-    private val nanoOfSecond: Int
+    override val secondOfUnixEpoch: Long,
+    override val nanosecond: Int
 ) : TimePoint<Instant>,
     Comparable<Instant> {
 
     init {
-        if (second !in MIN_SECOND..MAX_SECOND) {
-            throw DateTimeException("'$second' is outside the supported second range")
+        if (secondOfUnixEpoch !in MIN_SECOND..MAX_SECOND) {
+            throw DateTimeException("'$secondOfUnixEpoch' is outside the supported second range")
         }
     }
 
     override val secondsSinceUnixEpoch: LongSeconds
-        get() = second.seconds
+        get() = secondOfUnixEpoch.seconds
 
-    override val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
-        get() = nanoOfSecond.nanoseconds
+    override val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
+        get() = nanosecond.nanoseconds
 
     override val millisecondsSinceUnixEpoch: LongMilliseconds
-        get() = secondsSinceUnixEpoch + nanoOfSecondsSinceUnixEpoch.inMilliseconds
+        get() = secondsSinceUnixEpoch + additionalNanosecondsSinceUnixEpoch.inMilliseconds
 
-    override val unixEpochSecond: Long
-        get() = second
-
-    override val unixEpochNanoOfSecond: Int
-        get() = nanoOfSecond
-
-    override val unixEpochMillisecond: Long
+    override val millisecondOfUnixEpoch: Long
         get() = millisecondsSinceUnixEpoch.value
 
     operator fun plus(other: Duration): Instant {
@@ -197,12 +193,12 @@ class Instant private constructor(
     }
 
     override fun compareTo(other: Instant): Int {
-        val secondsDiff = second.compareTo(other.second)
+        val secondsDiff = secondOfUnixEpoch.compareTo(other.secondOfUnixEpoch)
 
         return if (secondsDiff != 0) {
             secondsDiff
         } else {
-            nanoOfSecond - other.nanoOfSecond
+            nanosecond - other.nanosecond
         }
     }
 
@@ -217,17 +213,17 @@ class Instant private constructor(
         } else {
             Instant(
                 secondsSinceUnixEpoch + secondsToAdd,
-                nanoOfSecondsSinceUnixEpoch plusWithOverflow nanosecondsToAdd
+                additionalNanosecondsSinceUnixEpoch plusWithOverflow nanosecondsToAdd
             )
         }
     }
 
     override fun equals(other: Any?): Boolean {
-        return this === other || (other is Instant && second == other.second && nanoOfSecond == other.nanoOfSecond)
+        return this === other || (other is Instant && secondOfUnixEpoch == other.secondOfUnixEpoch && nanosecond == other.nanosecond)
     }
 
     override fun hashCode(): Int {
-        return 31 * second.hashCode() + nanoOfSecond
+        return 31 * secondOfUnixEpoch.hashCode() + nanosecond
     }
 
     companion object {
@@ -237,38 +233,38 @@ class Instant private constructor(
         /**
          * The smallest supported [Instant], which can be used as a "far past" sentinel.
          */
-        val MIN = fromUnixEpochSecond(MIN_SECOND)
+        val MIN = fromSecondOfUnixEpoch(MIN_SECOND)
 
         /**
          * The largest supported [Instant], which can be used as a "far future" sentinel.
          */
-        val MAX = fromUnixEpochSecond(MAX_SECOND, 999_999_999L)
+        val MAX = fromSecondOfUnixEpoch(MAX_SECOND, 999_999_999L)
 
         /**
          * The [Instant] representing the Unix epoch of 1970-01-01T00:00Z.
          */
-        val UNIX_EPOCH = fromUnixEpochSecond(0L)
+        val UNIX_EPOCH = fromSecondOfUnixEpoch(0L)
 
         /**
          * Create an [Instant] from the second of the Unix epoch.
          */
-        fun fromUnixEpochSecond(second: Long): Instant {
+        fun fromSecondOfUnixEpoch(second: Long): Instant {
             return Instant(second, 0)
         }
 
         /**
          * Create an [Instant] from the second of the Unix epoch.
          */
-        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int): Instant {
-            return fromUnixEpochSecond(second, nanosecondAdjustment.toLong())
+        fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int): Instant {
+            return fromSecondOfUnixEpoch(second, nanosecond.toLong())
         }
 
         /**
          * Create an [Instant] from the second of the Unix epoch.
          */
-        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Long): Instant {
-            val newSecond = second plusExact (nanosecondAdjustment floorDiv NANOSECONDS_PER_SECOND)
-            val newNanosecond = (nanosecondAdjustment floorMod NANOSECONDS_PER_SECOND).toInt()
+        fun fromSecondOfUnixEpoch(second: Long, nanosecond: Long): Instant {
+            val newSecond = second plusExact (nanosecond floorDiv NANOSECONDS_PER_SECOND)
+            val newNanosecond = (nanosecond floorMod NANOSECONDS_PER_SECOND).toInt()
 
             return Instant(newSecond, newNanosecond)
         }
@@ -276,10 +272,46 @@ class Instant private constructor(
         /**
          * Create an [Instant] from the millisecond of the Unix epoch.
          */
-        fun fromUnixEpochMillisecond(millisecond: Long): Instant {
+        fun fromMillisecondOfUnixEpoch(millisecond: Long): Instant {
             val second = millisecond floorDiv MILLISECONDS_PER_SECOND
             val nanosecond = (millisecond floorMod MILLISECONDS_PER_SECOND).toInt() * NANOSECONDS_PER_MILLISECOND
             return Instant(second, nanosecond)
+        }
+
+        @Deprecated(
+            "Use fromSecondOfUnixEpoch() instead.",
+            ReplaceWith("Instant.fromSecondOfUnixEpoch(second)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochSecond(second: Long): Instant {
+            return fromSecondOfUnixEpoch(second)
+        }
+
+        @Deprecated(
+            "Use fromSecondOfUnixEpoch() instead.",
+            ReplaceWith("Instant.fromSecondOfUnixEpoch(second, nanosecondAdjustment)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int): Instant {
+            return fromSecondOfUnixEpoch(second, nanosecondAdjustment)
+        }
+
+        @Deprecated(
+            "Use fromSecondOfUnixEpoch() instead.",
+            ReplaceWith("Instant.fromSecondOfUnixEpoch(second, nanosecondAdjustment)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Long): Instant {
+            return fromSecondOfUnixEpoch(second, nanosecondAdjustment)
+        }
+
+        @Deprecated(
+            "Use fromMillisecondOfUnixEpoch() instead.",
+            ReplaceWith("Instant.fromMillisecondOfUnixEpoch(millisecond)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochMillisecond(millisecond: Long): Instant {
+            return fromMillisecondOfUnixEpoch(millisecond)
         }
     }
 }
@@ -287,33 +319,29 @@ class Instant private constructor(
 /**
  * Create the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
-fun Instant(secondsSinceUnixEpoch: LongSeconds) = Instant.fromUnixEpochSecond(secondsSinceUnixEpoch.value)
+fun Instant(secondsSinceUnixEpoch: LongSeconds) = Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value)
 
 /**
  * Create the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
  * 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): Instant {
-    return Instant.fromUnixEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.value)
+    return Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value, nanosecondAdjustment.value)
 }
 
 /**
  * Create the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
  * 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: LongNanoseconds): Instant {
-    return Instant.fromUnixEpochSecond(secondsSinceUnixEpoch.value, nanosecondAdjustment.value)
+    return Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value, nanosecondAdjustment.value)
 }
 
 /**
  * Create the [Instant] represented by a number of milliseconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(millisecondsSinceUnixEpoch: LongMilliseconds): Instant {
-    return Instant.fromUnixEpochMillisecond(millisecondsSinceUnixEpoch.value)
+    return Instant.fromMillisecondOfUnixEpoch(millisecondsSinceUnixEpoch.value)
 }
 
 /**
@@ -334,7 +362,7 @@ fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
  * @throws TemporalParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date or time is invalid
  */
 fun String.toInstant(
     parser: TemporalParser,
@@ -347,7 +375,7 @@ fun String.toInstant(
 private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
 
 internal fun TemporalParseResult.toInstant(): Instant? {
-    // FIXME: Require the year field here for now and make it fits within DateTime's supported range
+    // FIXME: Require the year field here for now and make it fit within DateTime's supported range
     val parsedYear = this[DateProperty.Year] ?: return null
 
     this[DateProperty.Year] = parsedYear % 10_000
@@ -358,9 +386,9 @@ internal fun TemporalParseResult.toInstant(): Instant? {
     this[DateProperty.Year] = parsedYear
 
     return if (dateTime != null && offset != null) {
-        val secondOfEpoch = dateTime.unixEpochSecondAt(offset) +
+        val secondOfEpoch = dateTime.secondOfUnixEpochAt(offset) +
             ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
-        Instant.fromUnixEpochSecond(secondOfEpoch, dateTime.nanosecond)
+        Instant.fromSecondOfUnixEpoch(secondOfEpoch, dateTime.nanosecond)
     } else {
         null
     }
@@ -369,8 +397,8 @@ internal fun TemporalParseResult.toInstant(): Instant? {
 internal const val MAX_INSTANT_STRING_LENGTH = MAX_DATE_TIME_STRING_LENGTH + 1
 
 internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
-    val secondOfUnixEpoch = instant.unixEpochSecond
-    val nanosecond = instant.unixEpochNanoOfSecond
+    val secondOfUnixEpoch = instant.secondOfUnixEpoch
+    val nanosecond = instant.nanosecond
 
     return withComponentizedSecondOfUnixEpoch(secondOfUnixEpoch) { year, monthNumber, day, hour, minute, second ->
         appendDate(year, monthNumber, day)
@@ -380,15 +408,15 @@ internal fun StringBuilder.appendInstant(instant: Instant): StringBuilder {
     }
 }
 
-internal inline fun <T> withComponentizedSecondOfUnixEpoch(
+private inline fun <T> withComponentizedSecondOfUnixEpoch(
     secondOfUnixEpoch: Long,
     block: (year: Int, monthNumber: Int, dayOfMonth: Int, hour: Int, minute: Int, second: Int) -> T
 ): T {
     val dayOfUnixEpoch = secondOfUnixEpoch floorDiv SECONDS_PER_DAY
-    val secondOfDay = (secondOfUnixEpoch floorMod SECONDS_PER_DAY).toInt()
+    val secondsSinceStartOfDay = (secondOfUnixEpoch floorMod SECONDS_PER_DAY).toInt().seconds
 
     return withComponentizedDayOfUnixEpoch(dayOfUnixEpoch) { year, monthNumber, dayOfMonth ->
-        secondOfDay.seconds.toComponents { hours, minutes, seconds ->
+        secondsSinceStartOfDay.toComponents { hours, minutes, seconds ->
             block(year, monthNumber, dayOfMonth, hours.value, minutes.value, seconds.value)
         }
     }

@@ -15,44 +15,44 @@ class InstantTest : AbstractIslandTimeTest() {
             -31557014167219201L,
             31556889864403200L
         ).forEach {
-            assertFailsWith<DateTimeException> { Instant.fromUnixEpochSecond(it) }
-            assertFailsWith<DateTimeException> { Instant.fromUnixEpochSecond(it, 0) }
-            assertFailsWith<DateTimeException> { Instant.fromUnixEpochSecond(it, 0L) }
+            assertFailsWith<DateTimeException> { Instant.fromSecondOfUnixEpoch(it) }
+            assertFailsWith<DateTimeException> { Instant.fromSecondOfUnixEpoch(it, 0) }
+            assertFailsWith<DateTimeException> { Instant.fromSecondOfUnixEpoch(it, 0L) }
             assertFailsWith<DateTimeException> { Instant(it.seconds) }
             assertFailsWith<DateTimeException> { Instant(it.seconds, 0.nanoseconds) }
             assertFailsWith<DateTimeException> { Instant(it.seconds, 0L.nanoseconds) }
         }
 
         assertFailsWith<DateTimeException> {
-            Instant.fromUnixEpochSecond(-31557014167219200L, -1)
+            Instant.fromSecondOfUnixEpoch(-31557014167219200L, -1)
         }
 
         assertFailsWith<DateTimeException> {
-            Instant.fromUnixEpochSecond(-31557014167219200L, -1L)
+            Instant.fromSecondOfUnixEpoch(-31557014167219200L, -1L)
         }
 
         assertFailsWith<DateTimeException> {
-            Instant.fromUnixEpochSecond(31556889864403199L, 1_000_000_000)
+            Instant.fromSecondOfUnixEpoch(31556889864403199L, 1_000_000_000)
         }
 
         assertFailsWith<DateTimeException> {
-            Instant.fromUnixEpochSecond(31556889864403199L, 1_000_000_000L)
+            Instant.fromSecondOfUnixEpoch(31556889864403199L, 1_000_000_000L)
         }
     }
 
     @Test
     fun `millisecond properties return expected values`() {
-        assertEquals(0L, Instant.UNIX_EPOCH.unixEpochMillisecond)
+        assertEquals(0L, Instant.UNIX_EPOCH.millisecondOfUnixEpoch)
         assertEquals(0L.milliseconds, Instant.UNIX_EPOCH.millisecondsSinceUnixEpoch)
 
-        val instant = Instant.fromUnixEpochMillisecond(1566256047821L)
-        assertEquals(1566256047821L, instant.unixEpochMillisecond)
+        val instant = Instant.fromMillisecondOfUnixEpoch(1566256047821L)
+        assertEquals(1566256047821L, instant.millisecondOfUnixEpoch)
         assertEquals(1566256047821L.milliseconds, instant.millisecondsSinceUnixEpoch)
     }
 
     @Test
     fun `instants can be compared to each other`() {
-        assertTrue { Instant.UNIX_EPOCH < Instant.fromUnixEpochMillisecond(1566256047821L) }
+        assertTrue { Instant.UNIX_EPOCH < Instant.fromMillisecondOfUnixEpoch(1566256047821L) }
     }
 
     @Test
@@ -210,17 +210,17 @@ class InstantTest : AbstractIslandTimeTest() {
 
         assertEquals(
             "1970-01-01T00:00:00.000001Z",
-            Instant.fromUnixEpochSecond(0L, 1_000).toString()
+            Instant.fromSecondOfUnixEpoch(0L, 1_000).toString()
         )
 
         assertEquals(
             "1969-12-31T23:59:59.999999999Z",
-            Instant.fromUnixEpochSecond(0L, -1).toString()
+            Instant.fromSecondOfUnixEpoch(0L, -1).toString()
         )
 
         assertEquals(
             "2019-08-19T23:07:27.821Z",
-            Instant.fromUnixEpochMillisecond(1566256047821L).toString()
+            Instant.fromMillisecondOfUnixEpoch(1566256047821L).toString()
         )
 
         assertEquals(
@@ -268,12 +268,12 @@ class InstantTest : AbstractIslandTimeTest() {
     @Test
     fun `String_toInstant() parses ISO-8601 calendar date time strings in extended format by default`() {
         assertEquals(
-            Instant.fromUnixEpochMillisecond(0L),
+            Instant.fromMillisecondOfUnixEpoch(0L),
             "1970-01-01T00:00Z".toInstant()
         )
 
         assertEquals(
-            Instant.fromUnixEpochMillisecond(1566256047821L),
+            Instant.fromMillisecondOfUnixEpoch(1566256047821L),
             "2019-08-19T23:07:27.821Z".toInstant()
         )
 
@@ -291,12 +291,12 @@ class InstantTest : AbstractIslandTimeTest() {
     @Test
     fun `String_toInstant() parses ISO-8601 calendar date time strings in basic format with explicit parser`() {
         assertEquals(
-            Instant.fromUnixEpochMillisecond(0L),
+            Instant.fromMillisecondOfUnixEpoch(0L),
             "19700101 0000Z".toInstant(DateTimeParsers.Iso.INSTANT)
         )
 
         assertEquals(
-            Instant.fromUnixEpochMillisecond(1566256047821L),
+            Instant.fromMillisecondOfUnixEpoch(1566256047821L),
             "20190819T230727.821Z".toInstant(DateTimeParsers.Iso.INSTANT)
         )
     }

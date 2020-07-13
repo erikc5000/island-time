@@ -1,10 +1,11 @@
 package io.islandtime.measures
 
+import io.islandtime.measures.TimeUnit.*
 import io.islandtime.parser.TemporalParseException
 import kotlin.test.*
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds as kotlinSeconds
 import kotlin.time.nanoseconds as kotlinNanoseconds
+import kotlin.time.seconds as kotlinSeconds
 
 class DurationTest {
     @Test
@@ -331,122 +332,122 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedToDays() truncates the precision to 24-hour days`() {
+    fun `truncatedTo(DAYS) truncates the precision to 24-hour days`() {
         assertEquals(
             1.days.asDuration(),
-            durationOf(1.days + 1.hours + 1.nanoseconds).truncatedToDays()
+            durationOf(1.days + 1.hours + 1.nanoseconds).truncatedTo(DAYS)
         )
         assertEquals(
             (-1).days.asDuration(),
-            durationOf((-1).days - 1.hours - 1.nanoseconds).truncatedToDays()
+            durationOf((-1).days - 1.hours - 1.nanoseconds).truncatedTo(DAYS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf(1.days - 1.nanoseconds).truncatedToDays()
+            durationOf(1.days - 1.nanoseconds).truncatedTo(DAYS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf((-1).days + 1.nanoseconds).truncatedToDays()
+            durationOf((-1).days + 1.nanoseconds).truncatedTo(DAYS)
         )
     }
 
     @Test
-    fun `truncatedToHours() truncates the precision to hours`() {
+    fun `truncatedTo(HOURS) truncates the precision to hours`() {
         assertEquals(
             1.hours.asDuration(),
-            durationOf(1.hours + 1.minutes + 1.nanoseconds).truncatedToHours()
+            durationOf(1.hours + 1.minutes + 1.nanoseconds).truncatedTo(HOURS)
         )
         assertEquals(
             (-1).hours.asDuration(),
-            durationOf((-1).hours - 1.minutes - 1.nanoseconds).truncatedToHours()
+            durationOf((-1).hours - 1.minutes - 1.nanoseconds).truncatedTo(HOURS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf(1.hours - 1.nanoseconds).truncatedToHours()
+            durationOf(1.hours - 1.nanoseconds).truncatedTo(HOURS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf((-1).hours + 1.nanoseconds).truncatedToHours()
+            durationOf((-1).hours + 1.nanoseconds).truncatedTo(HOURS)
         )
     }
 
     @Test
-    fun `truncatedToMinutes() truncates the precision to minutes`() {
+    fun `truncatedTo(MINUTES) truncates the precision to minutes`() {
         assertEquals(
             1.minutes.asDuration(),
-            durationOf(1.minutes + 1.seconds + 1.nanoseconds).truncatedToMinutes()
+            durationOf(1.minutes + 1.seconds + 1.nanoseconds).truncatedTo(MINUTES)
         )
         assertEquals(
             (-1).minutes.asDuration(),
-            durationOf((-1).minutes - 1.seconds - 1.nanoseconds).truncatedToMinutes()
+            durationOf((-1).minutes - 1.seconds - 1.nanoseconds).truncatedTo(MINUTES)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf(1.minutes - 1.nanoseconds).truncatedToMinutes()
+            durationOf(1.minutes - 1.nanoseconds).truncatedTo(MINUTES)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf((-1).minutes + 1.nanoseconds).truncatedToMinutes()
+            durationOf((-1).minutes + 1.nanoseconds).truncatedTo(MINUTES)
         )
     }
 
     @Test
-    fun `truncatedToSeconds() truncates the precision to seconds`() {
+    fun `truncatedTo(SECONDS) truncates the precision to seconds`() {
         assertEquals(
             1.seconds.asDuration(),
-            durationOf(1.seconds + 1.nanoseconds).truncatedToSeconds()
+            durationOf(1.seconds + 1.nanoseconds).truncatedTo(SECONDS)
         )
         assertEquals(
             (-1).seconds.asDuration(),
-            durationOf((-1).seconds - 1.nanoseconds).truncatedToSeconds()
+            durationOf((-1).seconds - 1.nanoseconds).truncatedTo(SECONDS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf(1.seconds - 1.nanoseconds).truncatedToSeconds()
+            durationOf(1.seconds - 1.nanoseconds).truncatedTo(SECONDS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf((-1).seconds + 1.nanoseconds).truncatedToSeconds()
+            durationOf((-1).seconds + 1.nanoseconds).truncatedTo(SECONDS)
         )
     }
 
     @Test
-    fun `truncatedToMilliseconds() truncates the precision to milliseconds`() {
+    fun `truncatedTo(MILLISECONDS) truncates the precision to milliseconds`() {
         assertEquals(
             1.milliseconds.asDuration(),
-            durationOf(1.milliseconds + 1.nanoseconds).truncatedToMilliseconds()
+            durationOf(1.milliseconds + 1.nanoseconds).truncatedTo(MILLISECONDS)
         )
         assertEquals(
             (-1).milliseconds.asDuration(),
-            durationOf((-1).milliseconds - 1.nanoseconds).truncatedToMilliseconds()
+            durationOf((-1).milliseconds - 1.nanoseconds).truncatedTo(MILLISECONDS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf(1.milliseconds - 1.nanoseconds).truncatedToMilliseconds()
+            durationOf(1.milliseconds - 1.nanoseconds).truncatedTo(MILLISECONDS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf((-1).milliseconds + 1.nanoseconds).truncatedToMilliseconds()
+            durationOf((-1).milliseconds + 1.nanoseconds).truncatedTo(MILLISECONDS)
         )
     }
 
     @Test
-    fun `truncatedToMicroseconds() truncates the precision to microseconds`() {
+    fun `truncatedTo(MICROSECONDS) truncates the precision to microseconds`() {
         assertEquals(
             1.microseconds.asDuration(),
-            durationOf(1.microseconds + 1.nanoseconds).truncatedToMicroseconds()
+            durationOf(1.microseconds + 1.nanoseconds).truncatedTo(MICROSECONDS)
         )
         assertEquals(
             (-1).microseconds.asDuration(),
-            durationOf((-1).microseconds - 1.nanoseconds).truncatedToMicroseconds()
+            durationOf((-1).microseconds - 1.nanoseconds).truncatedTo(MICROSECONDS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf(1.microseconds - 1.nanoseconds).truncatedToMicroseconds()
+            durationOf(1.microseconds - 1.nanoseconds).truncatedTo(MICROSECONDS)
         )
         assertEquals(
             Duration.ZERO,
-            durationOf((-1).microseconds + 1.nanoseconds).truncatedToMicroseconds()
+            durationOf((-1).microseconds + 1.nanoseconds).truncatedTo(MICROSECONDS)
         )
     }
 

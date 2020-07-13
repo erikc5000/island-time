@@ -100,13 +100,49 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a zoned date-time within range`() {
+    fun `random() returns a date-time within the interval`() {
         val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         val end = Date(2019, Month.NOVEMBER, 20) at MIDNIGHT at UtcOffset((-5).hours)
-        val range = start..end
-        val randomInstant = range.random()
-        assertTrue { randomInstant in range }
-        assertEquals(UtcOffset((-4).hours), randomInstant.offset)
+        val interval = start until end
+        val randomOffsetDateTime = interval.random()
+        assertTrue { randomOffsetDateTime in interval }
+        assertEquals(UtcOffset((-4).hours), randomOffsetDateTime.offset)
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is empty`() {
+        assertFailsWith<NoSuchElementException> { OffsetDateTimeInterval.EMPTY.random() }
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval(start = dateTime).random() }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval(endExclusive = dateTime).random() }
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is empty`() {
+        assertNull(OffsetDateTimeInterval.EMPTY.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is not bounded`() {
+        val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
+        assertNull(OffsetDateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(OffsetDateTimeInterval(start = dateTime).randomOrNull())
+        assertNull(OffsetDateTimeInterval(endExclusive = dateTime).randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns a date-time within the interval`() {
+        val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
+        val end = (start + 1.nanoseconds).adjustedTo(UtcOffset((-5).hours))
+        val interval = start until end
+        val randomOffsetDateTime = interval.randomOrNull()!!
+        assertTrue { randomOffsetDateTime in interval }
+        assertEquals(UtcOffset((-4).hours), randomOffsetDateTime.offset)
     }
 
     @Test
@@ -130,7 +166,10 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
         assertEquals(
             periodOf(1.years, 1.months, 1.days),
-            periodBetween("2018-09-10T09:15-06:00".toOffsetDateTime(), "2019-10-11T09:15-07:00".toOffsetDateTime())
+            periodBetween(
+                "2018-09-10T09:15-06:00".toOffsetDateTime(),
+                "2019-10-11T09:15-07:00".toOffsetDateTime()
+            )
         )
     }
 
@@ -411,9 +450,25 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             }
         }
 
-        assertFailsWith<TemporalParseException> { "2001/2002-11-04T13:23+01".toOffsetDateTimeInterval(customParser) }
-        assertFailsWith<TemporalParseException> { "2001-10-03T00:01-04/2002".toOffsetDateTimeInterval(customParser) }
-        assertFailsWith<TemporalParseException> { "/2002-11-04T13:23-04".toOffsetDateTimeInterval(customParser) }
-        assertFailsWith<TemporalParseException> { "2001-10-03T00:01-07/".toOffsetDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> {
+            "2001/2002-11-04T13:23+01".toOffsetDateTimeInterval(
+                customParser
+            )
+        }
+        assertFailsWith<TemporalParseException> {
+            "2001-10-03T00:01-04/2002".toOffsetDateTimeInterval(
+                customParser
+            )
+        }
+        assertFailsWith<TemporalParseException> {
+            "/2002-11-04T13:23-04".toOffsetDateTimeInterval(
+                customParser
+            )
+        }
+        assertFailsWith<TemporalParseException> {
+            "2001-10-03T00:01-07/".toOffsetDateTimeInterval(
+                customParser
+            )
+        }
     }
 }

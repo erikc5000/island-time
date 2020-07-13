@@ -1,132 +1,254 @@
 package io.islandtime.operators
 
 import io.islandtime.*
-import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
-import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
+import io.islandtime.measures.TimeUnit.*
 
 /**
  * Return a copy of this time, truncated to the `hour` value. All smaller components will be replaced with zero.
  */
-fun Time.truncatedToHours() = copy(minute = 0, second = 0, nanosecond = 0)
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
+    DeprecationLevel.WARNING
+)
+fun Time.truncatedToHours() = truncatedTo(HOURS)
 
 /**
  * Return a copy of this time, truncated to the `minute` value. All smaller components will be replaced with zero.
  */
-fun Time.truncatedToMinutes() = copy(second = 0, nanosecond = 0)
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
+    DeprecationLevel.WARNING
+)
+fun Time.truncatedToMinutes() = truncatedTo(MINUTES)
 
 /**
  * Return a copy of this time, truncated to the `second` value. All smaller components will be replaced with zero.
  */
-fun Time.truncatedToSeconds() = copy(nanosecond = 0)
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
+    DeprecationLevel.WARNING
+)
+fun Time.truncatedToSeconds() = truncatedTo(SECONDS)
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to milliseconds.
  */
-fun Time.truncatedToMilliseconds() =
-    copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND)
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
+    DeprecationLevel.WARNING
+)
+fun Time.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to microseconds.
  */
-fun Time.truncatedToMicroseconds() =
-    copy(nanosecond = this.nanosecond / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND)
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
+    DeprecationLevel.WARNING
+)
+fun Time.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 
 /**
  * Return a copy of this date-time, truncated to the `hour` value. All smaller components will be replaced with zero.
  */
-fun DateTime.truncatedToHours() = copy(time = time.truncatedToHours())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
+    DeprecationLevel.WARNING
+)
+fun DateTime.truncatedToHours() = truncatedTo(HOURS)
 
 /**
  * Return a copy of this date-time, truncated to the `minute` value. ll smaller components will be replaced with zero.
  */
-fun DateTime.truncatedToMinutes() = copy(time = time.truncatedToMinutes())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(TimeUnit.MINUTES)", "io.islandtime.measures.TimeUnit"),
+    DeprecationLevel.WARNING
+)
+fun DateTime.truncatedToMinutes() = truncatedTo(MINUTES)
 
 /**
  * Return a copy of this date-time, truncated to the `second` value. All smaller components will be replaced with zero.
  */
-fun DateTime.truncatedToSeconds() = copy(time = time.truncatedToSeconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
+    DeprecationLevel.WARNING
+)
+fun DateTime.truncatedToSeconds() = truncatedTo(SECONDS)
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to milliseconds.
  */
-fun DateTime.truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
+    DeprecationLevel.WARNING
+)
+fun DateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to microseconds.
  */
-fun DateTime.truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
+    DeprecationLevel.WARNING
+)
+fun DateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 
 /**
  * Return a copy of this date-time, truncated to the `hour` value. All smaller components will be replaced with zero.
  */
-fun ZonedDateTime.truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTime.truncatedToHours() = truncatedTo(HOURS)
 
 /**
  * Return a copy of this date-time, truncated to the `minute` value. All smaller components will be replaced with zero.
  */
-fun ZonedDateTime.truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTime.truncatedToMinutes() = truncatedTo(MINUTES)
 
 /**
  * Return a copy of this date-time, truncated to the `second` value. All smaller components will be replaced with zero.
  */
-fun ZonedDateTime.truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTime.truncatedToSeconds() = truncatedTo(SECONDS)
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to milliseconds.
  */
-fun ZonedDateTime.truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to microseconds.
  */
-fun ZonedDateTime.truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 
 /**
  * Return a copy of this time, truncated to the `hour` value. All smaller components will be replaced with zero.
  */
-fun OffsetTime.truncatedToHours() = copy(time = time.truncatedToHours())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetTime.truncatedToHours() = truncatedTo(HOURS)
 
 /**
  * Return a copy of this time, truncated to the `minute` value. ll smaller components will be replaced with zero.
  */
-fun OffsetTime.truncatedToMinutes() = copy(time = time.truncatedToMinutes())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
+    DeprecationLevel.WARNING
+)
+fun OffsetTime.truncatedToMinutes() = truncatedTo(MINUTES)
 
 /**
  * Return a copy of this time, truncated to the `second` value. All smaller components will be replaced with zero.
  */
-fun OffsetTime.truncatedToSeconds() = copy(time = time.truncatedToSeconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetTime.truncatedToSeconds() = truncatedTo(SECONDS)
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to milliseconds.
  */
-fun OffsetTime.truncatedToMilliseconds() = copy(time = time.truncatedToMilliseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to microseconds.
  */
-fun OffsetTime.truncatedToMicroseconds() = copy(time = time.truncatedToMicroseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 
 /**
  * Return a copy of this date-time, truncated to the `hour` value. All smaller components will be replaced with zero.
  */
-fun OffsetDateTime.truncatedToHours() = copy(dateTime = dateTime.truncatedToHours())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.truncatedToHours() = truncatedTo(HOURS)
 
 /**
  * Return a copy of this date-time, truncated to the `minute` value. ll smaller components will be replaced with zero.
  */
-fun OffsetDateTime.truncatedToMinutes() = copy(dateTime = dateTime.truncatedToMinutes())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.truncatedToMinutes() = truncatedTo(MINUTES)
 
 /**
  * Return a copy of this date-time, truncated to the `second` value. All smaller components will be replaced with zero.
  */
-fun OffsetDateTime.truncatedToSeconds() = copy(dateTime = dateTime.truncatedToSeconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.truncatedToSeconds() = truncatedTo(SECONDS)
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to milliseconds.
  */
-fun OffsetDateTime.truncatedToMilliseconds() = copy(dateTime = dateTime.truncatedToMilliseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to microseconds.
  */
-fun OffsetDateTime.truncatedToMicroseconds() = copy(dateTime = dateTime.truncatedToMicroseconds())
+@Deprecated(
+    "Use truncatedTo() instead.",
+    ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)

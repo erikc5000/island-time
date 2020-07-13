@@ -1,7 +1,10 @@
 package io.islandtime.extensions.parcelize
 
 import android.os.Parcel
-import io.islandtime.*
+import io.islandtime.DateTime
+import io.islandtime.TimeZone
+import io.islandtime.UtcOffset
+import io.islandtime.ZonedDateTime
 import io.islandtime.measures.seconds
 import kotlinx.android.parcel.Parceler
 
@@ -17,7 +20,7 @@ object NullableZonedDateTimeParceler : Parceler<ZonedDateTime?> {
     override fun create(parcel: Parcel): ZonedDateTime? {
         return when (val year = parcel.readInt()) {
             Int.MIN_VALUE -> null
-            else -> ZonedDateTime.fromInstant(
+            else -> ZonedDateTime.fromLocal(
                 DateTime(
                     year,
                     parcel.readByte().toInt(),
@@ -27,8 +30,8 @@ object NullableZonedDateTimeParceler : Parceler<ZonedDateTime?> {
                     parcel.readByte().toInt(),
                     parcel.readInt()
                 ),
-                UtcOffset(parcel.readInt().seconds),
-                TimeZone(parcel.readString().orEmpty())
+                TimeZone(parcel.readString().orEmpty()),
+                UtcOffset(parcel.readInt().seconds)
             )
         }
     }
@@ -43,16 +46,15 @@ object NullableZonedDateTimeParceler : Parceler<ZonedDateTime?> {
 }
 
 internal fun Parcel.readZonedDateTime(): ZonedDateTime {
-    return ZonedDateTime.fromInstant(
+    return ZonedDateTime.fromLocal(
         readDateTime(),
-        UtcOffset(readInt().seconds),
-        TimeZone(readString().orEmpty())
+        TimeZone(readString().orEmpty()),
+        UtcOffset(readInt().seconds)
     )
 }
 
 internal fun Parcel.writeZonedDateTime(zonedDateTime: ZonedDateTime) {
-    writeDate(zonedDateTime.date)
-    writeTime(zonedDateTime.time)
-    writeInt(zonedDateTime.offset.totalSeconds.value)
+    writeDateTime(zonedDateTime.dateTime)
     writeString(zonedDateTime.zone.id)
+    writeInt(zonedDateTime.offset.totalSeconds.value)
 }

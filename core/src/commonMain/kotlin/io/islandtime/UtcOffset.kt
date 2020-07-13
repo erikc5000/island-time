@@ -1,15 +1,13 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.*
-import io.islandtime.internal.SECONDS_PER_HOUR
-import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.TemporalParseResult
-import io.islandtime.parser.TemporalParser
-import io.islandtime.parser.throwParserPropertyResolutionException
+import io.islandtime.parser.*
+import kotlin.math.absoluteValue
 import kotlin.math.sign
 
 /**
@@ -40,9 +38,8 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     inline fun <T> toComponents(
         action: (sign: Int, hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
     ): T {
-        return totalSeconds.absoluteValue.toComponents { hours, minutes, seconds ->
-            val sign = if (totalSeconds.isNegative()) -1 else 1
-            action(sign, hours, minutes, seconds)
+        return totalSeconds.value.absoluteValue.seconds.toComponents { hours, minutes, seconds ->
+            action(totalSeconds.value.sign, hours, minutes, seconds)
         }
     }
 
@@ -99,8 +96,8 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     fun validated(): UtcOffset = apply { validate() }
 
     companion object {
-        val MAX_TOTAL_SECONDS = (18 * SECONDS_PER_HOUR).seconds
-        val MIN_TOTAL_SECONDS = (-18 * SECONDS_PER_HOUR).seconds
+        val MAX_TOTAL_SECONDS = 18.hours.inSecondsUnchecked
+        val MIN_TOTAL_SECONDS = (-18).hours.inSecondsUnchecked
 
         val MIN = UtcOffset(MIN_TOTAL_SECONDS)
         val MAX = UtcOffset(MAX_TOTAL_SECONDS)
@@ -117,7 +114,6 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
  * @throws DateTimeException if any of the individual components is outside the valid range
  * @return a [UtcOffset]
  */
-@Suppress("FunctionName")
 fun UtcOffset(
     hours: IntHours,
     minutes: IntMinutes = 0.minutes,
@@ -128,29 +124,40 @@ fun UtcOffset(
 }
 
 /**
- * Convert a duration of hours into a UTC time offset of the same length.
+ * Converts a duration of hours into a UTC time offset of the same length.
  * @throws ArithmeticException if overflow occurs
  */
 fun IntHours.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
- * Convert a duration of minutes into a UTC time offset of the same length.
+ * Converts a duration of minutes into a UTC time offset of the same length.
  * @throws ArithmeticException if overflow occurs
  */
 fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
- * Convert a duration of seconds into a UTC time offset of the same length.
+ * Converts a duration of seconds into a UTC time offset of the same length.
  */
 fun IntSeconds.asUtcOffset() = UtcOffset(this)
 
 /**
- * Create a [UtcOffset] from an ISO-8601 time shift string in extended format.
+ * Convert a string to a [UtcOffset].
+ *
+ * The string is assumed to be an ISO-8601 UTC offset representation in extended format. For example, `Z`, `+05`, or
+ * `-04:30`. The output of [UtcOffset.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed UTC offset is invalid
  */
 fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
 
 /**
- * Create a [UtcOffset] from a string using a specific parser.
+ * Convert a string to a [UtcOffset] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed UTC offset is invalid
  */
 fun String.toUtcOffset(
     parser: TemporalParser,

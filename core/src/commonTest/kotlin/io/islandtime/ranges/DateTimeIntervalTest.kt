@@ -1,6 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
+import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.test.AbstractIslandTimeTest
@@ -49,7 +50,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `inclusive end creation handles unbounded correctly`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
         val max = DateTime.MAX
 
         assertTrue { (start..max).hasUnboundedEnd() }
@@ -59,8 +60,8 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within bounded range`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
-        val end = Date(2019, Month.MARCH, 12) at Time.MIDNIGHT
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -69,7 +70,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns true for dates within range with unbounded end`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
         val end = DateTime.MAX
 
         assertTrue { start in start..end }
@@ -79,7 +80,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `contains() returns true for dates within range with unbounded start`() {
         val start = DateTime.MIN
-        val end = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
+        val end = Date(2019, Month.MARCH, 10) at MIDNIGHT
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
@@ -87,8 +88,8 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `contains() returns false for out of range dates`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
-        val end = Date(2019, Month.MARCH, 12) at Time.MIDNIGHT
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT
 
         assertFalse { start - 1.nanoseconds in start..end }
         assertFalse { end + 1.nanoseconds in start..end }
@@ -98,8 +99,8 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `until infix operator constructs an interval with non-inclusive end`() {
-        val start = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
-        val end = Date(2019, Month.MARCH, 12) at Time.MIDNIGHT
+        val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
+        val end = Date(2019, Month.MARCH, 12) at MIDNIGHT
         val range = start until end
 
         assertEquals(start, range.start)
@@ -107,12 +108,59 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a zoned date-time within range`() {
-        val start = Date(2019, Month.NOVEMBER, 1) at Time.MIDNIGHT
-        val end = Date(2019, Month.NOVEMBER, 20) at Time.MIDNIGHT
-        val range = start..end
-        val randomDateTime = range.random()
-        assertTrue { randomDateTime in range }
+    fun `random() throws an exception when the interval is empty`() {
+        assertFailsWith<NoSuchElementException> { DateTimeInterval.EMPTY.random() }
+    }
+
+    @Test
+    fun `random() throws an exception when the interval is not bounded`() {
+        val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval(start = dateTime).random() }
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval(endExclusive = dateTime).random() }
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is empty`() {
+        assertNull(DateTimeInterval.EMPTY.randomOrNull())
+    }
+
+    @Test
+    fun `randomOrNull() returns null when the interval is not bounded`() {
+        val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
+        assertNull(DateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(DateTimeInterval(start = dateTime).randomOrNull())
+        assertNull(DateTimeInterval(endExclusive = dateTime).randomOrNull())
+    }
+
+    @Test
+    fun `random() and randomOrNull() return a date-time within the interval`() {
+        listOf(
+            Date(2019, Month.NOVEMBER, 1) at MIDNIGHT,
+            Date(2019, Month.NOVEMBER, 1) at Time(0, 0, 0, 1),
+            Date(2019, Month.NOVEMBER, 1) at Time.MAX
+        ).forEach { start ->
+            val interval = start until start + 1.nanoseconds
+            assertEquals(start, interval.random())
+            assertEquals(start, interval.randomOrNull())
+        }
+
+        listOf(
+            Date(2019, Month.NOVEMBER, 1) at MIDNIGHT,
+            Date(2019, Month.NOVEMBER, 1) at Time(0, 0, 0, 1),
+            Date(2019, Month.NOVEMBER, 1) at Time.MAX
+        ).forEach { start ->
+            listOf(
+                start + 1.nanoseconds,
+                start + 1.seconds,
+                start + 1.seconds + 1.nanoseconds,
+                start + 1.seconds + 999_999_999.nanoseconds
+            ).forEach { end ->
+                val interval = start until end
+                assertTrue { interval.random() in interval }
+                assertTrue { interval.randomOrNull()!! in interval }
+            }
+        }
     }
 
     @Test
@@ -312,7 +360,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end date-times are the same`() {
-        val dateTime = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
+        val dateTime = Date(2019, Month.MARCH, 10) at MIDNIGHT
         assertEquals(1L.nanoseconds, (dateTime..dateTime).lengthInNanoseconds)
     }
 
@@ -399,9 +447,25 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
             }
         }
 
-        assertFailsWith<TemporalParseException> { "2001/2002-11-04T13:23".toDateTimeInterval(customParser) }
-        assertFailsWith<TemporalParseException> { "2001-10-03T00:01/2002".toDateTimeInterval(customParser) }
-        assertFailsWith<TemporalParseException> { "/2002-11-04T13:23".toDateTimeInterval(customParser) }
-        assertFailsWith<TemporalParseException> { "2001-10-03T00:01/".toDateTimeInterval(customParser) }
+        assertFailsWith<TemporalParseException> {
+            "2001/2002-11-04T13:23".toDateTimeInterval(
+                customParser
+            )
+        }
+        assertFailsWith<TemporalParseException> {
+            "2001-10-03T00:01/2002".toDateTimeInterval(
+                customParser
+            )
+        }
+        assertFailsWith<TemporalParseException> {
+            "/2002-11-04T13:23".toDateTimeInterval(
+                customParser
+            )
+        }
+        assertFailsWith<TemporalParseException> {
+            "2001-10-03T00:01/".toDateTimeInterval(
+                customParser
+            )
+        }
     }
 }

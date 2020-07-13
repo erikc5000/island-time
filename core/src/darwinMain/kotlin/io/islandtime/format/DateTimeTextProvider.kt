@@ -1,16 +1,21 @@
 package io.islandtime.format
 
-import co.touchlab.stately.isolate.IsolateState
 import io.islandtime.DateTimeException
 import io.islandtime.base.DateProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.TimeProperty
+import io.islandtime.internal.confine
 import io.islandtime.locale.Locale
-import platform.Foundation.*
+import platform.Foundation.NSCalendar
+import platform.Foundation.NSCalendarIdentifierISO8601
+import kotlin.native.concurrent.Worker
+
+@SharedImmutable
+private val worker = Worker.start(errorReporting = false)
 
 actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
     private val narrowEraTextSymbols = listOf("B", "A")
-    private val parsableText = IsolateState { hashMapOf<ParsableTextKey, ParsableTextList>() }
+    private val parsableText = worker.confine { hashMapOf<ParsableTextKey, ParsableTextList>() }
 
     private val descendingTextComparator =
         compareByDescending<Pair<String, Long>> { it.first.length }.thenBy { it.second }
@@ -32,7 +37,7 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
 
         val key = ParsableTextKey(property, styles, locale.localeIdentifier)
 
-        return parsableText.access { cache ->
+        return parsableText.use { cache ->
             cache.getOrPut(key) {
                 val valueMap = hashMapOf<String, MutableSet<Long>>()
 

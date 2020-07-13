@@ -1,8 +1,9 @@
-# Gradle files
+**/.idea/*
+!/.idea/codeStyleSettings.xml
+!/.idea/codeStyles
 .gradle/
-.idea/
 build/
+docs/api/
+site/
 *.iml
-
-# Local configuration file
 local.properties

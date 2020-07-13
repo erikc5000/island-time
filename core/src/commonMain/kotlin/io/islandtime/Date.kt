@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.*
@@ -7,7 +9,7 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 
 /**
- * A date in an arbitrary region.
+ * A date in an ambiguous region.
  *
  * @constructor Create a [Date] from a year, month, and day of month.
  * @param year the year
@@ -79,7 +81,7 @@ class Date(
      */
     val dayOfWeek: DayOfWeek
         get() {
-            val zeroIndexedDayOfWeek = (unixEpochDay + 3) floorMod 7
+            val zeroIndexedDayOfWeek = (dayOfUnixEpoch + 3) floorMod 7
             return DayOfWeek.values()[zeroIndexedDayOfWeek.toInt()]
         }
 
@@ -92,6 +94,11 @@ class Date(
      * The day of the year -- also known as the ordinal date in ISO-8601.
      */
     val dayOfYear: Int get() = month.firstDayOfYearIn(year) + dayOfMonth - 1
+
+    /**
+     * The day of the Unix epoch.
+     */
+    val dayOfUnixEpoch: Long get() = getDayOfUnixEpochFrom(year, monthNumber, dayOfMonth)
 
     /**
      * The ISO month number, from 1-12.
@@ -118,20 +125,26 @@ class Date(
      */
     val lengthOfYear: IntDays get() = lengthOfYear(year)
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = YearMonth(year, month)
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
      */
-    inline val daysSinceUnixEpoch: LongDays get() = unixEpochDay.days
+    inline val daysSinceUnixEpoch: LongDays get() = dayOfUnixEpoch.days
 
-    /**
-     * The day of the Unix epoch.
-     */
-    val unixEpochDay: Long get() = getDayOfUnixEpochFrom(year, monthNumber, dayOfMonth)
+    @Deprecated(
+        "Use dayOfUnixEpoch instead.",
+        ReplaceWith("this.dayOfUnixEpoch"),
+        DeprecationLevel.WARNING
+    )
+    val unixEpochDay: Long
+        get() = dayOfUnixEpoch
 
     /**
      * Return a [Date] with [period] added to it.
@@ -309,34 +322,44 @@ class Date(
     ) = Date(year, dayOfYear)
 
     companion object {
-        val MIN = Date(Year.MIN_VALUE, 1)
-        val MAX = Date(Year.MAX_VALUE, Year.MAX.lastDay)
+        /**
+         * The smallest supported [Date], which can be used as a "far past" sentinel.
+         */
+        val MIN = Date(Year.MIN_VALUE, Month.JANUARY, 1)
 
         /**
-         * Create the [Date] that falls a certain number of days from the Unix epoch of 1970-01-01
+         * The largest supported [Date], which can be used as a "far future" sentinel.
+         */
+        val MAX = Date(Year.MAX_VALUE, Month.DECEMBER, 31)
+
+        /**
+         * Create a [Date] from a duration of days relative to the Unix epoch of 1970-01-01.
          * @param days the number of days relative to the Unix epoch
-         * @return a new [Date]
          * @throws DateTimeException if outside of the supported date range
          */
-        fun fromDaysSinceUnixEpoch(days: LongDays): Date {
-            return fromUnixEpochDay(days.value)
-        }
+        fun fromDaysSinceUnixEpoch(days: LongDays): Date = fromDayOfUnixEpoch(days.value)
 
         /**
          * Create a [Date] from the day of the Unix epoch.
          * @param day the day of the Unix epoch
-         * @return a new [Date]
          * @throws DateTimeException if outside of the supported date range
          */
-        fun fromUnixEpochDay(day: Long): Date {
+        fun fromDayOfUnixEpoch(day: Long): Date {
             if (day !in -365243219162L..365241780471L) {
-                throw DateTimeException("The Unix epoch day '$day' is outside the supported range")
+                throw DateTimeException("The day '$day' of the Unix epoch is outside the supported range")
             }
 
             return withComponentizedDayOfUnixEpoch(day) { year, month, dayOfMonth ->
                 Date(year, month, dayOfMonth)
             }
         }
+
+        @Deprecated(
+            "Use fromDayOfUnixEpoch() instead.",
+            ReplaceWith("Date.fromDayOfUnixEpoch(day)"),
+            DeprecationLevel.WARNING
+        )
+        fun fromUnixEpochDay(day: Long): Date = fromDayOfUnixEpoch(day)
     }
 }
 
@@ -344,10 +367,8 @@ class Date(
  * Create a [Date] from a year and day of year
  * @param year the year
  * @param dayOfYear the day of the calendar year
- * @return a new [Date]
  * @throws DateTimeException if the year or day of year are invalid
  */
-@Suppress("FunctionName")
 fun Date(year: Int, dayOfYear: Int): Date {
     checkValidYear(year)
     checkValidDayOfYear(year, dayOfYear)
@@ -363,9 +384,9 @@ fun Date(year: Int, dayOfYear: Int): Date {
  * Convert an [Instant] into the [Date] represented by it at a particular UTC offset.
  */
 fun Instant.toDateAt(offset: UtcOffset): Date {
-    val adjustedSeconds = unixEpochSecond + offset.totalSeconds.value
-    val unixEpochDay = adjustedSeconds floorDiv SECONDS_PER_DAY
-    return Date.fromUnixEpochDay(unixEpochDay)
+    val adjustedSeconds = secondOfUnixEpoch + offset.totalSeconds.value
+    val dayOfUnixEpoch = adjustedSeconds floorDiv SECONDS_PER_DAY
+    return Date.fromDayOfUnixEpoch(dayOfUnixEpoch)
 }
 
 /**
@@ -378,7 +399,6 @@ fun Instant.toDateAt(zone: TimeZone): Date {
 /**
  * Combine a [YearMonth] with a day of the month to create a [Date].
  * @param day the day of the month
- * @return a [Date]
  */
 fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
@@ -403,7 +423,7 @@ fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
  * - [DateProperty.Year], [DateProperty.DayOfYear]
  *
  * @throws TemporalParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed date is invalid
  */
 fun String.toDate(
     parser: TemporalParser,

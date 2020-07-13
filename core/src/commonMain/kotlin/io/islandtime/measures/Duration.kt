@@ -3,6 +3,7 @@ package io.islandtime.measures
 import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.Duration.Companion.create
+import io.islandtime.measures.TimeUnit.*
 import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.TemporalParseResult
@@ -69,70 +70,115 @@ class Duration private constructor(
      * Convert this duration into the number of whole milliseconds represented by it.
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
-    val inMilliseconds
+    val inMilliseconds: LongMilliseconds
         get() = seconds.inMilliseconds + nanosecondAdjustment.inMilliseconds.toLongMilliseconds()
 
     /**
      * Convert this duration into the number of whole microseconds represented by it.
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
-    val inMicroseconds
+    val inMicroseconds: LongMicroseconds
         get() = seconds.inMicroseconds + nanosecondAdjustment.inMicroseconds.toLongMicroseconds()
 
     /**
      * Convert this duration into [LongNanoseconds].
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
-    val inNanoseconds
+    val inNanoseconds: LongNanoseconds
         get() = seconds.inNanoseconds + nanosecondAdjustment
+
+    /**
+     * Return this duration, rounded down to match the precision of a given [unit].
+     */
+    fun truncatedTo(unit: TimeUnit): Duration {
+        return when (unit) {
+            DAYS -> create(seconds / SECONDS_PER_DAY * SECONDS_PER_DAY, 0.nanoseconds)
+            HOURS -> create(seconds / SECONDS_PER_HOUR * SECONDS_PER_HOUR, 0.nanoseconds)
+            MINUTES -> create(seconds / SECONDS_PER_MINUTE * SECONDS_PER_MINUTE, 0.nanoseconds)
+            SECONDS -> create(seconds, 0.nanoseconds)
+            MILLISECONDS -> create(
+                seconds,
+                (nanosecondAdjustment.value / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND).nanoseconds
+            )
+            MICROSECONDS -> create(
+                seconds,
+                (nanosecondAdjustment.value / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND).nanoseconds
+            )
+            NANOSECONDS -> this
+        }
+    }
 
     /**
      * Return this duration truncated to the number of 24-hour days.
      *
      * All unit components smaller than a day will be replaced with zero.
      */
-    fun truncatedToDays() = create(seconds / SECONDS_PER_DAY * SECONDS_PER_DAY, 0.nanoseconds)
+    @Deprecated(
+        "Use truncatedTo().",
+        ReplaceWith("truncatedTo(DAYS)", "io.islandtime.measures.TimeUnit.DAYS"),
+        DeprecationLevel.WARNING
+    )
+    fun truncatedToDays() = truncatedTo(DAYS)
 
     /**
      * Return this duration truncated to the number of whole hours.
      *
      * All unit components smaller than an hour will be replaced with zero.
      */
-    fun truncatedToHours() = create(seconds / SECONDS_PER_HOUR * SECONDS_PER_HOUR, 0.nanoseconds)
+    @Deprecated(
+        "Use truncatedTo().",
+        ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
+        DeprecationLevel.WARNING
+    )
+    fun truncatedToHours() = truncatedTo(HOURS)
 
     /**
      * Return this duration truncated to the number of whole minutes.
      *
      * All unit components smaller than a minute will be replaced with zero.
      */
-    fun truncatedToMinutes() = create(seconds / SECONDS_PER_MINUTE * SECONDS_PER_MINUTE, 0.nanoseconds)
+    @Deprecated(
+        "Use truncatedTo().",
+        ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
+        DeprecationLevel.WARNING
+    )
+    fun truncatedToMinutes() = truncatedTo(MINUTES)
 
     /**
      * Return this duration truncated to the number of whole seconds.
      *
      * All unit components smaller than a second will be replaced with zero.
      */
-    fun truncatedToSeconds() = create(seconds, 0.nanoseconds)
+    @Deprecated(
+        "Use truncatedTo().",
+        ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
+        DeprecationLevel.WARNING
+    )
+    fun truncatedToSeconds() = truncatedTo(SECONDS)
 
     /**
      * Return this duration truncated to the number of whole milliseconds.
      *
      * All unit components smaller than a millisecond will be replaced with zero.
      */
-    fun truncatedToMilliseconds() = create(
-        seconds,
-        (nanosecondAdjustment.value / NANOSECONDS_PER_MILLISECOND * NANOSECONDS_PER_MILLISECOND).nanoseconds
+    @Deprecated(
+        "Use truncatedTo().",
+        ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
+        DeprecationLevel.WARNING
     )
+    fun truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
     /**
      * Return this duration truncated to the number of whole microseconds.
      *
      * All unit components smaller than a microsecond will be replaced with zero.
      */
-    fun truncatedToMicroseconds() = create(
-        seconds,
-        (nanosecondAdjustment.value / NANOSECONDS_PER_MICROSECOND * NANOSECONDS_PER_MICROSECOND).nanoseconds
+    @Deprecated(
+        "Use truncatedTo().",
+        ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
+        DeprecationLevel.WARNING
     )
+    fun truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 
     operator fun unaryMinus() = create(-seconds, nanosecondAdjustment.negateUnchecked())
 
@@ -313,18 +359,9 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val days = seconds.inDays
-        val hours = (seconds - days).inHours
-        val minutes = (seconds - days - hours).inMinutes
-        val seconds = seconds - days - hours - minutes
-
-        return action(
-            days,
-            hours.toIntHoursUnchecked(),
-            minutes.toIntMinutesUnchecked(),
-            seconds.toIntSecondsUnchecked(),
-            nanosecondAdjustment
-        )
+        return seconds.toComponents { days, hours, minutes, seconds ->
+            action(days, hours, minutes, seconds, nanosecondAdjustment)
+        }
     }
 
     /**
@@ -338,16 +375,9 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val hours = seconds.inHours
-        val minutes = (seconds - hours).inMinutes
-        val seconds = seconds - hours - minutes
-
-        return action(
-            hours,
-            minutes.toIntMinutesUnchecked(),
-            seconds.toIntSecondsUnchecked(),
-            nanosecondAdjustment
-        )
+        return seconds.toComponents { hours, minutes, seconds ->
+            action(hours, minutes, seconds, nanosecondAdjustment)
+        }
     }
 
     /**
@@ -360,9 +390,9 @@ class Duration private constructor(
             nanoseconds: IntNanoseconds
         ) -> T
     ): T {
-        val minutes = seconds.inMinutes
-        val seconds = seconds - minutes
-        return action(minutes, seconds.toIntSecondsUnchecked(), nanosecondAdjustment)
+        return seconds.toComponents { minutes, seconds ->
+            action(minutes, seconds, nanosecondAdjustment)
+        }
     }
 
     /**

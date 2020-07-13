@@ -7,7 +7,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
-import kotlin.random.nextLong
 
 /**
  * An inclusive range of dates.
@@ -61,8 +60,7 @@ class DateRange(
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is DateRange && (isEmpty() && other.isEmpty() ||
-            first == other.first && last == other.last)
+        return other is DateRange && (isEmpty() && other.isEmpty() || first == other.first && last == other.last)
     }
 
     override fun hashCode(): Int {
@@ -134,7 +132,7 @@ class DateRange(
         /**
          * A range containing zero days.
          */
-        val EMPTY = DateRange(Date.fromUnixEpochDay(1L), Date.fromUnixEpochDay(0L))
+        val EMPTY = DateRange(Date.fromDayOfUnixEpoch(1L), Date.fromDayOfUnixEpoch(0L))
 
         /**
          * An unbounded (ie. infinite) range of dates.
@@ -196,23 +194,50 @@ fun String.toDateRange(
 
 /**
  * Return a random date within the range using the default random number generator.
+ * @throws NoSuchElementException if the range is empty
+ * @throws UnsupportedOperationException if the range is unbounded
+ * @see DateRange.randomOrNull
  */
 fun DateRange.random(): Date = random(Random)
 
 /**
+ * Return a random date within the range using the default random number generator or `null` if the range is empty or
+ * unbounded.
+ * @see DateRange.random
+ */
+fun DateRange.randomOrNull(): Date? = randomOrNull(Random)
+
+/**
  * Return a random date within the range using the supplied random number generator.
+ * @throws NoSuchElementException if the range is empty
+ * @throws UnsupportedOperationException if the range is unbounded
+ * @see DateRange.randomOrNull
  */
 fun DateRange.random(random: Random): Date {
+    if (!isBounded()) throwUnboundedIntervalException()
+
     try {
-        val longRange = first.unixEpochDay..last.unixEpochDay
-        return Date.fromUnixEpochDay(random.nextLong(longRange))
+        return Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
     } catch (e: IllegalArgumentException) {
         throw NoSuchElementException(e.message)
     }
 }
 
 /**
- * Get a range containing all of the days up to, but not including [to]
+ * Return a random date within the range using the supplied random number generator or `null` if the range is empty or
+ * unbounded.
+ * @see DateRange.random
+ */
+fun DateRange.randomOrNull(random: Random): Date? {
+    return if (isEmpty() || !isBounded()) {
+        null
+    } else {
+        Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
+    }
+}
+
+/**
+ * Get a range containing all of the days up to, but not including [to].
  */
 infix fun Date.until(to: Date) = DateRange(this, to - 1L.days)
 

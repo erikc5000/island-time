@@ -43,7 +43,7 @@ kotlin {
 
         val darwinMain by getting {
             dependencies {
-                implementation(Libs.statelyIsolate)
+                implementation(Libs.AtomicFU.native)
             }
         }
     }

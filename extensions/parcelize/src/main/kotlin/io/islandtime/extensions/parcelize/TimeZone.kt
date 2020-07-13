@@ -21,10 +21,6 @@ object NullableTimeZoneParceler : Parceler<TimeZone?> {
     }
 
     override fun TimeZone?.write(parcel: Parcel, flags: Int) {
-        if (this == null) {
-            parcel.writeString(null)
-        } else {
-            parcel.writeString(id)
-        }
+        parcel.writeString(this?.id)
     }
 }

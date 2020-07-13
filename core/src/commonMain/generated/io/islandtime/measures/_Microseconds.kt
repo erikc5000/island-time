@@ -41,11 +41,11 @@ inline class IntMicroseconds(
   val value: Int
 ) : Comparable<IntMicroseconds> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntMicroseconds
-    get() = if (value < 0) IntMicroseconds(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    */
@@ -103,16 +103,16 @@ inline class IntMicroseconds(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return if (isZero()) {
+     return if (value == 0) {
        "PT0S"
      } else {
        buildString {
          val wholePart = (value / 1000000).absoluteValue
          val fractionalPart = (value % 1000000).absoluteValue
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(wholePart)
-         if (fractionalPart != 0) {
+         if (fractionalPart > 0) {
            append('.')
            append(fractionalPart.toZeroPaddedString(6).dropLastWhile { it == '0' })
          }
@@ -235,8 +235,8 @@ inline class IntMicroseconds(
 
   inline fun <T> toComponents(action: (milliseconds: IntMilliseconds,
       microseconds: IntMicroseconds) -> T): T {
-    val milliseconds = this.inMilliseconds
-    val microseconds = (this - milliseconds).toIntMicrosecondsUnchecked()
+    val milliseconds = (value / MICROSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).microseconds
     return action(milliseconds, microseconds)
   }
 
@@ -245,9 +245,10 @@ inline class IntMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val seconds = this.inSeconds
-    val milliseconds = (this - seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - seconds - milliseconds).toIntMicrosecondsUnchecked()
+    val seconds = (value / MICROSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).microseconds
     return action(seconds, milliseconds, microseconds)
   }
 
@@ -257,10 +258,11 @@ inline class IntMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val minutes = this.inMinutes
-    val seconds = (this - minutes).toIntMicrosecondsUnchecked().inSeconds
-    val milliseconds = (this - minutes - seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - minutes - seconds - milliseconds).toIntMicrosecondsUnchecked()
+    val minutes = (value / MICROSECONDS_PER_MINUTE).minutes
+    val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).microseconds
     return action(minutes, seconds, milliseconds, microseconds)
   }
 
@@ -271,13 +273,12 @@ inline class IntMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).toIntMicrosecondsUnchecked().inMinutes
-    val seconds = (this - hours - minutes).toIntMicrosecondsUnchecked().inSeconds
-    val milliseconds = (this - hours - minutes -
-        seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - hours - minutes - seconds -
-        milliseconds).toIntMicrosecondsUnchecked()
+    val hours = (value / MICROSECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % MICROSECONDS_PER_HOUR) / MICROSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).microseconds
     return action(hours, minutes, seconds, milliseconds, microseconds)
   }
 
@@ -289,14 +290,13 @@ inline class IntMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntMicrosecondsUnchecked().inHours
-    val minutes = (this - days - hours).toIntMicrosecondsUnchecked().inMinutes
-    val seconds = (this - days - hours - minutes).toIntMicrosecondsUnchecked().inSeconds
-    val milliseconds = (this - days - hours - minutes -
-        seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - days - hours - minutes - seconds -
-        milliseconds).toIntMicrosecondsUnchecked()
+    val days = (value / MICROSECONDS_PER_DAY).toInt().days
+    val hours = ((value % MICROSECONDS_PER_DAY) / MICROSECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % MICROSECONDS_PER_HOUR) / MICROSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).microseconds
     return action(days, hours, minutes, seconds, milliseconds, microseconds)
   }
 
@@ -357,11 +357,11 @@ inline class LongMicroseconds(
   val value: Long
 ) : Comparable<LongMicroseconds> {
   /**
-   * Get the absolute value.
+   * Returns the absolute value.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongMicroseconds
-    get() = if (value < 0) LongMicroseconds(value.negateExact()) else this
+    get() = if (value < 0) -this else this
   /**
    * Convert to nanoseconds.
    * @throws ArithmeticException if overflow occurs
@@ -426,16 +426,16 @@ inline class LongMicroseconds(
    * Convert to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
-     return if (isZero()) {
+     return if (value == 0L) {
        "PT0S"
      } else {
        buildString {
          val wholePart = (value / 1000000).absoluteValue
          val fractionalPart = ((value % 1000000).toInt()).absoluteValue
-         if (isNegative()) { append('-') }
+         if (value < 0) { append('-') }
          append("PT")
          append(wholePart)
-         if (fractionalPart != 0) {
+         if (fractionalPart > 0) {
            append('.')
            append(fractionalPart.toZeroPaddedString(6).dropLastWhile { it == '0' })
          }
@@ -557,8 +557,8 @@ inline class LongMicroseconds(
 
   inline fun <T> toComponents(action: (milliseconds: LongMilliseconds,
       microseconds: IntMicroseconds) -> T): T {
-    val milliseconds = this.inMilliseconds
-    val microseconds = (this - milliseconds).toIntMicrosecondsUnchecked()
+    val milliseconds = (value / MICROSECONDS_PER_MILLISECOND).milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt().microseconds
     return action(milliseconds, microseconds)
   }
 
@@ -567,9 +567,10 @@ inline class LongMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val seconds = this.inSeconds
-    val milliseconds = (this - seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - seconds - milliseconds).toIntMicrosecondsUnchecked()
+    val seconds = (value / MICROSECONDS_PER_SECOND).seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt().microseconds
     return action(seconds, milliseconds, microseconds)
   }
 
@@ -579,10 +580,11 @@ inline class LongMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val minutes = this.inMinutes
-    val seconds = (this - minutes).toIntMicrosecondsUnchecked().inSeconds
-    val milliseconds = (this - minutes - seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - minutes - seconds - milliseconds).toIntMicrosecondsUnchecked()
+    val minutes = (value / MICROSECONDS_PER_MINUTE).minutes
+    val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt().microseconds
     return action(minutes, seconds, milliseconds, microseconds)
   }
 
@@ -593,13 +595,12 @@ inline class LongMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val hours = this.inHours
-    val minutes = (this - hours).toIntMicrosecondsUnchecked().inMinutes
-    val seconds = (this - hours - minutes).toIntMicrosecondsUnchecked().inSeconds
-    val milliseconds = (this - hours - minutes -
-        seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - hours - minutes - seconds -
-        milliseconds).toIntMicrosecondsUnchecked()
+    val hours = (value / MICROSECONDS_PER_HOUR).hours
+    val minutes = ((value % MICROSECONDS_PER_HOUR) / MICROSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt().microseconds
     return action(hours, minutes, seconds, milliseconds, microseconds)
   }
 
@@ -611,14 +612,13 @@ inline class LongMicroseconds(
     milliseconds: IntMilliseconds,
     microseconds: IntMicroseconds
   ) -> T): T {
-    val days = this.inDays
-    val hours = (this - days).toIntMicrosecondsUnchecked().inHours
-    val minutes = (this - days - hours).toIntMicrosecondsUnchecked().inMinutes
-    val seconds = (this - days - hours - minutes).toIntMicrosecondsUnchecked().inSeconds
-    val milliseconds = (this - days - hours - minutes -
-        seconds).toIntMicrosecondsUnchecked().inMilliseconds
-    val microseconds = (this - days - hours - minutes - seconds -
-        milliseconds).toIntMicrosecondsUnchecked()
+    val days = (value / MICROSECONDS_PER_DAY).days
+    val hours = ((value % MICROSECONDS_PER_DAY) / MICROSECONDS_PER_HOUR).toInt().hours
+    val minutes = ((value % MICROSECONDS_PER_HOUR) / MICROSECONDS_PER_MINUTE).toInt().minutes
+    val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).toInt().seconds
+    val milliseconds = ((value % MICROSECONDS_PER_SECOND) /
+        MICROSECONDS_PER_MILLISECOND).toInt().milliseconds
+    val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt().microseconds
     return action(days, hours, minutes, seconds, milliseconds, microseconds)
   }
 

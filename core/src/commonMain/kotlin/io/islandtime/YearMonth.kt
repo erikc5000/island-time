@@ -222,11 +222,11 @@ class YearMonth(
 /**
  * Convert a string to a [YearMonth].
  *
- * The string is assumed to be an ISO-8601 year-month in extended format. For example, `2010-05` or `1960-12`. The
- * output of [YearMonth.toString] can be safely parsed using this method.
+ * The string is assumed to be an ISO-8601 year-month. For example, `2010-05` or `1960-12`. The output of
+ * [YearMonth.toString] can be safely parsed using this method.
  *
  * @throws TemporalParseException if parsing fails
- * @throws DateTimeException if the parsed time is invalid
+ * @throws DateTimeException if the parsed year-month is invalid
  */
 fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
 
@@ -264,11 +264,11 @@ internal fun TemporalParseResult.toYearMonth(): YearMonth? {
 }
 
 /**
- * Combine a year and month to get a [YearMonth].
+ * Combine a year and month to create a [YearMonth].
  */
 infix fun Year.at(month: Month) = YearMonth(value, month)
 
 /**
- * Combine a year and month number to get a [YearMonth].
+ * Combine a year and month number to create a [YearMonth].
  */
 fun Year.atMonth(number: Int) = YearMonth(value, number.toMonth())

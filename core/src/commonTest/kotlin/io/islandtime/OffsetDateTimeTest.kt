@@ -1,9 +1,6 @@
 package io.islandtime
 
-import io.islandtime.measures.days
-import io.islandtime.measures.hours
-import io.islandtime.measures.minutes
-import io.islandtime.measures.seconds
+import io.islandtime.measures.*
 import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
@@ -34,6 +31,78 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
             assertEquals(2, minute)
             assertEquals(3, second)
             assertEquals(4, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from seconds since unix epoch`() {
+        OffsetDateTime.fromSecondsSinceUnixEpoch((-1L).seconds, offset = UtcOffset.ZERO).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(0, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+
+        OffsetDateTime.fromSecondsSinceUnixEpoch((-1L).seconds, 1.nanoseconds, UtcOffset.ZERO).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(1, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from milliseconds since unix epoch`() {
+        OffsetDateTime.fromMillisecondsSinceUnixEpoch(1L.milliseconds, (-1).hours.asUtcOffset()).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1_000_000, nanosecond)
+            assertEquals((-1).hours.asUtcOffset(), offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from second of unix epoch`() {
+        OffsetDateTime.fromSecondOfUnixEpoch(-1L, offset = UtcOffset.ZERO).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(0, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+
+        OffsetDateTime.fromSecondOfUnixEpoch(0L, 1, UtcOffset.ZERO).run {
+            assertEquals(1970, year)
+            assertEquals(1, dayOfYear)
+            assertEquals(0, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from millisecond of unix epoch`() {
+        OffsetDateTime.fromMillisecondOfUnixEpoch(1L, UtcOffset.ZERO).run {
+            assertEquals(1970, year)
+            assertEquals(1, dayOfYear)
+            assertEquals(0, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1_000_000, nanosecond)
             assertEquals(UtcOffset.ZERO, offset)
         }
     }
@@ -133,19 +202,6 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
         assertEquals(2, testOffset.minute)
         assertEquals(3, testOffset.second)
         assertEquals(4, testOffset.nanosecond)
-    }
-
-    @Test
-    fun `instant property returns an equivalent Instant`() {
-        assertEquals(
-            "1970-01-01T00:00Z".toInstant(),
-            "1970-01-01T00:00Z".toOffsetDateTime().instant
-        )
-
-        assertEquals(
-            "2017-02-28T21:00:00.123456789Z".toInstant(),
-            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().instant
-        )
     }
 
     @Test

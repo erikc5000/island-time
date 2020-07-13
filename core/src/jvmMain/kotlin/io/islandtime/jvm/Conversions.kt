@@ -12,14 +12,14 @@ import io.islandtime.measures.*
  * Convert to an equivalent Island Time [Instant].
  */
 fun java.time.Instant.toIslandInstant(): Instant {
-    return Instant.fromUnixEpochSecond(epochSecond, nano)
+    return Instant.fromSecondOfUnixEpoch(epochSecond, nano)
 }
 
 /**
  * Convert to an equivalent Java `Instant`.
  */
 fun Instant.toJavaInstant(): java.time.Instant {
-    return java.time.Instant.ofEpochSecond(unixEpochSecond, unixEpochNanoOfSecond.toLong())
+    return java.time.Instant.ofEpochSecond(secondOfUnixEpoch, nanosecond.toLong())
 }
 
 /**

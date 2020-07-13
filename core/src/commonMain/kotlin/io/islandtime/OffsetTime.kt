@@ -2,10 +2,7 @@ package io.islandtime
 
 import io.islandtime.base.*
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.TemporalParseResult
-import io.islandtime.parser.TemporalParser
-import io.islandtime.parser.throwParserPropertyResolutionException
+import io.islandtime.parser.*
 
 /**
  * A time of day with an offset from UTC.
@@ -182,12 +179,31 @@ class OffsetTime(
 }
 
 /**
- * Create an [OffsetTime] by combining a [Time] with a [UtcOffset].
+ * Combine a local time with a UTC offset to create an [OffsetTime].
  */
 infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 
+/**
+ * Convert a string to an [OffsetTime].
+ *
+ * The string is assumed to be an ISO-8601 time with the UTC offset in extended format. For example, `02:30+01:00` or
+ * `14:40:23Z`. The output of [OffsetTime.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time or offset is invalid
+ */
 fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
 
+/**
+ * Convert a string to an [OffsetTime] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * Any custom parser must be capable of supplying the fields necessary to resolve both a [Time] and [UtcOffset].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed time or offset is invalid
+ */
 fun String.toOffsetTime(
     parser: TemporalParser,
     settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT

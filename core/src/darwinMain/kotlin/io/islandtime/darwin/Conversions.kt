@@ -172,7 +172,7 @@ fun NSDateComponents.toIslandZonedDateTimeOrNull(): ZonedDateTime? {
  */
 fun <T> TimePoint<T>.toNSDate(): NSDate {
     return NSDate.dateWithTimeIntervalSince1970(
-        unixEpochSecond.toDouble() + unixEpochNanoOfSecond.toDouble() / NANOSECONDS_PER_SECOND
+        secondOfUnixEpoch.toDouble() + nanosecond.toDouble() / NANOSECONDS_PER_SECOND
     )
 }
 
@@ -182,7 +182,7 @@ fun <T> TimePoint<T>.toNSDate(): NSDate {
 fun NSDate.toIslandInstant(): Instant {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return Instant.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond)
+    return Instant.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond)
 }
 
 /**
@@ -191,7 +191,7 @@ fun NSDate.toIslandInstant(): Instant {
 fun NSDate.toIslandDateTimeAt(offset: UtcOffset): DateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return DateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
+    return DateTime.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
 /**
@@ -205,7 +205,7 @@ fun NSDate.toIslandDateTimeAt(nsTimeZone: NSTimeZone) = toIslandDateTimeAt(nsTim
 fun NSDate.toIslandOffsetDateTimeAt(offset: UtcOffset): OffsetDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return OffsetDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, offset)
+    return OffsetDateTime.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond, offset)
 }
 
 /**
@@ -221,7 +221,7 @@ fun NSDate.toIslandOffsetDateTimeAt(nsTimeZone: NSTimeZone): OffsetDateTime {
 fun NSDate.toIslandZonedDateTimeAt(zone: TimeZone): ZonedDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
     val unixEpochNanoOfSecond = ((timeIntervalSince1970 - unixEpochSecond) * NANOSECONDS_PER_SECOND).toInt()
-    return ZonedDateTime.fromUnixEpochSecond(unixEpochSecond, unixEpochNanoOfSecond, zone)
+    return ZonedDateTime.fromSecondOfUnixEpoch(unixEpochSecond, unixEpochNanoOfSecond, zone)
 }
 
 /**
@@ -244,7 +244,7 @@ fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(
 fun NSTimeZone.toIslandUtcOffset(): UtcOffset = throw UnsupportedOperationException("Should not be called")
 
 /**
- * Convert an `NSTimeZone` to an Island Time [UtcOffset] with the same shift from UTC at the provided date.
+ * Convert an `NSTimeZone` to an Island Time [UtcOffset] at the provided date.
  */
 fun NSTimeZone.toIslandUtcOffsetAt(date: NSDate): UtcOffset {
     return secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
@@ -257,7 +257,6 @@ fun NSTimeZone.toIslandTimeZone(): TimeZone = name.toTimeZone()
 
 /**
  * Convert an Island Time [TimeZone] to an `NSTimeZone`.
- *
  * @throws TimeZoneRulesException if the identifier isn't recognized as valid for an `NSTimeZone`
  */
 fun TimeZone.toNSTimeZone(): NSTimeZone = toNSTimeZoneOrNull()

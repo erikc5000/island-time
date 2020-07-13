@@ -634,11 +634,6 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `yearMonth property returns a YearMonth with the same month and year`() {
-        assertEquals(YearMonth(2018, Month.JULY), Date(2018, Month.JULY, 4).yearMonth)
-    }
-
-    @Test
     fun `daysSinceUnixEpoch property works correctly`() {
         assertEquals(0L.days, Date(1970, Month.JANUARY, 1).daysSinceUnixEpoch)
         assertEquals(1L.days, Date(1970, Month.JANUARY, 2).daysSinceUnixEpoch)

@@ -9,10 +9,7 @@ import io.islandtime.ranges.internal.*
 import kotlin.random.Random
 
 /**
- * An interval between two arbitrary date-times.
- *
- * As no UTC offset or time zone is associated with either date-time, it's up to the application to interpret the
- * meaning.
+ * An interval between two date-times, assumed to be at the same offset from UTC.
  *
  * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
@@ -196,8 +193,8 @@ class DateTimeInterval(
          * An empty interval.
          */
         val EMPTY = DateTimeInterval(
-            DateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO),
-            DateTime.fromUnixEpochSecond(0L, 0, UtcOffset.ZERO)
+            DateTime.fromSecondOfUnixEpoch(0L, 0, UtcOffset.ZERO),
+            DateTime.fromSecondOfUnixEpoch(0L, 0, UtcOffset.ZERO)
         )
 
         /**
@@ -271,22 +268,46 @@ fun String.toDateTimeInterval(
 
 /**
  * Return a random date-time within the interval using the default random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see DateTimeInterval.randomOrNull
  */
 fun DateTimeInterval.random(): DateTime = random(Random)
 
 /**
+ * Return a random date-time within the interval using the default random number generator or
+ * `null` if the interval is empty or unbounded.
+ * @see DateTimeInterval.random
+ */
+fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNull(Random)
+
+/**
  * Return a random date-time within the interval using the supplied random number generator.
+ * @throws NoSuchElementException if the interval is empty
+ * @throws UnsupportedOperationException if the interval is unbounded
+ * @see DateTimeInterval.randomOrNull
  */
 fun DateTimeInterval.random(random: Random): DateTime {
-    try {
-        return DateTime.fromUnixEpochSecond(
-            random.nextLong(start.unixEpochSecondAt(UtcOffset.ZERO), endExclusive.unixEpochSecondAt(UtcOffset.ZERO)),
-            random.nextInt(start.unixEpochNanoOfSecond, endExclusive.unixEpochNanoOfSecond),
-            UtcOffset.ZERO
-        )
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
-    }
+    return random(
+        random,
+        secondGetter = { it.secondOfUnixEpochAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.nanosecond },
+        creator = { second, nanosecond -> DateTime.fromSecondOfUnixEpoch(second, nanosecond, UtcOffset.ZERO) }
+    )
+}
+
+/**
+ * Return a random date-time within the interval using the supplied random number generator or
+ * `null` if the interval is empty or unbounded.
+ * @see DateTimeInterval.random
+ */
+fun DateTimeInterval.randomOrNull(random: Random): DateTime? {
+    return randomOrNull(
+        random,
+        secondGetter = { it.secondOfUnixEpochAt(UtcOffset.ZERO) },
+        nanosecondGetter = { it.nanosecond },
+        creator = { second, nanosecond -> DateTime.fromSecondOfUnixEpoch(second, nanosecond, UtcOffset.ZERO) }
+    )
 }
 
 /**
@@ -335,10 +356,12 @@ fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
  * when working with [DateTime] directly.
  */
 fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
-    val secondDiff = endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) -
-        start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
+    val secondDiff =
+        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) - start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
 
-    val nanoDiff = endExclusive.nanoOfSecondsSinceUnixEpoch minusWithOverflow start.nanoOfSecondsSinceUnixEpoch
+    val nanoDiff =
+        endExclusive.additionalNanosecondsSinceUnixEpoch minusWithOverflow start.additionalNanosecondsSinceUnixEpoch
+
     return durationOf(secondDiff, nanoDiff)
 }
 
@@ -370,9 +393,9 @@ fun minutesBetween(start: DateTime, endExclusive: DateTime): LongMinutes {
 fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
     return secondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -386,9 +409,9 @@ fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
 fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMilliseconds {
     return millisecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -402,9 +425,9 @@ fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMillisecon
 fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicroseconds {
     return microsecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 
@@ -418,9 +441,9 @@ fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicrosecon
 fun nanosecondsBetween(start: DateTime, endExclusive: DateTime): LongNanoseconds {
     return nanosecondsBetween(
         start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.nanoOfSecondsSinceUnixEpoch,
+        start.additionalNanosecondsSinceUnixEpoch,
         endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.nanoOfSecondsSinceUnixEpoch
+        endExclusive.additionalNanosecondsSinceUnixEpoch
     )
 }
 

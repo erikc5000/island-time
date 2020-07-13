@@ -4,12 +4,12 @@ import io.islandtime.measures.*
 import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
-import io.islandtime.zone.*
+import io.islandtime.zone.TimeZoneRulesException
 import kotlin.test.*
 
 class ZonedDateTimeTest : AbstractIslandTimeTest() {
-    private val nyZone = "America/New_York".toTimeZone()
-    private val denverZone = "America/Denver".toTimeZone()
+    private val nyZone = TimeZone("America/New_York")
+    private val denverZone = TimeZone("America/Denver")
 
     @Test
     fun `throws an exception when constructed with a TimeZone that has no rules`() {
@@ -99,43 +99,75 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_dateTimeAt() returns a ZonedDateTime with a similar local date and time`() {
-        val offsetDateTime =
-            Date(2019, 3, 3) at Time(1, 0) at UtcOffset((-5).hours)
+    fun `can be constructed from seconds since unix epoch`() {
+        ZonedDateTime.fromSecondsSinceUnixEpoch((-1L).seconds, zone = TimeZone.UTC).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(0, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
 
-        assertEquals(
-            ZonedDateTime(
-                2019,
-                3,
-                2,
-                23,
-                0,
-                0,
-                0,
-                denverZone
-            ),
-            offsetDateTime.dateTimeAt(denverZone)
-        )
+        ZonedDateTime.fromSecondsSinceUnixEpoch((-1L).seconds, 1.nanoseconds, TimeZone.UTC).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(1, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
     }
 
     @Test
-    fun `OffsetDateTime_instantAt() returns a ZonedDateTime with the same instant`() {
-        val offsetDateTime =
-            Date(2019, 3, 3) at Time(1, 0) at UtcOffset((-5).hours)
+    fun `can be constructed from milliseconds since unix epoch`() {
+        ZonedDateTime.fromMillisecondsSinceUnixEpoch(1L.milliseconds, (-1).hours.asUtcOffset().asTimeZone()).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1_000_000, nanosecond)
+            assertEquals((-1).hours.asUtcOffset(), offset)
+        }
+    }
 
-        assertEquals(
-            ZonedDateTime(
-                2019,
-                3,
-                3,
-                1,
-                0,
-                0,
-                0,
-                nyZone
-            ),
-            offsetDateTime.instantAt(nyZone)
-        )
+    @Test
+    fun `can be constructed from second of unix epoch`() {
+        ZonedDateTime.fromSecondOfUnixEpoch(-1L, zone = TimeZone.UTC).run {
+            assertEquals(1969, year)
+            assertEquals(365, dayOfYear)
+            assertEquals(23, hour)
+            assertEquals(59, minute)
+            assertEquals(59, second)
+            assertEquals(0, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+
+        ZonedDateTime.fromSecondOfUnixEpoch(0L, 1, TimeZone.UTC).run {
+            assertEquals(1970, year)
+            assertEquals(1, dayOfYear)
+            assertEquals(0, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
+    }
+
+    @Test
+    fun `can be constructed from millisecond of unix epoch`() {
+        ZonedDateTime.fromMillisecondOfUnixEpoch(1L, TimeZone.UTC).run {
+            assertEquals(1970, year)
+            assertEquals(1, dayOfYear)
+            assertEquals(0, hour)
+            assertEquals(0, minute)
+            assertEquals(0, second)
+            assertEquals(1_000_000, nanosecond)
+            assertEquals(UtcOffset.ZERO, offset)
+        }
     }
 
     @Test
@@ -197,8 +229,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 821_000_000,
                 nyZone
             ),
-            Instant(1566256047821L.milliseconds)
-                at nyZone
+            Instant(1566256047821L.milliseconds) at nyZone
         )
     }
 
@@ -289,14 +320,12 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
         val zonedDateTime = DateTime(2019, 3, 3, 7, 0) at denverZone
 
         assertEquals(2019, zonedDateTime.year)
-        assertEquals(YearMonth(2019, 3), zonedDateTime.yearMonth)
         assertEquals(Month.MARCH, zonedDateTime.month)
         assertEquals(3, zonedDateTime.monthNumber)
         assertEquals(3, zonedDateTime.dayOfMonth)
         assertEquals(Date(2019, 3, 3), zonedDateTime.date)
         assertEquals(Time(7, 0), zonedDateTime.time)
         assertEquals(DateTime(2019, 3, 3, 7, 0), zonedDateTime.dateTime)
-        assertEquals(OffsetTime(Time(7, 0), UtcOffset((-7).hours)), zonedDateTime.offsetTime)
     }
 
     @Test
@@ -507,32 +536,6 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
                 DateTime(2019, 3, 10, 5, 30),
                 nyZone
             ).adjustedTo(denverZone)
-        )
-    }
-
-    @Test
-    fun `instant property returns an equivalent Instant`() {
-        assertEquals(
-            "1970-01-01T00:00Z".toInstant(),
-            "1970-01-01T00:00Z".toZonedDateTime().instant
-        )
-
-        assertEquals(
-            "2017-02-28T21:00:00.123456789Z".toInstant(),
-            "2017-02-28T14:00:00.123456789-07:00[America/Denver]".toZonedDateTime().instant
-        )
-    }
-
-    @Test
-    fun `offsetDateTime property returns an equivalent OffsetDateTime`() {
-        assertEquals(
-            "1970-01-01T00:00Z".toOffsetDateTime(),
-            "1970-01-01T00:00Z".toZonedDateTime().offsetDateTime
-        )
-
-        assertEquals(
-            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime(),
-            "2017-02-28T14:00:00.123456789-07:00[America/Denver]".toZonedDateTime().offsetDateTime
         )
     }
 

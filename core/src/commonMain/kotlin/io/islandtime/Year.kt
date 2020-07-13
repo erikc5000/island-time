@@ -139,8 +139,27 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
     }
 }
 
+/**
+ * Convert a string to a [Year].
+ *
+ * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or 'Y12345'. The output of
+ * [Year.toString] can be safely parsed using this method.
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed year is invalid
+ */
 fun String.toYear() = toYear(DateTimeParsers.Iso.YEAR)
 
+/**
+ * Convert a string to a [Year] using a specific parser.
+ *
+ * A set of predefined parsers can be found in [DateTimeParsers].
+ *
+ * The parser must be capable of supplying [DateTimeField.YEAR].
+ *
+ * @throws DateTimeParseException if parsing fails
+ * @throws DateTimeException if the parsed year is invalid
+ */
 fun String.toYear(
     parser: TemporalParser,
     settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT

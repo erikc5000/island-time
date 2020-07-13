@@ -24,10 +24,10 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `can be constructed from unix epoch millisecond`() {
+    fun `can be constructed from millisecond of unix epoch`() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at Time(1, 0),
-            DateTime.fromUnixEpochMillisecond(0L, 1.hours.asUtcOffset())
+            DateTime.fromMillisecondOfUnixEpoch(0L, 1.hours.asUtcOffset())
         )
 
         assertEquals(
@@ -38,7 +38,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at
                 Time(1, 0, 0, 1_000_000),
-            DateTime.fromUnixEpochMillisecond(1L, 1.hours.asUtcOffset())
+            DateTime.fromMillisecondOfUnixEpoch(1L, 1.hours.asUtcOffset())
         )
 
         assertEquals(
@@ -50,7 +50,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at
                 Time(0, 59, 59, 999_000_000),
-            DateTime.fromUnixEpochMillisecond(-1L, 1.hours.asUtcOffset())
+            DateTime.fromMillisecondOfUnixEpoch(-1L, 1.hours.asUtcOffset())
         )
 
         assertEquals(
@@ -61,10 +61,10 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `can be constructed from unix epoch second`() {
+    fun `can be constructed from second of unix epoch`() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at Time(1, 0),
-            DateTime.fromUnixEpochSecond(0L, 0, 1.hours.asUtcOffset())
+            DateTime.fromSecondOfUnixEpoch(0L, 0, 1.hours.asUtcOffset())
         )
 
         assertEquals(
@@ -75,7 +75,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at
                 Time(1, 0, 0, 1),
-            DateTime.fromUnixEpochSecond(0L, 1, 1.hours.asUtcOffset())
+            DateTime.fromSecondOfUnixEpoch(0L, 1, 1.hours.asUtcOffset())
         )
 
         assertEquals(
@@ -87,7 +87,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.JANUARY, 1) at
                 Time(0, 59, 59, 999_999_999),
-            DateTime.fromUnixEpochSecond(0L, -1, 1.hours.asUtcOffset())
+            DateTime.fromSecondOfUnixEpoch(0L, -1, 1.hours.asUtcOffset())
         )
 
         assertEquals(
@@ -201,29 +201,29 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `unixEpochMillisecondAt() returns the millisecond of the unix epoch`() {
+    fun `millisecondOfUnixEpochAt() returns the millisecond of the unix epoch`() {
         assertEquals(
             1L,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_999_999))
-                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+                .millisecondOfUnixEpochAt(1.hours.asUtcOffset())
         )
 
         assertEquals(
             1L,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_000_000))
-                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+                .millisecondOfUnixEpochAt(1.hours.asUtcOffset())
         )
 
         assertEquals(
             0L,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 999_999))
-                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+                .millisecondOfUnixEpochAt(1.hours.asUtcOffset())
         )
 
         assertEquals(
             0L,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0))
-                .unixEpochMillisecondAt(1.hours.asUtcOffset())
+                .millisecondOfUnixEpochAt(1.hours.asUtcOffset())
         )
 
         assertEquals(
