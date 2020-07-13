@@ -1,15 +1,19 @@
 package io.islandtime.format
 
-import co.touchlab.stately.isolate.IsolateState
+import io.islandtime.internal.confine
 import io.islandtime.locale.Locale
 import platform.Foundation.*
+import kotlin.native.concurrent.Worker
+
+@SharedImmutable
+private val worker = Worker.start(errorReporting = false)
 
 /**
  * The default provider of localized date-time format styles for the current platform.
  */
 actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
-    private val styleCache = IsolateState { hashMapOf<StyleCacheKey, TemporalFormatter>() }
-    private val skeletonCache = IsolateState { hashMapOf<SkeletonCacheKey, TemporalFormatter?>() }
+    private val styleCache = worker.confine { hashMapOf<StyleCacheKey, TemporalFormatter>() }
+    private val skeletonCache = worker.confine { hashMapOf<SkeletonCacheKey, TemporalFormatter?>() }
 
     private data class StyleCacheKey(
         val dateStyle: FormatStyle?,
@@ -30,7 +34,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
 
         val adjustedLocale = locale.withDefaultCalendar()
 
-        return styleCache.access { cache ->
+        return styleCache.use { cache ->
             val key = StyleCacheKey(dateStyle, timeStyle, adjustedLocale.localeIdentifier)
 
             cache.getOrPut(key) {
@@ -50,7 +54,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
     override fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
         val adjustedLocale = locale.withDefaultCalendar()
 
-        return skeletonCache.access { cache ->
+        return skeletonCache.use { cache ->
             val key = SkeletonCacheKey(skeleton, adjustedLocale.localeIdentifier)
 
             cache.getOrPut(key) {

@@ -189,7 +189,7 @@ infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
  * The string is assumed to be an ISO-8601 time with the UTC offset in extended format. For example, `02:30+01:00` or
  * `14:40:23Z`. The output of [OffsetTime.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time or offset is invalid
  */
 fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
@@ -201,7 +201,7 @@ fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIM
  *
  * Any custom parser must be capable of supplying the fields necessary to resolve both a [Time] and [UtcOffset].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time or offset is invalid
  */
 fun String.toOffsetTime(

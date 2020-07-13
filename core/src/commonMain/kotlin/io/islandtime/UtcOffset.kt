@@ -3,6 +3,8 @@
 package io.islandtime
 
 import io.islandtime.base.*
+import io.islandtime.internal.SECONDS_PER_HOUR
+import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
@@ -146,7 +148,7 @@ fun IntSeconds.asUtcOffset() = UtcOffset(this)
  * The string is assumed to be an ISO-8601 UTC offset representation in extended format. For example, `Z`, `+05`, or
  * `-04:30`. The output of [UtcOffset.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed UTC offset is invalid
  */
 fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
@@ -156,7 +158,7 @@ fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed UTC offset is invalid
  */
 fun String.toUtcOffset(

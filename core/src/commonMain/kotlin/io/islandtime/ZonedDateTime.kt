@@ -173,7 +173,7 @@ class ZonedDateTime private constructor(
             is DateProperty, is TimeProperty -> dateTime.get(property)
             is UtcOffsetProperty -> offset.get(property)
             is TimeZoneProperty -> zone.get(property)
-            TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            TimePointProperty.SecondOfUnixEpoch -> secondOfUnixEpoch
             else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
@@ -182,7 +182,7 @@ class ZonedDateTime private constructor(
         @Suppress("UNCHECKED_CAST")
         return when (property) {
             is TimeZoneProperty -> zone.get(property)
-            TimePointProperty.Instant -> instant as T
+            TimePointProperty.Instant -> toInstant() as T
             else -> throwUnsupportedTemporalPropertyException(property)
         }
     }

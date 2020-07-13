@@ -163,21 +163,24 @@ class OffsetDateTime(
         ReplaceWith("this.toYearMonth()"),
         DeprecationLevel.WARNING
     )
-    inline val yearMonth: YearMonth get() = toYearMonth()
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     @Deprecated(
         "Use toOffsetTime() instead.",
         ReplaceWith("this.toOffsetTime()"),
         DeprecationLevel.WARNING
     )
-    inline val offsetTime: OffsetTime get() = toOffsetTime()
+    inline val offsetTime: OffsetTime
+        get() = toOffsetTime()
 
     @Deprecated(
         "Use toInstant() instead.",
         ReplaceWith("this.toInstant()"),
         DeprecationLevel.WARNING
     )
-    inline val instant: Instant get() = toInstant()
+    inline val instant: Instant
+        get() = toInstant()
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
@@ -289,7 +292,7 @@ class OffsetDateTime(
         return when (property) {
             is DateProperty, is TimeProperty -> dateTime.get(property)
             is UtcOffsetProperty -> offset.get(property)
-            TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            TimePointProperty.SecondOfUnixEpoch -> secondOfUnixEpoch
             else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
@@ -297,7 +300,7 @@ class OffsetDateTime(
     override fun <T> get(property: ObjectProperty<T>): T {
         @Suppress("UNCHECKED_CAST")
         return when (property) {
-            TimePointProperty.Instant -> instant as T
+            TimePointProperty.Instant -> toInstant() as T
             else -> throwUnsupportedTemporalPropertyException(property)
         }
     }
@@ -463,7 +466,7 @@ fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
  * The string is assumed to be an ISO-8601 date-time with the UTC offset in extended format. For example,
  * `2019-05-30T02:30+01:00`. The output of [OffsetDateTime.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date-time or offset is invalid
  */
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
@@ -475,7 +478,7 @@ fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OF
  *
  * Any custom parser must be capable of supplying the fields necessary to resolve a [Date], [Time] and [UtcOffset].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date-time or offset is invalid
  */
 fun String.toOffsetDateTime(

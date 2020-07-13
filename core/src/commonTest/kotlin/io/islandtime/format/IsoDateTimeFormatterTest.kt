@@ -16,7 +16,7 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
         val formatter = isoDateTimeFormatter()
 
         assertEquals("2010", formatter.format(Year(zonedDateTime.year)))
-        assertEquals("2010-09", formatter.format(zonedDateTime.yearMonth))
+        assertEquals("2010-09", formatter.format(zonedDateTime.toYearMonth()))
         assertEquals("2010-09-03", formatter.format(zonedDateTime.date))
         assertEquals(
             "2010-09-03T01:02:03.000000004",
@@ -24,7 +24,7 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
         )
         assertEquals(
             "2010-09-03T01:02:03.000000004-06:00",
-            formatter.format(zonedDateTime.offsetDateTime)
+            formatter.format(zonedDateTime.toOffsetDateTime())
         )
         assertEquals(
             "2010-09-03T01:02:03.000000004-06:00",
@@ -35,7 +35,7 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
             formatter.format(zonedDateTime)
         )
         assertEquals("01:02:03.000000004", formatter.format(zonedDateTime.time))
-        assertEquals("01:02:03.000000004-06:00", formatter.format(zonedDateTime.offsetTime))
+        assertEquals("01:02:03.000000004-06:00", formatter.format(zonedDateTime.toOffsetTime()))
     }
 
     @Test
@@ -45,12 +45,12 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
         }
 
         assertEquals("2010", formatter.format(Year(zonedDateTime.year)))
-        assertEquals("2010-09", formatter.format(zonedDateTime.yearMonth))
+        assertEquals("2010-09", formatter.format(zonedDateTime.toYearMonth()))
         assertEquals("20100903", formatter.format(zonedDateTime.date))
         assertEquals("20100903T010203.000000004", formatter.format(zonedDateTime.dateTime))
         assertEquals(
             "20100903T010203.000000004-0600",
-            formatter.format(zonedDateTime.offsetDateTime)
+            formatter.format(zonedDateTime.toOffsetDateTime())
         )
         assertEquals(
             "20100903T010203.000000004-0600",
@@ -61,6 +61,6 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
             formatter.format(zonedDateTime)
         )
         assertEquals("010203.000000004", formatter.format(zonedDateTime.time))
-        assertEquals("010203.000000004-0600", formatter.format(zonedDateTime.offsetTime))
+        assertEquals("010203.000000004-0600", formatter.format(zonedDateTime.toOffsetTime()))
     }
 }

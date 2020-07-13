@@ -1,11 +1,11 @@
 package io.islandtime.format
 
-import io.islandtime.IslandTime
-import io.islandtime.locale.Locale
 import io.islandtime.DateTimeException
+import io.islandtime.IslandTime
 import io.islandtime.base.DateProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.TimeProperty
+import io.islandtime.locale.Locale
 
 typealias ParsableTextList = List<Pair<String, Long>>
 

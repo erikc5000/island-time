@@ -176,10 +176,10 @@ class Instant private constructor(
 
     override fun get(property: NumberProperty): Long {
         return when (property) {
-            TimeProperty.MillisecondOfSecond -> nanoOfSecond.toLong() / NANOSECONDS_PER_MILLISECOND
-            TimeProperty.MicrosecondOfSecond -> nanoOfSecond.toLong() / NANOSECONDS_PER_MICROSECOND
-            TimeProperty.NanosecondOfSecond -> nanoOfSecond.toLong()
-            TimePointProperty.SecondOfUnixEpoch -> unixEpochSecond
+            TimeProperty.MillisecondOfSecond -> nanosecond.toLong() / NANOSECONDS_PER_MILLISECOND
+            TimeProperty.MicrosecondOfSecond -> nanosecond.toLong() / NANOSECONDS_PER_MICROSECOND
+            TimeProperty.NanosecondOfSecond -> nanosecond.toLong()
+            TimePointProperty.SecondOfUnixEpoch -> secondOfUnixEpoch
             else -> throwUnsupportedTemporalPropertyException(property)
         }
     }

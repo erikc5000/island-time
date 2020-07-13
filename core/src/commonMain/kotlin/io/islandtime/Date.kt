@@ -58,7 +58,7 @@ class Date(
 
     override fun get(property: NumberProperty): Long {
         return when (property) {
-            DateProperty.DayOfUnixEpoch -> unixEpochDay
+            DateProperty.DayOfUnixEpoch -> dayOfUnixEpoch
             else -> getInt(property).toLong()
         }
     }

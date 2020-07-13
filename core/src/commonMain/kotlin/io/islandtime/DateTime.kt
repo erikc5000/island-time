@@ -137,7 +137,8 @@ class DateTime(
         ReplaceWith("this.toYearMonth()"),
         DeprecationLevel.WARNING
     )
-    inline val yearMonth: YearMonth get() = toYearMonth()
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * Return a [DateTime] with [period] added to it.
@@ -729,7 +730,7 @@ val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
  * The string is assumed to be an ISO-8601 date-time representation in extended format. For example, `2019-08-22T18:00`
  * or `2019-08-22 18:00:30.123456789`. The output of [DateTime.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date-time is invalid
  */
 fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
@@ -741,7 +742,7 @@ fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
  *
  * Any custom parser must be capable of supplying the fields necessary to resolve both a [Date] and [Time].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date-time is invalid
  */
 fun String.toDateTime(

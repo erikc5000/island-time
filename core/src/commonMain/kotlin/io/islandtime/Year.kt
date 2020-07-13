@@ -3,10 +3,7 @@ package io.islandtime
 import io.islandtime.base.*
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.*
-import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.TemporalParseResult
-import io.islandtime.parser.TemporalParser
-import io.islandtime.parser.throwParserPropertyResolutionException
+import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 import kotlin.math.absoluteValue
 
@@ -145,7 +142,7 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
  * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or 'Y12345'. The output of
  * [Year.toString] can be safely parsed using this method.
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed year is invalid
  */
 fun String.toYear() = toYear(DateTimeParsers.Iso.YEAR)
@@ -157,7 +154,7 @@ fun String.toYear() = toYear(DateTimeParsers.Iso.YEAR)
  *
  * The parser must be capable of supplying [DateTimeField.YEAR].
  *
- * @throws DateTimeParseException if parsing fails
+ * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed year is invalid
  */
 fun String.toYear(
