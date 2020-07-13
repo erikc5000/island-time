@@ -8,6 +8,7 @@ import io.islandtime.internal.confine
 import io.islandtime.locale.Locale
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarIdentifierISO8601
+import platform.Foundation.localeIdentifier
 import kotlin.native.concurrent.Worker
 
 @SharedImmutable
