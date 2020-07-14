@@ -205,9 +205,11 @@ fun TimeZone(id: String): TimeZone {
  */
 fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
 
-/**
- * Convert a string to a [TimeZone].
- */
+@Deprecated(
+    "Use TimeZone() instead.",
+    ReplaceWith("TimeZone(this)"),
+    DeprecationLevel.WARNING
+)
 fun String.toTimeZone() = TimeZone(this)
 
 internal const val MAX_TIME_ZONE_STRING_LENGTH = 50

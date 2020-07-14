@@ -215,7 +215,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
 
     @Test
     fun `convert NSDate to ZonedDateTime`() {
-        val zone = "America/New_York".toTimeZone()
+        val zone = TimeZone("America/New_York")
 
         assertEquals(
             Instant.UNIX_EPOCH at zone,
