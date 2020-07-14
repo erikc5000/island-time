@@ -4,6 +4,7 @@ package io.islandtime
 
 import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
+import io.islandtime.internal.systemDefaultTimeZone
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.nanoseconds
@@ -174,6 +175,11 @@ sealed class TimeZone : Comparable<TimeZone> {
          * A fixed time zone representing UTC.
          */
         val UTC: TimeZone = FixedOffset(UtcOffset.ZERO)
+
+        /**
+         * Get the system's current [TimeZone].
+         */
+        fun systemDefault(): TimeZone = systemDefaultTimeZone()
 
         /**
          * Create a fixed-offset [TimeZone] from an identifier in the form of `+01:00`.
