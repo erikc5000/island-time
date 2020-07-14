@@ -1,4 +1,4 @@
-package io.islandtime.clock
+package io.islandtime.internal
 
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class JvmPlatformSystemClockTest : AbstractIslandTimeTest() {
+class PlatformTest : AbstractIslandTimeTest() {
     @Test
     fun `converts java_util_TimeZone with UTC equivalent IDs to Island region-based zones`() {
         listOf("GMT", "UTC").forEach {
