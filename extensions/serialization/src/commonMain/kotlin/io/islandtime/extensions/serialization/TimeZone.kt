@@ -1,7 +1,6 @@
 package io.islandtime.extensions.serialization
 
 import io.islandtime.TimeZone
-import io.islandtime.toTimeZone
 import kotlinx.serialization.*
 
 object TimeZoneSerializer : KSerializer<TimeZone> {
@@ -13,6 +12,6 @@ object TimeZoneSerializer : KSerializer<TimeZone> {
     }
 
     override fun deserialize(decoder: Decoder): TimeZone {
-        return decoder.decodeString().toTimeZone()
+        return TimeZone(decoder.decodeString())
     }
 }

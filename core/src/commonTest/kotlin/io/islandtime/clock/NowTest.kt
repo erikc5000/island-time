@@ -38,7 +38,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `Date_now() with offset`() {
-        val clock = FixedClock((-1).days, "Etc/GMT+1".toTimeZone())
+        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
         assertEquals(Date(1969, Month.DECEMBER, 30), Date.now(clock))
     }
 
@@ -65,7 +65,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `DateTime_now() with offset`() {
-        val clock = FixedClock((-1).days, "Etc/GMT+1".toTimeZone())
+        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
         assertEquals(
             DateTime(1969, Month.DECEMBER, 30, 23, 0),
             DateTime.now(clock)
@@ -92,25 +92,25 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `Time_now() with offset`() {
-        val clock1 = FixedClock((-1).days, "Etc/GMT+4".toTimeZone())
+        val clock1 = FixedClock((-1).days, TimeZone("Etc/GMT+4"))
         assertEquals(Time(20, 0), Time.now(clock1))
 
-        val clock2 = FixedClock((-1).days, "Etc/GMT-4".toTimeZone())
+        val clock2 = FixedClock((-1).days, TimeZone("Etc/GMT-4"))
         assertEquals(Time(4, 0), Time.now(clock2))
     }
 
     @Test
     fun `OffsetTime_now()`() {
-        val clock1 = FixedClock((-1).days, "Etc/GMT+4".toTimeZone())
+        val clock1 = FixedClock((-1).days, TimeZone("Etc/GMT+4"))
         assertEquals(OffsetTime(Time(20, 0), (-4).hours.asUtcOffset()), OffsetTime.now(clock1))
 
-        val clock2 = FixedClock((-1).days, "Etc/GMT-4".toTimeZone())
+        val clock2 = FixedClock((-1).days, TimeZone("Etc/GMT-4"))
         assertEquals(OffsetTime(Time(4, 0), 4.hours.asUtcOffset()), OffsetTime.now(clock2))
     }
 
     @Test
     fun `OffsetDateTime_now()`() {
-        val clock = FixedClock((-1).days, "Etc/GMT+1".toTimeZone())
+        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
         assertEquals(
             OffsetDateTime(
                 DateTime(1969, Month.DECEMBER, 30, 23, 0),
@@ -131,11 +131,11 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `ZonedDateTime_now()`() {
-        val clock = FixedClock((-1).days, "Etc/GMT+1".toTimeZone())
+        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
         assertEquals(
             ZonedDateTime(
                 DateTime(1969, Month.DECEMBER, 30, 23, 0),
-                "Etc/GMT+1".toTimeZone()
+                TimeZone("Etc/GMT+1")
             ),
             ZonedDateTime.now(clock)
         )
@@ -144,7 +144,7 @@ class NowTest : AbstractIslandTimeTest() {
         assertEquals(
             ZonedDateTime(
                 DateTime(1969, Month.DECEMBER, 31, 0, 0),
-                "Etc/GMT+1".toTimeZone()
+                TimeZone("Etc/GMT+1")
             ),
             ZonedDateTime.now(clock)
         )
