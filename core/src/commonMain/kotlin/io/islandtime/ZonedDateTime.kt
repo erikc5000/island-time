@@ -729,7 +729,7 @@ internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
     val offset = this.toUtcOffset()
 
     return if (dateTime != null && offset != null) {
-        val zone = timeZoneId?.toTimeZone() ?: offset.asTimeZone()
+        val zone = timeZoneId?.let { TimeZone(it) } ?: offset.asTimeZone()
 
         // Check if the offset is valid for the time zone as we understand it and if not, adjust the date-time and
         // offset to valid values while preserving the instant of the parsed value
