@@ -10,14 +10,13 @@ Features:
 - Date ranges and time intervals, integrating with Kotlin ranges and progressions
 - Read and write strings in ISO formats
 - DSL-based definition of custom parsers
-- Access to localized text for names of months, days of the week, time zones, etc.
-- Operators like `date.next(MONDAY)`, `dateTime.startOfWeek`, or `date.weekRange(WeekSettings.systemDefault())`
-- Conversion to and from platform-specific date-time types
+- Access localized text for names of months, days of the week, time zones, etc.
+- Convenience operators like `date.next(MONDAY)`, `dateTime.startOfWeek`, or `date.weekRange(WeekSettings.systemDefault())`
+- Convert to and from platform-specific date-time types
 - Works on JVM, Android, iOS, macOS, tvOS, and watchOS
 
 Current limitations:
 - No custom format strings (must write platform-specific code to do this)
-- Doesn't support all week-related fields or week-based dates
 - Only supports the ISO calendar system
 
 Island Time is still early in development and "moving fast" so to speak. The API is likely to experience changes between minor version increments.

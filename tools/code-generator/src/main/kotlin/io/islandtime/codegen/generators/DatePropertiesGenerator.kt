@@ -198,8 +198,8 @@ private fun buildDatePropertiesFile() = file(
         property(name = "lengthOfWeekBasedYear", returnType = measures("IntWeeks")) {
             kdoc {
                 """
-                    The length of the ISO week-based year that this ${receiverClass.simpleName} falls in. This will be
-                    either 52 or 53 weeks.
+                    The length of the ISO week-based year that this ${receiverClass.simpleName} falls in, either 52 or
+                    53 weeks.
                 """.trimIndent()
             }
 
