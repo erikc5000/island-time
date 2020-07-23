@@ -1,4 +1,4 @@
-package io.islandtime.codegen
+package io.islandtime.codegen.dsl
 
 import com.squareup.kotlinpoet.*
 import kotlin.reflect.KClass
