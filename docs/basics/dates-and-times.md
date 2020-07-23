@@ -138,9 +138,9 @@ println(zonedDateTime.adjustedTo(TimeZone("America/Los_Angeles")))
 // Output: 2020-03-07T23:30-08:00
 ```
 
-## Patterns and Operators
+## Patterns, Properties, and Operators
 
-Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of operators that simplify common tasks.
+Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of properties and operators that simplify common tasks.
 
 ### `at`
 
@@ -165,7 +165,7 @@ val dateTime = DateTime.now().copy(dayOfMonth = 15)
 val dateTimeAtMidnight = dateTime.copy(time = Time.MIDNIGHT)
 ```
 
-### Addition and Subtraction
+### Addition and subtraction
 
 A [duration](durations.md) of time can be added or subtracted from a date-time primitive. Which units are supported will vary depending on whether the primitive is date-based, time-based, or both.
 
@@ -267,6 +267,34 @@ val roundedToNearest15Mins = dateTime.roundedToNearest(15.minutes)
 val roundedDownTo100Millis = dateTime.roundedDownToNearest(100.milliseconds)
 // Output: 2020-06-30T06:32:14.1
 ```
+
+### Week numbers
+
+You can obtain the week number and year as defined in the [ISO week date system](https://en.wikipedia.org/wiki/ISO_week_date) like this:
+
+```kotlin
+val date = Date.now()
+
+// Get the week-based year, which may differ from the regular year
+val isoWeekYear: Int = date.weekBasedYear
+
+// Get the week of the week-based year
+val isoWeekNumber: Int = date.weekOfWeekBasedYear
+
+// Or convert the date to a full ISO week date representation in a single step
+date.toWeekDate { year: Int, week: Int, day: Int ->
+    // ...
+}
+```
+
+Different week definitions can be used by specifying the [`WeekSettings`](../api/core/io.islandtime.calendar/-week-settings/index.md) explicitly.
+
+```kotlin
+val usaWeekNumber: Int = date.weekOfWeekBasedYear(WeekSettings.SUNDAY_START)
+```
+
+!!! info "`weekOfYear` vs. `weekOfWeekBasedYear`"
+    The week number associated with a particular date could fall in the prior or subsequent year, depending on how the week is defined. `weekOfYear` will return the week number relative to the date's regular `year` -- `0` if it falls in the prior year, for example. On the other hand, `weekOfWeekBasedYear` will adjust the number to the `weekBasedYear`.
 
 ## ISO Representation
 

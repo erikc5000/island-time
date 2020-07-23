@@ -83,8 +83,7 @@ val Date.weekOfWeekBasedYear: Int
 fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearImpl(settings)
 
 /**
- * The length of the ISO week-based year that this date falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
  */
 val Date.lengthOfWeekBasedYear: IntWeeks
   get() = lengthOfWeekBasedYearImpl
@@ -155,8 +154,7 @@ val DateTime.weekOfWeekBasedYear: Int
 fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekBasedYear(settings)
 
 /**
- * The length of the ISO week-based year that this date-time falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val DateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = date.lengthOfWeekBasedYear
@@ -228,8 +226,7 @@ fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
 
 /**
- * The length of the ISO week-based year that this date-time falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
@@ -301,8 +298,7 @@ fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
 
 /**
- * The length of the ISO week-based year that this date-time falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val ZonedDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear

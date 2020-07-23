@@ -18,5 +18,4 @@ across platforms while taking full advantage of the features offered by the Kotl
 
 ## Current Limitations
 - No custom format strings (must write platform-specific code to do this)
-- Doesn't support all week-related fields or week-based dates
 - Only supports the ISO calendar system
