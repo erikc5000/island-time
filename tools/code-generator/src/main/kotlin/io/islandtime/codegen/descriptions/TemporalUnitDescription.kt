@@ -1,4 +1,4 @@
-package io.islandtime.codegen
+package io.islandtime.codegen.descriptions
 
 import java.util.*
 

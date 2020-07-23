@@ -12,6 +12,10 @@ data class WeekSettings(
     val firstDayOfWeek: DayOfWeek,
     val minimumDaysInFirstWeek: Int
 ) {
+    init {
+        require(minimumDaysInFirstWeek in 1..7) { "minimumDaysInFirstWeek must be in 1..7" }
+    }
+
     companion object {
         /**
          * The definition of a week according to the current system settings. This may differ from the definition
@@ -23,12 +27,12 @@ data class WeekSettings(
          * The ISO-8601 calendar system's definition of a week, where the first day of the week is Monday and the first
          * week of the year has a minimum of 4 days.
          */
-        val ISO = WeekSettings(DayOfWeek.MONDAY, 4)
+        val ISO = WeekSettings(DayOfWeek.MONDAY, minimumDaysInFirstWeek = 4)
 
         /**
          * A definition of a week that starts on Sunday with a minimum of 1 day in the first week of the year.
          */
-        val SUNDAY_START = WeekSettings(DayOfWeek.SUNDAY, 1)
+        val SUNDAY_START = WeekSettings(DayOfWeek.SUNDAY, minimumDaysInFirstWeek = 1)
     }
 }
 
