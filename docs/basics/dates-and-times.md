@@ -138,9 +138,9 @@ println(zonedDateTime.adjustedTo(TimeZone("America/Los_Angeles")))
 // Output: 2020-03-07T23:30-08:00
 ```
 
-## Patterns and Operators
+## Patterns, Properties, and Operators
 
-Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of operators that simplify common tasks.
+Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of properties and operators that simplify common tasks.
 
 ### `at`
 
@@ -165,7 +165,7 @@ val dateTime = DateTime.now().copy(dayOfMonth = 15)
 val dateTimeAtMidnight = dateTime.copy(time = Time.MIDNIGHT)
 ```
 
-### Addition and Subtraction
+### Addition and subtraction
 
 A [duration](durations.md) of time can be added or subtracted from a date-time primitive. Which units are supported will vary depending on whether the primitive is date-based, time-based, or both.
 
