@@ -1,12 +1,44 @@
 package io.islandtime
 
 import io.islandtime.calendar.WeekSettings
+import io.islandtime.measures.days
 import io.islandtime.measures.weeks
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class DatePropertiesTest : AbstractIslandTimeTest() {
+    @Test
+    fun `Date_isInLeapYear returns true in leap year`() {
+        assertTrue { Date(2020, Month.JANUARY, 1).isInLeapYear }
+    }
+
+    @Test
+    fun `Date_isInLeapYear returns false in common year`() {
+        assertFalse { Date(2019, Month.JANUARY, 1).isInLeapYear }
+    }
+
+    @Test
+    fun `Date_isLeapDay returns true only on February 29`() {
+        assertTrue { Date(2020, Month.FEBRUARY, 29).isLeapDay }
+        assertFalse { Date(2019, Month.FEBRUARY, 28).isLeapDay }
+        assertFalse { Date(2019, Month.MARCH, 29).isLeapDay }
+    }
+
+    @Test
+    fun `Date_lengthOfMonth returns the length in days of a date's month`() {
+        assertEquals(29.days, Date(2020, Month.FEBRUARY, 29).lengthOfMonth)
+        assertEquals(28.days, Date(2019, Month.FEBRUARY, 28).lengthOfMonth)
+    }
+
+    @Test
+    fun `Date_lengthOfYear returns the length in days of a date's year`() {
+        assertEquals(366.days, Date(2020, Month.FEBRUARY, 29).lengthOfYear)
+        assertEquals(365.days, Date(2010, Month.MAY, 20).lengthOfYear)
+    }
+
     @Test
     fun `Date_weekOfMonth with ISO week definition`() {
         listOf(

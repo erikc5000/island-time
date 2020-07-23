@@ -12,10 +12,36 @@ import io.islandtime.internal.weekBasedYearImpl
 import io.islandtime.internal.weekOfMonthImpl
 import io.islandtime.internal.weekOfWeekBasedYearImpl
 import io.islandtime.internal.weekOfYearImpl
+import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntWeeks
+import kotlin.Boolean
 import kotlin.Int
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
+
+/**
+ * Checks if this date falls within a leap year.
+ */
+val Date.isInLeapYear: Boolean
+  get() = isLeapYear(year)
+
+/**
+ * Checks if this date is February 29.
+ */
+val Date.isLeapDay: Boolean
+  get() = month == Month.FEBRUARY && dayOfMonth == 29
+
+/**
+ * The length of this date's month in days.
+ */
+val Date.lengthOfMonth: IntDays
+  get() = month.lengthIn(year)
+
+/**
+ * The length of this date's year in days.
+ */
+val Date.lengthOfYear: IntDays
+  get() = lengthOfYear(year)
 
 /**
  * The week of the month (0-5) according to the ISO definition.
@@ -83,11 +109,34 @@ val Date.weekOfWeekBasedYear: Int
 fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearImpl(settings)
 
 /**
- * The length of the ISO week-based year that this date falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
  */
 val Date.lengthOfWeekBasedYear: IntWeeks
   get() = lengthOfWeekBasedYearImpl
+
+/**
+ * Checks if this date-time falls within a leap year.
+ */
+val DateTime.isInLeapYear: Boolean
+  inline get() = date.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val DateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val DateTime.lengthOfMonth: IntDays
+  inline get() = date.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val DateTime.lengthOfYear: IntDays
+  inline get() = date.lengthOfYear
 
 /**
  * The week of the month (0-5) according to the ISO definition.
@@ -155,11 +204,34 @@ val DateTime.weekOfWeekBasedYear: Int
 fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekBasedYear(settings)
 
 /**
- * The length of the ISO week-based year that this date-time falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val DateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = date.lengthOfWeekBasedYear
+
+/**
+ * Checks if this date-time falls within a leap year.
+ */
+val OffsetDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val OffsetDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val OffsetDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val OffsetDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
 
 /**
  * The week of the month (0-5) according to the ISO definition.
@@ -228,11 +300,34 @@ fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
 
 /**
- * The length of the ISO week-based year that this date-time falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
+
+/**
+ * Checks if this date-time falls within a leap year.
+ */
+val ZonedDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val ZonedDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val ZonedDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val ZonedDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
 
 /**
  * The week of the month (0-5) according to the ISO definition.
@@ -301,8 +396,7 @@ fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
 
 /**
- * The length of the ISO week-based year that this date-time falls in. This will be either 52 or 53
- * weeks.
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val ZonedDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear

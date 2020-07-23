@@ -138,26 +138,6 @@ class OffsetDateTime(
      */
     inline val year: Int get() = dateTime.year
 
-    /**
-     * Check if this date falls within a leap year.
-     */
-    inline val isInLeapYear: Boolean get() = dateTime.isInLeapYear
-
-    /**
-     * Check if this is a leap day.
-     */
-    inline val isLeapDay: Boolean get() = dateTime.isLeapDay
-
-    /**
-     * The length of this date's month in days.
-     */
-    inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
-
-    /**
-     * The length of this date's year in days.
-     */
-    inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
-
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),

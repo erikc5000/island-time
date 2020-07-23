@@ -106,29 +106,6 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `isInLeapYear returns true in leap year`() {
-        assertTrue { Date(2020, Month.JANUARY, 1).isInLeapYear }
-    }
-
-    @Test
-    fun `isInLeapYear returns false in common year`() {
-        assertFalse { Date(2019, Month.JANUARY, 1).isInLeapYear }
-    }
-
-    @Test
-    fun `isLeapDay property returns true only on February 29`() {
-        assertTrue { Date(2020, Month.FEBRUARY, 29).isLeapDay }
-        assertFalse { Date(2019, Month.FEBRUARY, 28).isLeapDay }
-        assertFalse { Date(2019, Month.MARCH, 29).isLeapDay }
-    }
-
-    @Test
-    fun `lengthOfMonth property returns the length in days of a date's month`() {
-        assertEquals(29.days, Date(2020, Month.FEBRUARY, 29).lengthOfMonth)
-        assertEquals(28.days, Date(2019, Month.FEBRUARY, 28).lengthOfMonth)
-    }
-
-    @Test
     fun `can be broken down into components`() {
         val (year, month, day) = Date(2019, Month.AUGUST, 4)
         assertEquals(2019, year)

@@ -72,26 +72,6 @@ class Date(
      */
     inline val monthNumber: Int get() = month.number
 
-    /**
-     * Check if this date falls within a leap year.
-     */
-    val isInLeapYear: Boolean get() = isLeapYear(year)
-
-    /**
-     * Check if this is a leap day.
-     */
-    val isLeapDay: Boolean get() = month == Month.FEBRUARY && dayOfMonth == 29
-
-    /**
-     * The length of this date's month in days.
-     */
-    val lengthOfMonth: IntDays get() = month.lengthIn(year)
-
-    /**
-     * The length of this date's year in days.
-     */
-    val lengthOfYear: IntDays get() = lengthOfYear(year)
-
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
