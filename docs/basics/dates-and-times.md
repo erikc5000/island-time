@@ -268,7 +268,7 @@ val roundedDownTo100Millis = dateTime.roundedDownToNearest(100.milliseconds)
 // Output: 2020-06-30T06:32:14.1
 ```
 
-### Week Numbers
+### Week numbers
 
 You can obtain the week number and year as defined in the [ISO week date system](https://en.wikipedia.org/wiki/ISO_week_date) like this:
 
