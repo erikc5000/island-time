@@ -50,13 +50,17 @@ internal inline fun Date.weekOfWeekBasedYearImpl(settings: WeekSettings): Int {
     }
 }
 
-internal inline val Date.lengthOfWeekBasedYearImpl: IntWeeks
-    get() {
-        val startOfWeekBasedYear = Year(weekBasedYear).startDate
-        val dayOfWeek = startOfWeekBasedYear.dayOfWeek
-        val isLongYear = dayOfWeek == DayOfWeek.THURSDAY || (dayOfWeek == DayOfWeek.WEDNESDAY && isInLeapYear)
-        return if (isLongYear) 53.weeks else 52.weeks
-    }
+internal fun lengthOfWeekBasedYear(weekBasedYear: Int): IntWeeks {
+    return lastWeekOfWeekBasedYear(weekBasedYear).weeks
+}
+
+internal fun lastWeekOfWeekBasedYear(weekBasedYear: Int): Int {
+    val year = Year(weekBasedYear)
+    val startOfWeekBasedYear = year.startDate
+    val dayOfWeek = startOfWeekBasedYear.dayOfWeek
+    val isLongYear = dayOfWeek == DayOfWeek.THURSDAY || (dayOfWeek == DayOfWeek.WEDNESDAY && year.isLeap)
+    return if (isLongYear) 53 else 52
+}
 
 private fun Date.weekNumber(dayOfMonthOrYear: Int, settings: WeekSettings): Int {
     return weekNumber(dayOfWeek, dayOfMonthOrYear, settings)

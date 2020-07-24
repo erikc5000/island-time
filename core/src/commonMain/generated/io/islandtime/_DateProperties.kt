@@ -7,7 +7,7 @@
 package io.islandtime
 
 import io.islandtime.calendar.WeekSettings
-import io.islandtime.internal.lengthOfWeekBasedYearImpl
+import io.islandtime.internal.lengthOfWeekBasedYear
 import io.islandtime.internal.weekBasedYearImpl
 import io.islandtime.internal.weekOfMonthImpl
 import io.islandtime.internal.weekOfWeekBasedYearImpl
@@ -86,7 +86,7 @@ fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearI
  * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
  */
 val Date.lengthOfWeekBasedYear: IntWeeks
-  get() = lengthOfWeekBasedYearImpl
+  get() = lengthOfWeekBasedYear(weekBasedYear)
 
 /**
  * The week of the month (0-5) according to the ISO definition.
