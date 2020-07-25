@@ -3,57 +3,64 @@ package io.islandtime.codegen.descriptions
 import com.squareup.kotlinpoet.TypeName
 import io.islandtime.codegen.base
 
-enum class DateTimeDescription {
-    Year {
-        override val typeName: TypeName get() = base("Year")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.YEARS
-        override val simpleName: String get() = "year"
-        override val isDateBased: Boolean = true
-    },
-    YearMonth {
-        override val typeName: TypeName get() = base("YearMonth")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.MONTHS
-        override val simpleName: String get() = "year-month"
-        override val isDateBased: Boolean = true
-    },
-    Date {
-        override val typeName: TypeName get() = base("Date")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.DAYS
-        override val simpleName: String get() = "date"
-        override val isDateBased: Boolean = true
-    },
-    DateTime {
-        override val typeName: TypeName get() = base("DateTime")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.NANOSECONDS
+enum class DateTimeDescription(
+    val typeName: TypeName,
+    val simpleName: String,
+    val smallestUnit: TemporalUnitDescription,
+    val interval: IntervalDescription? = null,
+    val isDateBased: Boolean = false
+) {
+    Year(
+        typeName = base("Year"),
+        simpleName = "year",
+        smallestUnit = TemporalUnitDescription.YEARS,
+        isDateBased = true
+    ),
+    YearMonth(
+        typeName = base("YearMonth"),
+        simpleName = "year-month",
+        smallestUnit = TemporalUnitDescription.MONTHS,
+        isDateBased = true
+    ),
+    Date(
+        typeName = base("Date"),
+        simpleName = "date",
+        smallestUnit = TemporalUnitDescription.DAYS,
+        interval = IntervalDescription.DateRange,
+        isDateBased = true
+    ),
+    DateTime(
+        typeName = base("DateTime"),
+        simpleName = "date-time",
+        smallestUnit = TemporalUnitDescription.NANOSECONDS,
+        interval = IntervalDescription.DateTimeInterval,
+        isDateBased = true
+    ) {
         override val datePropertyName: String get() = "date"
-        override val simpleName: String get() = "date-time"
-        override val isDateBased: Boolean = true
     },
-    OffsetDateTime {
-        override val typeName: TypeName get() = base("OffsetDateTime")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.NANOSECONDS
+    OffsetDateTime(
+        typeName = base("OffsetDateTime"),
+        simpleName = "date-time",
+        smallestUnit = TemporalUnitDescription.NANOSECONDS,
+        interval = IntervalDescription.OffsetDateTimeInterval,
+        isDateBased = true
+    ) {
         override val datePropertyName: String get() = "dateTime"
-        override val simpleName: String get() = "date-time"
-        override val isDateBased: Boolean = true
     },
-    ZonedDateTime {
-        override val typeName: TypeName get() = base("ZonedDateTime")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.NANOSECONDS
+    ZonedDateTime(
+        typeName = base("ZonedDateTime"),
+        simpleName = "date-time",
+        smallestUnit = TemporalUnitDescription.NANOSECONDS,
+        interval = IntervalDescription.ZonedDateTimeInterval,
+        isDateBased = true
+    ) {
         override val datePropertyName: String get() = "dateTime"
-        override val simpleName: String get() = "date-time"
-        override val isDateBased: Boolean = true
     },
-    Instant {
-        override val typeName: TypeName get() = base("Instant")
-        override val smallestUnit: TemporalUnitDescription get() = TemporalUnitDescription.NANOSECONDS
-        override val simpleName: String get() = "instant"
-    };
-
-    abstract val typeName: TypeName
-    abstract val smallestUnit: TemporalUnitDescription
-    abstract val simpleName: String
-
-    open val isDateBased: Boolean = false
+    Instant(
+        typeName = base("Instant"),
+        simpleName = "instant",
+        smallestUnit = TemporalUnitDescription.NANOSECONDS
+    );
 
     open val datePropertyName: String get() = throw NotImplementedError()
 

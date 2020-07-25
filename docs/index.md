@@ -12,7 +12,7 @@ across platforms while taking full advantage of the features offered by the Kotl
 - Read and write strings in ISO formats
 - DSL-based definition of custom parsers
 - Access localized text for names of months, days of the week, time zones, etc.
-- Convenience operators like `date.next(MONDAY)`, `dateTime.startOfWeek`, or `date.weekRange(WeekSettings.systemDefault())`
+- Convenience operators like `date.next(MONDAY)`, `dateTime.startOfWeek`, or `date.week(WeekSettings.systemDefault())`
 - Convert to and from platform-specific date-time types
 - Works on JVM, Android, iOS, macOS, tvOS, and watchOS
 

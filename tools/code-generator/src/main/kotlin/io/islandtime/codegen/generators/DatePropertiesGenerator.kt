@@ -2,15 +2,13 @@ package io.islandtime.codegen.generators
 
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
-import io.islandtime.codegen.SingleFileGenerator
-import io.islandtime.codegen.calendar
+import io.islandtime.codegen.*
 import io.islandtime.codegen.descriptions.DateTimeDescription
 import io.islandtime.codegen.descriptions.DateTimeDescription.Date
 import io.islandtime.codegen.descriptions.TemporalUnitDescription.DAYS
+import io.islandtime.codegen.dsl.CodeBlockBuilder
 import io.islandtime.codegen.dsl.FileBuilder
 import io.islandtime.codegen.dsl.file
-import io.islandtime.codegen.internal
-import io.islandtime.codegen.measures
 
 object DatePropertiesGenerator : SingleFileGenerator() {
     override fun generateSingle(): FileSpec = buildDatePropertiesFile()
@@ -27,6 +25,73 @@ private fun buildDatePropertiesFile() = file(
 }
 
 private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescription) {
+    receiverClass.interval?.let { intervalClass ->
+        fun CodeBlockBuilder.intervalOfWeekCode(vararg startOfWeekArgs: String): String {
+            using("startOfWeek", operators("startOfWeek"))
+            using("days", measures("days"))
+
+            return buildString {
+                append("return %startOfWeek:T")
+
+                if (startOfWeekArgs.isNotEmpty()) {
+                    append("(${startOfWeekArgs.joinToString()})")
+                }
+
+                if (intervalClass.isInclusive) {
+                    append(".let·{·it..it·+·6.%days:T·}")
+                } else {
+                    using("until", ranges("until"))
+                    append(".let·{·it·%until:T·it·+·7.%days:T·}")
+                }
+            }
+        }
+
+        property(name = "week", returnType = intervalClass.typeName) {
+            kdoc {
+                """
+                    The ${intervalClass.simpleName} defining the ISO week that this ${receiverClass.simpleName} falls
+                    within.
+
+                    The ISO week starts on Monday and ends on Sunday.
+                """.trimIndent()
+            }
+
+            receiver(receiverClass.typeName)
+            getter { intervalOfWeekCode() }
+        }
+
+        function(name = "week") {
+            kdoc {
+                """
+                    The ${intervalClass.simpleName} defining the week that this ${receiverClass.simpleName} falls
+                    within. The first day of the week will be determined by the provided [settings].
+                """.trimIndent()
+            }
+
+            receiver(receiverClass.typeName)
+            argument("settings", calendar("WeekSettings"))
+            returns(intervalClass.typeName)
+            code { intervalOfWeekCode("settings") }
+        }
+
+        function(name = "week") {
+            kdoc {
+                """
+                    The ${intervalClass.simpleName} defining the week that this ${receiverClass.simpleName} falls
+                    within. The first day of the week will be the default associated with the provided [locale].
+
+                    Keep in mind that that the system's calendar settings may differ from that of the default locale on
+                    some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                """.trimIndent()
+            }
+
+            receiver(receiverClass.typeName)
+            argument("locale", locale("Locale"))
+            returns(intervalClass.typeName)
+            code { intervalOfWeekCode("locale") }
+        }
+    }
+
     property(name = "weekOfMonth", returnType = Int::class) {
         kdoc { "The week of the month (0-5) according to the ISO definition." }
         receiver(receiverClass.typeName)
