@@ -7,6 +7,7 @@
 package io.islandtime
 
 import io.islandtime.calendar.WeekSettings
+import io.islandtime.calendar.weekSettings
 import io.islandtime.internal.lengthOfWeekBasedYear
 import io.islandtime.internal.weekBasedYearImpl
 import io.islandtime.internal.weekOfMonthImpl
@@ -50,29 +51,39 @@ fun Date.week(settings: WeekSettings): DateRange = startOfWeek(settings).let { i
 fun Date.week(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
 
 /**
- * The week of the month (0-5) according to the ISO definition.
+ * The week of the month, from 0-6, calculated using the ISO week definition.
  */
 val Date.weekOfMonth: Int
-  get() = weekOfMonthImpl
+  get() = weekOfMonthImpl(WeekSettings.ISO)
 
 /**
- * The week of the month (0-5) according to the week definition in [settings].
+ * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
 fun Date.weekOfMonth(settings: WeekSettings): Int = weekOfMonthImpl(settings)
 
 /**
- * The week of the year according to the ISO week definition. If the week number is associated with
- * the preceding year, `0` will be returned.
+ * The week of the month, from 0-6, calculated using the default week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun Date.weekOfMonth(locale: Locale): Int = weekOfMonthImpl(locale.weekSettings)
+
+/**
+ * The week of the year, calculated using the ISO week definition. If the week number is associated
+ * with the preceding year, `0` will be returned.
  *
  * To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
  *
  * @see weekOfWeekBasedYear
  */
 val Date.weekOfYear: Int
-  get() = weekOfYearImpl
+  get() = weekOfYearImpl(WeekSettings.ISO)
 
 /**
- * The week of the year according to the week definition in [settings]. If the week number is
+ * The week of the year, calculated using the week definition in [settings]. If the week number is
  * associated with the preceding year, `0` will be returned.
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
@@ -82,22 +93,49 @@ val Date.weekOfYear: Int
 fun Date.weekOfYear(settings: WeekSettings): Int = weekOfYearImpl(settings)
 
 /**
- * The week-based year used in the ISO
- * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This differs from the regular ISO
- * year when the week number falls in the preceding or following year.
+ * The week of the year, calculated using the week definition associated with the provided [locale].
+ * If the week number is associated with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
  *
  * @see weekOfWeekBasedYear
  */
-val Date.weekBasedYear: Int
-  get() = weekBasedYearImpl
+fun Date.weekOfYear(locale: Locale): Int = weekOfYearImpl(locale.weekSettings)
 
 /**
- * The week-based year according to the week definition in [settings]. This differs from the regular
+ * The week-based year used in the ISO
+ * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This value differs from the regular
  * ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
+val Date.weekBasedYear: Int
+  get() = weekBasedYearImpl(WeekSettings.ISO)
+
+/**
+ * The week-based year, calculated using the week definition in [settings]. This value differs from
+ * the regular ISO year when the week number falls in the preceding or following year.
+ *
+ * @see weekOfWeekBasedYear
+ */
 fun Date.weekBasedYear(settings: WeekSettings): Int = weekBasedYearImpl(settings)
+
+/**
+ * The week-based year, calculated using the week definition associated with the provided [locale].
+ * This value differs from the regular ISO year when the week number falls in the preceding or
+ * following year.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun Date.weekBasedYear(locale: Locale): Int = weekBasedYearImpl(locale.weekSettings)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
@@ -105,14 +143,26 @@ fun Date.weekBasedYear(settings: WeekSettings): Int = weekBasedYearImpl(settings
  * @see weekBasedYear
  */
 val Date.weekOfWeekBasedYear: Int
-  get() = weekOfWeekBasedYearImpl
+  get() = weekOfWeekBasedYearImpl(WeekSettings.ISO)
 
 /**
- * The week number of the week-based year according to the week definition in [settings].
+ * The week number of the week-based year, calculated using the week definition in [settings].
  *
  * @see weekBasedYear
  */
 fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearImpl(settings)
+
+/**
+ * The week number of the week-based year, calculated using the week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekBasedYear
+ */
+fun Date.weekOfWeekBasedYear(locale: Locale): Int = weekOfWeekBasedYearImpl(locale.weekSettings)
 
 /**
  * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
@@ -147,19 +197,29 @@ fun DateTime.week(locale: Locale): DateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
 
 /**
- * The week of the month (0-5) according to the ISO definition.
+ * The week of the month, from 0-6, calculated using the ISO week definition.
  */
 val DateTime.weekOfMonth: Int
   inline get() = date.weekOfMonth
 
 /**
- * The week of the month (0-5) according to the week definition in [settings].
+ * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
 fun DateTime.weekOfMonth(settings: WeekSettings): Int = date.weekOfMonth(settings)
 
 /**
- * The week of the year according to the ISO week definition. If the week number is associated with
- * the preceding year, `0` will be returned.
+ * The week of the month, from 0-6, calculated using the default week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun DateTime.weekOfMonth(locale: Locale): Int = date.weekOfMonth(locale)
+
+/**
+ * The week of the year, calculated using the ISO week definition. If the week number is associated
+ * with the preceding year, `0` will be returned.
  *
  * To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
  *
@@ -169,7 +229,7 @@ val DateTime.weekOfYear: Int
   inline get() = date.weekOfYear
 
 /**
- * The week of the year according to the week definition in [settings]. If the week number is
+ * The week of the year, calculated using the week definition in [settings]. If the week number is
  * associated with the preceding year, `0` will be returned.
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
@@ -179,9 +239,23 @@ val DateTime.weekOfYear: Int
 fun DateTime.weekOfYear(settings: WeekSettings): Int = date.weekOfYear(settings)
 
 /**
+ * The week of the year, calculated using the week definition associated with the provided [locale].
+ * If the week number is associated with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun DateTime.weekOfYear(locale: Locale): Int = date.weekOfYear(locale)
+
+/**
  * The week-based year used in the ISO
- * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This differs from the regular ISO
- * year when the week number falls in the preceding or following year.
+ * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This value differs from the regular
+ * ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
@@ -189,12 +263,25 @@ val DateTime.weekBasedYear: Int
   inline get() = date.weekBasedYear
 
 /**
- * The week-based year according to the week definition in [settings]. This differs from the regular
- * ISO year when the week number falls in the preceding or following year.
+ * The week-based year, calculated using the week definition in [settings]. This value differs from
+ * the regular ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
 fun DateTime.weekBasedYear(settings: WeekSettings): Int = date.weekBasedYear(settings)
+
+/**
+ * The week-based year, calculated using the week definition associated with the provided [locale].
+ * This value differs from the regular ISO year when the week number falls in the preceding or
+ * following year.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun DateTime.weekBasedYear(locale: Locale): Int = date.weekBasedYear(locale)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
@@ -205,11 +292,23 @@ val DateTime.weekOfWeekBasedYear: Int
   inline get() = date.weekOfWeekBasedYear
 
 /**
- * The week number of the week-based year according to the week definition in [settings].
+ * The week number of the week-based year, calculated using the week definition in [settings].
  *
  * @see weekBasedYear
  */
 fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekBasedYear(settings)
+
+/**
+ * The week number of the week-based year, calculated using the week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekBasedYear
+ */
+fun DateTime.weekOfWeekBasedYear(locale: Locale): Int = date.weekOfWeekBasedYear(locale)
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
@@ -244,19 +343,29 @@ fun OffsetDateTime.week(locale: Locale): OffsetDateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
 
 /**
- * The week of the month (0-5) according to the ISO definition.
+ * The week of the month, from 0-6, calculated using the ISO week definition.
  */
 val OffsetDateTime.weekOfMonth: Int
   inline get() = dateTime.weekOfMonth
 
 /**
- * The week of the month (0-5) according to the week definition in [settings].
+ * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
 fun OffsetDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMonth(settings)
 
 /**
- * The week of the year according to the ISO week definition. If the week number is associated with
- * the preceding year, `0` will be returned.
+ * The week of the month, from 0-6, calculated using the default week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun OffsetDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
+
+/**
+ * The week of the year, calculated using the ISO week definition. If the week number is associated
+ * with the preceding year, `0` will be returned.
  *
  * To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
  *
@@ -266,7 +375,7 @@ val OffsetDateTime.weekOfYear: Int
   inline get() = dateTime.weekOfYear
 
 /**
- * The week of the year according to the week definition in [settings]. If the week number is
+ * The week of the year, calculated using the week definition in [settings]. If the week number is
  * associated with the preceding year, `0` will be returned.
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
@@ -276,9 +385,23 @@ val OffsetDateTime.weekOfYear: Int
 fun OffsetDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(settings)
 
 /**
+ * The week of the year, calculated using the week definition associated with the provided [locale].
+ * If the week number is associated with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun OffsetDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
+
+/**
  * The week-based year used in the ISO
- * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This differs from the regular ISO
- * year when the week number falls in the preceding or following year.
+ * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This value differs from the regular
+ * ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
@@ -286,12 +409,25 @@ val OffsetDateTime.weekBasedYear: Int
   inline get() = dateTime.weekBasedYear
 
 /**
- * The week-based year according to the week definition in [settings]. This differs from the regular
- * ISO year when the week number falls in the preceding or following year.
+ * The week-based year, calculated using the week definition in [settings]. This value differs from
+ * the regular ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
 fun OffsetDateTime.weekBasedYear(settings: WeekSettings): Int = dateTime.weekBasedYear(settings)
+
+/**
+ * The week-based year, calculated using the week definition associated with the provided [locale].
+ * This value differs from the regular ISO year when the week number falls in the preceding or
+ * following year.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun OffsetDateTime.weekBasedYear(locale: Locale): Int = dateTime.weekBasedYear(locale)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
@@ -302,12 +438,24 @@ val OffsetDateTime.weekOfWeekBasedYear: Int
   inline get() = dateTime.weekOfWeekBasedYear
 
 /**
- * The week number of the week-based year according to the week definition in [settings].
+ * The week number of the week-based year, calculated using the week definition in [settings].
  *
  * @see weekBasedYear
  */
 fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
+
+/**
+ * The week number of the week-based year, calculated using the week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekBasedYear
+ */
+fun OffsetDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWeekBasedYear(locale)
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
@@ -342,19 +490,29 @@ fun ZonedDateTime.week(locale: Locale): ZonedDateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
 
 /**
- * The week of the month (0-5) according to the ISO definition.
+ * The week of the month, from 0-6, calculated using the ISO week definition.
  */
 val ZonedDateTime.weekOfMonth: Int
   inline get() = dateTime.weekOfMonth
 
 /**
- * The week of the month (0-5) according to the week definition in [settings].
+ * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
 fun ZonedDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMonth(settings)
 
 /**
- * The week of the year according to the ISO week definition. If the week number is associated with
- * the preceding year, `0` will be returned.
+ * The week of the month, from 0-6, calculated using the default week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun ZonedDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
+
+/**
+ * The week of the year, calculated using the ISO week definition. If the week number is associated
+ * with the preceding year, `0` will be returned.
  *
  * To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
  *
@@ -364,7 +522,7 @@ val ZonedDateTime.weekOfYear: Int
   inline get() = dateTime.weekOfYear
 
 /**
- * The week of the year according to the week definition in [settings]. If the week number is
+ * The week of the year, calculated using the week definition in [settings]. If the week number is
  * associated with the preceding year, `0` will be returned.
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
@@ -374,9 +532,23 @@ val ZonedDateTime.weekOfYear: Int
 fun ZonedDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(settings)
 
 /**
+ * The week of the year, calculated using the week definition associated with the provided [locale].
+ * If the week number is associated with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun ZonedDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
+
+/**
  * The week-based year used in the ISO
- * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This differs from the regular ISO
- * year when the week number falls in the preceding or following year.
+ * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This value differs from the regular
+ * ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
@@ -384,12 +556,25 @@ val ZonedDateTime.weekBasedYear: Int
   inline get() = dateTime.weekBasedYear
 
 /**
- * The week-based year according to the week definition in [settings]. This differs from the regular
- * ISO year when the week number falls in the preceding or following year.
+ * The week-based year, calculated using the week definition in [settings]. This value differs from
+ * the regular ISO year when the week number falls in the preceding or following year.
  *
  * @see weekOfWeekBasedYear
  */
 fun ZonedDateTime.weekBasedYear(settings: WeekSettings): Int = dateTime.weekBasedYear(settings)
+
+/**
+ * The week-based year, calculated using the week definition associated with the provided [locale].
+ * This value differs from the regular ISO year when the week number falls in the preceding or
+ * following year.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+fun ZonedDateTime.weekBasedYear(locale: Locale): Int = dateTime.weekBasedYear(locale)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
@@ -400,12 +585,24 @@ val ZonedDateTime.weekOfWeekBasedYear: Int
   inline get() = dateTime.weekOfWeekBasedYear
 
 /**
- * The week number of the week-based year according to the week definition in [settings].
+ * The week number of the week-based year, calculated using the week definition in [settings].
  *
  * @see weekBasedYear
  */
 fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
+
+/**
+ * The week number of the week-based year, calculated using the week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekBasedYear
+ */
+fun ZonedDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWeekBasedYear(locale)
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.

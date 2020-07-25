@@ -123,7 +123,8 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
             Date(2009, 1, 4) to 2,
             Date(2020, 5, 31) to 6
         ).forEach { (date, week) ->
-            assertEquals(week, date.weekOfMonth(SUNDAY_START), date.toString())
+            assertEquals(week, date.weekOfMonth(SUNDAY_START), message = "$date (SUNDAY_START)")
+            assertEquals(week, date.weekOfMonth(en_US), message = "$date (en-US)")
         }
     }
 
@@ -168,7 +169,8 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
             Date(2009, 1, 3) to 1,
             Date(2009, 1, 4) to 2
         ).forEach { (date, week) ->
-            assertEquals(week, date.weekOfYear(SUNDAY_START), date.toString())
+            assertEquals(week, date.weekOfYear(SUNDAY_START), message = "$date (SUNDAY_START)")
+            assertEquals(week, date.weekOfYear(en_US), message = "$date (en-US)")
         }
     }
 
@@ -211,7 +213,13 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
             assertEquals(
                 Pair(year, week),
                 Pair(date.weekBasedYear(SUNDAY_START), date.weekOfWeekBasedYear(SUNDAY_START)),
-                date.toString()
+                message = "$date (SUNDAY_START)"
+            )
+
+            assertEquals(
+                Pair(year, week),
+                Pair(date.weekBasedYear(en_US), date.weekOfWeekBasedYear(en_US)),
+                message = "$date (en-US)"
             )
         }
     }
