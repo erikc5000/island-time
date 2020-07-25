@@ -207,8 +207,8 @@ private fun buildDatePropertiesFile() = file(
 
             if (receiverClass == Date) {
                 getter {
-                    using("impl", internal("lengthOfWeekBasedYearImpl"))
-                    "return %impl:T"
+                    using("impl", internal("lengthOfWeekBasedYear"))
+                    "return %impl:T(weekBasedYear)"
                 }
             } else {
                 modifiers(KModifier.INLINE)
