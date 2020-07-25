@@ -12,10 +12,42 @@ import io.islandtime.internal.weekBasedYearImpl
 import io.islandtime.internal.weekOfMonthImpl
 import io.islandtime.internal.weekOfWeekBasedYearImpl
 import io.islandtime.internal.weekOfYearImpl
+import io.islandtime.locale.Locale
 import io.islandtime.measures.IntWeeks
+import io.islandtime.measures.days
+import io.islandtime.operators.startOfWeek
+import io.islandtime.ranges.DateRange
+import io.islandtime.ranges.DateTimeInterval
+import io.islandtime.ranges.OffsetDateTimeInterval
+import io.islandtime.ranges.ZonedDateTimeInterval
+import io.islandtime.ranges.until
 import kotlin.Int
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
+
+/**
+ * The range defining the ISO week that this date falls within.
+ *
+ * The ISO week starts on Monday and ends on Sunday.
+ */
+val Date.week: DateRange
+  get() = startOfWeek.let { it..it + 6.days }
+
+/**
+ * The range defining the week that this date falls within. The first day of the week will be
+ * determined by the provided [settings].
+ */
+fun Date.week(settings: WeekSettings): DateRange = startOfWeek(settings).let { it..it + 6.days }
+
+/**
+ * The range defining the week that this date falls within. The first day of the week will be the
+ * default associated with the provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun Date.week(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
 
 /**
  * The week of the month (0-5) according to the ISO definition.
@@ -89,6 +121,32 @@ val Date.lengthOfWeekBasedYear: IntWeeks
   get() = lengthOfWeekBasedYear(weekBasedYear)
 
 /**
+ * The interval defining the ISO week that this date-time falls within.
+ *
+ * The ISO week starts on Monday and ends on Sunday.
+ */
+val DateTime.week: DateTimeInterval
+  get() = startOfWeek.let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be determined by the provided [settings].
+ */
+fun DateTime.week(settings: WeekSettings): DateTimeInterval =
+    startOfWeek(settings).let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be the default associated with the provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun DateTime.week(locale: Locale): DateTimeInterval =
+    startOfWeek(locale).let { it until it + 7.days }
+
+/**
  * The week of the month (0-5) according to the ISO definition.
  */
 val DateTime.weekOfMonth: Int
@@ -158,6 +216,32 @@ fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekB
  */
 val DateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = date.lengthOfWeekBasedYear
+
+/**
+ * The interval defining the ISO week that this date-time falls within.
+ *
+ * The ISO week starts on Monday and ends on Sunday.
+ */
+val OffsetDateTime.week: OffsetDateTimeInterval
+  get() = startOfWeek.let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be determined by the provided [settings].
+ */
+fun OffsetDateTime.week(settings: WeekSettings): OffsetDateTimeInterval =
+    startOfWeek(settings).let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be the default associated with the provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun OffsetDateTime.week(locale: Locale): OffsetDateTimeInterval =
+    startOfWeek(locale).let { it until it + 7.days }
 
 /**
  * The week of the month (0-5) according to the ISO definition.
@@ -230,6 +314,32 @@ fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
  */
 val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
+
+/**
+ * The interval defining the ISO week that this date-time falls within.
+ *
+ * The ISO week starts on Monday and ends on Sunday.
+ */
+val ZonedDateTime.week: ZonedDateTimeInterval
+  get() = startOfWeek.let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be determined by the provided [settings].
+ */
+fun ZonedDateTime.week(settings: WeekSettings): ZonedDateTimeInterval =
+    startOfWeek(settings).let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be the default associated with the provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+fun ZonedDateTime.week(locale: Locale): ZonedDateTimeInterval =
+    startOfWeek(locale).let { it until it + 7.days }
 
 /**
  * The week of the month (0-5) according to the ISO definition.

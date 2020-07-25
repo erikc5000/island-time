@@ -210,7 +210,7 @@ You can also get the week period as a [range or interval](intervals.md).
 
 ```kotlin
 // Get the date range of the current week
-val weekRange: DateRange = Date.now().weekRange(WeekSettings.systemDefault())
+val rangeOfWeek: DateRange = Date.now().week(WeekSettings.systemDefault())
 ```
 
 ### Previous or next day of week
