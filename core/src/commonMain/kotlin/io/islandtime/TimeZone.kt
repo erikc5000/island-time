@@ -108,6 +108,9 @@ sealed class TimeZone : Comparable<TimeZone> {
         return id.compareTo(other.id)
     }
 
+    /**
+     * Returns the [id] of this time zone.
+     */
     override fun toString() = id
 
     /**

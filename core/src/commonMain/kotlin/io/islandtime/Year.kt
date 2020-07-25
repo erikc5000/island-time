@@ -81,6 +81,9 @@ inline class Year(val value: Int) : Comparable<Year> {
 
     override fun compareTo(other: Year) = value - other.value
 
+    /**
+     * Converts this year to a string in ISO-8601 extended format. For example, `2012`, `-0001`, or `+10000`.
+     */
     override fun toString(): String {
         val absValue = value.absoluteValue
 

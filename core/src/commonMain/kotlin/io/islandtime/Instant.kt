@@ -176,7 +176,7 @@ class Instant private constructor(
     }
 
     /**
-     * Convert this instant to a string in ISO-8601 extended format.
+     * Converts this instant to a string in ISO-8601 extended format. For example, `2020-02-13T02:30:05.367Z`.
      */
     override fun toString() = buildString(MAX_INSTANT_STRING_LENGTH) { appendInstant(this@Instant) }
 
