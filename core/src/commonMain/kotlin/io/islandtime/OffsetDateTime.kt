@@ -189,8 +189,8 @@ class OffsetDateTime(
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
     /**
-     * Change the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
-     * represented by it remains the same
+     * Changes the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
+     * represented by it remains the same.
      */
     fun adjustedTo(newOffset: UtcOffset): OffsetDateTime {
         return if (newOffset == offset) {
@@ -202,11 +202,10 @@ class OffsetDateTime(
     }
 
     /**
-     * Return an [OffsetDateTime] with [period] added to it.
+     * Returns this date-time with [period] added to it.
      *
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
-     * defined in ISO-8601-2.
+     * be coerced into the valid range.
      */
     operator fun plus(period: Period) = copy(dateTime = dateTime + period)
 
@@ -234,11 +233,10 @@ class OffsetDateTime(
     override operator fun plus(nanoseconds: IntNanoseconds) = copy(dateTime = dateTime + nanoseconds)
 
     /**
-     * Return an [OffsetDateTime] with [period] subtracted from it.
+     * Returns this date-time with [period] subtracted from it.
      *
-     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
-     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
-     * addition as defined in ISO-8601-2.
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range.
      */
     operator fun minus(period: Period) = copy(dateTime = dateTime - period)
 
@@ -267,6 +265,10 @@ class OffsetDateTime(
 
     operator fun rangeTo(other: OffsetDateTime) = OffsetDateTimeInterval.withInclusiveEnd(this, other)
 
+    /**
+     * Converts this date-time to a string in ISO-8601 extended format. For example,
+     * `2012-04-15T17:31:45.923452091-04:00` or `2020-02-13T02:30Z`.
+     */
     override fun toString() = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
         appendOffsetDateTime(this@OffsetDateTime)
     }
@@ -280,7 +282,9 @@ class OffsetDateTime(
     }
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         dateTime: DateTime = this.dateTime,
@@ -288,7 +292,9 @@ class OffsetDateTime(
     ) = OffsetDateTime(dateTime, offset)
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         date: Date = this.date,
@@ -297,7 +303,9 @@ class OffsetDateTime(
     ) = OffsetDateTime(date, time, offset)
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -310,7 +318,9 @@ class OffsetDateTime(
     ) = OffsetDateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond), offset)
 
     /**
-     * Return a new [OffsetDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
