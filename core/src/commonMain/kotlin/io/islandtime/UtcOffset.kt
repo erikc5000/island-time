@@ -55,6 +55,9 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
 
     override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
 
+    /**
+     * Converts this offset to a string in ISO-8601 extended format. For example, `-04:00` or `Z`.
+     */
     override fun toString(): String {
         return if (isZero()) {
             "Z"

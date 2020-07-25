@@ -114,11 +114,10 @@ class Date(
         get() = dayOfUnixEpoch
 
     /**
-     * Return a [Date] with [period] added to it.
+     * Returns this date with [period] added to it.
      *
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
-     * defined in ISO-8601-2.
+     * be coerced into the valid range.
      */
     operator fun plus(period: Period): Date {
         return if (period.isZero()) {
@@ -167,11 +166,10 @@ class Date(
     }
 
     /**
-     * Return a [Date] with [period] subtracted from it.
+     * Returns this date with [period] subtracted from it.
      *
-     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
-     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
-     * addition as defined in ISO-8601-2.
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range.
      */
     operator fun minus(period: Period): Date {
         return if (period.isZero()) {
@@ -243,6 +241,10 @@ class Date(
         }
     }
 
+    /**
+     * Converts this date to a string in ISO-8601 extended format using the "calendar date" form. For example,
+     * `2012-04-15`.
+     */
     override fun toString() = buildString(MAX_DATE_STRING_LENGTH) { appendDate(this@Date) }
 
     override fun equals(other: Any?): Boolean {
@@ -257,8 +259,7 @@ class Date(
     }
 
     /**
-     * Return a copy of this [Date], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date with the values of any individual components replaced by the new values specified.
      * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
@@ -268,8 +269,7 @@ class Date(
     ) = Date(year, month, dayOfMonth)
 
     /**
-     * Return a copy of this [Date], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date with the values of any individual components replaced by the new values specified.
      * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
@@ -279,8 +279,7 @@ class Date(
     ) = Date(year, monthNumber, dayOfMonth)
 
     /**
-     * Return a copy of this [Date], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date with the values of any individual components replaced by the new values specified.
      * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
