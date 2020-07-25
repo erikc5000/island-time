@@ -32,13 +32,13 @@ inline fun <T> Date.toWeekDate(settings: WeekSettings, action: (year: Int, week:
  * @throws DateTimeException if the year, week, or day is invalid
  */
 fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int): Date {
-    val dayOfWeek = day.toDayOfWeek()
+    checkValidDayOfWeek(day)
     checkValidYear(year)
     checkValidWeekOfWeekBasedYear(week, year)
     // TODO: The day number may exceed the max near the end of the year, but is it even worth checking?
 
     val jan4 = Date(year, Month.JANUARY, 4)
-    val dayOfYear = (week * 7 + dayOfWeek.number) - (jan4.dayOfWeek.number + 3)
+    val dayOfYear = (week * 7 + day) - (jan4.dayOfWeek.number + 3)
 
     return if (dayOfYear < 1) {
         Date(year = year - 1, dayOfYear = dayOfYear + lastDayOfYear(year - 1))
@@ -61,6 +61,8 @@ fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int): Date {
  * @param settings the week definition to use when interpreting the [year], [week], and [day]
  */
 fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int, settings: WeekSettings): Date {
+    checkValidDayOfWeek(day)
+
     // Week dates around Date.MIN and Date.MAX can fail here if the week year exceeds the supported range, but no easy
     // way to work around that.
     checkValidYear(year)
