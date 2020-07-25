@@ -2,6 +2,7 @@ package io.islandtime.codegen
 
 import com.squareup.kotlinpoet.ClassName
 import io.islandtime.codegen.generators.ConstantsGenerator
+import io.islandtime.codegen.generators.DateConversionsGenerator
 import io.islandtime.codegen.generators.DatePropertiesGenerator
 import io.islandtime.codegen.generators.TemporalUnitGenerator
 import java.io.File
@@ -21,7 +22,8 @@ fun calendar(name: String) = ClassName(CALENDAR_PACKAGE_NAME, name)
 private val generators = arrayOf(
     TemporalUnitGenerator,
     ConstantsGenerator,
-    DatePropertiesGenerator
+    DatePropertiesGenerator,
+    DateConversionsGenerator
 )
 
 fun main() {
