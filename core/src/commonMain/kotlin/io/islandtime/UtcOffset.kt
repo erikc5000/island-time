@@ -24,17 +24,17 @@ import kotlin.math.sign
 inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcOffset> {
 
     /**
-     * Check if this offset is within the supported range.
+     * Checks if this offset is within the supported range.
      */
     val isValid: Boolean get() = totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS
 
     /**
-     * Is this the UTC offset of +00:00?
+     * Checks if this is the UTC offset of +00:00.
      */
     fun isZero(): Boolean = this == ZERO
 
     /**
-     * Break a UTC offset down into components. The sign will indicate whether the offset is positive or negative while
+     * Breaks a UTC offset down into components. The sign will indicate whether the offset is positive or negative while
      * each component will be positive.
      */
     inline fun <T> toComponents(
@@ -46,7 +46,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     }
 
     /**
-     * Break a UTC offset down into components. If the offset is negative, each component will be negative.
+     * Breaks a UTC offset down into components. If the offset is negative, each component will be negative.
      */
     inline fun <T> toComponents(
         action: (hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) -> T
@@ -83,7 +83,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     }
 
     /**
-     * Check if the offset is valid and throw an exception if it isn't.
+     * Checks if the offset is valid and throws an exception if it isn't.
      * @throws DateTimeException if the offset is outside the supported range
      * @see isValid
      */
@@ -94,7 +94,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     }
 
     /**
-     * Ensure that the offset is valid, throwing an exception if it isn't.
+     * Ensures that the offset is valid, throwing an exception if it isn't.
      * @throws DateTimeException if the offset is outside the supported range
      * @see isValid
      */
@@ -111,7 +111,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
 }
 
 /**
- * Create a UTC offset of hours, minutes, and seconds. Each component must be within its valid range and without any
+ * Creates a UTC offset of hours, minutes, and seconds. Each component must be within its valid range and without any
  * mixed positive and negative values.
  * @param hours hours to offset by, within +/-18
  * @param minutes minutes to offset by, within +/-59
@@ -146,7 +146,7 @@ fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
 fun IntSeconds.asUtcOffset() = UtcOffset(this)
 
 /**
- * Convert a string to a [UtcOffset].
+ * Converts a string to a [UtcOffset].
  *
  * The string is assumed to be an ISO-8601 UTC offset representation in extended format. For example, `Z`, `+05`, or
  * `-04:30`. The output of [UtcOffset.toString] can be safely parsed using this method.
@@ -157,7 +157,7 @@ fun IntSeconds.asUtcOffset() = UtcOffset(this)
 fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
 
 /**
- * Convert a string to a [UtcOffset] using a specific parser.
+ * Converts a string to a [UtcOffset] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -173,7 +173,7 @@ fun String.toUtcOffset(
 }
 
 /**
- * Resolve a parser result into a [UtcOffset].
+ * Resolves a parser result into a [UtcOffset].
  *
  * Required properties are [UtcOffsetProperty.TotalSeconds] or [UtcOffsetProperty.Sign] in conjunction with any
  * combination of [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds].

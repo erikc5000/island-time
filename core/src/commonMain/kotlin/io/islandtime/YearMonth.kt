@@ -9,7 +9,7 @@ import io.islandtime.ranges.DateRange
 /**
  * A month in a particular year.
  *
- * @constructor Create a [YearMonth].
+ * @constructor Creates a [YearMonth].
  * @param year the year
  * @param month the month of the year
  * @throws DateTimeException if the year is outside the supported range
@@ -27,7 +27,7 @@ class YearMonth(
     }
 
     /**
-     * Create a [YearMonth].
+     * Creates a [YearMonth].
      * @throws DateTimeException if the year or month is invalid
      */
     constructor(year: Int, monthNumber: Int) : this(year, monthNumber.toMonth())
@@ -38,7 +38,7 @@ class YearMonth(
     inline val monthNumber: Int get() = month.number
 
     /**
-     * Check if this year-month falls within a leap year.
+     * Checks if this year-month falls within a leap year.
      */
     val isInLeapYear: Boolean get() = isLeapYear(year)
 

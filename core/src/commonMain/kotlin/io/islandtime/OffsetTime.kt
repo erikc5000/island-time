@@ -6,6 +6,8 @@ import io.islandtime.parser.*
 
 /**
  * A time of day with an offset from UTC.
+ * @constructor Creates an [OffsetTime] by combining a [Time] and [UtcOffset].
+ * @throws DateTimeException if the offset is invalid
  */
 class OffsetTime(
     /** The time of day. */
@@ -19,7 +21,7 @@ class OffsetTime(
     }
 
     /**
-     * Create an [OffsetTime].
+     * Creates an [OffsetTime].
      * @throws DateTimeException if the time or offset is invalid
      */
     constructor(
@@ -58,7 +60,7 @@ class OffsetTime(
         get() = (time.nanosecondsSinceStartOfDay.value - offset.totalSeconds.inNanoseconds.value).nanoseconds
 
     /**
-     * Return an [OffsetTime] with the offset changed to [newOffset], adjusting the time component such that the instant
+     * Changes the offset of this [OffsetTime], adjusting the time component such that the instant represented by it
      * remains the same.
      */
     fun adjustedTo(newOffset: UtcOffset): OffsetTime {
@@ -111,7 +113,7 @@ class OffsetTime(
     }
 
     /**
-     * Compare to another [OffsetTime] based on timeline order, ignoring offset differences.
+     * Compares to another [OffsetTime] based on timeline order, ignoring offset differences.
      * @see DEFAULT_SORT_ORDER
      * @see TIMELINE_ORDER
      */
@@ -169,25 +171,25 @@ class OffsetTime(
         val MAX = Time.MAX at UtcOffset.MIN
 
         /**
-         * Compare by UTC equivalent instant, then time. Using this `Comparator` guarantees a deterministic order when
+         * Compares by UTC equivalent instant, then time. Using this `Comparator` guarantees a deterministic order when
          * sorting.
          */
         val DEFAULT_SORT_ORDER = compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }.thenBy { it.time }
 
         /**
-         * Compare by timeline order only, ignoring any offset differences.
+         * Compares by timeline order only, ignoring any offset differences.
          */
         val TIMELINE_ORDER = compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }
     }
 }
 
 /**
- * Combine a local time with a UTC offset to create an [OffsetTime].
+ * Combines a local time with a UTC offset to create an [OffsetTime].
  */
 infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 
 /**
- * Convert a string to an [OffsetTime].
+ * Converts a string to an [OffsetTime].
  *
  * The string is assumed to be an ISO-8601 time with the UTC offset in extended format. For example, `02:30+01:00` or
  * `14:40:23Z`. The output of [OffsetTime.toString] can be safely parsed using this method.
@@ -198,7 +200,7 @@ infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
 fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
 
 /**
- * Convert a string to an [OffsetTime] using a specific parser.
+ * Converts a string to an [OffsetTime] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *

@@ -9,7 +9,7 @@ import io.islandtime.ranges.DateTimeInterval
 /**
  * A date and time of day in an ambiguous region.
  *
- * @constructor Create a [DateTime] by combining a [Date] and [Time].
+ * @constructor Creates a [DateTime] by combining a [Date] and [Time].
  * @param date the date
  * @param time the time
  */
@@ -22,7 +22,7 @@ class DateTime(
     Comparable<DateTime> {
 
     /**
-     * Create a [DateTime].
+     * Creates a [DateTime].
      * @throws DateTimeException if the date-time is invalid
      */
     constructor(
@@ -36,7 +36,7 @@ class DateTime(
     ) : this(Date(year, month, day), Time(hour, minute, second, nanosecond))
 
     /**
-     * Create a [DateTime].
+     * Creates a [DateTime].
      * @throws DateTimeException if the date-time is invalid
      */
     constructor(
@@ -50,7 +50,7 @@ class DateTime(
     ) : this(year, monthNumber.toMonth(), day, hour, minute, second, nanosecond)
 
     /**
-     * Create a [DateTime].
+     * Creates a [DateTime].
      * @throws DateTimeException if the date-time is invalid
      */
     constructor(
@@ -103,7 +103,7 @@ class DateTime(
     inline val dayOfMonth: Int get() = date.dayOfMonth
 
     /**
-     * The day of the year -- also known as the ordinal date in ISO-8601.
+     * The day of the year.
      */
     inline val dayOfYear: Int get() = date.dayOfYear
 
@@ -620,17 +620,17 @@ class DateTime(
 
     companion object {
         /**
-         * The smallest supported [DateTime], which can be used as a "far past" sentinel.
+         * The earliest supported [DateTime], which can be used as a "far past" sentinel.
          */
         val MIN = DateTime(Date.MIN, Time.MIN)
 
         /**
-         * The largest supported [DateTime], which can be used as a "far future" sentinel.
+         * The latest supported [DateTime], which can be used as a "far future" sentinel.
          */
         val MAX = DateTime(Date.MAX, Time.MAX)
 
         /**
-         * Create a [DateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
+         * Creates a [DateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
          */
         fun fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch: LongMilliseconds, offset: UtcOffset): DateTime {
             val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
@@ -643,7 +643,7 @@ class DateTime(
         }
 
         /**
-         * Create a [DateTime] from a duration of seconds relative to the Unix epoch at [offset], optionally, with some
+         * Creates a [DateTime] from a duration of seconds relative to the Unix epoch at [offset], optionally, with some
          * number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
@@ -663,14 +663,14 @@ class DateTime(
         }
 
         /**
-         * Create a [DateTime] from the millisecond of the Unix epoch at [offset].
+         * Creates a [DateTime] from the millisecond of the Unix epoch at [offset].
          */
         fun fromMillisecondOfUnixEpoch(millisecond: Long, offset: UtcOffset): DateTime {
             return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, offset)
         }
 
         /**
-         * Create a [DateTime] from the second of the Unix epoch at [offset] and optionally, the nanosecond of the
+         * Creates a [DateTime] from the second of the Unix epoch at [offset] and optionally, the nanosecond of the
          * second.
          */
         fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int = 0, offset: UtcOffset): DateTime {
@@ -698,12 +698,12 @@ class DateTime(
 }
 
 /**
- * Combine a [Date] with a [Time] to create a [DateTime].
+ * Combines a [Date] with a [Time] to create a [DateTime].
  */
 infix fun Date.at(time: Time) = DateTime(this, time)
 
 /**
- * Combine a [Date] with a time to create a [DateTime].
+ * Combines a [Date] with a time to create a [DateTime].
  */
 fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): DateTime {
     return DateTime(this, Time(hour, minute, second, nanosecond))
@@ -738,7 +738,7 @@ val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 fun String.toDateTime() = toDateTime(DateTimeParsers.Iso.Extended.DATE_TIME)
 
 /**
- * Convert a string to a [DateTime] using a specific parser.
+ * Converts a string to a [DateTime] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
