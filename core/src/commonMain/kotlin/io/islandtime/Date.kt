@@ -11,7 +11,7 @@ import io.islandtime.ranges.DateRange
 /**
  * A date in an ambiguous region.
  *
- * @constructor Create a [Date] from a year, month, and day of month.
+ * @constructor Creates a [Date] from a year, month, and day of month.
  * @param year the year
  * @param month the month
  * @param day the day of the month
@@ -31,7 +31,7 @@ class Date(
     }
 
     /**
-     * Create a [Date] from a year, ISO month number, and day of month.
+     * Creates a [Date] from a year, ISO month number, and day of month.
      * @param year the year
      * @param monthNumber the ISO month number, from 1-12
      * @param day the day of the month
@@ -58,7 +58,7 @@ class Date(
     val dayOfMonth: Int get() = day
 
     /**
-     * The day of the year -- also known as the ordinal date in ISO-8601.
+     * The day of the year.
      */
     val dayOfYear: Int get() = month.firstDayOfYearIn(year) + dayOfMonth - 1
 
@@ -289,24 +289,24 @@ class Date(
 
     companion object {
         /**
-         * The smallest supported [Date], which can be used as a "far past" sentinel.
+         * The earliest supported [Date], which can be used as a "far past" sentinel.
          */
         val MIN = Date(Year.MIN_VALUE, Month.JANUARY, 1)
 
         /**
-         * The largest supported [Date], which can be used as a "far future" sentinel.
+         * The latest supported [Date], which can be used as a "far future" sentinel.
          */
         val MAX = Date(Year.MAX_VALUE, Month.DECEMBER, 31)
 
         /**
-         * Create a [Date] from a duration of days relative to the Unix epoch of 1970-01-01.
+         * Creates a [Date] from a duration of days relative to the Unix epoch of 1970-01-01.
          * @param days the number of days relative to the Unix epoch
          * @throws DateTimeException if outside of the supported date range
          */
         fun fromDaysSinceUnixEpoch(days: LongDays): Date = fromDayOfUnixEpoch(days.value)
 
         /**
-         * Create a [Date] from the day of the Unix epoch.
+         * Creates a [Date] from the day of the Unix epoch.
          * @param day the day of the Unix epoch
          * @throws DateTimeException if outside of the supported date range
          */
@@ -330,7 +330,7 @@ class Date(
 }
 
 /**
- * Create a [Date] from a year and day of year
+ * Creates a [Date] from a year and day of year
  * @param year the year
  * @param dayOfYear the day of the calendar year
  * @throws DateTimeException if the year or day of year are invalid
@@ -347,7 +347,7 @@ fun Date(year: Int, dayOfYear: Int): Date {
 }
 
 /**
- * Convert an [Instant] into the [Date] represented by it at a particular UTC offset.
+ * Converts this instant to the corresponding [Date] at [offset].
  */
 fun Instant.toDateAt(offset: UtcOffset): Date {
     val adjustedSeconds = secondOfUnixEpoch + offset.totalSeconds.value
@@ -356,20 +356,20 @@ fun Instant.toDateAt(offset: UtcOffset): Date {
 }
 
 /**
- * Convert an [Instant] into the [Date] represented by it in a particular time zone.
+ * Converts this instant to the corresponding [Date] in [zone].
  */
 fun Instant.toDateAt(zone: TimeZone): Date {
     return this.toDateAt(zone.rules.offsetAt(this))
 }
 
 /**
- * Combine a [YearMonth] with a day of the month to create a [Date].
+ * Combines a [YearMonth] with a day of the month to create a [Date].
  * @param day the day of the month
  */
 fun YearMonth.atDay(day: Int) = Date(year, month, day)
 
 /**
- * Convert a string to a [Date].
+ * Converts a string to a [Date].
  *
  * The string is assumed to be an ISO-8601 calendar date in extended format. For example, `2010-10-05`. The output of
  * [Date.toString] can be safely parsed using this method.
@@ -380,7 +380,7 @@ fun YearMonth.atDay(day: Int) = Date(year, month, day)
 fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
 
 /**
- * Convert a string to a [Date] using a specific parser.
+ * Converts a string to a [Date] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
