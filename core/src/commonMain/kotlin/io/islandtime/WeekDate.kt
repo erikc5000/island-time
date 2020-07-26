@@ -4,7 +4,9 @@
 package io.islandtime
 
 import io.islandtime.calendar.WeekSettings
+import io.islandtime.calendar.weekSettings
 import io.islandtime.internal.lastWeekOfWeekBasedYear
+import io.islandtime.locale.Locale
 import io.islandtime.measures.days
 import io.islandtime.measures.weeks
 import kotlin.jvm.JvmMultifileClass
@@ -22,6 +24,16 @@ inline fun <T> Date.toWeekDate(action: (year: Int, week: Int, day: Int) -> T): T
  */
 inline fun <T> Date.toWeekDate(settings: WeekSettings, action: (year: Int, week: Int, day: Int) -> T): T {
     return action(weekBasedYear(settings), weekOfWeekBasedYear(settings), dayOfWeek.number(settings))
+}
+
+/**
+ * Converts this date to a week date representation using the week definition associated with the provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale on some platforms.
+ * To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+ */
+inline fun <T> Date.toWeekDate(locale: Locale, action: (year: Int, week: Int, day: Int) -> T): T {
+    return toWeekDate(locale.weekSettings, action)
 }
 
 /**
@@ -75,6 +87,17 @@ fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int, settings: WeekSe
     val weeksToAdd = (week - date.weekOfYear(settings)).weeks
     val daysToAdd = weeksToAdd + (day - date.dayOfWeek.number(settings)).days
     return date + daysToAdd
+}
+
+/**
+ * Create a [Date] from a week date representation using the week definition associated with the provided [locale].
+ * @param year the week-based year
+ * @param week the week number of the week-based year
+ * @param day the day of week number, 1-7
+ * @param locale the locale providing the week definition to use when interpreting the [year], [week], and [day]
+ */
+fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int, locale: Locale): Date {
+    return fromWeekDate(year, week, day, locale.weekSettings)
 }
 
 private fun checkValidWeekOfWeekBasedYear(week: Int): Int {
