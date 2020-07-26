@@ -36,7 +36,7 @@ class DateRange(
     }
 
     /**
-     * Convert this interval to a string in ISO-8601 extended format.
+     * Converts this range to a string in ISO-8601 extended format.
      */
     override fun toString(): String {
         return if (isEmpty()) {

@@ -9,93 +9,102 @@ import io.islandtime.locale.Locale
 import io.islandtime.measures.days
 import io.islandtime.ranges.*
 
-/**
- * The date range of the ISO week that this date falls within.
- *
- * The ISO week starts on Monday and ends on Sunday.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 val Date.weekRange: DateRange
-    get() = with(startOfWeek) { this..this + 6.days }
+    get() = startOfWeek.let { it..it + 6.days }
 
-/**
- * The date range of the week that this date falls within. The first day of the week will be determined by [settings].
- */
-fun Date.weekRange(settings: WeekSettings): DateRange = with(startOfWeek(settings)) { this..this + 6.days }
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(settings)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
+fun Date.weekRange(settings: WeekSettings): DateRange = startOfWeek(settings).let { it..it + 6.days }
 
-/**
- * The date range of the week that this date falls within. The first day of the week will be determined by [locale].
- */
-fun Date.weekRange(locale: Locale): DateRange = with(startOfWeek(locale)) { this..this + 6.days }
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(locale)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
+fun Date.weekRange(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
 
-/**
- * The interval of the ISO week that this date-time falls within.
- *
- * The ISO week starts on Monday and ends on Sunday.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 val DateTime.weekInterval: DateTimeInterval
-    get() = with(startOfWeek) { this until this + 7.days }
+    get() = startOfWeek.let { it until it + 7.days }
 
-/**
- * The interval of the week that this date-time falls within. The first day of the week will be determined by
- * [settings].
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(settings)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 fun DateTime.weekInterval(settings: WeekSettings): DateTimeInterval {
-    return with(startOfWeek(settings)) { this until this + 7.days }
+    return startOfWeek(settings).let { it until it + 7.days }
 }
 
-/**
- * The interval of the week that this date falls within. The first day of the week will be determined by [locale].
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(locale)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 fun DateTime.weekInterval(locale: Locale): DateTimeInterval {
-    return with(startOfWeek(locale)) { this until this + 7.days }
+    return startOfWeek(locale).let { it until it + 7.days }
 }
 
-/**
- * The interval of the ISO week that this date-time falls within. The offset will be preserved in both the start and end
- * date-times
- *
- * The ISO week starts on Monday and ends on Sunday.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 val OffsetDateTime.weekInterval: OffsetDateTimeInterval
-    get() = with(startOfWeek) { this until this + 7.days }
+    get() = startOfWeek.let { it until it + 7.days }
 
-/**
- * The interval of the week that this date-time falls within. The first day of the week will be determined by
- * [settings]. The offset will be preserved in both the start and end date-times.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(settings)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 fun OffsetDateTime.weekInterval(settings: WeekSettings): OffsetDateTimeInterval {
-    return with(startOfWeek(settings)) { this until this + 7.days }
+    return startOfWeek(settings).let { it until it + 7.days }
 }
 
-/**
- * The interval of the week that this date falls within. The first day of the week will be determined by [locale]. The
- * offset will be preserved in both the start and end date-times.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(locale)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 fun OffsetDateTime.weekInterval(locale: Locale): OffsetDateTimeInterval {
-    return with(startOfWeek(locale)) { this until this + 7.days }
+    return startOfWeek(locale).let { it until it + 7.days }
 }
 
-/**
- * The interval of the ISO week that this date-time falls within. The zone will be preserved in both the start and end
- * date-times.
- *
- * The ISO week starts on Monday and ends on Sunday.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 val ZonedDateTime.weekInterval: ZonedDateTimeInterval
-    get() = with(startOfWeek) { this until this + 7.days }
+    get() = startOfWeek.let { it until it + 7.days }
 
-/**
- * The interval of the week that this date-time falls within. The first day of the week will be determined by
- * [settings]. The zone will be preserved in both the start and end date-times.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(settings)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 fun ZonedDateTime.weekInterval(settings: WeekSettings): ZonedDateTimeInterval {
-    return with(startOfWeek(settings)) { this until this + 7.days }
+    return startOfWeek(settings).let { it until it + 7.days }
 }
 
-/**
- * The interval of the week that this date falls within. The first day of the week will be determined by [locale]. The
- * zone will be preserved in both the start and end date-times.
- */
+@Deprecated(
+    "Renamed to 'week'.",
+    ReplaceWith("this.week(locale)", "io.islandtime.week"),
+    DeprecationLevel.WARNING
+)
 fun ZonedDateTime.weekInterval(locale: Locale): ZonedDateTimeInterval {
-    return with(startOfWeek(locale)) { this until this + 7.days }
+    return startOfWeek(locale).let { it until it + 7.days }
 }

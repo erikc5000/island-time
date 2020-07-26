@@ -45,7 +45,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     override fun isEmpty(): Boolean = _start >= _endExclusive
 
     /**
-     * Convert the interval into a [Duration] of the same length.
+     * Converts this interval into a [Duration] of the same length.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asDuration(): Duration {

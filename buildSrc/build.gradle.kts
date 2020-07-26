@@ -11,7 +11,7 @@ plugins {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4-M3")
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:0.10.1")
-    implementation("com.android.tools.build:gradle:4.0.0")
+    implementation("com.android.tools.build:gradle:4.0.1")
 }
 
 kotlinDslPluginOptions {
