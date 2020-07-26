@@ -71,22 +71,22 @@ enum class DayOfWeek {
     }
 
     /**
-     * Add days to this day of the week, wrapping when the beginning or end of the week is reached.
+     * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun plus(days: IntDays) = plus(days.value % DAYS_PER_WEEK)
 
     /**
-     * Add days to this day of the week, wrapping when the beginning or end of the week is reached.
+     * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun plus(days: LongDays) = plus((days.value % DAYS_PER_WEEK).toInt())
 
     /**
-     * Subtract days from this day of the week, wrapping when the beginning or end of the week is reached.
+     * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun minus(days: IntDays) = plus(-(days.value % DAYS_PER_WEEK))
 
     /**
-     * Subtract days from this day of the week, wrapping when the beginning or end of the week is reached.
+     * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun minus(days: LongDays) = plus(-(days.value % DAYS_PER_WEEK).toInt())
 
@@ -101,7 +101,7 @@ enum class DayOfWeek {
 }
 
 /**
- * Convert an ISO day of week number to a [DayOfWeek].
+ * Converts an ISO day of week number to a [DayOfWeek].
  *
  * The ISO week starts on Monday (1) and ends on Sunday (7).
  */
@@ -110,7 +110,7 @@ fun Int.toDayOfWeek(): DayOfWeek {
 }
 
 /**
- * Convert a day of week number (1-7) to a [DayOfWeek] according to the week definition provided by [settings].
+ * Converts a day of week number (1-7) to a [DayOfWeek] using the week definition provided by [settings].
  */
 fun Int.toDayOfWeek(settings: WeekSettings): DayOfWeek {
     return settings.firstDayOfWeek + (checkValidDayOfWeek(this) - 1).days
