@@ -226,13 +226,13 @@ class Time(
     }
 
     /**
-     * Convert this time to a string in ISO-8601 extended format.
+     * Converts this time to a string in ISO-8601 extended format. For example, `17:31:45.923452091` or `02:30`.
      */
     override fun toString() = buildString(MAX_TIME_STRING_LENGTH) { appendTime(this@Time) }
 
     /**
-     * Return a copy of this [Time], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting time is invalid
      */
     fun copy(

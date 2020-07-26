@@ -253,7 +253,7 @@ fun NSTimeZone.toIslandUtcOffsetAt(date: NSDate): UtcOffset {
 /**
  * Convert an NSTimeZone` to an Island Time [TimeZone] with the same identifier.
  */
-fun NSTimeZone.toIslandTimeZone(): TimeZone = name.toTimeZone()
+fun NSTimeZone.toIslandTimeZone(): TimeZone = TimeZone(name)
 
 /**
  * Convert an Island Time [TimeZone] to an `NSTimeZone`.

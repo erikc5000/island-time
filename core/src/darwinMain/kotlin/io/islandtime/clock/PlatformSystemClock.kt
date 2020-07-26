@@ -10,8 +10,6 @@ import platform.posix.gettimeofday
 import platform.posix.timeval
 
 internal actual object PlatformSystemClock {
-    actual fun currentZone() = NSTimeZone.localTimeZone.toIslandTimeZone()
-
     actual fun read(): LongMilliseconds {
         return memScoped {
             val posixTime = alloc<timeval>()
