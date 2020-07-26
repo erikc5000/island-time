@@ -16,7 +16,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
         assertFailsWith<TimeZoneRulesException> {
             ZonedDateTime(
                 DateTime(2019, 5, 30, 18, 0),
-                "America/Boston".toTimeZone()
+                TimeZone("America/Boston")
             )
         }
     }
@@ -277,22 +277,22 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     fun `DEFAULT_SORT_ORDER compares based on instant, then date and time, and then zone`() {
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
-                Date(1969, 365) at Time(23, 0) at "America/Chicago".toTimeZone(),
+                Date(1969, 365) at Time(23, 0) at TimeZone("America/Chicago"),
                 Date(1970, 1) at Time(0, 0) at nyZone
             ) < 0
         }
 
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
-                Date(1970, 1) at Time(0, 0) at "Etc/GMT+5".toTimeZone(),
+                Date(1970, 1) at Time(0, 0) at TimeZone("Etc/GMT+5"),
                 Date(1970, 1) at Time(0, 0) at nyZone
             ) > 0
         }
 
         assertTrue {
             ZonedDateTime.DEFAULT_SORT_ORDER.compare(
-                Date(1969, 365) at Time(23, 0) at "Etc/GMT+5".toTimeZone(),
-                Date(1969, 365) at Time(23, 0) at "Etc/GMT+5".toTimeZone()
+                Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5"),
+                Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5")
             ) == 0
         }
     }
@@ -587,7 +587,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             "2019-11-03T01:30Z[Etc/UTC]",
             ZonedDateTime(
                 DateTime(2019, 11, 3, 1, 30),
-                "Etc/UTC".toTimeZone()
+                TimeZone("Etc/UTC")
             ).toString()
         )
 

@@ -8,51 +8,6 @@ import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
 /**
- * Returns this date with the precision reduced to the year.
- */
-fun YearMonth.toYear(): Year = Year(year)
-
-/**
- * Returns this date with the precision reduced to the year.
- */
-fun Date.toYear(): Year = Year(year)
-
-/**
- * Returns this date-time with the precision reduced to the year.
- */
-fun DateTime.toYear(): Year = date.toYear()
-
-/**
- * Returns this date-time with the precision reduced to the year.
- */
-fun OffsetDateTime.toYear(): Year = date.toYear()
-
-/**
- * Returns this date-time with the precision reduced to the year.
- */
-fun ZonedDateTime.toYear(): Year = date.toYear()
-
-/**
- * Returns this date with the precision reduced to the year-month.
- */
-fun Date.toYearMonth(): YearMonth = YearMonth(year, month)
-
-/**
- * Returns this date-time with the precision reduced to the year-month.
- */
-fun DateTime.toYearMonth(): YearMonth = date.toYearMonth()
-
-/**
- * Returns this date-time with the precision reduced to the year-month.
- */
-fun OffsetDateTime.toYearMonth(): YearMonth = dateTime.toYearMonth()
-
-/**
- * Returns this date-time with the precision reduced to the year-month.
- */
-fun ZonedDateTime.toYearMonth(): YearMonth = dateTime.toYearMonth()
-
-/**
  * Returns the combined time and UTC offset.
  */
 fun OffsetDateTime.toOffsetTime(): OffsetTime = OffsetTime(time, offset)

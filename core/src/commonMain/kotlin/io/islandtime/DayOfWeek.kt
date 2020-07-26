@@ -107,20 +107,19 @@ enum class DayOfWeek {
  * The ISO week starts on Monday (1) and ends on Sunday (7).
  */
 fun Int.toDayOfWeek(): DayOfWeek {
-    if (this !in DayOfWeek.MIN.number..DayOfWeek.MAX.number) {
-        throw DateTimeException("'$this' is not a valid day of week number")
-    }
-
-    return DayOfWeek.values()[this - 1]
+    return DayOfWeek.values()[checkValidDayOfWeek(this) - 1]
 }
 
 /**
  * Convert a day of week number (1-7) to a [DayOfWeek] according to the week definition provided by [settings].
  */
 fun Int.toDayOfWeek(settings: WeekSettings): DayOfWeek {
-    if (this !in DayOfWeek.MIN.number..DayOfWeek.MAX.number) {
-        throw DateTimeException("'$this' is not a valid day of week number")
-    }
+    return settings.firstDayOfWeek + (checkValidDayOfWeek(this) - 1).days
+}
 
-    return settings.firstDayOfWeek + (this - 1).days
+internal fun checkValidDayOfWeek(number: Int): Int {
+    if (number !in 1..7) {
+        throw DateTimeException("'$number' is not a valid day of week number")
+    }
+    return number
 }

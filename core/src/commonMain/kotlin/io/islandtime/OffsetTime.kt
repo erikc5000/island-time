@@ -127,13 +127,16 @@ class OffsetTime(
         return 31 * time.hashCode() + offset.hashCode()
     }
 
+    /**
+     * Converts this time to a string in ISO-8601 extended format. For example, `17:31:45.923452091-04:00` or `02:30Z`.
+     */
     override fun toString(): String {
         return buildString(MAX_OFFSET_TIME_STRING_LENGTH) { appendOffsetTime(this@OffsetTime) }
     }
 
     /**
-     * Return a copy of this [OffsetTime], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting time or offset is invalid
      */
     fun copy(
@@ -142,8 +145,8 @@ class OffsetTime(
     ) = OffsetTime(time, offset)
 
     /**
-     * Return a copy of this [OffsetTime], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting time or offset is invalid
      */
     fun copy(

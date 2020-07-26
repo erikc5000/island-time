@@ -130,7 +130,10 @@ fun ZonedDateTime.Companion.now(clock: Clock): ZonedDateTime {
     return fromMillisecondsSinceUnixEpoch(clock.read(), clock.zone)
 }
 
-/**
- * Get the system clock's current [TimeZone].
- */
-fun TimeZone.Companion.systemDefault() = SystemClock.currentZone()
+@Suppress("EXTENSION_SHADOWED_BY_MEMBER")
+@Deprecated(
+    "Moved to TimeZone companion object.",
+    ReplaceWith("systemDefault()"),
+    DeprecationLevel.WARNING
+)
+fun TimeZone.Companion.systemDefault() = systemDefault()

@@ -58,8 +58,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val end = DateTime.MAX at nyZone
 
         assertTrue { start in start..end }
-        assertTrue { DateTime.MAX at "Etc/UTC".toTimeZone() in start..end }
-        assertTrue { DateTime.MAX at "America/Denver".toTimeZone() in start..end }
+        assertTrue { DateTime.MAX at TimeZone("Etc/UTC") in start..end }
+        assertTrue { DateTime.MAX at TimeZone("America/Denver") in start..end }
         assertTrue { Instant.MAX in start..end }
     }
 
@@ -70,8 +70,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
         assertTrue { start in start..end }
         assertTrue { end in start..end }
-        assertTrue { DateTime.MIN at "Etc/UTC".toTimeZone() in start..end }
-        assertTrue { DateTime.MIN at "America/Denver".toTimeZone() in start..end }
+        assertTrue { DateTime.MIN at TimeZone("Etc/UTC") in start..end }
+        assertTrue { DateTime.MIN at TimeZone("America/Denver") in start..end }
         assertTrue { Instant.MIN in start..end }
     }
 

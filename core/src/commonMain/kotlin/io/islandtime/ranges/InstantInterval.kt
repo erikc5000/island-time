@@ -27,7 +27,7 @@ class InstantInterval(
     override val last: Instant get() = endInclusive
 
     /**
-     * Convert this interval to a string in ISO-8601 extended format.
+     * Converts this interval to a string in ISO-8601 extended format.
      */
     override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
 
