@@ -5,13 +5,13 @@ import io.islandtime.locale.Locale
 import io.islandtime.measures.days
 import java.util.*
 
-internal actual fun systemDefaultWeekSettings(): WeekSettings {
-    val gregorianCalendar = GregorianCalendar(Locale.getDefault().withoutVariant())
-
-    return with(gregorianCalendar) {
-        WeekSettings(firstIslandDayOfWeek, minimalDaysInFirstWeek)
+actual val Locale.weekSettings: WeekSettings
+    get() {
+        val gregorianCalendar = GregorianCalendar(this.withoutVariant())
+        return with(gregorianCalendar) { WeekSettings(firstIslandDayOfWeek, minimalDaysInFirstWeek) }
     }
-}
+
+internal actual fun systemDefaultWeekSettings(): WeekSettings = Locale.getDefault().weekSettings
 
 internal actual val Locale.firstDayOfWeek: DayOfWeek
     get() = GregorianCalendar(this.withoutVariant()).firstIslandDayOfWeek
