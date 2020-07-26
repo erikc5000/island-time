@@ -8,7 +8,7 @@ import io.islandtime.parser.*
 /**
  * A time of day in an ambiguous region.
  *
- * @constructor Create a [Time] from its individual components.
+ * @constructor Creates a [Time] from its individual components.
  * @param hour the hour of day
  * @param minute the minute of the hour
  * @param second the second of the minute
@@ -249,7 +249,7 @@ class Time(
         val NOON = Time(12, 0)
 
         /**
-         * Create a [Time] from the second of the day and optionally, the number of nanoseconds within that second.
+         * Creates a [Time] from the second of the day and optionally, the number of nanoseconds within that second.
          *
          * @param secondOfDay the second of the day
          * @param nanosecond the nanosecond of the second, from 0 - 999,999,999
@@ -261,7 +261,7 @@ class Time(
         }
 
         /**
-         * Create the [Time] at a number of seconds since the start of the day and optionally, a number of additional
+         * Creates the [Time] at a number of seconds since the start of the day and optionally, a number of additional
          * nanoseconds.
          *
          * @param seconds the number of seconds since the start of the day
@@ -283,7 +283,7 @@ class Time(
         }
 
         /**
-         * Create a [Time] from the nanosecond of the day.
+         * Creates a [Time] from the nanosecond of the day.
          *
          * @param nanosecondOfDay the nanosecond of the day
          * @return a new [Time]
@@ -302,7 +302,7 @@ class Time(
         }
 
         /**
-         * Create the [Time] at a number of nanoseconds since the start of the day.
+         * Creates the [Time] at a number of nanoseconds since the start of the day.
          *
          * @param nanoseconds the number of nanoseconds since the start of the day
          * @return a new [Time]
@@ -315,7 +315,7 @@ class Time(
 }
 
 /**
- * Convert a string to a [Time].
+ * Converts a string to a [Time].
  *
  * The string is assumed to be an ISO-8601 time representation in extended format. For example, `05`, `05:30`,
  * `05:30:00`, or `05:30:00.123456789`. The output of [Time.toString] can be safely parsed using this method.
@@ -326,7 +326,7 @@ class Time(
 fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
 
 /**
- * Convert a string to a [Time] using a specific parser.
+ * Converts a string to a [Time] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
