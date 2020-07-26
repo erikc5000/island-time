@@ -7,15 +7,21 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 import kotlin.math.absoluteValue
 
+/**
+ * A year as defined by ISO-8601.
+ * @constructor Creates a [Year].
+ * @param value the year
+ * @property value The year value.
+ */
 inline class Year(val value: Int) : Comparable<Year> {
 
     /**
-     * Is this year within the supported range?
+     * Checks if this year is within the supported range.
      */
     val isValid: Boolean get() = value in MIN_VALUE..MAX_VALUE
 
     /**
-     * Is this a leap year?
+     * Checks if this is a leap year.
      */
     val isLeap: Boolean
         get() = value % 4 == 0 && (value % 100 != 0 || value % 400 == 0)
@@ -72,6 +78,11 @@ inline class Year(val value: Int) : Comparable<Year> {
     operator fun contains(yearMonth: YearMonth) = yearMonth.year == value
     operator fun contains(date: Date) = date.year == value
 
+    /**
+     * Ensures that this year is valid, throwing an exception if it isn't.
+     * @throws DateTimeException if the year is invalid
+     * @see isValid
+     */
     fun validated(): Year {
         if (!isValid) {
             throw DateTimeException(getInvalidYearMessage(value.toLong()))
@@ -99,16 +110,30 @@ inline class Year(val value: Int) : Comparable<Year> {
     }
 
     companion object {
+        /**
+         * The earliest supported year value.
+         */
         const val MIN_VALUE = -999_999_999
+
+        /**
+         * The latest supported year value.
+         */
         const val MAX_VALUE = 999_999_999
 
+        /**
+         * The earliest supported [Year], which can be used as a "far past" sentinel.
+         */
         val MIN = Year(MIN_VALUE)
+
+        /**
+         * The latest supported [Year], which can be used as a "far future" sentinel.
+         */
         val MAX = Year(MAX_VALUE)
     }
 }
 
 /**
- * Convert a string to a [Year].
+ * Converts a string to a [Year].
  *
  * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or 'Y12345'. The output of
  * [Year.toString] can be safely parsed using this method.
@@ -119,7 +144,7 @@ inline class Year(val value: Int) : Comparable<Year> {
 fun String.toYear() = toYear(DateTimeParsers.Iso.YEAR)
 
 /**
- * Convert a string to a [Year] using a specific parser.
+ * Converts a string to a [Year] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *

@@ -204,12 +204,12 @@ class Instant private constructor(
         private const val MAX_SECOND = 31556889864403199L
 
         /**
-         * The smallest supported [Instant], which can be used as a "far past" sentinel.
+         * The earliest supported [Instant], which can be used as a "far past" sentinel.
          */
         val MIN = fromSecondOfUnixEpoch(MIN_SECOND)
 
         /**
-         * The largest supported [Instant], which can be used as a "far future" sentinel.
+         * The latest supported [Instant], which can be used as a "far future" sentinel.
          */
         val MAX = fromSecondOfUnixEpoch(MAX_SECOND, 999_999_999L)
 
@@ -219,21 +219,21 @@ class Instant private constructor(
         val UNIX_EPOCH = fromSecondOfUnixEpoch(0L)
 
         /**
-         * Create an [Instant] from the second of the Unix epoch.
+         * Creates an [Instant] from the second of the Unix epoch.
          */
         fun fromSecondOfUnixEpoch(second: Long): Instant {
             return Instant(second, 0)
         }
 
         /**
-         * Create an [Instant] from the second of the Unix epoch.
+         * Creates an [Instant] from the second of the Unix epoch.
          */
         fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int): Instant {
             return fromSecondOfUnixEpoch(second, nanosecond.toLong())
         }
 
         /**
-         * Create an [Instant] from the second of the Unix epoch.
+         * Creates an [Instant] from the second of the Unix epoch.
          */
         fun fromSecondOfUnixEpoch(second: Long, nanosecond: Long): Instant {
             val newSecond = second plusExact (nanosecond floorDiv NANOSECONDS_PER_SECOND)
@@ -243,7 +243,7 @@ class Instant private constructor(
         }
 
         /**
-         * Create an [Instant] from the millisecond of the Unix epoch.
+         * Creates an [Instant] from the millisecond of the Unix epoch.
          */
         fun fromMillisecondOfUnixEpoch(millisecond: Long): Instant {
             val second = millisecond floorDiv MILLISECONDS_PER_SECOND
@@ -290,12 +290,12 @@ class Instant private constructor(
 }
 
 /**
- * Create the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.
+ * Creates the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
 fun Instant(secondsSinceUnixEpoch: LongSeconds) = Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value)
 
 /**
- * Create the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
+ * Creates the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
  * 1970-01-01T00:00Z.
  */
 fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): Instant {
@@ -303,7 +303,7 @@ fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanosec
 }
 
 /**
- * Create the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
+ * Creates the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
  * 1970-01-01T00:00Z.
  */
 fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: LongNanoseconds): Instant {
@@ -311,14 +311,14 @@ fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: LongNanose
 }
 
 /**
- * Create the [Instant] represented by a number of milliseconds relative to the Unix epoch of 1970-01-01T00:00Z.
+ * Creates the [Instant] represented by a number of milliseconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
 fun Instant(millisecondsSinceUnixEpoch: LongMilliseconds): Instant {
     return Instant.fromMillisecondOfUnixEpoch(millisecondsSinceUnixEpoch.value)
 }
 
 /**
- * Convert a string to an [Instant].
+ * Converts a string to an [Instant].
  *
  * The string is assumed to be an ISO-8601 UTC date-time representation in extended format. For example,
  * `2010-10-05T18:30Z` or `2010-10-05T18:30:00.123456789Z`. The output of [Instant.toString] can be safely parsed
@@ -330,7 +330,7 @@ fun Instant(millisecondsSinceUnixEpoch: LongMilliseconds): Instant {
 fun String.toInstant() = toInstant(DateTimeParsers.Iso.Extended.INSTANT)
 
 /**
- * Convert a string to an [Instant] using a specific parser.
+ * Converts a string to an [Instant] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *

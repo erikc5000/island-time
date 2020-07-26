@@ -26,18 +26,18 @@ sealed class TimeZone : Comparable<TimeZone> {
     abstract val id: String
 
     /**
-     * Check if this is a valid time zone according to the current time zone rules provider.
+     * Checks if this is a valid time zone according to the current time zone rules provider.
      */
     abstract val isValid: Boolean
 
     /**
-     * Get the rules associated with this time zone.
+     * The rules associated with this time zone.
      * @throws TimeZoneRulesException if the current time zone rules provider doesn't support [id]
      */
     abstract val rules: TimeZoneRules
 
     /**
-     * Check if the time zone is valid and throw an exception if it isn't.
+     * Checks if this time zone is valid and throws an exception if it isn't.
      *
      * @throws TimeZoneRulesException if the current time zone rules provider doesn't support [id]
      * @see isValid
@@ -49,15 +49,14 @@ sealed class TimeZone : Comparable<TimeZone> {
     }
 
     /**
-     * Ensure that the time zone is valid, throwing an exception if it isn't.
-     *
+     * Ensures that this time zone is valid, throwing an exception if it isn't.
      * @throws TimeZoneRulesException if the current time zone rules provider doesn't support [id]
      * @see isValid
      */
     fun validated(): TimeZone = apply { validate() }
 
     /**
-     * The localized name of the time zone, if available for the locale in the specified style. The result depends on
+     * The localized name of this time zone, if available for the locale in the specified style. The result depends on
      * the configured [TimeZoneTextProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
@@ -75,8 +74,8 @@ sealed class TimeZone : Comparable<TimeZone> {
     }
 
     /**
-     * A textual representation of the time zone, suitable for display purposes. The localized name will be returned, if
-     * available for the locale in the specified style. If not, the [id] will be returned instead.
+     * A textual representation of this time zone, suitable for display purposes. The localized name will be returned,
+     * if available for the locale in the specified style. If not, the [id] will be returned instead.
      *
      * The result depends on the configured [TimeZoneTextProvider] and may differ between platforms.
      *
@@ -96,10 +95,7 @@ sealed class TimeZone : Comparable<TimeZone> {
     }
 
     /**
-     * Get a normalized time zone.
-     *
-     * Any time zone with a fixed offset will be converted to use a consistent identifier.
-     *
+     * Returns a normalized time zone, converting any zone with a fixed offset to use a consistent identifier.
      * @throws TimeZoneRulesException if the current time zone rules provider doesn't support [id]
      */
     abstract fun normalized(): TimeZone
@@ -180,12 +176,12 @@ sealed class TimeZone : Comparable<TimeZone> {
         val UTC: TimeZone = FixedOffset(UtcOffset.ZERO)
 
         /**
-         * Get the system's current [TimeZone].
+         * Returns the system's current [TimeZone].
          */
         fun systemDefault(): TimeZone = systemDefaultTimeZone()
 
         /**
-         * Create a fixed-offset [TimeZone] from an identifier in the form of `+01:00`.
+         * Creates a fixed-offset [TimeZone] from an identifier in the form of `+01:00`.
          */
         fun FixedOffset(id: String): FixedOffset {
             return try {
@@ -198,7 +194,7 @@ sealed class TimeZone : Comparable<TimeZone> {
 }
 
 /**
- * Create a [TimeZone] from an identifier.
+ * Creates a [TimeZone] from an identifier.
  */
 fun TimeZone(id: String): TimeZone {
     return when {
