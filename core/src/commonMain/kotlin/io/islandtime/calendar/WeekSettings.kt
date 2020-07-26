@@ -18,8 +18,9 @@ data class WeekSettings(
 
     companion object {
         /**
-         * The definition of a week according to the current system settings. This may differ from the definition
-         * associated with the default locale on platforms that allow this to be customized, such as iOS and macOS.
+         * Returns the definition of a week according to the current system settings. This may differ from the
+         * definition associated with the default locale on platforms that allow this to be customized, such as iOS and
+         * macOS.
          */
         fun systemDefault(): WeekSettings = systemDefaultWeekSettings()
 
@@ -35,6 +36,11 @@ data class WeekSettings(
         val SUNDAY_START = WeekSettings(DayOfWeek.SUNDAY, minimumDaysInFirstWeek = 1)
     }
 }
+
+/**
+ * The default [WeekSettings] associated with this locale.
+ */
+expect val Locale.weekSettings: WeekSettings
 
 internal expect fun systemDefaultWeekSettings(): WeekSettings
 internal expect val Locale.firstDayOfWeek: DayOfWeek
