@@ -34,7 +34,7 @@ interface Clock {
  * @constructor Create a [SystemClock] with a specific time zone, defaulting to the system's current zone.
  * @see currentZone
  */
-class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
+class SystemClock(override val zone: TimeZone = TimeZone.systemDefault()) : Clock {
     override fun read() = PlatformSystemClock.read()
 
     override fun equals(other: Any?): Boolean {
@@ -53,7 +53,12 @@ class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
         /**
          * Get the current system time zone.
          */
-        fun currentZone(): TimeZone = PlatformSystemClock.currentZone()
+        @Deprecated(
+            "Use TimeZone.systemDefault() instead.",
+            ReplaceWith("TimeZone.systemDefault()"),
+            DeprecationLevel.WARNING
+        )
+        fun currentZone(): TimeZone = TimeZone.systemDefault()
     }
 }
 
@@ -61,7 +66,6 @@ class SystemClock(override val zone: TimeZone = currentZone()) : Clock {
  * Platform system clock implementation
  */
 internal expect object PlatformSystemClock {
-    fun currentZone(): TimeZone
     fun read(): LongMilliseconds
 }
 

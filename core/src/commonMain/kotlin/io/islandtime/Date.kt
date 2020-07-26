@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.DateTimeField
@@ -90,10 +92,13 @@ class Date(
      */
     val lengthOfYear: IntDays get() = lengthOfYear(year)
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = YearMonth(year, month)
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
@@ -109,11 +114,10 @@ class Date(
         get() = dayOfUnixEpoch
 
     /**
-     * Return a [Date] with [period] added to it.
+     * Returns this date with [period] added to it.
      *
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
-     * defined in ISO-8601-2.
+     * be coerced into the valid range.
      */
     operator fun plus(period: Period): Date {
         return if (period.isZero()) {
@@ -162,11 +166,10 @@ class Date(
     }
 
     /**
-     * Return a [Date] with [period] subtracted from it.
+     * Returns this date with [period] subtracted from it.
      *
-     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
-     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
-     * addition as defined in ISO-8601-2.
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range.
      */
     operator fun minus(period: Period): Date {
         return if (period.isZero()) {
@@ -238,6 +241,10 @@ class Date(
         }
     }
 
+    /**
+     * Converts this date to a string in ISO-8601 extended format using the "calendar date" form. For example,
+     * `2012-04-15`.
+     */
     override fun toString() = buildString(MAX_DATE_STRING_LENGTH) { appendDate(this@Date) }
 
     override fun equals(other: Any?): Boolean {
@@ -252,8 +259,7 @@ class Date(
     }
 
     /**
-     * Return a copy of this [Date], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date with the values of any individual components replaced by the new values specified.
      * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
@@ -263,8 +269,7 @@ class Date(
     ) = Date(year, month, dayOfMonth)
 
     /**
-     * Return a copy of this [Date], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date with the values of any individual components replaced by the new values specified.
      * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
@@ -274,8 +279,7 @@ class Date(
     ) = Date(year, monthNumber, dayOfMonth)
 
     /**
-     * Return a copy of this [Date], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date with the values of any individual components replaced by the new values specified.
      * @throws DateTimeException if the resulting date is invalid
      */
     fun copy(
@@ -331,7 +335,6 @@ class Date(
  * @param dayOfYear the day of the calendar year
  * @throws DateTimeException if the year or day of year are invalid
  */
-@Suppress("FunctionName")
 fun Date(year: Int, dayOfYear: Int): Date {
     checkValidYear(year)
     checkValidDayOfYear(year, dayOfYear)

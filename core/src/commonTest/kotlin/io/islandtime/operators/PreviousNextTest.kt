@@ -7,7 +7,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class PreviousNextTest : AbstractIslandTimeTest() {
-    private val nyZone = "America/New_York".toTimeZone()
+    private val nyZone = TimeZone("America/New_York")
 
     @Test
     fun `Date_next() returns the next date with a particular day of week`() {

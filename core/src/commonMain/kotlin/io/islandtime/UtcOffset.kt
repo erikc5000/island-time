@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.DateTimeField
@@ -53,6 +55,9 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
 
     override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
 
+    /**
+     * Converts this offset to a string in ISO-8601 extended format. For example, `-04:00` or `Z`.
+     */
     override fun toString(): String {
         return if (isZero()) {
             "Z"
@@ -98,7 +103,6 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
  * @throws DateTimeException if any of the individual components is outside the valid range
  * @return a [UtcOffset]
  */
-@Suppress("FunctionName")
 fun UtcOffset(
     hours: IntHours,
     minutes: IntMinutes = 0.minutes,
@@ -109,19 +113,19 @@ fun UtcOffset(
 }
 
 /**
- * Convert a duration of hours into a UTC time offset of the same length.
+ * Converts a duration of hours into a UTC time offset of the same length.
  * @throws ArithmeticException if overflow occurs
  */
 fun IntHours.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
- * Convert a duration of minutes into a UTC time offset of the same length.
+ * Converts a duration of minutes into a UTC time offset of the same length.
  * @throws ArithmeticException if overflow occurs
  */
 fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
 
 /**
- * Convert a duration of seconds into a UTC time offset of the same length.
+ * Converts a duration of seconds into a UTC time offset of the same length.
  */
 fun IntSeconds.asUtcOffset() = UtcOffset(this)
 

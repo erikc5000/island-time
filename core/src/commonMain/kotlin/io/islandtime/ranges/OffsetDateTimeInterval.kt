@@ -22,7 +22,7 @@ class OffsetDateTimeInterval(
     override fun hasUnboundedEnd(): Boolean = endExclusive.dateTime == DateTime.MAX
 
     /**
-     * Convert this interval to a string in ISO-8601 extended format.
+     * Converts this interval to a string in ISO-8601 extended format.
      */
     override fun toString() = buildIsoString(
         maxElementSize = MAX_OFFSET_DATE_TIME_STRING_LENGTH,
@@ -31,7 +31,7 @@ class OffsetDateTimeInterval(
     )
 
     /**
-     * Convert the interval into a [Period] of the same length.
+     * Converts this interval into a [Period] of the same length.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     fun asPeriod(): Period {

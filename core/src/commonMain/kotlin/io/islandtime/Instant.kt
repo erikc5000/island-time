@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.DateTimeField
@@ -174,7 +176,7 @@ class Instant private constructor(
     }
 
     /**
-     * Convert this instant to a string in ISO-8601 extended format.
+     * Converts this instant to a string in ISO-8601 extended format. For example, `2020-02-13T02:30:05.367Z`.
      */
     override fun toString() = buildString(MAX_INSTANT_STRING_LENGTH) { appendInstant(this@Instant) }
 
@@ -290,14 +292,12 @@ class Instant private constructor(
 /**
  * Create the [Instant] represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(secondsSinceUnixEpoch: LongSeconds) = Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value)
 
 /**
  * Create the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
  * 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanoseconds): Instant {
     return Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value, nanosecondAdjustment.value)
 }
@@ -306,7 +306,6 @@ fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: IntNanosec
  * Create the [Instant] represented by a number of seconds and additional nanoseconds relative to the Unix epoch of
  * 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: LongNanoseconds): Instant {
     return Instant.fromSecondOfUnixEpoch(secondsSinceUnixEpoch.value, nanosecondAdjustment.value)
 }
@@ -314,7 +313,6 @@ fun Instant(secondsSinceUnixEpoch: LongSeconds, nanosecondAdjustment: LongNanose
 /**
  * Create the [Instant] represented by a number of milliseconds relative to the Unix epoch of 1970-01-01T00:00Z.
  */
-@Suppress("FunctionName")
 fun Instant(millisecondsSinceUnixEpoch: LongMilliseconds): Instant {
     return Instant.fromMillisecondOfUnixEpoch(millisecondsSinceUnixEpoch.value)
 }
@@ -362,7 +360,7 @@ internal fun DateTimeParseResult.toInstant(): Instant? {
 
     return if (dateTime != null && offset != null) {
         val secondOfEpoch = dateTime.secondOfUnixEpochAt(offset) +
-                ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
+            ((parsedYear / 10_000L) timesExact SECONDS_PER_10000_YEARS)
         Instant.fromSecondOfUnixEpoch(secondOfEpoch, dateTime.nanosecond)
     } else {
         null

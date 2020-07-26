@@ -1,3 +1,5 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.base.TimePoint
@@ -99,29 +101,43 @@ class ZonedDateTime private constructor(
      */
     inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = dateTime.yearMonth
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * The combined time of day and offset.
      */
-    inline val offsetTime: OffsetTime get() = OffsetTime(time, offset)
+    @Deprecated(
+        "Use toOffsetTime() instead.",
+        ReplaceWith("this.toOffsetTime()"),
+        DeprecationLevel.WARNING
+    )
+    inline val offsetTime: OffsetTime
+        get() = toOffsetTime()
 
-    /**
-     * The combined date, time, and offset.
-     *
-     * While similar to `ZonedDateTime`, an `OffsetDateTime` representation is unaffected by time zone rule changes or
-     * database differences between systems, making it better suited for use cases involving persistence or network
-     * transfer.
-     */
-    inline val offsetDateTime: OffsetDateTime get() = OffsetDateTime(dateTime, offset)
+    @Deprecated(
+        "Use toOffsetDateTime() instead.",
+        ReplaceWith("this.toOffsetDateTime()"),
+        DeprecationLevel.WARNING
+    )
+    inline val offsetDateTime: OffsetDateTime
+        get() = toOffsetDateTime()
 
     /**
      * The [Instant] representing the same time point.
      */
-    inline val instant: Instant get() = Instant.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond)
+    @Deprecated(
+        "Use toInstant() instead.",
+        ReplaceWith("this.toInstant()"),
+        DeprecationLevel.WARNING
+    )
+    inline val instant: Instant
+        get() = toInstant()
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)
@@ -146,6 +162,10 @@ class ZonedDateTime private constructor(
         return result
     }
 
+    /**
+     * Converts this date-time to a string in ISO-8601 extended format. For example,
+     * `2012-04-15T17:31:45.923452091-04:00[America/New_York]` or `2020-02-13T02:30Z`.
+     */
     override fun toString(): String {
         return buildString(MAX_ZONED_DATE_TIME_STRING_LENGTH) {
             appendZonedDateTime(this@ZonedDateTime)
@@ -153,11 +173,10 @@ class ZonedDateTime private constructor(
     }
 
     /**
-     * Return a [ZonedDateTime] with [period] added to it.
+     * Returns this date-time with [period] added to it.
      *
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
-     * defined in ISO-8601-2.
+     * be coerced into the valid range.
      */
     operator fun plus(period: Period) = copy(dateTime = dateTime + period)
 
@@ -185,11 +204,10 @@ class ZonedDateTime private constructor(
     override operator fun plus(nanoseconds: LongNanoseconds) = resolveInstant(dateTime + nanoseconds)
 
     /**
-     * Return a [ZonedDateTime] with [period] subtracted from it.
+     * Returns this date-time with [period] subtracted from it.
      *
-     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
-     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
-     * addition as defined in ISO-8601-2.
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range.
      */
     operator fun minus(period: Period) = copy(dateTime = dateTime - period)
 
@@ -219,11 +237,14 @@ class ZonedDateTime private constructor(
     operator fun rangeTo(other: ZonedDateTime) = ZonedDateTimeInterval.withInclusiveEnd(this, other)
 
     /**
-     * Return a new [ZonedDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      *
      * If the new date falls within a daylight savings time gap, it will be adjusted forward by the length of the gap.
      * If it falls within an overlap, the [offset] value will be used if possible. The time zone takes precedence over
      * the offset, so any provided [offset] value will be ignored if it is invalid within the current region.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         dateTime: DateTime = this.dateTime,
@@ -232,11 +253,14 @@ class ZonedDateTime private constructor(
     ) = fromLocal(dateTime, zone, offset)
 
     /**
-     * Return a new [ZonedDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      *
      * If the new date falls within a daylight savings time gap, it will be adjusted forward by the length of the gap.
      * If it falls within an overlap, the [offset] value will be used if possible. The time zone takes precedence over
      * the offset, so any provided [offset] value will be ignored if it is invalid within the current region.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         date: Date = this.date,
@@ -246,11 +270,14 @@ class ZonedDateTime private constructor(
     ) = fromLocal(dateTime.copy(date, time), zone, offset)
 
     /**
-     * Return a new [ZonedDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      *
      * If the new date falls within a daylight savings time gap, it will be adjusted forward by the length of the gap.
      * If it falls within an overlap, the [offset] value will be used if possible. The time zone takes precedence over
      * the offset, so any provided [offset] value will be ignored if it is invalid within the current region.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -271,11 +298,14 @@ class ZonedDateTime private constructor(
     )
 
     /**
-     * Return a new [ZonedDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      *
      * If the new date falls within a daylight savings time gap, it will be adjusted forward by the length of the gap.
      * If it falls within an overlap, the [offset] value will be used if possible. The time zone takes precedence over
      * the offset, so any provided [offset] value will be ignored if it is invalid within the current region.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -297,11 +327,14 @@ class ZonedDateTime private constructor(
     )
 
     /**
-     * Return a new [ZonedDateTime], replacing any of the components with new values.
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      *
      * If the new date falls within a daylight savings time gap, it will be adjusted forward by the length of the gap.
      * If it falls within an overlap, the [offset] value will be used if possible. The time zone takes precedence over
      * the offset, so any provided [offset] value will be ignored if it is invalid within the current region.
+     *
+     * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
         year: Int = this.year,
@@ -323,8 +356,8 @@ class ZonedDateTime private constructor(
     )
 
     /**
-     * If the local date-time falls during an overlap caused by a daylight savings transition, return a [ZonedDateTime]
-     * with the same local date and time, but using the earlier of the two valid offsets.
+     * If the local date-time falls during an overlap caused by a daylight savings transition, a [ZonedDateTime] with
+     * the same local date and time will be returned, but using the earlier of the two valid offsets.
      */
     fun withEarlierOffsetAtOverlap(): ZonedDateTime {
         val transition = zone.rules.transitionAt(dateTime)
@@ -340,8 +373,8 @@ class ZonedDateTime private constructor(
     }
 
     /**
-     * If the local date-time falls during an overlap caused by a daylight savings transition, return a [ZonedDateTime]
-     * with the same local date and time, but using the later of the two valid offsets.
+     * If the local date-time falls during an overlap caused by a daylight savings transition, a [ZonedDateTime] with
+     * the same local date and time will be returned, but using the later of the two valid offsets.
      */
     fun withLaterOffsetAtOverlap(): ZonedDateTime {
         val transition = zone.rules.transitionAt(dateTime)
@@ -357,15 +390,15 @@ class ZonedDateTime private constructor(
     }
 
     /**
-     * If this date-time uses a region-based time zone, return a copy with a fixed offset. Otherwise, return this
-     * date-time, unchanged.
+     * If this date-time uses a region-based time zone, a copy with a fixed offset will be returned. Otherwise, this
+     * date-time will be returned unchanged.
      */
     fun withFixedOffsetZone(): ZonedDateTime {
         return if (zone is TimeZone.FixedOffset) this else create(dateTime, offset, offset.asTimeZone())
     }
 
     /**
-     * Change the time zone of a [ZonedDateTime], adjusting the date, time, and offset such that the instant
+     * Changes the time zone of a [ZonedDateTime], adjusting the date, time, and offset such that the instant
      * represented by it remains the same.
      */
     fun adjustedTo(newTimeZone: TimeZone): ZonedDateTime {
@@ -504,7 +537,6 @@ class ZonedDateTime private constructor(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(
     year: Int,
     month: Month,
@@ -523,7 +555,6 @@ fun ZonedDateTime(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(
     year: Int,
     monthNumber: Int,
@@ -542,7 +573,6 @@ fun ZonedDateTime(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(
     year: Int,
     dayOfYear: Int,
@@ -560,7 +590,6 @@ fun ZonedDateTime(
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLocal(DateTime(date, time), zone)
 
 /**
@@ -570,7 +599,6 @@ fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLo
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
  * (meaning the local time exists twice), the earlier offset will be used.
  */
-@Suppress("FunctionName")
 fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(dateTime, zone)
 
 /**
@@ -625,46 +653,60 @@ fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
 }
 
 @Deprecated(
-    "Renamed to 'dateTimeAt'.",
-    ReplaceWith("this.dateTimeAt(zone)"),
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_LOCAL_TIME)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_LOCAL_TIME"
+    ),
     DeprecationLevel.WARNING
 )
 fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
-    return dateTimeAt(zone)
-}
-
-/**
- * The [ZonedDateTime] with the same date and time at [zone]. The offset will be preserved if possible, but may require
- * adjustment.
- * @see instantAt
- * @see asZonedDateTime
- */
-fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.fromInstant(dateTime, offset, zone)
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
 }
 
 @Deprecated(
-    "Renamed to 'instantAt'.",
-    ReplaceWith("this.instantAt(zone)"),
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_LOCAL_TIME)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_LOCAL_TIME"
+    ),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
+}
+
+@Deprecated(
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_INSTANT)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_INSTANT"
+    ),
     DeprecationLevel.WARNING
 )
 fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
-    return instantAt(zone)
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
 }
 
-/**
- * The [ZonedDateTime] representing the same instant in time at [zone]. The local date, time, and offset may differ.
- * @see dateTimeAt
- * @see asZonedDateTime
- */
+@Deprecated(
+    "Use toZonedDateTime() instead.",
+    ReplaceWith(
+        "this.toZonedDateTime(zone, PRESERVE_INSTANT)",
+        "io.islandtime.OffsetConversionStrategy.PRESERVE_INSTANT"
+    ),
+    DeprecationLevel.WARNING
+)
 fun OffsetDateTime.instantAt(zone: TimeZone): ZonedDateTime {
-    return ZonedDateTime.fromInstant(dateTime, offset, zone)
+    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
 }
 
 /**
- * Convert to a [ZonedDateTime] with a fixed offset time zone.
- * @see instantAt
- * @see dateTimeAt
+ * Converts this [OffsetDateTime] to an equivalent [ZonedDateTime] using a fixed-offset time zone.
+ *
+ * This comes with the caveat that a fixed-offset zone lacks knowledge of any region and will not respond to daylight
+ * savings time changes. To convert to a region-based zone, use [toZonedDateTime] instead.
+ *
+ * @see toZonedDateTime
  */
 fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.fromLocal(dateTime, offset.asTimeZone(), offset)
@@ -704,7 +746,7 @@ internal fun DateTimeParseResult.toZonedDateTime(): ZonedDateTime? {
     val offset = this.toUtcOffset()
 
     return if (dateTime != null && offset != null) {
-        val zone = timeZoneId?.toTimeZone() ?: offset.asTimeZone()
+        val zone = timeZoneId?.let { TimeZone(it) } ?: offset.asTimeZone()
 
         // Check if the offset is valid for the time zone as we understand it and if not, adjust the date-time and
         // offset to valid values while preserving the instant of the parsed value

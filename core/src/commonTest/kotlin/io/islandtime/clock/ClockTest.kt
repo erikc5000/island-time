@@ -3,7 +3,6 @@ package io.islandtime.clock
 import io.islandtime.Instant
 import io.islandtime.TimeZone
 import io.islandtime.measures.milliseconds
-import io.islandtime.toTimeZone
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -30,10 +29,10 @@ class ClockTest {
 
     @Test
     fun `SystemClock() with zone`() {
-        val clock = SystemClock("America/Denver".toTimeZone())
+        val clock = SystemClock(TimeZone("America/Denver"))
 
         assertTrue { clock.read() > 0L.milliseconds }
         assertTrue { clock.instant() > Instant.UNIX_EPOCH }
-        assertEquals("America/Denver".toTimeZone(), clock.zone)
+        assertEquals(TimeZone("America/Denver"), clock.zone)
     }
 }

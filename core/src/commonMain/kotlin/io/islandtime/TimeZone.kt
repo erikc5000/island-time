@@ -1,7 +1,10 @@
+@file:Suppress("FunctionName")
+
 package io.islandtime
 
 import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
+import io.islandtime.internal.systemDefaultTimeZone
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.nanoseconds
@@ -105,6 +108,9 @@ sealed class TimeZone : Comparable<TimeZone> {
         return id.compareTo(other.id)
     }
 
+    /**
+     * Returns the [id] of this time zone.
+     */
     override fun toString() = id
 
     /**
@@ -173,8 +179,15 @@ sealed class TimeZone : Comparable<TimeZone> {
          */
         val UTC: TimeZone = FixedOffset(UtcOffset.ZERO)
 
-        @Suppress("FunctionName")
-        fun FixedOffset(id: String): TimeZone {
+        /**
+         * Get the system's current [TimeZone].
+         */
+        fun systemDefault(): TimeZone = systemDefaultTimeZone()
+
+        /**
+         * Create a fixed-offset [TimeZone] from an identifier in the form of `+01:00`.
+         */
+        fun FixedOffset(id: String): FixedOffset {
             return try {
                 FixedOffset(id.toUtcOffset(FIXED_TIME_ZONE_PARSER))
             } catch (e: DateTimeParseException) {
@@ -187,7 +200,6 @@ sealed class TimeZone : Comparable<TimeZone> {
 /**
  * Create a [TimeZone] from an identifier.
  */
-@Suppress("FunctionName")
 fun TimeZone(id: String): TimeZone {
     return when {
         id == "Z" -> TimeZone.UTC
@@ -198,13 +210,15 @@ fun TimeZone(id: String): TimeZone {
 }
 
 /**
- * Convert a UTC offset into a [TimeZone] with a fixed offset.
+ * Converts this [UtcOffset] into a fixed-offset [TimeZone].
  */
 fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
 
-/**
- * Convert a string to a [TimeZone].
- */
+@Deprecated(
+    "Use TimeZone() instead.",
+    ReplaceWith("TimeZone(this)"),
+    DeprecationLevel.WARNING
+)
 fun String.toTimeZone() = TimeZone(this)
 
 internal const val MAX_TIME_ZONE_STRING_LENGTH = 50

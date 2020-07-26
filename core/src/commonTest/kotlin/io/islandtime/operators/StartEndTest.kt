@@ -9,7 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class StartEndTest : AbstractIslandTimeTest() {
-    private val nyZone = "America/New_York".toTimeZone()
+    private val nyZone = TimeZone("America/New_York")
 
     @Test
     fun `Date_startOfYear returns the date at the start of this date's year`() {

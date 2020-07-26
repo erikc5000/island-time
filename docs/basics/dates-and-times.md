@@ -10,7 +10,7 @@ Island Time has a wide array of different date-time classes, each tailored to it
 | `YearMonth` | month | `2020-02` |
 | `Year` | year | `2020` |
 
-The `Date` class represents a date in an ambiguous region. It could be in New York City. It could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone &mdash; hence the _ambiguous_ part.
+The [`Date`](../api/core/io.islandtime/-date/index.md) class represents a date in an ambiguous region. It could be in New York City. It could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone &mdash; hence the _ambiguous_ part.
 
 ```kotlin
 // Get the current date in the local time zone of the system
@@ -23,7 +23,7 @@ val leapDay = Date(2020, Month.February, 29)
 val cincoDeMayo = "2020-05-05".toDate()
 ```
 
-It's also possible to represent a date with reduced precision. For example, a `YearMonth` could be used to represent a credit card expiration date containing just a year and month.
+It's also possible to represent a date with reduced precision. For example, a [`YearMonth`](../api/core/io.islandtime/-year-month/index.md) could be used to represent a credit card expiration date containing just a year and month.
 
 ```kotlin
 // Create a year-month from a year and month
@@ -35,7 +35,7 @@ val yearMonth: YearMonth = Year(2020) at Month.AUGUST
 
 ## Time of Day
 
-The `Time` class can be used to represent a time of the day in an ambiguous region. Unlike `Date`, there are no classes with reduced precision &mdash; a `Time` is always precise to the nanosecond.
+The [`Time`](../api/core/io.islandtime/-time/index.md) class can be used to represent a time of the day in an ambiguous region. Unlike `Date`, there are no classes with reduced precision &mdash; a `Time` is always precise to the nanosecond.
 
 ```kotlin
 // Get the current time in the local time zone of the system
@@ -50,7 +50,7 @@ val (hour, minute, second, nanosecond) = time
 
 ## Combined Date and Time of Day
 
-A `DateTime` combines a `Date` and `Time`, allowing you to represent both in a single data structure, still in an ambiguous region.
+A [`DateTime`](../api/core/io.islandtime/-date-time/index.md) combines a `Date` and `Time`, allowing you to represent both in a single data structure, still in an ambiguous region.
 
 ```kotlin
 // Create a date-time from individual date and time components
@@ -80,7 +80,7 @@ The classes we've looked at so far model dates and times in an ambiguous region,
 | `ZonedDateTime` | A date and time of day in a particular time zone |
 | `OffsetDateTime` | A date and time of day with fixed UTC offset |
 
-An `Instant` is simply a number of seconds and nanoseconds that have elpased since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (`1970-01-01T00:00Z`), ignoring leap seconds. There's no concept of "date" without conversion to one of the other types. Practically speaking, this is the class you should use when you don't care about the local time and just want a [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) timestamp.
+An [`Instant`](../api/core/io.islandtime/-instant/index.md) is simply a number of seconds and nanoseconds that have elpased since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (`1970-01-01T00:00Z`), ignoring leap seconds. There's no concept of "date" without conversion to one of the other types. Practically speaking, this is the class you should use when you don't care about the local time and just want a [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) timestamp.
 
 ```kotlin
 data class DogDto(
@@ -91,11 +91,11 @@ data class DogDto(
 )
 ```
 
-To capture an instant along with the local time, you have two options &mdash; `OffsetDateTime` and `ZonedDateTime`. Both store a date-time with an offset from UTC, however, `ZonedDateTime` is also aware of time zone rules, which is an important distinction.
+To capture an instant along with the local time, you have two options &mdash; [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) and [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md). Both store a date-time with an offset from UTC, however, `ZonedDateTime` is also aware of time zone rules, which is an important distinction.
 
 ### `UtcOffset` vs. `TimeZone`
 
-In Island Time, a `UtcOffset` is just a number of seconds that a local time must be adjusted forward or backward by to be equivalent to UTC. A `TimeZone` defines the rules used to determine the UTC offset. Time zones fall into two categories &mdash; region-based (`TimeZone.Region`) and fixed offset (`TimeZone.FixedOffset`).
+In Island Time, a [`UtcOffset`](../api/core/io.islandtime/-utc-offset/index.md) is just a number of seconds that a local time must be adjusted forward or backward by to be equivalent to UTC. A [`TimeZone`](../api/core/io.islandtime/-time-zone/index.md) defines the rules used to determine the UTC offset. Time zones fall into two categories &mdash; region-based (`TimeZone.Region`) and fixed offset (`TimeZone.FixedOffset`).
 
 Region-based zones have identifiers, such as "America/New_York" or "Europe/London", that correspond to entries in the [IANA Time Zone Database](https://www.iana.org/time-zones).
 
@@ -124,7 +124,7 @@ println(zonedDateTime - 1.hours)
 // Output: 2020-03-08T01:30-05:00 [America/New_York]
 
 // It's easy to convert a ZonedDateTime to an OffsetDateTime
-println(zonedDateTime.asOffsetDateTime())
+println(zonedDateTime.toOffsetDateTime())
 // Output: 2020-03-08T03:30-04:00
 
 // It's also possible to change the time zone such that it uses a fixed offset
@@ -138,9 +138,9 @@ println(zonedDateTime.adjustedTo(TimeZone("America/Los_Angeles")))
 // Output: 2020-03-07T23:30-08:00
 ```
 
-## Patterns and Operators
+## Patterns, Properties, and Operators
 
-Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of operators that simplify common tasks.
+Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of properties and operators that simplify common tasks.
 
 ### `at`
 
@@ -165,7 +165,7 @@ val dateTime = DateTime.now().copy(dayOfMonth = 15)
 val dateTimeAtMidnight = dateTime.copy(time = Time.MIDNIGHT)
 ```
 
-### Addition and Subtraction
+### Addition and subtraction
 
 A [duration](durations.md) of time can be added or subtracted from a date-time primitive. Which units are supported will vary depending on whether the primitive is date-based, time-based, or both.
 
@@ -210,7 +210,7 @@ You can also get the week period as a [range or interval](intervals.md).
 
 ```kotlin
 // Get the date range of the current week
-val weekRange: DateRange = Date.now().weekRange(WeekSettings.systemDefault())
+val rangeOfWeek: DateRange = Date.now().week(WeekSettings.systemDefault())
 ```
 
 ### Previous or next day of week
@@ -237,7 +237,7 @@ val nextWednesdayOrToday = today.nextOrSame(WEDNESDAY)
 
 ### Rounding
 
-A time or date-time can be rounded up, down, or half-up to the precision of a particular unit or increment.
+A time or date-time can be rounded up, down, or half-up to the precision of a particular unit.
 
 ```kotlin
 val dateTime = DateTime.now()
@@ -247,22 +247,54 @@ val dateTime = DateTime.now()
 val roundedToMinute = dateTime.roundedTo(MINUTES)
 // Output: 2020-06-30T06:32
 
-// Round half-up to the nearest 15 minutes
-val roundedToNearest15Mins = dateTime.roundedToNearest(15.minutes)
-// Output: 2020-06-30T06:30
-
 // Round up to the nearest hour
 val roundedUpToHour = dateTime.roundedUpTo(HOURS)
 // Output: 2020-06-30T07:00
 
-// Round down to the nearest hour
+// Round down to the nearest hour (alternatively, use can use roundedDownTo())
 val roundedDownToHour = dateTime.truncatedTo(HOURS)
 // Output: 2020-06-30T06:00
+```
+
+You can also round to the nearest 15 minutes &mdash; or whatever increment you'd like.
+
+```kotlin
+// Round half-up to the nearest 15 minutes
+val roundedToNearest15Mins = dateTime.roundedToNearest(15.minutes)
+// Output: 2020-06-30T06:30
 
 // Round down to the nearest 100 milliseconds
 val roundedDownTo100Millis = dateTime.roundedDownToNearest(100.milliseconds)
 // Output: 2020-06-30T06:32:14.1
 ```
+
+### Week numbers
+
+You can obtain the week number and year as defined in the [ISO week date system](https://en.wikipedia.org/wiki/ISO_week_date) like this:
+
+```kotlin
+val date = Date.now()
+
+// Get the week-based year, which may differ from the regular year
+val isoWeekYear: Int = date.weekBasedYear
+
+// Get the week of the week-based year
+val isoWeekNumber: Int = date.weekOfWeekBasedYear
+
+// Or convert the date to a full ISO week date representation in a single step
+date.toWeekDate { year: Int, week: Int, day: Int ->
+    // ...
+}
+```
+
+Different week definitions can be used by specifying the [`WeekSettings`](../api/core/io.islandtime.calendar/-week-settings/index.md) explicitly.
+
+```kotlin
+val usaWeekNumber: Int = date.weekOfWeekBasedYear(WeekSettings.SUNDAY_START)
+```
+
+!!! info "`weekOfYear` vs. `weekOfWeekBasedYear`"
+    The week number associated with a particular date could fall in the prior or subsequent year, depending on how the week is defined. `weekOfYear` will return the week number relative to the date's regular `year` -- `0` if it falls in the prior year, for example. On the other hand, `weekOfWeekBasedYear` will adjust the number to the `weekBasedYear`.
 
 ## ISO Representation
 

@@ -64,6 +64,11 @@ A `DateRange` can be converted directly to an interval representing the period f
 val today: Date = Date.now()
 val dateRange: DateRange = today - 1.weeks until today
 val zone: TimeZone = TimeZone.systemDefault()
+
+// Convert to a ZonedDateTimeInterval
+val zonedDateTimeInterval: ZonedDateTimeInterval = dateRange at zone
+
+// Convert to an InstantInterval
 val instantInterval: InstantInterval = dateRange.toInstantIntervalAt(zone)
 ```
 
@@ -74,7 +79,7 @@ Only `InstantInterval` allows iteration, though the other interval types can be 
 ```kotlin
 val now: ZonedDateTime = ZonedDateTime.now()
 val zonedDateTimeInterval: ZonedDateTimeInterval = now until now + 1.weeks
-val instantInterval: InstantInterval = zonedDateTimeInterval.asInstantInterval()
+val instantInterval: InstantInterval = zonedDateTimeInterval.toInstantInterval()
 ```
 
 Unlike with date ranges, the `step` is necessary to create a progression.
@@ -109,7 +114,7 @@ val emptyDateRange = DateRange.EMPTY
 ```
 
 !!! info ""Unbounded" vs. "Open""
-    In ISO-8601, an "unbounded" interval is referred to as an "open" interval. However, this conflicts with the mathematical meaning of "open" though (ie. end points that are exclusive rather than inclusive), so we avoid using that terminology.
+    In ISO-8601, an "unbounded" interval is referred to as an "open" interval. However, this conflicts with the mathematical meaning of "open" (ie. end points that are exclusive rather than inclusive), so we try to avoid using that terminology.
 
 ## ISO Representation
 
@@ -126,8 +131,8 @@ val isoDateRangeString = dateRange.toString()
 val readDateRange = isoDateRangeString.toDateRange()
 
 val zone = TimeZone("America/New_York")
-val zonedInterval: ZonedDateTimeInterval = dateRange.toZonedDateTimeIntervalAt(zone)
-val isoZonedIntervalString = instantInterval.toString()
+val zonedInterval: ZonedDateTimeInterval = dateRange at zone
+val isoZonedIntervalString = zonedInterval.toString()
 // Output: 2020-03-01T00:00-05:00[America/New_York]/2020-05-13T23:59:59.999999999-04:00[America/New_York]
 
 val readZonedInterval = isoZonedIntervalString.toZonedDateTimeInterval()

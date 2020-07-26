@@ -130,17 +130,18 @@ class DateTime(
      */
     inline val lengthOfYear: IntDays get() = date.lengthOfYear
 
-    /**
-     * The combined year and month.
-     */
-    inline val yearMonth: YearMonth get() = date.yearMonth
+    @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.WARNING
+    )
+    inline val yearMonth: YearMonth get() = toYearMonth()
 
     /**
-     * Return a [DateTime] with [period] added to it.
+     * Returns this date-time with [period] added to it.
      *
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range. This behavior is consistent with the order of operations for period addition as
-     * defined in ISO-8601-2.
+     * be coerced into the valid range.
      */
     operator fun plus(period: Period): DateTime {
         return if (period.isZero()) {
@@ -312,11 +313,10 @@ class DateTime(
     }
 
     /**
-     * Return a [DateTime] with [period] subtracted from it.
+     * Returns this date-time with [period] subtracted from it.
      *
-     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
-     * will be coerced into the valid range. This behavior is consistent with the order of operations for period
-     * addition as defined in ISO-8601-2.
+     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
+     * be coerced into the valid range.
      */
     operator fun minus(period: Period) = plus(-period)
 
@@ -439,6 +439,10 @@ class DateTime(
         }
     }
 
+    /**
+     * Converts this date-time to a string in ISO-8601 extended format. For example, `2012-04-15T17:31:45.923452091` or
+     * `2020-02-13T02:30`.
+     */
     override fun toString() = buildString(MAX_DATE_TIME_STRING_LENGTH) { appendDateTime(this@DateTime) }
 
     override fun equals(other: Any?): Boolean {
@@ -450,8 +454,8 @@ class DateTime(
     }
 
     /**
-     * Return a copy of this [DateTime], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
@@ -460,8 +464,8 @@ class DateTime(
     ) = DateTime(date, time)
 
     /**
-     * Return a copy of this [DateTime], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
@@ -474,8 +478,8 @@ class DateTime(
     ) = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Return a copy of this [DateTime], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
@@ -489,8 +493,8 @@ class DateTime(
     ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
-     * Return a copy of this [DateTime], replacing individual components with new values as desired.
-     *
+     * Returns a copy of this date-time with the values of any individual components replaced by the new values
+     * specified.
      * @throws DateTimeException if the resulting date-time is invalid
      */
     fun copy(
@@ -579,13 +583,12 @@ class DateTime(
      */
     fun millisecondOfUnixEpochAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
-    /**
-     * The [Instant] represented by this date-time at a particular offset from UTC.
-     * @param offset the offset from UTC
-     */
-    fun instantAt(offset: UtcOffset): Instant {
-        return Instant.fromSecondOfUnixEpoch(secondOfUnixEpochAt(offset), nanosecond)
-    }
+    @Deprecated(
+        "Use toInstantAt() instead.",
+        ReplaceWith("this.toInstantAt(offset)"),
+        DeprecationLevel.WARNING
+    )
+    fun instantAt(offset: UtcOffset): Instant = toInstantAt(offset)
 
     companion object {
         /**
@@ -679,7 +682,7 @@ fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): D
 }
 
 /**
- * Convert to a [DateTime] at a particular offset from UTC.
+ * Converts this instant to the corresponding [DateTime] at [offset].
  */
 fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
     return DateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, offset)

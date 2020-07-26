@@ -1,4 +1,4 @@
-package io.islandtime.codegen
+package io.islandtime.codegen.descriptions
 
 import java.util.*
 
@@ -45,7 +45,8 @@ enum class TemporalUnitDescription(
     val intName: String get() = "Int$pluralName"
     val longName: String get() = "Long$pluralName"
     open val singularName: String get() = pluralName.dropLast(1)
-    val lowerCaseName: String get() = pluralName.toLowerCase(Locale.US)
+    val lowerSingularName: String get() = singularName.toLowerCase(Locale.US)
+    val lowerPluralName: String get() = pluralName.toLowerCase(Locale.US)
     val valueName: String get() = "value"
     val inUnitPropertyName: String get() = "in$pluralName"
     val inUnitUncheckedPropertyName: String get() = "${inUnitPropertyName}Unchecked"
@@ -86,7 +87,7 @@ data class TemporalUnitConversion(
 
     val constantName: String
         get() {
-            val (smallerUnit, largerUnit) = smallerUnitToLargerUnit()
+            val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
             return "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".toUpperCase(Locale.US)
         }
 
@@ -98,7 +99,7 @@ data class TemporalUnitConversion(
         }
 
     val constantValue: Long by lazy {
-        val (smallerUnit, largerUnit) = smallerUnitToLargerUnit()
+        val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
 
         (smallerUnit.ordinal until largerUnit.ordinal)
             .map { TemporalUnitDescription.values()[it].conversionFactor.toLong() }
@@ -117,7 +118,7 @@ data class TemporalUnitConversion(
         }
     }
 
-    private fun smallerUnitToLargerUnit() = if (fromUnit <= toUnit) {
+    private fun orderedFromSmallerToLargerUnit() = if (fromUnit <= toUnit) {
         fromUnit to toUnit
     } else {
         toUnit to fromUnit

@@ -42,7 +42,7 @@ class DateTimeInterval(
     }
 
     /**
-     * Convert this interval to a string in ISO-8601 extended format.
+     * Converts this interval to a string in ISO-8601 extended format.
      */
     override fun toString() = buildIsoString(
         maxElementSize = MAX_DATE_TIME_STRING_LENGTH,
@@ -51,9 +51,9 @@ class DateTimeInterval(
     )
 
     /**
-     * Get the [Duration] between the start and end date-time, assuming they're in the same time zone. In general, it's
-     * more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be
-     * taken into account when working with [DateTime] directly.
+     * Converts this interval to the [Duration] between the start and end date-time, assuming they're in the same time
+     * zone. In general, it's more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight
+     * savings rules won't be taken into account when working with [DateTime] directly.
      *
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
@@ -234,8 +234,7 @@ class DateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toDateTimeInterval() =
-    toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
+fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
 
 /**
  * Convert a string to a [DateTimeInterval] using a specific parser.

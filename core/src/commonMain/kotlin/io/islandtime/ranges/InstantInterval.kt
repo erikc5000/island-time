@@ -27,7 +27,7 @@ class InstantInterval(
     override val last: Instant get() = endInclusive
 
     /**
-     * Convert this interval to a string in ISO-8601 extended format.
+     * Converts this interval to a string in ISO-8601 extended format.
      */
     override fun toString() = buildIsoString(
         maxElementSize = MAX_INSTANT_STRING_LENGTH,
@@ -154,48 +154,16 @@ fun InstantInterval.randomOrNull(random: Random): Instant? {
  */
 infix fun Instant.until(to: Instant) = InstantInterval(this, to)
 
-/**
- * Convert a range of dates into an [InstantInterval] between the starting and ending instants in a particular time
- * zone.
- */
-fun DateRange.toInstantIntervalAt(zone: TimeZone): InstantInterval {
-    return when {
-        isEmpty() -> InstantInterval.EMPTY
-        isUnbounded() -> InstantInterval.UNBOUNDED
-        else -> {
-            val start = if (hasUnboundedStart()) Instant.MIN else start.startOfDayAt(zone).instant
-            val end = if (hasUnboundedEnd()) Instant.MAX else endInclusive.endOfDayAt(zone).instant
-            start..end
-        }
-    }
-}
+@Deprecated(
+    "Use toInstantInterval() instead.",
+    ReplaceWith("this.toInstantInterval()"),
+    DeprecationLevel.WARNING
+)
+fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
 
-/**
- * Convert an [OffsetDateTimeInterval] into an [InstantInterval].
- */
-fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval {
-    return when {
-        isEmpty() -> InstantInterval.EMPTY
-        isUnbounded() -> InstantInterval.UNBOUNDED
-        else -> {
-            val startInstant = if (hasUnboundedStart()) Instant.MIN else start.instant
-            val endInstant = if (hasUnboundedEnd()) Instant.MAX else endExclusive.instant
-            startInstant until endInstant
-        }
-    }
-}
-
-/**
- * Convert a [ZonedDateTimeInterval] until an [InstantInterval].
- */
-fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval {
-    return when {
-        isEmpty() -> InstantInterval.EMPTY
-        isUnbounded() -> InstantInterval.UNBOUNDED
-        else -> {
-            val startInstant = if (hasUnboundedStart()) Instant.MIN else start.instant
-            val endInstant = if (hasUnboundedEnd()) Instant.MAX else endExclusive.instant
-            startInstant until endInstant
-        }
-    }
-}
+@Deprecated(
+    "Use toInstantInterval() instead.",
+    ReplaceWith("this.toInstantInterval()"),
+    DeprecationLevel.WARNING
+)
+fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
