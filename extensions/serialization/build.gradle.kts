@@ -8,7 +8,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":core"))
-                implementation(kotlin("stdlib-common"))
                 implementation(Libs.Serialization.runtime)
             }
         }
@@ -17,12 +16,6 @@ kotlin {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
             }
         }
 
