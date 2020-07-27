@@ -5,7 +5,6 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 buildscript {
     repositories {
         jcenter()
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
     }
 
     dependencies {
@@ -16,7 +15,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
     }
 
     tasks.withType<JavaCompile>().configureEach {

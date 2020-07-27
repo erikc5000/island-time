@@ -20,7 +20,6 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(kotlin("stdlib-jdk8"))
 
     api(Libs.threetenabp)
 

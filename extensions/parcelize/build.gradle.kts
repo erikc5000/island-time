@@ -27,7 +27,6 @@ dependencies {
     coreLibraryDesugaring(Libs.androidDesugarJdkLibs)
 
     implementation(project(":core"))
-    implementation(kotlin("stdlib-jdk8"))
 
     androidTestImplementation(Libs.AndroidxTest.runner)
     androidTestImplementation(Libs.googleTruth)
