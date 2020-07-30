@@ -23,7 +23,6 @@ nav:
   - 'Extensions':
       - 'extensions/serialization.md'
       - 'extensions/parcelize.md'
-      - 'extensions/threetenabp.md'
   - 'API':
       - 'core': 'api/core/index.md'
       - 'parcelize-extensions': 'api/parcelize/index.md'
