@@ -1,15 +1,27 @@
 package io.islandtime
 
+import io.islandtime.DayOfWeek.MONDAY
+import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.calendar.WeekSettings
+import io.islandtime.calendar.WeekSettings.Companion.ISO
+import io.islandtime.calendar.WeekSettings.Companion.SUNDAY_START
+import io.islandtime.locale.localeOf
+import io.islandtime.measures.hours
 import io.islandtime.measures.days
 import io.islandtime.measures.weeks
 import io.islandtime.test.AbstractIslandTimeTest
+import io.islandtime.test.TestData
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class DatePropertiesTest : AbstractIslandTimeTest() {
+    @Suppress("PrivatePropertyName")
+    private val en_US = localeOf("en-US")
+
+    private val nyZone = TimeZone("America/New_York")
+
     @Test
     fun `Date_isInLeapYear returns true in leap year`() {
         assertTrue { Date(2020, Month.JANUARY, 1).isInLeapYear }
@@ -40,12 +52,93 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `Date_week() with ISO start`() {
+        val date = Date(2020, Month.MARCH, 6)
+        val expected = Date(2020, Month.MARCH, 2)..Date(2020, Month.MARCH, 8)
+
+        assertEquals(expected, date.week)
+        assertEquals(expected, date.week(ISO))
+    }
+
+    @Test
+    fun `Date_week() with Sunday start`() {
+        val date = Date(2020, Month.MARCH, 6)
+        val expected = Date(2020, Month.MARCH, 1)..Date(2020, Month.MARCH, 7)
+
+        assertEquals(expected, date.week(SUNDAY_START))
+        assertEquals(expected, date.week(en_US))
+    }
+
+    @Test
+    fun `DateTime_week() with ISO start`() {
+        val dateTime = DateTime(2020, Month.MARCH, 6, 13, 30)
+        val start = Date(2020, Month.MARCH, 2) at MIDNIGHT
+        val end = Date(2020, Month.MARCH, 8) at Time.MAX
+
+        assertEquals(start..end, dateTime.week)
+        assertEquals(start..end, dateTime.week(ISO))
+    }
+
+    @Test
+    fun `DateTime_week() with Sunday start`() {
+        val dateTime = DateTime(2020, Month.MARCH, 6, 13, 30)
+        val start = Date(2020, Month.MARCH, 1) at MIDNIGHT
+        val end = Date(2020, Month.MARCH, 7) at Time.MAX
+
+        assertEquals(start..end, dateTime.week(SUNDAY_START))
+        assertEquals(start..end, dateTime.week(en_US))
+    }
+
+    @Test
+    fun `OffsetDateTime_week() with ISO start`() {
+        // Note: DST transition occurs at 2AM on March 8
+        val offsetDateTime = DateTime(2020, Month.MARCH, 6, 13, 30) at UtcOffset((-5).hours)
+        val start = Date(2020, Month.MARCH, 2) at MIDNIGHT at UtcOffset((-5).hours)
+        val end = Date(2020, Month.MARCH, 8) at Time.MAX at UtcOffset((-5).hours)
+
+        assertEquals(start..end, offsetDateTime.week)
+        assertEquals(start..end, offsetDateTime.week(ISO))
+    }
+
+    @Test
+    fun `OffsetDateTime_week() with Sunday start`() {
+        val offsetDateTime = DateTime(2020, Month.MARCH, 6, 13, 30) at UtcOffset((-5).hours)
+        val start = Date(2020, Month.MARCH, 1) at MIDNIGHT at UtcOffset((-5).hours)
+        val end = Date(2020, Month.MARCH, 7) at Time.MAX at UtcOffset((-5).hours)
+
+        assertEquals(start..end, offsetDateTime.week(en_US))
+        assertEquals(start..end, offsetDateTime.week(SUNDAY_START))
+    }
+
+    @Test
+    fun `ZonedDateTime_week() with ISO start`() {
+        // Note: DST transition occurs at 2AM on March 8
+        val zonedDateTime = DateTime(2020, Month.MARCH, 6, 13, 30) at nyZone
+        val start = Date(2020, Month.MARCH, 2) at MIDNIGHT at nyZone
+        val end = Date(2020, Month.MARCH, 8) at Time.MAX at nyZone
+
+        assertEquals(start..end, zonedDateTime.week)
+        assertEquals(start..end, zonedDateTime.week(ISO))
+    }
+
+    @Test
+    fun `ZonedDateTime_week() with Sunday start`() {
+        val zonedDateTime = DateTime(2020, Month.MARCH, 6, 13, 30) at nyZone
+        val start = Date(2020, Month.MARCH, 1) at MIDNIGHT at nyZone
+        val end = Date(2020, Month.MARCH, 7) at Time.MAX at nyZone
+
+        assertEquals(start..end, zonedDateTime.week(en_US))
+        assertEquals(start..end, zonedDateTime.week(SUNDAY_START))
+    }
+
+    @Test
     fun `Date_weekOfMonth with ISO week definition`() {
         listOf(
             Date(2008, 12, 31) to 5,
             Date(2009, 1, 1) to 1,
             Date(2009, 1, 4) to 1,
-            Date(2009, 1, 5) to 2
+            Date(2009, 1, 5) to 2,
+            Date(2020, 5, 31) to 4
         ).forEach { (date, week) ->
             assertEquals(week, date.weekOfMonth, date.toString())
         }
@@ -59,9 +152,11 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
             Date(2008, 12, 31) to 5,
             Date(2009, 1, 1) to 1,
             Date(2009, 1, 3) to 1,
-            Date(2009, 1, 4) to 2
+            Date(2009, 1, 4) to 2,
+            Date(2020, 5, 31) to 6
         ).forEach { (date, week) ->
-            assertEquals(week, date.weekOfMonth(WeekSettings.SUNDAY_START), date.toString())
+            assertEquals(week, date.weekOfMonth(SUNDAY_START), message = "$date (SUNDAY_START)")
+            assertEquals(week, date.weekOfMonth(en_US), message = "$date (en-US)")
         }
     }
 
@@ -73,11 +168,12 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
             Date(2008, 12, 31) to 5,
             Date(2009, 1, 1) to 0,
             Date(2009, 1, 4) to 0,
-            Date(2009, 1, 5) to 1
+            Date(2009, 1, 5) to 1,
+            Date(2020, 5, 31) to 4
         ).forEach { (date, week) ->
             assertEquals(
                 week,
-                date.weekOfMonth(WeekSettings(DayOfWeek.MONDAY, 5)),
+                date.weekOfMonth(WeekSettings(MONDAY, 5)),
                 date.toString()
             )
         }
@@ -105,7 +201,8 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
             Date(2009, 1, 3) to 1,
             Date(2009, 1, 4) to 2
         ).forEach { (date, week) ->
-            assertEquals(week, date.weekOfYear(WeekSettings.SUNDAY_START), date.toString())
+            assertEquals(week, date.weekOfYear(SUNDAY_START), message = "$date (SUNDAY_START)")
+            assertEquals(week, date.weekOfYear(en_US), message = "$date (en-US)")
         }
     }
 
@@ -121,7 +218,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
         ).forEach { (date, week) ->
             assertEquals(
                 week,
-                date.weekOfYear(WeekSettings(DayOfWeek.MONDAY, 5)),
+                date.weekOfYear(WeekSettings(MONDAY, 5)),
                 date.toString()
             )
         }
@@ -129,63 +226,32 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
 
     @Test
     fun `ISO week date`() {
-        listOf(
-            Date(2005, 1, 1) to Triple(2004, 53, 6),
-            Date(2005, 1, 2) to Triple(2004, 53, 7),
-            Date(2005, 12, 31) to Triple(2005, 52, 6),
-            Date(2006, 1, 1) to Triple(2005, 52, 7),
-            Date(2006, 1, 2) to Triple(2006, 1, 1),
-            Date(2006, 12, 31) to Triple(2006, 52, 7),
-            Date(2007, 1, 1) to Triple(2007, 1, 1),
-            Date(2007, 12, 30) to Triple(2007, 52, 7),
-            Date(2007, 12, 31) to Triple(2008, 1, 1),
-            Date(2008, 1, 1) to Triple(2008, 1, 2),
-            Date(2008, 12, 28) to Triple(2008, 52, 7),
-            Date(2008, 12, 29) to Triple(2009, 1, 1),
-            Date(2008, 12, 30) to Triple(2009, 1, 2),
-            Date(2008, 12, 31) to Triple(2009, 1, 3),
-            Date(2009, 1, 1) to Triple(2009, 1, 4),
-            Date(2009, 12, 31) to Triple(2009, 53, 4),
-            Date(2010, 1, 1) to Triple(2009, 53, 5),
-            Date(2010, 1, 2) to Triple(2009, 53, 6),
-            Date(2010, 1, 3) to Triple(2009, 53, 7),
-            Date(2010, 1, 4) to Triple(2010, 1, 1)
-        ).forEach { (date, weekDate) ->
-            assertEquals(weekDate, date.toWeekDate(::Triple), "toWeekDate(): $date")
-
+        TestData.isoWeekDates.forEach { (date, weekDate) ->
             val (year, week) = weekDate
-            assertEquals(year, date.weekBasedYear, "weekBasedYear: $date")
-            assertEquals(week, date.weekOfWeekBasedYear, "weekOfWeekBasedYear: $date")
+
+            assertEquals(
+                Pair(year, week),
+                Pair(date.weekBasedYear, date.weekOfWeekBasedYear),
+                date.toString()
+            )
         }
     }
 
     @Test
     fun `week date with Sunday start`() {
-        listOf(
-            Date(2016, 12, 30) to Pair(2016, 53),
-            Date(2016, 12, 31) to Pair(2016, 53),
-            Date(2017, 1, 1) to Pair(2017, 1),
-            Date(2017, 1, 2) to Pair(2017, 1),
-            Date(2017, 1, 7) to Pair(2017, 1),
-            Date(2017, 1, 8) to Pair(2017, 2),
-            Date(2017, 12, 30) to Pair(2017, 52),
-            Date(2017, 12, 31) to Pair(2018, 1),
-            Date(2018, 1, 6) to Pair(2018, 1),
-            Date(2018, 12, 29) to Pair(2018, 52),
-            Date(2018, 12, 30) to Pair(2019, 1),
-            Date(2019, 1, 5) to Pair(2019, 1),
-            Date(2019, 1, 6) to Pair(2019, 2),
-            Date(2019, 12, 28) to Pair(2019, 52),
-            Date(2019, 12, 29) to Pair(2020, 1),
-            Date(2020, 1, 5) to Pair(2020, 2)
-        ).forEach { (date, yearWeek) ->
+        TestData.sundayStartWeekDates.forEach { (date, weekDate) ->
+            val (year, week) = weekDate
+
             assertEquals(
-                yearWeek,
-                Pair(
-                    date.weekBasedYear(WeekSettings.SUNDAY_START),
-                    date.weekOfWeekBasedYear(WeekSettings.SUNDAY_START)
-                ),
-                date.toString()
+                Pair(year, week),
+                Pair(date.weekBasedYear(SUNDAY_START), date.weekOfWeekBasedYear(SUNDAY_START)),
+                message = "$date (SUNDAY_START)"
+            )
+
+            assertEquals(
+                Pair(year, week),
+                Pair(date.weekBasedYear(en_US), date.weekOfWeekBasedYear(en_US)),
+                message = "$date (en-US)"
             )
         }
     }

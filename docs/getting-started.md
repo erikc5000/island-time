@@ -32,7 +32,7 @@ Island Time requires Java 8 or above.
 
 ### Android
 
-Island Time requires a minimum compile SDK of API 15 or later and Java 8 support should be [turned on](https://developer.android.com/studio/write/java8-support).
+Island Time requires Android Gradle Plugin 4.0 or later and a minimum compile SDK of API 15.
 
 ## Gradle Setup
 
@@ -61,9 +61,7 @@ Extensions are also available for [serialization](extensions/serialization.md) a
 
 ### Android
 
-#### Android Studio 4.0 or later
-
-Make sure that [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) is enabled.
+You'll need to turn on [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) if it isn't enabled already.
 
 === "Groovy"
     ```groovy
@@ -108,10 +106,6 @@ Make sure that [core library desugaring](https://developer.android.com/studio/pr
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
     }
     ```
-
-#### Android Studio 3.6 or earlier
-
-You'll need to add an additional dependency on the ThreeTen Android Backport. You can find details [here](extensions/threetenabp.md).
 
 ### Snapshot builds
 

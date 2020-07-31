@@ -7,10 +7,13 @@ import kotlinx.cinterop.convert
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarIdentifierGregorian
 
+actual val Locale.weekSettings: WeekSettings
+    get() = NSCalendar(NSCalendarIdentifierGregorian)
+        .also { it.locale = this }
+        .run { WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek.convert()) }
+
 internal actual fun systemDefaultWeekSettings(): WeekSettings {
-    return with(NSCalendar.currentCalendar) {
-        WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek().convert())
-    }
+    return with(NSCalendar.currentCalendar) { WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek.convert()) }
 }
 
 internal actual val Locale.firstDayOfWeek: DayOfWeek

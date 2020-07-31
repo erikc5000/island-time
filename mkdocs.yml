@@ -23,7 +23,6 @@ nav:
   - 'Extensions':
       - 'extensions/serialization.md'
       - 'extensions/parcelize.md'
-      - 'extensions/threetenabp.md'
   - 'API':
       - 'core': 'api/core/index.md'
       - 'parcelize-extensions': 'api/parcelize/index.md'
@@ -54,4 +53,4 @@ plugins:
 
 extra:
   versions:
-    islandtime: '0.2.3'
+    islandtime: '0.2.4'

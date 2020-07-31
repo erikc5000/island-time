@@ -9,7 +9,7 @@ import io.islandtime.ranges.DateRange
 /**
  * A month in a particular year.
  *
- * @constructor Create a [YearMonth].
+ * @constructor Creates a [YearMonth].
  * @param year the year
  * @param month the month of the year
  * @throws DateTimeException if the year is outside the supported range
@@ -26,7 +26,7 @@ class YearMonth(
     }
 
     /**
-     * Create a [YearMonth].
+     * Creates a [YearMonth].
      * @throws DateTimeException if the year or month is invalid
      */
     constructor(year: Int, monthNumber: Int) : this(year, monthNumber.toMonth())
@@ -37,7 +37,7 @@ class YearMonth(
     inline val monthNumber: Int get() = month.number
 
     /**
-     * Check if this year-month falls within a leap year.
+     * Checks if this year-month falls within a leap year.
      */
     val isInLeapYear: Boolean get() = isLeapYear(year)
 
@@ -105,7 +105,7 @@ class YearMonth(
     }
 
     /**
-     * Convert this year-month to a string in ISO-8601 extended format.
+     * Converts this date-time to a string in ISO-8601 extended format. For example, `2012-04`.
      */
     override fun toString(): String {
         return buildString(7) {
@@ -116,12 +116,16 @@ class YearMonth(
     }
 
     /**
-     * Create a copy of this [YearMonth], replacing the value of any component, as desired
+     * Returns a copy of this year-month with the values of any individual components replaced by the new values
+     * specified.
+     * @throws DateTimeException if the year is invalid
      */
     fun copy(year: Int = this.year, month: Month = this.month) = YearMonth(year, month)
 
     /**
-     * Create a copy of this [YearMonth], replacing the value of any component, as desired
+     * Returns a copy of this year-month with the values of any individual components replaced by the new values
+     * specified.
+     * @throws DateTimeException if the year or month is invalid
      */
     fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
 

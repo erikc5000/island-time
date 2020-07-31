@@ -61,7 +61,7 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
 
         if (isTimeBased) {
             addAliasedImport(KOTLIN_DURATION_CLASS_NAME, "KotlinDuration")
-            addAliasedImport(ClassName("kotlin.time", lowerCaseName), "kotlin$pluralName")
+            addAliasedImport(ClassName("kotlin.time", lowerPluralName), "kotlin$pluralName")
         }
 
         listOf(
@@ -160,7 +160,7 @@ abstract class TemporalUnitClassGenerator(
     fun build() = listOf(buildClass()) + allExtensionSpecs()
 
     fun buildClass() = io.islandtime.codegen.dsl.buildClassTypeSpec(className) {
-        addKdoc("A number of ${description.lowerCaseName}.")
+        addKdoc("A number of ${description.lowerPluralName}.")
         addModifiers(KModifier.INLINE)
         primaryConstructor(constructorFunSpec)
         addSuperinterface(ClassName("kotlin", "Comparable").parameterizedBy(className))
@@ -297,7 +297,7 @@ fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() =
         addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
         addKdoc("Convert to a [${KOTLIN_DURATION_CLASS_NAME.canonicalName}].")
         returns(KOTLIN_DURATION_CLASS_NAME)
-        addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerCaseName))
+        addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerPluralName))
     }
 
 fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = io.islandtime.codegen.dsl.buildCodeBlock {
@@ -501,7 +501,7 @@ fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
 ) = io.islandtime.codegen.dsl.buildFunSpec(plusOrMinusOperator.functionName) {
     addModifiers(KModifier.OPERATOR)
 
-    val amount = ParameterSpec(conversion.toUnit.lowerCaseName, conversion.toUnit.intClassName)
+    val amount = ParameterSpec(conversion.toUnit.lowerPluralName, conversion.toUnit.intClassName)
     addParameter(amount)
 
     when (conversion.operator) {
@@ -569,7 +569,7 @@ fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
 ) = io.islandtime.codegen.dsl.buildFunSpec(plusOrMinusOperator.functionName) {
     addModifiers(KModifier.OPERATOR)
 
-    val amount = ParameterSpec(conversion.toUnit.lowerCaseName, conversion.toUnit.longClassName)
+    val amount = ParameterSpec(conversion.toUnit.lowerPluralName, conversion.toUnit.longClassName)
     addParameter(amount)
 
     when (conversion.operator) {
@@ -754,7 +754,7 @@ fun TemporalUnitClassGenerator.buildInBiggerUnitConversionSpecs(
         conversion.toUnit.inWholeUnitPropertyName,
         conversion.toUnit.classNameFor(primitive)
     ) {
-        addKdoc("Convert to whole ${conversion.toUnit.lowerCaseName}.")
+        addKdoc("Convert to whole ${conversion.toUnit.lowerPluralName}.")
         getter(
             io.islandtime.codegen.dsl.buildGetterFunSpec {
                 val statement = buildString {
@@ -764,7 +764,7 @@ fun TemporalUnitClassGenerator.buildInBiggerUnitConversionSpecs(
                         append(".toInt()")
                     }
 
-                    append(".${conversion.toUnit.lowerCaseName}")
+                    append(".${conversion.toUnit.lowerPluralName}")
                 }
 
                 addStatement(statement, valuePropertySpec, conversion.propertyClassName)
@@ -789,7 +789,7 @@ fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
         ) {
             addKdoc(
                 """
-                    Convert to ${conversion.toUnit.lowerCaseName}.
+                    Convert to ${conversion.toUnit.lowerPluralName}.
                     @throws ArithmeticException if overflow occurs
                 """.trimIndent()
             )
@@ -797,9 +797,9 @@ fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
                 io.islandtime.codegen.dsl.buildGetterFunSpec {
                     addStatement(
                         if (primitive == Int::class && conversion.toUnit.forceLongInOperators) {
-                            "return (%N.toLong() %T %T).${conversion.toUnit.lowerCaseName}"
+                            "return (%N.toLong() %T %T).${conversion.toUnit.lowerPluralName}"
                         } else {
-                            "return (%N %T %T).${conversion.toUnit.lowerCaseName}"
+                            "return (%N %T %T).${conversion.toUnit.lowerPluralName}"
                         },
                         valuePropertySpec,
                         internal("timesExact"),
@@ -820,22 +820,22 @@ fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
     ) {
         if (overflowSafeMethodRequired) {
             addModifiers(KModifier.INTERNAL)
-            addKdoc("Convert to ${conversion.toUnit.lowerCaseName} without checking for overflow.")
+            addKdoc("Convert to ${conversion.toUnit.lowerPluralName} without checking for overflow.")
         } else {
-            addKdoc("Convert to ${conversion.toUnit.lowerCaseName}.")
+            addKdoc("Convert to ${conversion.toUnit.lowerPluralName}.")
         }
 
         getter(
             io.islandtime.codegen.dsl.buildGetterFunSpec {
                 if (primitive == Int::class && conversion.toUnit.forceLongInOperators) {
                     addStatement(
-                        "return (%N.toLong() * %T).${conversion.toUnit.lowerCaseName}",
+                        "return (%N.toLong() * %T).${conversion.toUnit.lowerPluralName}",
                         valuePropertySpec,
                         conversion.propertyClassName
                     )
                 } else {
                     addStatement(
-                        "return (%N * %T).${conversion.toUnit.lowerCaseName}",
+                        "return (%N * %T).${conversion.toUnit.lowerPluralName}",
                         valuePropertySpec,
                         conversion.propertyClassName
                     )
@@ -848,7 +848,7 @@ fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
 }
 
 fun TemporalUnitClassGenerator.buildPrimitiveExtensionPropertySpec() = io.islandtime.codegen.dsl.buildPropertySpec(
-    description.lowerCaseName,
+    description.lowerPluralName,
     className
 ) {
     addKdoc("Convert to [%T].", className)
@@ -865,12 +865,12 @@ fun TemporalUnitClassGenerator.buildTimesExtensionFunSpec(
     addModifiers(KModifier.OPERATOR)
     addKdoc(
         """
-            Multiply by a number of ${description.lowerCaseName}.
+            Multiply by a number of ${description.lowerPluralName}.
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
     )
 
-    val unit = ParameterSpec(description.lowerCaseName, className)
+    val unit = ParameterSpec(description.lowerPluralName, className)
     addParameter(unit)
     addStatement("return %N * this", unit)
 }
@@ -903,7 +903,7 @@ fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
 
                 val lambdaParameters = allComponentUnits.map { currentUnit ->
                     io.islandtime.codegen.dsl.buildParameterSpec(
-                        currentUnit.lowerCaseName,
+                        currentUnit.lowerPluralName,
                         if (currentUnit == biggestUnit && primitive == Long::class) {
                             currentUnit.longClassName
                         } else {
@@ -959,12 +959,12 @@ fun TemporalUnitClassGenerator.buildToComponentsFunctions(): List<FunSpec> {
                     }
 
                     addNamedCode(
-                        "val ${currentUnit.lowerCaseName} = ${conversionString}.${currentUnit.lowerCaseName}\n",
+                        "val ${currentUnit.lowerPluralName} = ${conversionString}.${currentUnit.lowerPluralName}\n",
                         arguments
                     )
                 }
 
-                val allVariableNames = allComponentUnits.joinToString(", ") { it.lowerCaseName }
+                val allVariableNames = allComponentUnits.joinToString(", ") { it.lowerPluralName }
                 addStatement("return action($allVariableNames)")
             }
         }

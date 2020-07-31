@@ -36,7 +36,7 @@ object IslandTime {
         }
 
     /**
-     * Initialize Island Time.
+     * Initializes Island Time.
      *
      * This method should be called prior to any of use of the library, usually during an application's initialization
      * process. If Island Time is not explicitly initialized, the [PlatformTimeZoneRulesProvider] and all other default
@@ -49,7 +49,7 @@ object IslandTime {
     }
 
     /**
-     * Initialize Island Time with a specific time zone rules provider, leaving all other settings in their default
+     * Initializes Island Time with a specific time zone rules provider, leaving all other settings in their default
      * state.
      *
      * This method should be called prior to any of use of the library, usually during an application's initialization
@@ -64,7 +64,7 @@ object IslandTime {
     }
 
     /**
-     * Reset Island Time to an uninitialized state.
+     * Resets Island Time to an uninitialized state.
      *
      * This method is intended to be used to clean up custom providers in tests. It shouldn't be necessary to call this
      * in production.
