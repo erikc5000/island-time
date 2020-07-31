@@ -46,6 +46,63 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
             }
         }
 
+        property(name = "isInLeapYear", returnType = Boolean::class) {
+            kdoc { "Checks if this ${receiverClass.simpleName} falls within a leap year." }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return isLeapYear(year)" }
+            } else {
+                modifiers(KModifier.INLINE)
+                delegatesTo(receiverClass.datePropertyName)
+            }
+        }
+
+        property(
+            name = if (receiverClass == Date) "isLeapDay" else "isInLeapDay",
+            returnType = Boolean::class
+        ) {
+            kdoc {
+                if (receiverClass == Date) {
+                    "Checks if this ${receiverClass.simpleName} is February 29."
+                } else {
+                    "Checks if this ${receiverClass.simpleName} falls within February 29."
+                }
+            }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return month == Month.FEBRUARY && dayOfMonth == 29" }
+            } else {
+                modifiers(KModifier.INLINE)
+                getter { "return date.isLeapDay" }
+            }
+        }
+
+        property(name = "lengthOfMonth", returnType = measures("IntDays")) {
+            kdoc { "The length of this ${receiverClass.simpleName}'s month in days." }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return month.lengthIn(year)" }
+            } else {
+                modifiers(KModifier.INLINE)
+                delegatesTo(receiverClass.datePropertyName)
+            }
+        }
+
+        property(name = "lengthOfYear", returnType = measures("IntDays")) {
+            kdoc { "The length of this ${receiverClass.simpleName}'s year in days." }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return lengthOfYear(year)" }
+            } else {
+                modifiers(KModifier.INLINE)
+                delegatesTo(receiverClass.datePropertyName)
+            }
+        }
+
         property(name = "week", returnType = intervalClass.typeName) {
             kdoc {
                 """
