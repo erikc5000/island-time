@@ -6,7 +6,7 @@ object Versions {
     const val googleTruth = "1.0.1"
     const val threetenabp = "1.2.4"
     const val kotlinpoet = "1.6.0"
-    const val androidDesugarJdkLibs = "1.0.9"
+    const val androidDesugarJdkLibs = "1.0.11"
 }
 
 object Libs {
