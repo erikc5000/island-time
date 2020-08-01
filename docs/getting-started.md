@@ -32,7 +32,7 @@ Island Time requires Java 8 or above.
 
 ### Android
 
-Island Time requires Android Gradle Plugin 4.0 or later and a minimum compile SDK of API 15.
+Island Time requires Android Gradle Plugin 4.0 or later and a minimum compile SDK of API 21.
 
 ## Gradle Setup
 
