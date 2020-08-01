@@ -3,7 +3,7 @@ package io.islandtime.format
 import io.islandtime.locale.Locale
 
 /**
- * Defines the set of characters that should be used when parsing or formatting numbers.
+ * The set of characters that should be used when parsing or formatting numbers.
  *
  * @property zeroDigit The character that represents zero.
  * @property plusSign A list of allowed plus sign characters. The first element will be used when formatting.

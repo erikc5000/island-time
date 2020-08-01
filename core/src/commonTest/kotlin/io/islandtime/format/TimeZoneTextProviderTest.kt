@@ -1,14 +1,17 @@
 package io.islandtime.format
 
 import io.islandtime.TimeZone
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNull
 
 @Suppress("PrivatePropertyName")
 class TimeZoneTextProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeOf("en-US")
-    private val de_DE = localeOf("de-DE")
+    private val en_US = "en-US".toLocale()
+    private val de_DE = "de-DE".toLocale()
 
     @Test
     fun `timeZoneTextFor() returns null when given a fixed offset time zone`() {

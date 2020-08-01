@@ -6,7 +6,6 @@ import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.internal.systemDefaultTimeZone
 import io.islandtime.locale.Locale
-import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
 import io.islandtime.parser.*
@@ -56,7 +55,7 @@ sealed class TimeZone : Comparable<TimeZone> {
     fun validated(): TimeZone = apply { validate() }
 
     /**
-     * The localized name of this time zone, if available for the locale in the specified style. The result depends on
+     * The localized name of this time zone, if available for the [locale] in the specified style. The result depends on
      * the configured [TimeZoneTextProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
@@ -69,13 +68,13 @@ sealed class TimeZone : Comparable<TimeZone> {
      *
      * @see displayName
      */
-    fun localizedName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String? {
+    fun localizedName(style: TimeZoneTextStyle, locale: Locale): String? {
         return TimeZoneTextProvider.timeZoneTextFor(this, style, locale)
     }
 
     /**
      * A textual representation of this time zone, suitable for display purposes. The localized name will be returned,
-     * if available for the locale in the specified style. If not, the [id] will be returned instead.
+     * if available for the [locale] in the specified style. If not, the [id] will be returned instead.
      *
      * The result depends on the configured [TimeZoneTextProvider] and may differ between platforms.
      *
@@ -90,7 +89,7 @@ sealed class TimeZone : Comparable<TimeZone> {
      * @see localizedName
      * @see id
      */
-    fun displayName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String {
+    fun displayName(style: TimeZoneTextStyle, locale: Locale): String {
         return localizedName(style, locale) ?: id
     }
 
