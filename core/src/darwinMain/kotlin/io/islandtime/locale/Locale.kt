@@ -6,7 +6,4 @@ import platform.Foundation.currentLocale
 actual typealias Locale = NSLocale
 
 actual fun defaultLocale(): Locale = NSLocale.currentLocale
-
-internal actual fun localeOf(identifier: String): Locale {
-    return NSLocale(identifier)
-}
+actual fun String.toLocale(): Locale = NSLocale(this)

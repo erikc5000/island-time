@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.format.TextStyle
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.measures.days
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
@@ -11,9 +11,9 @@ import kotlin.test.assertFailsWith
 
 @Suppress("PrivatePropertyName")
 class DayOfWeekTest : AbstractIslandTimeTest() {
-    private val en_US = localeOf("en-US")
-    private val de_DE = localeOf("de-DE")
-    private val ar_EG = localeOf("ar-EG")
+    private val en_US = "en-US".toLocale()
+    private val de_DE = "de-DE".toLocale()
+    private val ar_EG = "ar-EG".toLocale()
 
     @Test
     fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {

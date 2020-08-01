@@ -5,7 +5,7 @@ import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.WeekSettings.Companion.ISO
 import io.islandtime.calendar.WeekSettings.Companion.SUNDAY_START
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.measures.hours
 import io.islandtime.measures.days
 import io.islandtime.measures.weeks
@@ -18,7 +18,7 @@ import kotlin.test.assertTrue
 
 class DatePropertiesTest : AbstractIslandTimeTest() {
     @Suppress("PrivatePropertyName")
-    private val en_US = localeOf("en-US")
+    private val en_US = "en-US".toLocale()
 
     private val nyZone = TimeZone("America/New_York")
 
