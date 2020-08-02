@@ -2,18 +2,14 @@
 
 package io.islandtime.internal
 
-import io.islandtime.Instant
-import io.islandtime.PlatformInstant
-import io.islandtime.TimeZone
+import io.islandtime.*
 import io.islandtime.jvm.toIslandInstant
 import io.islandtime.jvm.toJavaInstant
 
-internal actual val PlatformInstant.secondOfUnixEpoch: Long get() = epochSecond
-internal actual val PlatformInstant.nanosecond: Int get() = nano
+internal actual fun systemDefaultTimeZone(): TimeZone = java.util.TimeZone.getDefault().toIslandTimeZone()
+
 internal actual fun PlatformInstant.toIslandInstant(): Instant = this.toIslandInstant()
 internal actual fun Instant.toPlatformInstant(): PlatformInstant = this.toJavaInstant()
-
-internal actual fun systemDefaultTimeZone(): TimeZone = java.util.TimeZone.getDefault().toIslandTimeZone()
 
 private var lastDefaultTimeZone: Pair<java.util.TimeZone, TimeZone>? = null
 

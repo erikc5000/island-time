@@ -11,7 +11,7 @@ import io.islandtime.parser.*
 import io.islandtime.ranges.InstantInterval
 
 /**
- * A platform-specific representation of an instant.
+ * A platform-specific representation of an instant in time.
  */
 expect class PlatformInstant
 

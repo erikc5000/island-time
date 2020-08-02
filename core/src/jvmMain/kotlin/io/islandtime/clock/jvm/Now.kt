@@ -1,7 +1,8 @@
 package io.islandtime.clock.jvm
 
 import io.islandtime.*
-import io.islandtime.internal.*
+import io.islandtime.clock.internal.*
+import io.islandtime.internal.toIslandInstant
 import io.islandtime.jvm.toIslandTimeZone
 import java.time.Clock as JavaClock
 

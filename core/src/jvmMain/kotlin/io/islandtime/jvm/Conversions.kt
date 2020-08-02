@@ -354,7 +354,7 @@ fun IntNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofN
 fun LongNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value)
 
 /**
- * Makes this clock compatible with Island Time's [Clock].
+ * Makes this clock compatible with Island Time's [Clock] interface.
  */
 fun java.time.Clock.asIslandClock(): Clock = WrappedJavaClock(clock = this)
 
