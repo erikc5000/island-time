@@ -2,6 +2,9 @@ package io.islandtime.jvm
 
 import com.google.common.truth.Truth.assertThat
 import io.islandtime.Date
+import io.islandtime.isInLeapYear
+import io.islandtime.lengthOfMonth
+import io.islandtime.lengthOfYear
 import io.islandtime.ranges.periodBetween
 import org.junit.Test
 import java.time.LocalDate

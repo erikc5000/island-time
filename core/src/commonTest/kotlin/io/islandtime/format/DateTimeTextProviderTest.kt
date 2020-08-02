@@ -2,15 +2,15 @@ package io.islandtime.format
 
 import io.islandtime.DateTimeException
 import io.islandtime.base.DateTimeField
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 @Suppress("PrivatePropertyName")
 class DateTimeTextProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeOf("en-US")
-    private val de_DE = localeOf("de-DE")
-    private val pl_PL = localeOf("pl-PL")
+    private val en_US = "en-US".toLocale()
+    private val de_DE = "de-DE".toLocale()
+    private val pl_PL = "pl-PL".toLocale()
 
     @Test
     fun `textFor() throws an exception when value is out of range`() {

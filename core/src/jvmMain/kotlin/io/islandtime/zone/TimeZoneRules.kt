@@ -1,5 +1,3 @@
-@file:Suppress("NewApi")
-
 package io.islandtime.zone
 
 import io.islandtime.DateTime
