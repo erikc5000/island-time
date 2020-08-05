@@ -12,7 +12,7 @@ import io.islandtime.ranges.OffsetDateTimeInterval
  * application of time zone rules may be undesirable. For most applications, [ZonedDateTime] is a better choice since
  * it takes time zone rules into account when performing calendrical calculations.
  *
- * @constructor Create an [OffsetDateTime] by combining a [DateTime] and [UtcOffset].
+ * @constructor Creates an [OffsetDateTime] by combining a [DateTime] and [UtcOffset].
  * @param dateTime the local date and time of day
  * @param offset the offset from UTC
  * @throws DateTimeException if the offset is invalid
@@ -29,13 +29,13 @@ class OffsetDateTime(
     }
 
     /**
-     * Create an [OffsetDateTime].
+     * Creates an [OffsetDateTime].
      * @throws DateTimeException if the offset is invalid
      */
     constructor(date: Date, time: Time, offset: UtcOffset) : this(DateTime(date, time), offset)
 
     /**
-     * Create an [OffsetDateTime].
+     * Creates an [OffsetDateTime].
      * @throws DateTimeException if the date-time or offset is invalid
      */
     constructor(
@@ -50,7 +50,7 @@ class OffsetDateTime(
     ) : this(DateTime(year, month, dayOfMonth, hour, minute, second, nanosecond), offset)
 
     /**
-     * Create an [OffsetDateTime].
+     * Creates an [OffsetDateTime].
      * @throws DateTimeException if the date-time or offset is invalid
      */
     constructor(
@@ -65,7 +65,7 @@ class OffsetDateTime(
     ) : this(DateTime(year, monthNumber.toMonth(), dayOfMonth, hour, minute, second, nanosecond), offset)
 
     /**
-     * Create an [OffsetDateTime].
+     * Creates an [OffsetDateTime].
      * @throws DateTimeException if the date-time or offset is invalid
      */
     constructor(
@@ -129,7 +129,7 @@ class OffsetDateTime(
     inline val dayOfMonth: Int get() = dateTime.dayOfMonth
 
     /**
-     * The day of the year -- also known as the ordinal date in ISO-8601.
+     * The day of the year.
      */
     inline val dayOfYear: Int get() = dateTime.dayOfYear
 
@@ -137,26 +137,6 @@ class OffsetDateTime(
      * The year.
      */
     inline val year: Int get() = dateTime.year
-
-    /**
-     * Check if this date falls within a leap year.
-     */
-    inline val isInLeapYear: Boolean get() = dateTime.isInLeapYear
-
-    /**
-     * Check if this is a leap day.
-     */
-    inline val isLeapDay: Boolean get() = dateTime.isLeapDay
-
-    /**
-     * The length of this date's month in days.
-     */
-    inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
-
-    /**
-     * The length of this date's year in days.
-     */
-    inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
 
     @Deprecated(
         "Use toYearMonth() instead.",
@@ -189,7 +169,7 @@ class OffsetDateTime(
         get() = dateTime.millisecondsSinceUnixEpochAt(offset)
 
     /**
-     * Changes the offset of an [OffsetDateTime], adjusting the date and time components such that the instant
+     * Changes the offset of this [OffsetDateTime], adjusting the date and time components such that the instant
      * represented by it remains the same.
      */
     fun adjustedTo(newOffset: UtcOffset): OffsetDateTime {
@@ -335,12 +315,12 @@ class OffsetDateTime(
 
     companion object {
         /**
-         * The smallest supported [OffsetDateTime], which can be used as a "far past" sentinel.
+         * The earliest supported [OffsetDateTime], which can be used as a "far past" sentinel.
          */
         val MIN = DateTime.MIN at UtcOffset.MAX
 
         /**
-         * The largest supported [OffsetDateTime], which can be used as a "far future" sentinel.
+         * The latest supported [OffsetDateTime], which can be used as a "far future" sentinel.
          */
         val MAX = DateTime.MAX at UtcOffset.MIN
 
@@ -357,14 +337,14 @@ class OffsetDateTime(
         val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
         /**
-         * Create an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
+         * Creates an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
          */
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): OffsetDateTime {
             return OffsetDateTime(DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset), offset)
         }
 
         /**
-         * Create an [OffsetDateTime] from a duration of seconds relative to the Unix epoch at [offset], optionally,
+         * Creates an [OffsetDateTime] from a duration of seconds relative to the Unix epoch at [offset], optionally,
          * with some number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
@@ -376,14 +356,14 @@ class OffsetDateTime(
         }
 
         /**
-         * Create an [OffsetDateTime] from the millisecond of the Unix epoch at [offset].
+         * Creates an [OffsetDateTime] from the millisecond of the Unix epoch at [offset].
          */
         fun fromMillisecondOfUnixEpoch(millisecond: Long, offset: UtcOffset): OffsetDateTime {
             return OffsetDateTime(DateTime.fromMillisecondOfUnixEpoch(millisecond, offset), offset)
         }
 
         /**
-         * Create an [OffsetDateTime] from the second of the Unix epoch at [offset] and optionally, the nanosecond of
+         * Creates an [OffsetDateTime] from the second of the Unix epoch at [offset] and optionally, the nanosecond of
          * the second.
          */
         fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int = 0, offset: UtcOffset): OffsetDateTime {
@@ -411,17 +391,17 @@ class OffsetDateTime(
 }
 
 /**
- * Combine a local date and time with a UTC offset to create an [OffsetDateTime].
+ * Combines a local date and time with a UTC offset to create an [OffsetDateTime].
  */
 infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
 
 /**
- * Combine a local date with a time and UTC offset to create an [OffsetDateTime].
+ * Combines a local date with a time and UTC offset to create an [OffsetDateTime].
  */
 infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
 
 /**
- * Combine an instant with a UTC offset to create an [OffsetDateTime].
+ * Combines an instant with a UTC offset to create an [OffsetDateTime].
  */
 infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
 
@@ -433,7 +413,7 @@ infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offse
 fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
 
 /**
- * Convert a string to an [OffsetDateTime].
+ * Converts a string to an [OffsetDateTime].
  *
  * The string is assumed to be an ISO-8601 date-time with the UTC offset in extended format. For example,
  * `2019-05-30T02:30+01:00`. The output of [OffsetDateTime.toString] can be safely parsed using this method.
@@ -444,7 +424,7 @@ fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
 fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
 /**
- * Convert a string to an [OffsetDateTime] using a specific parser.
+ * Converts a string to an [OffsetDateTime] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *

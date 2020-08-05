@@ -1,6 +1,7 @@
 package io.islandtime
 
 import io.islandtime.calendar.WeekSettings.Companion.SUNDAY_START
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.TestData
 import kotlin.test.Test
@@ -8,6 +9,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class WeekDateTest : AbstractIslandTimeTest() {
+    @Suppress("PrivatePropertyName")
+    private val en_US = "en-US".toLocale()
+
     @Test
     fun `Date_toWeekDate() converts to ISO week date`() {
         TestData.isoWeekDates.forEach { (date, weekDate) ->
@@ -18,7 +22,8 @@ class WeekDateTest : AbstractIslandTimeTest() {
     @Test
     fun `Date_toWeekDate() converts to week date with Sunday start week definition`() {
         TestData.sundayStartWeekDates.forEach { (date, weekDate) ->
-            assertEquals(weekDate, date.toWeekDate(SUNDAY_START, ::Triple), date.toString())
+            assertEquals(weekDate, date.toWeekDate(SUNDAY_START, ::Triple), message = "$date (SUNDAY_START)")
+            assertEquals(weekDate, date.toWeekDate(en_US, ::Triple), message = "$date (en-US)")
         }
     }
 
@@ -75,7 +80,8 @@ class WeekDateTest : AbstractIslandTimeTest() {
     fun `Date_fromWeekDate() creates a Date from a Sunday start week date`() {
         TestData.sundayStartWeekDates.filter { it.first != Date.MAX }.forEach { (date, weekDate) ->
             val (year, week, day) = weekDate
-            assertEquals(date, Date.fromWeekDate(year, week, day, SUNDAY_START), date.toString())
+            assertEquals(date, Date.fromWeekDate(year, week, day, SUNDAY_START), message = "$date (SUNDAY_START)")
+            assertEquals(date, Date.fromWeekDate(year, week, day, en_US), message = "$date (en-US)")
         }
     }
 }

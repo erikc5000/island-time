@@ -8,13 +8,10 @@ import io.islandtime.measures.IntWeeks
 import io.islandtime.measures.weeks
 import io.islandtime.measures.years
 
-internal inline val Date.weekOfMonthImpl: Int get() = weekOfMonthImpl(WeekSettings.ISO)
 internal inline fun Date.weekOfMonthImpl(settings: WeekSettings): Int = weekNumber(dayOfMonth, settings)
-internal inline val Date.weekOfYearImpl: Int get() = weekOfYearImpl(WeekSettings.ISO)
 internal inline fun Date.weekOfYearImpl(settings: WeekSettings): Int = weekNumber(dayOfYear, settings)
-internal inline val Date.weekBasedYearImpl: Int get() = weekBasedYearImpl(WeekSettings.ISO)
 
-internal inline fun Date.weekBasedYearImpl(settings: WeekSettings): Int {
+internal fun Date.weekBasedYearImpl(settings: WeekSettings): Int {
     val dayOfYear = dayOfYear
     val offset = startOfWeekOffset(dayOfWeek, dayOfYear, settings)
     val week = weekNumber(dayOfYear, offset)
@@ -31,9 +28,7 @@ internal inline fun Date.weekBasedYearImpl(settings: WeekSettings): Int {
     }
 }
 
-internal inline val Date.weekOfWeekBasedYearImpl: Int get() = weekOfWeekBasedYearImpl(WeekSettings.ISO)
-
-internal inline fun Date.weekOfWeekBasedYearImpl(settings: WeekSettings): Int {
+internal fun Date.weekOfWeekBasedYearImpl(settings: WeekSettings): Int {
     val dayOfYear = dayOfYear
     val offset = startOfWeekOffset(dayOfWeek, dayOfYear, settings)
     val week = weekNumber(dayOfYear, offset)

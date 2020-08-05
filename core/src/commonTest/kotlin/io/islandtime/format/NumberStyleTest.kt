@@ -1,6 +1,6 @@
 package io.islandtime.format
 
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -8,9 +8,9 @@ import kotlin.test.todo
 
 @Suppress("PrivatePropertyName")
 class NumberStyleTest {
-    private val en_US = localeOf("en-US")
-    private val de_DE = localeOf("de-DE")
-    private val hi_IN_u_nu_native = localeOf("hi-IN-u-nu-native")
+    private val en_US = "en-US".toLocale()
+    private val de_DE = "de-DE".toLocale()
+    private val hi_IN_u_nu_native = "hi-IN-u-nu-native".toLocale()
 
     @Test
     fun `throws an exception when given any empty list`() {

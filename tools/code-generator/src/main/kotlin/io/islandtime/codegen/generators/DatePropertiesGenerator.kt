@@ -46,6 +46,63 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
             }
         }
 
+        property(name = "isInLeapYear", returnType = Boolean::class) {
+            kdoc { "Checks if this ${receiverClass.simpleName} falls within a leap year." }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return isLeapYear(year)" }
+            } else {
+                modifiers(KModifier.INLINE)
+                delegatesTo(receiverClass.datePropertyName)
+            }
+        }
+
+        property(
+            name = if (receiverClass == Date) "isLeapDay" else "isInLeapDay",
+            returnType = Boolean::class
+        ) {
+            kdoc {
+                if (receiverClass == Date) {
+                    "Checks if this ${receiverClass.simpleName} is February 29."
+                } else {
+                    "Checks if this ${receiverClass.simpleName} falls within February 29."
+                }
+            }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return month == Month.FEBRUARY && dayOfMonth == 29" }
+            } else {
+                modifiers(KModifier.INLINE)
+                getter { "return date.isLeapDay" }
+            }
+        }
+
+        property(name = "lengthOfMonth", returnType = measures("IntDays")) {
+            kdoc { "The length of this ${receiverClass.simpleName}'s month in days." }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return month.lengthIn(year)" }
+            } else {
+                modifiers(KModifier.INLINE)
+                delegatesTo(receiverClass.datePropertyName)
+            }
+        }
+
+        property(name = "lengthOfYear", returnType = measures("IntDays")) {
+            kdoc { "The length of this ${receiverClass.simpleName}'s year in days." }
+            receiver(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                getter { "return lengthOfYear(year)" }
+            } else {
+                modifiers(KModifier.INLINE)
+                delegatesTo(receiverClass.datePropertyName)
+            }
+        }
+
         property(name = "week", returnType = intervalClass.typeName) {
             kdoc {
                 """
@@ -93,13 +150,14 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
     }
 
     property(name = "weekOfMonth", returnType = Int::class) {
-        kdoc { "The week of the month (0-5) according to the ISO definition." }
+        kdoc { "The week of the month, from 0-6, calculated using the ISO week definition." }
         receiver(receiverClass.typeName)
 
         if (receiverClass == Date) {
             getter {
                 using("impl", internal("weekOfMonthImpl"))
-                "return %impl:T"
+                using("weekSettings", calendar("WeekSettings"))
+                "return %impl:T(%weekSettings:T.ISO)"
             }
         } else {
             modifiers(KModifier.INLINE)
@@ -108,7 +166,7 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
     }
 
     function(name = "weekOfMonth") {
-        kdoc { "The week of the month (0-5) according to the week definition in [settings]." }
+        kdoc { "The week of the month, from 0-6, calculated using the week definition in [settings]." }
         receiver(receiverClass.typeName)
         argument("settings", calendar("WeekSettings"))
         returns(Int::class)
@@ -123,11 +181,37 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         }
     }
 
+    function(name = "weekOfMonth") {
+        kdoc {
+            """
+                The week of the month, from 0-6, calculated using the default week definition associated with the
+                provided [locale].
+                
+                Keep in mind that that the system's calendar settings may differ from that of the default locale on
+                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+            """.trimIndent()
+        }
+
+        receiver(receiverClass.typeName)
+        argument("locale", locale("Locale"))
+        returns(Int::class)
+
+        if (receiverClass == Date) {
+            code {
+                using("impl", internal("weekOfMonthImpl"))
+                using("weekSettings", calendar("weekSettings"))
+                "return %impl:T(%locale:N.%weekSettings:T)"
+            }
+        } else {
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
     property(name = "weekOfYear", returnType = Int::class) {
         kdoc {
             """
-                The week of the year according to the ISO week definition. If the week number is associated with the
-                preceding year, `0` will be returned.
+                The week of the year, calculated using the ISO week definition. If the week number is associated with
+                the preceding year, `0` will be returned.
 
                 To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
 
@@ -140,7 +224,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         if (receiverClass == Date) {
             getter {
                 using("impl", internal("weekOfYearImpl"))
-                "return %impl:T"
+                using("weekSettings", calendar("WeekSettings"))
+                "return %impl:T(%weekSettings:T.ISO)"
             }
         } else {
             modifiers(KModifier.INLINE)
@@ -151,8 +236,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
     function("weekOfYear") {
         kdoc {
             """
-                The week of the year according to the week definition in [settings]. If the week number is associated
-                with the preceding year, `0` will be returned.
+                The week of the year, calculated using the week definition in [settings]. If the week number is
+                associated with the preceding year, `0` will be returned.
 
                 To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
                 
@@ -174,11 +259,42 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         }
     }
 
+    function("weekOfYear") {
+        kdoc {
+            """
+                The week of the year, calculated using the week definition associated with the provided [locale]. If the
+                week number is associated with the preceding year, `0` will be returned.
+
+                To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+                
+                Keep in mind that that the system's calendar settings may differ from that of the default locale on
+                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                
+                @see weekOfWeekBasedYear
+            """.trimIndent()
+        }
+
+        receiver(receiverClass.typeName)
+        argument("locale", locale("Locale"))
+        returns(Int::class)
+
+        if (receiverClass == Date) {
+            code {
+                using("impl", internal("weekOfYearImpl"))
+                using("weekSettings", calendar("weekSettings"))
+                "return %impl:T(%locale:N.%weekSettings:T)"
+            }
+        } else {
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
     property(name = "weekBasedYear", returnType = Int::class) {
         kdoc {
             """
                 The week-based year used in the ISO [week·date·system](https://en.wikipedia.org/wiki/ISO_week_date).
-                This differs from the regular ISO year when the week number falls in the preceding or following year.
+                This value differs from the regular ISO year when the week number falls in the preceding or following
+                year.
                 
                 @see weekOfWeekBasedYear
             """.trimIndent()
@@ -189,7 +305,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         if (receiverClass == Date) {
             getter {
                 using("impl", internal("weekBasedYearImpl"))
-                "return %impl:T"
+                using("weekSettings", calendar("WeekSettings"))
+                "return %impl:T(%weekSettings:T.ISO)"
             }
         } else {
             modifiers(KModifier.INLINE)
@@ -200,8 +317,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
     function(name = "weekBasedYear") {
         kdoc {
             """
-                The week-based year according to the week definition in [settings]. This differs from the regular ISO
-                year when the week number falls in the preceding or following year.
+                The week-based year, calculated using the week definition in [settings]. This value differs from the
+                regular ISO year when the week number falls in the preceding or following year.
                 
                 @see weekOfWeekBasedYear
             """.trimIndent()
@@ -215,6 +332,34 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
             code {
                 using("impl", internal("weekBasedYearImpl"))
                 "return %impl:T(%settings:N)"
+            }
+        } else {
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
+    function(name = "weekBasedYear") {
+        kdoc {
+            """
+                The week-based year, calculated using the week definition associated with the provided [locale]. This
+                value differs from the regular ISO year when the week number falls in the preceding or following year.
+                
+                Keep in mind that that the system's calendar settings may differ from that of the default locale on
+                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                
+                @see weekOfWeekBasedYear
+            """.trimIndent()
+        }
+
+        receiver(receiverClass.typeName)
+        argument("locale", locale("Locale"))
+        returns(Int::class)
+
+        if (receiverClass == Date) {
+            code {
+                using("impl", internal("weekBasedYearImpl"))
+                using("weekSettings", calendar("weekSettings"))
+                "return %impl:T(%locale:N.%weekSettings:T)"
             }
         } else {
             delegatesTo(receiverClass.datePropertyName)
@@ -235,7 +380,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         if (receiverClass == Date) {
             getter {
                 using("impl", internal("weekOfWeekBasedYearImpl"))
-                "return %impl:T"
+                using("weekSettings", calendar("WeekSettings"))
+                "return %impl:T(%weekSettings:T.ISO)"
             }
         } else {
             modifiers(KModifier.INLINE)
@@ -246,7 +392,7 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
     function(name = "weekOfWeekBasedYear") {
         kdoc {
             """
-                The week number of the week-based year according to the week definition in [settings].
+                The week number of the week-based year, calculated using the week definition in [settings].
                 
                 @see weekBasedYear
             """.trimIndent()
@@ -260,6 +406,34 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
             code {
                 using("impl", internal("weekOfWeekBasedYearImpl"))
                 "return %impl:T(%settings:N)"
+            }
+        } else {
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
+    function(name = "weekOfWeekBasedYear") {
+        kdoc {
+            """
+                The week number of the week-based year, calculated using the week definition associated with the
+                provided [locale].
+                
+                Keep in mind that that the system's calendar settings may differ from that of the default locale on
+                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                
+                @see weekBasedYear
+            """.trimIndent()
+        }
+
+        receiver(receiverClass.typeName)
+        argument("locale", locale("Locale"))
+        returns(Int::class)
+
+        if (receiverClass == Date) {
+            code {
+                using("impl", internal("weekOfWeekBasedYearImpl"))
+                using("weekSettings", calendar("weekSettings"))
+                "return %impl:T(%locale:N.%weekSettings:T)"
             }
         } else {
             delegatesTo(receiverClass.datePropertyName)

@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.format.TextStyle
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.measures.days
 import io.islandtime.measures.months
 import io.islandtime.test.AbstractIslandTimeTest
@@ -78,7 +78,7 @@ class MonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `localizedName() and displayName() get localized text from the provider`() {
-        @Suppress("LocalVariableName") val en_US = localeOf("en-US")
+        @Suppress("LocalVariableName") val en_US = "en-US".toLocale()
         assertEquals("April", Month.APRIL.localizedName(TextStyle.FULL_STANDALONE, en_US))
         assertEquals("Jun", Month.JUNE.displayName(TextStyle.SHORT_STANDALONE, en_US))
     }

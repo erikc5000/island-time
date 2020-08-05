@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class NowTest : AbstractIslandTimeTest() {
     @Test
     fun `Year_now()`() {
-        val clock = FixedClock((-1L).milliseconds)
+        val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(Year(1969), Year.now(clock))
 
         clock += 1.milliseconds
@@ -20,7 +20,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `YearMonth_now()`() {
-        val clock = FixedClock((-1L).milliseconds)
+        val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(YearMonth(1969, Month.DECEMBER), YearMonth.now(clock))
 
         clock += 1.milliseconds
@@ -29,7 +29,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `Date_now() in UTC`() {
-        val clock = FixedClock((-1L).milliseconds)
+        val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(Date(1969, Month.DECEMBER, 31), Date.now(clock))
 
         clock += 1.milliseconds
@@ -38,13 +38,13 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `Date_now() with offset`() {
-        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
+        val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(Date(1969, Month.DECEMBER, 30), Date.now(clock))
     }
 
     @Test
     fun `DateTime_now() in UTC`() {
-        val clock = FixedClock((-1L).milliseconds)
+        val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(
             DateTime(1969, Month.DECEMBER, 31, 23, 59, 59, 999_000_000),
             DateTime.now(clock)
@@ -65,7 +65,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `DateTime_now() with offset`() {
-        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
+        val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(
             DateTime(1969, Month.DECEMBER, 30, 23, 0),
             DateTime.now(clock)
@@ -74,7 +74,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `Time_now() in UTC`() {
-        val clock = FixedClock((-1).days)
+        val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone.UTC)
         assertEquals(Time(0, 0), Time.now(clock))
 
         clock += 1.milliseconds
@@ -92,25 +92,25 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `Time_now() with offset`() {
-        val clock1 = FixedClock((-1).days, TimeZone("Etc/GMT+4"))
+        val clock1 = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+4"))
         assertEquals(Time(20, 0), Time.now(clock1))
 
-        val clock2 = FixedClock((-1).days, TimeZone("Etc/GMT-4"))
+        val clock2 = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT-4"))
         assertEquals(Time(4, 0), Time.now(clock2))
     }
 
     @Test
     fun `OffsetTime_now()`() {
-        val clock1 = FixedClock((-1).days, TimeZone("Etc/GMT+4"))
+        val clock1 = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+4"))
         assertEquals(OffsetTime(Time(20, 0), (-4).hours.asUtcOffset()), OffsetTime.now(clock1))
 
-        val clock2 = FixedClock((-1).days, TimeZone("Etc/GMT-4"))
+        val clock2 = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT-4"))
         assertEquals(OffsetTime(Time(4, 0), 4.hours.asUtcOffset()), OffsetTime.now(clock2))
     }
 
     @Test
     fun `OffsetDateTime_now()`() {
-        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
+        val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(
             OffsetDateTime(
                 DateTime(1969, Month.DECEMBER, 30, 23, 0),
@@ -131,7 +131,7 @@ class NowTest : AbstractIslandTimeTest() {
 
     @Test
     fun `ZonedDateTime_now()`() {
-        val clock = FixedClock((-1).days, TimeZone("Etc/GMT+1"))
+        val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(
             ZonedDateTime(
                 DateTime(1969, Month.DECEMBER, 30, 23, 0),

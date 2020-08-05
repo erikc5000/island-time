@@ -3,7 +3,6 @@ package io.islandtime
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
-import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntMonths
 import io.islandtime.measures.LongMonths
@@ -65,7 +64,7 @@ enum class Month {
 
 
     /**
-     * Get the ISO month number, from 1-12.
+     * The ISO month number, from 1-12.
      */
     val number: Int get() = ordinal + 1
 
@@ -99,7 +98,7 @@ enum class Month {
         }
 
     /**
-     * The localized name of the month, if available for the locale in the specified style. The result depends on the
+     * The localized name of the month, if available for the [locale] in the specified style. The result depends on the
      * configured [DateTimeTextProvider] and may differ between platforms.
      *
      * @param style the style of text
@@ -107,7 +106,7 @@ enum class Month {
      * @return the localized name or `null` if unavailable for the specified locale
      * @see displayName
      */
-    fun localizedName(style: TextStyle, locale: Locale = defaultLocale()): String? {
+    fun localizedName(style: TextStyle, locale: Locale): String? {
         return DateTimeTextProvider.monthTextFor(number.toLong(), style, locale)
     }
 
@@ -122,12 +121,12 @@ enum class Month {
      * @return the localized name or [number] if unavailable for the specified locale
      * @see localizedName
      */
-    fun displayName(style: TextStyle, locale: Locale = defaultLocale()): String {
+    fun displayName(style: TextStyle, locale: Locale): String {
         return localizedName(style, locale) ?: number.toString()
     }
 
     /**
-     * Get the number of days in the month for a particular year.
+     * Returns the number of days in the month for a particular year.
      * @param year retrieve the length of the month within this year
      * @return the number of days in the month
      */
@@ -139,16 +138,13 @@ enum class Month {
     }
 
     /**
-     * The last day of the month in a particular year.
+     * Returns the last day of the month in a particular year.
      */
     fun lastDayIn(year: Int) = lengthIn(year).value
 
     /**
-     * The day of the year that this month's first days falls on.  This may vary depending on whether or not the year is
-     * a leap year.
-     *
-     * For example, the first day of [MARCH] will be either 60th or 61st day of the year.
-     *
+     * Returns the day of the year that this month's first days falls on. This may vary depending on whether or not the
+     * year is a leap year. For example, the first day of [MARCH] will be either 60th or 61st day of the year.
      * @param year retrieve the day of year number within this year
      * @return the first day of year number
      */
@@ -157,11 +153,8 @@ enum class Month {
     }
 
     /**
-     * The day of the year that this month's last day falls on. This may vary depending on whether or not the year is a
-     * leap year.
-     *
-     * For example, the last of [FEBRUARY] will be either 59th or 60th day of the year.
-     *
+     * Returns the day of the year that this month's last day falls on. This may vary depending on whether or not the
+     * year is a leap year. For example, the last of [FEBRUARY] will be either 59th or 60th day of the year.
      * @param year retrieve the day of year number within this year
      * @return the last day of year number
      */
@@ -176,7 +169,7 @@ enum class Month {
     }
 
     /**
-     * The range of valid days for this month within a given year
+     * Returns the range of valid days for this month within a given year
      * @param year retrieve the day range within this year
      * @return the range of valid days
      */
@@ -185,22 +178,22 @@ enum class Month {
     }
 
     /**
-     * Add months to this month, wrapping when the beginning or end of the year is reached.
+     * Adds months to this month, wrapping when the beginning or end of the year is reached.
      */
     operator fun plus(months: IntMonths) = plus(months.value % 12)
 
     /**
-     * Add months to this month, wrapping when the beginning or end of the year is reached.
+     * Adds months to this month, wrapping when the beginning or end of the year is reached.
      */
     operator fun plus(months: LongMonths) = plus((months.value % 12).toInt())
 
     /**
-     * Subtract months from this month, wrapping when the beginning or end of the year is reached.
+     * Subtracts months from this month, wrapping when the beginning or end of the year is reached.
      */
     operator fun minus(months: IntMonths) = plus(-(months.value % 12))
 
     /**
-     * Subtract months from this month, wrapping when the beginning or end of the year is reached.
+     * Subtracts months from this month, wrapping when the beginning or end of the year is reached.
      */
     operator fun minus(months: LongMonths) = plus(-(months.value % 12).toInt())
 
@@ -215,7 +208,7 @@ enum class Month {
 }
 
 /**
- * Convert an ISO month number (from 1-12) to a [Month].
+ * Converts an ISO month number, from 1-12, to a [Month].
  */
 fun Int.toMonth(): Month {
     if (this !in Month.MIN.number..Month.MAX.number) {

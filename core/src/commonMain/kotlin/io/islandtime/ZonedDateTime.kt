@@ -72,7 +72,7 @@ class ZonedDateTime private constructor(
     inline val dayOfMonth: Int get() = dateTime.dayOfMonth
 
     /**
-     * The day of the year -- also known as the ordinal date in ISO-8601.
+     * The day of the year.
      */
     inline val dayOfYear: Int get() = dateTime.dayOfYear
 
@@ -80,26 +80,6 @@ class ZonedDateTime private constructor(
      * The year.
      */
     inline val year: Int get() = dateTime.year
-
-    /**
-     * Check if this date falls within a leap year.
-     */
-    inline val isInLeapYear: Boolean get() = dateTime.isInLeapYear
-
-    /**
-     * Check if this is a leap day.
-     */
-    inline val isLeapDay: Boolean get() = dateTime.isLeapDay
-
-    /**
-     * The length of this date's month in days.
-     */
-    inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
-
-    /**
-     * The length of this date's year in days.
-     */
-    inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
 
     @Deprecated(
         "Use toYearMonth() instead.",
@@ -413,7 +393,7 @@ class ZonedDateTime private constructor(
 
     companion object {
         /**
-         * Compare by instant, then date-time, then time zone. Using this `Comparator` guarantees a deterministic order
+         * Compares by instant, then date-time, then time zone. Using this `Comparator` guarantees a deterministic order
          * when sorting.
          */
         val DEFAULT_SORT_ORDER = compareBy<ZonedDateTime> { it.secondOfUnixEpoch }
@@ -422,12 +402,12 @@ class ZonedDateTime private constructor(
             .thenBy { it.zone }
 
         /**
-         * Compare by timeline order only, ignoring any offset or time zone differences.
+         * Compares by timeline order only, ignoring any offset or time zone differences.
          */
         val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
 
         /**
-         * Create a [ZonedDateTime] from a local date and time, optionally using a preferred offset. If the local date
+         * Creates a [ZonedDateTime] from a local date and time, optionally using a preferred offset. If the local date
          * and time fall during an overlap, [preferredOffset] will be used if it represents one of the two valid
          * offsets. If it is `null` or invalid, it will be ignored.
          */
@@ -458,7 +438,7 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] from the instant represented by a local date-time and offset. The resulting
+         * Creates a [ZonedDateTime] from the instant represented by a local date-time and offset. The resulting
          * `ZonedDateTime` may have a different date-time and offset depending on the time zone rules, but the instant
          * will be the same.
          */
@@ -467,7 +447,7 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] from a duration of milliseconds relative to the Unix epoch at [zone].
+         * Creates a [ZonedDateTime] from a duration of milliseconds relative to the Unix epoch at [zone].
          */
         fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, zone: TimeZone): ZonedDateTime {
             val offset = zone.rules.offsetAt(milliseconds)
@@ -476,7 +456,7 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] from a duration of seconds relative to the Unix epoch at [zone], optionally,
+         * Creates a [ZonedDateTime] from a duration of seconds relative to the Unix epoch at [zone], optionally,
          * with some number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
@@ -490,14 +470,14 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] from the millisecond of the Unix epoch at [zone].
+         * Creates a [ZonedDateTime] from the millisecond of the Unix epoch at [zone].
          */
         fun fromMillisecondOfUnixEpoch(millisecond: Long, zone: TimeZone): ZonedDateTime {
             return fromMillisecondsSinceUnixEpoch(millisecond.milliseconds, zone)
         }
 
         /**
-         * Create a [ZonedDateTime] from the second of the Unix epoch at [zone].
+         * Creates a [ZonedDateTime] from the second of the Unix epoch at [zone].
          */
         fun fromSecondOfUnixEpoch(second: Long, nanosecond: Int = 0, zone: TimeZone): ZonedDateTime {
             return fromSecondsSinceUnixEpoch(second.seconds, nanosecond.nanoseconds, zone)
@@ -522,7 +502,7 @@ class ZonedDateTime private constructor(
         }
 
         /**
-         * Create a [ZonedDateTime] with no additional validation.
+         * Creates a [ZonedDateTime] with no additional validation.
          */
         internal fun create(dateTime: DateTime, offset: UtcOffset, zone: TimeZone): ZonedDateTime {
             return ZonedDateTime(dateTime, offset, zone)
@@ -531,7 +511,7 @@ class ZonedDateTime private constructor(
 }
 
 /**
- * Create a [ZonedDateTime] from a local date and time.
+ * Creates a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
@@ -549,7 +529,7 @@ fun ZonedDateTime(
 ) = ZonedDateTime.fromLocal(DateTime(year, month, day, hour, minute, second, nanosecond), zone)
 
 /**
- * Create a [ZonedDateTime] from a local date and time.
+ * Creates a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
@@ -567,7 +547,7 @@ fun ZonedDateTime(
 ) = ZonedDateTime.fromLocal(DateTime(year, monthNumber, day, hour, minute, second, nanosecond), zone)
 
 /**
- * Create a [ZonedDateTime] from a local date and time.
+ * Creates a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
@@ -584,7 +564,7 @@ fun ZonedDateTime(
 ) = ZonedDateTime.fromLocal(DateTime(year, dayOfYear, hour, minute, second, nanosecond), zone)
 
 /**
- * Create a [ZonedDateTime] from a local date and time.
+ * Creates a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
@@ -593,7 +573,7 @@ fun ZonedDateTime(
 fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLocal(DateTime(date, time), zone)
 
 /**
- * Create a [ZonedDateTime] from a local date and time.
+ * Creates a [ZonedDateTime] from a local date and time.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
@@ -602,12 +582,12 @@ fun ZonedDateTime(date: Date, time: Time, zone: TimeZone) = ZonedDateTime.fromLo
 fun ZonedDateTime(dateTime: DateTime, zone: TimeZone) = ZonedDateTime.fromLocal(dateTime, zone)
 
 /**
- * Combine an instant with a time zone to create a [ZonedDateTime].
+ * Combines an instant with a time zone to create a [ZonedDateTime].
  */
 infix fun Instant.at(zone: TimeZone) = ZonedDateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, zone)
 
 /**
- * Combine a local date and time with a time zone to create a [ZonedDateTime].
+ * Combines a local date and time with a time zone to create a [ZonedDateTime].
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the local time falls within a
  * gap (meaning it doesn't exist), it will be adjusted forward by the length of the gap. If it falls within an overlap
@@ -713,7 +693,7 @@ fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
 }
 
 /**
- * Convert a string to a [ZonedDateTime].
+ * Converts a string to a [ZonedDateTime].
  *
  * The string is assumed to be a complete ISO-8601 date and time representation in extended format, optionally including
  * a non-standard region ID. For example, `2005-05-06T23:30+01` or `2005-05-06T23:30-04:00[America/New_York]`.
@@ -726,7 +706,7 @@ fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
 fun String.toZonedDateTime() = toZonedDateTime(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME)
 
 /**
- * Convert a string to a [ZonedDateTime] using a specific parser.
+ * Converts a string to a [ZonedDateTime] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *

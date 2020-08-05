@@ -6,7 +6,6 @@ import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.internal.DAYS_PER_WEEK
 import io.islandtime.locale.Locale
-import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.LongDays
 import io.islandtime.measures.days
@@ -43,7 +42,7 @@ enum class DayOfWeek {
     fun number(locale: Locale): Int = (this - (locale.firstDayOfWeek.number - 1).days).number
 
     /**
-     * The localized name of the day, if available for the locale in the specified style. The result depends on the
+     * The localized name of the day, if available for the [locale] in the specified style. The result depends on the
      * configured [DateTimeTextProvider] and may differ between platforms.
      *
      * @param style the style of text
@@ -51,7 +50,7 @@ enum class DayOfWeek {
      * @return the localized name or `null` if unavailable for the specified locale
      * @see displayName
      */
-    fun localizedName(style: TextStyle, locale: Locale = defaultLocale()): String? {
+    fun localizedName(style: TextStyle, locale: Locale): String? {
         return DateTimeTextProvider.dayOfWeekTextFor(number.toLong(), style, locale)
     }
 
@@ -66,27 +65,27 @@ enum class DayOfWeek {
      * @return the localized name or [number] if unavailable for the specified locale
      * @see localizedName
      */
-    fun displayName(style: TextStyle, locale: Locale = defaultLocale()): String {
+    fun displayName(style: TextStyle, locale: Locale): String {
         return localizedName(style, locale) ?: number.toString()
     }
 
     /**
-     * Add days to this day of the week, wrapping when the beginning or end of the week is reached.
+     * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun plus(days: IntDays) = plus(days.value % DAYS_PER_WEEK)
 
     /**
-     * Add days to this day of the week, wrapping when the beginning or end of the week is reached.
+     * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun plus(days: LongDays) = plus((days.value % DAYS_PER_WEEK).toInt())
 
     /**
-     * Subtract days from this day of the week, wrapping when the beginning or end of the week is reached.
+     * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun minus(days: IntDays) = plus(-(days.value % DAYS_PER_WEEK))
 
     /**
-     * Subtract days from this day of the week, wrapping when the beginning or end of the week is reached.
+     * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
      */
     operator fun minus(days: LongDays) = plus(-(days.value % DAYS_PER_WEEK).toInt())
 
@@ -101,7 +100,7 @@ enum class DayOfWeek {
 }
 
 /**
- * Convert an ISO day of week number to a [DayOfWeek].
+ * Converts an ISO day of week number to a [DayOfWeek].
  *
  * The ISO week starts on Monday (1) and ends on Sunday (7).
  */
@@ -110,7 +109,7 @@ fun Int.toDayOfWeek(): DayOfWeek {
 }
 
 /**
- * Convert a day of week number (1-7) to a [DayOfWeek] according to the week definition provided by [settings].
+ * Converts a day of week number (1-7) to a [DayOfWeek] using the week definition provided by [settings].
  */
 fun Int.toDayOfWeek(settings: WeekSettings): DayOfWeek {
     return settings.firstDayOfWeek + (checkValidDayOfWeek(this) - 1).days
