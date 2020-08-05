@@ -8,8 +8,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":core"))
-                implementation(kotlin("stdlib-common"))
-                implementation(Libs.Serialization.common)
+                implementation(Libs.Serialization.runtime)
             }
         }
 
@@ -20,23 +19,10 @@ kotlin {
             }
         }
 
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
-                implementation(Libs.Serialization.jvm)
-            }
-        }
-
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
-            }
-        }
-
-        val darwinMain by getting {
-            dependencies {
-                implementation(Libs.Serialization.native)
             }
         }
     }
