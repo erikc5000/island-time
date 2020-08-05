@@ -27,9 +27,6 @@ abstract class SystemClock protected constructor() : Clock {
          */
         val UTC: SystemClock = createSystemClock(TimeZone.UTC)
 
-        /**
-         * Get the current system time zone.
-         */
         @Deprecated(
             "Use TimeZone.systemDefault() instead.",
             ReplaceWith("TimeZone.systemDefault()"),

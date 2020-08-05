@@ -10,6 +10,12 @@ import io.islandtime.measures.*
 
 /**
  * A time source.
+ *
+ * For an implementation that uses the system's clock, see [SystemClock]. [FixedClock] is also available for testing
+ * purposes.
+ *
+ * @see SystemClock
+ * @see FixedClock
  */
 interface Clock {
     /**

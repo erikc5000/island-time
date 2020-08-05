@@ -1,5 +1,3 @@
-@file:Suppress("NewApi")
-
 package io.islandtime.internal
 
 import io.islandtime.*

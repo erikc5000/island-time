@@ -8,6 +8,9 @@ import io.islandtime.measures.*
 
 /**
  * A clock with a fixed time, suitable for testing.
+ *
+ * @param instant the initial instant that the clock should be set to
+ * @param zone the time zone
  */
 class FixedClock(
     private var instant: Instant,
