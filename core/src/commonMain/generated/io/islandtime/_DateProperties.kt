@@ -14,6 +14,7 @@ import io.islandtime.internal.weekOfMonthImpl
 import io.islandtime.internal.weekOfWeekBasedYearImpl
 import io.islandtime.internal.weekOfYearImpl
 import io.islandtime.locale.Locale
+import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntWeeks
 import io.islandtime.measures.days
 import io.islandtime.operators.startOfWeek
@@ -22,9 +23,34 @@ import io.islandtime.ranges.DateTimeInterval
 import io.islandtime.ranges.OffsetDateTimeInterval
 import io.islandtime.ranges.ZonedDateTimeInterval
 import io.islandtime.ranges.until
+import kotlin.Boolean
 import kotlin.Int
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
+
+/**
+ * Checks if this date falls within a leap year.
+ */
+val Date.isInLeapYear: Boolean
+  get() = isLeapYear(year)
+
+/**
+ * Checks if this date is February 29.
+ */
+val Date.isLeapDay: Boolean
+  get() = month == Month.FEBRUARY && dayOfMonth == 29
+
+/**
+ * The length of this date's month in days.
+ */
+val Date.lengthOfMonth: IntDays
+  get() = month.lengthIn(year)
+
+/**
+ * The length of this date's year in days.
+ */
+val Date.lengthOfYear: IntDays
+  get() = lengthOfYear(year)
 
 /**
  * The range defining the ISO week that this date falls within.
@@ -169,6 +195,30 @@ fun Date.weekOfWeekBasedYear(locale: Locale): Int = weekOfWeekBasedYearImpl(loca
  */
 val Date.lengthOfWeekBasedYear: IntWeeks
   get() = lengthOfWeekBasedYear(weekBasedYear)
+
+/**
+ * Checks if this date-time falls within a leap year.
+ */
+val DateTime.isInLeapYear: Boolean
+  inline get() = date.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val DateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val DateTime.lengthOfMonth: IntDays
+  inline get() = date.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val DateTime.lengthOfYear: IntDays
+  inline get() = date.lengthOfYear
 
 /**
  * The interval defining the ISO week that this date-time falls within.
@@ -317,6 +367,30 @@ val DateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = date.lengthOfWeekBasedYear
 
 /**
+ * Checks if this date-time falls within a leap year.
+ */
+val OffsetDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val OffsetDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val OffsetDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val OffsetDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
+
+/**
  * The interval defining the ISO week that this date-time falls within.
  *
  * The ISO week starts on Monday and ends on Sunday.
@@ -462,6 +536,30 @@ fun OffsetDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWee
  */
 val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
+
+/**
+ * Checks if this date-time falls within a leap year.
+ */
+val ZonedDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val ZonedDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val ZonedDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val ZonedDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
 
 /**
  * The interval defining the ISO week that this date-time falls within.

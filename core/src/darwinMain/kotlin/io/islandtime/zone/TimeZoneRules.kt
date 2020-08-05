@@ -1,9 +1,6 @@
 package io.islandtime.zone
 
-import io.islandtime.DateTime
-import io.islandtime.Instant
-import io.islandtime.UtcOffset
-import io.islandtime.asUtcOffset
+import io.islandtime.*
 import io.islandtime.darwin.toIslandDateTimeAt
 import io.islandtime.darwin.toNSDate
 import io.islandtime.darwin.toNSDateComponents
@@ -69,6 +66,10 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
     override fun offsetAt(instant: Instant): UtcOffset = offsetAt(instant.toNSDate())
 
+    override fun offsetAt(instant: PlatformInstant): UtcOffset {
+        return timeZone.secondsFromGMTForDate(instant).convert<Int>().seconds.asUtcOffset()
+    }
+
     override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
         return transitionsInYear.use { map ->
             map.getOrPut(dateTime.year) {
@@ -97,10 +98,6 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
     override val hasFixedOffset: Boolean
         get() = timeZone.nextDaylightSavingTimeTransitionAfterDate(NSDate.distantPast) == null
-
-    private fun offsetAt(date: NSDate): UtcOffset {
-        return timeZone.secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
-    }
 
     @OptIn(ExperimentalStdlibApi::class)
     private fun findTransitionsIn(year: Int): List<TimeZoneOffsetTransition> {

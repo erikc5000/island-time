@@ -110,26 +110,6 @@ class DateTime(
      */
     inline val year: Int get() = date.year
 
-    /**
-     * Check if this date falls within a leap year.
-     */
-    inline val isInLeapYear: Boolean get() = date.isInLeapYear
-
-    /**
-     * Check if this is a leap day.
-     */
-    inline val isLeapDay: Boolean get() = date.isLeapDay
-
-    /**
-     * The length of the date's month in days.
-     */
-    inline val lengthOfMonth: IntDays get() = date.lengthOfMonth
-
-    /**
-     * The length of the date's year in days.
-     */
-    inline val lengthOfYear: IntDays get() = date.lengthOfYear
-
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),

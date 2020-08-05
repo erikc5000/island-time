@@ -296,4 +296,28 @@ class ConversionsTest {
         assertEquals(1_000_000_000L, 1_000_000_000.nanoseconds.toJavaDuration().toNanos())
         assertEquals(-1L, (-1L).nanoseconds.toJavaDuration().toNanos())
     }
+
+    @Test
+    fun `converts a Java Clock to an Island Time Clock`() {
+        val javaClock = java.time.Clock.fixed(
+            java.time.Instant.ofEpochSecond(234_678_901L, 123456789),
+            java.time.ZoneId.of("America/New_York")
+        )
+
+        val islandClock = javaClock.asIslandClock()
+
+        assertEquals(
+            java.time.Instant.ofEpochSecond(234_678_901L, 123456789),
+            islandClock.readPlatformInstant()
+        )
+        assertEquals(
+            Instant.fromSecondOfUnixEpoch(234_678_901L, 123456789),
+            islandClock.readInstant()
+        )
+        assertEquals(
+            Instant.fromSecondOfUnixEpoch(234_678_901L, 123456789).millisecondsSinceUnixEpoch,
+            islandClock.readMilliseconds()
+        )
+        assertEquals(TimeZone("America/New_York"), islandClock.zone)
+    }
 }

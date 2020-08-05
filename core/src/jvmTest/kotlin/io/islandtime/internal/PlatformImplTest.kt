@@ -8,13 +8,15 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class PlatformTest : AbstractIslandTimeTest() {
+class PlatformImplTest : AbstractIslandTimeTest() {
     @Test
     fun `converts java_util_TimeZone with UTC equivalent IDs to Island region-based zones`() {
-        listOf("GMT", "UTC").forEach {
-            val tz = java.util.TimeZone.getTimeZone(it).toIslandTimeZone()
-            assertEquals(it, tz.id)
-            assertTrue { tz.isValid }
+        listOf("GMT", "UTC").forEach { id ->
+            repeat(2) {
+                val tz = java.util.TimeZone.getTimeZone(id).toIslandTimeZone()
+                assertEquals(id, tz.id)
+                assertTrue { tz.isValid }
+            }
         }
     }
 

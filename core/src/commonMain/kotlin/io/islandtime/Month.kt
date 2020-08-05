@@ -3,7 +3,6 @@ package io.islandtime
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
-import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntMonths
 import io.islandtime.measures.LongMonths
@@ -99,7 +98,7 @@ enum class Month {
         }
 
     /**
-     * The localized name of the month, if available for the locale in the specified style. The result depends on the
+     * The localized name of the month, if available for the [locale] in the specified style. The result depends on the
      * configured [DateTimeTextProvider] and may differ between platforms.
      *
      * @param style the style of text
@@ -107,7 +106,7 @@ enum class Month {
      * @return the localized name or `null` if unavailable for the specified locale
      * @see displayName
      */
-    fun localizedName(style: TextStyle, locale: Locale = defaultLocale()): String? {
+    fun localizedName(style: TextStyle, locale: Locale): String? {
         return DateTimeTextProvider.monthTextFor(number.toLong(), style, locale)
     }
 
@@ -122,7 +121,7 @@ enum class Month {
      * @return the localized name or [number] if unavailable for the specified locale
      * @see localizedName
      */
-    fun displayName(style: TextStyle, locale: Locale = defaultLocale()): String {
+    fun displayName(style: TextStyle, locale: Locale): String {
         return localizedName(style, locale) ?: number.toString()
     }
 
