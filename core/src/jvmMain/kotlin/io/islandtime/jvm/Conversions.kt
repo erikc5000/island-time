@@ -3,6 +3,7 @@
 package io.islandtime.jvm
 
 import io.islandtime.*
+import io.islandtime.clock.Clock
 import io.islandtime.internal.MICROSECONDS_PER_SECOND
 import io.islandtime.measures.*
 
@@ -350,3 +351,21 @@ fun IntNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofN
  * Convert to an equivalent Java `Duration`.
  */
 fun LongNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value)
+
+/**
+ * Makes this clock compatible with Island Time's [Clock] interface.
+ */
+fun java.time.Clock.asIslandClock(): Clock = WrappedJavaClock(clock = this)
+
+private class WrappedJavaClock(private val clock: java.time.Clock) : Clock {
+    override fun equals(other: Any?): Boolean {
+        return other is WrappedJavaClock && other.clock == clock
+    }
+
+    override fun hashCode(): Int = clock.hashCode()
+    override fun toString(): String = "$clock (Java)"
+    override val zone: TimeZone get() = clock.zone.toIslandTimeZone()
+    override fun readPlatformInstant(): PlatformInstant = clock.instant()
+    override fun readInstant(): Instant = readPlatformInstant().toIslandInstant()
+    override fun readMilliseconds(): LongMilliseconds = clock.millis().milliseconds
+}

@@ -2,6 +2,7 @@ package io.islandtime.zone
 
 import io.islandtime.DateTime
 import io.islandtime.Instant
+import io.islandtime.PlatformInstant
 import io.islandtime.UtcOffset
 import io.islandtime.jvm.*
 import io.islandtime.measures.*
@@ -58,6 +59,15 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
         return with(instant) { offsetAt(secondsSinceUnixEpoch, additionalNanosecondsSinceUnixEpoch) }
     }
 
+    override fun offsetAt(instant: PlatformInstant): UtcOffset {
+        return try {
+            javaZoneRules.getOffset(instant).toIslandUtcOffset()
+        } catch (e: ArithmeticException) {
+            // Workaround for Android desugaring issue (https://issuetracker.google.com/issues/153773237)
+            UtcOffset.ZERO
+        }
+    }
+
     override fun offsetAt(dateTime: DateTime): UtcOffset {
         val offset = javaZoneRules.getOffset(dateTime.toJavaLocalDateTime())
         return offset.toIslandUtcOffset()
@@ -86,15 +96,6 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
 
     override fun daylightSavingsAt(instant: Instant): IntSeconds {
         return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
-    }
-
-    private fun offsetAt(javaInstant: JavaInstant): UtcOffset {
-        return try {
-            javaZoneRules.getOffset(javaInstant).toIslandUtcOffset()
-        } catch (e: ArithmeticException) {
-            // Workaround for Android desugaring issue (https://issuetracker.google.com/issues/153773237)
-            UtcOffset.ZERO
-        }
     }
 }
 
