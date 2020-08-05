@@ -14,22 +14,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated")
-
-            dependencies {
-                implementation(kotlin("stdlib-common"))
-            }
         }
 
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
             }
         }
 
@@ -43,7 +33,7 @@ kotlin {
 
         val darwinMain by getting {
             dependencies {
-                implementation(Libs.AtomicFU.native)
+                implementation(Libs.AtomicFU.runtime)
             }
         }
     }

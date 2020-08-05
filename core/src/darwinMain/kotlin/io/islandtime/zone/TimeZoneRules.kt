@@ -124,7 +124,7 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
                 val offsetAfter = offsetAt(nextTransition)
                 val dateTimeBefore = nextTransition.toIslandDateTimeAt(offsetBefore)
 
-                this += DarwinTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter)
+                add(DarwinTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter))
 
                 currentDate = nextTransition
                 nextTransition = timeZone.nextDaylightSavingTimeTransitionAfterDate(currentDate)
