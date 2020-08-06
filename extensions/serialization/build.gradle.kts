@@ -1,29 +1,11 @@
 plugins {
-    `multiplatform-library`
-    kotlin("plugin.serialization") version Versions.kotlin
+    id("islandtime-multiplatform")
+    kotlin("plugin.serialization")
 }
 
 kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(project(":core"))
-                implementation(Libs.Serialization.runtime)
-            }
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-            }
-        }
+    sourceSets.commonMain.get().dependencies {
+        implementation(project(":core"))
+        implementation(Libs.Serialization.runtime)
     }
 }

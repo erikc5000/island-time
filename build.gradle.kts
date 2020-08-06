@@ -1,35 +1,30 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath(Libs.AtomicFU.gradlePlugin)
-    }
+plugins {
+    kotlin("plugin.serialization") version Versions.kotlin
+    id("kotlinx-atomicfu") version Versions.atomicfu
 }
 
-allprojects {
+subprojects {
     repositories {
         jcenter()
     }
 
-    tasks.withType<JavaCompile>().configureEach {
+    tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_1_8.toString()
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
 
-    tasks.withType<KotlinCompile>().configureEach {
+    tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
             jvmTarget = "1.8"
         }
     }
-    
-    tasks.withType(AbstractTestTask::class).configureEach {
+
+    tasks.withType<AbstractTestTask> {
         testLogging {
             events = setOf(TestLogEvent.FAILED)
             exceptionFormat = TestExceptionFormat.FULL

@@ -1,32 +1,26 @@
 plugins {
-    `android-library`
+    id("islandtime-android")
     id("kotlin-android-extensions")
 }
 
 android {
-    compileOptions {
-        coreLibraryDesugaringEnabled = true
-    }
+    compileOptions.coreLibraryDesugaringEnabled = true
 
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
-        getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
-    }
+    sourceSets["main"].java.srcDirs("src/main/kotlin")
+    sourceSets["androidTest"].java.srcDirs("src/androidTest/kotlin")
 
     defaultConfig {
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    testOptions {
-        execution = "ANDROIDX_TEST_ORCHESTRATOR"
-    }
+    testOptions.execution = "ANDROIDX_TEST_ORCHESTRATOR"
 }
 
 dependencies {
-    coreLibraryDesugaring(Libs.androidDesugarJdkLibs)
-
     implementation(project(":core"))
+
+    coreLibraryDesugaring(Libs.androidDesugarJdkLibs)
 
     androidTestImplementation(Libs.AndroidxTest.runner)
     androidTestImplementation(Libs.googleTruth)

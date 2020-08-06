@@ -8,7 +8,7 @@ plugins {
 
 val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
 
-val dokka by tasks.existing(DokkaTask::class) {
+tasks.dokka {
     outputDirectory = "$buildDir/dokka"
     outputFormat = "html"
 }
@@ -19,9 +19,9 @@ val generateMkdocsApiDocs by tasks.creating(DokkaTask::class) {
 }
 
 val javadocJar by tasks.registering(Jar::class) {
-    dependsOn(dokka)
+    dependsOn(tasks.dokka)
     archiveClassifier.set("javadoc")
-    from(dokka.get().outputDirectory)
+    from(tasks.dokka.get().outputDirectory)
 }
 
 signing {
@@ -31,30 +31,28 @@ signing {
     sign(publishing.publications)
 }
 
-tasks.withType<Sign>().configureEach {
+tasks.withType<Sign> {
     onlyIf { isReleaseBuild }
 }
 
 publishing {
-    repositories {
-        maven {
-            val snapshotRepositoryUrl: String by project
-            val releaseRepositoryUrl: String by project
-            val repositoryUrl = if (isReleaseBuild) releaseRepositoryUrl else snapshotRepositoryUrl
+    repositories.maven {
+        val snapshotRepositoryUrl: String by project
+        val releaseRepositoryUrl: String by project
+        val repositoryUrl = if (isReleaseBuild) releaseRepositoryUrl else snapshotRepositoryUrl
 
-            url = uri(repositoryUrl)
+        url = uri(repositoryUrl)
 
-            val repositoryUsername: String? by project
-            val repositoryPassword: String? by project
+        val repositoryUsername: String? by project
+        val repositoryPassword: String? by project
 
-            credentials {
-                username = repositoryUsername.orEmpty()
-                password = repositoryPassword.orEmpty()
-            }
+        credentials {
+            username = repositoryUsername.orEmpty()
+            password = repositoryPassword.orEmpty()
         }
     }
 
-    publications.withType<MavenPublication>().configureEach {
+    publications.withType<MavenPublication> {
         artifact(javadocJar.get())
 
         val pomName: String by project
@@ -88,7 +86,6 @@ publishing {
                 developer {
                     id.set(pomDeveloperId)
                     name.set(pomDeveloperName)
-
                 }
             }
             scm {

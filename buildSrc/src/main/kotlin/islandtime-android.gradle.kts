@@ -1,29 +1,25 @@
+plugins {
+    id("com.android.library")
+    kotlin("android")
+    id("islandtime-published")
+}
+
 repositories {
     google()
     jcenter()
 }
 
-plugins {
-    id("com.android.library")
-    kotlin("android")
-    id("published-library")
-}
-
 android {
     compileSdkVersion(29)
 
-    defaultConfig {
-        minSdkVersion(21)
-    }
+    defaultConfig.minSdkVersion(21)
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    buildFeatures {
-        buildConfig = false
-    }
+    buildFeatures.buildConfig = false
 }
 
 afterEvaluate {
@@ -32,12 +28,8 @@ afterEvaluate {
         from(android.sourceSets["main"].java.sourceFiles)
     }
 
-    publishing {
-        publications {
-            create<MavenPublication>("releaseAar") {
-                artifact(androidSourcesJar.get())
-                from(components["release"])
-            }
-        }
+    publishing.publications.create<MavenPublication>("releaseAar") {
+        artifact(androidSourcesJar.get())
+        from(components["release"])
     }
 }

@@ -1,16 +1,16 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
     kotlin("multiplatform")
-    id("published-library")
+    id("islandtime-published")
     jacoco
 }
 
 val ideaActive get() = System.getProperty("idea.active") == "true"
 
 kotlin {
-    jvm()
+    jvm().compilations["test"].defaultSourceSet.dependencies {
+        implementation(kotlin("test"))
+        implementation(kotlin("test-junit"))
+    }
 
     val darwinTargets = if (ideaActive) {
         listOf(iosX64("darwin"))
@@ -19,24 +19,18 @@ kotlin {
     }
 
     sourceSets {
-        all {
-            languageSettings.apply {
-                enableLanguageFeature("InlineClasses")
-                useExperimentalAnnotation("kotlin.RequiresOptIn")
-                progressiveMode = true
-            }
+        commonTest.get().dependencies {
+            implementation(kotlin("test-common"))
+            implementation(kotlin("test-annotations-common"))
         }
 
         if (!ideaActive) {
-            val commonMain by getting
-            val commonTest by getting
-
             val darwinMain by creating {
-                dependsOn(commonMain)
+                dependsOn(commonMain.get())
             }
 
             val darwinTest by creating {
-                dependsOn(commonTest)
+                dependsOn(commonTest.get())
             }
 
             configure(darwinTargets) {
@@ -44,38 +38,42 @@ kotlin {
                 compilations["test"].defaultSourceSet.dependsOn(darwinTest)
             }
         }
-    }
-}
 
-val emptySourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
+        all {
+            languageSettings.apply {
+                enableLanguageFeature("InlineClasses")
+                useExperimentalAnnotation("kotlin.RequiresOptIn")
+                progressiveMode = true
+            }
+        }
+    }
 }
 
 publishing {
     val pomMppArtifactId: String? by project
 
-    publications.withType<MavenPublication>().configureEach {
+    val emptySourcesJar by tasks.registering(Jar::class) {
+        archiveClassifier.set("sources")
+    }
+
+    publications.withType<MavenPublication> {
         if (name == "kotlinMultiplatform") {
             if (pomMppArtifactId != null) {
                 artifactId = pomMppArtifactId
             }
             artifact(emptySourcesJar.get())
-        } else {
-            if (pomMppArtifactId != null) {
-                artifactId = "${pomMppArtifactId}-$name"
-            }
+        } else if (pomMppArtifactId != null) {
+            artifactId = "${pomMppArtifactId}-$name"
         }
     }
 }
 
 afterEvaluate {
-    tasks.withType<DokkaTask>().configureEach {
-        multiplatform {
-            kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
-        }
+    tasks.dokka.get().multiplatform {
+        kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
     }
 
-    tasks.withType<JacocoReport>().configureEach {
+    tasks.withType<JacocoReport> {
         classDirectories.setFrom(
             fileTree("${buildDir}/classes/kotlin/jvm/") {
                 exclude("**/*Test*.*")

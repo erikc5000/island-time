@@ -1,70 +1,47 @@
-import org.jetbrains.dokka.gradle.DokkaTask
-
 plugins {
-    `multiplatform-library`
+    id("islandtime-multiplatform")
+    id("kotlinx-atomicfu")
 }
-
-apply(plugin = "kotlinx-atomicfu")
 
 kotlin {
-    jvm {
-        withJava()
+    sourceSets {
+        commonMain.get().kotlin.srcDirs("src/commonMain/generated")
+
+        darwinMain.get().dependencies {
+            implementation(Libs.AtomicFU.runtime)
+        }
     }
 
-    sourceSets {
-        val commonMain by getting {
-            kotlin.srcDirs("src/commonMain/generated")
-        }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
-                implementation(Libs.googleTruth)
-            }
-        }
-
-        val darwinMain by getting {
-            dependencies {
-                implementation(Libs.AtomicFU.runtime)
-            }
+    jvm {
+        withJava()
+        compilations["test"].defaultSourceSet.dependencies {
+            implementation(Libs.googleTruth)
         }
     }
 }
 
-tasks.withType<DokkaTask>().configureEach {
-    multiplatform {
-        create("global") {
-            perPackageOption {
-                prefix = "io.islandtime.internal"
-                suppress = true
-            }
+tasks.dokka.get().multiplatform.create("global") {
+    perPackageOption {
+        prefix = "io.islandtime.internal"
+        suppress = true
+    }
 
-            perPackageOption {
-                prefix = "io.islandtime.measures.internal"
-                suppress = true
-            }
+    perPackageOption {
+        prefix = "io.islandtime.measures.internal"
+        suppress = true
+    }
 
-            perPackageOption {
-                prefix = "io.islandtime.parser.internal"
-                suppress = true
-            }
+    perPackageOption {
+        prefix = "io.islandtime.parser.internal"
+        suppress = true
+    }
 
-            perPackageOption {
-                prefix = "io.islandtime.ranges.internal"
-                suppress = true
-            }
+    perPackageOption {
+        prefix = "io.islandtime.ranges.internal"
+        suppress = true
+    }
 
-            perPackageOption {
-                includes = listOf("packages.md")
-            }
-        }
+    perPackageOption {
+        includes = listOf("packages.md")
     }
 }
