@@ -11,6 +11,12 @@ kotlin {
         withJava()
     }
 
+    js {
+        browser {
+            useCommonJs()
+        }
+    }
+
     sourceSets {
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated")
@@ -34,6 +40,18 @@ kotlin {
         val darwinMain by getting {
             dependencies {
                 implementation(Libs.AtomicFU.runtime)
+            }
+        }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+            }
+        }
+
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
             }
         }
     }
