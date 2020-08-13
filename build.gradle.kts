@@ -3,8 +3,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("plugin.serialization") version Versions.kotlin
-    id("kotlinx-atomicfu") version Versions.atomicfu
+    kotlin("plugin.serialization") version Versions.kotlin apply false
+    id("kotlinx-atomicfu") version Versions.atomicfu apply false
 }
 
 subprojects {
