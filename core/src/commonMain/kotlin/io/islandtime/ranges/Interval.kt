@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 /**
- * A time interval.
+ * A half-open or closed interval.
  */
 interface Interval<T> {
     /**
@@ -20,49 +20,49 @@ interface Interval<T> {
     val endExclusive: T
 
     /**
-     * Check if the interval's start is unbounded. In ISO-8601 terminology, this is an "open" start.
+     * Checks if this interval's start is unbounded. In ISO-8601 terminology, this is an "open" start.
      */
     fun hasUnboundedStart(): Boolean
 
     /**
-     * Check if the interval's end is unbounded. In ISO-8601 terminology, this is an "open" end.
+     * Checks if this interval's end is unbounded. In ISO-8601 terminology, this is an "open" end.
      */
     fun hasUnboundedEnd(): Boolean
 
     /**
-     * Check if the interval's start is bounded, meaning it has a finite value.
+     * Checks if this interval's start is bounded, meaning it has a finite value.
      */
     fun hasBoundedStart(): Boolean = !hasUnboundedStart()
 
     /**
-     * Check if the interval's end is bounded, meaning it has a finite value.
+     * Checks if this interval's end is bounded, meaning it has a finite value.
      */
     fun hasBoundedEnd(): Boolean = !hasUnboundedEnd()
 
     /**
-     * Check if both the start and end of the interval are bounded, meaning it has a finite range.
+     * Checks if both the start and end of this interval are bounded, meaning it has a finite range.
      */
     fun isBounded(): Boolean = hasBoundedStart() && hasBoundedEnd()
 
     /**
-     * Check if both the start and end of the interval are unbounded, meaning this is an infinite time period in both
+     * Checks if both the start and end of this interval are unbounded, meaning this is an infinite time period in both
      * directions.
      */
     fun isUnbounded(): Boolean = hasUnboundedStart() && hasUnboundedEnd()
 
     /**
-     * Check if this interval contains [value].
+     * Checks if this interval contains [value].
      */
     operator fun contains(value: T): Boolean
 
     /**
-     * Check if this interval is empty.
+     * Checks if this interval is empty.
      */
     fun isEmpty(): Boolean
 }
 
 /**
- * Check if this interval contains [value].
+ * Checks if this interval contains [value].
  *
  * This will always return `false` if [value] is `null`.
  */
