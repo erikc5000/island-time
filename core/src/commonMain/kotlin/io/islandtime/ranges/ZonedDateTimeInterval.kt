@@ -217,7 +217,7 @@ infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, t
 @Deprecated(
     "Use 'at' instead.",
     ReplaceWith("this at zone"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun DateRange.toZonedDateTimeInterval(zone: TimeZone): ZonedDateTimeInterval = this at zone
 

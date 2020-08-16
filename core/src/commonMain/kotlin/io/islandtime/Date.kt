@@ -75,7 +75,7 @@ class Date(
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth
         get() = toYearMonth()
@@ -88,7 +88,7 @@ class Date(
     @Deprecated(
         "Use dayOfUnixEpoch instead.",
         ReplaceWith("this.dayOfUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochDay: Long
         get() = dayOfUnixEpoch
@@ -303,7 +303,7 @@ class Date(
         @Deprecated(
             "Use fromDayOfUnixEpoch() instead.",
             ReplaceWith("Date.fromDayOfUnixEpoch(day)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochDay(day: Long): Date = fromDayOfUnixEpoch(day)
     }

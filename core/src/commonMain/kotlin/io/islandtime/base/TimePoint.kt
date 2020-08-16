@@ -17,7 +17,7 @@ interface TimePoint<T> {
     @Deprecated(
         "Use additionalNanosecondsSinceUnixEpoch instead.",
         ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val nanoOfSecondsSinceUnixEpoch: IntNanoseconds get() = additionalNanosecondsSinceUnixEpoch
 
@@ -34,7 +34,7 @@ interface TimePoint<T> {
     @Deprecated(
         "Use secondOfUnixEpoch instead.",
         ReplaceWith("this.secondOfUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochSecond: Long get() = secondOfUnixEpoch
 
@@ -46,7 +46,7 @@ interface TimePoint<T> {
     @Deprecated(
         "Use nanosecond instead.",
         ReplaceWith("this.nanosecond"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochNanoOfSecond: Int get() = nanosecond
 
@@ -58,7 +58,7 @@ interface TimePoint<T> {
     @Deprecated(
         "Use millisecondOfUnixEpoch instead.",
         ReplaceWith("this.millisecondOfUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochMillisecond: Long get() = millisecondOfUnixEpoch
 

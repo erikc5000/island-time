@@ -153,13 +153,13 @@ infix fun Instant.until(to: Instant) = InstantInterval(this, to)
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
 
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
