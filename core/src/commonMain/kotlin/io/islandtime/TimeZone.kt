@@ -212,7 +212,7 @@ fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
 @Deprecated(
     "Use TimeZone() instead.",
     ReplaceWith("TimeZone(this)"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun String.toTimeZone() = TimeZone(this)
 

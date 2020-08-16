@@ -111,42 +111,42 @@ class Duration private constructor(
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(DAYS)", "io.islandtime.measures.TimeUnit.DAYS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToDays() = truncatedTo(DAYS)
 
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToHours() = truncatedTo(HOURS)
 
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToMinutes() = truncatedTo(MINUTES)
 
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToSeconds() = truncatedTo(SECONDS)
 
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 

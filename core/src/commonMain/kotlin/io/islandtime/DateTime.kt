@@ -113,7 +113,7 @@ class DateTime(
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth get() = toYearMonth()
 
@@ -503,7 +503,7 @@ class DateTime(
     @Deprecated(
         "Use additionalNanosecondsSinceUnixEpoch instead.",
         ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
         get() = additionalNanosecondsSinceUnixEpoch
@@ -530,7 +530,7 @@ class DateTime(
     @Deprecated(
         "Use secondOfUnixEpochAt() instead.",
         ReplaceWith("this.secondOfUnixEpochAt(offset)"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun unixEpochSecondAt(offset: UtcOffset): Long = secondOfUnixEpochAt(offset)
 
@@ -545,7 +545,7 @@ class DateTime(
     @Deprecated(
         "Use nanosecond instead.",
         ReplaceWith("this.nanosecond"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochNanoOfSecond: Int
         get() = nanosecond
@@ -553,7 +553,7 @@ class DateTime(
     @Deprecated(
         "Use millisecondOfUnixEpoch() instead.",
         ReplaceWith("this.millisecondOfUnixEpochAt(offset)"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondOfUnixEpochAt(offset)
 
@@ -566,7 +566,7 @@ class DateTime(
     @Deprecated(
         "Use toInstantAt() instead.",
         ReplaceWith("this.toInstantAt(offset)"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun instantAt(offset: UtcOffset): Instant = toInstantAt(offset)
 
@@ -632,7 +632,7 @@ class DateTime(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("DateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): DateTime {
             return fromMillisecondOfUnixEpoch(millisecond, offset)
@@ -641,7 +641,7 @@ class DateTime(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("DateTime.fromSecondOfUnixEpoch(second, nanosecondAdjustment, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int = 0, offset: UtcOffset): DateTime {
             return fromSecondOfUnixEpoch(second, nanosecondAdjustment, offset)

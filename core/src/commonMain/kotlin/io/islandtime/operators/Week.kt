@@ -12,7 +12,7 @@ import io.islandtime.ranges.*
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val Date.weekRange: DateRange
     get() = startOfWeek.let { it..it + 6.days }
@@ -20,21 +20,21 @@ val Date.weekRange: DateRange
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun Date.weekRange(settings: WeekSettings): DateRange = startOfWeek(settings).let { it..it + 6.days }
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun Date.weekRange(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val DateTime.weekInterval: DateTimeInterval
     get() = startOfWeek.let { it until it + 7.days }
@@ -42,7 +42,7 @@ val DateTime.weekInterval: DateTimeInterval
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun DateTime.weekInterval(settings: WeekSettings): DateTimeInterval {
     return startOfWeek(settings).let { it until it + 7.days }
@@ -51,7 +51,7 @@ fun DateTime.weekInterval(settings: WeekSettings): DateTimeInterval {
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun DateTime.weekInterval(locale: Locale): DateTimeInterval {
     return startOfWeek(locale).let { it until it + 7.days }
@@ -60,7 +60,7 @@ fun DateTime.weekInterval(locale: Locale): DateTimeInterval {
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val OffsetDateTime.weekInterval: OffsetDateTimeInterval
     get() = startOfWeek.let { it until it + 7.days }
@@ -68,7 +68,7 @@ val OffsetDateTime.weekInterval: OffsetDateTimeInterval
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTime.weekInterval(settings: WeekSettings): OffsetDateTimeInterval {
     return startOfWeek(settings).let { it until it + 7.days }
@@ -77,7 +77,7 @@ fun OffsetDateTime.weekInterval(settings: WeekSettings): OffsetDateTimeInterval 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTime.weekInterval(locale: Locale): OffsetDateTimeInterval {
     return startOfWeek(locale).let { it until it + 7.days }
@@ -86,7 +86,7 @@ fun OffsetDateTime.weekInterval(locale: Locale): OffsetDateTimeInterval {
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val ZonedDateTime.weekInterval: ZonedDateTimeInterval
     get() = startOfWeek.let { it until it + 7.days }
@@ -94,7 +94,7 @@ val ZonedDateTime.weekInterval: ZonedDateTimeInterval
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTime.weekInterval(settings: WeekSettings): ZonedDateTimeInterval {
     return startOfWeek(settings).let { it until it + 7.days }
@@ -103,7 +103,7 @@ fun ZonedDateTime.weekInterval(settings: WeekSettings): ZonedDateTimeInterval {
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTime.weekInterval(locale: Locale): ZonedDateTimeInterval {
     return startOfWeek(locale).let { it until it + 7.days }

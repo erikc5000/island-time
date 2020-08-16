@@ -141,21 +141,21 @@ class OffsetDateTime(
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth get() = toYearMonth()
 
     @Deprecated(
         "Use toOffsetTime() instead.",
         ReplaceWith("this.toOffsetTime()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val offsetTime: OffsetTime get() = toOffsetTime()
 
     @Deprecated(
         "Use toInstant() instead.",
         ReplaceWith("this.toInstant()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val instant: Instant get() = toInstant()
 
@@ -374,7 +374,7 @@ class OffsetDateTime(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): OffsetDateTime {
             return fromMillisecondOfUnixEpoch(millisecond, offset)
@@ -383,7 +383,7 @@ class OffsetDateTime(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, offset: UtcOffset): OffsetDateTime {
             return fromSecondOfUnixEpoch(second, nanoOfSecond, offset)
@@ -409,7 +409,7 @@ infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offse
 @Deprecated(
     "Use 'toOffsetDateTime()' instead.",
     ReplaceWith("this.toOffsetDateTime()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
 
