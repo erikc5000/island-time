@@ -45,7 +45,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     }
 
     /**
-     * Get the number of 24-hour days in the interval.
+     * Gets the number of 24-hour days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     open val lengthInDays: LongDays
@@ -56,7 +56,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of whole hours in the interval.
+     * Gets the number of whole hours in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInHours: LongHours
@@ -67,7 +67,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of whole minutes in the interval.
+     * Gets the number of whole minutes in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMinutes: LongMinutes
@@ -78,7 +78,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of whole seconds in the interval.
+     * Gets the number of whole seconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInSeconds: LongSeconds
@@ -89,7 +89,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of whole milliseconds in the interval.
+     * Gets the number of whole milliseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMilliseconds: LongMilliseconds
@@ -100,7 +100,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of whole microseconds in the interval.
+     * Gets the number of whole microseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMicroseconds: LongMicroseconds
@@ -111,7 +111,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Get the number of whole nanoseconds in the interval.
+     * Gets the number of whole nanoseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInNanoseconds: LongNanoseconds
@@ -134,7 +134,7 @@ operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*
 }
 
 /**
- * Get the [Duration] between two time points.
+ * Gets the [Duration] between two time points.
  */
 fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpoch - start.secondsSinceUnixEpoch
@@ -144,28 +144,28 @@ fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>):
 }
 
 /**
- * Get the number of 24-hour days between two time points.
+ * Gets the number of 24-hour days between two time points.
  */
 fun <T1, T2> daysBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongDays {
     return secondsBetween(start, endExclusive).inDays
 }
 
 /**
- * Get the number of whole hours between two time points.
+ * Gets the number of whole hours between two time points.
  */
 fun <T1, T2> hoursBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongHours {
     return secondsBetween(start, endExclusive).inHours
 }
 
 /**
- * Get the number of whole minutes between two time points.
+ * Gets the number of whole minutes between two time points.
  */
 fun <T1, T2> minutesBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongMinutes {
     return secondsBetween(start, endExclusive).inMinutes
 }
 
 /**
- * Get the number of whole seconds between two time points.
+ * Gets the number of whole seconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongSeconds {
@@ -178,7 +178,7 @@ fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): 
 }
 
 /**
- * Get the number of whole milliseconds between two time points.
+ * Gets the number of whole milliseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> millisecondsBetween(
@@ -194,7 +194,7 @@ fun <T1, T2> millisecondsBetween(
 }
 
 /**
- * Get the number of whole microseconds between two time points.
+ * Gets the number of whole microseconds between two time points.
  *  @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> microsecondsBetween(
@@ -210,7 +210,7 @@ fun <T1, T2> microsecondsBetween(
 }
 
 /**
- * Get the number of nanoseconds between two time points.
+ * Gets the number of nanoseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> nanosecondsBetween(

@@ -65,7 +65,7 @@ class InstantInterval(
 }
 
 /**
- * Convert a string to an [InstantInterval].
+ * Converts a string to an [InstantInterval].
  *
  * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
  * [InstantInterval.toString] can be safely parsed using this method.
@@ -83,7 +83,7 @@ class InstantInterval(
 fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
 
 /**
- * Convert a string to an [InstantInterval] using a specific parser.
+ * Converts a string to an [InstantInterval] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -116,7 +116,7 @@ fun String.toInstantInterval(
 }
 
 /**
- * Return a random instant within the interval using the default random number generator.
+ * Returns a random instant within this interval using the default random number generator.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see InstantInterval.randomOrNull
@@ -124,14 +124,14 @@ fun String.toInstantInterval(
 fun InstantInterval.random(): Instant = random(Random)
 
 /**
- * Return a random instant within the interval using the default random number generator or `null` if the interval is
+ * Returns a random instant within this interval using the default random number generator or `null` if the interval is
  * empty or unbounded.
  * @see InstantInterval.random
  */
 fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
 
 /**
- * Return a random instant within the interval using the supplied random number generator.
+ * Returns a random instant within this interval using the supplied random number generator.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see InstantInterval.randomOrNull
@@ -141,7 +141,7 @@ fun InstantInterval.random(random: Random): Instant {
 }
 
 /**
- * Return a random instant within the interval using the supplied random number generator or `null` if the interval is
+ * Returns a random instant within this interval using the supplied random number generator or `null` if the interval is
  * empty or unbounded.
  * @see InstantInterval.random
  */
@@ -150,20 +150,20 @@ fun InstantInterval.randomOrNull(random: Random): Instant? {
 }
 
 /**
- * Get an interval containing all of the instants up to, but not including [to].
+ * Creates an [InstantInterval] from this instant up to, but not including [to].
  */
 infix fun Instant.until(to: Instant) = InstantInterval(this, to)
 
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
 
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()

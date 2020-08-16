@@ -31,12 +31,12 @@ interface TimeZoneRulesProvider {
     val availableRegionIds: Set<String>
 
     /**
-     * Check if [regionId] has rules associated with it.
+     * Checks if [regionId] has rules associated with it.
      */
     fun hasRulesFor(regionId: String): Boolean
 
     /**
-     * Get the rules associated with a particular region ID.
+     * Gets the rules associated with a particular region ID.
      * @throws TimeZoneRulesException if the region ID isn't supported
      */
     fun rulesFor(regionId: String): TimeZoneRules

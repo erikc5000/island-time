@@ -22,9 +22,7 @@ Due to the experimental status of [inline classes](https://kotlinlang.org/docs/r
 | --- | --- |
 | 0.1.x | 1.3.6x |
 | 0.2.x | 1.3.7x |
-
-!!! info "Kotlin 1.4 preview builds"
-    Island Time builds that are compatible with the latest Kotlin 1.4 preview build are also available starting with 1.4-M3. Just add the appropriate suffix to the version number. For example, `{{ versions.islandtime }}` would be `{{ versions.islandtime }}-1.4-M3`.
+| 0.3.x | 1.4.0x |
 
 ### JVM
 

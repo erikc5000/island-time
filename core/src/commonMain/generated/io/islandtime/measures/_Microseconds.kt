@@ -41,66 +41,66 @@ inline class IntMicroseconds(
   val value: Int
 ) : Comparable<IntMicroseconds> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntMicroseconds
     get() = if (value < 0) -this else this
   /**
-   * Convert to nanoseconds.
+   * Converts this duration to nanoseconds.
    */
   val inNanoseconds: LongNanoseconds
     get() = (value.toLong() * NANOSECONDS_PER_MICROSECOND).nanoseconds
 
   /**
-   * Convert to whole milliseconds.
+   * Converts this duration to the number of whole milliseconds.
    */
   val inMilliseconds: IntMilliseconds
     get() = (value / MICROSECONDS_PER_MILLISECOND).milliseconds
 
   /**
-   * Convert to whole seconds.
+   * Converts this duration to the number of whole seconds.
    */
   val inSeconds: IntSeconds
     get() = (value / MICROSECONDS_PER_SECOND).seconds
 
   /**
-   * Convert to whole minutes.
+   * Converts this duration to the number of whole minutes.
    */
   val inMinutes: IntMinutes
     get() = (value / MICROSECONDS_PER_MINUTE).minutes
 
   /**
-   * Convert to whole hours.
+   * Converts this duration to the number of whole hours.
    */
   val inHours: IntHours
     get() = (value / MICROSECONDS_PER_HOUR).toInt().hours
 
   /**
-   * Convert to whole days.
+   * Converts this duration to the number of whole days.
    */
   val inDays: IntDays
     get() = (value / MICROSECONDS_PER_DAY).toInt().days
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0
 
   override fun compareTo(other: IntMicroseconds): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return if (value == 0) {
@@ -122,30 +122,30 @@ inline class IntMicroseconds(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = IntMicroseconds(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = IntMicroseconds(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = this.toLongMicroseconds() * scalar
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = this.toLongMicroseconds() * scalar
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): IntMicroseconds {
@@ -157,7 +157,7 @@ inline class IntMicroseconds(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
   operator fun div(scalar: Long): LongMicroseconds = this.toLongMicroseconds() / scalar
@@ -301,18 +301,18 @@ inline class IntMicroseconds(
   }
 
   /**
-   * Convert to a [kotlin.time.Duration].
+   * Converts this duration to a [kotlin.time.Duration].
    */
   @ExperimentalTime
   fun toKotlinDuration(): KotlinDuration = value.kotlinMicroseconds
 
   /**
-   * Convert to [LongMicroseconds].
+   * Converts this duration to [LongMicroseconds].
    */
   fun toLongMicroseconds() = LongMicroseconds(value.toLong())
 
   /**
-   * Convert to a unit-less `Long` value.
+   * Converts this duration to a `Long` value.
    */
   fun toLong() = value.toLong()
 
@@ -330,19 +330,19 @@ inline class IntMicroseconds(
 }
 
 /**
- * Convert to [IntMicroseconds].
+ * Converts this value to a duration of microseconds.
  */
 val Int.microseconds: IntMicroseconds
   get() = IntMicroseconds(this)
 
 /**
- * Multiply by a number of microseconds.
+ * Multiplies this value by a duration of microseconds.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(microseconds: IntMicroseconds) = microseconds * this
 
 /**
- * Multiply by a number of microseconds.
+ * Multiplies this value by a duration of microseconds.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(microseconds: IntMicroseconds) = microseconds * this
@@ -357,73 +357,73 @@ inline class LongMicroseconds(
   val value: Long
 ) : Comparable<LongMicroseconds> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongMicroseconds
     get() = if (value < 0) -this else this
   /**
-   * Convert to nanoseconds.
+   * Converts this duration to nanoseconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inNanoseconds: LongNanoseconds
     get() = (value timesExact NANOSECONDS_PER_MICROSECOND).nanoseconds
 
   /**
-   * Convert to nanoseconds without checking for overflow.
+   * Converts this duration to nanoseconds without checking for overflow.
    */
   internal val inNanosecondsUnchecked: LongNanoseconds
     get() = (value * NANOSECONDS_PER_MICROSECOND).nanoseconds
 
   /**
-   * Convert to whole milliseconds.
+   * Converts this duration to the number of whole milliseconds.
    */
   val inMilliseconds: LongMilliseconds
     get() = (value / MICROSECONDS_PER_MILLISECOND).milliseconds
 
   /**
-   * Convert to whole seconds.
+   * Converts this duration to the number of whole seconds.
    */
   val inSeconds: LongSeconds
     get() = (value / MICROSECONDS_PER_SECOND).seconds
 
   /**
-   * Convert to whole minutes.
+   * Converts this duration to the number of whole minutes.
    */
   val inMinutes: LongMinutes
     get() = (value / MICROSECONDS_PER_MINUTE).minutes
 
   /**
-   * Convert to whole hours.
+   * Converts this duration to the number of whole hours.
    */
   val inHours: LongHours
     get() = (value / MICROSECONDS_PER_HOUR).hours
 
   /**
-   * Convert to whole days.
+   * Converts this duration to the number of whole days.
    */
   val inDays: LongDays
     get() = (value / MICROSECONDS_PER_DAY).days
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0L
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0L
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0L
 
   override fun compareTo(other: LongMicroseconds): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return if (value == 0L) {
@@ -445,30 +445,30 @@ inline class LongMicroseconds(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = LongMicroseconds(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = LongMicroseconds(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = LongMicroseconds(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = LongMicroseconds(value timesExact scalar)
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): LongMicroseconds {
@@ -480,7 +480,7 @@ inline class LongMicroseconds(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Long): LongMicroseconds {
@@ -623,31 +623,31 @@ inline class LongMicroseconds(
   }
 
   /**
-   * Convert to a [kotlin.time.Duration].
+   * Converts this duration to a [kotlin.time.Duration].
    */
   @ExperimentalTime
   fun toKotlinDuration(): KotlinDuration = value.kotlinMicroseconds
 
   /**
-   * Convert to [IntMicroseconds].
+   * Converts this duration to [IntMicroseconds].
    * @throws ArithmeticException if overflow occurs
    */
   fun toIntMicroseconds() = IntMicroseconds(value.toIntExact())
 
   /**
-   * Convert to [IntMicroseconds] without checking for overflow.
+   * Converts this duration to [IntMicroseconds] without checking for overflow.
    */
   @PublishedApi
   internal fun toIntMicrosecondsUnchecked() = IntMicroseconds(value.toInt())
 
   /**
-   * Convert to a unit-less `Int` value.
+   * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
   fun toInt() = value.toIntExact()
 
   /**
-   * Convert to a unit-less `Int` value without checking for overflow.
+   * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked() = value.toInt()
 
@@ -665,25 +665,25 @@ inline class LongMicroseconds(
 }
 
 /**
- * Convert to [LongMicroseconds].
+ * Converts this value to a duration of microseconds.
  */
 val Long.microseconds: LongMicroseconds
   get() = LongMicroseconds(this)
 
 /**
- * Multiply by a number of microseconds.
+ * Multiplies this value by a duration of microseconds.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(microseconds: LongMicroseconds) = microseconds * this
 
 /**
- * Multiply by a number of microseconds.
+ * Multiplies this value by a duration of microseconds.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(microseconds: LongMicroseconds) = microseconds * this
 
 /**
- * Convert to Island Time [LongMicroseconds].
+ * Converts this duration to Island Time [LongMicroseconds].
  */
 @ExperimentalTime
 fun KotlinDuration.toIslandMicroseconds() =

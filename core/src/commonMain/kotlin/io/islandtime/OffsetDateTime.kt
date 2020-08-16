@@ -141,21 +141,21 @@ class OffsetDateTime(
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth get() = toYearMonth()
 
     @Deprecated(
         "Use toOffsetTime() instead.",
         ReplaceWith("this.toOffsetTime()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val offsetTime: OffsetTime get() = toOffsetTime()
 
     @Deprecated(
         "Use toInstant() instead.",
         ReplaceWith("this.toInstant()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val instant: Instant get() = toInstant()
 
@@ -325,16 +325,17 @@ class OffsetDateTime(
         val MAX = DateTime.MAX at UtcOffset.MIN
 
         /**
-         * Compare by instant, then date-time. Using this `Comparator` guarantees a deterministic order when sorting.
+         * A [Comparator] that compares by instant, then date-time. Using this `Comparator` guarantees a deterministic
+         * order when sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
+        val DEFAULT_SORT_ORDER: Comparator<OffsetDateTime> = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
             .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
 
         /**
-         * Compare by timeline order only, ignoring any offset differences.
+         * A [Comparator] that compares by timeline order only, ignoring any offset differences.
          */
-        val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimePoint.TIMELINE_ORDER
 
         /**
          * Creates an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
@@ -373,7 +374,7 @@ class OffsetDateTime(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): OffsetDateTime {
             return fromMillisecondOfUnixEpoch(millisecond, offset)
@@ -382,7 +383,7 @@ class OffsetDateTime(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, offset: UtcOffset): OffsetDateTime {
             return fromSecondOfUnixEpoch(second, nanoOfSecond, offset)
@@ -408,7 +409,7 @@ infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offse
 @Deprecated(
     "Use 'toOffsetDateTime()' instead.",
     ReplaceWith("this.toOffsetDateTime()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
 

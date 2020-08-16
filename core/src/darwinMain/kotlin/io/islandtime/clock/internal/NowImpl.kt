@@ -4,27 +4,27 @@ import io.islandtime.*
 import io.islandtime.clock.Clock
 import io.islandtime.internal.*
 
-actual fun Date.Companion.nowImpl(clock: Clock): Date {
+internal actual fun Date.Companion.nowImpl(clock: Clock): Date {
     return with(clock) { readInstant().toDateAt(zone) }
 }
 
-actual fun DateTime.Companion.nowImpl(clock: Clock): DateTime {
+internal actual fun DateTime.Companion.nowImpl(clock: Clock): DateTime {
     return with(clock) { readInstant().toDateTimeAt(zone) }
 }
 
-actual fun OffsetDateTime.Companion.nowImpl(clock: Clock): OffsetDateTime {
+internal actual fun OffsetDateTime.Companion.nowImpl(clock: Clock): OffsetDateTime {
     return with(clock) { readInstant().toOffsetDateTimeAt(zone) }
 }
 
-actual fun ZonedDateTime.Companion.nowImpl(clock: Clock): ZonedDateTime {
+internal actual fun ZonedDateTime.Companion.nowImpl(clock: Clock): ZonedDateTime {
     return with(clock) { readInstant() at zone }
 }
 
-actual fun Time.Companion.nowImpl(clock: Clock): Time {
+internal actual fun Time.Companion.nowImpl(clock: Clock): Time {
     return with(clock) { readInstant().toTimeAt(zone) }
 }
 
-actual fun OffsetTime.Companion.nowImpl(clock: Clock): OffsetTime {
+internal actual fun OffsetTime.Companion.nowImpl(clock: Clock): OffsetTime {
     return with(clock) { readInstant().toOffsetTimeAt(zone) }
 }
 

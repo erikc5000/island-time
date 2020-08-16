@@ -84,7 +84,7 @@ class ZonedDateTime private constructor(
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth
         get() = toYearMonth()
@@ -95,7 +95,7 @@ class ZonedDateTime private constructor(
     @Deprecated(
         "Use toOffsetTime() instead.",
         ReplaceWith("this.toOffsetTime()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val offsetTime: OffsetTime
         get() = toOffsetTime()
@@ -103,7 +103,7 @@ class ZonedDateTime private constructor(
     @Deprecated(
         "Use toOffsetDateTime() instead.",
         ReplaceWith("this.toOffsetDateTime()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val offsetDateTime: OffsetDateTime
         get() = toOffsetDateTime()
@@ -114,7 +114,7 @@ class ZonedDateTime private constructor(
     @Deprecated(
         "Use toInstant() instead.",
         ReplaceWith("this.toInstant()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val instant: Instant
         get() = toInstant()
@@ -393,18 +393,18 @@ class ZonedDateTime private constructor(
 
     companion object {
         /**
-         * Compares by instant, then date-time, then time zone. Using this `Comparator` guarantees a deterministic order
-         * when sorting.
+         * A [Comparator] that compares by instant, then date-time, then time zone. Using this `Comparator` guarantees a
+         * deterministic order when sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<ZonedDateTime> { it.secondOfUnixEpoch }
+        val DEFAULT_SORT_ORDER: Comparator<ZonedDateTime> = compareBy<ZonedDateTime> { it.secondOfUnixEpoch }
             .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
             .thenBy { it.zone }
 
         /**
-         * Compares by timeline order only, ignoring any offset or time zone differences.
+         * A [Comparator] that compares by timeline order only, ignoring any offset or time zone differences.
          */
-        val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimePoint.TIMELINE_ORDER
 
         /**
          * Creates a [ZonedDateTime] from a local date and time, optionally using a preferred offset. If the local date
@@ -486,7 +486,7 @@ class ZonedDateTime private constructor(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("ZonedDateTime.fromMillisecondOfUnixEpoch(millisecond, zone)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long, zone: TimeZone): ZonedDateTime {
             return fromMillisecondOfUnixEpoch(millisecond, zone)
@@ -495,7 +495,7 @@ class ZonedDateTime private constructor(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("ZonedDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, zone)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, zone: TimeZone): ZonedDateTime {
             return fromSecondOfUnixEpoch(second, nanoOfSecond, zone)
@@ -638,7 +638,7 @@ fun Date.endOfDayAt(zone: TimeZone): ZonedDateTime {
         "this.toZonedDateTime(zone, PRESERVE_LOCAL_TIME)",
         "io.islandtime.OffsetConversionStrategy.PRESERVE_LOCAL_TIME"
     ),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
     return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
@@ -650,7 +650,7 @@ fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
         "this.toZonedDateTime(zone, PRESERVE_LOCAL_TIME)",
         "io.islandtime.OffsetConversionStrategy.PRESERVE_LOCAL_TIME"
     ),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
     return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
@@ -662,7 +662,7 @@ fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
         "this.toZonedDateTime(zone, PRESERVE_INSTANT)",
         "io.islandtime.OffsetConversionStrategy.PRESERVE_INSTANT"
     ),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
     return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
@@ -674,7 +674,7 @@ fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
         "this.toZonedDateTime(zone, PRESERVE_INSTANT)",
         "io.islandtime.OffsetConversionStrategy.PRESERVE_INSTANT"
     ),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTime.instantAt(zone: TimeZone): ZonedDateTime {
     return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)

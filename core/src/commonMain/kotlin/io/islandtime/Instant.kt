@@ -259,7 +259,7 @@ class Instant private constructor(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("Instant.fromSecondOfUnixEpoch(second)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long): Instant {
             return fromSecondOfUnixEpoch(second)
@@ -268,7 +268,7 @@ class Instant private constructor(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("Instant.fromSecondOfUnixEpoch(second, nanosecondAdjustment)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int): Instant {
             return fromSecondOfUnixEpoch(second, nanosecondAdjustment)
@@ -277,7 +277,7 @@ class Instant private constructor(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("Instant.fromSecondOfUnixEpoch(second, nanosecondAdjustment)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Long): Instant {
             return fromSecondOfUnixEpoch(second, nanosecondAdjustment)
@@ -286,7 +286,7 @@ class Instant private constructor(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("Instant.fromMillisecondOfUnixEpoch(millisecond)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long): Instant {
             return fromMillisecondOfUnixEpoch(millisecond)
