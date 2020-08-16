@@ -15,7 +15,7 @@ interface TimePointProgressionBuilder<T : TimePoint<T>> {
 }
 
 /**
- * Progression builder that stores just the first and last elements.
+ * A progression builder that stores just the first and last elements.
  */
 private class DefaultTimePointProgressionBuilder<T : TimePoint<T>>(
     override val first: T,
@@ -64,7 +64,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
     }
 
     /**
-     * Reverse a progression such that it counts down instead of up, or vice versa
+     * Reverses this progression such that it counts down instead of up, or vice versa.
      */
     fun reversed(): TimePointSecondProgression<T> {
         return fromClosedRange(last, first, -step)
@@ -121,7 +121,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
     }
 
     /**
-     * Reverse a progression such that it counts down instead of up, or vice versa
+     * Reverses this progression such that it counts down instead of up, or vice versa.
      */
     fun reversed(): TimePointNanosecondProgression<T> {
         return fromClosedRange(last, first, -step)
@@ -137,7 +137,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
 }
 
 /**
- * Get a progression of time points in descending order.
+ * Creates a progression of time points in descending order.
  */
 infix fun <T : TimePoint<T>> T.downTo(to: T): TimePointProgressionBuilder<T> {
     return DefaultTimePointProgressionBuilder(this, to)

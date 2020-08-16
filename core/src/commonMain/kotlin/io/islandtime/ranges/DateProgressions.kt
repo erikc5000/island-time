@@ -23,7 +23,9 @@ open class DateDayProgression protected constructor(
     val first: Date get() = Date.fromDaysSinceUnixEpoch(firstUnixEpochDay)
     val last: Date get() = Date.fromDaysSinceUnixEpoch(lastUnixEpochDay)
 
-    /** Is the progression empty? */
+    /**
+     * Checks if this progression is empty.
+     */
     open fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
 
     override fun iterator(): DateIterator = DateDayProgressionIterator(firstUnixEpochDay, lastUnixEpochDay, step)
@@ -65,7 +67,9 @@ class DateMonthProgression private constructor(
 
     val last = getLastDateInProgression(first, endInclusive, step)
 
-    /** Is the progression empty? */
+    /**
+     * Checks if this progression is empty.
+     */
     fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
 
     override fun iterator(): DateIterator = DateMonthProgressionIterator(first, last, step)
@@ -97,37 +101,54 @@ class DateMonthProgression private constructor(
 }
 
 /**
- * A get progression of dates in descending order
+ * Creates a progression of dates in descending order.
  */
 infix fun Date.downTo(to: Date) = DateDayProgression.fromClosedRange(this, to, (-1).days)
 
 /**
- * Reverse a progression such that it counts down instead of up, or vice versa
+ * Reverses this progression such that it counts down instead of up, or vice versa.
  */
 fun DateDayProgression.reversed() = DateDayProgression.fromClosedRange(last, first, -step)
 
 /**
- * Step over dates in increments of days
+ * Creates a progression that steps over the dates in this progression in increments of days.
  */
 infix fun DateDayProgression.step(step: IntDays): DateDayProgression {
     require(step.value > 0) { "step must be positive" }
     return DateDayProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
+/**
+ * Creates a progression that steps over the dates in this progression in increments of weeks.
+ */
 infix fun DateDayProgression.step(step: IntWeeks) = this.step(step.inDays)
 
 /**
- * Step over dates in increments of months
+ * Creates a progression that steps over the dates in this progression in increments of months.
  */
 infix fun DateDayProgression.step(step: IntMonths): DateMonthProgression {
     require(step > 0.months) { "step must be positive" }
     return DateMonthProgression.fromClosedRange(first, last, if (this.step.value > 0) step else -step)
 }
 
+/**
+ * Creates a progression that steps over the dates in this progression in increments of years.
+ */
 infix fun DateDayProgression.step(step: IntYears) = this.step(step.inMonths)
+
+/**
+ * Creates a progression that steps over the dates in this progression in increments of decades.
+ */
 infix fun DateDayProgression.step(step: IntDecades) = this.step(step.inMonths)
+
+/**
+ * Creates a progression that steps over the dates in this progression in increments of centuries.
+ */
 infix fun DateDayProgression.step(step: IntCenturies) = this.step(step.inMonths)
 
+/**
+ * Reverses this progression such that it counts down instead of up, or vice versa.
+ */
 fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last, first, -step)
 
 /**
@@ -163,7 +184,7 @@ private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): D
 }
 
 /**
- * Get the number of months between two dates for the purposes of a progression.  This works a little differently than
+ * Gets the number of months between two dates for the purposes of a progression.  This works a little differently than
  * the usual [monthsBetween] since it tries to use the same day as the start date while stepping months, coercing that
  * day as needed to fit the number of days in the current month.
  */

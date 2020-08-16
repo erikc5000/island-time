@@ -68,7 +68,7 @@ interface TimePoint<T> {
     val millisecondOfUnixEpoch: Long get() = millisecondsSinceUnixEpoch.value
 
     /**
-     * Check if this time point represents the same instant as [other]. Unlike the equals operator, equality is
+     * Checks if this time point represents the same instant as [other]. Unlike the equals operator, equality is
      * determined solely by timeline order.
      */
     fun isSameInstantAs(other: TimePoint<*>): Boolean {
@@ -76,6 +76,9 @@ interface TimePoint<T> {
     }
 
     /**
+     *
+     * Compares this time point with another time point.
+     *
      * Time points can be compared to other time points based on timeline order, but aren't required to implement the
      * [Comparable] interface since they don't necessarily have a natural order that's consistent with equals.
      */
@@ -120,8 +123,9 @@ interface TimePoint<T> {
 
     companion object {
         /**
-         * Compare by timeline order.
+         * A [Comparator] that compares by timeline order.
          */
-        val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.secondOfUnixEpoch }.thenBy { it.nanosecond }
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> =
+            compareBy<TimePoint<*>> { it.secondOfUnixEpoch }.thenBy { it.nanosecond }
     }
 }
