@@ -16,7 +16,7 @@ import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
 /**
- * Return this time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a 24-hour day.
@@ -27,7 +27,7 @@ fun Time.roundedToNearest(increment: IntHours): Time {
 }
 
 /**
- * Return this time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into an hour.
@@ -38,7 +38,7 @@ fun Time.roundedToNearest(increment: IntMinutes): Time {
 }
 
 /**
- * Return this time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a minute.
@@ -49,7 +49,7 @@ fun Time.roundedToNearest(increment: IntSeconds): Time {
 }
 
 /**
- * Return this time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -59,7 +59,7 @@ fun Time.roundedToNearest(increment: IntMilliseconds): Time {
 }
 
 /**
- * Return this time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -69,7 +69,7 @@ fun Time.roundedToNearest(increment: IntMicroseconds): Time {
 }
 
 /**
- * Return this time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -79,7 +79,7 @@ fun Time.roundedToNearest(increment: IntNanoseconds): Time {
 }
 
 /**
- * Return this time, rounded to match the precision of a given [unit]. If the time is halfway between whole values of
+ * Returns this time, rounded to match the precision of a given [unit]. If the time is halfway between whole values of
  * the unit, it will be rounded up.
  */
 fun Time.roundedTo(unit: TimeUnit): Time {
@@ -95,7 +95,7 @@ fun Time.roundedTo(unit: TimeUnit): Time {
 }
 
 /**
- * Return this time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a 24-hour day.
@@ -105,7 +105,7 @@ fun OffsetTime.roundedToNearest(increment: IntHours): OffsetTime {
 }
 
 /**
- * Return this time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into an hour.
@@ -115,7 +115,7 @@ fun OffsetTime.roundedToNearest(increment: IntMinutes): OffsetTime {
 }
 
 /**
- * Return this time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a minute.
@@ -125,7 +125,7 @@ fun OffsetTime.roundedToNearest(increment: IntSeconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -135,7 +135,7 @@ fun OffsetTime.roundedToNearest(increment: IntMilliseconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -145,7 +145,7 @@ fun OffsetTime.roundedToNearest(increment: IntMicroseconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway between
+ * Returns this time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -155,7 +155,7 @@ fun OffsetTime.roundedToNearest(increment: IntNanoseconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded to match the precision of a given [unit]. If the time is halfway between whole values of
+ * Returns this time, rounded to match the precision of a given [unit]. If the time is halfway between whole values of
  * the unit, it will be rounded up.
  */
 fun OffsetTime.roundedTo(unit: TimeUnit): OffsetTime {
@@ -163,7 +163,7 @@ fun OffsetTime.roundedTo(unit: TimeUnit): OffsetTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a 24-hour day.
@@ -174,7 +174,7 @@ fun DateTime.roundedToNearest(increment: IntHours): DateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into an hour.
@@ -185,7 +185,7 @@ fun DateTime.roundedToNearest(increment: IntMinutes): DateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a minute.
@@ -196,7 +196,7 @@ fun DateTime.roundedToNearest(increment: IntSeconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -206,7 +206,7 @@ fun DateTime.roundedToNearest(increment: IntMilliseconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -216,7 +216,7 @@ fun DateTime.roundedToNearest(increment: IntMicroseconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -226,7 +226,7 @@ fun DateTime.roundedToNearest(increment: IntNanoseconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded to match the precision of a given [unit]. If the time is halfway between whole values
+ * Returns this date-time, rounded to match the precision of a given [unit]. If the time is halfway between whole values
  * of the unit, it will be rounded up.
  */
 fun DateTime.roundedTo(unit: TimeUnit): DateTime {
@@ -242,7 +242,7 @@ fun DateTime.roundedTo(unit: TimeUnit): DateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a 24-hour day.
@@ -252,7 +252,7 @@ fun OffsetDateTime.roundedToNearest(increment: IntHours): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into an hour.
@@ -262,7 +262,7 @@ fun OffsetDateTime.roundedToNearest(increment: IntMinutes): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a minute.
@@ -272,7 +272,7 @@ fun OffsetDateTime.roundedToNearest(increment: IntSeconds): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -282,7 +282,7 @@ fun OffsetDateTime.roundedToNearest(increment: IntMilliseconds): OffsetDateTime 
 }
 
 /**
- * Return this date-time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -292,7 +292,7 @@ fun OffsetDateTime.roundedToNearest(increment: IntMicroseconds): OffsetDateTime 
 }
 
 /**
- * Return this date-time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -302,7 +302,7 @@ fun OffsetDateTime.roundedToNearest(increment: IntNanoseconds): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded to match the precision of a given [unit]. If the time is halfway between whole values
+ * Returns this date-time, rounded to match the precision of a given [unit]. If the time is halfway between whole values
  * of the unit, it will be rounded up.
  */
 fun OffsetDateTime.roundedTo(unit: TimeUnit): OffsetDateTime {
@@ -310,7 +310,7 @@ fun OffsetDateTime.roundedTo(unit: TimeUnit): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a 24-hour day.
@@ -325,7 +325,7 @@ fun ZonedDateTime.roundedToNearest(increment: IntHours): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into an hour.
@@ -340,7 +340,7 @@ fun ZonedDateTime.roundedToNearest(increment: IntMinutes): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
+ * Returns this date-time, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a minute.
@@ -355,7 +355,7 @@ fun ZonedDateTime.roundedToNearest(increment: IntSeconds): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -370,7 +370,7 @@ fun ZonedDateTime.roundedToNearest(increment: IntMilliseconds): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -385,7 +385,7 @@ fun ZonedDateTime.roundedToNearest(increment: IntMicroseconds): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
+ * Returns this date-time, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -400,7 +400,7 @@ fun ZonedDateTime.roundedToNearest(increment: IntNanoseconds): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded to match the precision of a given [unit]. If the time is halfway between whole values
+ * Returns this date-time, rounded to match the precision of a given [unit]. If the time is halfway between whole values
  * of the unit, it will be rounded up.
  *
  * Due to daylight savings time transitions, there a few complexities to be aware of. If the new local time falls within
@@ -413,7 +413,7 @@ fun ZonedDateTime.roundedTo(unit: TimeUnit): ZonedDateTime {
 }
 
 /**
- * Return this instant, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
+ * Returns this instant, rounded to the nearest hour that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a 24-hour day.
@@ -424,7 +424,7 @@ fun Instant.roundedToNearest(increment: IntHours): Instant {
 }
 
 /**
- * Return this instant, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
+ * Returns this instant, rounded to the nearest minute that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into an hour.
@@ -435,7 +435,7 @@ fun Instant.roundedToNearest(increment: IntMinutes): Instant {
 }
 
 /**
- * Return this instant, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
+ * Returns this instant, rounded to the nearest second that satisfies the [increment]. If the time is halfway between
  * increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a minute.
@@ -446,7 +446,7 @@ fun Instant.roundedToNearest(increment: IntSeconds): Instant {
 }
 
 /**
- * Return this instant, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
+ * Returns this instant, rounded to the nearest millisecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -457,7 +457,7 @@ fun Instant.roundedToNearest(increment: IntMilliseconds): Instant {
 }
 
 /**
- * Return this instant, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
+ * Returns this instant, rounded to the nearest microsecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -468,7 +468,7 @@ fun Instant.roundedToNearest(increment: IntMicroseconds): Instant {
 }
 
 /**
- * Return this instant, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
+ * Returns this instant, rounded to the nearest nanosecond that satisfies the [increment]. If the time is halfway
  * between increments, it will be rounded up.
  *
  * The [increment] must multiply evenly into a second.
@@ -479,7 +479,7 @@ fun Instant.roundedToNearest(increment: IntNanoseconds): Instant {
 }
 
 /**
- * Return this instant, rounded to match the precision of a given [unit]. If the time is halfway between whole values
+ * Returns this instant, rounded to match the precision of a given [unit]. If the time is halfway between whole values
  * of the unit, it will be rounded up.
  */
 fun Instant.roundedTo(unit: TimeUnit): Instant {

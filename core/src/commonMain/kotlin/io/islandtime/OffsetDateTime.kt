@@ -325,16 +325,17 @@ class OffsetDateTime(
         val MAX = DateTime.MAX at UtcOffset.MIN
 
         /**
-         * Compare by instant, then date-time. Using this `Comparator` guarantees a deterministic order when sorting.
+         * A [Comparator] that compares by instant, then date-time. Using this `Comparator` guarantees a deterministic
+         * order when sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
+        val DEFAULT_SORT_ORDER: Comparator<OffsetDateTime> = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
             .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
 
         /**
-         * Compare by timeline order only, ignoring any offset differences.
+         * A [Comparator] that compares by timeline order only, ignoring any offset differences.
          */
-        val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimePoint.TIMELINE_ORDER
 
         /**
          * Creates an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].

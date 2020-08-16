@@ -40,8 +40,7 @@ class OffsetDateTimeInterval(
     }
 
     /**
-     * Get the number of years between the start and end of the interval. A year is considered to have passed if twelve
-     * full months have passed between the start date and end date.
+     * Gets the number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInYears
@@ -52,8 +51,7 @@ class OffsetDateTimeInterval(
         }
 
     /**
-     * Get the number of months between the start and end of the interval. A month is considered to have passed if the
-     * day of the end month is greater than or equal to the day of the start month.
+     * Gets the number of whole months in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMonths
@@ -64,7 +62,7 @@ class OffsetDateTimeInterval(
         }
 
     /**
-     * Get the number of whole weeks in the interval.
+     * Gets the number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInWeeks
@@ -108,7 +106,7 @@ class OffsetDateTimeInterval(
 }
 
 /**
- * Convert a string to an [OffsetDateTimeInterval].
+ * Converts a string to an [OffsetDateTimeInterval].
  *
  * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
  * [OffsetDateTimeInterval.toString] can be safely parsed using this method.
@@ -126,7 +124,7 @@ class OffsetDateTimeInterval(
 fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
 
 /**
- * Convert a string to an [OffsetDateTimeInterval] using a specific parser.
+ * Converts a string to an [OffsetDateTimeInterval] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -160,7 +158,7 @@ fun String.toOffsetDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator. The offset of the start
+ * Returns a random date-time within this interval using the default random number generator. The offset of the start
  * date-time will be used.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
@@ -169,14 +167,14 @@ fun String.toOffsetDateTimeInterval(
 fun OffsetDateTimeInterval.random(): OffsetDateTime = random(Random)
 
 /**
- * Return a random date-time within the interval using the default random number generator or `null` if the interval is
- * empty or unbounded. The offset of the start date-time will be used.
+ * Returns a random date-time within this interval using the default random number generator or `null` if the interval
+ * is empty or unbounded. The offset of the start date-time will be used.
  * @see OffsetDateTimeInterval.random
  */
 fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random)
 
 /**
- * Return a random date-time within the interval using the supplied random number generator. The offset of the start
+ * Returns a random date-time within this interval using the supplied random number generator. The offset of the start
  * date-time will be used.
  * @throws NoSuchElementException if the interval is empty
  * @throws UnsupportedOperationException if the interval is unbounded
@@ -189,8 +187,8 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
 }
 
 /**
- * Return a random date-time within the interval using the supplied random number generator or `null` if the interval is
- * empty or unbounded. The offset of the start date-time will be used.
+ * Returns a random date-time within this interval using the supplied random number generator or `null` if the interval
+ * is empty or unbounded. The offset of the start date-time will be used.
  * @see OffsetDateTimeInterval.random
  */
 fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
@@ -200,12 +198,12 @@ fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
 }
 
 /**
- * Create an interval containing all of the representable date-times from up to, but not including [to].
+ * Creates an [OffsetDateTimeInterval] from this date-time up to, but not including [to].
  */
 infix fun OffsetDateTime.until(to: OffsetDateTime) = OffsetDateTimeInterval(this, to)
 
 /**
- * Get the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the starting
+ * Gets the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the starting
  * date-time.
  */
 fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
@@ -213,7 +211,7 @@ fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
 }
 
 /**
- * Get the number of whole years between two date-times, adjusting the offset of [endExclusive] if necessary to match
+ * Gets the number of whole years between two date-times, adjusting the offset of [endExclusive] if necessary to match
  * the starting date-time.
  */
 fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears {
@@ -221,7 +219,7 @@ fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears 
 }
 
 /**
- * Get the number of whole months between two date-times, adjusting the offset of [endExclusive] if necessary to match
+ * Gets the number of whole months between two date-times, adjusting the offset of [endExclusive] if necessary to match
  * the starting date-time.
  */
 fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonths {
@@ -229,7 +227,7 @@ fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonth
 }
 
 /**
- * Get the number whole weeks between two date-times, adjusting the offset of [endExclusive] if necessary to match the
+ * Gets the number whole weeks between two date-times, adjusting the offset of [endExclusive] if necessary to match the
  * starting date-time.
  */
 fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongWeeks {
@@ -237,7 +235,7 @@ fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongWeeks
 }
 
 /**
- * Get the number whole days between two date-times, adjusting the offset of [endExclusive] if necessary to match the
+ * Gets the number whole days between two date-times, adjusting the offset of [endExclusive] if necessary to match the
  * starting date-time.
  */
 fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongDays {

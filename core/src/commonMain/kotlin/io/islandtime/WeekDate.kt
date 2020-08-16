@@ -37,7 +37,7 @@ inline fun <T> Date.toWeekDate(locale: Locale, action: (year: Int, week: Int, da
 }
 
 /**
- * Create a [Date] from an ISO week date.
+ * Creates a [Date] from an ISO week date.
  * @param year the week-based year
  * @param week the week number of the week-based year
  * @param day the ISO day of week number, 1 (Monday) to 7 (Sunday)
@@ -66,7 +66,7 @@ fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int): Date {
 }
 
 /**
- * Create a [Date] from a week date representation using the week definition in [settings].
+ * Creates a [Date] from a week date representation using the week definition in [settings].
  * @param year the week-based year
  * @param week the week number of the week-based year
  * @param day the day of week number, 1-7
@@ -90,7 +90,7 @@ fun Date.Companion.fromWeekDate(year: Int, week: Int, day: Int, settings: WeekSe
 }
 
 /**
- * Create a [Date] from a week date representation using the week definition associated with the provided [locale].
+ * Creates a [Date] from a week date representation using the week definition associated with the provided [locale].
  * @param year the week-based year
  * @param week the week number of the week-based year
  * @param day the day of week number, 1-7

@@ -97,7 +97,7 @@ class GroupedDateTimeParser internal constructor(
 }
 
 /**
- * Create a [GroupedDateTimeParser].
+ * Creates a [GroupedDateTimeParser].
  *
  * A grouped parser is capable of grouping the parsed fields into separate results, allowing fields to be reused within
  * the same character sequence.

@@ -13,6 +13,9 @@ import kotlin.random.nextLong
  * An inclusive range of dates.
  *
  * [Date.MIN] and [Date.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
+ *
+ * @property start The start of this interval, inclusive.
+ * @property endInclusive The end of this interval, inclusive.
  */
 class DateRange(
     start: Date = Date.MIN,
@@ -69,8 +72,8 @@ class DateRange(
     }
 
     /**
-     * Convert a range of dates into a period containing each day in the range. As a range is inclusive, if the start
-     * and end date are the same, the resulting period will contain one day.
+     * Converts this range into a [Period] of the same length. As a range is inclusive, if the start and end date are
+     * the same, the resulting period will contain one day.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     fun asPeriod(): Period {
@@ -82,8 +85,7 @@ class DateRange(
     }
 
     /**
-     * Get the number of years in the range. A year is considered to have passed if twelve full months have passed
-     * between the start date and end date, according to the definition of 'month' in [lengthInMonths].
+     * Gets the number of whole years in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     val lengthInYears
@@ -94,8 +96,7 @@ class DateRange(
         }
 
     /**
-     * Get the number of months in the range. A month is considered to have passed if the day of the end month is
-     * greater than or equal to the day of the start month minus one (as a range is inclusive).
+     * Gets the number of whole months in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     val lengthInMonths
@@ -106,7 +107,7 @@ class DateRange(
         }
 
     /**
-     * Get the number of weeks in the range.
+     * Gets the number of whole weeks in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     val lengthInWeeks
@@ -117,8 +118,8 @@ class DateRange(
         }
 
     /**
-     * Get the number of days in the range. As a range is inclusive, if the start and end date are the same, the result
-     * will be one day.
+     * Gets the number of days in this range. As a range is inclusive, if the start and end date are the same, the
+     * result will be one day.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
     val lengthInDays
@@ -131,7 +132,7 @@ class DateRange(
 
     companion object {
         /**
-         * A range containing zero days.
+         * An empty range.
          */
         val EMPTY = DateRange(Date.fromDayOfUnixEpoch(1L), Date.fromDayOfUnixEpoch(0L))
 
@@ -143,7 +144,7 @@ class DateRange(
 }
 
 /**
- * Convert a string to a [DateRange].
+ * Converts a string to a [DateRange].
  *
  * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
  * [DateRange.toString] can be safely parsed using this method.
@@ -161,7 +162,7 @@ class DateRange(
 fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
 
 /**
- * Convert a string to a [DateRange] using a specific parser.
+ * Converts a string to a [DateRange] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -194,7 +195,7 @@ fun String.toDateRange(
 }
 
 /**
- * Return a random date within the range using the default random number generator.
+ * Returns a random date within this range using the default random number generator.
  * @throws NoSuchElementException if the range is empty
  * @throws UnsupportedOperationException if the range is unbounded
  * @see DateRange.randomOrNull
@@ -202,14 +203,14 @@ fun String.toDateRange(
 fun DateRange.random(): Date = random(Random)
 
 /**
- * Return a random date within the range using the default random number generator or `null` if the range is empty or
+ * Returns a random date within this range using the default random number generator or `null` if the range is empty or
  * unbounded.
  * @see DateRange.random
  */
 fun DateRange.randomOrNull(): Date? = randomOrNull(Random)
 
 /**
- * Return a random date within the range using the supplied random number generator.
+ * Returns a random date within this range using the supplied random number generator.
  * @throws NoSuchElementException if the range is empty
  * @throws UnsupportedOperationException if the range is unbounded
  * @see DateRange.randomOrNull
@@ -225,7 +226,7 @@ fun DateRange.random(random: Random): Date {
 }
 
 /**
- * Return a random date within the range using the supplied random number generator or `null` if the range is empty or
+ * Returns a random date within this range using the supplied random number generator or `null` if the range is empty or
  * unbounded.
  * @see DateRange.random
  */
@@ -238,12 +239,12 @@ fun DateRange.randomOrNull(random: Random): Date? {
 }
 
 /**
- * Get a range containing all of the days up to, but not including [to].
+ * Creates a [DateRange] containing all of the days from this date up to, but not including [to].
  */
 infix fun Date.until(to: Date) = DateRange(this, to - 1L.days)
 
 /**
- * Get the [Period] between two dates.
+ * Gets the [Period] between two dates.
  */
 fun periodBetween(start: Date, endExclusive: Date): Period {
     var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
@@ -268,14 +269,14 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
 }
 
 /**
- * Get the number of whole years between two dates.
+ * Gets the number of whole years between two dates.
  */
 fun yearsBetween(start: Date, endExclusive: Date): IntYears {
     return monthsBetween(start, endExclusive).inYears
 }
 
 /**
- * Get the number of whole months between two dates.
+ * Gets the number of whole months between two dates.
  */
 fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
     val startDays = start.monthsSinceYear0 * 32L + start.dayOfMonth
@@ -284,14 +285,14 @@ fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
 }
 
 /**
- * Get the number of whole weeks between two dates.
+ * Gets the number of whole weeks between two dates.
  */
 fun weeksBetween(start: Date, endExclusive: Date): LongWeeks {
     return daysBetween(start, endExclusive).inWeeks
 }
 
 /**
- * Get the number of days between two dates.
+ * Gets the number of days between two dates.
  */
 fun daysBetween(start: Date, endExclusive: Date): LongDays {
     return endExclusive.daysSinceUnixEpoch - start.daysSinceUnixEpoch
