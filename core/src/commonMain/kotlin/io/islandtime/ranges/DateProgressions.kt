@@ -5,11 +5,30 @@ import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import kotlin.math.abs
 
-open class DateDayProgression protected constructor(
-    first: Date,
+abstract class DateDayProgression internal constructor(): Iterable<Date> {
+    abstract val first: Date
+    abstract val last: Date
+    abstract val step: IntDays
+
+    /**
+     * Checks if this progression is empty.
+     */
+    abstract fun isEmpty(): Boolean
+
+    override fun iterator(): Iterator<Date> = DateDayProgressionIterator(first, last, step)
+
+    companion object {
+        fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntDays): DateDayProgression {
+            return DefaultDateDayProgression(rangeStart, rangeEnd, step)
+        }
+    }
+}
+
+private class DefaultDateDayProgression(
+    start: Date,
     endInclusive: Date,
-    val step: IntDays
-) : Iterable<Date> {
+    override val step: IntDays
+) : DateDayProgression() {
 
     init {
         require(step.value != 0) { "Step must be non-zero" }
@@ -18,45 +37,29 @@ open class DateDayProgression protected constructor(
         }
     }
 
-    protected val firstUnixEpochDay: LongDays = first.daysSinceUnixEpoch
-    protected val lastUnixEpochDay: LongDays = getLastDayInProgression(firstUnixEpochDay, endInclusive, step)
-    val first: Date get() = Date.fromDaysSinceUnixEpoch(firstUnixEpochDay)
-    val last: Date get() = Date.fromDaysSinceUnixEpoch(lastUnixEpochDay)
+    override val first: Date = start
+    override val last: Date = getLastDateInProgression(start, endInclusive, step)
 
-    /**
-     * Checks if this progression is empty.
-     */
-    open fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
-
-    override fun iterator(): DateIterator = DateDayProgressionIterator(firstUnixEpochDay, lastUnixEpochDay, step)
+    override fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
 
     override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $last step ${-step}"
 
     override fun equals(other: Any?): Boolean {
         return other is DateDayProgression &&
-            (isEmpty() && other.isEmpty() ||
-                firstUnixEpochDay == other.firstUnixEpochDay &&
-                lastUnixEpochDay == other.lastUnixEpochDay &&
-                step == other.step)
+            ((isEmpty() && other.isEmpty()) || (first == other.first && last == other.last && step == other.step))
     }
 
     override fun hashCode(): Int {
         return if (isEmpty()) {
             -1
         } else {
-            31 * (31 * firstUnixEpochDay.hashCode() + lastUnixEpochDay.hashCode()) + step.value
-        }
-    }
-
-    companion object {
-        fun fromClosedRange(rangeStart: Date, rangeEnd: Date, step: IntDays): DateDayProgression {
-            return DateDayProgression(rangeStart, rangeEnd, step)
+            31 * (31 * first.hashCode() + last.hashCode()) + step.value
         }
     }
 }
 
 class DateMonthProgression private constructor(
-    val first: Date,
+    start: Date,
     endInclusive: Date,
     val step: IntMonths
 ) : Iterable<Date> {
@@ -65,32 +68,29 @@ class DateMonthProgression private constructor(
         require(step.value != 0) { "Step must be non-zero" }
     }
 
-    val last = getLastDateInProgression(first, endInclusive, step)
+    val first = start
+    val last = getLastDateInProgression(start, endInclusive, step)
 
     /**
      * Checks if this progression is empty.
      */
     fun isEmpty(): Boolean = if (step.value > 0) first > last else first < last
 
-    override fun iterator(): DateIterator = DateMonthProgressionIterator(first, last, step)
+    override fun iterator(): Iterator<Date> = DateMonthProgressionIterator(first, last, step)
 
     override fun toString() = if (step.value > 0) "$first..$last step $step" else "$first downTo $last step ${-step}"
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as DateMonthProgression
-
-        if (first != other.first) return false
-        if (step != other.step) return false
-        if (last != other.last) return false
-
-        return true
+        return other is DateMonthProgression &&
+            ((isEmpty() && other.isEmpty()) || (first == other.first && last == other.last && step == other.step))
     }
 
     override fun hashCode(): Int {
-        return if (isEmpty()) -1 else 31 * (31 * first.hashCode() + last.hashCode()) + step.value
+        return if (isEmpty()) {
+            -1
+        } else {
+            31 * (31 * first.hashCode() + last.hashCode()) + step.value
+        }
     }
 
     companion object {
@@ -154,27 +154,25 @@ fun DateMonthProgression.reversed() = DateMonthProgression.fromClosedRange(last,
 /**
  * Assumes step is non-zero
  */
-private fun getLastDayInProgression(startInDays: LongDays, endDate: Date, step: IntDays): LongDays {
-    val endInDays = endDate.daysSinceUnixEpoch
-
+private fun getLastDateInProgression(start: Date, end: Date, step: IntDays): Date {
     return when {
-        step.value > 0L -> if (startInDays >= endInDays) {
-            endInDays
+        step.value > 0L -> if (start >= end) {
+            end
         } else {
-            endInDays - (abs(endInDays.value - startInDays.value) % step.value).days
+            val endEpochDay = end.dayOfUnixEpoch
+            Date.fromDayOfUnixEpoch(endEpochDay - (abs(endEpochDay - start.dayOfUnixEpoch) % step.value))
         }
-        else -> if (startInDays <= endInDays) {
-            endInDays
+        else -> if (start <= end) {
+            end
         } else {
-            endInDays - (abs(startInDays.value - endInDays.value) % step.value).days
+            val endEpochDay = end.dayOfUnixEpoch
+            Date.fromDayOfUnixEpoch(endEpochDay - (abs(start.dayOfUnixEpoch - end.dayOfUnixEpoch) % step.value))
         }
     }
 }
 
 private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): Date {
-    return if ((step.value > 0 && start >= end) ||
-        (step.value < 0 && start <= end)
-    ) {
+    return if ((step.value > 0 && start >= end) || (step.value < 0 && start <= end)) {
         end
     } else {
         val monthsBetween = progressionMonthsBetween(start, end)
@@ -184,11 +182,11 @@ private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): D
 }
 
 /**
- * Gets the number of months between two dates for the purposes of a progression.  This works a little differently than
+ * Gets the number of months between two dates for the purposes of a progression. This works a little differently than
  * the usual [monthsBetween] since it tries to use the same day as the start date while stepping months, coercing that
  * day as needed to fit the number of days in the current month.
  */
-internal fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths {
+private fun progressionMonthsBetween(start: Date, endInclusive: Date): IntMonths {
     val yearsBetween = endInclusive.year - start.year
     val monthsBetween = yearsBetween * MONTHS_PER_YEAR + (endInclusive.month.ordinal - start.month.ordinal)
 

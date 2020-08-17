@@ -24,8 +24,11 @@ class OffsetDateTimeInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() =
-        buildIsoString(MAX_OFFSET_DATE_TIME_STRING_LENGTH, StringBuilder::appendOffsetDateTime)
+    override fun toString() = buildIsoString(
+        maxElementSize = MAX_OFFSET_DATE_TIME_STRING_LENGTH,
+        inclusive = false,
+        appendFunction = StringBuilder::appendOffsetDateTime
+    )
 
     /**
      * Converts this interval into a [Period] of the same length.

@@ -16,7 +16,10 @@ import kotlin.random.Random
 class DateTimeInterval(
     override val start: DateTime = UNBOUNDED.start,
     override val endExclusive: DateTime = UNBOUNDED.endExclusive
-) : TimeInterval<DateTime> {
+) : Interval<DateTime> {
+
+    override val endInclusive: DateTime
+        get() = if (hasUnboundedEnd()) endExclusive else endExclusive - 1.nanoseconds
 
     override fun hasUnboundedStart(): Boolean = start == DateTime.MIN
     override fun hasUnboundedEnd(): Boolean = endExclusive == DateTime.MAX
@@ -45,7 +48,11 @@ class DateTimeInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_DATE_TIME_STRING_LENGTH, StringBuilder::appendDateTime)
+    override fun toString() = buildIsoString(
+        maxElementSize = MAX_DATE_TIME_STRING_LENGTH,
+        inclusive = false,
+        appendFunction = StringBuilder::appendDateTime
+    )
 
     /**
      * Converts this interval to the [Duration] between the start and end date-time, assuming they're in the same time

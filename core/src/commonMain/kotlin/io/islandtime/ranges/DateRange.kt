@@ -5,6 +5,7 @@ import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.random.Random
 import kotlin.random.nextLong
@@ -13,62 +14,45 @@ import kotlin.random.nextLong
  * An inclusive range of dates.
  *
  * [Date.MIN] and [Date.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
- *
- * @property start The start of this interval, inclusive.
- * @property endInclusive The end of this interval, inclusive.
  */
 class DateRange(
-    start: Date = Date.MIN,
-    endInclusive: Date = Date.MAX
-) : DateDayProgression(start, endInclusive, 1.days),
+    override val start: Date = Date.MIN,
+    override val endInclusive: Date = Date.MAX
+) : DateDayProgression(),
+    Interval<Date>,
     ClosedRange<Date> {
 
-    fun hasUnboundedStart(): Boolean = start == Date.MIN
-    fun hasUnboundedEnd(): Boolean = endInclusive == Date.MAX
+    override val endExclusive: Date get() = endInclusive + 1.days
 
-    fun hasBoundedStart(): Boolean = !hasUnboundedStart()
-    fun hasBoundedEnd(): Boolean = !hasUnboundedEnd()
-    fun isBounded(): Boolean = hasBoundedStart() && hasBoundedEnd()
-    fun isUnbounded(): Boolean = hasUnboundedStart() && hasUnboundedEnd()
+    override fun hasUnboundedStart(): Boolean = start == Date.MIN
+    override fun hasUnboundedEnd(): Boolean = endInclusive == Date.MAX
+    override fun contains(value: Date): Boolean = super.contains(value)
 
-    override val start: Date get() = first
-    override val endInclusive: Date get() = last
+    override val first: Date get() = start
+    override val last: Date get() = endInclusive
+    override val step: IntDays get() = 1.days
 
     override fun isEmpty(): Boolean {
-        return firstUnixEpochDay > lastUnixEpochDay || endInclusive == Date.MIN || start == Date.MAX
+        return start > endInclusive || endInclusive == Date.MIN || start == Date.MAX
     }
 
     /**
      * Converts this range to a string in ISO-8601 extended format.
      */
-    override fun toString(): String {
-        return if (isEmpty()) {
-            ""
-        } else {
-            buildString(2 * MAX_DATE_STRING_LENGTH + 1) {
-                if (hasBoundedStart()) {
-                    appendDate(start)
-                } else {
-                    append("..")
-                }
-
-                append('/')
-
-                if (hasBoundedEnd()) {
-                    appendDate(endInclusive)
-                } else {
-                    append("..")
-                }
-            }
-        }
-    }
+    override fun toString(): String = buildIsoString(
+        maxElementSize = MAX_DATE_STRING_LENGTH,
+        inclusive = true,
+        appendFunction = StringBuilder::appendDate
+    )
 
     override fun equals(other: Any?): Boolean {
-        return other is DateRange && (isEmpty() && other.isEmpty() || first == other.first && last == other.last)
+        return other is DateRange &&
+            ((isEmpty() && other.isEmpty()) ||
+                (start == other.start && endInclusive == other.endInclusive))
     }
 
     override fun hashCode(): Int {
-        return if (isEmpty()) -1 else (31 * first.hashCode() + last.hashCode())
+        return if (isEmpty()) -1 else (31 * start.hashCode() + endInclusive.hashCode())
     }
 
     /**

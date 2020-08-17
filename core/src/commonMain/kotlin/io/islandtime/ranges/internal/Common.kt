@@ -5,7 +5,7 @@ import io.islandtime.base.TimePoint
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
-import io.islandtime.ranges.TimeInterval
+import io.islandtime.ranges.Interval
 import io.islandtime.ranges.TimePointInterval
 import kotlin.random.Random
 
@@ -57,14 +57,15 @@ internal fun nanosecondsBetween(
         (endExclusiveNanoseconds - startNanoseconds)
 }
 
-internal inline fun <T> TimeInterval<T>.buildIsoString(
-    baseCapacity: Int,
+internal inline fun <T> Interval<T>.buildIsoString(
+    maxElementSize: Int,
+    inclusive: Boolean,
     appendFunction: StringBuilder.(T) -> StringBuilder
 ): String {
     return if (isEmpty()) {
         ""
     } else {
-        buildString(2 * baseCapacity + 1) {
+        buildString(2 * maxElementSize + 1) {
             if (hasBoundedStart()) {
                 appendFunction(start)
             } else {
@@ -74,7 +75,7 @@ internal inline fun <T> TimeInterval<T>.buildIsoString(
             append('/')
 
             if (hasBoundedEnd()) {
-                appendFunction(endExclusive)
+                appendFunction(if (inclusive) endInclusive else endExclusive)
             } else {
                 append("..")
             }
@@ -88,7 +89,7 @@ internal fun throwUnboundedIntervalException(): Nothing {
     )
 }
 
-internal inline fun <T> TimeInterval<T>.random(
+internal inline fun <T> Interval<T>.random(
     random: Random,
     secondGetter: (T) -> Long,
     nanosecondGetter: (T) -> Int,
@@ -101,7 +102,7 @@ internal inline fun <T> TimeInterval<T>.random(
     }
 }
 
-internal inline fun <T> TimeInterval<T>.randomOrNull(
+internal inline fun <T> Interval<T>.randomOrNull(
     random: Random,
     secondGetter: (T) -> Long,
     nanosecondGetter: (T) -> Int,
@@ -128,7 +129,7 @@ internal inline fun <T : TimePoint<T>> TimePointInterval<T>.randomOrNull(
     return randomOrNull(random, { it.secondOfUnixEpoch }, { it.nanosecond }, creator)
 }
 
-private inline fun <T> TimeInterval<T>.generateRandom(
+private inline fun <T> Interval<T>.generateRandom(
     random: Random,
     secondGetter: (T) -> Long,
     nanosecondGetter: (T) -> Int,
