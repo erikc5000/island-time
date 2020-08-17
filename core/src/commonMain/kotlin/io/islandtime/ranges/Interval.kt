@@ -5,17 +5,17 @@ package io.islandtime.ranges
  */
 interface Interval<T> {
     /**
-     * The start of the interval, inclusive.
+     * The start of this interval, inclusive.
      */
     val start: T
 
     /**
-     * The end of the interval, inclusive.
+     * The end of this interval, inclusive.
      */
     val endInclusive: T
 
     /**
-     * The end of the interval, exclusive.
+     * The end of this interval, exclusive.
      */
     val endExclusive: T
 
