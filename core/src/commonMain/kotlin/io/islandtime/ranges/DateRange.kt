@@ -18,7 +18,7 @@ import kotlin.random.nextLong
 class DateRange(
     override val start: Date = Date.MIN,
     override val endInclusive: Date = Date.MAX
-) : DateDayProgression,
+) : DateDayProgression(),
     Interval<Date>,
     ClosedRange<Date> {
 

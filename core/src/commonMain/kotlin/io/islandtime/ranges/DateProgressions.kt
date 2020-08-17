@@ -5,15 +5,15 @@ import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import kotlin.math.abs
 
-interface DateDayProgression : Iterable<Date> {
-    val first: Date
-    val last: Date
-    val step: IntDays
+abstract class DateDayProgression internal constructor(): Iterable<Date> {
+    abstract val first: Date
+    abstract val last: Date
+    abstract val step: IntDays
 
     /**
-     * Is the progression empty?
+     * Checks if this progression is empty.
      */
-    fun isEmpty(): Boolean
+    abstract fun isEmpty(): Boolean
 
     override fun iterator(): Iterator<Date> = DateDayProgressionIterator(first, last, step)
 
@@ -28,7 +28,7 @@ private class DefaultDateDayProgression(
     start: Date,
     endInclusive: Date,
     override val step: IntDays
-) : DateDayProgression {
+) : DateDayProgression() {
 
     init {
         require(step.value != 0) { "Step must be non-zero" }
@@ -182,7 +182,7 @@ private fun getLastDateInProgression(start: Date, end: Date, step: IntMonths): D
 }
 
 /**
- * Gets the number of months between two dates for the purposes of a progression.  This works a little differently than
+ * Gets the number of months between two dates for the purposes of a progression. This works a little differently than
  * the usual [monthsBetween] since it tries to use the same day as the start date while stepping months, coercing that
  * day as needed to fit the number of days in the current month.
  */
