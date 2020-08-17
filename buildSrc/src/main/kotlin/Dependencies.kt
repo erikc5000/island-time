@@ -1,7 +1,7 @@
 object Versions {
-    const val kotlin = "1.4.0-rc"
-    const val serialization = "1.0-M1-1.4.0-rc"
-    const val atomicfu = "0.14.3-1.4.0-rc"
+    const val kotlin = "1.4.0"
+    const val serialization = "1.0.0-RC"
+    const val atomicfu = "0.14.4"
     const val androidxTest = "1.2.0"
     const val googleTruth = "1.0.1"
     const val kotlinpoet = "1.6.0"
@@ -10,7 +10,7 @@ object Versions {
 
 object Libs {
     object Serialization {
-        const val runtime = "org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.serialization}"
+        const val core = "org.jetbrains.kotlinx:kotlinx-serialization-core:${Versions.serialization}"
     }
 
     object AtomicFU {

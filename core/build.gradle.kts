@@ -30,38 +30,12 @@ kotlin {
                 implementation(Libs.googleTruth)
             }
         }
-
-        val darwinMain by getting {
-            dependencies {
-                implementation(Libs.AtomicFU.runtime)
-            }
-        }
     }
 }
 
 tasks.withType<DokkaTask>().configureEach {
     multiplatform {
         create("global") {
-            perPackageOption {
-                prefix = "io.islandtime.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                prefix = "io.islandtime.measures.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                prefix = "io.islandtime.parser.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                prefix = "io.islandtime.ranges.internal"
-                suppress = true
-            }
-
             perPackageOption {
                 includes = listOf("packages.md")
             }

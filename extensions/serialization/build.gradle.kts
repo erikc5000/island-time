@@ -8,7 +8,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":core"))
-                implementation(Libs.Serialization.runtime)
+                implementation(Libs.Serialization.core)
             }
         }
 
