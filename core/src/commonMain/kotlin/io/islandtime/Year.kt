@@ -135,7 +135,7 @@ inline class Year(val value: Int) : Comparable<Year> {
 /**
  * Converts a string to a [Year].
  *
- * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or 'Y12345'. The output of
+ * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or `Y12345`. The output of
  * [Year.toString] can be safely parsed using this method.
  *
  * @throws DateTimeParseException if parsing fails

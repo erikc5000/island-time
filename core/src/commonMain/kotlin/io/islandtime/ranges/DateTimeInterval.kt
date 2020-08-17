@@ -6,7 +6,6 @@ import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.*
-import kotlin.random.Random
 
 /**
  * An interval between two date-times, assumed to be at the same offset from UTC.
@@ -48,7 +47,7 @@ class DateTimeInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(
+    override fun toString(): String = buildIsoString(
         maxElementSize = MAX_DATE_TIME_STRING_LENGTH,
         inclusive = false,
         appendFunction = StringBuilder::appendDateTime
@@ -82,10 +81,10 @@ class DateTimeInterval(
     }
 
     /**
-     * Gets the number of whole years in this interval.
+     * The number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInYears
+    val lengthInYears: IntYears
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endExclusive)
@@ -93,10 +92,10 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole months in this interval.
+     * The number of whole months in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMonths
+    val lengthInMonths: IntMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endExclusive)
@@ -104,7 +103,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole weeks in this interval.
+     * The number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInWeeks: LongWeeks
@@ -115,7 +114,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole days in this interval.
+     * The number of whole days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInDays: LongDays
@@ -126,7 +125,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole hours in this interval.
+     * The number of whole hours in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInHours: LongHours
@@ -137,7 +136,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole minutes in this interval.
+     * The number of whole minutes in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMinutes: LongMinutes
@@ -148,7 +147,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole seconds in this interval.
+     * The number of whole seconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInSeconds: LongSeconds
@@ -159,7 +158,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole milliseconds in this interval.
+     * The number of whole milliseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMilliseconds: LongMilliseconds
@@ -170,7 +169,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of whole microseconds in this interval.
+     * The number of whole microseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMicroseconds: LongMicroseconds
@@ -181,7 +180,7 @@ class DateTimeInterval(
         }
 
     /**
-     * Gets the number of nanoseconds in this interval.
+     * The number of nanoseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInNanoseconds: LongNanoseconds
@@ -234,7 +233,7 @@ class DateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toDateTimeInterval() = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
+fun String.toDateTimeInterval(): DateTimeInterval = toDateTimeInterval(DateTimeParsers.Iso.Extended.DATE_TIME_INTERVAL)
 
 /**
  * Converts a string to a [DateTimeInterval] using a specific parser.
@@ -270,53 +269,9 @@ fun String.toDateTimeInterval(
 }
 
 /**
- * Returns a random date-time within this interval using the default random number generator.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see DateTimeInterval.randomOrNull
- */
-fun DateTimeInterval.random(): DateTime = random(Random)
-
-/**
- * Returns a random date-time within this interval using the default random number generator or
- * `null` if the interval is empty or unbounded.
- * @see DateTimeInterval.random
- */
-fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNull(Random)
-
-/**
- * Returns a random date-time within this interval using the supplied random number generator.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see DateTimeInterval.randomOrNull
- */
-fun DateTimeInterval.random(random: Random): DateTime {
-    return random(
-        random,
-        secondGetter = { it.secondOfUnixEpochAt(UtcOffset.ZERO) },
-        nanosecondGetter = { it.nanosecond },
-        creator = { second, nanosecond -> DateTime.fromSecondOfUnixEpoch(second, nanosecond, UtcOffset.ZERO) }
-    )
-}
-
-/**
- * Returns a random date-time within this interval using the supplied random number generator or `null` if the interval
- * is empty or unbounded.
- * @see DateTimeInterval.random
- */
-fun DateTimeInterval.randomOrNull(random: Random): DateTime? {
-    return randomOrNull(
-        random,
-        secondGetter = { it.secondOfUnixEpochAt(UtcOffset.ZERO) },
-        nanosecondGetter = { it.nanosecond },
-        creator = { second, nanosecond -> DateTime.fromSecondOfUnixEpoch(second, nanosecond, UtcOffset.ZERO) }
-    )
-}
-
-/**
  * Creates a [DateTimeInterval] from this date-time up to, but not including the nanosecond represented by [to].
  */
-infix fun DateTime.until(to: DateTime) = DateTimeInterval(this, to)
+infix fun DateTime.until(to: DateTime): DateTimeInterval = DateTimeInterval(this, to)
 
 /**
  * Gets the [Period] between two date-times, assuming they're in the same time zone.

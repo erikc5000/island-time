@@ -4,8 +4,9 @@ import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.*
-import kotlin.random.Random
+import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
+import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval between two offset date-times based on timeline order.
@@ -24,7 +25,7 @@ class OffsetDateTimeInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(
+    override fun toString(): String = buildIsoString(
         maxElementSize = MAX_OFFSET_DATE_TIME_STRING_LENGTH,
         inclusive = false,
         appendFunction = StringBuilder::appendOffsetDateTime
@@ -43,10 +44,10 @@ class OffsetDateTimeInterval(
     }
 
     /**
-     * Gets the number of whole years in this interval.
+     * The number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInYears
+    val lengthInYears: IntYears
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endExclusive)
@@ -54,10 +55,10 @@ class OffsetDateTimeInterval(
         }
 
     /**
-     * Gets the number of whole months in this interval.
+     * The number of whole months in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMonths
+    val lengthInMonths: IntMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endExclusive)
@@ -65,10 +66,10 @@ class OffsetDateTimeInterval(
         }
 
     /**
-     * Gets the number of whole weeks in this interval.
+     * The number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInWeeks
+    val lengthInWeeks: LongWeeks
         get() = when {
             isEmpty() -> 0L.weeks
             isBounded() -> weeksBetween(start, endExclusive)
@@ -124,7 +125,9 @@ class OffsetDateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toOffsetDateTimeInterval() = toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
+fun String.toOffsetDateTimeInterval(): OffsetDateTimeInterval {
+    return toOffsetDateTimeInterval(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME_INTERVAL)
+}
 
 /**
  * Converts a string to an [OffsetDateTimeInterval] using a specific parser.
@@ -161,49 +164,9 @@ fun String.toOffsetDateTimeInterval(
 }
 
 /**
- * Returns a random date-time within this interval using the default random number generator. The offset of the start
- * date-time will be used.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see OffsetDateTimeInterval.randomOrNull
- */
-fun OffsetDateTimeInterval.random(): OffsetDateTime = random(Random)
-
-/**
- * Returns a random date-time within this interval using the default random number generator or `null` if the interval
- * is empty or unbounded. The offset of the start date-time will be used.
- * @see OffsetDateTimeInterval.random
- */
-fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull(Random)
-
-/**
- * Returns a random date-time within this interval using the supplied random number generator. The offset of the start
- * date-time will be used.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see OffsetDateTimeInterval.randomOrNull
- */
-fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime {
-    return random(random) { second, nanosecond ->
-        OffsetDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.offset)
-    }
-}
-
-/**
- * Returns a random date-time within this interval using the supplied random number generator or `null` if the interval
- * is empty or unbounded. The offset of the start date-time will be used.
- * @see OffsetDateTimeInterval.random
- */
-fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? {
-    return randomOrNull(random) { second, nanosecond ->
-        OffsetDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.offset)
-    }
-}
-
-/**
  * Creates an [OffsetDateTimeInterval] from this date-time up to, but not including [to].
  */
-infix fun OffsetDateTime.until(to: OffsetDateTime) = OffsetDateTimeInterval(this, to)
+infix fun OffsetDateTime.until(to: OffsetDateTime): OffsetDateTimeInterval = OffsetDateTimeInterval(this, to)
 
 /**
  * Gets the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the starting
