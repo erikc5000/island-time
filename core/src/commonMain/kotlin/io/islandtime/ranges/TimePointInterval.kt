@@ -45,7 +45,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     }
 
     /**
-     * Gets the number of 24-hour days in this interval.
+     * The number of 24-hour days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     open val lengthInDays: LongDays
@@ -56,7 +56,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Gets the number of whole hours in this interval.
+     * The number of whole hours in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInHours: LongHours
@@ -67,7 +67,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Gets the number of whole minutes in this interval.
+     * The number of whole minutes in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMinutes: LongMinutes
@@ -78,7 +78,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Gets the number of whole seconds in this interval.
+     * The number of whole seconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInSeconds: LongSeconds
@@ -89,7 +89,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Gets the number of whole milliseconds in this interval.
+     * The number of whole milliseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMilliseconds: LongMilliseconds
@@ -100,7 +100,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Gets the number of whole microseconds in this interval.
+     * The number of whole microseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMicroseconds: LongMicroseconds
@@ -111,7 +111,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
         }
 
     /**
-     * Gets the number of whole nanoseconds in this interval.
+     * The number of whole nanoseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInNanoseconds: LongNanoseconds
@@ -123,9 +123,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
 }
 
 /**
- * Check if this interval contains [value].
- *
- * This will always return `false` if [value] is `null`.
+ * Checks if this interval contains [value]. This will always return `false` if [value] is `null`.
  */
 operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*>?): Boolean {
     return value != null &&

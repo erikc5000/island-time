@@ -4,8 +4,9 @@ import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.*
-import kotlin.random.Random
+import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
+import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval of zoned date-times based on timeline order.
@@ -25,7 +26,7 @@ class ZonedDateTimeInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(
+    override fun toString(): String = buildIsoString(
         maxElementSize = MAX_ZONED_DATE_TIME_STRING_LENGTH,
         inclusive = false,
         appendFunction = StringBuilder::appendZonedDateTime
@@ -44,10 +45,10 @@ class ZonedDateTimeInterval(
     }
 
     /**
-     * Gets the number of whole years in this interval.
+     * The number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInYears
+    val lengthInYears: IntYears
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endExclusive)
@@ -55,10 +56,10 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Gets the number of whole months is this interval.
+     * The number of whole months is this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMonths
+    val lengthInMonths: IntMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endExclusive)
@@ -66,10 +67,10 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Gets the number of whole weeks in this interval.
+     * The number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInWeeks
+    val lengthInWeeks: LongWeeks
         get() = when {
             isEmpty() -> 0L.weeks
             isBounded() -> weeksBetween(start, endExclusive)
@@ -77,10 +78,10 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Gets the number of whole days in this interval.
+     * The number of whole days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    override val lengthInDays
+    override val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
             isBounded() -> daysBetween(start, endExclusive)
@@ -136,7 +137,9 @@ class ZonedDateTimeInterval(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+fun String.toZonedDateTimeInterval(): ZonedDateTimeInterval {
+    return toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+}
 
 /**
  * Converts a string to a [ZonedDateTimeInterval] using a specific parser.
@@ -173,49 +176,9 @@ fun String.toZonedDateTimeInterval(
 }
 
 /**
- * Returns a random date-time within this interval using the default random number generator. The zone of the start
- * date-time will be used.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see ZonedDateTimeInterval.randomOrNull
+ * Creates a [ZonedDateTimeInterval] from this date-time up to, but not including [to].
  */
-fun ZonedDateTimeInterval.random(): ZonedDateTime = random(Random)
-
-/**
- * Returns a random date-time within this interval using the default random number generator or `null` if the interval
- * is empty or unbounded. The zone of the start date-time will be used.
- * @see ZonedDateTimeInterval.random
- */
-fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
-
-/**
- * Returns a random date-time within this interval using the supplied random number generator. The zone of the start
- * date-time will be used.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see ZonedDateTimeInterval.randomOrNull
- */
-fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
-    return random(random) { second, nanosecond ->
-        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
-    }
-}
-
-/**
- * Returns a random date-time within this interval using the supplied random number generator or `null` if the interval
- * is empty or unbounded. The zone of the start date-time will be used.
- * @see ZonedDateTimeInterval.random
- */
-fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
-    return randomOrNull(random) { second, nanosecond ->
-        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
-    }
-}
-
-/**
- * Creates a {ZonedDateTimeInterval] from this date-time up to, but not including [to].
- */
-infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, to)
+infix fun ZonedDateTime.until(to: ZonedDateTime): ZonedDateTimeInterval = ZonedDateTimeInterval(this, to)
 
 
 @Deprecated(

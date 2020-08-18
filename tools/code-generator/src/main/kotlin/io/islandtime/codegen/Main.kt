@@ -1,10 +1,7 @@
 package io.islandtime.codegen
 
 import com.squareup.kotlinpoet.ClassName
-import io.islandtime.codegen.generators.ConstantsGenerator
-import io.islandtime.codegen.generators.DateConversionsGenerator
-import io.islandtime.codegen.generators.DatePropertiesGenerator
-import io.islandtime.codegen.generators.TemporalUnitGenerator
+import io.islandtime.codegen.generators.*
 import java.io.File
 
 private const val OUTPUT_PATH = "../../core/src/commonMain/generated"
@@ -16,6 +13,7 @@ private const val LOCALE_PACKAGE_NAME = "io.islandtime.locale"
 private const val MEASURES_PACKAGE_NAME = "io.islandtime.measures"
 private const val OPERATORS_PACKAGE_NAME = "io.islandtime.operators"
 private const val RANGES_PACKAGE_NAME = "io.islandtime.ranges"
+private const val RANGES_INTERNAL_PACKAGE_NAME = "io.islandtime.ranges.internal"
 
 fun base(name: String) = ClassName(BASE_PACKAGE_NAME, name)
 fun calendar(name: String) = ClassName(CALENDAR_PACKAGE_NAME, name)
@@ -24,12 +22,14 @@ fun locale(name: String) = ClassName(LOCALE_PACKAGE_NAME, name)
 fun measures(name: String) = ClassName(MEASURES_PACKAGE_NAME, name)
 fun operators(name: String) = ClassName(OPERATORS_PACKAGE_NAME, name)
 fun ranges(name: String) = ClassName(RANGES_PACKAGE_NAME, name)
+fun rangesInternal(name: String) = ClassName(RANGES_INTERNAL_PACKAGE_NAME, name)
 
 private val generators = arrayOf(
     TemporalUnitGenerator,
     ConstantsGenerator,
     DatePropertiesGenerator,
-    DateConversionsGenerator
+    DateConversionsGenerator,
+    IntervalOperatorsGenerator
 )
 
 fun main() {

@@ -7,8 +7,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
 import io.islandtime.ranges.internal.throwUnboundedIntervalException
-import kotlin.random.Random
-import kotlin.random.nextLong
 
 /**
  * An inclusive range of dates.
@@ -69,10 +67,10 @@ class DateRange(
     }
 
     /**
-     * Gets the number of whole years in this range.
+     * The number of whole years in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInYears
+    val lengthInYears: IntYears
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endInclusive + 1.days)
@@ -80,10 +78,10 @@ class DateRange(
         }
 
     /**
-     * Gets the number of whole months in this range.
+     * The number of whole months in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInMonths
+    val lengthInMonths: IntMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endInclusive + 1.days)
@@ -91,10 +89,10 @@ class DateRange(
         }
 
     /**
-     * Gets the number of whole weeks in this range.
+     * The number of whole weeks in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInWeeks
+    val lengthInWeeks: LongWeeks
         get() = when {
             isEmpty() -> 0L.weeks
             isBounded() -> weeksBetween(start, endInclusive + 1.days)
@@ -102,11 +100,11 @@ class DateRange(
         }
 
     /**
-     * Gets the number of days in this range. As a range is inclusive, if the start and end date are the same, the
-     * result will be one day.
+     * The number of days in this range. As a range is inclusive, if the start and end date are the same, the result
+     * will be one day.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInDays
+    val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
             isBounded() -> daysBetween(start, endInclusive + 1.days)
@@ -143,7 +141,7 @@ class DateRange(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toDateRange() = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
+fun String.toDateRange(): DateRange = toDateRange(DateTimeParsers.Iso.Extended.DATE_RANGE)
 
 /**
  * Converts a string to a [DateRange] using a specific parser.
@@ -179,53 +177,9 @@ fun String.toDateRange(
 }
 
 /**
- * Returns a random date within this range using the default random number generator.
- * @throws NoSuchElementException if the range is empty
- * @throws UnsupportedOperationException if the range is unbounded
- * @see DateRange.randomOrNull
- */
-fun DateRange.random(): Date = random(Random)
-
-/**
- * Returns a random date within this range using the default random number generator or `null` if the range is empty or
- * unbounded.
- * @see DateRange.random
- */
-fun DateRange.randomOrNull(): Date? = randomOrNull(Random)
-
-/**
- * Returns a random date within this range using the supplied random number generator.
- * @throws NoSuchElementException if the range is empty
- * @throws UnsupportedOperationException if the range is unbounded
- * @see DateRange.randomOrNull
- */
-fun DateRange.random(random: Random): Date {
-    if (!isBounded()) throwUnboundedIntervalException()
-
-    try {
-        return Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
-    } catch (e: IllegalArgumentException) {
-        throw NoSuchElementException(e.message)
-    }
-}
-
-/**
- * Returns a random date within this range using the supplied random number generator or `null` if the range is empty or
- * unbounded.
- * @see DateRange.random
- */
-fun DateRange.randomOrNull(random: Random): Date? {
-    return if (isEmpty() || !isBounded()) {
-        null
-    } else {
-        Date.fromDayOfUnixEpoch(random.nextLong(start.dayOfUnixEpoch, endInclusive.dayOfUnixEpoch + 1))
-    }
-}
-
-/**
  * Creates a [DateRange] containing all of the days from this date up to, but not including [to].
  */
-infix fun Date.until(to: Date) = DateRange(this, to - 1L.days)
+infix fun Date.until(to: Date): DateRange = DateRange(this, to - 1L.days)
 
 /**
  * Gets the [Period] between two dates.
