@@ -8,10 +8,10 @@ remote_branch: gh-pages
 copyright: 'Copyright &copy; 2020 Erik Christensen'
 
 nav:
-  - 'About': index.md
+  - index.md
   - getting-started.md
   - 'The Basics':
-      - 'basics/general-design.md'
+      - 'basics/overview.md'
       - 'basics/dates-and-times.md'
       - 'basics/durations.md'
       - 'basics/intervals.md'
@@ -27,29 +27,35 @@ nav:
       - 'core': 'api/core/index.md'
       - 'parcelize-extensions': 'api/parcelize/index.md'
       - 'serialization-extensions': 'api/serialization/index.md'
-      - 'threetenabp-extensions': 'api/threetenabp/index.md'
 
 theme:
   name: material
   palette:
     primary: 'cyan'
     accent: 'cyan'
-  logo: 'images/logo.svg'
-  favicon: 'images/logo.svg'
-  custom_dir: 'docs/theme/'
+  logo: 'assets/images/logo.svg'
+  favicon: 'assets/images/logo.svg'
+  custom_dir: 'docs/assets/theme/'
 
 markdown_extensions:
   - toc:
       permalink: true
-  - codehilite:
-      guess_lang: false
+      permalink_title: Permalink
   - admonition
+  - attr_list
+  - meta
   - pymdownx.superfences
   - pymdownx.tabbed
+  - pymdownx.tilde
+  - pymdownx.inlinehilite
 
 plugins:
-  - search
+  - search:
+      prebuild_index: true
   - macros
+
+extra_css:
+  - assets/stylesheets/extra.css
 
 extra:
   versions:

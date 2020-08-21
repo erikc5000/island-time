@@ -6,9 +6,9 @@ Island Time has a wide array of different date-time classes, each tailored to it
 
 | Class | Precision | Example ISO Representation |
 | --- | --- | --- |
-| `Date` | day | `2020-02-15` |
-| `YearMonth` | month | `2020-02` |
-| `Year` | year | `2020` |
+| [`Date`](../api/core/io.islandtime/-date/index.md) | day | `2020-02-15` |
+| [`YearMonth`](../api/core/io.islandtime/-year-month/index.md) | month | `2020-02` |
+| [`Year`](../api/core/io.islandtime/-year/index.md) | year | `2020` |
 
 The [`Date`](../api/core/io.islandtime/-date/index.md) class represents a date in an ambiguous region. It could be in New York City. It could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone &mdash; hence the _ambiguous_ part.
 
@@ -76,9 +76,9 @@ The classes we've looked at so far model dates and times in an ambiguous region,
 
 | Class | Description |
 | --- | --- |
-| `Instant` | A timestamp |
-| `ZonedDateTime` | A date and time of day in a particular time zone |
-| `OffsetDateTime` | A date and time of day with fixed UTC offset |
+| [`Instant`](../api/core/io.islandtime/-instant/index.md) | A timestamp |
+| [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md) | A date and time of day in a particular time zone |
+| [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) | A date and time of day with fixed UTC offset |
 
 An [`Instant`](../api/core/io.islandtime/-instant/index.md) is simply a number of seconds and nanoseconds that have elpased since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (`1970-01-01T00:00Z`), ignoring leap seconds. There's no concept of "date" without conversion to one of the other types. Practically speaking, this is the class you should use when you don't care about the local time and just want a [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) timestamp.
 
@@ -105,7 +105,7 @@ Fixed offset zones have a fixed UTC offset. While region-based zones are general
 
 Most platforms nowadays draw their understanding of time zones from the [IANA Time Zone Database](https://www.iana.org/time-zones), but time zones and their rules change all the time and different systems might have different versions of the database or only a subset of it available. This makes persistance and serialization of `ZonedDateTime` troublesome since there's the possibility that when it gets read later, the zone can't be found or its rules have changed, thus altering the local date and time.
 
-Using `OffsetDateTime` guarantees that you won't get an exception and the value you save will be the value that's read later, making it well-suited for this particular use case. More often than not though, you should use `ZonedDateTime` since it will handle daylight savings transitions correctly when doing calendrical calculations. You just might want to consider converting to an `OffsetDateTime` when you persist or serialize your data.
+Using `OffsetDateTime` guarantees that you'll never get an exception due to an unavailable time zone and that the value you save will be the value that's read later, making it well-suited for this particular use case. More often than not though, you should use `ZonedDateTime` since it will handle daylight savings transitions correctly when doing any sort of calendar math, but you may want to consider converting to an `OffsetDateTime` when you persist or serialize your data.
 
 ```kotlin
 val date = Date(2020, Month.MARCH, 8)
@@ -144,7 +144,7 @@ Throughout Island Time's date-time primitives, you'll find a set of patterns tha
 
 ### `at`
 
-The `at` infix function can be used to build up date-time primitives from "smaller" pieces. For example, we can create a `DateTime` by combining a `Date and a `Time`.
+The `at` infix function can be used to build up date-time primitives from "smaller" pieces. For example, we can create a `DateTime` by combining a `Date` and a `Time`.
 
 ```kotlin
 val dateTime = Date.now() at Time.NOON
@@ -251,7 +251,7 @@ val roundedToMinute = dateTime.roundedTo(MINUTES)
 val roundedUpToHour = dateTime.roundedUpTo(HOURS)
 // Output: 2020-06-30T07:00
 
-// Round down to the nearest hour (alternatively, use can use roundedDownTo())
+// Round down to the nearest hour (alternatively, you can use roundedDownTo())
 val roundedDownToHour = dateTime.truncatedTo(HOURS)
 // Output: 2020-06-30T06:00
 ```
@@ -294,7 +294,7 @@ val usaWeekNumber: Int = date.weekOfWeekBasedYear(WeekSettings.SUNDAY_START)
 ```
 
 !!! info "`weekOfYear` vs. `weekOfWeekBasedYear`"
-    The week number associated with a particular date could fall in the prior or subsequent year, depending on how the week is defined. `weekOfYear` will return the week number relative to the date's regular `year` -- `0` if it falls in the prior year, for example. On the other hand, `weekOfWeekBasedYear` will adjust the number to the `weekBasedYear`.
+    The week number associated with a particular date could fall in the prior or subsequent year, depending on how the week is defined. `weekOfYear` will return the week number relative to the date's regular `year` &mdash; `0` if it falls in the prior year, for example. On the other hand, `weekOfWeekBasedYear` will adjust the number to the `weekBasedYear`.
 
 ## ISO Representation
 

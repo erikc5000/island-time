@@ -3,6 +3,10 @@ plugins {
     application
 }
 
+repositories {
+    jcenter()
+}
+
 dependencies {
     implementation(Libs.kotlinpoet)
 }

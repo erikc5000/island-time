@@ -1,4 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -69,12 +68,6 @@ publishing {
 }
 
 afterEvaluate {
-    tasks.withType<DokkaTask>().configureEach {
-        multiplatform {
-            kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
-        }
-    }
-
     tasks.withType<JacocoReport>().configureEach {
         classDirectories.setFrom(
             fileTree("${buildDir}/classes/kotlin/jvm/") {

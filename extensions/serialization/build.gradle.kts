@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     `multiplatform-library`
     kotlin("plugin.serialization") version Versions.kotlin
@@ -24,6 +26,14 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
+        }
+    }
+}
+
+tasks.withType<DokkaTask>().configureEach {
+    dokkaSourceSets {
+        configureEach {
+            includes.from(file("MODULE.md"))
         }
     }
 }
