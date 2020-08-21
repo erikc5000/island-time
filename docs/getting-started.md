@@ -16,7 +16,7 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 !!! warning "Important"
     Your project's Kotlin compiler version must match the version used by Island Time.
 
-Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time -- even for non-native targets. Those of you who are using [Kotlin/Native](https://kotlinlang.org/docs/reference/native-overview.html) are probably already accustomed to dealing with this since there is no binary compatibility between releases yet.
+Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time &mdash; even for non-native targets. Those of you who are using [Kotlin/Native](https://kotlinlang.org/docs/reference/native-overview.html) are probably already accustomed to dealing with this since there is no binary compatibility between releases yet.
 
 | Island Time Version | Kotlin Version |
 | --- | --- |

@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.gradle.DokkaTask
+
 plugins {
     `android-library`
     id("kotlin-android-extensions")
@@ -31,4 +33,12 @@ dependencies {
     androidTestImplementation(Libs.AndroidxTest.runner)
     androidTestImplementation(Libs.googleTruth)
     androidTestUtil(Libs.AndroidxTest.orchestrator)
+}
+
+tasks.withType<DokkaTask>().configureEach {
+    dokkaSourceSets {
+        configureEach {
+            includes.from(file("MODULE.md"))
+        }
+    }
 }

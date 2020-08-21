@@ -34,11 +34,9 @@ kotlin {
 }
 
 tasks.withType<DokkaTask>().configureEach {
-    multiplatform {
-        create("global") {
-            perPackageOption {
-                includes = listOf("packages.md")
-            }
+    dokkaSourceSets {
+        configureEach {
+            includes.from(file("MODULE.md"))
         }
     }
 }

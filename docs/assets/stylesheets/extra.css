@@ -1,0 +1,28 @@
+.source-set-tag {
+    text-align: center;
+    font-size: x-small;
+    padding: 4px;
+    color: black;
+    background: #FFD54F;
+    border-radius: 8px
+}
+
+.source-set-common {
+    color: white;
+    background: #4DD0E1;
+}
+
+.source-set-jvm {
+    color: white;
+    background: #81C784;
+}
+
+.source-set-darwin {
+    color: white;
+    background: #9575CD;
+}
+
+.source-set-android {
+    color: black;
+    background: #DCE775;
+}

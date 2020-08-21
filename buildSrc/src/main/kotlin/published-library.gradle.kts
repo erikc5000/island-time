@@ -6,22 +6,26 @@ plugins {
     signing
 }
 
-val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
-
-val dokka by tasks.existing(DokkaTask::class) {
-    outputDirectory = "$buildDir/dokka"
-    outputFormat = "html"
+repositories {
+    jcenter()
+    maven(url = "https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
 }
 
-val generateMkdocsApiDocs by tasks.creating(DokkaTask::class) {
-    outputDirectory = "$rootDir/docs/api"
-    outputFormat = "gfm"
+val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
+
+tasks.register<DokkaTask>("dokkaMkdocs") {
+    dependencies {
+        plugins("io.islandtime.gradle:mkdocs-dokka-plugin")
+    }
+
+    outputDirectory.set(file("$rootDir/docs/api"))
 }
 
 val javadocJar by tasks.registering(Jar::class) {
-    dependsOn(dokka)
+    val dokkaHtml = tasks.named<DokkaTask>("dokkaHtml")
+    dependsOn(dokkaHtml)
     archiveClassifier.set("javadoc")
-    from(dokka.get().outputDirectory)
+    from(dokkaHtml.get().outputDirectory)
 }
 
 signing {

@@ -1,4 +1,4 @@
-# Interop
+# Interoperating with Platform Libraries
 
 In a multiplatform project, it's often necessary to interoperate with code that uses platform libraries directly. A number of conversion functions are available to help simplify this process.
 
