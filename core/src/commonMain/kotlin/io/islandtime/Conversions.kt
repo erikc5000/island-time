@@ -4,6 +4,8 @@
 package io.islandtime
 
 import io.islandtime.base.TimePoint
+import io.islandtime.internal.SECONDS_PER_DAY
+import io.islandtime.internal.floorDiv
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
@@ -25,6 +27,29 @@ fun ZonedDateTime.toOffsetTime(): OffsetTime = OffsetTime(time, offset)
  * transfer.
  */
 fun ZonedDateTime.toOffsetDateTime(): OffsetDateTime = OffsetDateTime(dateTime, offset)
+
+/**
+ * Converts this instant to the corresponding [Date] at [offset].
+ */
+fun Instant.toDateAt(offset: UtcOffset): Date {
+    val adjustedSeconds = secondOfUnixEpoch + offset.totalSeconds.value
+    val dayOfUnixEpoch = adjustedSeconds floorDiv SECONDS_PER_DAY
+    return Date.fromDayOfUnixEpoch(dayOfUnixEpoch)
+}
+
+/**
+ * Converts this instant to the corresponding [Date] in [zone].
+ */
+fun Instant.toDateAt(zone: TimeZone): Date {
+    return this.toDateAt(zone.rules.offsetAt(this))
+}
+
+/**
+ * Converts this instant to the corresponding [DateTime] at [offset].
+ */
+fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
+    return DateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, offset)
+}
 
 /**
  * Converts this instant to the corresponding [DateTime] in [zone].
@@ -71,6 +96,18 @@ fun OffsetDateTime.toZonedDateTime(zone: TimeZone, strategy: OffsetConversionStr
 }
 
 /**
+ * Converts this [OffsetDateTime] to an equivalent [ZonedDateTime] using a fixed-offset time zone.
+ *
+ * This comes with the caveat that a fixed-offset zone lacks knowledge of any region and will not respond to daylight
+ * savings time changes. To convert to a region-based zone, use [toZonedDateTime] instead.
+ *
+ * @see toZonedDateTime
+ */
+fun OffsetDateTime.asZonedDateTime(): ZonedDateTime {
+    return ZonedDateTime.fromLocal(dateTime, offset.asTimeZone(), offset)
+}
+
+/**
  * Converts this date-time to the corresponding [Instant] at [offset].
  * @param offset the offset from UTC
  */
@@ -79,13 +116,18 @@ fun DateTime.toInstantAt(offset: UtcOffset): Instant {
 }
 
 /**
- * Converts this date-time to the [Instant] representing the same time point.
+ * Converts this date-time to an [Instant] representing the same time point.
  */
 fun OffsetDateTime.toInstant(): Instant = (this as TimePoint<*>).toInstant()
 
 /**
- * Converts this date-time to the [Instant] representing the same time point.
+ * Converts this date-time to an [Instant] representing the same time point.
  */
 fun ZonedDateTime.toInstant(): Instant = (this as TimePoint<*>).toInstant()
+
+/**
+ * Converts this [UtcOffset] into a fixed-offset [TimeZone].
+ */
+fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
 
 internal fun TimePoint<*>.toInstant(): Instant = Instant.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond)

@@ -243,13 +243,14 @@ class OffsetDateTime(
     override operator fun minus(nanoseconds: LongNanoseconds) = copy(dateTime = dateTime - nanoseconds)
     override operator fun minus(nanoseconds: IntNanoseconds) = copy(dateTime = dateTime - nanoseconds)
 
-    operator fun rangeTo(other: OffsetDateTime) = OffsetDateTimeInterval.withInclusiveEnd(this, other)
+    operator fun rangeTo(other: OffsetDateTime): OffsetDateTimeInterval =
+        OffsetDateTimeInterval.withInclusiveEnd(this, other)
 
     /**
      * Converts this date-time to a string in ISO-8601 extended format. For example,
      * `2012-04-15T17:31:45.923452091-04:00` or `2020-02-13T02:30Z`.
      */
-    override fun toString() = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
+    override fun toString(): String = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
         appendOffsetDateTime(this@OffsetDateTime)
     }
 
@@ -392,28 +393,6 @@ class OffsetDateTime(
 }
 
 /**
- * Combines a local date and time with a UTC offset to create an [OffsetDateTime].
- */
-infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
-
-/**
- * Combines a local date with a time and UTC offset to create an [OffsetDateTime].
- */
-infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-
-/**
- * Combines an instant with a UTC offset to create an [OffsetDateTime].
- */
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
-
-@Deprecated(
-    "Use 'toOffsetDateTime()' instead.",
-    ReplaceWith("this.toOffsetDateTime()"),
-    DeprecationLevel.ERROR
-)
-fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
-
-/**
  * Converts a string to an [OffsetDateTime].
  *
  * The string is assumed to be an ISO-8601 date-time with the UTC offset in extended format. For example,
@@ -422,7 +401,7 @@ fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed date-time or offset is invalid
  */
-fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
+fun String.toOffsetDateTime(): OffsetDateTime = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
 /**
  * Converts a string to an [OffsetDateTime] using a specific parser.
@@ -462,3 +441,10 @@ internal fun StringBuilder.appendOffsetDateTime(offsetDateTime: OffsetDateTime):
     }
     return this
 }
+
+@Deprecated(
+    "Use 'toOffsetDateTime()' instead.",
+    ReplaceWith("this.toOffsetDateTime()"),
+    DeprecationLevel.ERROR
+)
+fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()

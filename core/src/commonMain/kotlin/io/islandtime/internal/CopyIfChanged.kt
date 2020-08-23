@@ -1,4 +1,4 @@
-package io.islandtime.operators.internal
+package io.islandtime.internal
 
 import io.islandtime.*
 

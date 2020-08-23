@@ -1,6 +1,7 @@
 package io.islandtime
 
 import io.islandtime.measures.hours
+import io.islandtime.measures.seconds
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -62,6 +63,33 @@ class ConversionsTest : AbstractIslandTimeTest() {
     fun `ZonedDateTime_toYearMonth() converts to YearMonth`() {
         val zonedDateTime = DateTime(2019, 3, 3, 7, 0) at denverZone
         assertEquals(YearMonth(2019, 3), zonedDateTime.toYearMonth())
+    }
+
+    @Test
+    fun `Instant_toDateAt() converts an instant to a Date at a UTC offset`() {
+        assertEquals(Date(1970, Month.JANUARY, 1), Instant.UNIX_EPOCH.toDateAt(UtcOffset.ZERO))
+
+        assertEquals(
+            Date(1970, Month.JANUARY, 2),
+            Instant(20L.hours.inSeconds).toDateAt(UtcOffset(4.hours))
+        )
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 31),
+            Instant((-20L).hours.inSeconds).toDateAt(UtcOffset((-4).hours))
+        )
+    }
+
+    @Test
+    fun `Instant_toDateAt() converts an instant to a Date at a time zone`() {
+        val zone = TimeZone("America/New_York")
+
+        assertEquals(Date(1970, Month.JANUARY, 1), Instant(5L.hours.inSeconds).toDateAt(zone))
+
+        assertEquals(
+            Date(1969, Month.DECEMBER, 31),
+            Instant(5L.hours - 1.seconds).toDateAt(zone)
+        )
     }
 
     @Test
@@ -138,6 +166,27 @@ class ConversionsTest : AbstractIslandTimeTest() {
                 denverZone
             ),
             offsetDateTime.toZonedDateTime(denverZone, OffsetConversionStrategy.PRESERVE_INSTANT)
+        )
+    }
+
+    @Test
+    fun `OffsetDateTime_asZonedDateTime() converts to a ZonedDateTime with fixed offset zone`() {
+        assertEquals(
+            ZonedDateTime.create(
+                DateTime(1970, 1, 1, 0, 0, 0, 0),
+                UtcOffset.ZERO,
+                TimeZone.UTC
+            ),
+            "1970-01-01T00:00Z".toOffsetDateTime().asZonedDateTime()
+        )
+
+        assertEquals(
+            ZonedDateTime.create(
+                DateTime(2017, 2, 28, 14, 0, 0, 123456789),
+                UtcOffset((-7).hours),
+                UtcOffset((-7).hours).asTimeZone()
+            ),
+            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().asZonedDateTime()
         )
     }
 

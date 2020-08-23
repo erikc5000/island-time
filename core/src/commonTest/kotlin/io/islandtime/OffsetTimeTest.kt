@@ -98,7 +98,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `unixEpochNanoseconds property returns the time with offset relative to 1970-01-01Z`() {
+    fun `nanosecondsSinceStartOfUtcDay returns the time with offset relative to 1970-01-01Z`() {
         assertEquals(
             1.hours + 2.minutes + 3.seconds + 4.nanoseconds - UtcOffset.MAX.totalSeconds,
             time1234.nanosecondsSinceStartOfUtcDay

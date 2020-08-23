@@ -1,8 +1,7 @@
-package io.islandtime.operators.internal
+package io.islandtime.internal
 
 import io.islandtime.DateTime
 import io.islandtime.Time
-import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.startOfDay
 

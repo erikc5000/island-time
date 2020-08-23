@@ -1,16 +1,13 @@
+@file:JvmName("DateTimesKt")
 @file:JvmMultifileClass
-@file:JvmName("OperatorsKt")
+@file:Suppress("PackageDirectoryMismatch")
 
-package io.islandtime.operators
+package io.islandtime
 
-import io.islandtime.*
 import io.islandtime.Time.Companion.MIDNIGHT
-import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
-import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
-import io.islandtime.internal.floorMod
+import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.measures.TimeUnit.*
-import io.islandtime.operators.internal.*
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 

@@ -16,7 +16,7 @@ import io.islandtime.ranges.InstantInterval
 expect class PlatformInstant
 
 /**
- * An instant in time with nanosecond precision.
+ * An instant in time with nanosecond-precision.
  */
 class Instant private constructor(
     override val secondOfUnixEpoch: Long,

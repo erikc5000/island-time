@@ -120,16 +120,16 @@ class YearMonth(
      * specified.
      * @throws DateTimeException if the year is invalid
      */
-    fun copy(year: Int = this.year, month: Month = this.month) = YearMonth(year, month)
+    fun copy(year: Int = this.year, month: Month = this.month): YearMonth = YearMonth(year, month)
 
     /**
      * Returns a copy of this year-month with the values of any individual components replaced by the new values
      * specified.
      * @throws DateTimeException if the year or month is invalid
      */
-    fun copy(year: Int = this.year, monthNumber: Int) = YearMonth(year, monthNumber)
+    fun copy(year: Int = this.year, monthNumber: Int): YearMonth = YearMonth(year, monthNumber)
 
-    operator fun plus(years: IntYears) = plus(years.toLongYears())
+    operator fun plus(years: IntYears): YearMonth = plus(years.toLongYears())
 
     operator fun plus(years: LongYears): YearMonth {
         return if (years.value == 0L) {
@@ -140,7 +140,7 @@ class YearMonth(
         }
     }
 
-    operator fun plus(months: IntMonths) = plus(months.toLongMonths())
+    operator fun plus(months: IntMonths): YearMonth = plus(months.toLongMonths())
 
     operator fun plus(months: LongMonths): YearMonth {
         return if (months.value == 0L) {
@@ -153,7 +153,7 @@ class YearMonth(
         }
     }
 
-    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
+    operator fun minus(years: IntYears): YearMonth = plus(years.toLongYears().negateUnchecked())
 
     operator fun minus(years: LongYears): YearMonth {
         return if (years.value == Long.MIN_VALUE) {
@@ -163,7 +163,7 @@ class YearMonth(
         }
     }
 
-    operator fun minus(months: IntMonths) = plus(months.toLongMonths().negateUnchecked())
+    operator fun minus(months: IntMonths): YearMonth = plus(months.toLongMonths().negateUnchecked())
 
     operator fun minus(months: LongMonths): YearMonth {
         return if (months.value == Long.MIN_VALUE) {
@@ -173,7 +173,7 @@ class YearMonth(
         }
     }
 
-    operator fun contains(date: Date) = date.year == year && date.month == month
+    operator fun contains(date: Date): Boolean = date.year == year && date.month == month
 
     companion object {
         /**
@@ -189,7 +189,7 @@ class YearMonth(
 }
 
 /**
- * Convert a string to a [YearMonth].
+ * Converts a string to a [YearMonth].
  *
  * The string is assumed to be an ISO-8601 year-month. For example, `2010-05` or `1960-12`. The output of
  * [YearMonth.toString] can be safely parsed using this method.
@@ -197,10 +197,10 @@ class YearMonth(
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed year-month is invalid
  */
-fun String.toYearMonth() = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
+fun String.toYearMonth(): YearMonth = toYearMonth(DateTimeParsers.Iso.YEAR_MONTH)
 
 /**
- * Convert a string to a [YearMonth] using a specific parser.
+ * Converts a string to a [YearMonth] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -231,13 +231,3 @@ internal fun DateTimeParseResult.toYearMonth(): YearMonth? {
         null
     }
 }
-
-/**
- * Combine a year and month to create a [YearMonth].
- */
-infix fun Year.at(month: Month) = YearMonth(value, month)
-
-/**
- * Combine a year and month number to create a [YearMonth].
- */
-fun Year.atMonth(number: Int) = YearMonth(value, number.toMonth())

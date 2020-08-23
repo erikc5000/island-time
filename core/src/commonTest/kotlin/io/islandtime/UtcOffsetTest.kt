@@ -43,7 +43,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `IntHours_asUtcOffset() creates a time offset from a duration of hours`() {
+    fun `IntHours_asUtcOffset() creates a UtcOffset from a duration of hours`() {
         assertEquals((-3600).seconds, (-1).hours.asUtcOffset().totalSeconds)
     }
 
@@ -53,7 +53,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `IntMinutes_asUtcOffset() creates a time offset from a duration of minutes`() {
+    fun `IntMinutes_asUtcOffset() creates a UtcOffset from a duration of minutes`() {
         assertEquals((-12_000).seconds, (-200).minutes.asUtcOffset().totalSeconds)
     }
 
@@ -63,7 +63,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `IntSeconds_asUtcOffset() creates a time offset from a duration of seconds`() {
+    fun `IntSeconds_asUtcOffset() creates a UtcOffset from a duration of seconds`() {
         assertEquals(1.seconds, 1.seconds.asUtcOffset().totalSeconds)
     }
 
