@@ -27,7 +27,7 @@ private fun buildDatePropertiesFile() = file(
 private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescription) {
     receiverClass.interval?.let { intervalClass ->
         fun CodeBlockBuilder.intervalOfWeekCode(vararg startOfWeekArgs: String): String {
-            using("startOfWeek", operators("startOfWeek"))
+            using("startOfWeek", base("startOfWeek"))
             using("days", measures("days"))
 
             return buildString {
@@ -43,63 +43,6 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
                     using("until", ranges("until"))
                     append(".let·{·it·%until:T·it·+·7.%days:T·}")
                 }
-            }
-        }
-
-        property(name = "isInLeapYear", returnType = Boolean::class) {
-            kdoc { "Checks if this ${receiverClass.simpleName} falls within a leap year." }
-            receiver(receiverClass.typeName)
-
-            if (receiverClass == Date) {
-                getter { "return isLeapYear(year)" }
-            } else {
-                modifiers(KModifier.INLINE)
-                delegatesTo(receiverClass.datePropertyName)
-            }
-        }
-
-        property(
-            name = if (receiverClass == Date) "isLeapDay" else "isInLeapDay",
-            returnType = Boolean::class
-        ) {
-            kdoc {
-                if (receiverClass == Date) {
-                    "Checks if this ${receiverClass.simpleName} is February 29."
-                } else {
-                    "Checks if this ${receiverClass.simpleName} falls within February 29."
-                }
-            }
-            receiver(receiverClass.typeName)
-
-            if (receiverClass == Date) {
-                getter { "return month == Month.FEBRUARY && dayOfMonth == 29" }
-            } else {
-                modifiers(KModifier.INLINE)
-                getter { "return date.isLeapDay" }
-            }
-        }
-
-        property(name = "lengthOfMonth", returnType = measures("IntDays")) {
-            kdoc { "The length of this ${receiverClass.simpleName}'s month in days." }
-            receiver(receiverClass.typeName)
-
-            if (receiverClass == Date) {
-                getter { "return month.lengthIn(year)" }
-            } else {
-                modifiers(KModifier.INLINE)
-                delegatesTo(receiverClass.datePropertyName)
-            }
-        }
-
-        property(name = "lengthOfYear", returnType = measures("IntDays")) {
-            kdoc { "The length of this ${receiverClass.simpleName}'s year in days." }
-            receiver(receiverClass.typeName)
-
-            if (receiverClass == Date) {
-                getter { "return lengthOfYear(year)" }
-            } else {
-                modifiers(KModifier.INLINE)
-                delegatesTo(receiverClass.datePropertyName)
             }
         }
 
@@ -440,6 +383,63 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         }
     }
 
+    property(name = "isInLeapYear", returnType = Boolean::class) {
+        kdoc { "Checks if this ${receiverClass.simpleName} falls within a leap year." }
+        receiver(receiverClass.typeName)
+
+        if (receiverClass == Date) {
+            getter { "return isLeapYear(year)" }
+        } else {
+            modifiers(KModifier.INLINE)
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
+    property(
+        name = if (receiverClass == Date) "isLeapDay" else "isInLeapDay",
+        returnType = Boolean::class
+    ) {
+        kdoc {
+            if (receiverClass == Date) {
+                "Checks if this ${receiverClass.simpleName} is February 29."
+            } else {
+                "Checks if this ${receiverClass.simpleName} falls within February 29."
+            }
+        }
+        receiver(receiverClass.typeName)
+
+        if (receiverClass == Date) {
+            getter { "return month == Month.FEBRUARY && dayOfMonth == 29" }
+        } else {
+            modifiers(KModifier.INLINE)
+            getter { "return date.isLeapDay" }
+        }
+    }
+
+    property(name = "lengthOfMonth", returnType = measures("IntDays")) {
+        kdoc { "The length of this ${receiverClass.simpleName}'s month in days." }
+        receiver(receiverClass.typeName)
+
+        if (receiverClass == Date) {
+            getter { "return month.lengthIn(year)" }
+        } else {
+            modifiers(KModifier.INLINE)
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
+    property(name = "lengthOfYear", returnType = measures("IntDays")) {
+        kdoc { "The length of this ${receiverClass.simpleName}'s year in days." }
+        receiver(receiverClass.typeName)
+
+        if (receiverClass == Date) {
+            getter { "return lengthOfYear(year)" }
+        } else {
+            modifiers(KModifier.INLINE)
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
     property(name = "lengthOfWeekBasedYear", returnType = measures("IntWeeks")) {
         kdoc {
             """
@@ -460,4 +460,64 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
             delegatesTo(receiverClass.datePropertyName)
         }
     }
+
+    fun createPreviousNextFunctions(name: String, plusOrMinus: PlusOrMinusOperator) {
+        function(name = name) {
+            kdoc {
+                if (name == "next") {
+                    "The next ${receiverClass.simpleName} after this one that falls on [dayOfWeek]."
+                } else {
+                    "The last ${receiverClass.simpleName} before this one that falls on [dayOfWeek]."
+                }
+            }
+            receiver(receiverClass.typeName)
+            argument("dayOfWeek", base("DayOfWeek"))
+            returns(receiverClass.typeName)
+
+            if (receiverClass == Date) {
+                code {
+                    using("days", measures("days"))
+
+                    val dayDiffCode = if (plusOrMinus == PlusOrMinusOperator.PLUS) {
+                        "this.dayOfWeek.ordinal - dayOfWeek.ordinal"
+                    } else {
+                        "dayOfWeek.ordinal - this.dayOfWeek.ordinal"
+                    }
+
+                    """
+                        val dayDiff = $dayDiffCode
+    
+                        return if (dayDiff >= 0) {
+                            this ${plusOrMinus.uncheckedOperator} (7 - dayDiff).%days:T
+                        } else {
+                            this ${plusOrMinus.uncheckedOperator} (-dayDiff).%days:T
+                        }
+                    """.trimIndent()
+                }
+            } else {
+                val propertyName = receiverClass.datePropertyName
+
+                code {
+                    "return copy($propertyName = $propertyName.$name(%dayOfWeek:N))"
+                }
+            }
+        }
+
+        function(name = "${name}OrSame") {
+            kdoc {
+                """
+                    The $name ${receiverClass.simpleName} that falls on [dayOfWeek], or this ${receiverClass.simpleName}
+                    if it falls on the same day.
+                """.trimIndent()
+            }
+
+            receiver(receiverClass.typeName)
+            argument("dayOfWeek", base("DayOfWeek"))
+            returns(receiverClass.typeName)
+            code { "return if (dayOfWeek == this.dayOfWeek) this else $name(dayOfWeek)" }
+        }
+    }
+
+    createPreviousNextFunctions("next", PlusOrMinusOperator.PLUS)
+    createPreviousNextFunctions("previous", PlusOrMinusOperator.MINUS)
 }

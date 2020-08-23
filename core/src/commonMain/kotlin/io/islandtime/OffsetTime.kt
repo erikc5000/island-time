@@ -171,11 +171,6 @@ class OffsetTime(
 }
 
 /**
- * Combines a local time with a UTC offset to create an [OffsetTime].
- */
-infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
-
-/**
  * Converts a string to an [OffsetTime].
  *
  * The string is assumed to be an ISO-8601 time with the UTC offset in extended format. For example, `02:30+01:00` or
@@ -184,7 +179,7 @@ infix fun Time.at(offset: UtcOffset) = OffsetTime(this, offset)
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed time or offset is invalid
  */
-fun String.toOffsetTime() = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
+fun String.toOffsetTime(): OffsetTime = toOffsetTime(DateTimeParsers.Iso.Extended.OFFSET_TIME)
 
 /**
  * Converts a string to an [OffsetTime] using a specific parser.

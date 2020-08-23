@@ -11,7 +11,6 @@ private const val CALENDAR_PACKAGE_NAME = "io.islandtime.calendar"
 private const val INTERNAL_PACKAGE_NAME = "io.islandtime.internal"
 private const val LOCALE_PACKAGE_NAME = "io.islandtime.locale"
 private const val MEASURES_PACKAGE_NAME = "io.islandtime.measures"
-private const val OPERATORS_PACKAGE_NAME = "io.islandtime.operators"
 private const val RANGES_PACKAGE_NAME = "io.islandtime.ranges"
 private const val RANGES_INTERNAL_PACKAGE_NAME = "io.islandtime.ranges.internal"
 
@@ -20,7 +19,6 @@ fun calendar(name: String) = ClassName(CALENDAR_PACKAGE_NAME, name)
 fun internal(name: String) = ClassName(INTERNAL_PACKAGE_NAME, name)
 fun locale(name: String) = ClassName(LOCALE_PACKAGE_NAME, name)
 fun measures(name: String) = ClassName(MEASURES_PACKAGE_NAME, name)
-fun operators(name: String) = ClassName(OPERATORS_PACKAGE_NAME, name)
 fun ranges(name: String) = ClassName(RANGES_PACKAGE_NAME, name)
 fun rangesInternal(name: String) = ClassName(RANGES_INTERNAL_PACKAGE_NAME, name)
 

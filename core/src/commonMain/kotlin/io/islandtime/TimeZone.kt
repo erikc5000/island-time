@@ -106,7 +106,7 @@ sealed class TimeZone : Comparable<TimeZone> {
     /**
      * Returns the [id] of this time zone.
      */
-    override fun toString() = id
+    override fun toString(): String = id
 
     /**
      * A named time zone, typically corresponding to a region identifier in the IANA Time Zone Database, but may be any
@@ -159,13 +159,13 @@ sealed class TimeZone : Comparable<TimeZone> {
         override val id: String get() = offset.toString()
         override val isValid: Boolean get() = true
         override val rules: TimeZoneRules get() = FixedTimeZoneRules(offset)
-        override fun normalized() = this
+        override fun normalized(): FixedOffset = this
 
         override fun equals(other: Any?): Boolean {
             return this === other || (other is FixedOffset && offset == other.offset)
         }
 
-        override fun hashCode() = offset.hashCode()
+        override fun hashCode(): Int = offset.hashCode()
     }
 
     companion object {
@@ -204,17 +204,12 @@ fun TimeZone(id: String): TimeZone {
     }
 }
 
-/**
- * Converts this [UtcOffset] into a fixed-offset [TimeZone].
- */
-fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
-
 @Deprecated(
     "Use TimeZone() instead.",
     ReplaceWith("TimeZone(this)"),
     DeprecationLevel.ERROR
 )
-fun String.toTimeZone() = TimeZone(this)
+fun String.toTimeZone(): TimeZone = TimeZone(this)
 
 internal const val MAX_TIME_ZONE_STRING_LENGTH = 50
 

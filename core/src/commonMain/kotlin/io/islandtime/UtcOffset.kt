@@ -53,7 +53,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
     }
 
 
-    override fun compareTo(other: UtcOffset) = totalSeconds.compareTo(other.totalSeconds)
+    override fun compareTo(other: UtcOffset): Int = totalSeconds.compareTo(other.totalSeconds)
 
     /**
      * Converts this offset to a string in ISO-8601 extended format. For example, `-04:00` or `Z`.
@@ -113,21 +113,21 @@ fun UtcOffset(
 }
 
 /**
- * Converts a duration of hours into a UTC time offset of the same length.
+ * Converts a duration of hours into a [UtcOffset] of the same length.
  * @throws ArithmeticException if overflow occurs
  */
-fun IntHours.asUtcOffset() = UtcOffset(this.inSeconds)
+fun IntHours.asUtcOffset(): UtcOffset = UtcOffset(this.inSeconds)
 
 /**
- * Converts a duration of minutes into a UTC time offset of the same length.
+ * Converts a duration of minutes into a [UtcOffset] of the same length.
  * @throws ArithmeticException if overflow occurs
  */
-fun IntMinutes.asUtcOffset() = UtcOffset(this.inSeconds)
+fun IntMinutes.asUtcOffset(): UtcOffset = UtcOffset(this.inSeconds)
 
 /**
- * Converts a duration of seconds into a UTC time offset of the same length.
+ * Converts a duration of seconds into a [UtcOffset] of the same length.
  */
-fun IntSeconds.asUtcOffset() = UtcOffset(this)
+fun IntSeconds.asUtcOffset(): UtcOffset = UtcOffset(this)
 
 /**
  * Converts a string to a [UtcOffset].
@@ -138,7 +138,7 @@ fun IntSeconds.asUtcOffset() = UtcOffset(this)
  * @throws DateTimeParseException if parsing fails
  * @throws DateTimeException if the parsed UTC offset is invalid
  */
-fun String.toUtcOffset() = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
+fun String.toUtcOffset(): UtcOffset = toUtcOffset(DateTimeParsers.Iso.Extended.UTC_OFFSET)
 
 /**
  * Converts a string to a [UtcOffset] using a specific parser.

@@ -1,6 +1,7 @@
-package io.islandtime.operators
+@file:Suppress("PackageDirectoryMismatch")
 
-import io.islandtime.*
+package io.islandtime
+
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.locale.toLocale
 import io.islandtime.measures.hours

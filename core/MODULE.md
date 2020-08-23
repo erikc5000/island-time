@@ -38,10 +38,6 @@ Platform-independent locale.
 
 Classes related to the measurement of time, including `Duration`, `Period`, and more specific units, such as `IntHours` or `LongYears`.
 
-# Package io.islandtime.operators
-
-Convenience operators for various date-time primitives, enabling things like `date.next(TUESDAY)`, `date.startOfWeek`, or `dateTime.truncatedTo(HOURS)`.
-
 # Package io.islandtime.parser
 
 Parsing of dates, times, durations, and intervals from textual representations.

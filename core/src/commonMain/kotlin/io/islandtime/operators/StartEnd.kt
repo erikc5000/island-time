@@ -1,11 +1,16 @@
-package io.islandtime.operators
+@file:JvmName("DateTimesKt")
+@file:JvmMultifileClass
+@file:Suppress("PackageDirectoryMismatch")
 
-import io.islandtime.*
+package io.islandtime
+
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.firstDayOfWeek
+import io.islandtime.internal.copyIfChanged
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
-import io.islandtime.operators.internal.copyIfChanged
+import kotlin.jvm.JvmMultifileClass
+import kotlin.jvm.JvmName
 
 /**
  * The date at the start of the year that this date falls in.

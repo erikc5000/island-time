@@ -1,4 +1,4 @@
-package io.islandtime.clock.jvm
+package io.islandtime.jvm
 
 import io.islandtime.*
 import io.islandtime.measures.hours
@@ -10,7 +10,7 @@ import java.time.Instant as JavaInstant
 import java.time.ZoneId as JavaZoneId
 import java.time.ZoneOffset as JavaZoneOffset
 
-class JvmNowTest : AbstractIslandTimeTest() {
+class ClockExtensionsTest : AbstractIslandTimeTest() {
     @Test
     fun `Year_now()`() {
         val clock = JavaClock.fixed(JavaInstant.ofEpochMilli(-1L), JavaZoneOffset.UTC)
@@ -99,5 +99,29 @@ class JvmNowTest : AbstractIslandTimeTest() {
             ),
             ZonedDateTime.now(clock)
         )
+    }
+
+    @Test
+    fun `converts a Java Clock to an Island Time Clock`() {
+        val javaClock = java.time.Clock.fixed(
+            java.time.Instant.ofEpochSecond(234_678_901L, 123456789),
+            java.time.ZoneId.of("America/New_York")
+        )
+
+        val islandClock = javaClock.asIslandClock()
+
+        assertEquals(
+            java.time.Instant.ofEpochSecond(234_678_901L, 123456789),
+            islandClock.readPlatformInstant()
+        )
+        assertEquals(
+            Instant.fromSecondOfUnixEpoch(234_678_901L, 123456789),
+            islandClock.readInstant()
+        )
+        assertEquals(
+            Instant.fromSecondOfUnixEpoch(234_678_901L, 123456789).millisecondsSinceUnixEpoch,
+            islandClock.readMilliseconds()
+        )
+        assertEquals(TimeZone("America/New_York"), islandClock.zone)
     }
 }

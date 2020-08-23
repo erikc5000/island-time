@@ -40,14 +40,6 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `YearMonth_atDay() constructs a Date from a YearMonth and day of month`() {
-        assertEquals(
-            Date(2018, Month.MAY, 30),
-            YearMonth(2018, Month.MAY).atDay(30)
-        )
-    }
-
-    @Test
     fun `copy() creates a new Date, replacing any combination of values`() {
         assertEquals(
             Date(2017, Month.NOVEMBER, 19),
@@ -704,32 +696,5 @@ class DateTest : AbstractIslandTimeTest() {
         ).forEach {
             assertEquals(Date(2000, Month.FEBRUARY, 29), it.toDate(DateTimeParsers.Iso.DATE))
         }
-    }
-
-    @Test
-    fun `Instant_toDateAt() converts an instant to a Date at a UTC offset`() {
-        assertEquals(Date(1970, Month.JANUARY, 1), Instant.UNIX_EPOCH.toDateAt(UtcOffset.ZERO))
-
-        assertEquals(
-            Date(1970, Month.JANUARY, 2),
-            Instant(20L.hours.inSeconds).toDateAt(UtcOffset(4.hours))
-        )
-
-        assertEquals(
-            Date(1969, Month.DECEMBER, 31),
-            Instant((-20L).hours.inSeconds).toDateAt(UtcOffset((-4).hours))
-        )
-    }
-
-    @Test
-    fun `Instant_toDateAt() converts an instant to a Date at a time zone`() {
-        val zone = TimeZone("America/New_York")
-
-        assertEquals(Date(1970, Month.JANUARY, 1), Instant(5L.hours.inSeconds).toDateAt(zone))
-
-        assertEquals(
-            Date(1969, Month.DECEMBER, 31),
-            Instant(5L.hours - 1.seconds).toDateAt(zone)
-        )
     }
 }
