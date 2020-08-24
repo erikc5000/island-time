@@ -7,11 +7,11 @@ pluginManagement {
 
 include(
     ":core",
-    ":tools:code-generator",
     ":extensions:parcelize",
-    ":extensions:serialization",
-    ":extensions:threetenabp"
+    ":extensions:serialization"
 )
+
+includeBuild("tools/code-generator")
 
 includeBuild("tools/mkdocs-dokka-plugin") {
     dependencySubstitution {

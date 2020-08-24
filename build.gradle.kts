@@ -52,3 +52,7 @@ subprojects {
         }
     }
 }
+
+tasks.register("codegen") {
+    dependsOn(gradle.includedBuild("code-generator").task(":run"))
+}
