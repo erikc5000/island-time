@@ -29,11 +29,3 @@ kotlin {
         }
     }
 }
-
-tasks.withType<DokkaTask>().configureEach {
-    dokkaSourceSets {
-        configureEach {
-            includes.from(file("MODULE.md"))
-        }
-    }
-}
