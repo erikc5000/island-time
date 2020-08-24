@@ -59,10 +59,8 @@ publishing {
                 artifactId = pomMppArtifactId
             }
             artifact(emptySourcesJar.get())
-        } else {
-            if (pomMppArtifactId != null) {
-                artifactId = "${pomMppArtifactId}-$name"
-            }
+        } else if (pomMppArtifactId != null) {
+            artifactId = "${pomMppArtifactId}-$name"
         }
     }
 }

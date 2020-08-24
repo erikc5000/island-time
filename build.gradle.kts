@@ -41,6 +41,11 @@ subprojects {
     tasks.withType<DokkaTask>().configureEach {
         dokkaSourceSets {
             configureEach {
+                val pomArtifactId: String? by project
+                val pomMppArtifactId: String? by project
+                (pomArtifactId ?: pomMppArtifactId)?.let { moduleDisplayName.set(it) }
+
+                includes.from(project.file("MODULE.md"))
                 skipEmptyPackages.set(true)
                 skipDeprecated.set(true)
             }
