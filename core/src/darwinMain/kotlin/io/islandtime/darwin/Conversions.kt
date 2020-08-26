@@ -14,7 +14,7 @@ import kotlinx.cinterop.convert
 import platform.Foundation.*
 
 /**
- * Convert an Island Time [Year] to an equivalent `NSDateComponents` object.
+ * Converts this year to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -26,7 +26,7 @@ fun Year.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents 
 }
 
 /**
- * Convert an Island Time [YearMonth] to an equivalent `NSDateComponents` object.
+ * Converts this year-month to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -39,7 +39,7 @@ fun YearMonth.toNSDateComponents(includeCalendar: Boolean = false): NSDateCompon
 }
 
 /**
- * Convert an Island Time [Date] to an equivalent `NSDateComponents` object.
+ * Converts this date to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -51,7 +51,7 @@ fun Date.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents 
 }
 
 /**
- * Convert an Island Time [Time] to an equivalent `NSDateComponents` object.
+ * Converts this time to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -63,7 +63,7 @@ fun Time.toNSDateComponents(includeCalendar: Boolean = false): NSDateComponents 
 }
 
 /**
- * Convert an Island Time [DateTime] to an equivalent `NSDateComponents` object.
+ * Converts this date-time to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -75,7 +75,7 @@ fun DateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCompone
 }
 
 /**
- * Convert an Island Time [OffsetTime] to an equivalent `NSDateComponents` object.
+ * Converts this time to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -88,7 +88,7 @@ fun OffsetTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCompo
 }
 
 /**
- * Convert an Island Time [OffsetDateTime] to an equivalent `NSDateComponents` object.
+ * Converts this date-time to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -101,7 +101,7 @@ fun OffsetDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateC
 }
 
 /**
- * Convert an Island Time [ZonedDateTime] to an equivalent `NSDateComponents` object.
+ * Converts this date-time to an equivalent `NSDateComponents` object.
  * @param includeCalendar `true` if the resulting `NSDateComponents` should include the ISO-8601 calendar
  * @return an equivalent `NSDateComponents` object
  */
@@ -114,35 +114,35 @@ fun ZonedDateTime.toNSDateComponents(includeCalendar: Boolean = false): NSDateCo
 }
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [Date].
+ * Converts this set of date components to an Island Time [Date].
  */
 fun NSDateComponents.toIslandDate(): Date {
     return Date(year.convert(), month.convert<Int>(), day.convert())
 }
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [Time].
+ * Converts this set of date components to an Island Time [Time].
  */
 fun NSDateComponents.toIslandTime(): Time {
     return Time(hour.convert(), minute.convert(), second.convert(), nanosecond.convert())
 }
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [DateTime].
+ * Converts this set of date components to an Island Time [DateTime].
  */
 fun NSDateComponents.toIslandDateTime(): DateTime {
     return DateTime(toIslandDate(), toIslandTime())
 }
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [OffsetDateTime].
+ * Converts this set of date components to an Island Time [OffsetDateTime].
  * @throws DateTimeException if the `timeZone` property is absent.
  */
 fun NSDateComponents.toIslandOffsetDateTime() = toIslandOffsetDateTimeOrNull()
     ?: throw DateTimeException("The 'timeZone' property must be non-null")
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [OffsetDateTime] or `null` if the `timeZone` property is
+ * Converts this set of date components to an Island Time [OffsetDateTime], or `null` if the `timeZone` property is
  * absent.
  */
 fun NSDateComponents.toIslandOffsetDateTimeOrNull(): OffsetDateTime? {
@@ -153,14 +153,14 @@ fun NSDateComponents.toIslandOffsetDateTimeOrNull(): OffsetDateTime? {
 }
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [ZonedDateTime].
+ * Converts this set of date components to an Island Time [ZonedDateTime].
  * @throws DateTimeException if the `timeZone` property is absent.
  */
 fun NSDateComponents.toIslandZonedDateTime() = toIslandZonedDateTimeOrNull()
     ?: throw DateTimeException("The 'timeZone' property must be non-null")
 
 /**
- * Convert an `NSDateComponents` object to an Island Time [ZonedDateTime] or `null` if the `timeZone` property is
+ * Converts this set of date components to an Island Time [ZonedDateTime], or `null` if the `timeZone` property is
  * absent.
  */
 fun NSDateComponents.toIslandZonedDateTimeOrNull(): ZonedDateTime? {
@@ -168,7 +168,7 @@ fun NSDateComponents.toIslandZonedDateTimeOrNull(): ZonedDateTime? {
 }
 
 /**
- * Convert an Island Time [TimePoint] to an `NSDate`.
+ * Converts this time point to an `NSDate`.
  */
 fun <T> TimePoint<T>.toNSDate(): NSDate {
     return NSDate.dateWithTimeIntervalSince1970(
@@ -177,7 +177,7 @@ fun <T> TimePoint<T>.toNSDate(): NSDate {
 }
 
 /**
- * Convert an `NSDate` to an Island Time [Instant].
+ * Converts this `NSDate` to an Island Time [Instant].
  */
 fun NSDate.toIslandInstant(): Instant {
     val unixEpochSecond = timeIntervalSince1970.toLong()
@@ -186,7 +186,7 @@ fun NSDate.toIslandInstant(): Instant {
 }
 
 /**
- * Convert an `NSDate` to an Island Time [DateTime] at the specified UTC offset.
+ * Converts this `NSDate` to an Island Time [DateTime] at the specified UTC offset.
  */
 fun NSDate.toIslandDateTimeAt(offset: UtcOffset): DateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
@@ -195,12 +195,12 @@ fun NSDate.toIslandDateTimeAt(offset: UtcOffset): DateTime {
 }
 
 /**
- * Convert an `NSDate` to an Island Time [DateTime] at the specified time zone.
+ * Converts this `NSDate` to an Island Time [DateTime] at the specified time zone.
  */
 fun NSDate.toIslandDateTimeAt(nsTimeZone: NSTimeZone) = toIslandDateTimeAt(nsTimeZone.toIslandUtcOffsetAt(this))
 
 /**
- * Convert an `NSDate` to an Island Time [OffsetDateTime] at the specified UTC offset.
+ * Converts this `NSDate` to an Island Time [OffsetDateTime] at the specified [offset].
  */
 fun NSDate.toIslandOffsetDateTimeAt(offset: UtcOffset): OffsetDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
@@ -209,14 +209,14 @@ fun NSDate.toIslandOffsetDateTimeAt(offset: UtcOffset): OffsetDateTime {
 }
 
 /**
- * Convert an `NSDate` to an Island Time [OffsetDateTime] at the specified time zone.
+ * Converts this `NSDate` to an Island Time [OffsetDateTime] at the specified time zone.
  */
 fun NSDate.toIslandOffsetDateTimeAt(nsTimeZone: NSTimeZone): OffsetDateTime {
     return toIslandOffsetDateTimeAt(nsTimeZone.toIslandUtcOffsetAt(this))
 }
 
 /**
- * Convert an `NSDate` to an Island Time [ZonedDateTime] at the specified time zone.
+ * Converts this `NSDate` to an Island Time [ZonedDateTime] at the specified time zone.
  */
 fun NSDate.toIslandZonedDateTimeAt(zone: TimeZone): ZonedDateTime {
     val unixEpochSecond = timeIntervalSince1970.toLong()
@@ -225,12 +225,12 @@ fun NSDate.toIslandZonedDateTimeAt(zone: TimeZone): ZonedDateTime {
 }
 
 /**
- * Convert an `NSDate` to an Island Time [ZonedDateTime] at the specified time zone.
+ * Converts this `NSDate` to an Island Time [ZonedDateTime] at the specified time zone.
  */
 fun NSDate.toIslandZonedDateTimeAt(nsTimeZone: NSTimeZone) = toIslandZonedDateTimeAt(nsTimeZone.toIslandTimeZone())
 
 /**
- * Convert an Island Time [UtcOffset] into an equivalent `NSTimeZone` with a fixed UTC offset.
+ * Converts this offset into an equivalent `NSTimeZone` with a fixed UTC offset.
  *
  * Note that `NSTimeZone`will round the `totalSeconds` value to the nearest minute.
  */
@@ -244,26 +244,26 @@ fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(
 fun NSTimeZone.toIslandUtcOffset(): UtcOffset = throw UnsupportedOperationException("Should not be called")
 
 /**
- * Convert an `NSTimeZone` to an Island Time [UtcOffset] at the provided date.
+ * Converts this `NSTimeZone` to an Island Time [UtcOffset] at the provided date.
  */
 fun NSTimeZone.toIslandUtcOffsetAt(date: NSDate): UtcOffset {
     return secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
 }
 
 /**
- * Convert an NSTimeZone` to an Island Time [TimeZone] with the same identifier.
+ * Converts this NSTimeZone` to an Island Time [TimeZone] with the same identifier.
  */
 fun NSTimeZone.toIslandTimeZone(): TimeZone = TimeZone(name)
 
 /**
- * Convert an Island Time [TimeZone] to an `NSTimeZone`.
+ * Converts this time zone to an `NSTimeZone`.
  * @throws TimeZoneRulesException if the identifier isn't recognized as valid for an `NSTimeZone`
  */
 fun TimeZone.toNSTimeZone(): NSTimeZone = toNSTimeZoneOrNull()
     ?: throw TimeZoneRulesException("The identifier '$id' could not be converted to an NSTimeZone")
 
 /**
- * Convert an Island Time [TimeZone] to an `NSTimeZone` or `null` if the identifier isn't recognized as valid for an
+ * Converts this time zone to an `NSTimeZone`, or `null` if the identifier isn't recognized as valid for an
  * `NSTimeZone`.
  */
 fun TimeZone.toNSTimeZoneOrNull(): NSTimeZone? {
@@ -275,96 +275,96 @@ fun TimeZone.toNSTimeZoneOrNull(): NSTimeZone? {
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun Duration.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
     seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntDays.toNSTimeInterval(): NSTimeInterval = this.toLongDays().inSecondsUnchecked.value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongDays.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntHours.toNSTimeInterval(): NSTimeInterval = this.toLongHours().inSecondsUnchecked.value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongHours.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntMinutes.toNSTimeInterval(): NSTimeInterval = this.toLongMinutes().inSecondsUnchecked.value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongMinutes.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntSeconds.toNSTimeInterval(): NSTimeInterval = value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongSeconds.toNSTimeInterval(): NSTimeInterval = value.toDouble()
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntMilliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
     seconds.value.toDouble() + milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongMilliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
     seconds.value.toDouble() + milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntMicroseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
     seconds.value.toDouble() + microseconds.value.toDouble() / MICROSECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongMicroseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
     seconds.value.toDouble() + microseconds.value.toDouble() / MICROSECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun IntNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
     seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSTimeInterval`.
+ * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun LongNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
     seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
 }
 
 /**
- * Convert to an equivalent `NSDateInterval`.
+ * Converts this interval to an equivalent `NSDateInterval`.
  * @throws UnsupportedOperationException if the interval is unbounded
  */
 fun <T : TimePoint<T>> TimePointInterval<T>.toNSDateInterval(): NSDateInterval {
@@ -373,7 +373,7 @@ fun <T : TimePoint<T>> TimePointInterval<T>.toNSDateInterval(): NSDateInterval {
 }
 
 /**
- * Convert to an equivalent `NSDateInterval` or `null` if the interval is unbounded.
+ * Converts this interval to an equivalent `NSDateInterval`, or `null` if the interval is unbounded.
  */
 fun <T : TimePoint<T>> TimePointInterval<T>.toNSDateIntervalOrNull(): NSDateInterval? {
     return if (isBounded()) {
@@ -384,7 +384,7 @@ fun <T : TimePoint<T>> TimePointInterval<T>.toNSDateIntervalOrNull(): NSDateInte
 }
 
 /**
- * Convert to an equivalent Island Time [InstantInterval].
+ * Converts this interval to an equivalent Island Time [InstantInterval].
  */
 fun NSDateInterval.toIslandInstantInterval(): InstantInterval {
     return startDate.toIslandInstant() until endDate.toIslandInstant()

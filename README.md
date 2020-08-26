@@ -15,8 +15,9 @@ Features:
 - Convert to and from platform-specific date-time types
 - Works on JVM, Android, iOS, macOS, tvOS, and watchOS
 
-Current limitations:
+Notable Limitations:
 - No custom format strings (must write platform-specific code to do this)
+- No support for JavaScript or non-Apple native platforms
 - Only supports the ISO calendar system
 
 Island Time is still early in development and "moving fast" so to speak. The API is likely to experience changes between minor version increments.
