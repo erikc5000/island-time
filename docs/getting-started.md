@@ -16,7 +16,7 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 !!! warning "Important"
     Your project's Kotlin compiler version must match the version used by Island Time.
 
-Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time &mdash; even for non-native targets. Those of you who are using [Kotlin/Native](https://kotlinlang.org/docs/reference/native-overview.html) are probably already accustomed to dealing with this since there is no binary compatibility between releases yet.
+Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time &mdash; even for non-native targets.
 
 | Island Time Version | Kotlin Version |
 | --- | --- |
@@ -26,11 +26,11 @@ Due to the experimental status of [inline classes](https://kotlinlang.org/docs/r
 
 ### JVM
 
-Island Time requires Java 8 or above.
+Java 8 or above is required.
 
 ### Android
 
-Island Time requires Android Gradle Plugin 4.0 or later and a minimum compile SDK of API 21.
+Android Gradle Plugin 4.0 or above and a minimum compile SDK of API 21 are required.
 
 ## Gradle Setup
 
@@ -79,7 +79,7 @@ You'll need to turn on [core library desugaring](https://developer.android.com/s
     }
 
     dependencies {
-        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     }
     ```
 
@@ -93,7 +93,7 @@ You'll need to turn on [core library desugaring](https://developer.android.com/s
 
         compileOptions {
             // Flag to enable support for the new language APIs
-            coreLibraryDesugaringEnabled = true
+            isCoreLibraryDesugaringEnabled = true
             // Sets Java compatibility to Java 8
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
@@ -101,7 +101,7 @@ You'll need to turn on [core library desugaring](https://developer.android.com/s
     }
 
     dependencies {
-        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.10")
     }
     ```
 

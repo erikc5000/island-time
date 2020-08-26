@@ -20,9 +20,7 @@ jobs:
         run: pip install mkdocs-material mkdocs-macros-plugin
 
       - name: Build API docs
-        run: |
-          ./gradlew assemble
-          ./gradlew generateMkdocsApiDocs
+        run: ./gradlew mkdocsDokka
 
       - name: Deploy
         run: mkdocs gh-deploy --force

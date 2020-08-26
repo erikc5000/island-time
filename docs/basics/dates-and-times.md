@@ -10,7 +10,7 @@ Island Time has a wide array of different date-time classes, each tailored to it
 | [`YearMonth`](../api/core/io.islandtime/-year-month/index.md) | month | `2020-02` |
 | [`Year`](../api/core/io.islandtime/-year/index.md) | year | `2020` |
 
-The [`Date`](../api/core/io.islandtime/-date/index.md) class represents a date in an ambiguous region. It could be in New York City. It could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone &mdash; hence the _ambiguous_ part.
+The [`Date`](../api/core/io.islandtime/-date/index.md) class represents a date in an ambiguous region. It could be in New York City, it could be in Tokyo. The instants in time that define the start and end of a `Date` can only be determined in the context of a particular time zone &mdash; hence the _ambiguous_ part.
 
 ```kotlin
 // Get the current date in the local time zone of the system
@@ -50,7 +50,7 @@ val (hour, minute, second, nanosecond) = time
 
 ## Combined Date and Time of Day
 
-A [`DateTime`](../api/core/io.islandtime/-date-time/index.md) combines a `Date` and `Time`, allowing you to represent both in a single data structure, still in an ambiguous region.
+A [`DateTime`](../api/core/io.islandtime/-date-time/index.md) combines a [`Date`](../api/core/io.islandtime/-date/index.md) and [`Time`](../api/core/io.islandtime/-time/index.md), allowing you to represent both in a single data structure, still in an ambiguous region.
 
 ```kotlin
 // Create a date-time from individual date and time components
@@ -68,11 +68,11 @@ val anotherDateTime: DateTime = date at Time.NOON
 val startOfDay: DateTime = date.startOfDay
 ```
 
-There's no guarantee that a particular `DateTime` will exist in every time zone and it could even exist twice, all thanks to the fun that is daylight savings time. We'll get into that more shortly, but it's important to keep this in mind since constructing or manipulating a `DateTime` directly can lead to subtle bugs.
+There's no guarantee that a [`DateTime`](../api/core/io.islandtime/-date-time/index.md) will exist exactly once in a given time zone. Due to daylight savings time transitions, it may exist twice or it may not exist at all. We'll get into this more shortly, but it's important to keep in mind that working with and manipulating a [`DateTime`](../api/core/io.islandtime/-date-time/index.md) directly can lead to subtle bugs.
 
 ## Instants in Time
 
-The classes we've looked at so far model dates and times in an ambiguous region, but often we want to unambiguously capture an instant in time. There are actually three different classes in Island Time that can do this, each serving a different purpose.
+So far, the classes we've looked at model dates and times in an ambiguous region, but often we want to unambiguously capture an instant in time. There are three different classes in Island Time that can do this, each serving a different purpose.
 
 | Class | Description |
 | --- | --- |
@@ -80,7 +80,7 @@ The classes we've looked at so far model dates and times in an ambiguous region,
 | [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md) | A date and time of day in a particular time zone |
 | [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) | A date and time of day with fixed UTC offset |
 
-An [`Instant`](../api/core/io.islandtime/-instant/index.md) is simply a number of seconds and nanoseconds that have elpased since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (`1970-01-01T00:00Z`), ignoring leap seconds. There's no concept of "date" without conversion to one of the other types. Practically speaking, this is the class you should use when you don't care about the local time and just want a [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) timestamp.
+An [`Instant`](../api/core/io.islandtime/-instant/index.md) is simply a number of seconds and nanoseconds that have elapsed since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time) (`1970-01-01T00:00Z`), ignoring leap seconds. There's no concept of "date" without conversion to one of the other types. Practically speaking, this is the class you should use when you don't care about the local time and just want a [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) timestamp.
 
 ```kotlin
 data class DogDto(
@@ -91,21 +91,21 @@ data class DogDto(
 )
 ```
 
-To capture an instant along with the local time, you have two options &mdash; [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) and [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md). Both store a date-time with an offset from UTC, however, `ZonedDateTime` is also aware of time zone rules, which is an important distinction.
+To capture an instant along with the local time, you have two options &mdash; [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) and [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md). Both store a `DateTime` along with a `UtcOffset`, however, `ZonedDateTime` is also aware of time zone rules, which is an important distinction.
 
-### `UtcOffset` vs. `TimeZone`
+### `TimeZone` vs. `UtcOffset`
 
 In Island Time, a [`UtcOffset`](../api/core/io.islandtime/-utc-offset/index.md) is just a number of seconds that a local time must be adjusted forward or backward by to be equivalent to UTC. A [`TimeZone`](../api/core/io.islandtime/-time-zone/index.md) defines the rules used to determine the UTC offset. Time zones fall into two categories &mdash; region-based (`TimeZone.Region`) and fixed offset (`TimeZone.FixedOffset`).
 
 Region-based zones have identifiers, such as "America/New_York" or "Europe/London", that correspond to entries in the [IANA Time Zone Database](https://www.iana.org/time-zones).
 
-Fixed offset zones have a fixed UTC offset. While region-based zones are generally preferrable, a suitable one may not exist in all situations and sometimes you just want a fixed offset.
+Fixed offset zones have a fixed UTC offset. While region-based zones are generally preferrable, a suitable one may not exist in all situations.
 
 ### `ZonedDateTime` vs. `OffsetDateTime`
 
-Most platforms nowadays draw their understanding of time zones from the [IANA Time Zone Database](https://www.iana.org/time-zones), but time zones and their rules change all the time and different systems might have different versions of the database or only a subset of it available. This makes persistance and serialization of `ZonedDateTime` troublesome since there's the possibility that when it gets read later, the zone can't be found or its rules have changed, thus altering the local date and time.
+While most platforms nowadays draw their understanding of time zones from the [IANA Time Zone Database](https://www.iana.org/time-zones), time zones and their rules change all the time and different systems might have different versions of the database or only a subset of it available. This makes persistance and serialization of `ZonedDateTime` troublesome since there's the possibility that when the stored data gets read later, the zone can't be found or its rules have changed, thus altering the local date and time.
 
-Using `OffsetDateTime` guarantees that you'll never get an exception due to an unavailable time zone and that the value you save will be the value that's read later, making it well-suited for this particular use case. More often than not though, you should use `ZonedDateTime` since it will handle daylight savings transitions correctly when doing any sort of calendar math, but you may want to consider converting to an `OffsetDateTime` when you persist or serialize your data.
+Using `OffsetDateTime` guarantees that you'll never get an exception due to an unavailable time zone and that the value you save will be the value that's read later, making it well-suited for this particular use case. More often than not, you should use `ZonedDateTime` since it will handle daylight savings transitions correctly when doing any sort of calendar math, but you may want to consider converting to an `OffsetDateTime` when you persist or serialize your data.
 
 ```kotlin
 val date = Date(2020, Month.MARCH, 8)
@@ -140,7 +140,7 @@ println(zonedDateTime.adjustedTo(TimeZone("America/Los_Angeles")))
 
 ## Patterns, Properties, and Operators
 
-Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant as well as a number of properties and operators that simplify common tasks.
+Throughout Island Time's date-time primitives, you'll find a set of patterns that remain (relatively) constant, as well as a number of properties and operators that simplify common tasks.
 
 ### `at`
 

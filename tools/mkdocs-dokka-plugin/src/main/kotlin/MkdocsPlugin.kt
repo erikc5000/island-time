@@ -54,13 +54,17 @@ class MarkdownContent {
     private val stringBuilder = StringBuilder()
 
     fun append(content: String): Unit = with(stringBuilder) {
-        if (inInlineCodeBlock && codeBlockIsTerminated) {
-            //append('`')
-            append("<code>")
-            codeBlockIsTerminated = false
-        }
+        if (inInlineCodeBlock) {
+            if (codeBlockIsTerminated) {
+                //append('`')
+                append("<code>")
+                codeBlockIsTerminated = false
+            }
 
-        append(content)
+            append(content.replace("<", "&lt;").replace(">", "&gt;"))
+        } else {
+            append(content)
+        }
     }
 
     fun appendNonCode(content: String): Unit = with(stringBuilder) {

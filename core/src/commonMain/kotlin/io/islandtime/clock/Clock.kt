@@ -9,7 +9,7 @@ import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
 
 /**
- * A time source.
+ * An abstraction providing the current time.
  *
  * For an implementation that uses the system's clock, see [SystemClock]. [FixedClock] is also available for testing
  * purposes.
@@ -19,7 +19,7 @@ import io.islandtime.measures.*
  */
 interface Clock {
     /**
-     * The clock's time zone.
+     * The time zone of this clock.
      */
     val zone: TimeZone
 

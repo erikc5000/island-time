@@ -18,6 +18,7 @@ nav:
       - 'basics/interop.md'
       - 'basics/formatting.md'
       - 'basics/parsing.md'
+      - 'basics/clocks.md'
   - 'Advanced Topics':
       - 'advanced/custom-providers.md'
   - 'Extensions':
