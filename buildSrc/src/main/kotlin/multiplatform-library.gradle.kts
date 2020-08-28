@@ -1,4 +1,3 @@
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -45,12 +44,6 @@ kotlin {
             }
         }
     }
-
-    // Workaround for https://youtrack.jetbrains.com/issue/KT-36721
-    targets.withType<KotlinNativeTarget>().configureEach {
-        val moduleName = "${project.group}.${project.name}"
-        compilations["main"].kotlinOptions.freeCompilerArgs += listOf("-module-name", moduleName)
-    }
 }
 
 val emptySourcesJar by tasks.registering(Jar::class) {
@@ -66,21 +59,13 @@ publishing {
                 artifactId = pomMppArtifactId
             }
             artifact(emptySourcesJar.get())
-        } else {
-            if (pomMppArtifactId != null) {
-                artifactId = "${pomMppArtifactId}-$name"
-            }
+        } else if (pomMppArtifactId != null) {
+            artifactId = "${pomMppArtifactId}-$name"
         }
     }
 }
 
 afterEvaluate {
-    tasks.withType<DokkaTask>().configureEach {
-        multiplatform {
-            kotlin.targets.matching { it.name != "metadata" }.forEach { create(it.name) }
-        }
-    }
-
     tasks.withType<JacocoReport>().configureEach {
         classDirectories.setFrom(
             fileTree("${buildDir}/classes/kotlin/jvm/") {

@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.dokka.gradle.DokkaTask
 
 buildscript {
     repositories {
@@ -12,11 +13,7 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-
+subprojects {
     tasks.withType<JavaCompile>().configureEach {
         sourceCompatibility = JavaVersion.VERSION_1_8.toString()
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
@@ -28,7 +25,7 @@ allprojects {
             jvmTarget = "1.8"
         }
     }
-    
+
     tasks.withType(AbstractTestTask::class).configureEach {
         testLogging {
             events = setOf(TestLogEvent.FAILED)
@@ -36,4 +33,22 @@ allprojects {
             showStackTraces = true
         }
     }
+
+    tasks.withType<DokkaTask>().configureEach {
+        dokkaSourceSets {
+            configureEach {
+                val pomArtifactId: String? by project
+                val pomMppArtifactId: String? by project
+                (pomArtifactId ?: pomMppArtifactId)?.let { moduleDisplayName.set(it) }
+
+                includes.from(project.file("MODULE.md"))
+                skipEmptyPackages.set(true)
+                skipDeprecated.set(true)
+            }
+        }
+    }
+}
+
+tasks.register("codegen") {
+    dependsOn(gradle.includedBuild("code-generator").task(":run"))
 }

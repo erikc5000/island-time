@@ -34,62 +34,62 @@ inline class IntDecades(
   val value: Int
 ) : Comparable<IntDecades> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntDecades
     get() = if (value < 0) -this else this
   /**
-   * Convert to months.
+   * Converts this duration to months.
    * @throws ArithmeticException if overflow occurs
    */
   val inMonths: IntMonths
     get() = (value timesExact MONTHS_PER_DECADE).months
 
   /**
-   * Convert to months without checking for overflow.
+   * Converts this duration to months without checking for overflow.
    */
   internal val inMonthsUnchecked: IntMonths
     get() = (value * MONTHS_PER_DECADE).months
 
   /**
-   * Convert to years.
+   * Converts this duration to years.
    * @throws ArithmeticException if overflow occurs
    */
   val inYears: IntYears
     get() = (value timesExact YEARS_PER_DECADE).years
 
   /**
-   * Convert to years without checking for overflow.
+   * Converts this duration to years without checking for overflow.
    */
   internal val inYearsUnchecked: IntYears
     get() = (value * YEARS_PER_DECADE).years
 
   /**
-   * Convert to whole centuries.
+   * Converts this duration to the number of whole centuries.
    */
   val inCenturies: IntCenturies
     get() = (value / DECADES_PER_CENTURY).centuries
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0
 
   override fun compareTo(other: IntDecades): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return when (value) {
@@ -105,30 +105,30 @@ inline class IntDecades(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = IntDecades(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = IntDecades(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = IntDecades(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = this.toLongDecades() * scalar
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): IntDecades {
@@ -140,7 +140,7 @@ inline class IntDecades(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
   operator fun div(scalar: Long): LongDecades = this.toLongDecades() / scalar
@@ -187,12 +187,12 @@ inline class IntDecades(
   }
 
   /**
-   * Convert to [LongDecades].
+   * Converts this duration to [LongDecades].
    */
   fun toLongDecades() = LongDecades(value.toLong())
 
   /**
-   * Convert to a unit-less `Long` value.
+   * Converts this duration to a `Long` value.
    */
   fun toLong() = value.toLong()
 
@@ -210,19 +210,19 @@ inline class IntDecades(
 }
 
 /**
- * Convert to [IntDecades].
+ * Converts this value to a duration of decades.
  */
 val Int.decades: IntDecades
   get() = IntDecades(this)
 
 /**
- * Multiply by a number of decades.
+ * Multiplies this value by a duration of decades.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(decades: IntDecades) = decades * this
 
 /**
- * Multiply by a number of decades.
+ * Multiplies this value by a duration of decades.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(decades: IntDecades) = decades * this
@@ -237,62 +237,62 @@ inline class LongDecades(
   val value: Long
 ) : Comparable<LongDecades> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongDecades
     get() = if (value < 0) -this else this
   /**
-   * Convert to months.
+   * Converts this duration to months.
    * @throws ArithmeticException if overflow occurs
    */
   val inMonths: LongMonths
     get() = (value timesExact MONTHS_PER_DECADE).months
 
   /**
-   * Convert to months without checking for overflow.
+   * Converts this duration to months without checking for overflow.
    */
   internal val inMonthsUnchecked: LongMonths
     get() = (value * MONTHS_PER_DECADE).months
 
   /**
-   * Convert to years.
+   * Converts this duration to years.
    * @throws ArithmeticException if overflow occurs
    */
   val inYears: LongYears
     get() = (value timesExact YEARS_PER_DECADE).years
 
   /**
-   * Convert to years without checking for overflow.
+   * Converts this duration to years without checking for overflow.
    */
   internal val inYearsUnchecked: LongYears
     get() = (value * YEARS_PER_DECADE).years
 
   /**
-   * Convert to whole centuries.
+   * Converts this duration to the number of whole centuries.
    */
   val inCenturies: LongCenturies
     get() = (value / DECADES_PER_CENTURY).centuries
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0L
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0L
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0L
 
   override fun compareTo(other: LongDecades): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return when (value) {
@@ -308,30 +308,30 @@ inline class LongDecades(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = LongDecades(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = LongDecades(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = LongDecades(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = LongDecades(value timesExact scalar)
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): LongDecades {
@@ -343,7 +343,7 @@ inline class LongDecades(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Long): LongDecades {
@@ -397,25 +397,25 @@ inline class LongDecades(
   }
 
   /**
-   * Convert to [IntDecades].
+   * Converts this duration to [IntDecades].
    * @throws ArithmeticException if overflow occurs
    */
   fun toIntDecades() = IntDecades(value.toIntExact())
 
   /**
-   * Convert to [IntDecades] without checking for overflow.
+   * Converts this duration to [IntDecades] without checking for overflow.
    */
   @PublishedApi
   internal fun toIntDecadesUnchecked() = IntDecades(value.toInt())
 
   /**
-   * Convert to a unit-less `Int` value.
+   * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
   fun toInt() = value.toIntExact()
 
   /**
-   * Convert to a unit-less `Int` value without checking for overflow.
+   * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked() = value.toInt()
 
@@ -433,19 +433,19 @@ inline class LongDecades(
 }
 
 /**
- * Convert to [LongDecades].
+ * Converts this value to a duration of decades.
  */
 val Long.decades: LongDecades
   get() = LongDecades(this)
 
 /**
- * Multiply by a number of decades.
+ * Multiplies this value by a duration of decades.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(decades: LongDecades) = decades * this
 
 /**
- * Multiply by a number of decades.
+ * Multiplies this value by a duration of decades.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(decades: LongDecades) = decades * this

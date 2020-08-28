@@ -14,3 +14,10 @@ IslandTime.initialize {
     timeZoneTextProvider = MyTimeZoneTextProvider
 }
 ```
+
+Island Time can only be initialized once. Subsequent attempts to initialize it will throw an exception. This is intended to alert you to potentially undesirable behavior as a result of late initialization or attempts to use different providers in different places. In a test environment though, this can sometimes be problematic, so you may explciitly restore Island Time to an unitialized state using the `reset()` function:
+
+```kotlin
+IslandTime.reset()
+// It's now safe to initialize Island Time again
+```

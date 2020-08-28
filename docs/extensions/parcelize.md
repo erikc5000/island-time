@@ -1,6 +1,6 @@
 #`@Parcelize`
 
-The `parcelize-extensions` artifact provides a set of parcelers for use with the [Parcelable implementation generator](https://kotlinlang.org/docs/tutorials/android-plugin.html#parcelable-implementations-generator) in the Kotlin Android Extensions.
+The `parcelize-extensions` artifact provides a set of parcelers for use with the [Parcelable implementation generator](https://kotlinlang.org/docs/reference/compiler-plugins.html#parcelable-implementations-generator) in the Kotlin Android Extensions.
 
 ## Gradle Setup
 
@@ -31,7 +31,7 @@ data class MyParcelable(
 ) : Parcelable
 ```
 
-In the above example, [DateParceler](../api/parcelize/io.islandtime.extensions.parcelize/-date-parceler/index.md) is used to generate a class containing a non-nullable `Date`. You could make the `Date` nullable instead by using [NullableDateParceler](../api/parcelize/io.islandtime.extensions.parcelize/-nullable-date-parceler/index.md).
+In the above example, [DateParceler](../api/parcelize-extensions/io.islandtime.extensions.parcelize/-date-parceler/index.md) is used to generate a class containing a non-nullable `Date`. You could make the `Date` nullable instead by using [NullableDateParceler](../api/parcelize-extensions/io.islandtime.extensions.parcelize/-nullable-date-parceler/index.md).
 
 ```kotlin
 @Parcelize
@@ -42,4 +42,4 @@ data class MyParcelableWithNull(
 ) : Parcelable
 ```
 
-See the [Parcelize Extensions API documention](../api/parcelize/index.md) for the full list of available parcelers.
+See the [Parcelize Extensions API documention](../api/parcelize-extensions/index.md) for the full list of available parcelers.

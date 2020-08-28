@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package io.islandtime.operators
 
 import io.islandtime.Date
@@ -5,106 +7,97 @@ import io.islandtime.DateTime
 import io.islandtime.OffsetDateTime
 import io.islandtime.ZonedDateTime
 import io.islandtime.calendar.WeekSettings
+import io.islandtime.internal.deprecatedToError
 import io.islandtime.locale.Locale
-import io.islandtime.measures.days
-import io.islandtime.ranges.*
+import io.islandtime.ranges.DateRange
+import io.islandtime.ranges.DateTimeInterval
+import io.islandtime.ranges.OffsetDateTimeInterval
+import io.islandtime.ranges.ZonedDateTimeInterval
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val Date.weekRange: DateRange
-    get() = startOfWeek.let { it..it + 6.days }
+    get() = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Date.weekRange(settings: WeekSettings): DateRange = startOfWeek(settings).let { it..it + 6.days }
+fun Date.weekRange(settings: WeekSettings): DateRange = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Date.weekRange(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
+fun Date.weekRange(locale: Locale): DateRange = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val DateTime.weekInterval: DateTimeInterval
-    get() = startOfWeek.let { it until it + 7.days }
+    get() = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.weekInterval(settings: WeekSettings): DateTimeInterval {
-    return startOfWeek(settings).let { it until it + 7.days }
-}
+fun DateTime.weekInterval(settings: WeekSettings): DateTimeInterval = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.weekInterval(locale: Locale): DateTimeInterval {
-    return startOfWeek(locale).let { it until it + 7.days }
-}
+fun DateTime.weekInterval(locale: Locale): DateTimeInterval = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val OffsetDateTime.weekInterval: OffsetDateTimeInterval
-    get() = startOfWeek.let { it until it + 7.days }
+    get() = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.weekInterval(settings: WeekSettings): OffsetDateTimeInterval {
-    return startOfWeek(settings).let { it until it + 7.days }
-}
+fun OffsetDateTime.weekInterval(settings: WeekSettings): OffsetDateTimeInterval = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.weekInterval(locale: Locale): OffsetDateTimeInterval {
-    return startOfWeek(locale).let { it until it + 7.days }
-}
+fun OffsetDateTime.weekInterval(locale: Locale): OffsetDateTimeInterval = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 val ZonedDateTime.weekInterval: ZonedDateTimeInterval
-    get() = startOfWeek.let { it until it + 7.days }
+    get() = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(settings)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.weekInterval(settings: WeekSettings): ZonedDateTimeInterval {
-    return startOfWeek(settings).let { it until it + 7.days }
-}
+fun ZonedDateTime.weekInterval(settings: WeekSettings): ZonedDateTimeInterval = deprecatedToError()
 
 @Deprecated(
     "Renamed to 'week'.",
     ReplaceWith("this.week(locale)", "io.islandtime.week"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.weekInterval(locale: Locale): ZonedDateTimeInterval {
-    return startOfWeek(locale).let { it until it + 7.days }
-}
+fun ZonedDateTime.weekInterval(locale: Locale): ZonedDateTimeInterval = deprecatedToError()

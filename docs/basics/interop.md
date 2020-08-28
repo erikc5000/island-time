@@ -1,4 +1,4 @@
-# Interop
+# Interoperating with Platform Libraries
 
 In a multiplatform project, it's often necessary to interoperate with code that uses platform libraries directly. A number of conversion functions are available to help simplify this process.
 
@@ -8,17 +8,17 @@ Island Time's classes map very closely to those in [java.time](https://docs.orac
 
 | java.time | Island Time | Description |
 | --- | --- | --- |
-| `LocalDate` | `Date` | A date in arbitrary region |
-| `LocalTime` | `Time` | A time of day in arbitrary region |
-| `LocalDateTime` | `DateTime` | A combined date and time of day in arbitrary region |
-| `Instant` | `Instant` | An instant in time, represented by the number of seconds/nanoseconds relative to the Unix epoch (1970-01-01T00:00Z) |
-| `OffsetTime` | `OffsetTime` | A time of day with UTC offset |
-| `OffsetDateTime` | `OffsetDateTime` | A date and time of day with fixed UTC offset |
-| `ZonedDateTime` | `ZonedDateTime` | A date and time of day in a particular time zone region |
-| `ZoneOffset` | `UtcOffset` | An offset from UTC |
-| `ZoneId` | `TimeZone` | An IANA time zone database region ID or fixed offset from UTC |
-| `Duration` | `Duration` | A (potentially large) duration of time |
-| `Period` | `Period` | A date-based period of time |
+| `LocalDate` | [`Date`](../api/core/io.islandtime/-date/index.md) | A date in arbitrary region |
+| `LocalTime` | [`Time`](../api/core/io.islandtime/-time/index.md) | A time of day in arbitrary region |
+| `LocalDateTime` | [`DateTime`](../api/core/io.islandtime/-date-time/index.md) | A combined date and time of day in arbitrary region |
+| `Instant` | [`Instant`](../api/core/io.islandtime/-instant/index.md) | An instant in time, represented by the number of seconds/nanoseconds relative to the Unix epoch (`1970-01-01T00:00Z`) |
+| `OffsetTime` | [`OffsetTime`](../api/core/io.islandtime/-offset-time/index.md) | A time of day with UTC offset |
+| `OffsetDateTime` | [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) | A date and time of day with fixed UTC offset |
+| `ZonedDateTime` | [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md) | A date and time of day in a particular time zone region |
+| `ZoneOffset` | [`UtcOffset`](../api/core/io.islandtime/-utc-offset/index.md) | An offset from UTC |
+| `ZoneId` | [`TimeZone`](../api/core/io.islandtime/-time-zone/index.md) | An IANA time zone database region ID or fixed offset from UTC |
+| `Duration` | [`Duration`](../api/core/io.islandtime.measures/-duration/index.md) | A (potentially large) duration of time |
+| `Period` | [`Period`](../api/core/io.islandtime.measures/-period/index.md) | A date-based period of time |
 
 To convert between an Island Time `Date` and Java `LocalDate`, you can do something like this:
 
@@ -42,7 +42,7 @@ You can find the full set of conversions in the [io.islandtime.jvm](../api/core/
 
 ## Apple Foundation Classes
 
-We can map between some of the Island Time types and the date-time types provided in Apple's [Foundation API](https://developer.apple.com/documentation/foundation/dates_and_times?language=objc), such as `NSDate`, `NSDateComponents`, and `NSTimeZone`. Keep in mind that `NSDate` and `NSTimeInterval` are based around floating-point numbers, so conversion can result in lost precision sometimes.
+We can map between some of the Island Time types and the date-time types provided in Apple's [Foundation API](https://developer.apple.com/documentation/foundation/dates_and_times?language=objc), such as `NSDate`, `NSDateComponents`, and `NSTimeZone`. Keep in mind that `NSDate` and `NSTimeInterval` are based around floating-point numbers, so conversion may result in lost precision.
 
 ```kotlin
 // NSDate is a timestamp, just like Instant
@@ -64,7 +64,7 @@ The full set of conversions can be found in the [io.islandtime.darwin](../api/co
 
 ## kotlin.time
 
-The Kotlin Standard Library has an experimental [`Duration`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/) type of its own, which you can convert to and from Island Time durations. Kotlin's `Duration` is based on a floating-point number, so keep in mind that conversion can be lossy.
+The Kotlin Standard Library has an experimental [`Duration`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/) type of its own, which you can convert to and from Island Time durations. Kotlin's `Duration` is based on a floating-point number, so keep in mind that conversion may result in lost precision.
 
 ```kotlin
 import kotlin.time.seconds as kotlinSeconds

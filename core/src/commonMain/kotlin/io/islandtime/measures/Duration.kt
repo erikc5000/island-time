@@ -25,70 +25,70 @@ class Duration private constructor(
     Comparable<Duration> {
 
     /**
-     * Is this duration zero?
+     * Checks if this duration is zero.
      */
     fun isZero(): Boolean = this == ZERO
 
     /**
-     * Is this duration positive?
+     * Checks if this duration is positive.
      */
     fun isPositive(): Boolean = seconds.value > 0L || nanosecondAdjustment.value > 0
 
     /**
-     * Is this duration negative?
+     * Checks if this duration is negative.
      */
     fun isNegative(): Boolean = seconds.value < 0L || nanosecondAdjustment.value < 0
 
     /**
-     * Get the absolute value of this duration.
+     * The absolute value of this duration.
      */
     val absoluteValue: Duration
         get() = if (isNegative()) -this else this
 
     /**
-     * Convert this duration into the number of 24-hour days represented by it.
+     * Converts this duration into the number of 24-hour days represented by it.
      */
     inline val inDays: LongDays get() = seconds.inDays
 
     /**
-     * Convert this duration into the number of whole hours represented by it.
+     * Converts this duration into the number of whole hours represented by it.
      */
     inline val inHours: LongHours get() = seconds.inHours
 
     /**
-     * Convert this duration into the number of whole minutes represented by it.
+     * Converts this duration into the number of whole minutes represented by it.
      */
     inline val inMinutes: LongMinutes get() = seconds.inMinutes
 
     /**
-     * Return the number of whole seconds in this duration.
+     * Returns the number of whole seconds in this duration.
      * @see seconds
      */
     inline val inSeconds: LongSeconds get() = seconds
 
     /**
-     * Convert this duration into the number of whole milliseconds represented by it.
+     * Converts this duration into the number of whole milliseconds represented by it.
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
     val inMilliseconds: LongMilliseconds
         get() = seconds.inMilliseconds + nanosecondAdjustment.inMilliseconds.toLongMilliseconds()
 
     /**
-     * Convert this duration into the number of whole microseconds represented by it.
+     * Converts this duration into the number of whole microseconds represented by it.
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
     val inMicroseconds: LongMicroseconds
         get() = seconds.inMicroseconds + nanosecondAdjustment.inMicroseconds.toLongMicroseconds()
 
     /**
-     * Convert this duration into [LongNanoseconds].
+     * Converts this duration into [LongNanoseconds].
      * @throws ArithmeticException if the duration cannot be represented without overflow
      */
     val inNanoseconds: LongNanoseconds
         get() = seconds.inNanoseconds + nanosecondAdjustment
 
     /**
-     * Return this duration, rounded down to match the precision of a given [unit].
+     * Returns this duration, rounded down to match the precision of a given [unit].
      */
     fun truncatedTo(unit: TimeUnit): Duration {
         return when (unit) {
@@ -108,75 +108,45 @@ class Duration private constructor(
         }
     }
 
-    /**
-     * Return this duration truncated to the number of 24-hour days.
-     *
-     * All unit components smaller than a day will be replaced with zero.
-     */
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(DAYS)", "io.islandtime.measures.TimeUnit.DAYS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToDays() = truncatedTo(DAYS)
 
-    /**
-     * Return this duration truncated to the number of whole hours.
-     *
-     * All unit components smaller than an hour will be replaced with zero.
-     */
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToHours() = truncatedTo(HOURS)
 
-    /**
-     * Return this duration truncated to the number of whole minutes.
-     *
-     * All unit components smaller than a minute will be replaced with zero.
-     */
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToMinutes() = truncatedTo(MINUTES)
 
-    /**
-     * Return this duration truncated to the number of whole seconds.
-     *
-     * All unit components smaller than a second will be replaced with zero.
-     */
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToSeconds() = truncatedTo(SECONDS)
 
-    /**
-     * Return this duration truncated to the number of whole milliseconds.
-     *
-     * All unit components smaller than a millisecond will be replaced with zero.
-     */
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 
-    /**
-     * Return this duration truncated to the number of whole microseconds.
-     *
-     * All unit components smaller than a microsecond will be replaced with zero.
-     */
     @Deprecated(
         "Use truncatedTo().",
         ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 
@@ -311,7 +281,7 @@ class Duration private constructor(
     }
 
     /**
-     * Multiply by a scalar value.
+     * Multiples this duration by a scalar value.
      * @throws ArithmeticException if overflow occurs
      */
     operator fun times(scalar: Int): Duration {
@@ -329,7 +299,7 @@ class Duration private constructor(
     }
 
     /**
-     * Divide by a scalar value.
+     * Divides this duration by a scalar value.
      * @throws ArithmeticException if division by zero or overflow occurs
      */
     operator fun div(scalar: Int): Duration {
@@ -348,7 +318,7 @@ class Duration private constructor(
     }
 
     /**
-     * Break this duration down into individual unit components, assuming a 24-hour day length.
+     * Breaks this duration down into individual unit components, assuming a 24-hour day length.
      */
     inline fun <T> toComponents(
         action: (
@@ -365,7 +335,7 @@ class Duration private constructor(
     }
 
     /**
-     * Break this duration down into individual unit components.
+     * Breaks this duration down into individual unit components.
      */
     inline fun <T> toComponents(
         action: (
@@ -381,7 +351,7 @@ class Duration private constructor(
     }
 
     /**
-     * Break this duration down into individual unit components.
+     * Breaks this duration down into individual unit components.
      */
     inline fun <T> toComponents(
         action: (
@@ -396,7 +366,7 @@ class Duration private constructor(
     }
 
     /**
-     * Break this duration down into individual unit components.
+     * Breaks this duration down into individual unit components.
      */
     inline fun <T> toComponents(
         action: (
@@ -431,6 +401,10 @@ class Duration private constructor(
         }
     }
 
+    /**
+     * Converts this duration to a [kotlin.time.Duration]. Since Kotlin's `Duration` type is based on a floating-point
+     * number, precision may be lost.
+     */
     @kotlin.time.ExperimentalTime
     fun toKotlinDuration(): kotlin.time.Duration {
         return seconds.toKotlinDuration() + nanosecondAdjustment.toKotlinDuration()
@@ -477,8 +451,19 @@ class Duration private constructor(
     }
 
     companion object {
+        /**
+         * The minimum supported [Duration].
+         */
         val MIN = Duration(Long.MIN_VALUE.seconds, (-999_999_999).nanoseconds)
+
+        /**
+         * The maximum supported [Duration].
+         */
         val MAX = Duration(Long.MAX_VALUE.seconds, 999_999_999.nanoseconds)
+
+        /**
+         * A [Duration] of zero length.
+         */
         val ZERO = Duration(0L.seconds)
 
         internal fun create(
@@ -495,7 +480,7 @@ class Duration private constructor(
 }
 
 /**
- * Create a [Duration].
+ * Creates a [Duration].
  *
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
@@ -506,7 +491,7 @@ fun durationOf(
 ) = durationOf(seconds.toLongSeconds(), nanoseconds.toLongNanoseconds())
 
 /**
- * Create a [Duration].
+ * Creates a [Duration].
  *
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
@@ -517,7 +502,7 @@ fun durationOf(
 ) = durationOf(seconds, nanoseconds.toLongNanoseconds())
 
 /**
- * Create a [Duration].
+ * Creates a [Duration].
  *
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
@@ -528,7 +513,7 @@ fun durationOf(
 ) = durationOf(seconds.toLongSeconds(), nanoseconds)
 
 /**
- * Create a [Duration].
+ * Creates a [Duration].
  *
  * @param seconds the number of seconds in the duration
  * @param nanoseconds the number of additional nanoseconds to be applied on top of [seconds]
@@ -549,56 +534,56 @@ fun durationOf(seconds: LongSeconds, nanoseconds: LongNanoseconds): Duration {
 }
 
 /**
- * Create a [Duration] of 24-hour days.
+ * Creates a [Duration] of 24-hour days.
  */
 fun durationOf(days: IntDays) = create(days.toLongDays().inSecondsUnchecked)
 
 /**
- * Create a [Duration] of 24-hour days.
+ * Creates a [Duration] of 24-hour days.
  * @throws ArithmeticException if overflow occurs
  */
 fun durationOf(days: LongDays) = create(days.inSeconds)
 
 /**
- * Create a [Duration] of hours.
+ * Creates a [Duration] of hours.
  */
 fun durationOf(hours: IntHours) = create(hours.toLongHours().inSecondsUnchecked)
 
 /**
- * Create a [Duration] of hours.
+ * Creates a [Duration] of hours.
  * @throws ArithmeticException if overflow occurs
  */
 fun durationOf(hours: LongHours) = create(hours.inSeconds)
 
 /**
- * Create a [Duration] of minutes.
+ * Creates a [Duration] of minutes.
  */
 fun durationOf(minutes: IntMinutes) = create(minutes.toLongMinutes().inSecondsUnchecked)
 
 /**
- * Create a [Duration] of minutes.
+ * Creates a [Duration] of minutes.
  * @throws ArithmeticException if overflow occurs
  */
 fun durationOf(minutes: LongMinutes) = create(minutes.inSeconds)
 
 /**
- * Create a [Duration] of seconds.
+ * Creates a [Duration] of seconds.
  */
 fun durationOf(seconds: IntSeconds) = create(seconds.toLongSeconds())
 
 /**
- * Create a [Duration] of seconds.
+ * Creates a [Duration] of seconds.
  * @throws ArithmeticException if overflow occurs
  */
 fun durationOf(seconds: LongSeconds) = create(seconds)
 
 /**
- * Create a [Duration] of milliseconds.
+ * Creates a [Duration] of milliseconds.
  */
 fun durationOf(milliseconds: IntMilliseconds) = durationOf(milliseconds.toLongMilliseconds())
 
 /**
- * Create a [Duration] of milliseconds.
+ * Creates a [Duration] of milliseconds.
  */
 fun durationOf(milliseconds: LongMilliseconds): Duration {
     val seconds = milliseconds.inSeconds
@@ -608,12 +593,12 @@ fun durationOf(milliseconds: LongMilliseconds): Duration {
 }
 
 /**
- * Create a [Duration] of microseconds.
+ * Creates a [Duration] of microseconds.
  */
 fun durationOf(microseconds: IntMicroseconds) = durationOf(microseconds.toLongMicroseconds())
 
 /**
- * Create a [Duration] of microseconds.
+ * Creates a [Duration] of microseconds.
  */
 fun durationOf(microseconds: LongMicroseconds): Duration {
     val seconds = microseconds.inSeconds
@@ -623,12 +608,12 @@ fun durationOf(microseconds: LongMicroseconds): Duration {
 }
 
 /**
- * Create a [Duration] of nanoseconds.
+ * Creates a [Duration] of nanoseconds.
  */
 fun durationOf(nanoseconds: IntNanoseconds) = durationOf(nanoseconds.toLongNanoseconds())
 
 /**
- * Create a [Duration] of nanoseconds.
+ * Creates a [Duration] of nanoseconds.
  */
 fun durationOf(nanoseconds: LongNanoseconds): Duration {
     val seconds = nanoseconds.inSeconds
@@ -638,7 +623,7 @@ fun durationOf(nanoseconds: LongNanoseconds): Duration {
 }
 
 /**
- * Return the absolute value of a duration
+ * Returns the absolute value of [duration].
  */
 fun abs(duration: Duration) = duration.absoluteValue
 
@@ -658,6 +643,9 @@ fun IntMilliseconds.asDuration() = durationOf(this)
 fun IntMicroseconds.asDuration() = durationOf(this)
 fun IntNanoseconds.asDuration() = durationOf(this)
 
+/**
+ * Converts this duration to an equivalent Island Time [Duration].
+ */
 @kotlin.time.ExperimentalTime
 fun kotlin.time.Duration.toIslandDuration(): Duration {
     return toComponents { seconds, nanoseconds ->
@@ -702,18 +690,18 @@ internal fun StringBuilder.appendDuration(duration: Duration): StringBuilder {
 }
 
 /**
- * Multiply by a duration.
+ * Multiplies this value by a duration.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(duration: Duration) = duration * this
 
 /**
- * Convert an ISO-8601 duration string into a [Duration].
+ * Converts an ISO-8601 duration string to a [Duration].
  */
 fun String.toDuration() = toDuration(DateTimeParsers.Iso.DURATION)
 
 /**
- * Convert a string to a [Duration] using [parser].
+ * Converts a string to a [Duration] using [parser].
  */
 fun String.toDuration(
     parser: TemporalParser,

@@ -2,10 +2,12 @@ package io.islandtime.jvm
 
 import io.islandtime.*
 import io.islandtime.measures.*
+import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import java.time.Clock as JavaClock
 
-class ConversionsTest {
+class ConversionsTest : AbstractIslandTimeTest() {
     @Test
     fun `converts Java Instant to Instant`() {
         listOf(
@@ -295,5 +297,29 @@ class ConversionsTest {
         assertEquals(java.time.Duration.ZERO, 0L.nanoseconds.toJavaDuration())
         assertEquals(1_000_000_000L, 1_000_000_000.nanoseconds.toJavaDuration().toNanos())
         assertEquals(-1L, (-1L).nanoseconds.toJavaDuration().toNanos())
+    }
+
+    @Test
+    fun `converts a Java Clock to an Island Time Clock`() {
+        val javaClock = JavaClock.fixed(
+            java.time.Instant.ofEpochSecond(234_678_901L, 123456789),
+            java.time.ZoneId.of("America/New_York")
+        )
+
+        val islandClock = javaClock.asIslandClock()
+
+        assertEquals(
+            java.time.Instant.ofEpochSecond(234_678_901L, 123456789),
+            islandClock.readPlatformInstant()
+        )
+        assertEquals(
+            Instant.fromSecondOfUnixEpoch(234_678_901L, 123456789),
+            islandClock.readInstant()
+        )
+        assertEquals(
+            Instant.fromSecondOfUnixEpoch(234_678_901L, 123456789).millisecondsSinceUnixEpoch,
+            islandClock.readMilliseconds()
+        )
+        assertEquals(TimeZone("America/New_York"), islandClock.zone)
     }
 }

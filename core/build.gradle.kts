@@ -14,22 +14,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated")
-
-            dependencies {
-                implementation(kotlin("stdlib-common"))
-            }
         }
 
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-            }
-        }
-
-        val jvmMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib-jdk8"))
             }
         }
 
@@ -40,41 +30,13 @@ kotlin {
                 implementation(Libs.googleTruth)
             }
         }
-
-        val darwinMain by getting {
-            dependencies {
-                implementation(Libs.AtomicFU.native)
-            }
-        }
     }
 }
 
 tasks.withType<DokkaTask>().configureEach {
-    multiplatform {
-        create("global") {
-            perPackageOption {
-                prefix = "io.islandtime.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                prefix = "io.islandtime.measures.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                prefix = "io.islandtime.parser.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                prefix = "io.islandtime.ranges.internal"
-                suppress = true
-            }
-
-            perPackageOption {
-                includes = listOf("packages.md")
-            }
+    dokkaSourceSets {
+        configureEach {
+            includes.from(file("MODULE.md"))
         }
     }
 }

@@ -14,14 +14,15 @@ import io.islandtime.internal.weekOfMonthImpl
 import io.islandtime.internal.weekOfWeekBasedYearImpl
 import io.islandtime.internal.weekOfYearImpl
 import io.islandtime.locale.Locale
+import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntWeeks
 import io.islandtime.measures.days
-import io.islandtime.operators.startOfWeek
 import io.islandtime.ranges.DateRange
 import io.islandtime.ranges.DateTimeInterval
 import io.islandtime.ranges.OffsetDateTimeInterval
 import io.islandtime.ranges.ZonedDateTimeInterval
 import io.islandtime.ranges.until
+import kotlin.Boolean
 import kotlin.Int
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -165,10 +166,72 @@ fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearI
 fun Date.weekOfWeekBasedYear(locale: Locale): Int = weekOfWeekBasedYearImpl(locale.weekSettings)
 
 /**
+ * Checks if this date falls within a leap year.
+ */
+val Date.isInLeapYear: Boolean
+  get() = isLeapYear(year)
+
+/**
+ * Checks if this date is February 29.
+ */
+val Date.isLeapDay: Boolean
+  get() = month == Month.FEBRUARY && dayOfMonth == 29
+
+/**
+ * The length of this date's month in days.
+ */
+val Date.lengthOfMonth: IntDays
+  get() = month.lengthIn(year)
+
+/**
+ * The length of this date's year in days.
+ */
+val Date.lengthOfYear: IntDays
+  get() = lengthOfYear(year)
+
+/**
  * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
  */
 val Date.lengthOfWeekBasedYear: IntWeeks
   get() = lengthOfWeekBasedYear(weekBasedYear)
+
+/**
+ * The next date after this one that falls on [dayOfWeek].
+ */
+fun Date.next(dayOfWeek: DayOfWeek): Date {
+  val dayDiff = this.dayOfWeek.ordinal - dayOfWeek.ordinal
+
+  return if (dayDiff >= 0) {
+      this + (7 - dayDiff).days
+  } else {
+      this + (-dayDiff).days
+  }
+}
+
+/**
+ * The next date that falls on [dayOfWeek], or this date if it falls on the same day.
+ */
+fun Date.nextOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayOfWeek) this else
+    next(dayOfWeek)
+
+/**
+ * The last date before this one that falls on [dayOfWeek].
+ */
+fun Date.previous(dayOfWeek: DayOfWeek): Date {
+  val dayDiff = dayOfWeek.ordinal - this.dayOfWeek.ordinal
+
+  return if (dayDiff >= 0) {
+      this - (7 - dayDiff).days
+  } else {
+      this - (-dayDiff).days
+  }
+}
+
+/**
+ * The previous date that falls on [dayOfWeek], or this date if it falls on the same day.
+ */
+fun Date.previousOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayOfWeek) this else
+    previous(dayOfWeek)
 
 /**
  * The interval defining the ISO week that this date-time falls within.
@@ -311,10 +374,56 @@ fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekB
 fun DateTime.weekOfWeekBasedYear(locale: Locale): Int = date.weekOfWeekBasedYear(locale)
 
 /**
+ * Checks if this date-time falls within a leap year.
+ */
+val DateTime.isInLeapYear: Boolean
+  inline get() = date.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val DateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val DateTime.lengthOfMonth: IntDays
+  inline get() = date.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val DateTime.lengthOfYear: IntDays
+  inline get() = date.lengthOfYear
+
+/**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val DateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = date.lengthOfWeekBasedYear
+
+/**
+ * The next date-time after this one that falls on [dayOfWeek].
+ */
+fun DateTime.next(dayOfWeek: DayOfWeek): DateTime = copy(date = date.next(dayOfWeek))
+
+/**
+ * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+fun DateTime.nextOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek == this.dayOfWeek) this else
+    next(dayOfWeek)
+
+/**
+ * The last date-time before this one that falls on [dayOfWeek].
+ */
+fun DateTime.previous(dayOfWeek: DayOfWeek): DateTime = copy(date = date.previous(dayOfWeek))
+
+/**
+ * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+fun DateTime.previousOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek == this.dayOfWeek) this
+    else previous(dayOfWeek)
 
 /**
  * The interval defining the ISO week that this date-time falls within.
@@ -458,10 +567,58 @@ fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
 fun OffsetDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWeekBasedYear(locale)
 
 /**
+ * Checks if this date-time falls within a leap year.
+ */
+val OffsetDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val OffsetDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val OffsetDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val OffsetDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
+
+/**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
+
+/**
+ * The next date-time after this one that falls on [dayOfWeek].
+ */
+fun OffsetDateTime.next(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTime =
+    dateTime.next(dayOfWeek))
+
+/**
+ * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+fun OffsetDateTime.nextOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
+    this.dayOfWeek) this else next(dayOfWeek)
+
+/**
+ * The last date-time before this one that falls on [dayOfWeek].
+ */
+fun OffsetDateTime.previous(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTime =
+    dateTime.previous(dayOfWeek))
+
+/**
+ * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+fun OffsetDateTime.previousOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
+    this.dayOfWeek) this else previous(dayOfWeek)
 
 /**
  * The interval defining the ISO week that this date-time falls within.
@@ -605,7 +762,55 @@ fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
 fun ZonedDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWeekBasedYear(locale)
 
 /**
+ * Checks if this date-time falls within a leap year.
+ */
+val ZonedDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+val ZonedDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+val ZonedDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+val ZonedDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
+
+/**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
 val ZonedDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
+
+/**
+ * The next date-time after this one that falls on [dayOfWeek].
+ */
+fun ZonedDateTime.next(dayOfWeek: DayOfWeek): ZonedDateTime = copy(dateTime =
+    dateTime.next(dayOfWeek))
+
+/**
+ * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+fun ZonedDateTime.nextOrSame(dayOfWeek: DayOfWeek): ZonedDateTime = if (dayOfWeek == this.dayOfWeek)
+    this else next(dayOfWeek)
+
+/**
+ * The last date-time before this one that falls on [dayOfWeek].
+ */
+fun ZonedDateTime.previous(dayOfWeek: DayOfWeek): ZonedDateTime = copy(dateTime =
+    dateTime.previous(dayOfWeek))
+
+/**
+ * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+fun ZonedDateTime.previousOrSame(dayOfWeek: DayOfWeek): ZonedDateTime = if (dayOfWeek ==
+    this.dayOfWeek) this else previous(dayOfWeek)

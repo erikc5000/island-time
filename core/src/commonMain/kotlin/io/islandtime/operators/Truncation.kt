@@ -1,7 +1,7 @@
 package io.islandtime.operators
 
 import io.islandtime.*
-import io.islandtime.measures.TimeUnit.*
+import io.islandtime.internal.deprecatedToError
 
 /**
  * Return a copy of this time, truncated to the `hour` value. All smaller components will be replaced with zero.
@@ -9,9 +9,9 @@ import io.islandtime.measures.TimeUnit.*
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Time.truncatedToHours() = truncatedTo(HOURS)
+fun Time.truncatedToHours(): Time = deprecatedToError()
 
 /**
  * Return a copy of this time, truncated to the `minute` value. All smaller components will be replaced with zero.
@@ -19,9 +19,9 @@ fun Time.truncatedToHours() = truncatedTo(HOURS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Time.truncatedToMinutes() = truncatedTo(MINUTES)
+fun Time.truncatedToMinutes(): Time = deprecatedToError()
 
 /**
  * Return a copy of this time, truncated to the `second` value. All smaller components will be replaced with zero.
@@ -29,9 +29,9 @@ fun Time.truncatedToMinutes() = truncatedTo(MINUTES)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Time.truncatedToSeconds() = truncatedTo(SECONDS)
+fun Time.truncatedToSeconds(): Time = deprecatedToError()
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to milliseconds.
@@ -39,9 +39,9 @@ fun Time.truncatedToSeconds() = truncatedTo(SECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Time.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
+fun Time.truncatedToMilliseconds(): Time = deprecatedToError()
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to microseconds.
@@ -49,9 +49,9 @@ fun Time.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun Time.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
+fun Time.truncatedToMicroseconds(): Time = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `hour` value. All smaller components will be replaced with zero.
@@ -59,9 +59,9 @@ fun Time.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.truncatedToHours() = truncatedTo(HOURS)
+fun DateTime.truncatedToHours(): DateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `minute` value. ll smaller components will be replaced with zero.
@@ -69,9 +69,9 @@ fun DateTime.truncatedToHours() = truncatedTo(HOURS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(TimeUnit.MINUTES)", "io.islandtime.measures.TimeUnit"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.truncatedToMinutes() = truncatedTo(MINUTES)
+fun DateTime.truncatedToMinutes(): DateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `second` value. All smaller components will be replaced with zero.
@@ -79,9 +79,9 @@ fun DateTime.truncatedToMinutes() = truncatedTo(MINUTES)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.truncatedToSeconds() = truncatedTo(SECONDS)
+fun DateTime.truncatedToSeconds(): DateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to milliseconds.
@@ -89,9 +89,9 @@ fun DateTime.truncatedToSeconds() = truncatedTo(SECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
+fun DateTime.truncatedToMilliseconds(): DateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to microseconds.
@@ -99,9 +99,9 @@ fun DateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun DateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
+fun DateTime.truncatedToMicroseconds(): DateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `hour` value. All smaller components will be replaced with zero.
@@ -109,9 +109,9 @@ fun DateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.truncatedToHours() = truncatedTo(HOURS)
+fun ZonedDateTime.truncatedToHours(): ZonedDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `minute` value. All smaller components will be replaced with zero.
@@ -119,9 +119,9 @@ fun ZonedDateTime.truncatedToHours() = truncatedTo(HOURS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.truncatedToMinutes() = truncatedTo(MINUTES)
+fun ZonedDateTime.truncatedToMinutes(): ZonedDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `second` value. All smaller components will be replaced with zero.
@@ -129,9 +129,9 @@ fun ZonedDateTime.truncatedToMinutes() = truncatedTo(MINUTES)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.truncatedToSeconds() = truncatedTo(SECONDS)
+fun ZonedDateTime.truncatedToSeconds(): ZonedDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to milliseconds.
@@ -139,9 +139,9 @@ fun ZonedDateTime.truncatedToSeconds() = truncatedTo(SECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
+fun ZonedDateTime.truncatedToMilliseconds(): ZonedDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to microseconds.
@@ -149,9 +149,9 @@ fun ZonedDateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun ZonedDateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
+fun ZonedDateTime.truncatedToMicroseconds(): ZonedDateTime = deprecatedToError()
 
 /**
  * Return a copy of this time, truncated to the `hour` value. All smaller components will be replaced with zero.
@@ -159,9 +159,9 @@ fun ZonedDateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetTime.truncatedToHours() = truncatedTo(HOURS)
+fun OffsetTime.truncatedToHours(): OffsetTime = deprecatedToError()
 
 /**
  * Return a copy of this time, truncated to the `minute` value. ll smaller components will be replaced with zero.
@@ -169,9 +169,9 @@ fun OffsetTime.truncatedToHours() = truncatedTo(HOURS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetTime.truncatedToMinutes() = truncatedTo(MINUTES)
+fun OffsetTime.truncatedToMinutes(): OffsetTime = deprecatedToError()
 
 /**
  * Return a copy of this time, truncated to the `second` value. All smaller components will be replaced with zero.
@@ -179,9 +179,9 @@ fun OffsetTime.truncatedToMinutes() = truncatedTo(MINUTES)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetTime.truncatedToSeconds() = truncatedTo(SECONDS)
+fun OffsetTime.truncatedToSeconds(): OffsetTime = deprecatedToError()
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to milliseconds.
@@ -189,9 +189,9 @@ fun OffsetTime.truncatedToSeconds() = truncatedTo(SECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
+fun OffsetTime.truncatedToMilliseconds(): OffsetTime = deprecatedToError()
 
 /**
  * Return a copy of this time with the `nanosecond` value truncated to microseconds.
@@ -199,9 +199,9 @@ fun OffsetTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
+fun OffsetTime.truncatedToMicroseconds(): OffsetTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `hour` value. All smaller components will be replaced with zero.
@@ -209,9 +209,9 @@ fun OffsetTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(HOURS)", "io.islandtime.measures.TimeUnit.HOURS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.truncatedToHours() = truncatedTo(HOURS)
+fun OffsetDateTime.truncatedToHours(): OffsetDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `minute` value. ll smaller components will be replaced with zero.
@@ -219,9 +219,9 @@ fun OffsetDateTime.truncatedToHours() = truncatedTo(HOURS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MINUTES)", "io.islandtime.measures.TimeUnit.MINUTES"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.truncatedToMinutes() = truncatedTo(MINUTES)
+fun OffsetDateTime.truncatedToMinutes(): OffsetDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time, truncated to the `second` value. All smaller components will be replaced with zero.
@@ -229,9 +229,9 @@ fun OffsetDateTime.truncatedToMinutes() = truncatedTo(MINUTES)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(SECONDS)", "io.islandtime.measures.TimeUnit.SECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.truncatedToSeconds() = truncatedTo(SECONDS)
+fun OffsetDateTime.truncatedToSeconds(): OffsetDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to milliseconds.
@@ -239,9 +239,9 @@ fun OffsetDateTime.truncatedToSeconds() = truncatedTo(SECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MILLISECONDS)", "io.islandtime.measures.TimeUnit.MILLISECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
+fun OffsetDateTime.truncatedToMilliseconds(): OffsetDateTime = deprecatedToError()
 
 /**
  * Return a copy of this date-time with the `nanosecond` value truncated to microseconds.
@@ -249,6 +249,6 @@ fun OffsetDateTime.truncatedToMilliseconds() = truncatedTo(MILLISECONDS)
 @Deprecated(
     "Use truncatedTo() instead.",
     ReplaceWith("truncatedTo(MICROSECONDS)", "io.islandtime.measures.TimeUnit.MICROSECONDS"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun OffsetDateTime.truncatedToMicroseconds() = truncatedTo(MICROSECONDS)
+fun OffsetDateTime.truncatedToMicroseconds(): OffsetDateTime = deprecatedToError()

@@ -1,11 +1,17 @@
 package io.islandtime.extensions.serialization.measures
 
-import io.islandtime.measures.*
-import kotlinx.serialization.*
+import io.islandtime.measures.Duration
+import io.islandtime.measures.toDuration
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 object DurationSerializer : KSerializer<Duration> {
     override val descriptor: SerialDescriptor =
-        PrimitiveDescriptor("io.islandtime.measures.DurationSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.measures.DurationSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Duration) {
         encoder.encodeString(value.toString())

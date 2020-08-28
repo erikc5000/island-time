@@ -1,7 +1,7 @@
 package io.islandtime
 
 import io.islandtime.calendar.WeekSettings.Companion.SUNDAY_START
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.TestData
 import kotlin.test.Test
@@ -10,7 +10,7 @@ import kotlin.test.assertFailsWith
 
 class WeekDateTest : AbstractIslandTimeTest() {
     @Suppress("PrivatePropertyName")
-    private val en_US = localeOf("en-US")
+    private val en_US = "en-US".toLocale()
 
     @Test
     fun `Date_toWeekDate() converts to ISO week date`() {

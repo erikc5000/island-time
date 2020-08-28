@@ -13,8 +13,8 @@ class ClockTest {
     fun `UTC SystemClock`() {
         val clock = SystemClock.UTC
 
-        assertTrue { clock.read() > 0L.milliseconds }
-        assertTrue { clock.instant() > Instant.UNIX_EPOCH }
+        assertTrue { clock.readMilliseconds() > 0L.milliseconds }
+        assertTrue { clock.readInstant() > Instant.UNIX_EPOCH }
         assertEquals(TimeZone.UTC, clock.zone)
     }
 
@@ -22,8 +22,8 @@ class ClockTest {
     fun `SystemClock() without zone`() {
         val clock = SystemClock()
 
-        assertTrue { clock.read() > 0L.milliseconds }
-        assertTrue { clock.instant() > Instant.UNIX_EPOCH }
+        assertTrue { clock.readMilliseconds() > 0L.milliseconds }
+        assertTrue { clock.readInstant() > Instant.UNIX_EPOCH }
         assertNotEquals("", clock.zone.id)
     }
 
@@ -31,8 +31,8 @@ class ClockTest {
     fun `SystemClock() with zone`() {
         val clock = SystemClock(TimeZone("America/Denver"))
 
-        assertTrue { clock.read() > 0L.milliseconds }
-        assertTrue { clock.instant() > Instant.UNIX_EPOCH }
+        assertTrue { clock.readMilliseconds() > 0L.milliseconds }
+        assertTrue { clock.readInstant() > Instant.UNIX_EPOCH }
         assertEquals(TimeZone("America/Denver"), clock.zone)
     }
 }

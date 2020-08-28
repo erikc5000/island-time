@@ -1,21 +1,18 @@
+@file:JvmName("DateTimesKt")
 @file:JvmMultifileClass
-@file:JvmName("OperatorsKt")
+@file:Suppress("PackageDirectoryMismatch")
 
-package io.islandtime.operators
+package io.islandtime
 
-import io.islandtime.*
 import io.islandtime.Time.Companion.MIDNIGHT
-import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
-import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
-import io.islandtime.internal.floorMod
+import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.measures.TimeUnit.*
-import io.islandtime.operators.internal.*
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
 /**
- * Return this time, rounded up to the nearest hour that satisfies the [increment].
+ * Returns this time, rounded up to the nearest hour that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
@@ -25,7 +22,7 @@ fun Time.roundedUpToNearest(increment: IntHours): Time {
 }
 
 /**
- * Return this time, rounded up to the nearest minute that satisfies the [increment].
+ * Returns this time, rounded up to the nearest minute that satisfies the [increment].
  *
  * The [increment] must multiply evenly into an hour.
  */
@@ -35,7 +32,7 @@ fun Time.roundedUpToNearest(increment: IntMinutes): Time {
 }
 
 /**
- * Return this time, rounded up to the nearest second that satisfies the [increment].
+ * Returns this time, rounded up to the nearest second that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a minute.
  */
@@ -45,7 +42,7 @@ fun Time.roundedUpToNearest(increment: IntSeconds): Time {
 }
 
 /**
- * Return this time, rounded up to the nearest millisecond that satisfies the [increment].
+ * Returns this time, rounded up to the nearest millisecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -54,7 +51,7 @@ fun Time.roundedUpToNearest(increment: IntMilliseconds): Time {
 }
 
 /**
- * Return this time, rounded up to the nearest microsecond that satisfies the [increment].
+ * Returns this time, rounded up to the nearest microsecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -63,7 +60,7 @@ fun Time.roundedUpToNearest(increment: IntMicroseconds): Time {
 }
 
 /**
- * Return this time, rounded up to the nearest nanosecond that satisfies the [increment].
+ * Returns this time, rounded up to the nearest nanosecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -72,7 +69,7 @@ fun Time.roundedUpToNearest(increment: IntNanoseconds): Time {
 }
 
 /**
- * Return this time, rounded up to match the precision of a given [unit].
+ * Returns this time, rounded up to match the precision of a given [unit].
  */
 fun Time.roundedUpTo(unit: TimeUnit): Time {
     return when (unit) {
@@ -87,7 +84,7 @@ fun Time.roundedUpTo(unit: TimeUnit): Time {
 }
 
 /**
- * Return this time, rounded up to the nearest hour that satisfies the [increment].
+ * Returns this time, rounded up to the nearest hour that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
@@ -96,7 +93,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntHours): OffsetTime {
 }
 
 /**
- * Return this time, rounded up to the nearest minute that satisfies the [increment].
+ * Returns this time, rounded up to the nearest minute that satisfies the [increment].
  *
  * The [increment] must multiply evenly into an hour.
  */
@@ -105,7 +102,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntMinutes): OffsetTime {
 }
 
 /**
- * Return this time, rounded up to the nearest second that satisfies the [increment].
+ * Returns this time, rounded up to the nearest second that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a minute.
  */
@@ -114,7 +111,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntSeconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded up to the nearest millisecond that satisfies the [increment].
+ * Returns this time, rounded up to the nearest millisecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -123,7 +120,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntMilliseconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded up to the nearest microsecond that satisfies the [increment].
+ * Returns this time, rounded up to the nearest microsecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -132,7 +129,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntMicroseconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded up to the nearest nanosecond that satisfies the [increment].
+ * Returns this time, rounded up to the nearest nanosecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -141,14 +138,14 @@ fun OffsetTime.roundedUpToNearest(increment: IntNanoseconds): OffsetTime {
 }
 
 /**
- * Return this time, rounded up to match the precision of a given [unit].
+ * Returns this time, rounded up to match the precision of a given [unit].
  */
 fun OffsetTime.roundedUpTo(unit: TimeUnit): OffsetTime {
     return copyIfChanged(time = time.roundedUpTo(unit))
 }
 
 /**
- * Return this date-time, rounded up to the nearest hour that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest hour that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
@@ -158,7 +155,7 @@ fun DateTime.roundedUpToNearest(increment: IntHours): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest minute that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest minute that satisfies the [increment].
  *
  * The [increment] must multiply evenly into an hour.
  */
@@ -168,7 +165,7 @@ fun DateTime.roundedUpToNearest(increment: IntMinutes): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest second that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest second that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a minute.
  */
@@ -178,7 +175,7 @@ fun DateTime.roundedUpToNearest(increment: IntSeconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest millisecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest millisecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -187,7 +184,7 @@ fun DateTime.roundedUpToNearest(increment: IntMilliseconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest microsecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest microsecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -196,7 +193,7 @@ fun DateTime.roundedUpToNearest(increment: IntMicroseconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest nanosecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest nanosecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -205,7 +202,7 @@ fun DateTime.roundedUpToNearest(increment: IntNanoseconds): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to match the precision of a given [unit].
+ * Returns this date-time, rounded up to match the precision of a given [unit].
  *
  * The start of the next day will be returned when the resulting time is after midnight.
  */
@@ -222,7 +219,7 @@ fun DateTime.roundedUpTo(unit: TimeUnit): DateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest hour that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest hour that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
@@ -231,7 +228,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntHours): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest minute that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest minute that satisfies the [increment].
  *
  * The [increment] must multiply evenly into an hour.
  */
@@ -240,7 +237,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntMinutes): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest second that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest second that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a minute.
  */
@@ -249,7 +246,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntSeconds): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest millisecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest millisecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -258,7 +255,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntMilliseconds): OffsetDateTim
 }
 
 /**
- * Return this date-time, rounded up to the nearest microsecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest microsecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -267,7 +264,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntMicroseconds): OffsetDateTim
 }
 
 /**
- * Return this date-time, rounded up to the nearest nanosecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest nanosecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -276,7 +273,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntNanoseconds): OffsetDateTime
 }
 
 /**
- * Return this date-time, rounded up to match the precision of a given [unit].
+ * Returns this date-time, rounded up to match the precision of a given [unit].
  *
  * The start of the next day will be returned when the resulting time is after midnight.
  */
@@ -285,7 +282,7 @@ fun OffsetDateTime.roundedUpTo(unit: TimeUnit): OffsetDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest hour that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest hour that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a 24-hour day.
  *
@@ -299,7 +296,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntHours): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest minute that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest minute that satisfies the [increment].
  *
  * The [increment] must multiply evenly into an hour.
  *
@@ -313,7 +310,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntMinutes): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest second that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest second that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a minute.
  *
@@ -327,7 +324,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntSeconds): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded up to the nearest millisecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest millisecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  *
@@ -341,7 +338,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntMilliseconds): ZonedDateTime 
 }
 
 /**
- * Return this date-time, rounded up to the nearest microsecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest microsecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  *
@@ -355,7 +352,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntMicroseconds): ZonedDateTime 
 }
 
 /**
- * Return this date-time, rounded up to the nearest nanosecond that satisfies the [increment].
+ * Returns this date-time, rounded up to the nearest nanosecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  *
@@ -369,7 +366,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntNanoseconds): ZonedDateTime {
 }
 
 /**
- * Return this date-time, rounded up to match the precision of a given [unit].
+ * Returns this date-time, rounded up to match the precision of a given [unit].
  *
  * The start of the next day will be returned when the resulting time is after midnight.
  *
@@ -383,7 +380,7 @@ fun ZonedDateTime.roundedUpTo(unit: TimeUnit): ZonedDateTime {
 }
 
 /**
- * Return this instant, rounded up to the nearest hour that satisfies the [increment].
+ * Returns this instant, rounded up to the nearest hour that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
@@ -393,7 +390,7 @@ fun Instant.roundedUpToNearest(increment: IntHours): Instant {
 }
 
 /**
- * Return this instant, rounded up to the nearest minute that satisfies the [increment].
+ * Returns this instant, rounded up to the nearest minute that satisfies the [increment].
  *
  * The [increment] must multiply evenly into an hour.
  */
@@ -403,7 +400,7 @@ fun Instant.roundedUpToNearest(increment: IntMinutes): Instant {
 }
 
 /**
- * Return this instant, rounded up to the nearest second that satisfies the [increment].
+ * Returns this instant, rounded up to the nearest second that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a minute.
  */
@@ -413,7 +410,7 @@ fun Instant.roundedUpToNearest(increment: IntSeconds): Instant {
 }
 
 /**
- * Return this instant, rounded up to the nearest millisecond that satisfies the [increment].
+ * Returns this instant, rounded up to the nearest millisecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -423,7 +420,7 @@ fun Instant.roundedUpToNearest(increment: IntMilliseconds): Instant {
 }
 
 /**
- * Return this instant, rounded up to the nearest microsecond that satisfies the [increment].
+ * Returns this instant, rounded up to the nearest microsecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -433,7 +430,7 @@ fun Instant.roundedUpToNearest(increment: IntMicroseconds): Instant {
 }
 
 /**
- * Return this instant, rounded up to the nearest nanosecond that satisfies the [increment].
+ * Returns this instant, rounded up to the nearest nanosecond that satisfies the [increment].
  *
  * The [increment] must multiply evenly into a second.
  */
@@ -443,7 +440,7 @@ fun Instant.roundedUpToNearest(increment: IntNanoseconds): Instant {
 }
 
 /**
- * Return this instant, rounded up to match the precision of a given [unit].
+ * Returns this instant, rounded up to match the precision of a given [unit].
  */
 fun Instant.roundedUpTo(unit: TimeUnit): Instant {
     return when (unit) {

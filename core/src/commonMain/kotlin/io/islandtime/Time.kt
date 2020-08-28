@@ -378,7 +378,7 @@ class Time(
  * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toTime() = toTime(DateTimeParsers.Iso.Extended.TIME)
+fun String.toTime(): Time = toTime(DateTimeParsers.Iso.Extended.TIME)
 
 /**
  * Converts a string to a [Time] using a specific parser.

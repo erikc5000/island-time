@@ -98,16 +98,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `at infix combines date with time`() {
-        val today = Date(2019, Month.JANUARY, 1)
-
-        assertEquals(
-            DateTime(today, Time(2, 30)),
-            today at "02:30".toTime()
-        )
-    }
-
-    @Test
     fun `copy() returns a new DateTime replacing the desired values`() {
         assertEquals(
             DateTime(2018, Month.MAY, 8, 12, 0),
@@ -958,28 +948,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             DateTime(2019, Month.JANUARY, 1, 2, 30),
             "2019-001T02:30".toDateTime(parser)
-        )
-    }
-
-    @Test
-    fun `Date_startOfDay returns the DateTime at midnight of same day`() {
-        assertEquals(
-            DateTime(
-                Date(2019, Month.JULY, 1),
-                Time.MIDNIGHT
-            ),
-            Date(2019, Month.JULY, 1).startOfDay
-        )
-    }
-
-    @Test
-    fun `Date_endOfDay returns the DateTime just before the end of the same day`() {
-        assertEquals(
-            DateTime(
-                Date(2019, Month.JULY, 1),
-                Time(23, 59, 59, 999_999_999)
-            ),
-            Date(2019, Month.JULY, 1).endOfDay
         )
     }
 }

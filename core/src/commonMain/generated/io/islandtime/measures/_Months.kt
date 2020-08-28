@@ -34,48 +34,48 @@ inline class IntMonths(
   val value: Int
 ) : Comparable<IntMonths> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntMonths
     get() = if (value < 0) -this else this
   /**
-   * Convert to whole years.
+   * Converts this duration to the number of whole years.
    */
   val inYears: IntYears
     get() = (value / MONTHS_PER_YEAR).years
 
   /**
-   * Convert to whole decades.
+   * Converts this duration to the number of whole decades.
    */
   val inDecades: IntDecades
     get() = (value / MONTHS_PER_DECADE).decades
 
   /**
-   * Convert to whole centuries.
+   * Converts this duration to the number of whole centuries.
    */
   val inCenturies: IntCenturies
     get() = (value / MONTHS_PER_CENTURY).centuries
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0
 
   override fun compareTo(other: IntMonths): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return when (value) {
@@ -91,30 +91,30 @@ inline class IntMonths(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = IntMonths(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = IntMonths(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = IntMonths(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = this.toLongMonths() * scalar
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): IntMonths {
@@ -126,7 +126,7 @@ inline class IntMonths(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
   operator fun div(scalar: Long): LongMonths = this.toLongMonths() / scalar
@@ -197,12 +197,12 @@ inline class IntMonths(
   }
 
   /**
-   * Convert to [LongMonths].
+   * Converts this duration to [LongMonths].
    */
   fun toLongMonths() = LongMonths(value.toLong())
 
   /**
-   * Convert to a unit-less `Long` value.
+   * Converts this duration to a `Long` value.
    */
   fun toLong() = value.toLong()
 
@@ -220,19 +220,19 @@ inline class IntMonths(
 }
 
 /**
- * Convert to [IntMonths].
+ * Converts this value to a duration of months.
  */
 val Int.months: IntMonths
   get() = IntMonths(this)
 
 /**
- * Multiply by a number of months.
+ * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(months: IntMonths) = months * this
 
 /**
- * Multiply by a number of months.
+ * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(months: IntMonths) = months * this
@@ -247,48 +247,48 @@ inline class LongMonths(
   val value: Long
 ) : Comparable<LongMonths> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongMonths
     get() = if (value < 0) -this else this
   /**
-   * Convert to whole years.
+   * Converts this duration to the number of whole years.
    */
   val inYears: LongYears
     get() = (value / MONTHS_PER_YEAR).years
 
   /**
-   * Convert to whole decades.
+   * Converts this duration to the number of whole decades.
    */
   val inDecades: LongDecades
     get() = (value / MONTHS_PER_DECADE).decades
 
   /**
-   * Convert to whole centuries.
+   * Converts this duration to the number of whole centuries.
    */
   val inCenturies: LongCenturies
     get() = (value / MONTHS_PER_CENTURY).centuries
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0L
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0L
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0L
 
   override fun compareTo(other: LongMonths): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return when (value) {
@@ -304,30 +304,30 @@ inline class LongMonths(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = LongMonths(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = LongMonths(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = LongMonths(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = LongMonths(value timesExact scalar)
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): LongMonths {
@@ -339,7 +339,7 @@ inline class LongMonths(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Long): LongMonths {
@@ -417,25 +417,25 @@ inline class LongMonths(
   }
 
   /**
-   * Convert to [IntMonths].
+   * Converts this duration to [IntMonths].
    * @throws ArithmeticException if overflow occurs
    */
   fun toIntMonths() = IntMonths(value.toIntExact())
 
   /**
-   * Convert to [IntMonths] without checking for overflow.
+   * Converts this duration to [IntMonths] without checking for overflow.
    */
   @PublishedApi
   internal fun toIntMonthsUnchecked() = IntMonths(value.toInt())
 
   /**
-   * Convert to a unit-less `Int` value.
+   * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
   fun toInt() = value.toIntExact()
 
   /**
-   * Convert to a unit-less `Int` value without checking for overflow.
+   * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked() = value.toInt()
 
@@ -453,19 +453,19 @@ inline class LongMonths(
 }
 
 /**
- * Convert to [LongMonths].
+ * Converts this value to a duration of months.
  */
 val Long.months: LongMonths
   get() = LongMonths(this)
 
 /**
- * Multiply by a number of months.
+ * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(months: LongMonths) = months * this
 
 /**
- * Multiply by a number of months.
+ * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(months: LongMonths) = months * this

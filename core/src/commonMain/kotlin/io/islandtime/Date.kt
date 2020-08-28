@@ -109,42 +109,22 @@ class Date(
     inline val monthNumber: Int get() = month.number
 
     /**
-     * Check if this date falls within a leap year.
-     */
-    val isInLeapYear: Boolean get() = isLeapYear(year)
-
-    /**
-     * Check if this is a leap day.
-     */
-    val isLeapDay: Boolean get() = month == Month.FEBRUARY && dayOfMonth == 29
-
-    /**
-     * The length of this date's month in days.
-     */
-    val lengthOfMonth: IntDays get() = month.lengthIn(year)
-
-    /**
-     * The length of this date's year in days.
-     */
-    val lengthOfYear: IntDays get() = lengthOfYear(year)
-
-    @Deprecated(
-        "Use toYearMonth() instead.",
-        ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
-    )
-    inline val yearMonth: YearMonth
-        get() = toYearMonth()
-
-    /**
      * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
      */
     inline val daysSinceUnixEpoch: LongDays get() = dayOfUnixEpoch.days
 
     @Deprecated(
+        "Use toYearMonth() instead.",
+        ReplaceWith("this.toYearMonth()"),
+        DeprecationLevel.ERROR
+    )
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
+
+    @Deprecated(
         "Use dayOfUnixEpoch instead.",
         ReplaceWith("this.dayOfUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochDay: Long
         get() = dayOfUnixEpoch
@@ -163,7 +143,7 @@ class Date(
         }
     }
 
-    operator fun plus(years: IntYears) = plus(years.toLongYears())
+    operator fun plus(years: IntYears): Date = plus(years.toLongYears())
 
     operator fun plus(years: LongYears): Date {
         return if (years.value == 0L) {
@@ -174,7 +154,7 @@ class Date(
         }
     }
 
-    operator fun plus(months: IntMonths) = plus(months.toLongMonths())
+    operator fun plus(months: IntMonths): Date = plus(months.toLongMonths())
 
     operator fun plus(months: LongMonths): Date {
         return if (months.value == 0L) {
@@ -188,10 +168,10 @@ class Date(
         }
     }
 
-    operator fun plus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked)
-    operator fun plus(weeks: LongWeeks) = plus(weeks.inDays)
+    operator fun plus(weeks: IntWeeks): Date = plus(weeks.toLongWeeks().inDaysUnchecked)
+    operator fun plus(weeks: LongWeeks): Date = plus(weeks.inDays)
 
-    operator fun plus(days: IntDays) = plus(days.toLongDays())
+    operator fun plus(days: IntDays): Date = plus(days.toLongDays())
 
     operator fun plus(days: LongDays): Date {
         return if (days.value == 0L) {
@@ -215,7 +195,7 @@ class Date(
         }
     }
 
-    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
+    operator fun minus(years: IntYears): Date = plus(years.toLongYears().negateUnchecked())
 
     operator fun minus(years: LongYears): Date {
         return if (years.value == Long.MIN_VALUE) {
@@ -225,7 +205,7 @@ class Date(
         }
     }
 
-    operator fun minus(months: IntMonths) = plus(months.toLongMonths().negateUnchecked())
+    operator fun minus(months: IntMonths): Date = plus(months.toLongMonths().negateUnchecked())
 
     operator fun minus(months: LongMonths): Date {
         return if (months.value == Long.MIN_VALUE) {
@@ -235,7 +215,7 @@ class Date(
         }
     }
 
-    operator fun minus(weeks: IntWeeks) = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
+    operator fun minus(weeks: IntWeeks): Date = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
 
     operator fun minus(weeks: LongWeeks): Date {
         return if (weeks.value == Long.MIN_VALUE) {
@@ -245,7 +225,7 @@ class Date(
         }
     }
 
-    operator fun minus(days: IntDays) = plus(days.toLongDays().negateUnchecked())
+    operator fun minus(days: IntDays): Date = plus(days.toLongDays().negateUnchecked())
 
     operator fun minus(days: LongDays): Date {
         return if (days.value == Long.MIN_VALUE) {
@@ -255,11 +235,11 @@ class Date(
         }
     }
 
-    operator fun rangeTo(other: Date) = DateRange(this, other)
+    operator fun rangeTo(other: Date): DateRange = DateRange(this, other)
 
-    operator fun component1() = year
-    operator fun component2() = month
-    operator fun component3() = day
+    operator fun component1(): Int = year
+    operator fun component2(): Month = month
+    operator fun component3(): Int = day
 
     override fun compareTo(other: Date): Int {
         val yearDiff = year - other.year
@@ -281,7 +261,7 @@ class Date(
      * Converts this date to a string in ISO-8601 extended format using the "calendar date" form. For example,
      * `2012-04-15`.
      */
-    override fun toString() = buildString(MAX_DATE_STRING_LENGTH) { appendDate(this@Date) }
+    override fun toString(): String = buildString(MAX_DATE_STRING_LENGTH) { appendDate(this@Date) }
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is Date && year == other.year && month == other.month && day == other.day)
@@ -302,7 +282,7 @@ class Date(
         year: Int = this.year,
         month: Month = this.month,
         dayOfMonth: Int = this.day
-    ) = Date(year, month, dayOfMonth)
+    ): Date = Date(year, month, dayOfMonth)
 
     /**
      * Returns a copy of this date with the values of any individual components replaced by the new values specified.
@@ -312,7 +292,7 @@ class Date(
         year: Int = this.year,
         monthNumber: Int,
         dayOfMonth: Int = this.day
-    ) = Date(year, monthNumber, dayOfMonth)
+    ): Date = Date(year, monthNumber, dayOfMonth)
 
     /**
      * Returns a copy of this date with the values of any individual components replaced by the new values specified.
@@ -321,7 +301,7 @@ class Date(
     fun copy(
         year: Int = this.year,
         dayOfYear: Int = this.dayOfYear
-    ) = Date(year, dayOfYear)
+    ): Date = Date(year, dayOfYear)
 
     companion object {
         /**
@@ -359,7 +339,7 @@ class Date(
         @Deprecated(
             "Use fromDayOfUnixEpoch() instead.",
             ReplaceWith("Date.fromDayOfUnixEpoch(day)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochDay(day: Long): Date = fromDayOfUnixEpoch(day)
     }
@@ -383,28 +363,6 @@ fun Date(year: Int, dayOfYear: Int): Date {
 }
 
 /**
- * Converts this instant to the corresponding [Date] at [offset].
- */
-fun Instant.toDateAt(offset: UtcOffset): Date {
-    val adjustedSeconds = secondOfUnixEpoch + offset.totalSeconds.value
-    val dayOfUnixEpoch = adjustedSeconds floorDiv SECONDS_PER_DAY
-    return Date.fromDayOfUnixEpoch(dayOfUnixEpoch)
-}
-
-/**
- * Converts this instant to the corresponding [Date] in [zone].
- */
-fun Instant.toDateAt(zone: TimeZone): Date {
-    return this.toDateAt(zone.rules.offsetAt(this))
-}
-
-/**
- * Combines a [YearMonth] with a day of the month to create a [Date].
- * @param day the day of the month
- */
-fun YearMonth.atDay(day: Int) = Date(year, month, day)
-
-/**
  * Converts a string to a [Date].
  *
  * The string is assumed to be an ISO-8601 calendar date in extended format. For example, `2010-10-05`. The output of
@@ -413,7 +371,7 @@ fun YearMonth.atDay(day: Int) = Date(year, month, day)
  * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date is invalid
  */
-fun String.toDate() = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
+fun String.toDate(): Date = toDate(DateTimeParsers.Iso.Extended.CALENDAR_DATE)
 
 /**
  * Converts a string to a [Date] using a specific parser.

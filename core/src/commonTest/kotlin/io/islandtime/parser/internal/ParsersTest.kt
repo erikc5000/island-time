@@ -1,15 +1,15 @@
 package io.islandtime.parser.internal
 
 import io.islandtime.format.numberStyle
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.todo
 
 @Suppress("PrivatePropertyName")
 class ParsersTest {
-    private val en_US = localeOf("en-US")
-    private val hi_IN_u_nu_native = localeOf("hi-IN-u-nu-native")
+    private val en_US = "en-US".toLocale()
+    private val hi_IN_u_nu_native = "hi-IN-u-nu-native".toLocale()
 
     @Test
     fun `Char_toDigit() converts a character to a digit according to NumberStyle`() {

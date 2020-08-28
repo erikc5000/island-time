@@ -6,58 +6,56 @@ import io.islandtime.extensions.serialization.measures.PeriodSerializer
 import io.islandtime.extensions.serialization.ranges.*
 import io.islandtime.measures.*
 import io.islandtime.ranges.*
-import kotlinx.serialization.ContextualSerialization
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.modules.serializersModuleOf
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @Serializable
 data class TestData(
-    @ContextualSerialization val date: Date,
-    @ContextualSerialization val time: Time,
-    @ContextualSerialization val dateTime: DateTime,
-    @ContextualSerialization val offsetTime: OffsetTime,
-    @ContextualSerialization val offsetDateTime: OffsetDateTime,
-    @ContextualSerialization val zonedDateTime: ZonedDateTime,
-    @ContextualSerialization val yearMonth: YearMonth,
-    @ContextualSerialization val instant: Instant,
-    @ContextualSerialization val zoneRegion: TimeZone,
-    @ContextualSerialization val fixedZone: TimeZone,
-    @ContextualSerialization val duration: Duration,
-    @ContextualSerialization val period: Period,
-    @ContextualSerialization val dateRange: DateRange,
-    @ContextualSerialization val dateTimeInterval: DateTimeInterval,
-    @ContextualSerialization val instantInterval: InstantInterval,
-    @ContextualSerialization val offsetDateTimeInterval: OffsetDateTimeInterval,
-    @ContextualSerialization val zonedDateTimeInterval: ZonedDateTimeInterval
+    @Contextual val date: Date,
+    @Contextual val time: Time,
+    @Contextual val dateTime: DateTime,
+    @Contextual val offsetTime: OffsetTime,
+    @Contextual val offsetDateTime: OffsetDateTime,
+    @Contextual val zonedDateTime: ZonedDateTime,
+    @Contextual val yearMonth: YearMonth,
+    @Contextual val instant: Instant,
+    @Serializable(with = TimeZoneSerializer::class) val zoneRegion: TimeZone,
+    @Serializable(with = TimeZoneSerializer::class) val fixedZone: TimeZone,
+    @Contextual val duration: Duration,
+    @Contextual val period: Period,
+    @Contextual val dateRange: DateRange,
+    @Contextual val dateTimeInterval: DateTimeInterval,
+    @Contextual val instantInterval: InstantInterval,
+    @Contextual val offsetDateTimeInterval: OffsetDateTimeInterval,
+    @Contextual val zonedDateTimeInterval: ZonedDateTimeInterval
 )
 
 class SerializerTest {
-    private val stringModule = serializersModuleOf(
-        mapOf(
-            Date::class to DateSerializer,
-            Time::class to TimeSerializer,
-            DateTime::class to DateTimeSerializer,
-            OffsetTime::class to OffsetTimeSerializer,
-            OffsetDateTime::class to OffsetDateTimeSerializer,
-            ZonedDateTime::class to ZonedDateTimeSerializer,
-            YearMonth::class to YearMonthSerializer,
-            Instant::class to InstantSerializer,
-            TimeZone::class to TimeZoneSerializer,
-            TimeZone.Region::class to TimeZoneSerializer,
-            TimeZone.FixedOffset::class to TimeZoneSerializer,
-            Duration::class to DurationSerializer,
-            Period::class to PeriodSerializer,
-            DateRange::class to DateRangeSerializer,
-            DateTimeInterval::class to DateTimeIntervalSerializer,
-            InstantInterval::class to InstantIntervalSerializer,
-            OffsetDateTimeInterval::class to OffsetDateTimeIntervalSerializer,
-            ZonedDateTimeInterval::class to ZonedDateTimeIntervalSerializer
-        )
-    )
+    private val stringModule = SerializersModule {
+        contextual(DateSerializer)
+        contextual(TimeSerializer)
+        contextual(DateTimeSerializer)
+        contextual(OffsetTimeSerializer)
+        contextual(OffsetDateTimeSerializer)
+        contextual(ZonedDateTimeSerializer)
+        contextual(YearMonthSerializer)
+        contextual(InstantSerializer)
+        contextual(DurationSerializer)
+        contextual(PeriodSerializer)
+        contextual(DateRangeSerializer)
+        contextual(DateTimeIntervalSerializer)
+        contextual(InstantIntervalSerializer)
+        contextual(OffsetDateTimeIntervalSerializer)
+        contextual(ZonedDateTimeIntervalSerializer)
+    }
 
     private val testData = TestData(
         date = Date(2018, Month.FEBRUARY, 21),
@@ -87,7 +85,7 @@ class SerializerTest {
         yearMonth = YearMonth(2019, Month.FEBRUARY),
         instant = Instant(1L.seconds, 1.nanoseconds),
         zoneRegion = TimeZone("America/Non_Existent_Zone"),
-        fixedZone = TimeZone.FixedOffset("+04:30"),
+        fixedZone = TimeZone("+04:30"),
         duration = durationOf(1.seconds, 500.nanoseconds),
         period = periodOf(1.years, 2.months, 3.days),
         dateRange = "2019-01-01/2019-05-31".toDateRange(),
@@ -100,8 +98,11 @@ class SerializerTest {
 
     @Test
     fun `serialize and unserialize to json`() {
-        val json = Json(JsonConfiguration.Stable.copy(prettyPrint = true), stringModule)
-        val text = json.stringify(TestData.serializer(), testData)
+        val json = Json {
+            prettyPrint = true
+            serializersModule = stringModule
+        }
+        val text = json.encodeToString(TestData.serializer(), testData)
 
         assertEquals(
             """
@@ -128,7 +129,7 @@ class SerializerTest {
             text
         )
 
-        val parsedTestData = json.parse(TestData.serializer(), text)
+        val parsedTestData = json.decodeFromString(TestData.serializer(), text)
         assertEquals(testData, parsedTestData)
     }
 }

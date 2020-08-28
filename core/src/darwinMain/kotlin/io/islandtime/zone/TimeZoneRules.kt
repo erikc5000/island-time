@@ -1,8 +1,12 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.darwin.*
-import io.islandtime.internal.*
+import io.islandtime.darwin.toIslandDateTimeAt
+import io.islandtime.darwin.toNSDate
+import io.islandtime.darwin.toNSDateComponents
+import io.islandtime.internal.MILLISECONDS_PER_SECOND
+import io.islandtime.internal.NANOSECONDS_PER_SECOND
+import io.islandtime.internal.confine
 import io.islandtime.measures.*
 import kotlinx.cinterop.convert
 import platform.Foundation.*
@@ -62,6 +66,10 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
 
     override fun offsetAt(instant: Instant): UtcOffset = offsetAt(instant.toNSDate())
 
+    override fun offsetAt(instant: PlatformInstant): UtcOffset {
+        return timeZone.secondsFromGMTForDate(instant).convert<Int>().seconds.asUtcOffset()
+    }
+
     override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
         return transitionsInYear.use { map ->
             map.getOrPut(dateTime.year) {
@@ -91,10 +99,6 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     override val hasFixedOffset: Boolean
         get() = timeZone.nextDaylightSavingTimeTransitionAfterDate(NSDate.distantPast) == null
 
-    private fun offsetAt(date: NSDate): UtcOffset {
-        return timeZone.secondsFromGMTForDate(date).convert<Int>().seconds.asUtcOffset()
-    }
-
     @OptIn(ExperimentalStdlibApi::class)
     private fun findTransitionsIn(year: Int): List<TimeZoneOffsetTransition> {
         val startDateComponents = NSDateComponents().also {
@@ -120,7 +124,7 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
                 val offsetAfter = offsetAt(nextTransition)
                 val dateTimeBefore = nextTransition.toIslandDateTimeAt(offsetBefore)
 
-                this += DarwinTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter)
+                add(DarwinTimeZoneOffsetTransition(dateTimeBefore, offsetBefore, offsetAfter))
 
                 currentDate = nextTransition
                 nextTransition = timeZone.nextDaylightSavingTimeTransitionAfterDate(currentDate)

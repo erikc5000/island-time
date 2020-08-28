@@ -138,30 +138,10 @@ class OffsetDateTime(
      */
     inline val year: Int get() = dateTime.year
 
-    /**
-     * Check if this date falls within a leap year.
-     */
-    inline val isInLeapYear: Boolean get() = dateTime.isInLeapYear
-
-    /**
-     * Check if this is a leap day.
-     */
-    inline val isLeapDay: Boolean get() = dateTime.isLeapDay
-
-    /**
-     * The length of this date's month in days.
-     */
-    inline val lengthOfMonth: IntDays get() = dateTime.lengthOfMonth
-
-    /**
-     * The length of this date's year in days.
-     */
-    inline val lengthOfYear: IntDays get() = dateTime.lengthOfYear
-
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth
         get() = toYearMonth()
@@ -169,7 +149,7 @@ class OffsetDateTime(
     @Deprecated(
         "Use toOffsetTime() instead.",
         ReplaceWith("this.toOffsetTime()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val offsetTime: OffsetTime
         get() = toOffsetTime()
@@ -177,7 +157,7 @@ class OffsetDateTime(
     @Deprecated(
         "Use toInstant() instead.",
         ReplaceWith("this.toInstant()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val instant: Instant
         get() = toInstant()
@@ -266,7 +246,8 @@ class OffsetDateTime(
     override operator fun minus(nanoseconds: LongNanoseconds) = copy(dateTime = dateTime - nanoseconds)
     override operator fun minus(nanoseconds: IntNanoseconds) = copy(dateTime = dateTime - nanoseconds)
 
-    operator fun rangeTo(other: OffsetDateTime) = OffsetDateTimeInterval.withInclusiveEnd(this, other)
+    operator fun rangeTo(other: OffsetDateTime): OffsetDateTimeInterval =
+        OffsetDateTimeInterval.withInclusiveEnd(this, other)
 
     override fun has(property: TemporalProperty<*>): Boolean {
         return when (property) {
@@ -307,7 +288,7 @@ class OffsetDateTime(
      * Converts this date-time to a string in ISO-8601 extended format. For example,
      * `2012-04-15T17:31:45.923452091-04:00` or `2020-02-13T02:30Z`.
      */
-    override fun toString() = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
+    override fun toString(): String = buildString(MAX_OFFSET_DATE_TIME_STRING_LENGTH) {
         appendOffsetDateTime(this@OffsetDateTime)
     }
 
@@ -383,16 +364,17 @@ class OffsetDateTime(
         val MAX = DateTime.MAX at UtcOffset.MIN
 
         /**
-         * Compare by instant, then date-time. Using this `Comparator` guarantees a deterministic order when sorting.
+         * A [Comparator] that compares by instant, then date-time. Using this `Comparator` guarantees a deterministic
+         * order when sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
+        val DEFAULT_SORT_ORDER: Comparator<OffsetDateTime> = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
             .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
 
         /**
-         * Compare by timeline order only, ignoring any offset differences.
+         * A [Comparator] that compares by timeline order only, ignoring any offset differences.
          */
-        val TIMELINE_ORDER get() = TimePoint.TIMELINE_ORDER
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimePoint.TIMELINE_ORDER
 
         /**
          * Creates an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
@@ -431,7 +413,7 @@ class OffsetDateTime(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): OffsetDateTime {
             return fromMillisecondOfUnixEpoch(millisecond, offset)
@@ -440,35 +422,13 @@ class OffsetDateTime(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, offset: UtcOffset): OffsetDateTime {
             return fromSecondOfUnixEpoch(second, nanoOfSecond, offset)
         }
     }
 }
-
-/**
- * Combines a local date and time with a UTC offset to create an [OffsetDateTime].
- */
-infix fun DateTime.at(offset: UtcOffset) = OffsetDateTime(this, offset)
-
-/**
- * Combines a local date with a time and UTC offset to create an [OffsetDateTime].
- */
-infix fun Date.at(offsetTime: OffsetTime) = OffsetDateTime(this, offsetTime.time, offsetTime.offset)
-
-/**
- * Combines an instant with a UTC offset to create an [OffsetDateTime].
- */
-infix fun Instant.at(offset: UtcOffset) = OffsetDateTime(this.toDateTimeAt(offset), offset)
-
-@Deprecated(
-    "Use 'toOffsetDateTime()' instead.",
-    ReplaceWith("this.toOffsetDateTime()"),
-    DeprecationLevel.WARNING
-)
-fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
 
 /**
  * Converts a string to an [OffsetDateTime].
@@ -479,7 +439,7 @@ fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
  * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed date-time or offset is invalid
  */
-fun String.toOffsetDateTime() = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
+fun String.toOffsetDateTime(): OffsetDateTime = toOffsetDateTime(DateTimeParsers.Iso.Extended.OFFSET_DATE_TIME)
 
 /**
  * Converts a string to an [OffsetDateTime] using a specific parser.
@@ -519,3 +479,10 @@ internal fun StringBuilder.appendOffsetDateTime(offsetDateTime: OffsetDateTime):
     }
     return this
 }
+
+@Deprecated(
+    "Use 'toOffsetDateTime()' instead.",
+    ReplaceWith("this.toOffsetDateTime()"),
+    DeprecationLevel.ERROR
+)
+fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()

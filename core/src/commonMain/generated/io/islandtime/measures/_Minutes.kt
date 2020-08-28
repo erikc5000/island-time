@@ -40,80 +40,80 @@ inline class IntMinutes(
   val value: Int
 ) : Comparable<IntMinutes> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: IntMinutes
     get() = if (value < 0) -this else this
   /**
-   * Convert to nanoseconds.
+   * Converts this duration to nanoseconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inNanoseconds: LongNanoseconds
     get() = (value.toLong() timesExact NANOSECONDS_PER_MINUTE).nanoseconds
 
   /**
-   * Convert to nanoseconds without checking for overflow.
+   * Converts this duration to nanoseconds without checking for overflow.
    */
   internal val inNanosecondsUnchecked: LongNanoseconds
     get() = (value.toLong() * NANOSECONDS_PER_MINUTE).nanoseconds
 
   /**
-   * Convert to microseconds.
+   * Converts this duration to microseconds.
    */
   val inMicroseconds: LongMicroseconds
     get() = (value.toLong() * MICROSECONDS_PER_MINUTE).microseconds
 
   /**
-   * Convert to milliseconds.
+   * Converts this duration to milliseconds.
    */
   val inMilliseconds: LongMilliseconds
     get() = (value.toLong() * MILLISECONDS_PER_MINUTE).milliseconds
 
   /**
-   * Convert to seconds.
+   * Converts this duration to seconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inSeconds: IntSeconds
     get() = (value timesExact SECONDS_PER_MINUTE).seconds
 
   /**
-   * Convert to seconds without checking for overflow.
+   * Converts this duration to seconds without checking for overflow.
    */
   internal val inSecondsUnchecked: IntSeconds
     get() = (value * SECONDS_PER_MINUTE).seconds
 
   /**
-   * Convert to whole hours.
+   * Converts this duration to the number of whole hours.
    */
   val inHours: IntHours
     get() = (value / MINUTES_PER_HOUR).hours
 
   /**
-   * Convert to whole days.
+   * Converts this duration to the number of whole days.
    */
   val inDays: IntDays
     get() = (value / MINUTES_PER_DAY).days
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0
 
   override fun compareTo(other: IntMinutes): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return when (value) {
@@ -129,30 +129,30 @@ inline class IntMinutes(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = IntMinutes(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = IntMinutes(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = IntMinutes(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = this.toLongMinutes() * scalar
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): IntMinutes {
@@ -164,7 +164,7 @@ inline class IntMinutes(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
   operator fun div(scalar: Long): LongMinutes = this.toLongMinutes() / scalar
@@ -251,18 +251,18 @@ inline class IntMinutes(
   }
 
   /**
-   * Convert to a [kotlin.time.Duration].
+   * Converts this duration to a [kotlin.time.Duration].
    */
   @ExperimentalTime
   fun toKotlinDuration(): KotlinDuration = value.kotlinMinutes
 
   /**
-   * Convert to [LongMinutes].
+   * Converts this duration to [LongMinutes].
    */
   fun toLongMinutes() = LongMinutes(value.toLong())
 
   /**
-   * Convert to a unit-less `Long` value.
+   * Converts this duration to a `Long` value.
    */
   fun toLong() = value.toLong()
 
@@ -280,19 +280,19 @@ inline class IntMinutes(
 }
 
 /**
- * Convert to [IntMinutes].
+ * Converts this value to a duration of minutes.
  */
 val Int.minutes: IntMinutes
   get() = IntMinutes(this)
 
 /**
- * Multiply by a number of minutes.
+ * Multiplies this value by a duration of minutes.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(minutes: IntMinutes) = minutes * this
 
 /**
- * Multiply by a number of minutes.
+ * Multiplies this value by a duration of minutes.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(minutes: IntMinutes) = minutes * this
@@ -307,94 +307,94 @@ inline class LongMinutes(
   val value: Long
 ) : Comparable<LongMinutes> {
   /**
-   * Returns the absolute value.
+   * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
   val absoluteValue: LongMinutes
     get() = if (value < 0) -this else this
   /**
-   * Convert to nanoseconds.
+   * Converts this duration to nanoseconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inNanoseconds: LongNanoseconds
     get() = (value timesExact NANOSECONDS_PER_MINUTE).nanoseconds
 
   /**
-   * Convert to nanoseconds without checking for overflow.
+   * Converts this duration to nanoseconds without checking for overflow.
    */
   internal val inNanosecondsUnchecked: LongNanoseconds
     get() = (value * NANOSECONDS_PER_MINUTE).nanoseconds
 
   /**
-   * Convert to microseconds.
+   * Converts this duration to microseconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inMicroseconds: LongMicroseconds
     get() = (value timesExact MICROSECONDS_PER_MINUTE).microseconds
 
   /**
-   * Convert to microseconds without checking for overflow.
+   * Converts this duration to microseconds without checking for overflow.
    */
   internal val inMicrosecondsUnchecked: LongMicroseconds
     get() = (value * MICROSECONDS_PER_MINUTE).microseconds
 
   /**
-   * Convert to milliseconds.
+   * Converts this duration to milliseconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inMilliseconds: LongMilliseconds
     get() = (value timesExact MILLISECONDS_PER_MINUTE).milliseconds
 
   /**
-   * Convert to milliseconds without checking for overflow.
+   * Converts this duration to milliseconds without checking for overflow.
    */
   internal val inMillisecondsUnchecked: LongMilliseconds
     get() = (value * MILLISECONDS_PER_MINUTE).milliseconds
 
   /**
-   * Convert to seconds.
+   * Converts this duration to seconds.
    * @throws ArithmeticException if overflow occurs
    */
   val inSeconds: LongSeconds
     get() = (value timesExact SECONDS_PER_MINUTE).seconds
 
   /**
-   * Convert to seconds without checking for overflow.
+   * Converts this duration to seconds without checking for overflow.
    */
   internal val inSecondsUnchecked: LongSeconds
     get() = (value * SECONDS_PER_MINUTE).seconds
 
   /**
-   * Convert to whole hours.
+   * Converts this duration to the number of whole hours.
    */
   val inHours: LongHours
     get() = (value / MINUTES_PER_HOUR).hours
 
   /**
-   * Convert to whole days.
+   * Converts this duration to the number of whole days.
    */
   val inDays: LongDays
     get() = (value / MINUTES_PER_DAY).days
 
   /**
-   * Is this duration zero?
+   * Checks if this duration is zero.
    */
   fun isZero(): Boolean = value == 0L
 
   /**
-   * Is this duration negative?
+   * Checks if this duration is negative.
    */
   fun isNegative(): Boolean = value < 0L
 
   /**
-   * Is this duration positive?
+   * Checks if this duration is positive.
    */
   fun isPositive(): Boolean = value > 0L
 
   override fun compareTo(other: LongMinutes): Int = value.compareTo(other.value)
 
   /**
-   * Convert to an ISO-8601 time interval representation.
+   * Converts this duration to an ISO-8601 time interval representation.
    */
   override fun toString(): String {
      return when (value) {
@@ -410,30 +410,30 @@ inline class LongMinutes(
   }
 
   /**
-   * Negate the value.
+   * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun unaryMinus() = LongMinutes(value.negateExact())
 
   /**
-   * Negate the value without checking for overflow.
+   * Negates this duration without checking for overflow.
    */
   internal fun negateUnchecked() = LongMinutes(-value)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Int) = LongMinutes(value timesExact scalar)
 
   /**
-   * Multiply by a scalar value.
+   * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
   operator fun times(scalar: Long) = LongMinutes(value timesExact scalar)
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Int): LongMinutes {
@@ -445,7 +445,7 @@ inline class LongMinutes(
   }
 
   /**
-   * Divide by a scalar value.
+   * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   operator fun div(scalar: Long): LongMinutes {
@@ -534,31 +534,31 @@ inline class LongMinutes(
   }
 
   /**
-   * Convert to a [kotlin.time.Duration].
+   * Converts this duration to a [kotlin.time.Duration].
    */
   @ExperimentalTime
   fun toKotlinDuration(): KotlinDuration = value.kotlinMinutes
 
   /**
-   * Convert to [IntMinutes].
+   * Converts this duration to [IntMinutes].
    * @throws ArithmeticException if overflow occurs
    */
   fun toIntMinutes() = IntMinutes(value.toIntExact())
 
   /**
-   * Convert to [IntMinutes] without checking for overflow.
+   * Converts this duration to [IntMinutes] without checking for overflow.
    */
   @PublishedApi
   internal fun toIntMinutesUnchecked() = IntMinutes(value.toInt())
 
   /**
-   * Convert to a unit-less `Int` value.
+   * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
   fun toInt() = value.toIntExact()
 
   /**
-   * Convert to a unit-less `Int` value without checking for overflow.
+   * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked() = value.toInt()
 
@@ -576,25 +576,25 @@ inline class LongMinutes(
 }
 
 /**
- * Convert to [LongMinutes].
+ * Converts this value to a duration of minutes.
  */
 val Long.minutes: LongMinutes
   get() = LongMinutes(this)
 
 /**
- * Multiply by a number of minutes.
+ * Multiplies this value by a duration of minutes.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Int.times(minutes: LongMinutes) = minutes * this
 
 /**
- * Multiply by a number of minutes.
+ * Multiplies this value by a duration of minutes.
  * @throws ArithmeticException if overflow occurs
  */
 operator fun Long.times(minutes: LongMinutes) = minutes * this
 
 /**
- * Convert to Island Time [LongMinutes].
+ * Converts this duration to Island Time [LongMinutes].
  */
 @ExperimentalTime
 fun KotlinDuration.toIslandMinutes() = LongMinutes(this.toLong(kotlin.time.DurationUnit.MINUTES))

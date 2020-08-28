@@ -7,7 +7,7 @@ import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class OffsetDateTimeTest : AbstractIslandTimeTest() {
-    private val testOffset = OffsetDateTime(
+    private val testOffsetDateTime = OffsetDateTime(
         2019, Month.FEBRUARY, 1, 1, 2, 3, 4, UtcOffset.MIN
     )
 
@@ -179,29 +179,16 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `at operator can be used to create an OffsetDateTime from a Date and OffsetTime`() {
-        assertEquals(
-            testOffset,
-            Date(2019, 32) at
-                OffsetTime(1, 2, 3, 4, UtcOffset.MIN)
-        )
-    }
-
-    @Test
     fun `DateTime properties work as expected`() {
-        assertEquals(2019, testOffset.year)
-        assertEquals(Month.FEBRUARY, testOffset.month)
-        assertEquals(1, testOffset.dayOfMonth)
-        assertEquals(32, testOffset.dayOfYear)
-        assertEquals(DayOfWeek.FRIDAY, testOffset.dayOfWeek)
-        assertFalse(testOffset.isInLeapYear)
-        assertFalse(testOffset.isLeapDay)
-        assertEquals(28.days, testOffset.lengthOfMonth)
-        assertEquals(365.days, testOffset.lengthOfYear)
-        assertEquals(1, testOffset.hour)
-        assertEquals(2, testOffset.minute)
-        assertEquals(3, testOffset.second)
-        assertEquals(4, testOffset.nanosecond)
+        assertEquals(2019, testOffsetDateTime.year)
+        assertEquals(Month.FEBRUARY, testOffsetDateTime.month)
+        assertEquals(1, testOffsetDateTime.dayOfMonth)
+        assertEquals(32, testOffsetDateTime.dayOfYear)
+        assertEquals(DayOfWeek.FRIDAY, testOffsetDateTime.dayOfWeek)
+        assertEquals(1, testOffsetDateTime.hour)
+        assertEquals(2, testOffsetDateTime.minute)
+        assertEquals(3, testOffsetDateTime.second)
+        assertEquals(4, testOffsetDateTime.nanosecond)
     }
 
     @Test

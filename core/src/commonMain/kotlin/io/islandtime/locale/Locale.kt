@@ -8,8 +8,13 @@ package io.islandtime.locale
 expect class Locale
 
 /**
- * Get the current [Locale].
+ * Gets the current [Locale].
+ *
+ * On the JVM, the `Category` is not used in order to support older Android versions.
  */
 expect fun defaultLocale(): Locale
 
-internal expect fun localeOf(identifier: String): Locale
+/**
+ * Converts an IETF BCP 47 language tag, such as "en-US" or "de-DE", to a [Locale].
+ */
+expect fun String.toLocale(): Locale

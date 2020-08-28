@@ -32,7 +32,7 @@ interface TimePoint<T> : Temporal {
     @Deprecated(
         "Use additionalNanosecondsSinceUnixEpoch instead.",
         ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val nanoOfSecondsSinceUnixEpoch: IntNanoseconds get() = additionalNanosecondsSinceUnixEpoch
 
@@ -49,7 +49,7 @@ interface TimePoint<T> : Temporal {
     @Deprecated(
         "Use secondOfUnixEpoch instead.",
         ReplaceWith("this.secondOfUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochSecond: Long get() = secondOfUnixEpoch
 
@@ -61,7 +61,7 @@ interface TimePoint<T> : Temporal {
     @Deprecated(
         "Use nanosecond instead.",
         ReplaceWith("this.nanosecond"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochNanoOfSecond: Int get() = nanosecond
 
@@ -73,7 +73,7 @@ interface TimePoint<T> : Temporal {
     @Deprecated(
         "Use millisecondOfUnixEpoch instead.",
         ReplaceWith("this.millisecondOfUnixEpoch"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     val unixEpochMillisecond: Long get() = millisecondOfUnixEpoch
 
@@ -83,7 +83,7 @@ interface TimePoint<T> : Temporal {
     val millisecondOfUnixEpoch: Long get() = millisecondsSinceUnixEpoch.value
 
     /**
-     * Check if this time point represents the same instant as [other]. Unlike the equals operator, equality is
+     * Checks if this time point represents the same instant as [other]. Unlike the equals operator, equality is
      * determined solely by timeline order.
      */
     fun isSameInstantAs(other: TimePoint<*>): Boolean {
@@ -91,6 +91,9 @@ interface TimePoint<T> : Temporal {
     }
 
     /**
+     *
+     * Compares this time point with another time point.
+     *
      * Time points can be compared to other time points based on timeline order, but aren't required to implement the
      * [Comparable] interface since they don't necessarily have a natural order that's consistent with equals.
      */
@@ -135,8 +138,9 @@ interface TimePoint<T> : Temporal {
 
     companion object {
         /**
-         * Compare by timeline order.
+         * A [Comparator] that compares by timeline order.
          */
-        val TIMELINE_ORDER = compareBy<TimePoint<*>> { it.secondOfUnixEpoch }.thenBy { it.nanosecond }
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> =
+            compareBy<TimePoint<*>> { it.secondOfUnixEpoch }.thenBy { it.nanosecond }
     }
 }

@@ -7,7 +7,6 @@ import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.internal.systemDefaultTimeZone
 import io.islandtime.locale.Locale
-import io.islandtime.locale.defaultLocale
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
 import io.islandtime.parser.*
@@ -57,7 +56,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
     fun validated(): TimeZone = apply { validate() }
 
     /**
-     * The localized name of this time zone, if available for the locale in the specified style. The result depends on
+     * The localized name of this time zone, if available for the [locale] in the specified style. The result depends on
      * the configured [TimeZoneTextProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
@@ -70,13 +69,13 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
      *
      * @see displayName
      */
-    fun localizedName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String? {
+    fun localizedName(style: TimeZoneTextStyle, locale: Locale): String? {
         return TimeZoneTextProvider.textFor(this, style, locale)
     }
 
     /**
      * A textual representation of this time zone, suitable for display purposes. The localized name will be returned,
-     * if available for the locale in the specified style. If not, the [id] will be returned instead.
+     * if available for the [locale] in the specified style. If not, the [id] will be returned instead.
      *
      * The result depends on the configured [TimeZoneTextProvider] and may differ between platforms.
      *
@@ -91,7 +90,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
      * @see localizedName
      * @see id
      */
-    fun displayName(style: TimeZoneTextStyle, locale: Locale = defaultLocale()): String {
+    fun displayName(style: TimeZoneTextStyle, locale: Locale): String {
         return localizedName(style, locale) ?: id
     }
 
@@ -121,7 +120,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
     /**
      * Returns the [id] of this time zone.
      */
-    override fun toString() = id
+    override fun toString(): String = id
 
     /**
      * A named time zone, typically corresponding to a region identifier in the IANA Time Zone Database, but may be any
@@ -181,7 +180,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
         override val id: String get() = offset.toString()
         override val isValid: Boolean get() = true
         override val rules: TimeZoneRules get() = FixedTimeZoneRules(offset)
-        override fun normalized() = this
+        override fun normalized(): FixedOffset = this
 
         override fun get(property: BooleanProperty): Boolean {
             return when (property) {
@@ -194,7 +193,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
             return this === other || (other is FixedOffset && offset == other.offset)
         }
 
-        override fun hashCode() = offset.hashCode()
+        override fun hashCode(): Int = offset.hashCode()
     }
 
     companion object {
@@ -233,17 +232,12 @@ fun TimeZone(id: String): TimeZone {
     }
 }
 
-/**
- * Converts this [UtcOffset] into a fixed-offset [TimeZone].
- */
-fun UtcOffset.asTimeZone(): TimeZone = TimeZone.FixedOffset(this)
-
 @Deprecated(
     "Use TimeZone() instead.",
     ReplaceWith("TimeZone(this)"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
-fun String.toTimeZone() = TimeZone(this)
+fun String.toTimeZone(): TimeZone = TimeZone(this)
 
 internal const val MAX_TIME_ZONE_STRING_LENGTH = 50
 

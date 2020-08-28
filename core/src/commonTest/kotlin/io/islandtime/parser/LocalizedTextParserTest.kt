@@ -2,7 +2,7 @@ package io.islandtime.parser
 
 import io.islandtime.base.DateProperty
 import io.islandtime.format.TextStyle
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,7 +10,7 @@ import kotlin.test.assertFailsWith
 
 class LocalizedTextParserTest : AbstractIslandTimeTest() {
     @Suppress("PropertyName")
-    val en_US = localeOf("en-US")
+    val en_US = "en-US".toLocale()
 
     @Test
     fun `parses localized months`() {

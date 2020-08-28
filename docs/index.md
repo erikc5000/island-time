@@ -1,7 +1,10 @@
+---
+title: About
+---
 # Island Time
 
 Island Time is a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html) library for working
-with dates and times. Heavily inspired by the java.time library, Island Time aims to provide a powerful API that works
+with dates and times. Heavily inspired by the java.time library, Island Time provides a powerful API that works
 across platforms while taking full advantage of the features offered by the Kotlin language.
 
 ## Features
@@ -16,6 +19,7 @@ across platforms while taking full advantage of the features offered by the Kotl
 - Convert to and from platform-specific date-time types
 - Works on JVM, Android, iOS, macOS, tvOS, and watchOS
 
-## Current Limitations
+## Notable Limitations
 - No custom format strings (must write platform-specific code to do this)
+- No support for JavaScript or non-Apple native platforms
 - Only supports the ISO calendar system

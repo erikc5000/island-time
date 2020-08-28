@@ -4,8 +4,9 @@ import io.islandtime.*
 import io.islandtime.base.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.ranges.internal.*
-import kotlin.random.Random
+import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
+import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval of zoned date-times based on timeline order.
@@ -25,7 +26,11 @@ class ZonedDateTimeInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_ZONED_DATE_TIME_STRING_LENGTH, StringBuilder::appendZonedDateTime)
+    override fun toString(): String = buildIsoString(
+        maxElementSize = MAX_ZONED_DATE_TIME_STRING_LENGTH,
+        inclusive = false,
+        appendFunction = StringBuilder::appendZonedDateTime
+    )
 
     /**
      * Converts this interval into a [Period] of the same length.
@@ -40,11 +45,10 @@ class ZonedDateTimeInterval(
     }
 
     /**
-     * Get the number of years between the start and end of the interval. A year is considered to have passed if twelve
-     * full months have passed between the start date and end date.
+     * The number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInYears
+    val lengthInYears: IntYears
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endExclusive)
@@ -52,11 +56,10 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Get the number of months between the start and end of the interval. A month is considered to have passed if the
-     * day of the end month is greater than or equal to the day of the start month.
+     * The number of whole months is this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMonths
+    val lengthInMonths: IntMonths
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endExclusive)
@@ -64,10 +67,10 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Get the number of whole weeks in the interval.
+     * The number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInWeeks
+    val lengthInWeeks: LongWeeks
         get() = when {
             isEmpty() -> 0L.weeks
             isBounded() -> weeksBetween(start, endExclusive)
@@ -75,10 +78,10 @@ class ZonedDateTimeInterval(
         }
 
     /**
-     * Get the number of whole days in the interval.
+     * The number of whole days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    override val lengthInDays
+    override val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
             isBounded() -> daysBetween(start, endExclusive)
@@ -119,7 +122,7 @@ class ZonedDateTimeInterval(
 }
 
 /**
- * Convert a string to a [ZonedDateTimeInterval].
+ * Converts a string to a [ZonedDateTimeInterval].
  *
  * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
  * [ZonedDateTimeInterval.toString] can be safely parsed using this method.
@@ -134,10 +137,12 @@ class ZonedDateTimeInterval(
  * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toZonedDateTimeInterval() = toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+fun String.toZonedDateTimeInterval(): ZonedDateTimeInterval {
+    return toZonedDateTimeInterval(DateTimeParsers.Iso.Extended.ZONED_DATE_TIME_INTERVAL)
+}
 
 /**
- * Convert a string to a [ZonedDateTimeInterval] using a specific parser.
+ * Converts a string to a [ZonedDateTimeInterval] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -171,63 +176,20 @@ fun String.toZonedDateTimeInterval(
 }
 
 /**
- * Return a random date-time within the interval using the default random number generator. The zone of the start
- * date-time will be used.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see ZonedDateTimeInterval.randomOrNull
+ * Creates a [ZonedDateTimeInterval] from this date-time up to, but not including [to].
  */
-fun ZonedDateTimeInterval.random(): ZonedDateTime = random(Random)
+infix fun ZonedDateTime.until(to: ZonedDateTime): ZonedDateTimeInterval = ZonedDateTimeInterval(this, to)
 
-/**
- * Return a random date-time within the interval using the default random number generator or `null` if the interval is
- * empty or unbounded. The zone of the start date-time will be used.
- * @see ZonedDateTimeInterval.random
- */
-fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNull(Random)
 
-/**
- * Return a random date-time within the interval using the supplied random number generator. The zone of the start
- * date-time will be used.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see ZonedDateTimeInterval.randomOrNull
- */
-fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime {
-    return random(random) { second, nanosecond ->
-        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
-    }
-}
-
-/**
- * Return a random date-time within the interval using the supplied random number generator or `null` if the interval is
- * empty or unbounded. The zone of the start date-time will be used.
- * @see ZonedDateTimeInterval.random
- */
-fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? {
-    return randomOrNull(random) { second, nanosecond ->
-        ZonedDateTime.fromSecondOfUnixEpoch(second, nanosecond, start.zone)
-    }
-}
-
-/**
- * Get an interval containing all of the representable time points up to, but not including [to].
- */
-infix fun ZonedDateTime.until(to: ZonedDateTime) = ZonedDateTimeInterval(this, to)
-
-/**
- * Convert a range of dates into a [ZonedDateTimeInterval] between the starting and ending instants in a particular
- * time zone.
- */
 @Deprecated(
     "Use 'at' instead.",
     ReplaceWith("this at zone"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun DateRange.toZonedDateTimeInterval(zone: TimeZone): ZonedDateTimeInterval = this at zone
 
 /**
- * Get the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the
+ * Gets the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the
  * starting date-time.
  */
 fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period {
@@ -235,15 +197,15 @@ fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period {
 }
 
 /**
- * Get the number of whole years between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
- * match the starting date-time.
+ * Gets the number of whole years between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
+ * to match the starting date-time.
  */
 fun yearsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntYears {
     return yearsBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }
 
 /**
- * Get the number of whole months between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
+ * Gets the number of whole months between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
  * to match the starting date-time.
  */
 fun monthsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntMonths {
@@ -251,15 +213,15 @@ fun monthsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): IntMonths 
 }
 
 /**
- * Get the number of whole weeks between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
- * match the starting date-time.
+ * Gets the number of whole weeks between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
+ * to match the starting date-time.
  */
 fun weeksBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): LongWeeks {
     return weeksBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
 }
 
 /**
- * Get the number of whole days between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
+ * Gets the number of whole days between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
  * match the starting date-time.
  */
 fun daysBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): LongDays {

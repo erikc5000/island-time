@@ -143,7 +143,15 @@ class CodeBlockBuilder(
 
     operator fun String.unaryPlus() {
         codeBlocks += if (sanitize) {
-            split("\n\n").joinToString(separator = "\n\n") { it.replace(oldChar = '\n', newChar = ' ') }
+            split("\n\n").joinToString(separator = "\n\n") {
+                val trimmed = it.trimStart()
+
+                if (!trimmed.startsWith('@')) {
+                    trimmed.replace(oldChar = '\n', newChar = ' ')
+                } else {
+                    trimmed
+                }
+            }
         } else {
             this
         }

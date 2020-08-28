@@ -2,11 +2,16 @@ package io.islandtime.extensions.serialization.ranges
 
 import io.islandtime.ranges.InstantInterval
 import io.islandtime.ranges.toInstantInterval
-import kotlinx.serialization.*
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 object InstantIntervalSerializer : KSerializer<InstantInterval> {
     override val descriptor: SerialDescriptor =
-        PrimitiveDescriptor("io.islandtime.ranges.InstantIntervalSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.ranges.InstantIntervalSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: InstantInterval) {
         encoder.encodeString(value.toString())

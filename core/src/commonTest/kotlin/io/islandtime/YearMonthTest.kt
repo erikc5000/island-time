@@ -8,27 +8,6 @@ import kotlin.test.*
 
 class YearMonthTest : AbstractIslandTimeTest() {
     @Test
-    fun `at infix combines Year and Month`() {
-        assertEquals(
-            YearMonth(2018, Month.DECEMBER),
-            Year(2018) at Month.DECEMBER
-        )
-
-        assertEquals(
-            YearMonth(2018, Month.APRIL),
-            Year(2018) at 4.toMonth()
-        )
-    }
-
-    @Test
-    fun `atMonth() combines Year and Month`() {
-        assertEquals(
-            YearMonth(2018, Month.APRIL),
-            Year(2018).atMonth(4)
-        )
-    }
-
-    @Test
     fun `throws an exception when initialized with an invalid year`() {
         assertFailsWith<DateTimeException> { YearMonth(1_000_000_000, Month.JANUARY) }
         assertFailsWith<DateTimeException> { YearMonth(-1_000_000_000, Month.DECEMBER) }

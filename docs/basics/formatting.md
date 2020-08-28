@@ -25,7 +25,7 @@ In general, you'll find a `localizedName()` method that returns `null` if text i
 
 ## `Locale`
 
-Island Time's `Locale` is simply a `typealias` for `java.util.Locale` or `NSLocale`. The `defaultLocale()` method allows you to access the system default locale in common code. If you want to use a specific locale, you should create it in platform-specific code and inject it into your common code.
+Island Time's `Locale` is simply a `typealias` for `java.util.Locale` or `NSLocale`. The `defaultLocale()` function allows you to access the user's current locale in common code. A specific locale can be used by converting a [language tag](https://tools.ietf.org/html/bcp47), such as "en-US", using the `String.toLocale()` method. For anything more sophisticated, you should use platform-specific code.
 
 ## Using Platform APIs
 

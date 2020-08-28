@@ -17,18 +17,10 @@ jobs:
           python-version: 3.8
 
       - name: Install mkdocs
-        run: pip3 install mkdocs mkdocs-material mkdocs-macros-plugin
+        run: pip install mkdocs-material mkdocs-macros-plugin
 
-      - name: Build documentation
-        run: |
-          ./gradlew generateMkdocsApiDocs
-          mkdocs build
+      - name: Build API docs
+        run: ./gradlew dokkaMkdocs
 
       - name: Deploy
-        if: success()
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: site
-          SINGLE_COMMIT: true
+        run: mkdocs gh-deploy --force

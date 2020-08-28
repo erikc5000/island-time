@@ -148,7 +148,7 @@ fun ZonedDateTimeInterval.toInstantInterval(): InstantInterval {
     return (this as TimePointInterval<*>).toInstantInterval()
 }
 
-private inline fun <T> TimeInterval<T>.toDateRange(toDateTime: T.() -> DateTime): DateRange {
+private inline fun <T> Interval<T>.toDateRange(toDateTime: T.() -> DateTime): DateRange {
     return when {
         isEmpty() -> DateRange.EMPTY
         isUnbounded() -> DateRange.UNBOUNDED

@@ -30,23 +30,23 @@ class Period private constructor(
         get() = (years.toLongYears().inMonthsUnchecked.value + months.value).months
 
     /**
-     * Check if this period has no length.
+     * Checks if this period is zero.
      */
     fun isZero(): Boolean = this == ZERO
 
     /**
-     * Check if any component of this period is negative.
+     * Checks if any component of this period is negative.
      */
     fun isNegative(): Boolean = years.value < 0 || months.value < 0 || days.value < 0
 
     /**
-     * Reverse the sign of each component in the period.
+     * Reverses the sign of each component in the period.
      * @throws ArithmeticException if overflow occurs
      */
     operator fun unaryMinus() = create(-years, -months, -days)
 
     /**
-     * Add each component of another period to each component of this period.
+     * Adds each component of another period to each component of this period.
      * @throws ArithmeticException if overflow occurs
      */
     operator fun plus(other: Period) = create(
@@ -56,7 +56,7 @@ class Period private constructor(
     )
 
     /**
-     * Subtract each component of another period from this period.
+     * Subtracts each component of another period from this period.
      * @throws ArithmeticException if overflow occurs
      */
     operator fun minus(other: Period) = create(
@@ -86,7 +86,7 @@ class Period private constructor(
     operator fun minus(days: LongDays) = copy(days = (this.days.toLong() - days.value).toIntExact().days)
 
     /**
-     * Multiply each component of this period by a scalar value.
+     * Multiplies each component of this period by a scalar value.
      * @throws ArithmeticException if overflow occurs
      */
     operator fun times(scalar: Int): Period {
@@ -102,8 +102,8 @@ class Period private constructor(
     operator fun component3() = days
 
     /**
-     * Normalize the number of years and months such that "1 year, 15 months" becomes "2 years, 3 months".  Only the
-     * months and years components are combined.  Days are never adjusted.
+     * Normalizes the number of years and months such that "1 year, 15 months" becomes "2 years, 3 months". Only the
+     * months and years components are combined. Days are never adjusted.
      */
     fun normalized(): Period {
         val monthTotal = totalMonths
@@ -159,7 +159,7 @@ class Period private constructor(
     }
 
     /**
-     * Returns an ISO-8601 period representation, such as "P1Y10M3D"
+     * Returns an ISO-8601 duration representation, such as "P1Y10M3D".
      */
     override fun toString(): String {
         return if (isZero()) {
@@ -187,7 +187,7 @@ class Period private constructor(
     }
 
     /**
-     * Return a new Period, replacing the years, months, and days components with new values, as desired
+     * Returns a new Period, replacing the years, months, and days components with new values, as desired
      * @param years new years value
      * @param months new months value
      * @param days new days value
@@ -201,7 +201,7 @@ class Period private constructor(
 
     companion object {
         /**
-         * A period of no length
+         * A [Period] of zero length.
          */
         val ZERO = Period()
 
@@ -220,74 +220,74 @@ class Period private constructor(
 }
 
 /**
- * Create a [Period].
+ * Creates a [Period].
  */
 fun periodOf(years: IntYears, months: IntMonths = 0.months, days: IntDays = 0.days): Period {
     return Period.create(years, months, days)
 }
 
 /**
- * Create a [Period].
+ * Creates a [Period].
  */
 fun periodOf(years: IntYears, days: IntDays) = Period.create(years = years, days = days)
 
 /**
- * Create a [Period].
+ * Creates a [Period].
  */
 fun periodOf(months: IntMonths, days: IntDays = 0.days) = Period.create(months = months, days = days)
 
 /**
- * Create a [Period].
+ * Creates a [Period].
  * @throws ArithmeticException if overflow occurs
  */
 fun periodOf(weeks: IntWeeks) = Period.create(days = weeks.inDays)
 
 /**
- * Create a [Period].
+ * Creates a [Period].
  */
 fun periodOf(days: IntDays) = Period.create(days = days)
 
 /**
- * Convert [IntYears] into a [Period] with the same number of years
+ * Converts this duration into a [Period] with the same number of years.
  */
 fun IntYears.asPeriod() = Period.create(years = this)
 
 /**
- * Convert [IntMonths] into a [Period] with the same number of months
+ * Converts this duration into a [Period] with the same number of months.
  */
 fun IntMonths.asPeriod() = Period.create(months = this)
 
 /**
- * Convert [IntWeeks] into a [Period] with the same number of weeks
+ * Converts this duration into a [Period] with the same number of weeks.
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
 fun IntWeeks.asPeriod() = Period.create(days = this.inDays)
 
 /**
- * Convert [IntDays] into a [Period] with the same number of days
+ * Converts this duration into a [Period] with the same number of days.
  */
 fun IntDays.asPeriod() = Period.create(days = this)
 
 /**
- * Convert [LongYears] into a [Period] with the same number of years
+ * Converts this duration into a [Period] with the same number of years.
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
 fun LongYears.asPeriod() = this.toIntYears().asPeriod()
 
 /**
- * Convert [LongMonths] into a [Period] with the same number of months
+ * Converts this duration into a [Period] with the same number of months.
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
 fun LongMonths.asPeriod() = this.toIntMonths().asPeriod()
 
 /**
- * Convert [LongWeeks] into a [Period] with the same number of weeks
+ * Converts this duration into a [Period] with the same number of weeks.
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
 fun LongWeeks.asPeriod() = this.inDays.asPeriod()
 
 /**
- * Convert [LongDays] into a [Period] with the same number of days
+ * Converts this duration into a [Period] with the same number of days.
  * @throws ArithmeticException if the resulting [Period] would overflow
  */
 fun LongDays.asPeriod() = this.toIntDays().asPeriod()

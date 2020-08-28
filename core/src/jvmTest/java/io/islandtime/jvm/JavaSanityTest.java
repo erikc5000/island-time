@@ -9,7 +9,7 @@ import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalQueries;
 
 import static com.google.common.truth.Truth.assertThat;
-import static io.islandtime.jvm.Conversions.*;
+import static io.islandtime.jvm.IslandTimeUtils.*;
 
 public class JavaSanityTest {
     @Test

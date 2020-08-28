@@ -171,69 +171,6 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `at infix creates a ZonedDateTime from a DateTime`() {
-        assertEquals(
-            ZonedDateTime(
-                2019,
-                3,
-                3,
-                1,
-                0,
-                0,
-                0,
-                TimeZone.UTC
-            ),
-            DateTime(2019, 3, 3, 1, 0) at TimeZone.UTC
-        )
-
-        assertEquals(
-            ZonedDateTime(
-                2019,
-                3,
-                3,
-                1,
-                0,
-                0,
-                0,
-                nyZone
-            ),
-            DateTime(2019, 3, 3, 1, 0) at
-                nyZone
-        )
-    }
-
-    @Test
-    fun `at infix creates a ZonedDateTime from an instant`() {
-        assertEquals(
-            ZonedDateTime(
-                2019,
-                8,
-                19,
-                23,
-                7,
-                27,
-                821_000_000,
-                TimeZone.UTC
-            ),
-            Instant(1566256047821L.milliseconds) at TimeZone.UTC
-        )
-
-        assertEquals(
-            ZonedDateTime(
-                2019,
-                8,
-                19,
-                19,
-                7,
-                27,
-                821_000_000,
-                nyZone
-            ),
-            Instant(1566256047821L.milliseconds) at nyZone
-        )
-    }
-
-    @Test
     fun `equality is based on date-time, time zone, and offset`() {
         assertEquals(
             ZonedDateTime.create(
@@ -686,52 +623,5 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
             ),
             "20190505 1200-04[America/New_York]".toZonedDateTime(DateTimeParsers.Iso.ZONED_DATE_TIME)
         )
-    }
-
-    @Test
-    fun `OffsetDateTime_asZonedDateTime() converts to a ZonedDateTime with fixed offset zone`() {
-        assertEquals(
-            ZonedDateTime.create(
-                DateTime(1970, 1, 1, 0, 0, 0, 0),
-                UtcOffset.ZERO,
-                TimeZone.UTC
-            ),
-            "1970-01-01T00:00Z".toOffsetDateTime().asZonedDateTime()
-        )
-
-        assertEquals(
-            ZonedDateTime.create(
-                DateTime(2017, 2, 28, 14, 0, 0, 123456789),
-                UtcOffset((-7).hours),
-                UtcOffset((-7).hours).asTimeZone()
-            ),
-            "2017-02-28T14:00:00.123456789-07:00".toOffsetDateTime().asZonedDateTime()
-        )
-    }
-
-    @Test
-    fun `Date_startOfDayAt() creates a ZonedDateTime at the start of the day in a particular time zone`() {
-        assertEquals(
-            ZonedDateTime(
-                DateTime(2019, 5, 20, 0, 0),
-                nyZone
-            ),
-            Date(2019, 5, 20).startOfDayAt(nyZone)
-        )
-
-        // TODO: Add tests where transitions occur during midnight
-    }
-
-    @Test
-    fun `Date_endOfDayAt() creates a ZonedDateTime at the end of the day in a particular time zone`() {
-        assertEquals(
-            ZonedDateTime(
-                DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),
-                nyZone
-            ),
-            Date(2019, 5, 20).endOfDayAt(nyZone)
-        )
-
-        // TODO: Add tests where transitions occur during midnight
     }
 }

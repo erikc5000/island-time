@@ -102,7 +102,7 @@ class GroupedTemporalParser internal constructor(
 }
 
 /**
- * Create a [GroupedTemporalParser].
+ * Creates a [GroupedDateTimeParser].
  *
  * A grouped parser is capable of grouping the parsed properties into separate results, allowing the
  * same property to be reused multiple times within a character sequence.

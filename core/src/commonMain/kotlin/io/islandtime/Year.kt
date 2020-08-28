@@ -75,8 +75,8 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
 
     operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
 
-    operator fun contains(yearMonth: YearMonth) = yearMonth.year == value
-    operator fun contains(date: Date) = date.year == value
+    operator fun contains(yearMonth: YearMonth): Boolean = yearMonth.year == value
+    operator fun contains(date: Date): Boolean = date.year == value
 
     /**
      * Ensures that this year is valid, throwing an exception if it isn't.
@@ -122,7 +122,7 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
         }.toLong()
     }
 
-    override fun compareTo(other: Year) = value - other.value
+    override fun compareTo(other: Year): Int = value - other.value
 
     /**
      * Converts this year to a string in ISO-8601 extended format. For example, `2012`, `-0001`, or `+10000`.
@@ -167,13 +167,13 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
 /**
  * Converts a string to a [Year].
  *
- * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or 'Y12345'. The output of
+ * The string is assumed to be an ISO-8601 year. For example, `2010`, `+002010`, or `Y12345`. The output of
  * [Year.toString] can be safely parsed using this method.
  *
  * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed year is invalid
  */
-fun String.toYear() = toYear(DateTimeParsers.Iso.YEAR)
+fun String.toYear(): Year = toYear(DateTimeParsers.Iso.YEAR)
 
 /**
  * Converts a string to a [Year] using a specific parser.

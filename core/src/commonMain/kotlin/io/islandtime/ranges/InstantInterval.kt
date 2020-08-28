@@ -5,9 +5,6 @@ import io.islandtime.base.DateProperty
 import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.random
-import io.islandtime.ranges.internal.randomOrNull
-import kotlin.random.Random
 
 /**
  * A half-open interval between two instants.
@@ -29,7 +26,11 @@ class InstantInterval(
     /**
      * Converts this interval to a string in ISO-8601 extended format.
      */
-    override fun toString() = buildIsoString(MAX_INSTANT_STRING_LENGTH, StringBuilder::appendInstant)
+    override fun toString(): String = buildIsoString(
+        maxElementSize = MAX_INSTANT_STRING_LENGTH,
+        inclusive = false,
+        appendFunction = StringBuilder::appendInstant
+    )
 
     companion object {
         /**
@@ -61,7 +62,7 @@ class InstantInterval(
 }
 
 /**
- * Convert a string to an [InstantInterval].
+ * Converts a string to an [InstantInterval].
  *
  * The string is assumed to be an ISO-8601 time interval representation in extended format. The output of
  * [InstantInterval.toString] can be safely parsed using this method.
@@ -76,10 +77,10 @@ class InstantInterval(
  * @throws TemporalParseException if parsing fails
  * @throws DateTimeException if the parsed time is invalid
  */
-fun String.toInstantInterval() = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
+fun String.toInstantInterval(): InstantInterval = toInstantInterval(DateTimeParsers.Iso.Extended.INSTANT_INTERVAL)
 
 /**
- * Convert a string to an [InstantInterval] using a specific parser.
+ * Converts a string to an [InstantInterval] using a specific parser.
  *
  * A set of predefined parsers can be found in [DateTimeParsers].
  *
@@ -112,54 +113,20 @@ fun String.toInstantInterval(
 }
 
 /**
- * Return a random instant within the interval using the default random number generator.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see InstantInterval.randomOrNull
+ * Creates an [InstantInterval] from this instant up to, but not including [to].
  */
-fun InstantInterval.random(): Instant = random(Random)
-
-/**
- * Return a random instant within the interval using the default random number generator or `null` if the interval is
- * empty or unbounded.
- * @see InstantInterval.random
- */
-fun InstantInterval.randomOrNull(): Instant? = randomOrNull(Random)
-
-/**
- * Return a random instant within the interval using the supplied random number generator.
- * @throws NoSuchElementException if the interval is empty
- * @throws UnsupportedOperationException if the interval is unbounded
- * @see InstantInterval.randomOrNull
- */
-fun InstantInterval.random(random: Random): Instant {
-    return random(random, Instant.Companion::fromSecondOfUnixEpoch)
-}
-
-/**
- * Return a random instant within the interval using the supplied random number generator or `null` if the interval is
- * empty or unbounded.
- * @see InstantInterval.random
- */
-fun InstantInterval.randomOrNull(random: Random): Instant? {
-    return randomOrNull(random, Instant.Companion::fromSecondOfUnixEpoch)
-}
-
-/**
- * Get an interval containing all of the instants up to, but not including [to].
- */
-infix fun Instant.until(to: Instant) = InstantInterval(this, to)
+infix fun Instant.until(to: Instant): InstantInterval = InstantInterval(this, to)
 
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
 
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
-    DeprecationLevel.WARNING
+    DeprecationLevel.ERROR
 )
 fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()

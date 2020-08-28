@@ -112,30 +112,10 @@ class DateTime(
      */
     inline val year: Int get() = date.year
 
-    /**
-     * Check if this date falls within a leap year.
-     */
-    inline val isInLeapYear: Boolean get() = date.isInLeapYear
-
-    /**
-     * Check if this is a leap day.
-     */
-    inline val isLeapDay: Boolean get() = date.isLeapDay
-
-    /**
-     * The length of the date's month in days.
-     */
-    inline val lengthOfMonth: IntDays get() = date.lengthOfMonth
-
-    /**
-     * The length of the date's year in days.
-     */
-    inline val lengthOfYear: IntDays get() = date.lengthOfYear
-
     @Deprecated(
         "Use toYearMonth() instead.",
         ReplaceWith("this.toYearMonth()"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     inline val yearMonth: YearMonth
         get() = toYearMonth()
@@ -427,8 +407,8 @@ class DateTime(
         }
     }
 
-    operator fun component1() = date
-    operator fun component2() = time
+    operator fun component1(): Date = date
+    operator fun component2(): Time = time
 
     operator fun rangeTo(other: DateTime) = DateTimeInterval.withInclusiveEnd(this, other)
 
@@ -471,7 +451,9 @@ class DateTime(
      * Converts this date-time to a string in ISO-8601 extended format. For example, `2012-04-15T17:31:45.923452091` or
      * `2020-02-13T02:30`.
      */
-    override fun toString() = buildString(MAX_DATE_TIME_STRING_LENGTH) { appendDateTime(this@DateTime) }
+    override fun toString(): String = buildString(MAX_DATE_TIME_STRING_LENGTH) {
+        appendDateTime(this@DateTime)
+    }
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is DateTime && date == other.date && time == other.time)
@@ -489,7 +471,7 @@ class DateTime(
     fun copy(
         date: Date = this.date,
         time: Time = this.time
-    ) = DateTime(date, time)
+    ): DateTime = DateTime(date, time)
 
     /**
      * Returns a copy of this date-time with the values of any individual components replaced by the new values
@@ -503,7 +485,7 @@ class DateTime(
         minute: Int = this.minute,
         second: Int = this.second,
         nanosecond: Int = this.nanosecond
-    ) = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond))
+    ): DateTime = DateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond))
 
     /**
      * Returns a copy of this date-time with the values of any individual components replaced by the new values
@@ -518,7 +500,7 @@ class DateTime(
         minute: Int = this.minute,
         second: Int = this.second,
         nanosecond: Int = this.nanosecond
-    ) = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond))
+    ): DateTime = DateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
      * Returns a copy of this date-time with the values of any individual components replaced by the new values
@@ -533,7 +515,7 @@ class DateTime(
         minute: Int = this.minute,
         second: Int = this.second,
         nanosecond: Int = this.nanosecond
-    ) = DateTime(date.copy(year, monthNumber, dayOfMonth), time.copy(hour, minute, second, nanosecond))
+    ): DateTime = DateTime(date.copy(year, monthNumber, dayOfMonth), time.copy(hour, minute, second, nanosecond))
 
     /**
      * The number of seconds relative to the Unix epoch of `1970-01-01T00:00Z` at a particular offset. This is a "floor"
@@ -547,14 +529,6 @@ class DateTime(
             time.secondsSinceStartOfDay.value -
             offset.totalSeconds.value).seconds
     }
-
-    @Deprecated(
-        "Use additionalNanosecondsSinceUnixEpoch instead.",
-        ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
-        DeprecationLevel.WARNING
-    )
-    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
-        get() = additionalNanosecondsSinceUnixEpoch
 
     /**
      * The number of additional nanoseconds that should be applied on top of the number of seconds since the Unix epoch
@@ -575,13 +549,6 @@ class DateTime(
             offset.totalSeconds.inMilliseconds.value).milliseconds
     }
 
-    @Deprecated(
-        "Use secondOfUnixEpochAt() instead.",
-        ReplaceWith("this.secondOfUnixEpochAt(offset)"),
-        DeprecationLevel.WARNING
-    )
-    fun unixEpochSecondAt(offset: UtcOffset): Long = secondOfUnixEpochAt(offset)
-
     /**
      * The second of the Unix epoch.
      *
@@ -590,21 +557,6 @@ class DateTime(
      */
     fun secondOfUnixEpochAt(offset: UtcOffset): Long = secondsSinceUnixEpochAt(offset).value
 
-    @Deprecated(
-        "Use nanosecond instead.",
-        ReplaceWith("this.nanosecond"),
-        DeprecationLevel.WARNING
-    )
-    val unixEpochNanoOfSecond: Int
-        get() = nanosecond
-
-    @Deprecated(
-        "Use millisecondOfUnixEpoch() instead.",
-        ReplaceWith("this.millisecondOfUnixEpochAt(offset)"),
-        DeprecationLevel.WARNING
-    )
-    fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondOfUnixEpochAt(offset)
-
     /**
      * The millisecond of the Unix epoch.
      * @param offset the offset from UTC
@@ -612,9 +564,39 @@ class DateTime(
     fun millisecondOfUnixEpochAt(offset: UtcOffset): Long = millisecondsSinceUnixEpochAt(offset).value
 
     @Deprecated(
+        "Use additionalNanosecondsSinceUnixEpoch instead.",
+        ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
+        DeprecationLevel.ERROR
+    )
+    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
+        get() = additionalNanosecondsSinceUnixEpoch
+
+    @Deprecated(
+        "Use secondOfUnixEpochAt() instead.",
+        ReplaceWith("this.secondOfUnixEpochAt(offset)"),
+        DeprecationLevel.ERROR
+    )
+    fun unixEpochSecondAt(offset: UtcOffset): Long = secondOfUnixEpochAt(offset)
+
+    @Deprecated(
+        "Use nanosecond instead.",
+        ReplaceWith("this.nanosecond"),
+        DeprecationLevel.ERROR
+    )
+    val unixEpochNanoOfSecond: Int
+        get() = nanosecond
+
+    @Deprecated(
+        "Use millisecondOfUnixEpoch() instead.",
+        ReplaceWith("this.millisecondOfUnixEpochAt(offset)"),
+        DeprecationLevel.ERROR
+    )
+    fun unixEpochMillisecondAt(offset: UtcOffset): Long = millisecondOfUnixEpochAt(offset)
+
+    @Deprecated(
         "Use toInstantAt() instead.",
         ReplaceWith("this.toInstantAt(offset)"),
-        DeprecationLevel.WARNING
+        DeprecationLevel.ERROR
     )
     fun instantAt(offset: UtcOffset): Instant = toInstantAt(offset)
 
@@ -680,7 +662,7 @@ class DateTime(
         @Deprecated(
             "Use fromMillisecondOfUnixEpoch() instead.",
             ReplaceWith("DateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): DateTime {
             return fromMillisecondOfUnixEpoch(millisecond, offset)
@@ -689,42 +671,13 @@ class DateTime(
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("DateTime.fromSecondOfUnixEpoch(second, nanosecondAdjustment, offset)"),
-            DeprecationLevel.WARNING
+            DeprecationLevel.ERROR
         )
         fun fromUnixEpochSecond(second: Long, nanosecondAdjustment: Int = 0, offset: UtcOffset): DateTime {
             return fromSecondOfUnixEpoch(second, nanosecondAdjustment, offset)
         }
     }
 }
-
-/**
- * Combines a [Date] with a [Time] to create a [DateTime].
- */
-infix fun Date.at(time: Time) = DateTime(this, time)
-
-/**
- * Combines a [Date] with a time to create a [DateTime].
- */
-fun Date.atTime(hour: Int, minute: Int, second: Int = 0, nanosecond: Int = 0): DateTime {
-    return DateTime(this, Time(hour, minute, second, nanosecond))
-}
-
-/**
- * Converts this instant to the corresponding [DateTime] at [offset].
- */
-fun Instant.toDateTimeAt(offset: UtcOffset): DateTime {
-    return DateTime.fromSecondOfUnixEpoch(secondOfUnixEpoch, nanosecond, offset)
-}
-
-/**
- * The [DateTime] at the start of the day.
- */
-val Date.startOfDay: DateTime get() = DateTime(this, Time.MIDNIGHT)
-
-/**
- * The [DateTime] at the end of the day.
- */
-val Date.endOfDay: DateTime get() = DateTime(this, Time.MAX)
 
 /**
  * Convert a string to a [DateTime].

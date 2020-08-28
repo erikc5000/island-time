@@ -1,6 +1,7 @@
-package io.islandtime.operators
+@file:Suppress("PackageDirectoryMismatch")
 
-import io.islandtime.Time
+package io.islandtime
+
 import io.islandtime.measures.TimeUnit.*
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test

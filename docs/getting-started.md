@@ -16,23 +16,21 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 !!! warning "Important"
     Your project's Kotlin compiler version must match the version used by Island Time.
 
-Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time -- even for non-native targets. Those of you who are using [Kotlin/Native](https://kotlinlang.org/docs/reference/native-overview.html) are probably already accustomed to dealing with this since there is no binary compatibility between releases yet.
+Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time &mdash; even for non-native targets.
 
 | Island Time Version | Kotlin Version |
 | --- | --- |
 | 0.1.x | 1.3.6x |
 | 0.2.x | 1.3.7x |
-
-!!! info "Kotlin 1.4 preview builds"
-    Island Time builds that are compatible with the latest Kotlin 1.4 preview build are also available starting with 1.4-M3. Just add the appropriate suffix to the version number. For example, `{{ versions.islandtime }}` would be `{{ versions.islandtime }}-1.4-M3`.
+| 0.3.x | 1.4.0x |
 
 ### JVM
 
-Island Time requires Java 8 or above.
+Java 8 or above is required.
 
 ### Android
 
-Island Time requires a minimum compile SDK of API 15 or later and Java 8 support should be [turned on](https://developer.android.com/studio/write/java8-support).
+Android Gradle Plugin 4.0 or above and a minimum compile SDK of API 21 are required.
 
 ## Gradle Setup
 
@@ -61,9 +59,7 @@ Extensions are also available for [serialization](extensions/serialization.md) a
 
 ### Android
 
-#### Android Studio 4.0 or later
-
-Make sure that [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) is enabled.
+You'll need to turn on [core library desugaring](https://developer.android.com/studio/preview/features#j8-desugar) if it isn't enabled already.
 
 === "Groovy"
     ```groovy
@@ -83,7 +79,7 @@ Make sure that [core library desugaring](https://developer.android.com/studio/pr
     }
 
     dependencies {
-        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     }
     ```
 
@@ -97,7 +93,7 @@ Make sure that [core library desugaring](https://developer.android.com/studio/pr
 
         compileOptions {
             // Flag to enable support for the new language APIs
-            coreLibraryDesugaringEnabled = true
+            isCoreLibraryDesugaringEnabled = true
             // Sets Java compatibility to Java 8
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
@@ -105,13 +101,9 @@ Make sure that [core library desugaring](https://developer.android.com/studio/pr
     }
 
     dependencies {
-        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.10")
     }
     ```
-
-#### Android Studio 3.6 or earlier
-
-You'll need to add an additional dependency on the ThreeTen Android Backport. You can find details [here](extensions/threetenabp.md).
 
 ### Snapshot builds
 

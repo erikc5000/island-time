@@ -4,45 +4,33 @@ import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.internal.*
-import kotlin.jvm.JvmName
 
 /**
  * A half-open interval of time points.
  */
 abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
-    private val _start: T,
-    private val _endExclusive: T
-) : TimeInterval<T> {
+    override val start: T,
+    override val endExclusive: T
+) : Interval<T> {
 
-    override val start: T get() = _start
-
-    /**
-     * The last representable time point within the interval.
-     */
-    val endInclusive: T get() = if (hasUnboundedEnd()) _endExclusive else _endExclusive - 1.nanoseconds
-
-    override val endExclusive: T get() = _endExclusive
+    override val endInclusive: T
+        get() = if (hasUnboundedEnd()) endExclusive else endExclusive - 1.nanoseconds
 
     override fun equals(other: Any?): Boolean {
         return other is TimePointInterval<*> && (isEmpty() && other.isEmpty() ||
-            ((hasUnboundedStart() && other.hasUnboundedStart()) || _start == other._start) &&
-            ((hasUnboundedEnd() && other.hasUnboundedEnd()) || _endExclusive == other._endExclusive))
+            ((hasUnboundedStart() && other.hasUnboundedStart()) || start == other.start) &&
+            ((hasUnboundedEnd() && other.hasUnboundedEnd()) || endExclusive == other.endExclusive))
     }
 
     override fun hashCode(): Int {
-        return if (isEmpty()) -1 else (31 * _start.hashCode() + _endExclusive.hashCode())
+        return if (isEmpty()) -1 else (31 * start.hashCode() + endExclusive.hashCode())
     }
 
     override fun contains(value: T): Boolean {
-        return (value >= _start || hasUnboundedStart()) && (value < _endExclusive || hasUnboundedEnd())
+        return (value >= start || hasUnboundedStart()) && (value < endExclusive || hasUnboundedEnd())
     }
 
-    @JvmName("containsOther")
-    operator fun contains(value: TimePoint<*>): Boolean {
-        return (value >= _start || hasUnboundedStart()) && (value < _endExclusive || hasUnboundedEnd())
-    }
-
-    override fun isEmpty(): Boolean = _start >= _endExclusive
+    override fun isEmpty(): Boolean = start >= endExclusive
 
     /**
      * Converts this interval into a [Duration] of the same length.
@@ -51,91 +39,100 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
     fun asDuration(): Duration {
         return when {
             isEmpty() -> Duration.ZERO
-            isBounded() -> durationBetween(_start, _endExclusive)
+            isBounded() -> durationBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
     }
 
     /**
-     * Get the number of 24-hour days in the interval.
+     * The number of 24-hour days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     open val lengthInDays: LongDays
         get() = when {
             isEmpty() -> 0L.days
-            isBounded() -> daysBetween(_start, _endExclusive)
+            isBounded() -> daysBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
     /**
-     * Get the number of whole hours in the interval.
+     * The number of whole hours in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInHours: LongHours
         get() = when {
             isEmpty() -> 0L.hours
-            isBounded() -> hoursBetween(_start, _endExclusive)
+            isBounded() -> hoursBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
     /**
-     * Get the number of whole minutes in the interval.
+     * The number of whole minutes in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMinutes: LongMinutes
         get() = when {
             isEmpty() -> 0L.minutes
-            isBounded() -> minutesBetween(_start, _endExclusive)
+            isBounded() -> minutesBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
     /**
-     * Get the number of whole seconds in the interval.
+     * The number of whole seconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInSeconds: LongSeconds
         get() = when {
             isEmpty() -> 0L.seconds
-            isBounded() -> secondsBetween(_start, _endExclusive)
+            isBounded() -> secondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
     /**
-     * Get the number of whole milliseconds in the interval.
+     * The number of whole milliseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMilliseconds: LongMilliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
-            isBounded() -> millisecondsBetween(_start, _endExclusive)
+            isBounded() -> millisecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
     /**
-     * Get the number of whole microseconds in the interval.
+     * The number of whole microseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInMicroseconds: LongMicroseconds
         get() = when {
             isEmpty() -> 0L.microseconds
-            isBounded() -> microsecondsBetween(_start, _endExclusive)
+            isBounded() -> microsecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 
     /**
-     * Get the number of whole nanoseconds in the interval.
+     * The number of whole nanoseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
     val lengthInNanoseconds: LongNanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
-            isBounded() -> nanosecondsBetween(_start, _endExclusive)
+            isBounded() -> nanosecondsBetween(start, endExclusive)
             else -> throwUnboundedIntervalException()
         }
 }
 
 /**
- * Get the [Duration] between two time points.
+ * Checks if this interval contains [value]. This will always return `false` if [value] is `null`.
+ */
+operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*>?): Boolean {
+    return value != null &&
+        (value >= start || hasUnboundedStart()) &&
+        (value < endExclusive || hasUnboundedEnd())
+}
+
+/**
+ * Gets the [Duration] between two time points.
  */
 fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): Duration {
     val secondDiff = endExclusive.secondsSinceUnixEpoch - start.secondsSinceUnixEpoch
@@ -145,28 +142,28 @@ fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>):
 }
 
 /**
- * Get the number of 24-hour days between two time points.
+ * Gets the number of 24-hour days between two time points.
  */
 fun <T1, T2> daysBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongDays {
     return secondsBetween(start, endExclusive).inDays
 }
 
 /**
- * Get the number of whole hours between two time points.
+ * Gets the number of whole hours between two time points.
  */
 fun <T1, T2> hoursBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongHours {
     return secondsBetween(start, endExclusive).inHours
 }
 
 /**
- * Get the number of whole minutes between two time points.
+ * Gets the number of whole minutes between two time points.
  */
 fun <T1, T2> minutesBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongMinutes {
     return secondsBetween(start, endExclusive).inMinutes
 }
 
 /**
- * Get the number of whole seconds between two time points.
+ * Gets the number of whole seconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongSeconds {
@@ -179,7 +176,7 @@ fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): 
 }
 
 /**
- * Get the number of whole milliseconds between two time points.
+ * Gets the number of whole milliseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> millisecondsBetween(
@@ -195,7 +192,7 @@ fun <T1, T2> millisecondsBetween(
 }
 
 /**
- * Get the number of whole microseconds between two time points.
+ * Gets the number of whole microseconds between two time points.
  *  @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> microsecondsBetween(
@@ -211,7 +208,7 @@ fun <T1, T2> microsecondsBetween(
 }
 
 /**
- * Get the number of nanoseconds between two time points.
+ * Gets the number of nanoseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
 fun <T1, T2> nanosecondsBetween(
