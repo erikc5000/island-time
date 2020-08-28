@@ -1,12 +1,10 @@
-@file:JvmName("Conversions")
+@file:JvmName("IslandTimeUtils")
 @file:JvmMultifileClass
-@file:Suppress("NewApi")
 
 package io.islandtime.jvm
 
 import io.islandtime.*
 import io.islandtime.base.*
-import io.islandtime.base.Temporal
 import io.islandtime.measures.seconds
 import java.time.chrono.IsoChronology
 import java.time.temporal.ChronoField

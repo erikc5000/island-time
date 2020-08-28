@@ -1,4 +1,5 @@
 @file:JvmName("IslandTimeUtils")
+@file:JvmMultifileClass
 
 package io.islandtime.jvm
 

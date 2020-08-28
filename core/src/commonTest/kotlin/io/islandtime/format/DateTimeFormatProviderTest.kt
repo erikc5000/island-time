@@ -1,7 +1,7 @@
 package io.islandtime.format
 
 import io.islandtime.*
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -10,9 +10,9 @@ import kotlin.test.assertTrue
 
 @Suppress("PrivatePropertyName")
 class DateTimeFormatProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeOf("en-US")
-    private val en_US_ca_japanese = localeOf("en-US-u-ca-japanese")
-    private val de_DE = localeOf("de-DE")
+    private val en_US = "en-US".toLocale()
+    private val en_US_ca_japanese = "en-US-u-ca-japanese".toLocale()
+    private val de_DE = "de-DE".toLocale()
 
     @Test
     fun `throws an exception when date and time style are both null`() {

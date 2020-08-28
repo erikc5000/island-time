@@ -2,12 +2,10 @@ package io.islandtime.format
 
 import io.islandtime.*
 import io.islandtime.base.Temporal
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.measures.hours
 import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
-import io.islandtime.operators.endOfMonth
-import io.islandtime.operators.startOfMonth
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeTextProvider
 import io.islandtime.test.FakeTimeZoneTextProvider
@@ -28,8 +26,8 @@ class DateTimePatternTest : AbstractIslandTimeTest(
             Time(13, 30, 1, 2_999_999) at
             TimeZone("America/New_York")
 
-    private val en_US_settings = TemporalFormatter.Settings(locale = localeOf("en-US"))
-    private val de_DE_settings = TemporalFormatter.Settings(locale = localeOf("de-DE"))
+    private val en_US_settings = TemporalFormatter.Settings(locale = "en-US".toLocale())
+    private val de_DE_settings = TemporalFormatter.Settings(locale = "de-DE".toLocale())
 
     @Test
     fun `parses empty patterns`() {
