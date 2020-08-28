@@ -1,12 +1,16 @@
 package io.islandtime.format
 
-import io.islandtime.*
+import io.islandtime.Date
+import io.islandtime.Time
+import io.islandtime.TimeZone
+import io.islandtime.at
 import io.islandtime.base.*
-import io.islandtime.locale.localeOf
-import io.islandtime.test.*
+import io.islandtime.test.AbstractIslandTimeTest
+import io.islandtime.test.FakeDateTimeFormatProvider
+import io.islandtime.test.FakeDateTimeTextProvider
+import io.islandtime.test.FakeTimeZoneTextProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 @Suppress("PrivatePropertyName")
 class DateTimeFormatterTest : AbstractIslandTimeTest(
@@ -16,25 +20,25 @@ class DateTimeFormatterTest : AbstractIslandTimeTest(
 ) {
     @Test
     fun `can model an iso format`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             year(4)
             +'-'
             monthNumber(2)
-            onlyIf({ it.has(DateProperty.DayOfMonth) }) {
+            onlyIf({ temporal.has(DateProperty.DayOfMonth) }) {
                 +'-'
                 dayOfMonth(2)
 
-                onlyIf({ it.has(TimeProperty.HourOfDay) }) {
+                onlyIf({ temporal.has(TimeProperty.HourOfDay) }) {
                     +'T'
                     hourOfDay(2)
-                    onlyIf({ it.has(TimeProperty.MinuteOfHour) }) {
+                    onlyIf({ temporal.has(TimeProperty.MinuteOfHour) }) {
                         +':'
                         minuteOfHour(2)
-                        onlyIf({ it.getOrElse(TimeProperty.SecondOfMinute) { 0L } != 0L }) {
+                        onlyIf({ temporal.getOrElse(TimeProperty.SecondOfMinute) { 0L } != 0L }) {
                             +':'
                             // FIXME: Change to fractionalSecondOfMinute()
                             secondOfMinute(2)
-                            onlyIf({ it.getOrElse(TimeProperty.NanosecondOfSecond) { 0L } != 0L }) {
+                            onlyIf({ temporal.getOrElse(TimeProperty.NanosecondOfSecond) { 0L } != 0L }) {
                                 +'.'
                                 nanosecondOfSecond(3)
                             }
@@ -42,11 +46,11 @@ class DateTimeFormatterTest : AbstractIslandTimeTest(
                     }
                 }
 
-                onlyIf({ it.has(UtcOffsetProperty.TotalSeconds) }) {
+                onlyIf({ temporal.has(UtcOffsetProperty.TotalSeconds) }) {
                     offset()
                 }
 
-                onlyIf({ it.getOrNull(TimeZoneProperty.TimeZone) is TimeZone.Region }) {
+                onlyIf({ temporal.getOrNull(TimeZoneProperty.TimeZone) is TimeZone.Region }) {
                     +'['
                     timeZoneId()
                     +']'

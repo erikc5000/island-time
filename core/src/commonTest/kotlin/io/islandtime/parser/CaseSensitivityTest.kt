@@ -8,7 +8,7 @@ import kotlin.test.assertTrue
 class CaseSensitivityTest {
     @Test
     fun `blocks can be made case sensitive regardless of parser setting`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +'T'
             caseSensitive {
                 +'T'
@@ -26,7 +26,7 @@ class CaseSensitivityTest {
 
     @Test
     fun `blocks can be made case insensitive regardless of parser setting`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +'T'
             caseInsensitive {
                 +'T'
@@ -43,7 +43,7 @@ class CaseSensitivityTest {
 
     @Test
     fun `nested case sensitivity blocks`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             caseInsensitive {
                 +"T"
                 caseSensitive {
@@ -61,7 +61,7 @@ class CaseSensitivityTest {
 
     @Test
     fun `empty blocks are allowed`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             caseSensitive {}
             caseInsensitive {}
         }

@@ -13,7 +13,7 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `by default, includes all present components in extended format`() {
-        val formatter = isoDateTimeFormatter()
+        val formatter = IsoDateTimeFormatter()
 
         assertEquals("2010", formatter.format(Year(zonedDateTime.year)))
         assertEquals("2010-09", formatter.format(zonedDateTime.toYearMonth()))
@@ -40,7 +40,7 @@ class IsoDateTimeFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format with all present components`() {
-        val formatter = isoDateTimeFormatter {
+        val formatter = IsoDateTimeFormatter {
             format = IsoFormat.BASIC
         }
 

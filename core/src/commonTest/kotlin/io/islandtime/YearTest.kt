@@ -4,7 +4,7 @@ import io.islandtime.ranges.DateRange
 import io.islandtime.measures.days
 import io.islandtime.measures.years
 import io.islandtime.parser.TemporalParseException
-import io.islandtime.parser.temporalParser
+import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.monthNumber
 import io.islandtime.parser.year
 import io.islandtime.test.AbstractIslandTimeTest
@@ -214,7 +214,7 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYear() throws an exception when the year is outside the supported range`() {
-        val customParser = temporalParser { year() }
+        val customParser = TemporalParser { year() }
 
         listOf(
             "${Year.MAX_VALUE + 1}",
@@ -250,7 +250,7 @@ class YearTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toYear() throws an exception when the parser fails to supply the YEAR field`() {
-        val customParser = temporalParser { monthNumber(2) }
+        val customParser = TemporalParser { monthNumber(2) }
         assertFailsWith<TemporalParseException> { "12".toYear(customParser) }
     }
 }

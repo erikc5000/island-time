@@ -13,35 +13,35 @@ class FractionFormatterTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when min length is greater than max`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 2..1) }
+            TemporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 2..1) }
         }
     }
 
     @Test
     fun `throws an exception when min length is less than 1`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { fraction(TimeProperty.NanosecondOfSecond, -1) }
+            TemporalFormatter { fraction(TimeProperty.NanosecondOfSecond, -1) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 0..9) }
+            TemporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 0..9) }
         }
     }
 
     @Test
     fun `throws an exception when max length is greater than 9`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 10) }
+            TemporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 10) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 1..10) }
+            TemporalFormatter { fraction(TimeProperty.NanosecondOfSecond, 1..10) }
         }
     }
 
     @Test
     fun `throws an exception when formatting a temporal with an out-of-range value`() {
-        val formatter = temporalFormatter { fraction(TimeProperty.MillisecondOfSecond, scale = 3) }
+        val formatter = TemporalFormatter { fraction(TimeProperty.MillisecondOfSecond, scale = 3) }
 
         assertFailsWith<DateTimeException> {
             formatter.format(temporalWith(TimeProperty.MillisecondOfSecond to -1_000L))
@@ -54,7 +54,7 @@ class FractionFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `formats fractions with variable length`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             fraction(TimeProperty.NanosecondOfSecond, 1..9)
         }
 

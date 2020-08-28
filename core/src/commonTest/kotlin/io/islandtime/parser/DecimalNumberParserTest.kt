@@ -11,53 +11,53 @@ class DecimalNumberParserTest {
     @Test
     fun `throws an exception if whole range is empty`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(wholeLength = IntRange.EMPTY) }
+            TemporalParser { decimalNumber(wholeLength = IntRange.EMPTY) }
         }
     }
 
     @Test
     fun `throws an exception if fraction range is empty`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(fractionLength = IntRange.EMPTY) }
+            TemporalParser { decimalNumber(fractionLength = IntRange.EMPTY) }
         }
     }
 
     @Test
     fun `throws an exception if whole range is outside of 0-19`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(wholeLength = -1..4) }
+            TemporalParser { decimalNumber(wholeLength = -1..4) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(wholeLength = 5..20) }
+            TemporalParser { decimalNumber(wholeLength = 5..20) }
         }
     }
 
     @Test
     fun `throws an exception if fraction range is outside of 0-9`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(fractionLength = -1..4) }
+            TemporalParser { decimalNumber(fractionLength = -1..4) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(fractionLength = 5..10) }
+            TemporalParser { decimalNumber(fractionLength = 5..10) }
         }
     }
 
     @Test
     fun `throws an exception if fraction scale is outside of 1-9`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(fractionScale = 0) }
+            TemporalParser { decimalNumber(fractionScale = 0) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { decimalNumber(fractionScale = 10) }
+            TemporalParser { decimalNumber(fractionScale = 10) }
         }
     }
 
     @Test
     fun `parses decimal numbers into two components`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             decimalNumber {
                 onParsed { whole, fraction ->
                     set(TimeProperty.SecondOfMinute, whole)
@@ -82,7 +82,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `allows decimal numbers with a zero length whole component`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             decimalNumber(0..19) {
                 onParsed { whole, fraction ->
                     set(TimeProperty.SecondOfMinute, whole)
@@ -102,7 +102,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `enforces whole length`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             decimalNumber(wholeLength = 2..3)
         }
 
@@ -118,7 +118,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `enforces fraction length`() {
-        val parser1 = temporalParser {
+        val parser1 = TemporalParser {
             decimalNumber(fractionLength = 1..3)
         }
 
@@ -134,7 +134,7 @@ class DecimalNumberParserTest {
             assertFailsWith<TemporalParseException> { parser1.parse(it) }
         }
 
-        val parser2 = temporalParser {
+        val parser2 = TemporalParser {
             decimalNumber(fractionLength = 2..4)
             +' '
         }
@@ -147,7 +147,7 @@ class DecimalNumberParserTest {
             assertFailsWith<TemporalParseException> { parser2.parse(it) }
         }
 
-        val parser3 = temporalParser {
+        val parser3 = TemporalParser {
             decimalNumber(fractionLength = 0..0)
             +' '
         }
@@ -158,7 +158,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `fractionScale controls the magnitude of the fractional part`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             decimalNumber(fractionScale = 3) {
                 onParsed { _, fraction -> set(TimeProperty.MillisecondOfSecond, fraction) }
             }
@@ -169,7 +169,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `reports an error when there are no characters to parse`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             decimalNumber()
         }
@@ -181,7 +181,7 @@ class DecimalNumberParserTest {
 
     @Test
     fun `reports an error if the whole and fractional parts are both absent`() {
-        val parser1 = temporalParser {
+        val parser1 = TemporalParser {
             decimalNumber(0..19) {
                 onParsed { whole, fraction ->
                     set(TimeProperty.SecondOfMinute, whole)
@@ -201,7 +201,7 @@ class DecimalNumberParserTest {
             assertEquals(it.length, exception.errorIndex)
         }
 
-        val parser2 = temporalParser {
+        val parser2 = TemporalParser {
             childParser(parser1)
             +' '
         }
@@ -220,14 +220,14 @@ class DecimalNumberParserTest {
 
     @Test
     fun `reports an error when a trailing decimal separator is found`() {
-        val parser = temporalParser { decimalNumber() }
+        val parser = TemporalParser { decimalNumber() }
         val exception = assertFailsWith<TemporalParseException> { parser.parse("-4.") }
         assertEquals(3, exception.errorIndex)
     }
 
     @Test
     fun `throws an exception on overflow`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             decimalNumber {
                 onParsed { whole, _ ->

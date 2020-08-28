@@ -63,8 +63,23 @@ sealed class DateProperty {
      *
      * In the ISO calendar system, this will be from 1 (`Monday`) to 7 (`Sunday`).
      */
-    object DayOfWeek : DateProperty(), NumberProperty {
+    object DayOfWeek : DateProperty(), DerivableNumberProperty {
         override val valueRange: LongRange = 1L..7L
+
+        override fun deriveValueFrom(temporal: Temporal): Long {
+            return temporal.get(Date).dayOfWeek.number.toLong()
+        }
+    }
+
+    /**
+     * The day of the week in the month, such as `2` if this is the 2nd Monday of the month.
+     */
+    object DayOfWeekInMonth : DateProperty(), DerivableNumberProperty {
+        override val valueRange: LongRange get() = 1L..7L
+
+        override fun deriveValueFrom(temporal: Temporal): Long {
+            return ((temporal.get(DayOfMonth) - 1) / 7) + 1
+        }
     }
 
     /**
@@ -78,6 +93,8 @@ sealed class DateProperty {
      * "open") in the context of an interval.
      */
     object IsFarFuture : DateProperty(), BooleanProperty
+
+    object Date : DateProperty(), ObjectProperty<io.islandtime.Date>
 }
 
 /**

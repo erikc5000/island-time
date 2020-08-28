@@ -45,7 +45,7 @@ class Date(
     ) : this(year, monthNumber.toMonth(), day)
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property is DateProperty
+        return property is DateProperty && property != DateProperty.DayOfWeekInMonth
     }
 
     override fun get(property: BooleanProperty): Boolean {
@@ -59,20 +59,23 @@ class Date(
     override fun get(property: NumberProperty): Long {
         return when (property) {
             DateProperty.DayOfUnixEpoch -> dayOfUnixEpoch
-            else -> getInt(property).toLong()
+            DateProperty.Year -> year.toLong()
+            DateProperty.YearOfEra -> (if (year >= 1) year else 1 - year).toLong()
+            DateProperty.MonthOfYear -> monthNumber.toLong()
+            DateProperty.DayOfWeek -> dayOfWeek.number.toLong()
+            DateProperty.DayOfMonth -> dayOfMonth.toLong()
+            DateProperty.DayOfYear -> dayOfYear.toLong()
+            DateProperty.Era -> (if (year >= 1) 1 else 0).toLong()
+            else -> super.get(property)
         }
     }
 
-    private fun getInt(property: NumberProperty): Int {
-        return when (property) {
-            DateProperty.Year -> year
-            DateProperty.YearOfEra -> if (year >= 1) year else 1 - year
-            DateProperty.MonthOfYear -> monthNumber
-            DateProperty.DayOfWeek -> dayOfWeek.number
-            DateProperty.DayOfMonth -> dayOfMonth
-            DateProperty.DayOfYear -> dayOfYear
-            DateProperty.Era -> if (year >= 1) 1 else 0
-            else -> throwUnsupportedTemporalPropertyException(property)
+    override fun <T> get(property: ObjectProperty<T>): T {
+        return if (property == DateProperty.Date) {
+            @Suppress("UNCHECKED_CAST")
+            this as T
+        } else {
+            super.get(property)
         }
     }
 
@@ -551,3 +554,5 @@ private fun checkValidDayOfYear(year: Int, dayOfYear: Int): Int {
     }
     return dayOfYear
 }
+
+val Date.dayOfWeekInMonth: Int get() = ((dayOfMonth - 1) / 7) + 1

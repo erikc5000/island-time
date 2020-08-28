@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class SignFormatterTest : AbstractIslandTimeTest() {
-    private val signFormatter = temporalFormatter { sign(UtcOffsetProperty.Sign) }
+    private val signFormatter = TemporalFormatter { sign(UtcOffsetProperty.Sign) }
 
     @Test
     fun `throws an exception when given an invalid property`() {

@@ -24,12 +24,12 @@ internal class CompositeFormatter(
 }
 
 internal class OnlyIfFormatter(
-    private val condition: (temporal: Temporal) -> Boolean,
+    private val condition: TemporalFormatter.Context.() -> Boolean,
     private val childFormatter: TemporalFormatter
 ) : TemporalFormatter() {
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        if (condition(context.temporal)) {
+        if (condition(context)) {
             childFormatter.format(context, stringBuilder)
         }
     }
@@ -62,12 +62,13 @@ internal class SignFormatter(private val property: NumberProperty) : TemporalFor
 }
 
 internal class WholeNumberFormatter(
-    private val property: NumberProperty,
+    private val propertyName: String,
+    private val value: Context.() -> Long,
     private val minLength: Int,
     private val maxLength: Int,
     private val signStyle: SignStyle,
     private val lengthExceededBehavior: LengthExceededBehavior,
-    private val transform: (Long) -> Long
+    private val valueTransform: (Long) -> Long
 ) : TemporalFormatter() {
 
     init {
@@ -77,7 +78,7 @@ internal class WholeNumberFormatter(
     }
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        val value = transform(context.temporal.get(property))
+        val value = valueTransform(value(context))
 
         val numberString = when (value) {
             Long.MIN_VALUE -> "9223372036854775808"
@@ -88,7 +89,7 @@ internal class WholeNumberFormatter(
             when (lengthExceededBehavior) {
                 LengthExceededBehavior.SIGN_STYLE_ALWAYS -> SignStyle.ALWAYS
                 LengthExceededBehavior.THROW -> throw DateTimeException(
-                    "The value '$value' of '$property' exceeds the maximum allowed length"
+                    "The value '$value' of '$propertyName' exceeds the maximum allowed length"
                 )
             }
         } else {
@@ -119,7 +120,7 @@ internal class WholeNumberFormatter(
             }
             SignStyle.NEVER -> if (value < 0) {
                 throw DateTimeException(
-                    "The value '$value' of '$property' cannot be negative according to the sign style"
+                    "The value '$value' of '$propertyName' cannot be negative according to the sign style"
                 )
             }
         }
@@ -242,8 +243,7 @@ internal class LocalizedDateTimeStyleFormatter(
     }
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
-        DateTimeFormatProvider.formatterFor(dateStyle, timeStyle, context.locale)
-            .format(context, stringBuilder)
+        DateTimeFormatProvider.formatterFor(dateStyle, timeStyle, context.locale).format(context, stringBuilder)
     }
 }
 

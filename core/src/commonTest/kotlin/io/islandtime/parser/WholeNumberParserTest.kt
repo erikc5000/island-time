@@ -12,17 +12,17 @@ class WholeNumberParserTest {
     @Test
     fun `fixed length parser throws an exception if length is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { wholeNumber(0) }
+            TemporalParser { wholeNumber(0) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { wholeNumber(20) }
+            TemporalParser { wholeNumber(20) }
         }
     }
 
     @Test
     fun `fixed length parser parses exact number of digits`() {
-        val dowParser = temporalParser {
+        val dowParser = TemporalParser {
             wholeNumber(1) {
                 associateWith(DateProperty.DayOfWeek)
             }
@@ -30,7 +30,7 @@ class WholeNumberParserTest {
 
         assertEquals(9, dowParser.parse("9")[DateProperty.DayOfWeek])
 
-        val dateParser = temporalParser {
+        val dateParser = TemporalParser {
             wholeNumber(3) {
                 associateWith(DateProperty.DayOfYear)
             }
@@ -46,7 +46,7 @@ class WholeNumberParserTest {
 
     @Test
     fun `fixed length parser doesn't enforce sign style by default`() {
-        val dowParser1 = temporalParser {
+        val dowParser1 = TemporalParser {
             wholeNumber(1) {
                 associateWith(DateProperty.DayOfWeek)
             }
@@ -54,7 +54,7 @@ class WholeNumberParserTest {
 
         assertEquals(9, dowParser1.parse("+9")[DateProperty.DayOfWeek])
 
-        val dowParser2 = temporalParser {
+        val dowParser2 = TemporalParser {
             wholeNumber(1) {
                 associateWith(DateProperty.DayOfWeek)
             }
@@ -65,13 +65,13 @@ class WholeNumberParserTest {
     @Test
     fun `enforces NEVER sign style`() {
         listOf(
-            temporalParser {
+            TemporalParser {
                 wholeNumber(1) {
                     associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEVER)
                 }
             },
-            temporalParser {
+            TemporalParser {
                 wholeNumber {
                     associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEVER)
@@ -86,13 +86,13 @@ class WholeNumberParserTest {
     @Test
     fun `enforces NEGATIVE_ONLY sign style`() {
         listOf(
-            temporalParser {
+            TemporalParser {
                 wholeNumber(1) {
                     associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEGATIVE_ONLY)
                 }
             },
-            temporalParser {
+            TemporalParser {
                 wholeNumber {
                     associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.NEGATIVE_ONLY)
@@ -108,13 +108,13 @@ class WholeNumberParserTest {
     @Test
     fun `enforces ALWAYS sign style`() {
         listOf(
-            temporalParser {
+            TemporalParser {
                 wholeNumber(1) {
                     associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.ALWAYS)
                 }
             },
-            temporalParser {
+            TemporalParser {
                 wholeNumber {
                     associateWith(DateProperty.DayOfWeek)
                     enforceSignStyle(SignStyle.ALWAYS)
@@ -130,24 +130,24 @@ class WholeNumberParserTest {
     @Test
     fun `variable length parser throws an exception if range is empty`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { wholeNumber(IntRange.EMPTY) }
+            TemporalParser { wholeNumber(IntRange.EMPTY) }
         }
     }
 
     @Test
     fun `variable length parser throws an exception if range is outside of 1-19`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { wholeNumber(0..4) }
+            TemporalParser { wholeNumber(0..4) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalParser { wholeNumber(5..20) }
+            TemporalParser { wholeNumber(5..20) }
         }
     }
 
     @Test
     fun `variable length parser parses digits within length`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             wholeNumber(1..3) {
                 associateWith(DateProperty.DayOfYear)
             }
@@ -156,7 +156,7 @@ class WholeNumberParserTest {
         assertEquals(4, parser.parse("4")[DateProperty.DayOfYear])
         assertEquals(400, parser.parse("400")[DateProperty.DayOfYear])
 
-        val parserWithLiteral = temporalParser {
+        val parserWithLiteral = TemporalParser {
             wholeNumber(1..3) {
                 associateWith(DateProperty.DayOfYear)
             }
@@ -169,7 +169,7 @@ class WholeNumberParserTest {
 
     @Test
     fun `variable length parser throws an exception if minimum number of digits can't be parsed`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             wholeNumber(2..3) {
                 associateWith(DateProperty.DayOfYear)
             }
@@ -182,7 +182,7 @@ class WholeNumberParserTest {
 
     @Test
     fun `variable length parser throws an exception if consecutive digits exceed the maximum`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             wholeNumber(2..3) {
                 associateWith(DateProperty.DayOfYear)
             }
@@ -198,10 +198,10 @@ class WholeNumberParserTest {
     @Test
     fun `reports an error when there are no characters to parse`() {
         listOf(
-            temporalParser {
+            TemporalParser {
                 +' '
                 wholeNumber(2)
-            }, temporalParser {
+            }, TemporalParser {
                 +' '
                 wholeNumber()
             }
@@ -215,12 +215,12 @@ class WholeNumberParserTest {
     @Test
     fun `throws an exception on overflow`() {
         val parsers = listOf(
-            temporalParser {
+            TemporalParser {
                 +' '
                 wholeNumber(19) {
                     onParsed { this[DurationProperty.Hours] = it }
                 }
-            }, temporalParser {
+            }, TemporalParser {
                 +' '
                 wholeNumber {
                     onParsed { this[DurationProperty.Hours] = it }

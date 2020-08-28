@@ -87,7 +87,7 @@ interface DateTimeTextProvider {
 }
 
 /**
- * An abstract date time text provider that supports the standard set of available properties.
+ * An abstract [DateTimeTextProvider] that supports the standard set of available properties.
  */
 abstract class AbstractDateTimeTextProvider : DateTimeTextProvider {
     override fun textFor(

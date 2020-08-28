@@ -19,5 +19,18 @@ inline class TemporalParseResult(
 
     inline operator fun <reified T> get(property: TemporalProperty<T>): T? = properties[property] as T?
 
+//    inline fun <reified T, R> replace(
+//        existingProperty: TemporalProperty<T>,
+//        newProperty: TemporalProperty<R>,
+//        valueTransform: (T) -> R
+//    ): Boolean {
+//        return if (existingProperty in properties) {
+//            val newValue = valueTransform(properties[existingProperty])
+//
+//        } else {
+//            false
+//        }
+//    }
+
     internal fun deepCopy() = TemporalParseResult(properties.toMutableMap())
 }

@@ -13,46 +13,49 @@ internal class IsoDateTimeFormatterBuilderImpl : IsoDateTimeFormatterBuilder {
         val format = format
         val timeDesignator = timeDesignator
 
-        return dateTimeFormatter {
-            onlyIf({ it.has(DateProperty.Year) }) {
+        return DateTimeFormatter {
+            onlyIfPresent(DateProperty.Year) {
                 year(4)
 
-                onlyIf({ it.has(DateProperty.MonthOfYear) }) {
-                    onlyIf({ format == IsoFormat.EXTENDED || !it.has(DateProperty.DayOfMonth) }) {
+                onlyIfPresent(DateProperty.MonthOfYear) {
+                    if (format == IsoFormat.EXTENDED) {
                         +'-'
+                    } else {
+                        onlyIfAbsent(DateProperty.DayOfMonth) { +'-' }
                     }
+
                     monthNumber(2)
 
-                    onlyIf({ it.has(DateProperty.DayOfMonth) }) {
+                    onlyIfPresent(DateProperty.DayOfMonth) {
                         if (format == IsoFormat.EXTENDED) +'-'
                         dayOfMonth(2)
                     }
                 }
 
-                onlyIf({ it.has(TimeProperty.HourOfDay) }) {
+                onlyIfPresent(TimeProperty.HourOfDay) {
                     timeDesignator.char?.let { +it }
                 }
             }
 
-            onlyIf({ it.has(TimeProperty.HourOfDay) }) {
+            onlyIfPresent(TimeProperty.HourOfDay) {
                 hourOfDay(2)
 
-                onlyIf({ it.has(TimeProperty.MinuteOfHour) }) {
+                onlyIfPresent(TimeProperty.MinuteOfHour) {
                     if (format == IsoFormat.EXTENDED) +':'
                     minuteOfHour(2)
 
-                    onlyIf({ it.getOrElse(TimeProperty.SecondOfMinute) { 0L } != 0L }) {
+                    onlyIfPresentAndNonZero(TimeProperty.SecondOfMinute) {
                         if (format == IsoFormat.EXTENDED) +':'
                         fractionalSecondOfMinute(2)
                     }
                 }
             }
 
-            onlyIf({ it.has(UtcOffsetProperty.TotalSeconds) }) {
+            onlyIfPresent(UtcOffsetProperty.TotalSeconds) {
                 offset(format = format)
             }
 
-            onlyIf({ it.getOrNull(TimeZoneProperty.TimeZone) is TimeZone.Region }) {
+            onlyIf({ temporal.getOrNull(TimeZoneProperty.TimeZone) is TimeZone.Region }) {
                 +'['
                 timeZoneId()
                 +']'
@@ -63,48 +66,48 @@ internal class IsoDateTimeFormatterBuilderImpl : IsoDateTimeFormatterBuilder {
 
 internal class IsoDurationFormatterBuilderImpl {
     fun build(): TemporalFormatter {
-        return temporalFormatter {
-            onlyIf({ it.get(DurationProperty.IsZero) }) {
+        return TemporalFormatter {
+            onlyIfTrue(DurationProperty.IsZero) {
                 +"PT0S"
             }
 
-            onlyIf({ !it.get(DurationProperty.IsZero) }) {
+            onlyIfFalse(DurationProperty.IsZero) {
                 +'P'
-                onlyIf({ it.getOrElse(DurationProperty.Years) { 0L } != 0L }) {
+                onlyIfPresentAndNonZero(DurationProperty.Years) {
                     wholeNumber(DurationProperty.Years)
                     +'Y'
                 }
-                onlyIf({ it.getOrElse(DurationProperty.Months) { 0L } != 0L }) {
+                onlyIfPresentAndNonZero(DurationProperty.Months) {
                     wholeNumber(DurationProperty.Months)
                     +'M'
                 }
-                onlyIf({ it.getOrElse(DurationProperty.Weeks) { 0L } != 0L }) {
+                onlyIfPresentAndNonZero(DurationProperty.Weeks) {
                     wholeNumber(DurationProperty.Weeks)
                     +'W'
                 }
-                onlyIf({ it.getOrElse(DurationProperty.Days) { 0L } != 0L }) {
+                onlyIfPresentAndNonZero(DurationProperty.Days) {
                     wholeNumber(DurationProperty.Days)
                     +'D'
                 }
                 onlyIf({
-                    it.getOrElse(DurationProperty.Hours) { 0L } != 0L ||
-                        it.getOrElse(DurationProperty.Minutes) { 0L } != 0L ||
-                        it.getOrElse(DurationProperty.Seconds) { 0L } != 0L ||
-                        it.getOrElse(DurationProperty.Nanoseconds) { 0L } != 0L
+                    temporal.getOrElse(DurationProperty.Hours) { 0L } != 0L ||
+                        temporal.getOrElse(DurationProperty.Minutes) { 0L } != 0L ||
+                        temporal.getOrElse(DurationProperty.Seconds) { 0L } != 0L ||
+                        temporal.getOrElse(DurationProperty.Nanoseconds) { 0L } != 0L
                 }) {
                     +'T'
                 }
-                onlyIf({ it.getOrElse(DurationProperty.Hours) { 0L } != 0L }) {
+                onlyIfPresentAndNonZero(DurationProperty.Hours) {
                     wholeNumber(DurationProperty.Hours)
                     +'H'
                 }
-                onlyIf({ it.getOrElse(DurationProperty.Minutes) { 0L } != 0L }) {
+                onlyIfPresentAndNonZero(DurationProperty.Minutes) {
                     wholeNumber(DurationProperty.Minutes)
                     +'M'
                 }
                 onlyIf({
-                    it.getOrElse(DurationProperty.Seconds) { 0L } != 0L ||
-                        it.getOrElse(DurationProperty.Nanoseconds) { 0L } != 0L
+                    temporal.getOrElse(DurationProperty.Seconds) { 0L } != 0L ||
+                        temporal.getOrElse(DurationProperty.Nanoseconds) { 0L } != 0L
                 }) {
                     decimalNumber(DurationProperty.Seconds, DurationProperty.Nanoseconds)
                     +'S'

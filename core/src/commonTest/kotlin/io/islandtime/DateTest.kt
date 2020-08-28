@@ -694,7 +694,7 @@ class DateTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDate() throws an exception when fields overflow`() {
-        val customParser = temporalParser {
+        val customParser = TemporalParser {
             year()
             +' '
             monthNumber()

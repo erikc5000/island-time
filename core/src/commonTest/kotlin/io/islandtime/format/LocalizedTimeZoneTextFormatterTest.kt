@@ -20,7 +20,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
 
     @Test
     fun `when no text is available, the zone ID is used`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             localizedTimeZoneText(TextStyle.SHORT, generic = true)
         }
 
@@ -38,7 +38,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
             TextStyle.FULL,
             TextStyle.FULL_STANDALONE
         ).forEach { style ->
-            val formatter = temporalFormatter {
+            val formatter = TemporalFormatter {
                 localizedTimeZoneText(style, generic = false)
             }
 
@@ -53,7 +53,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
             TextStyle.SHORT,
             TextStyle.SHORT_STANDALONE
         ).forEach { style ->
-            val formatter = temporalFormatter {
+            val formatter = TemporalFormatter {
                 localizedTimeZoneText(style, generic = false)
             }
 
@@ -68,7 +68,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
             TextStyle.FULL,
             TextStyle.FULL_STANDALONE
         ).forEach { style ->
-            val formatter = temporalFormatter {
+            val formatter = TemporalFormatter {
                 localizedTimeZoneText(style, generic = true)
             }
 
@@ -83,7 +83,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
             TextStyle.SHORT,
             TextStyle.SHORT_STANDALONE
         ).forEach {
-            val formatter = temporalFormatter {
+            val formatter = TemporalFormatter {
                 localizedTimeZoneText(it, generic = true)
             }
 
@@ -99,8 +99,8 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
             TextStyle.NARROW_STANDALONE
         ).forEach { style ->
             listOf(
-                temporalFormatter { localizedTimeZoneText(style, generic = false) },
-                temporalFormatter { localizedTimeZoneText(style, generic = true) }
+                TemporalFormatter { localizedTimeZoneText(style, generic = false) },
+                TemporalFormatter { localizedTimeZoneText(style, generic = true) }
             ).forEach { formatter ->
                 assertEquals("America/New_York", formatter.format(standardTimeDate))
                 assertEquals("America/New_York", formatter.format(daylightTimeDate))
@@ -110,7 +110,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
 
     @Test
     fun `uses generic name when specific and the temporal can't supply an instant`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             localizedTimeZoneText(TextStyle.FULL, generic = false)
         }
 

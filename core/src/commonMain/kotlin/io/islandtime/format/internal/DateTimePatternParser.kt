@@ -5,10 +5,7 @@ import io.islandtime.format.FormatOption
 import io.islandtime.format.IsoFormat
 import io.islandtime.format.TextStyle
 
-internal fun parseDateTimePatternTo(
-    builder: DateTimeFormatBuilder,
-    pattern: CharSequence
-): Unit = with(builder) {
+internal fun parseDateTimePatternTo(builder: DateTimeFormatBuilder, pattern: CharSequence): Unit = with(builder) {
     var position = 0
 
     while (position < pattern.length) {
@@ -70,8 +67,7 @@ private fun DateTimeFormatBuilder.parsePatternLetter(letter: Char, count: Int) {
         'L' -> parseStandaloneMonth(letter, count)
         'd' -> parseDayOfMonth(letter, count)
         'D' -> parseDayOfYear(letter, count)
-        // Not supported yet
-        // 'F' -> ALIGNED_DAY_OF_WEEK_IN_MONTH
+        'F' -> parseDayOfWeekInMonth(letter, count)
         'E' -> parseFormatDayOfWeekName(letter, count)
         'e' -> parseFormatDayOfWeekNumberOrName(letter, count)
         'c' -> parseStandaloneDayOfWeekNumberOrName(letter, count)
@@ -115,17 +111,17 @@ private fun DateTimeFormatBuilder.parseEra(letter: Char, count: Int) {
 private fun DateTimeFormatBuilder.parseYearOfEra(count: Int) {
     when (count) {
         2 -> twoDigitYearOfEra()
-        else -> yearOfEra(count)
+        else -> yearOfEra(minLength = count)
     }
 }
 
 private fun DateTimeFormatBuilder.parseYear(count: Int) {
-    year(count)
+    year(minLength = count)
 }
 
 private fun DateTimeFormatBuilder.parseFormatMonth(letter: Char, count: Int) {
     when (count) {
-        1, 2 -> monthNumber(count..2)
+        1, 2 -> monthNumber(minLength = count, maxLength = 2)
         3 -> monthName(TextStyle.SHORT)
         4 -> monthName(TextStyle.FULL)
         5 -> monthName(TextStyle.NARROW)
@@ -135,7 +131,7 @@ private fun DateTimeFormatBuilder.parseFormatMonth(letter: Char, count: Int) {
 
 private fun DateTimeFormatBuilder.parseStandaloneMonth(letter: Char, count: Int) {
     when (count) {
-        1, 2 -> monthNumber(count..2)
+        1, 2 -> monthNumber(minLength = count, maxLength = 2)
         3 -> monthName(TextStyle.SHORT_STANDALONE)
         4 -> monthName(TextStyle.FULL_STANDALONE)
         5 -> monthName(TextStyle.NARROW_STANDALONE)
@@ -151,6 +147,14 @@ private fun DateTimeFormatBuilder.parseDayOfYear(letter: Char, count: Int) {
     parseNumberPattern(letter, count, 3, ::dayOfYear)
 }
 
+private fun DateTimeFormatBuilder.parseDayOfWeekInMonth(letter: Char, count: Int) {
+    if (count == 1) {
+        dayOfWeekInMonth()
+    } else {
+        throwTooManyLettersException(letter)
+    }
+}
+
 private fun DateTimeFormatBuilder.parseFormatDayOfWeekName(letter: Char, count: Int) {
     when (count) {
         in 1..3 -> dayOfWeekName(TextStyle.SHORT)
@@ -162,7 +166,7 @@ private fun DateTimeFormatBuilder.parseFormatDayOfWeekName(letter: Char, count: 
 
 private fun DateTimeFormatBuilder.parseFormatDayOfWeekNumberOrName(letter: Char, count: Int) {
     when (count) {
-        1, 2 -> dayOfWeekNumber(count)
+        1, 2 -> localizedDayOfWeekNumber(length = count)
         3 -> dayOfWeekName(TextStyle.SHORT)
         4 -> dayOfWeekName(TextStyle.FULL)
         5 -> dayOfWeekName(TextStyle.NARROW)
@@ -172,7 +176,7 @@ private fun DateTimeFormatBuilder.parseFormatDayOfWeekNumberOrName(letter: Char,
 
 private fun DateTimeFormatBuilder.parseStandaloneDayOfWeekNumberOrName(letter: Char, count: Int) {
     when (count) {
-        1, 2 -> dayOfWeekNumber(1)
+        1, 2 -> localizedDayOfWeekNumber(length = 1)
         3 -> dayOfWeekName(TextStyle.SHORT_STANDALONE)
         4 -> dayOfWeekName(TextStyle.FULL_STANDALONE)
         5 -> dayOfWeekName(TextStyle.NARROW_STANDALONE)
@@ -213,11 +217,11 @@ private fun DateTimeFormatBuilder.parseSecondOfMinute(letter: Char, count: Int) 
 }
 
 private fun DateTimeFormatBuilder.parseFractionalSecond(count: Int) {
-    nanosecondOfSecond(count)
+    nanosecondOfSecond(minLength = count, maxLength = count)
 }
 
 private fun DateTimeFormatBuilder.parseMillisecondOfDay(count: Int) {
-    millisecondOfDay(count)
+    millisecondOfDay(minLength = count)
 }
 
 private fun DateTimeFormatBuilder.parseSpecificNonLocationTimeZone(letter: Char, count: Int) {

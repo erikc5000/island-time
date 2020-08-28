@@ -32,7 +32,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `default output matches UtcOffset_toString()`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset()
         }
 
@@ -44,19 +44,19 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
     @Test
     fun `minutes = never causes an exception`() {
         assertFailsWith<IllegalArgumentException> {
-            dateTimeFormatter {
+            DateTimeFormatter {
                 offset(minutes = FormatOption.NEVER)
             }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            dateTimeFormatter {
+            DateTimeFormatter {
                 offset(format = IsoFormat.BASIC, minutes = FormatOption.NEVER)
             }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            dateTimeFormatter {
+            DateTimeFormatter {
                 offset(minutes = FormatOption.NEVER, seconds = FormatOption.ALWAYS)
             }
         }
@@ -64,7 +64,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `throws an exception when the temporal can't supply the offset's total seconds`() {
-        val formatter = dateTimeFormatter { offset() }
+        val formatter = DateTimeFormatter { offset() }
         assertFailsWith<TemporalPropertyException> { formatter.format(Year(2020)) }
     }
 
@@ -74,13 +74,13 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
             UtcOffsetProperty.TotalSeconds to Long.MAX_VALUE
         )
 
-        val formatter = dateTimeFormatter { offset() }
+        val formatter = DateTimeFormatter { offset() }
         assertFailsWith<ArithmeticException> { formatter.format(intOverflowInducingTemporal) }
     }
 
     @Test
     fun `throws an exception when the offset is invalid`() {
-        val formatter = dateTimeFormatter { offset() }
+        val formatter = DateTimeFormatter { offset() }
 
         assertFailsWith<DateTimeException> {
             formatter.format(UtcOffset(UtcOffset.MAX_TOTAL_SECONDS + 1.seconds))
@@ -89,7 +89,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `extended format, utc designator turned off`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(useUtcDesignatorWhenZero = false)
         }
 
@@ -106,7 +106,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `extended format, seconds = never`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(seconds = FormatOption.NEVER)
         }
 
@@ -131,7 +131,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `extended format, seconds = always`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(seconds = FormatOption.ALWAYS)
         }
 
@@ -156,7 +156,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `extended format, seconds = always, utc designator turned off`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(useUtcDesignatorWhenZero = false, seconds = FormatOption.ALWAYS)
         }
 
@@ -181,7 +181,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(format = IsoFormat.BASIC)
         }
 
@@ -206,7 +206,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format, utc designator turned off`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(format = IsoFormat.BASIC, useUtcDesignatorWhenZero = false)
         }
 
@@ -223,7 +223,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format, minutes = optional`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(format = IsoFormat.BASIC, minutes = FormatOption.OPTIONAL)
         }
 
@@ -248,7 +248,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format, seconds = never`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(format = IsoFormat.BASIC, seconds = FormatOption.NEVER)
         }
 
@@ -273,7 +273,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format, seconds = always`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(format = IsoFormat.BASIC, seconds = FormatOption.ALWAYS)
         }
 
@@ -298,7 +298,7 @@ class UtcOffsetFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `basic format, seconds = always, utc designator turned off`() {
-        val formatter = dateTimeFormatter {
+        val formatter = DateTimeFormatter {
             offset(
                 format = IsoFormat.BASIC,
                 useUtcDesignatorWhenZero = false,

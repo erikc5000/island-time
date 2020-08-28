@@ -12,7 +12,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when min whole length is greater than max`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -25,7 +25,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when min whole length is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -35,7 +35,7 @@ class DecimalNumberFormatterTest {
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -48,7 +48,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when max whole length is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -58,7 +58,7 @@ class DecimalNumberFormatterTest {
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -72,7 +72,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when min fraction length is greater than max`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -85,7 +85,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when min fraction length is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -95,7 +95,7 @@ class DecimalNumberFormatterTest {
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -108,7 +108,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when max fraction length is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -118,7 +118,7 @@ class DecimalNumberFormatterTest {
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -131,7 +131,7 @@ class DecimalNumberFormatterTest {
     @Test
     fun `throws an exception when the fraction scale is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -141,7 +141,7 @@ class DecimalNumberFormatterTest {
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter {
+            TemporalFormatter {
                 decimalNumber(
                     TimeProperty.SecondOfMinute,
                     TimeProperty.NanosecondOfSecond,
@@ -153,7 +153,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `throws an exception when formatting a temporal with an out-of-range fraction value`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(
                 TimeProperty.SecondOfMinute,
                 TimeProperty.MillisecondOfSecond,
@@ -182,7 +182,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `formats whole numbers with variable length`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(TimeProperty.SecondOfMinute, TimeProperty.NanosecondOfSecond)
         }
 
@@ -218,7 +218,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `pads whole numbers as needed to satisfy the minimum length`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(
                 TimeProperty.SecondOfMinute,
                 TimeProperty.NanosecondOfSecond,
@@ -254,7 +254,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `throws an exception when the whole number's max length is exceeded`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(
                 TimeProperty.SecondOfMinute,
                 TimeProperty.NanosecondOfSecond,
@@ -283,7 +283,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `formats fractions with variable length`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(TimeProperty.SecondOfMinute, TimeProperty.NanosecondOfSecond)
         }
 
@@ -319,7 +319,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `adds zero to the end of fractions to satisfy min length`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(
                 TimeProperty.SecondOfMinute,
                 TimeProperty.NanosecondOfSecond,
@@ -359,7 +359,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `min whole length can be zero`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(
                 TimeProperty.SecondOfMinute,
                 TimeProperty.NanosecondOfSecond,
@@ -387,7 +387,7 @@ class DecimalNumberFormatterTest {
 
     @Test
     fun `max fraction length can be zero`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             decimalNumber(
                 TimeProperty.SecondOfMinute,
                 TimeProperty.NanosecondOfSecond,

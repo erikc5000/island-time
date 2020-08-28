@@ -6,6 +6,8 @@ import io.islandtime.locale.localeOf
 import io.islandtime.measures.hours
 import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
+import io.islandtime.operators.endOfMonth
+import io.islandtime.operators.startOfMonth
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeTextProvider
 import io.islandtime.test.FakeTimeZoneTextProvider
@@ -27,6 +29,7 @@ class DateTimePatternTest : AbstractIslandTimeTest(
             TimeZone("America/New_York")
 
     private val en_US_settings = TemporalFormatter.Settings(locale = localeOf("en-US"))
+    private val de_DE_settings = TemporalFormatter.Settings(locale = localeOf("de-DE"))
 
     @Test
     fun `parses empty patterns`() {
@@ -241,6 +244,28 @@ class DateTimePatternTest : AbstractIslandTimeTest(
     }
 
     @Test
+    fun `formats day of week in month correctly`() {
+        assertEquals("1", DateTimeFormatter("F").format(zonedDateTime.startOfMonth, en_US_settings))
+        assertEquals("5", DateTimeFormatter("F").format(zonedDateTime.endOfMonth, en_US_settings))
+        assertEquals("3", DateTimeFormatter("F").format(zonedDateTime, en_US_settings))
+    }
+
+    @Test
+    fun `throws an exception when day of week in month letter count is invalid`() {
+        listOf(
+            "FF",
+            "FFF",
+            "FFFF",
+            "FFFFF",
+            "FFFFFF"
+        ).forEach { pattern ->
+            assertFailsWith<IllegalArgumentException>(pattern) {
+                DateTimeFormatter(pattern).format(zonedDateTime, en_US_settings)
+            }
+        }
+    }
+
+    @Test
     fun `formats format day of week name correctly`() {
         listOf(
             "E" to "Sun (SHORT)",
@@ -261,7 +286,20 @@ class DateTimePatternTest : AbstractIslandTimeTest(
     }
 
     @Test
-    fun `formats format day of week name or number correctly`() {
+    fun `formats format day of week name or number correctly in en_US locale`() {
+        listOf(
+            "e" to "1",
+            "ee" to "01",
+            "eee" to "Sun (SHORT)",
+            "eeee" to "Sunday (FULL)",
+            "eeeee" to "S (NARROW)"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `formats format day of week name or number correctly in de_DE locale`() {
         listOf(
             "e" to "7",
             "ee" to "07",
@@ -269,7 +307,7 @@ class DateTimePatternTest : AbstractIslandTimeTest(
             "eeee" to "Sunday (FULL)",
             "eeeee" to "S (NARROW)"
         ).forEach { (pattern, result) ->
-            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, en_US_settings))
+            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, de_DE_settings))
         }
     }
 
@@ -281,7 +319,20 @@ class DateTimePatternTest : AbstractIslandTimeTest(
     }
 
     @Test
-    fun `formats standalone day of week name or number correctly`() {
+    fun `formats standalone day of week name or number correctly in en_US locale`() {
+        listOf(
+            "c" to "1",
+            "cc" to "1",
+            "ccc" to "Sun (SHORT_STANDALONE)",
+            "cccc" to "Sunday (FULL_STANDALONE)",
+            "ccccc" to "S (NARROW_STANDALONE)"
+        ).forEach { (pattern, result) ->
+            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, en_US_settings))
+        }
+    }
+
+    @Test
+    fun `formats standalone day of week name or number correctly in de_DE locale`() {
         listOf(
             "c" to "7",
             "cc" to "7",
@@ -289,7 +340,7 @@ class DateTimePatternTest : AbstractIslandTimeTest(
             "cccc" to "Sunday (FULL_STANDALONE)",
             "ccccc" to "S (NARROW_STANDALONE)"
         ).forEach { (pattern, result) ->
-            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, en_US_settings))
+            assertEquals(result, DateTimeFormatter(pattern).format(zonedDateTime, de_DE_settings))
         }
     }
 

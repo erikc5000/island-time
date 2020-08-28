@@ -16,7 +16,7 @@ import io.islandtime.parser.*
  * @throws DateTimeException if the time is invalid
  */
 class Time(
-    /** The hour of the day. */
+    /** The hour of the day, from 0-23. */
     val hour: Int,
     /** The minute of the hour. */
     val minute: Int,
@@ -73,6 +73,30 @@ class Time(
      */
     inline val nanosecondsSinceStartOfDay: LongNanoseconds
         get() = nanosecondOfDay.nanoseconds
+
+    /**
+     * The AM or PM of the day.
+     */
+    val amPm: AmPm get() = AmPm.values()[hour / 12]
+
+    /**
+     * The hour of AM-PM, from 0-11.
+     */
+    val hourOfAmPm: Int get() = hour % 12
+
+    /**
+     * The clock hour of the day, from 1-24.
+     */
+    val clockHour: Int get() = if (hour == 0) 24 else hour
+
+    /**
+     * The clock hour of AM-PM, from 1-12.
+     */
+    val clockHourOfAmPm: Int
+        get() {
+            val hourOfAmPm = hourOfAmPm
+            return if (hourOfAmPm == 0) 12 else hourOfAmPm
+        }
 
     operator fun plus(duration: Duration): Time {
         return this + duration.seconds + duration.nanosecondAdjustment
@@ -202,14 +226,11 @@ class Time(
 
     private fun getInt(property: NumberProperty): Int {
         return when (property) {
-            TimeProperty.AmPmOfDay -> hour / 12
+            TimeProperty.AmPmOfDay -> amPm.ordinal
             TimeProperty.HourOfDay -> hour
-            TimeProperty.HourOfAmPm -> hour % 12
-            TimeProperty.ClockHourOfDay -> if (hour == 0) 24 else hour
-            TimeProperty.ClockHourOfAmPm -> {
-                val hourOfAmPm = hour % 12
-                if (hourOfAmPm == 0) 12 else hourOfAmPm
-            }
+            TimeProperty.HourOfAmPm -> hourOfAmPm
+            TimeProperty.ClockHourOfDay -> clockHour
+            TimeProperty.ClockHourOfAmPm -> clockHourOfAmPm
             TimeProperty.MinuteOfHour -> minute
             TimeProperty.SecondOfDay -> secondOfDay
             TimeProperty.SecondOfMinute -> second

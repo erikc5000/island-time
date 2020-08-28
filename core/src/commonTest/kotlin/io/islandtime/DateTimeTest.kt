@@ -3,7 +3,7 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.temporalParser
+import io.islandtime.parser.TemporalParser
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -938,7 +938,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDateTime() parses valid ISO-8601 ordinal date strings with custom parser`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             anyOf({
                 childParser(DateTimeParsers.Iso.Basic.DATE)
                 anyOf({ +'T' }, { +' ' })

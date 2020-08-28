@@ -1,9 +1,9 @@
 package io.islandtime.format.internal
 
 import io.islandtime.base.DateProperty
-import io.islandtime.base.Temporal
 import io.islandtime.base.TimeProperty
 import io.islandtime.base.TimeZoneProperty
+import io.islandtime.calendar.WeekProperty
 import io.islandtime.format.*
 
 @PublishedApi
@@ -23,19 +23,13 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
     }
 
     override fun onlyIf(
-        predicate: (temporal: Temporal) -> Boolean,
+        predicate: TemporalFormatter.Context.() -> Boolean,
         builder: DateTimeFormatterBuilder.() -> Unit
     ) {
         val child = DateTimeFormatterBuilderImpl().apply(builder).build()
 
         if (child != EmptyFormatter) {
             use(OnlyIfFormatter(predicate, child))
-        }
-    }
-
-    override fun pattern(pattern: String) {
-        if (pattern.isNotEmpty()) {
-            parseDateTimePatternTo(this, pattern)
         }
     }
 
@@ -70,7 +64,7 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
     override fun twoDigitYearOfEra() {
         temporalFormatterBuilder.wholeNumber(DateProperty.YearOfEra, 2) {
             signStyle = SignStyle.NEVER
-            mapValue { it % 100 }
+            valueTransform = { it % 100 }
         }
     }
 
@@ -103,14 +97,25 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
     }
 
     override fun dayOfWeekNumber(length: Int) {
-        // FIXME: Use localized day of week number?
         temporalFormatterBuilder.wholeNumber(DateProperty.DayOfWeek, length) {
+            signStyle = SignStyle.NEVER
+        }
+    }
+
+    override fun localizedDayOfWeekNumber(length: Int) {
+        temporalFormatterBuilder.wholeNumber(WeekProperty.LocalizedDayOfWeek, length) {
             signStyle = SignStyle.NEVER
         }
     }
 
     override fun dayOfWeekName(style: TextStyle) {
         temporalFormatterBuilder.localizedDateTimeText(DateProperty.DayOfWeek, style)
+    }
+
+    override fun dayOfWeekInMonth() {
+        temporalFormatterBuilder.wholeNumber(DateProperty.DayOfWeekInMonth, minLength = 1, maxLength = 1) {
+            signStyle = SignStyle.NEVER
+        }
     }
 
     override fun amPm() {
@@ -153,12 +158,19 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
         }
     }
 
-    override fun fractionalSecondOfMinute(wholeLength: IntRange, fractionLength: IntRange) {
+    override fun fractionalSecondOfMinute(
+        minWholeLength: Int,
+        maxWholeLength: Int,
+        minFractionLength: Int,
+        maxFractionLength: Int
+    ) {
         temporalFormatterBuilder.decimalNumber(
             TimeProperty.SecondOfMinute,
             TimeProperty.NanosecondOfSecond,
-            wholeLength,
-            fractionLength
+            minWholeLength,
+            maxWholeLength,
+            minFractionLength,
+            maxFractionLength
         )
     }
 
@@ -168,8 +180,8 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
         }
     }
 
-    override fun nanosecondOfSecond(fractionLength: IntRange) {
-        temporalFormatterBuilder.fraction(TimeProperty.NanosecondOfSecond, fractionLength)
+    override fun nanosecondOfSecond(minLength: Int, maxLength: Int) {
+        temporalFormatterBuilder.fraction(TimeProperty.NanosecondOfSecond, minLength, maxLength)
     }
 
     override fun offset(
@@ -178,14 +190,7 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
         minutes: FormatOption,
         seconds: FormatOption
     ) {
-        use(
-            UtcOffsetFormatter(
-                format,
-                useUtcDesignatorWhenZero,
-                minutes,
-                seconds
-            )
-        )
+        use(UtcOffsetFormatter(format, useUtcDesignatorWhenZero, minutes, seconds))
     }
 
     override fun localizedOffset(style: TextStyle) {

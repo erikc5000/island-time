@@ -14,35 +14,35 @@ object DateTimeParsers {
         /**
          * Parse ISO-8601 calendar dates in either basic or extended format.
          */
-        val CALENDAR_DATE = temporalParser {
+        val CALENDAR_DATE = TemporalParser {
             anyOf(Extended.CALENDAR_DATE, Basic.CALENDAR_DATE)
         }
 
         /**
          * Parse ISO-8601 ordinal dates in either basic or extended format.
          */
-        val ORDINAL_DATE = temporalParser {
+        val ORDINAL_DATE = TemporalParser {
             anyOf(Extended.ORDINAL_DATE, Basic.ORDINAL_DATE)
         }
 
         /**
          * Parse ISO-8601 calendar or ordinal dates in either basic or extended format.
          */
-        val DATE = temporalParser {
+        val DATE = TemporalParser {
             anyOf(CALENDAR_DATE, ORDINAL_DATE)
         }
 
         /**
          * Parse an ISO-8601 time of day in either basic or extended format.
          */
-        val TIME = temporalParser {
+        val TIME = TemporalParser {
             anyOf(Extended.TIME, Basic.TIME)
         }
 
         /**
          * Parse an ISO-8601 UTC offset in either basic or extended format.
          */
-        val UTC_OFFSET = temporalParser {
+        val UTC_OFFSET = TemporalParser {
             anyOf({
                 utcDesignator()
             }, {
@@ -79,14 +79,14 @@ object DateTimeParsers {
         /**
          * Parse an ISO-8601 date and time of day in either basic or extended format.
          */
-        val DATE_TIME = temporalParser {
+        val DATE_TIME = TemporalParser {
             anyOf(Extended.DATE_TIME, Basic.DATE_TIME)
         }
 
         /**
          * Parse an ISO-8601 time of day and UTC offset in either basic or extended format.
          */
-        val OFFSET_TIME = temporalParser {
+        val OFFSET_TIME = TemporalParser {
             anyOf(Extended.OFFSET_TIME, Basic.OFFSET_TIME)
         }
 
@@ -98,7 +98,7 @@ object DateTimeParsers {
          * - `2008-09-01 18:30:00Z`
          * - `20080901 1830-04`
          */
-        val OFFSET_DATE_TIME = temporalParser {
+        val OFFSET_DATE_TIME = TemporalParser {
             anyOf(Extended.OFFSET_DATE_TIME, Basic.OFFSET_DATE_TIME)
         }
 
@@ -111,7 +111,7 @@ object DateTimeParsers {
          * - `2008-09-01 18:30:00Z`
          * - `20080901 1830-04[America/New_York]`
          */
-        val ZONED_DATE_TIME = temporalParser {
+        val ZONED_DATE_TIME = TemporalParser {
             anyOf(Extended.ZONED_DATE_TIME, Basic.ZONED_DATE_TIME)
         }
 
@@ -123,7 +123,7 @@ object DateTimeParsers {
          * - `2001-05-10T00:24Z`
          * - `20010510 0024Z`
          */
-        val INSTANT = temporalParser {
+        val INSTANT = TemporalParser {
             anyOf(Extended.INSTANT, Basic.INSTANT)
         }
 
@@ -133,7 +133,7 @@ object DateTimeParsers {
          * Example:
          * - `2008-09`
          */
-        val YEAR_MONTH = temporalParser {
+        val YEAR_MONTH = TemporalParser {
             childParser(ISO_EXPANDED_YEAR_COMPONENT)
             +'-'
             childParser(ISO_MONTH_COMPONENT)
@@ -151,7 +151,7 @@ object DateTimeParsers {
          * - `+0123456789`
          * - `Y12345`
          */
-        val YEAR = temporalParser {
+        val YEAR = TemporalParser {
             anyOf({
                 childParser(ISO_EXPANDED_YEAR_COMPONENT)
             }, {
@@ -169,7 +169,7 @@ object DateTimeParsers {
          * - `P5M-15D`
          * - `P0D`
          */
-        val PERIOD = temporalParser {
+        val PERIOD = TemporalParser {
             optional { periodSign() }
             +'P'
             optional {
@@ -199,7 +199,7 @@ object DateTimeParsers {
          * - `PT0S`
          * - `-PT1S`
          */
-        val DURATION = temporalParser {
+        val DURATION = TemporalParser {
             optional { periodSign() }
             +'P'
             optional {
@@ -254,18 +254,18 @@ object DateTimeParsers {
         }
 
         object Basic {
-            val CALENDAR_DATE = temporalParser {
+            val CALENDAR_DATE = TemporalParser {
                 childParser(ISO_STANDARD_YEAR_COMPONENT)
                 childParser(ISO_MONTH_COMPONENT)
                 childParser(ISO_DAY_OF_MONTH_COMPONENT)
             }
 
-            val ORDINAL_DATE = temporalParser {
+            val ORDINAL_DATE = TemporalParser {
                 childParser(ISO_STANDARD_YEAR_COMPONENT)
                 childParser(ISO_DAY_OF_YEAR_COMPONENT)
             }
 
-            val DATE = temporalParser {
+            val DATE = TemporalParser {
                 childParser(ISO_STANDARD_YEAR_COMPONENT)
                 anyOf({
                     childParser(ISO_MONTH_COMPONENT)
@@ -275,7 +275,7 @@ object DateTimeParsers {
                 })
             }
 
-            val TIME = temporalParser {
+            val TIME = TemporalParser {
                 hourOfDay(2) {
                     enforceSignStyle(SignStyle.NEVER)
                 }
@@ -291,7 +291,7 @@ object DateTimeParsers {
                 }
             }
 
-            val UTC_OFFSET = temporalParser {
+            val UTC_OFFSET = TemporalParser {
                 anyOf({
                     utcDesignator()
                 }, {
@@ -320,13 +320,13 @@ object DateTimeParsers {
              * - `20080901 183000`
              * - `20080901 1830`
              */
-            val DATE_TIME = temporalParser {
+            val DATE_TIME = TemporalParser {
                 childParser(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
                 childParser(TIME)
             }
 
-            val OFFSET_TIME = temporalParser {
+            val OFFSET_TIME = TemporalParser {
                 childParser(TIME)
                 childParser(UTC_OFFSET)
             }
@@ -339,7 +339,7 @@ object DateTimeParsers {
              * - `20080901 183000Z`
              * - `20080901 1830-04`
              */
-            val OFFSET_DATE_TIME = temporalParser {
+            val OFFSET_DATE_TIME = TemporalParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
             }
@@ -353,7 +353,7 @@ object DateTimeParsers {
              * - `20080901 183000Z`
              * - `20080901 1830-04[America/New_York]`
              */
-            val ZONED_DATE_TIME = temporalParser {
+            val ZONED_DATE_TIME = TemporalParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
                 optional {
@@ -371,7 +371,7 @@ object DateTimeParsers {
              * - `20010510T0024Z`
              * - `20010510 0024Z`
              */
-            val INSTANT = temporalParser {
+            val INSTANT = TemporalParser {
                 childParser(DATE_TIME)
                 utcDesignator()
             }
@@ -395,7 +395,7 @@ object DateTimeParsers {
         }
 
         object Extended {
-            val CALENDAR_DATE = temporalParser {
+            val CALENDAR_DATE = TemporalParser {
                 childParser(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
                 childParser(ISO_MONTH_COMPONENT)
@@ -403,13 +403,13 @@ object DateTimeParsers {
                 childParser(ISO_DAY_OF_MONTH_COMPONENT)
             }
 
-            val ORDINAL_DATE = temporalParser {
+            val ORDINAL_DATE = TemporalParser {
                 childParser(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
                 childParser(ISO_DAY_OF_YEAR_COMPONENT)
             }
 
-            val DATE = temporalParser {
+            val DATE = TemporalParser {
                 childParser(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
                 anyOf({
@@ -421,7 +421,7 @@ object DateTimeParsers {
                 })
             }
 
-            val TIME = temporalParser {
+            val TIME = TemporalParser {
                 hourOfDay(2) {
                     enforceSignStyle(SignStyle.NEVER)
                 }
@@ -439,7 +439,7 @@ object DateTimeParsers {
                 }
             }
 
-            val UTC_OFFSET = temporalParser {
+            val UTC_OFFSET = TemporalParser {
                 anyOf({
                     utcDesignator()
                 }, {
@@ -470,13 +470,13 @@ object DateTimeParsers {
              * - `2008-09-01 18:30:00`
              * - `2008-09-01 18:30`
              */
-            val DATE_TIME = temporalParser {
+            val DATE_TIME = TemporalParser {
                 childParser(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
                 childParser(TIME)
             }
 
-            val OFFSET_TIME = temporalParser {
+            val OFFSET_TIME = TemporalParser {
                 childParser(TIME)
                 childParser(UTC_OFFSET)
             }
@@ -489,7 +489,7 @@ object DateTimeParsers {
              * - `2008-09-01 18:30:00Z`
              * - `2008-09-01 18:30-04`
              */
-            val OFFSET_DATE_TIME = temporalParser {
+            val OFFSET_DATE_TIME = TemporalParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
             }
@@ -502,7 +502,7 @@ object DateTimeParsers {
              * - `2008-09-01T18:30-4:00[America/New_York]`
              * - `2008-09-01 18:30:00Z`
              */
-            val ZONED_DATE_TIME = temporalParser {
+            val ZONED_DATE_TIME = TemporalParser {
                 childParser(DATE_TIME)
                 childParser(UTC_OFFSET)
                 optional {
@@ -519,7 +519,7 @@ object DateTimeParsers {
              * - `2001-05-10T00:24:00.00000Z`
              * - `2001-05-10T00:24Z`
              */
-            val INSTANT = temporalParser {
+            val INSTANT = TemporalParser {
                 childParser(DATE_TIME)
                 utcDesignator()
             }
@@ -544,13 +544,13 @@ object DateTimeParsers {
     }
 }
 
-private val ISO_STANDARD_YEAR_COMPONENT = temporalParser {
+private val ISO_STANDARD_YEAR_COMPONENT = TemporalParser {
     year(4) {
         enforceSignStyle(SignStyle.NEGATIVE_ONLY)
     }
 }
 
-private val ISO_EXPANDED_YEAR_COMPONENT = temporalParser {
+private val ISO_EXPANDED_YEAR_COMPONENT = TemporalParser {
     anyOf({
         // Expanded representation requiring sign
         year(5..10) { enforceSignStyle(SignStyle.ALWAYS) }
@@ -560,19 +560,19 @@ private val ISO_EXPANDED_YEAR_COMPONENT = temporalParser {
     })
 }
 
-private val ISO_MONTH_COMPONENT = temporalParser {
+private val ISO_MONTH_COMPONENT = TemporalParser {
     monthNumber(2) {
         enforceSignStyle(SignStyle.NEVER)
     }
 }
 
-private val ISO_DAY_OF_MONTH_COMPONENT = temporalParser {
+private val ISO_DAY_OF_MONTH_COMPONENT = TemporalParser {
     dayOfMonth(2) {
         enforceSignStyle(SignStyle.NEVER)
     }
 }
 
-private val ISO_DAY_OF_YEAR_COMPONENT = temporalParser {
+private val ISO_DAY_OF_YEAR_COMPONENT = TemporalParser {
     dayOfYear(3) {
         enforceSignStyle(SignStyle.NEVER)
     }

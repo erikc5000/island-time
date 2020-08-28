@@ -35,6 +35,18 @@ interface ObjectProperty<T> : TemporalProperty<T>
  */
 typealias StringProperty = ObjectProperty<String>
 
+interface DerivableNumberProperty : NumberProperty {
+    fun deriveValueFrom(temporal: Temporal): Long
+}
+
+interface ContextualNumberProperty<Context> : NumberProperty {
+    fun Context.getValueFrom(temporal: Temporal): Long {
+        return temporal.getOrElse(this@ContextualNumberProperty) { deriveValueFrom(temporal) }
+    }
+
+    fun Context.deriveValueFrom(temporal: Temporal): Long
+}
+
 class TemporalPropertyException(
     message: String? = null,
     cause: Throwable? = null
@@ -50,7 +62,7 @@ interface Temporal {
     fun has(property: TemporalProperty<*>): Boolean = false
 
     /**
-     * Get the value of [property].
+     * Gets the value of [property].
      * @throws TemporalPropertyException if the property isn't available
      */
     fun get(property: BooleanProperty): Boolean {
@@ -58,15 +70,19 @@ interface Temporal {
     }
 
     /**
-     * Get the value of [property].
+     * Gets the value of [property].
      * @throws TemporalPropertyException if the property isn't available
      */
     fun get(property: NumberProperty): Long {
-        throwUnsupportedTemporalPropertyException(property)
+        return if (property is DerivableNumberProperty) {
+            property.deriveValueFrom(this)
+        } else {
+            throwUnsupportedTemporalPropertyException(property)
+        }
     }
 
     /**
-     * Get the value of [property].
+     * Gets the value of [property].
      * @throws TemporalPropertyException if the property isn't available
      */
     fun <T> get(property: ObjectProperty<T>): T {
@@ -75,7 +91,7 @@ interface Temporal {
 }
 
 /**
- * Get the value of [property] or the result of [defaultValue] if it isn't available.
+ * Gets the value of [property] or the result of [defaultValue] if it isn't available.
  */
 inline fun Temporal.getOrElse(
     property: BooleanProperty,
@@ -89,7 +105,7 @@ inline fun Temporal.getOrElse(
 }
 
 /**
- * Get the value of [property] or the result of [defaultValue] if it isn't available.
+ * Gets the value of [property] or the result of [defaultValue] if it isn't available.
  */
 inline fun Temporal.getOrElse(
     property: NumberProperty,
@@ -103,7 +119,7 @@ inline fun Temporal.getOrElse(
 }
 
 /**
- * Get the value of [property] or the result of [defaultValue] if it isn't available.
+ * Gets the value of [property] or the result of [defaultValue] if it isn't available.
  */
 inline fun <T> Temporal.getOrElse(
     property: ObjectProperty<T>,
@@ -117,21 +133,21 @@ inline fun <T> Temporal.getOrElse(
 }
 
 /**
- * Get the value of [property] or `null`` if it isn't available.
+ * Gets the value of [property] or `null`` if it isn't available.
  */
 fun Temporal.getOrNull(property: BooleanProperty): Boolean? {
     return if (has(property)) get(property) else null
 }
 
 /**
- * Get the value of [property] or `null`` if it isn't available.
+ * Gets the value of [property] or `null`` if it isn't available.
  */
 fun Temporal.getOrNull(property: NumberProperty): Long? {
     return if (has(property)) get(property) else null
 }
 
 /**
- * Get the value of [property] or `null`` if it isn't available.
+ * Gets the value of [property] or `null`` if it isn't available.
  */
 fun <T> Temporal.getOrNull(property: ObjectProperty<T>): T? {
     return if (has(property)) get(property) else null

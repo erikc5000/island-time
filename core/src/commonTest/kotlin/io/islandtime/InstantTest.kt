@@ -303,7 +303,7 @@ class InstantTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toInstant() throws an exception when required properties are missing`() {
-        val parser1 = temporalParser {
+        val parser1 = TemporalParser {
             monthNumber(2)
             +'-'
             dayOfMonth(2)

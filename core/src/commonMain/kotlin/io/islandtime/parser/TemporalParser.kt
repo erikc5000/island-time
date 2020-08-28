@@ -83,9 +83,10 @@ abstract class TemporalParser internal constructor() {
 }
 
 /**
- * Define a custom [TemporalParser].
+ * Builds a custom [TemporalParser].
  * @see DateTimeParsers
  */
-inline fun temporalParser(builder: TemporalParserBuilder.() -> Unit): TemporalParser {
+@Suppress("FunctionName")
+inline fun TemporalParser(builder: TemporalParserBuilder.() -> Unit): TemporalParser {
     return TemporalParserBuilderImpl().apply(builder).build()
 }

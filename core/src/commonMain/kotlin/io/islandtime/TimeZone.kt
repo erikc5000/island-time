@@ -250,7 +250,7 @@ internal const val MAX_TIME_ZONE_STRING_LENGTH = 50
 /**
  * A strict parser that expects an offset identical to Island Time's string representation for [UtcOffset].
  */
-private val FIXED_TIME_ZONE_PARSER = temporalParser {
+private val FIXED_TIME_ZONE_PARSER = TemporalParser {
     utcOffsetSign()
     utcOffsetHours(2)
     +':'

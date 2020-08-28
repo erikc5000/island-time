@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 class OnlyIfFormatterTest : AbstractIslandTimeTest() {
     @Test
     fun `empty onlyIf() does nothing on temporal formatter`() {
-        val formatter = temporalFormatter { onlyIf({ true }) {} }
+        val formatter = TemporalFormatter { onlyIf({ true }) {} }
 
         assertEquals(
             "",
@@ -19,8 +19,8 @@ class OnlyIfFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `conditionally executes block on temporal formatter`() {
-        val formatter = temporalFormatter {
-            onlyIf({ it.has(DateProperty.Year) }) {
+        val formatter = TemporalFormatter {
+            onlyIf({ temporal.has(DateProperty.Year) }) {
                 +"I have a year"
             }
         }
@@ -38,7 +38,7 @@ class OnlyIfFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `empty onlyIf() does nothing on date-time formatter`() {
-        val formatter = dateTimeFormatter { onlyIf({ true }) {} }
+        val formatter = DateTimeFormatter { onlyIf({ true }) {} }
 
         assertEquals(
             "",
@@ -48,8 +48,8 @@ class OnlyIfFormatterTest : AbstractIslandTimeTest() {
 
     @Test
     fun `conditionally executes block on date-time formatter`() {
-        val formatter = dateTimeFormatter {
-            onlyIf({ it.has(DateProperty.Year) }) {
+        val formatter = DateTimeFormatter {
+            onlyIf({ temporal.has(DateProperty.Year) }) {
                 +"I have a year"
             }
         }

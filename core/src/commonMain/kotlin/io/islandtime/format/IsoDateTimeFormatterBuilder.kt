@@ -97,7 +97,8 @@ interface IsoDateTimeFormatterBuilder {
 //    //var digits
 //}
 
-inline fun isoDateTimeFormatter(
+@Suppress("FunctionName")
+inline fun IsoDateTimeFormatter(
     builder: IsoDateTimeFormatterBuilder.() -> Unit = {}
 ): TemporalFormatter {
     return IsoDateTimeFormatterBuilderImpl().apply(builder).build()

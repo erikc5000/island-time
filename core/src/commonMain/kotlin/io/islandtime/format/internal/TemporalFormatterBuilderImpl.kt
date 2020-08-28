@@ -2,7 +2,7 @@ package io.islandtime.format.internal
 
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
-import io.islandtime.base.Temporal
+import io.islandtime.calendar.LocalizedNumberProperty
 import io.islandtime.format.NumberFormatterBuilder
 import io.islandtime.format.TemporalFormatter
 import io.islandtime.format.TemporalFormatterBuilder
@@ -22,7 +22,28 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
         maxLength: Int,
         builder: NumberFormatterBuilder.() -> Unit
     ) {
-        formatters += NumberFormatterBuilderImpl(property, minLength, maxLength)
+        formatters += NumberFormatterBuilderImpl(
+            property.toString(),
+            { temporal.get(property) },
+            minLength,
+            maxLength
+        )
+            .apply(builder)
+            .build()
+    }
+
+    override fun wholeNumber(
+        property: LocalizedNumberProperty,
+        minLength: Int,
+        maxLength: Int,
+        builder: NumberFormatterBuilder.() -> Unit
+    ) {
+        formatters += NumberFormatterBuilderImpl(
+            property.toString(),
+            { with(property) { getValueFrom(temporal) } },
+            minLength,
+            maxLength
+        )
             .apply(builder)
             .build()
     }
@@ -30,23 +51,25 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
     override fun decimalNumber(
         wholeProperty: NumberProperty,
         fractionProperty: NumberProperty,
-        wholeLength: IntRange,
-        fractionLength: IntRange,
+        minWholeLength: Int,
+        maxWholeLength: Int,
+        minFractionLength: Int,
+        maxFractionLength: Int,
         fractionScale: Int
     ) {
         formatters += DecimalNumberFormatter(
             wholeProperty,
             fractionProperty,
-            wholeLength.first,
-            wholeLength.last,
-            fractionLength.first,
-            fractionLength.last,
+            minWholeLength,
+            maxWholeLength,
+            minFractionLength,
+            maxFractionLength,
             fractionScale
         )
     }
 
-    override fun fraction(property: NumberProperty, length: IntRange, scale: Int) {
-        formatters += FractionFormatter(property, length.first, length.last, scale)
+    override fun fraction(property: NumberProperty, minLength: Int, maxLength: Int, scale: Int) {
+        formatters += FractionFormatter(property, minLength, maxLength, scale)
     }
 
     override fun literal(char: Char) {
@@ -70,7 +93,7 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
     }
 
     override fun onlyIf(
-        predicate: (temporal: Temporal) -> Boolean,
+        predicate: TemporalFormatter.Context.() -> Boolean,
         builder: TemporalFormatterBuilder.() -> Unit
     ) {
         val child = TemporalFormatterBuilderImpl().apply(builder).build()

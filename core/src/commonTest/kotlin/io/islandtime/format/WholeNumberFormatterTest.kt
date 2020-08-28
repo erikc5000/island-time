@@ -11,39 +11,39 @@ class WholeNumberFormatterTest {
     @Test
     fun `throws an exception when minLength is greater than maxLength`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { wholeNumber(DateProperty.Year, 2, 1) }
+            TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 2, maxLength = 1) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { wholeNumber(DateProperty.Year, 1, 0) }
+            TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 1, maxLength = 0) }
         }
     }
 
     @Test
     fun `throws an exception when minLength is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { wholeNumber(DateProperty.Year, 0, 1) }
+            TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 0, maxLength = 1) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { wholeNumber(DateProperty.Year, 20, 20) }
+            TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 20, maxLength = 20) }
         }
     }
 
     @Test
     fun `throws an exception when maxLength is out of range`() {
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { wholeNumber(DateProperty.Year, 1, 20) }
+            TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 1, maxLength = 20) }
         }
 
         assertFailsWith<IllegalArgumentException> {
-            temporalFormatter { wholeNumber(DateProperty.Year, 0, 0) }
+            TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 0, maxLength = 0) }
         }
     }
 
     @Test
     fun `formats variable length numbers`() {
-        val formatter = temporalFormatter { wholeNumber(DateProperty.Year) }
+        val formatter = TemporalFormatter { wholeNumber(DateProperty.Year) }
 
         listOf(
             0L to "0",
@@ -61,7 +61,7 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `formats fixed length numbers`() {
-        val formatter = temporalFormatter { wholeNumber(DateProperty.Year, 19) }
+        val formatter = TemporalFormatter { wholeNumber(DateProperty.Year, minLength = 19, maxLength = 19) }
 
         listOf(
             0L to "0000000000000000000",
@@ -79,7 +79,9 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `throws an exception when maxLength is exceeded by the value being formatted`() {
-        val formatter = temporalFormatter { wholeNumber(DateProperty.Year, 2) }
+        val formatter = TemporalFormatter {
+            wholeNumber(DateProperty.Year, minLength = 2, maxLength = 2)
+        }
 
         assertFailsWith<DateTimeException> {
             formatter.format(temporalWith(DateProperty.Year to 100L))
@@ -88,8 +90,8 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `respects ALWAYS sign style when formatting`() {
-        val formatter = temporalFormatter {
-            wholeNumber(DateProperty.Year, 19) {
+        val formatter = TemporalFormatter {
+            wholeNumber(DateProperty.Year, minLength = 19) {
                 signStyle = SignStyle.ALWAYS
             }
         }
@@ -110,7 +112,7 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `formats non-negative numbers when the NEVER sign style is used`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             wholeNumber(DateProperty.Year) {
                 signStyle = SignStyle.NEVER
             }
@@ -124,7 +126,7 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `throws an exception when the NEVER sign style is used and a number is negative`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             wholeNumber(DateProperty.Year) {
                 signStyle = SignStyle.NEVER
             }
@@ -137,7 +139,7 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `respects the number style when formatting`() {
-        val formatter = temporalFormatter { wholeNumber(DateProperty.Year) }
+        val formatter = TemporalFormatter { wholeNumber(DateProperty.Year) }
         val numberStyle = NumberStyle.DEFAULT.copy(zeroDigit = '०')
         val settings = TemporalFormatter.Settings(numberStyle = numberStyle)
 
@@ -149,9 +151,9 @@ class WholeNumberFormatterTest {
 
     @Test
     fun `transform function can be applied to the value`() {
-        val formatter = temporalFormatter {
+        val formatter = TemporalFormatter {
             wholeNumber(DateProperty.Year) {
-                mapValue { it / 2 }
+                valueTransform = { it / 2 }
             }
         }
 

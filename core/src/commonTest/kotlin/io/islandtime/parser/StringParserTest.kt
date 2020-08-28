@@ -16,7 +16,7 @@ class StringParserTest {
             3 to 't'
         )
 
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             string {
                 onEachChar { char, index ->
@@ -34,7 +34,7 @@ class StringParserTest {
 
     @Test
     fun `parsing can be stopped with REJECT_AND_STOP`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             string {
                 onEachChar { char, index ->
@@ -54,7 +54,7 @@ class StringParserTest {
 
     @Test
     fun `reports an error when there are no characters to parse`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             string {
                 onEachChar { _, _ ->  StringParseAction.ACCEPT_AND_CONTINUE }
@@ -68,7 +68,7 @@ class StringParserTest {
 
     @Test
     fun `reports an error when the min length isn't satisfied`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             string(2..10) {
                 onEachChar { char, _ ->
@@ -90,7 +90,7 @@ class StringParserTest {
 
     @Test
     fun `reports an error when the max length isn't satisfied`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             +' '
             string(1..4) {
                 onEachChar { char, _ ->

@@ -1,5 +1,8 @@
 package io.islandtime
 
+import io.islandtime.Time.Companion.MAX
+import io.islandtime.Time.Companion.MIDNIGHT
+import io.islandtime.Time.Companion.NOON
 import io.islandtime.internal.NANOSECONDS_PER_DAY
 import io.islandtime.internal.SECONDS_PER_DAY
 import io.islandtime.measures.*
@@ -99,6 +102,38 @@ class TimeTest : AbstractIslandTimeTest() {
     @Test
     fun `nanosecondsSinceStartOfDay property`() {
         assertEquals(1L.nanoseconds, Time(0, 0, 0, 1).nanosecondsSinceStartOfDay)
+    }
+
+    @Test
+    fun `amPm property`() {
+        assertEquals(AmPm.AM, Time(11, 0).amPm)
+        assertEquals(AmPm.PM, NOON.amPm)
+    }
+
+    @Test
+    fun `hourOfAmPm property`() {
+        assertEquals(0, MIDNIGHT.hourOfAmPm)
+        assertEquals(11, Time(11, 30).hourOfAmPm)
+        assertEquals(0, NOON.hourOfAmPm)
+        assertEquals(1, Time(13, 30).hourOfAmPm)
+        assertEquals(11, MAX.hourOfAmPm)
+    }
+    
+    @Test
+    fun `clockHour property`() {
+        assertEquals(24, MIDNIGHT.clockHour)
+        assertEquals(1, Time(1, 30).clockHour)
+        assertEquals(12, NOON.clockHour)
+        assertEquals(23, MAX.clockHour)
+    }
+
+    @Test
+    fun `clockHourOfAmPm property`() {
+        assertEquals(12, MIDNIGHT.clockHourOfAmPm)
+        assertEquals(1, Time(1, 30).clockHourOfAmPm)
+        assertEquals(12, NOON.clockHourOfAmPm)
+        assertEquals(1, Time(13, 30).clockHourOfAmPm)
+        assertEquals(11, MAX.clockHourOfAmPm)
     }
 
     @Test
@@ -429,12 +464,12 @@ class TimeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toTime() throws an exception when the parser can't supply all required properties`() {
-        assertFailsWith<TemporalParseException> { "14".toTime(temporalParser { minuteOfHour(2) }) }
+        assertFailsWith<TemporalParseException> { "14".toTime(TemporalParser { minuteOfHour(2) }) }
     }
 
     @Test
     fun `String_toTime() throws an exception if parsed values cause overflow`() {
-        val parser = temporalParser {
+        val parser = TemporalParser {
             hourOfDay()
             +':'
             minuteOfHour()

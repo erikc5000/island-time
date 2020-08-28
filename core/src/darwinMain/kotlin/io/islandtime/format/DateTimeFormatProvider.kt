@@ -1,6 +1,5 @@
 package io.islandtime.format
 
-import io.islandtime.internal.confine
 import io.islandtime.locale.Locale
 import platform.Foundation.*
 import kotlin.native.concurrent.Worker

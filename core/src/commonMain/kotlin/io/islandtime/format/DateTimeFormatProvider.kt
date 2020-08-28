@@ -4,18 +4,13 @@ import io.islandtime.IslandTime
 import io.islandtime.locale.Locale
 
 /**
- * An abstraction that allows formatters for localized date and time styles to be supplied from
- * different data sources.
+ * An abstraction that allows formatters for localized date and time styles to be supplied from different data sources.
  */
 interface DateTimeFormatProvider {
     /**
      * Get a localized formatter with the specified date and time styles.
      */
-    fun formatterFor(
-        dateStyle: FormatStyle?,
-        timeStyle: FormatStyle?,
-        locale: Locale
-    ): TemporalFormatter
+    fun formatterFor(dateStyle: FormatStyle?, timeStyle: FormatStyle?, locale: Locale): TemporalFormatter
 
     /**
      * Get the best localized formatter from an input skeleton, as defined in
