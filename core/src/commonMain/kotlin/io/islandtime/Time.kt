@@ -4,6 +4,8 @@ import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.*
+import io.islandtime.base.throwUnsupportedTemporalPropertyException
 
 /**
  * A time of day in an ambiguous region.
@@ -212,7 +214,7 @@ class Time(
     operator fun component4() = nanosecond
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property is TimeProperty
+        return property is TimeProperty || super.has(property)
     }
 
     override fun get(property: NumberProperty): Long {

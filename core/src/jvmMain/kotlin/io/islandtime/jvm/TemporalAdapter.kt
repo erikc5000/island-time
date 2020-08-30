@@ -6,6 +6,7 @@ package io.islandtime.jvm
 import io.islandtime.*
 import io.islandtime.base.*
 import io.islandtime.measures.seconds
+import io.islandtime.properties.*
 import java.time.chrono.IsoChronology
 import java.time.temporal.ChronoField
 import java.time.temporal.TemporalAccessor as JavaTemporalAccessor
@@ -53,9 +54,9 @@ fun Temporal.asJavaTemporalAccessor(): JavaTemporalAccessor {
                 } as R
                 JavaTemporalQueries.zoneId(),
                 JavaTemporalQueries.zone() -> when {
-                    has(TimeZoneProperty.TimeZone) -> get(TimeZoneProperty.TimeZone).toJavaZoneId()
-                    query == JavaTemporalQueries.zone() && has(UtcOffsetProperty.TotalSeconds) ->
-                        UtcOffset(get(UtcOffsetProperty.TotalSeconds).toInt().seconds).toJavaZoneOffset()
+                    has(io.islandtime.properties.TimeZoneProperty.TimeZoneObject) -> get(io.islandtime.properties.TimeZoneProperty.TimeZoneObject).toJavaZoneId()
+                    query == JavaTemporalQueries.zone() && has(io.islandtime.properties.UtcOffsetProperty.TotalSeconds) ->
+                        UtcOffset(get(io.islandtime.properties.UtcOffsetProperty.TotalSeconds).toInt().seconds).toJavaZoneOffset()
                     else -> null
                 } as R
                 JavaTemporalQueries.offset() -> when (this@asJavaTemporalAccessor) {

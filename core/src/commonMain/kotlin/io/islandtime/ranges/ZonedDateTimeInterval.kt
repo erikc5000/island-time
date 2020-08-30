@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.base.DateProperty
+import io.islandtime.properties.DateProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME

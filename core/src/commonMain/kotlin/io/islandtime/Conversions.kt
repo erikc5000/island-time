@@ -3,7 +3,6 @@
 
 package io.islandtime
 
-import io.islandtime.base.TimePoint
 import io.islandtime.internal.SECONDS_PER_DAY
 import io.islandtime.internal.floorDiv
 import kotlin.jvm.JvmMultifileClass

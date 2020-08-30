@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.TemporalProperty
+import io.islandtime.base.*
 
 /**
  * The result of a parsing operation.
@@ -8,7 +8,7 @@ import io.islandtime.base.TemporalProperty
 inline class TemporalParseResult(
     @PublishedApi
     internal val properties: MutableMap<TemporalProperty<*>, Any> = hashMapOf()
-) {
+) : Temporal {
     fun isEmpty() = properties.isEmpty()
     fun isNotEmpty() = !isEmpty()
     val size: Int get() = properties.size
@@ -18,6 +18,27 @@ inline class TemporalParseResult(
     }
 
     inline operator fun <reified T> get(property: TemporalProperty<T>): T? = properties[property] as T?
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return properties.containsKey(property) || super.has(property)
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return properties[property]?.let { it as Boolean } ?: super.get(property)
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return properties[property]?.let { it as Long } ?: super.get(property)
+    }
+
+    override fun <T> get(property: ObjectProperty<T>): T {
+        @Suppress("UNCHECKED_CAST")
+        return properties[property]?.let { it as T } ?: super.get(property)
+    }
+
+    fun resolve(property: NumberProperty): Long {
+        return get(property).also { properties[property] = it }
+    }
 
 //    inline fun <reified T, R> replace(
 //        existingProperty: TemporalProperty<T>,

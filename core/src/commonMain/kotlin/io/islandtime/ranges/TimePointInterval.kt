@@ -1,6 +1,6 @@
 package io.islandtime.ranges
 
-import io.islandtime.base.TimePoint
+import io.islandtime.TimePoint
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.internal.*

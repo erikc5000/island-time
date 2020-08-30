@@ -2,6 +2,7 @@ package io.islandtime.format.internal
 
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
+import io.islandtime.base.get
 import io.islandtime.calendar.LocalizedNumberProperty
 import io.islandtime.format.NumberFormatterBuilder
 import io.islandtime.format.TemporalFormatter
@@ -40,7 +41,7 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
     ) {
         formatters += NumberFormatterBuilderImpl(
             property.toString(),
-            { with(property) { getValueFrom(temporal) } },
+            { temporal.get(property, context = this) },
             minLength,
             maxLength
         )

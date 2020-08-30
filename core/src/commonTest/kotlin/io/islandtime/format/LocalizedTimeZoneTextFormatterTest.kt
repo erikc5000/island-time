@@ -2,7 +2,7 @@ package io.islandtime.format
 
 import io.islandtime.*
 import io.islandtime.Time.Companion.NOON
-import io.islandtime.base.TimeZoneProperty
+import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeTimeZoneTextProvider
 import io.islandtime.test.temporalWith
@@ -27,7 +27,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
         assertEquals(
             "America/Boston",
             formatter.format(
-                temporalWith(TimeZoneProperty.TimeZone to TimeZone("America/Boston"))
+                temporalWith(TimeZoneProperty.TimeZoneObject to TimeZone("America/Boston"))
             )
         )
     }

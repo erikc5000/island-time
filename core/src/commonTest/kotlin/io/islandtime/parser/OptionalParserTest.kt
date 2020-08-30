@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateProperty
+import io.islandtime.properties.DateProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

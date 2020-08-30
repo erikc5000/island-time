@@ -8,6 +8,8 @@ import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.TemporalParseResult
 import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.throwParserPropertyResolutionException
+import io.islandtime.properties.*
+import io.islandtime.base.throwUnsupportedTemporalPropertyException
 
 /**
  * A date-based period of time, such as "2 years, 5 months, 16 days". Unlike [Duration], which uses exact increments,

@@ -6,6 +6,7 @@ import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.*
 import io.islandtime.ranges.DateRange
 
 /**
@@ -45,7 +46,7 @@ class Date(
     ) : this(year, monthNumber.toMonth(), day)
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property is DateProperty && property != DateProperty.DayOfWeekInMonth
+        return property is DateProperty || super.has(property)
     }
 
     override fun get(property: BooleanProperty): Boolean {
@@ -71,7 +72,7 @@ class Date(
     }
 
     override fun <T> get(property: ObjectProperty<T>): T {
-        return if (property == DateProperty.Date) {
+        return if (property == DateProperty.DateObject) {
             @Suppress("UNCHECKED_CAST")
             this as T
         } else {
@@ -393,6 +394,45 @@ fun String.toDate(
     return result.toDate() ?: throwParserPropertyResolutionException<Date>(this)
 }
 
+//internal val DAY_OF_UNIX_EPOCH_RESOLVER = Resolver {
+//    getOrNull(DateProperty.DayOfUnixEpoch)?.let { Date.fromDayOfUnixEpoch(it) }
+//}
+
+//internal val CALENDAR_DATE_RESOLVER = Resolver {
+//    if (hasAll(DateProperty.Year, DateProperty.MonthOfYear, DateProperty.DayOfMonth)) {
+//        val year = get(DateProperty.Year).toIntExact()
+//        val month = get(DateProperty.MonthOfYear).toIntExact()
+//        val dayOfMonth = get(DateProperty.DayOfMonth).toIntExact()
+//
+//        Date(year, month, dayOfMonth)
+//    } else {
+//        null
+//    }
+//}
+//
+//internal val ORDINAL_DATE_RESOLVER = Resolver {
+//    if (hasAll(DateProperty.Year, DateProperty.DayOfYear)) {
+//        val year = get(DateProperty.Year).toIntExact()
+//        val dayOfYear = get(DateProperty.DayOfYear).toIntExact()
+//
+//        Date(year, dayOfYear)
+//    } else {
+//        null
+//    }
+//}
+
+//internal val WEEK_DATE_RESOLVER = Resolver {
+//    if (hasAll(DateProperty.Week, DateProperty.MonthOfYear, DateProperty.DayOfMonth)) {
+//        val year = get(DateProperty.Year).toIntExact()
+//        val month = get(DateProperty.MonthOfYear).toIntExact()
+//        val dayOfMonth = get(DateProperty.DayOfMonth).toIntExact()
+//
+//        Date(year, month, dayOfMonth)
+//    } else {
+//        null
+//    }
+//}
+
 internal fun TemporalParseResult.toDate(): Date? {
     val year = this[DateProperty.Year]
 
@@ -512,5 +552,3 @@ private fun checkValidDayOfYear(year: Int, dayOfYear: Int): Int {
     }
     return dayOfYear
 }
-
-val Date.dayOfWeekInMonth: Int get() = ((dayOfMonth - 1) / 7) + 1

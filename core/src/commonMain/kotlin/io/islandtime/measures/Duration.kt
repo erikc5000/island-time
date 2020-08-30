@@ -8,6 +8,8 @@ import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.TemporalParseResult
 import io.islandtime.parser.TemporalParser
+import io.islandtime.properties.*
+import io.islandtime.base.throwUnsupportedTemporalPropertyException
 import kotlin.math.absoluteValue
 
 /**

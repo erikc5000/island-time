@@ -1,9 +1,13 @@
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.BooleanProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.DateProperty
 import io.islandtime.ranges.DateRange
 import kotlin.math.absoluteValue
 
@@ -91,17 +95,13 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
     }
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return if (property is DateProperty) {
-            when (property) {
-                is DateProperty.Year,
-                is DateProperty.YearOfEra,
-                is DateProperty.Era,
-                is DateProperty.IsFarPast,
-                is DateProperty.IsFarFuture -> true
-                else -> false
-            }
-        } else {
-            false
+        return when (property) {
+            is DateProperty.Year,
+            is DateProperty.YearOfEra,
+            is DateProperty.Era,
+            is DateProperty.IsFarPast,
+            is DateProperty.IsFarFuture -> true
+            else -> super.has(property)
         }
     }
 
@@ -109,7 +109,7 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
         return when (property) {
             is DateProperty.IsFarPast -> this == MIN
             is DateProperty.IsFarFuture -> this == MAX
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }
     }
 
@@ -118,7 +118,7 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
             is DateProperty.Year -> value
             is DateProperty.YearOfEra -> if (value >= 1) value else 1 - value
             is DateProperty.Era -> if (value >= 1) 1 else 0
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }.toLong()
     }
 

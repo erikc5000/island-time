@@ -1,4 +1,7 @@
-package io.islandtime.base
+package io.islandtime.properties
+
+import io.islandtime.base.BooleanProperty
+import io.islandtime.base.NumberProperty
 
 sealed class DurationProperty {
     /**

@@ -25,6 +25,27 @@ private fun buildDatePropertiesFile() = file(
 }
 
 private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescription) {
+    property(name = "dayOfWeekInMonth", returnType = Int::class) {
+        kdoc {
+            """
+                The `N`-th day of the week in this ${receiverClass.simpleName}'s month. For example, `2`, if this is the
+                2nd Wednesday in April, or `5` if this is the 5th Monday in July.
+            """.trimIndent()
+        }
+
+        receiver(receiverClass.typeName)
+
+        if (receiverClass == Date) {
+            getter {
+                using("dayOfWeekInMonth", internal("dayOfWeekInMonth"))
+                "return %dayOfWeekInMonth:T(dayOfMonth)"
+            }
+        } else {
+            modifiers(KModifier.INLINE)
+            delegatesTo(receiverClass.datePropertyName)
+        }
+    }
+
     receiverClass.interval?.let { intervalClass ->
         fun CodeBlockBuilder.intervalOfWeekCode(vararg startOfWeekArgs: String): String {
             using("startOfWeek", base("startOfWeek"))

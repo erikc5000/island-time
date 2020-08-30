@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateProperty
+import io.islandtime.properties.DateProperty
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest

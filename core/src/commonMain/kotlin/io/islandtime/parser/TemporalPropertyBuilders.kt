@@ -3,6 +3,7 @@ package io.islandtime.parser
 import io.islandtime.MAX_TIME_ZONE_STRING_LENGTH
 import io.islandtime.base.*
 import io.islandtime.format.TextStyle
+import io.islandtime.properties.*
 
 /**
  * Parse a year with a variable number of digits.

@@ -1,7 +1,7 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DateProperty
-import io.islandtime.base.DurationProperty
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.DurationProperty
 import io.islandtime.format.SignStyle
 import kotlin.test.Test
 import kotlin.test.assertEquals

@@ -1,6 +1,7 @@
 package io.islandtime.format.internal
 
 import io.islandtime.DateTimeException
+import io.islandtime.properties.TimePointProperty
 import io.islandtime.UtcOffset
 import io.islandtime.base.*
 import io.islandtime.format.*
@@ -8,6 +9,7 @@ import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.seconds
+import io.islandtime.properties.*
 import kotlin.math.absoluteValue
 
 internal object EmptyFormatter : TemporalFormatter() {
@@ -284,13 +286,13 @@ internal class LocalizedTimeZoneTextFormatter(
 
     override fun format(context: FormatContext, stringBuilder: StringBuilder) {
         val temporal = context.temporal
-        val zone = temporal.get(TimeZoneProperty.TimeZone)
+        val zone = temporal.get(TimeZoneProperty.TimeZoneObject)
         var useGeneric = generic
         var useDaylight = false
 
         if (!generic) {
-            if (temporal.has(TimePointProperty.Instant)) {
-                val instant = temporal.get(TimePointProperty.Instant)
+            if (temporal.has(TimePointProperty.InstantObject)) {
+                val instant = temporal.get(TimePointProperty.InstantObject)
                 useDaylight = zone.rules.isDaylightSavingsAt(instant)
             } else {
                 useGeneric = true

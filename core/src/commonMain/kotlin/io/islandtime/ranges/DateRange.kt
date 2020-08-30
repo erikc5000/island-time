@@ -1,7 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.base.DateProperty
+import io.islandtime.properties.DateProperty
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import io.islandtime.parser.*

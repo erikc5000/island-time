@@ -1,15 +1,16 @@
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
-import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
-import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
 import io.islandtime.locale.Locale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntMonths
 import io.islandtime.measures.LongMonths
 import io.islandtime.measures.days
+import io.islandtime.properties.DateProperty
 
 /**
  * A month of the year.
@@ -200,7 +201,7 @@ enum class Month : Temporal {
     operator fun minus(months: LongMonths) = plus(-(months.value % 12).toInt())
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property == DateProperty.MonthOfYear
+        return property == DateProperty.MonthOfYear || super.has(property)
     }
 
     override fun get(property: NumberProperty): Long {

@@ -4,6 +4,8 @@ import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.TimeProperty
 import io.islandtime.ranges.DateTimeInterval
 
 /**
@@ -415,7 +417,7 @@ class DateTime(
     override fun has(property: TemporalProperty<*>): Boolean {
         return when (property) {
             is DateProperty, is TimeProperty -> true
-            else -> false
+            else -> super.has(property)
         }
     }
 
@@ -430,6 +432,14 @@ class DateTime(
     }
 
     override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is DateProperty -> date.get(property)
+            is TimeProperty -> time.get(property)
+            else -> super.get(property)
+        }
+    }
+
+    override fun <T> get(property: ObjectProperty<T>): T {
         return when (property) {
             is DateProperty -> date.get(property)
             is TimeProperty -> time.get(property)

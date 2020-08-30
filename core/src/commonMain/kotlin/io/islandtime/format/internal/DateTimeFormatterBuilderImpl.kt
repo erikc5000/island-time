@@ -1,8 +1,8 @@
 package io.islandtime.format.internal
 
-import io.islandtime.base.DateProperty
-import io.islandtime.base.TimeProperty
-import io.islandtime.base.TimeZoneProperty
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.TimeProperty
+import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.calendar.WeekProperty
 import io.islandtime.format.*
 

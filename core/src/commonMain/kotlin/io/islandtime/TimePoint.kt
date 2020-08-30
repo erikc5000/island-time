@@ -1,21 +1,7 @@
-package io.islandtime.base
+package io.islandtime
 
+import io.islandtime.base.Temporal
 import io.islandtime.measures.*
-
-/**
- * A property of a time point.
- */
-sealed class TimePointProperty {
-    /**
-     * The second of the Unix epoch. `0` corresponds to `1970-01-01T00:00Z`.
-     */
-    object SecondOfUnixEpoch : TimePointProperty(), NumberProperty
-
-    /**
-     * The time point represented as an [io.islandtime.Instant].
-     */
-    object Instant : TimePointProperty(), ObjectProperty<io.islandtime.Instant>
-}
 
 /**
  * An object that can be placed exactly in time.
@@ -34,7 +20,8 @@ interface TimePoint<T> : Temporal {
         ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
         DeprecationLevel.ERROR
     )
-    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds get() = additionalNanosecondsSinceUnixEpoch
+    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds
+        get() = additionalNanosecondsSinceUnixEpoch
 
     /**
      * The number of additional nanoseconds on top of [secondsSinceUnixEpoch].

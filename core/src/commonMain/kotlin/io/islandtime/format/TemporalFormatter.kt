@@ -3,7 +3,6 @@ package io.islandtime.format
 import io.islandtime.base.Temporal
 import io.islandtime.calendar.LocalizationContext
 import io.islandtime.calendar.WeekSettings
-import io.islandtime.calendar.weekSettings
 import io.islandtime.format.internal.FormatContext
 import io.islandtime.format.internal.TemporalFormatterBuilderImpl
 import io.islandtime.locale.Locale

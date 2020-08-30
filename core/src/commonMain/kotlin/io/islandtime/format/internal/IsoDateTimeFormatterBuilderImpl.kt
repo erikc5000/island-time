@@ -3,6 +3,7 @@ package io.islandtime.format.internal
 import io.islandtime.TimeZone
 import io.islandtime.base.*
 import io.islandtime.format.*
+import io.islandtime.properties.*
 
 @PublishedApi
 internal class IsoDateTimeFormatterBuilderImpl : IsoDateTimeFormatterBuilder {
@@ -55,7 +56,7 @@ internal class IsoDateTimeFormatterBuilderImpl : IsoDateTimeFormatterBuilder {
                 offset(format = format)
             }
 
-            onlyIf({ temporal.getOrNull(TimeZoneProperty.TimeZone) is TimeZone.Region }) {
+            onlyIf({ temporal.getOrNull(TimeZoneProperty.TimeZoneObject) is TimeZone.Region }) {
                 +'['
                 timeZoneId()
                 +']'

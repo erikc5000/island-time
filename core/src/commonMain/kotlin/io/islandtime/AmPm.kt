@@ -1,10 +1,11 @@
 package io.islandtime
 
 import io.islandtime.base.*
-import io.islandtime.base.throwUnsupportedTemporalPropertyException
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
+import io.islandtime.properties.*
+import io.islandtime.base.throwUnsupportedTemporalPropertyException
 
 /**
  * The AM or PM of the day.
@@ -38,13 +39,13 @@ enum class AmPm : Temporal {
     fun displayName(locale: Locale): String = localizedName(locale) ?: ordinal.toString()
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property == TimeProperty.AmPmOfDay
+        return property == TimeProperty.AmPmOfDay || super.has(property)
     }
 
     override fun get(property: NumberProperty): Long {
         return when (property) {
             TimeProperty.AmPmOfDay -> ordinal.toLong()
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }
     }
 }

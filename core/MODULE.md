@@ -8,7 +8,7 @@ Date-time primitives and core concepts, including classes such as `Date`, `Time`
 
 # Package io.islandtime.base
 
-*(Experimental)* Framework-level interfaces, allowing aspects of date, time, and duration to be abstracted. This area is unstable and likely to see significant change.
+Abstractions used throughout Island Time.
 
 # Package io.islandtime.calendar
 
@@ -41,6 +41,10 @@ Classes related to the measurement of time, including `Duration`, `Period`, and 
 # Package io.islandtime.parser
 
 Parsing of dates, times, durations, and intervals from textual representations.
+
+# Package io.islandtime.properties
+
+Provides access to the properties of dates, times, and durations in an abstract manner.
 
 # Package io.islandtime.ranges
 

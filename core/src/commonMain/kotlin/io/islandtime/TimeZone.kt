@@ -2,7 +2,10 @@
 
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.BooleanProperty
+import io.islandtime.base.ObjectProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.format.TimeZoneTextProvider
 import io.islandtime.format.TimeZoneTextStyle
 import io.islandtime.internal.systemDefaultTimeZone
@@ -10,6 +13,7 @@ import io.islandtime.locale.Locale
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
 import io.islandtime.parser.*
+import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.zone.FixedTimeZoneRules
 import io.islandtime.zone.TimeZoneRules
 import io.islandtime.zone.TimeZoneRulesException
@@ -101,13 +105,13 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
     abstract fun normalized(): TimeZone
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property is TimeZoneProperty
+        return property is TimeZoneProperty || super.has(property)
     }
 
     override fun <T> get(property: ObjectProperty<T>): T {
         @Suppress("UNCHECKED_CAST")
         return when (property) {
-            TimeZoneProperty.TimeZone -> this as T
+            TimeZoneProperty.TimeZoneObject -> this as T
             TimeZoneProperty.Id -> id as T
             else -> super.get(property)
         }

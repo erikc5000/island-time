@@ -1,7 +1,7 @@
 package io.islandtime.parser
 
-import io.islandtime.base.DurationProperty
-import io.islandtime.base.TimeProperty
+import io.islandtime.properties.DurationProperty
+import io.islandtime.properties.TimeProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

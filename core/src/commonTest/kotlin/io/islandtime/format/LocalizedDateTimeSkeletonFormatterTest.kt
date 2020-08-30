@@ -3,7 +3,7 @@ package io.islandtime.format
 import io.islandtime.Month
 import io.islandtime.Year
 import io.islandtime.YearMonth
-import io.islandtime.base.DateProperty
+import io.islandtime.properties.DateProperty
 import io.islandtime.base.TemporalPropertyException
 import io.islandtime.locale.Locale
 import io.islandtime.test.*

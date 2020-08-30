@@ -1,6 +1,8 @@
 package io.islandtime
 
-import io.islandtime.base.DateProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.firstDayOfWeek
 import io.islandtime.format.DateTimeTextProvider
@@ -10,11 +12,12 @@ import io.islandtime.locale.Locale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.LongDays
 import io.islandtime.measures.days
+import io.islandtime.properties.DateProperty
 
 /**
  * A day of the week.
  */
-enum class DayOfWeek {
+enum class DayOfWeek : Temporal {
     MONDAY,
     TUESDAY,
     WEDNESDAY,
@@ -68,6 +71,18 @@ enum class DayOfWeek {
      */
     fun displayName(style: TextStyle, locale: Locale): String {
         return localizedName(style, locale) ?: number.toString()
+    }
+
+    override fun has(property: TemporalProperty<*>): Boolean {
+        return property == DateProperty.DayOfWeek || super.has(property)
+    }
+
+    override fun get(property: NumberProperty): Long {
+        return if (property == DateProperty.DayOfWeek) {
+            number.toLong()
+        } else {
+            super.get(property)
+        }
     }
 
     /**

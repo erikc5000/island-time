@@ -2,11 +2,18 @@
 
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.ObjectProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.*
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.TimePointProperty
+import io.islandtime.properties.TimeProperty
+import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.ranges.InstantInterval
 
 /**
@@ -175,7 +182,7 @@ class Instant private constructor(
             TimeProperty.MicrosecondOfSecond,
             TimeProperty.NanosecondOfSecond,
             is TimePointProperty -> true
-            else -> false
+            else -> super.has(property)
         }
     }
 
@@ -185,15 +192,15 @@ class Instant private constructor(
             TimeProperty.MicrosecondOfSecond -> nanosecond.toLong() / NANOSECONDS_PER_MICROSECOND
             TimeProperty.NanosecondOfSecond -> nanosecond.toLong()
             TimePointProperty.SecondOfUnixEpoch -> secondOfUnixEpoch
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }
     }
 
     override fun <T> get(property: ObjectProperty<T>): T {
         @Suppress("UNCHECKED_CAST")
         return when (property) {
-            TimePointProperty.Instant -> this as T
-            else -> throwUnsupportedTemporalPropertyException(property)
+            TimePointProperty.InstantObject -> this as T
+            else -> super.get(property)
         }
     }
 

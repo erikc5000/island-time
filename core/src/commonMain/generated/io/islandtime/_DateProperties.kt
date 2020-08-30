@@ -8,6 +8,7 @@ package io.islandtime
 
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.weekSettings
+import io.islandtime.internal.dayOfWeekInMonth
 import io.islandtime.internal.lengthOfWeekBasedYear
 import io.islandtime.internal.weekBasedYearImpl
 import io.islandtime.internal.weekOfMonthImpl
@@ -26,6 +27,13 @@ import kotlin.Boolean
 import kotlin.Int
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
+
+/**
+ * The `N`-th day of the week in this date's month. For example, `2`, if this is the 2nd Wednesday
+ * in April, or `5` if this is the 5th Monday in July.
+ */
+val Date.dayOfWeekInMonth: Int
+  get() = dayOfWeekInMonth(dayOfMonth)
 
 /**
  * The range defining the ISO week that this date falls within.
@@ -234,6 +242,13 @@ fun Date.previousOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayO
     previous(dayOfWeek)
 
 /**
+ * The `N`-th day of the week in this date-time's month. For example, `2`, if this is the 2nd
+ * Wednesday in April, or `5` if this is the 5th Monday in July.
+ */
+val DateTime.dayOfWeekInMonth: Int
+  inline get() = date.dayOfWeekInMonth
+
+/**
  * The interval defining the ISO week that this date-time falls within.
  *
  * The ISO week starts on Monday and ends on Sunday.
@@ -424,6 +439,13 @@ fun DateTime.previous(dayOfWeek: DayOfWeek): DateTime = copy(date = date.previou
  */
 fun DateTime.previousOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek == this.dayOfWeek) this
     else previous(dayOfWeek)
+
+/**
+ * The `N`-th day of the week in this date-time's month. For example, `2`, if this is the 2nd
+ * Wednesday in April, or `5` if this is the 5th Monday in July.
+ */
+val OffsetDateTime.dayOfWeekInMonth: Int
+  inline get() = dateTime.dayOfWeekInMonth
 
 /**
  * The interval defining the ISO week that this date-time falls within.
@@ -619,6 +641,13 @@ fun OffsetDateTime.previous(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTim
  */
 fun OffsetDateTime.previousOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
     this.dayOfWeek) this else previous(dayOfWeek)
+
+/**
+ * The `N`-th day of the week in this date-time's month. For example, `2`, if this is the 2nd
+ * Wednesday in April, or `5` if this is the 5th Monday in July.
+ */
+val ZonedDateTime.dayOfWeekInMonth: Int
+  inline get() = dateTime.dayOfWeekInMonth
 
 /**
  * The interval defining the ISO week that this date-time falls within.

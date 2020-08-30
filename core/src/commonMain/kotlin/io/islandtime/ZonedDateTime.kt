@@ -2,9 +2,13 @@
 
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.BooleanProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.ObjectProperty
+import io.islandtime.base.TemporalProperty
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.*
 import io.islandtime.ranges.ZonedDateTimeInterval
 
 /**
@@ -129,35 +133,40 @@ class ZonedDateTime private constructor(
             is UtcOffsetProperty,
             is TimeZoneProperty,
             is TimePointProperty -> true
-            else -> false
+            else -> super.has(property)
         }
     }
 
     override fun get(property: BooleanProperty): Boolean {
         return when (property) {
-            is DateProperty, is TimeProperty -> dateTime.get(property)
+            is DateProperty -> date.get(property)
+            is TimeProperty -> time.get(property)
             is UtcOffsetProperty -> offset.get(property)
             is TimeZoneProperty -> zone.get(property)
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }
     }
 
     override fun get(property: NumberProperty): Long {
         return when (property) {
-            is DateProperty, is TimeProperty -> dateTime.get(property)
+            is DateProperty -> date.get(property)
+            is TimeProperty -> time.get(property)
             is UtcOffsetProperty -> offset.get(property)
             is TimeZoneProperty -> zone.get(property)
             TimePointProperty.SecondOfUnixEpoch -> secondOfUnixEpoch
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }
     }
 
     override fun <T> get(property: ObjectProperty<T>): T {
         @Suppress("UNCHECKED_CAST")
         return when (property) {
+            is DateProperty -> date.get(property)
+            is TimeProperty -> time.get(property)
+            is UtcOffsetProperty -> offset.get(property)
             is TimeZoneProperty -> zone.get(property)
-            TimePointProperty.Instant -> toInstant() as T
-            else -> throwUnsupportedTemporalPropertyException(property)
+            TimePointProperty.InstantObject -> toInstant() as T
+            else -> super.get(property)
         }
     }
 

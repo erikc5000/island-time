@@ -1,7 +1,7 @@
 package io.islandtime.ranges.internal
 
 import io.islandtime.*
-import io.islandtime.base.TimePoint
+import io.islandtime.TimePoint
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.ranges.*
 import kotlin.random.Random

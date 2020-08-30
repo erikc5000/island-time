@@ -5,6 +5,7 @@ import io.islandtime.Time
 import io.islandtime.TimeZone
 import io.islandtime.at
 import io.islandtime.base.*
+import io.islandtime.properties.*
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeFormatProvider
 import io.islandtime.test.FakeDateTimeTextProvider
@@ -50,7 +51,7 @@ class DateTimeFormatterTest : AbstractIslandTimeTest(
                     offset()
                 }
 
-                onlyIf({ temporal.getOrNull(TimeZoneProperty.TimeZone) is TimeZone.Region }) {
+                onlyIf({ temporal.getOrNull(TimeZoneProperty.TimeZoneObject) is TimeZone.Region }) {
                     +'['
                     timeZoneId()
                     +']'

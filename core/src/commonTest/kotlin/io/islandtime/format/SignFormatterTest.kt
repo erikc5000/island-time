@@ -1,8 +1,8 @@
 package io.islandtime.format
 
 import io.islandtime.base.TemporalPropertyException
-import io.islandtime.base.TimeZoneProperty
-import io.islandtime.base.UtcOffsetProperty
+import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.temporalWith
 import kotlin.test.Test

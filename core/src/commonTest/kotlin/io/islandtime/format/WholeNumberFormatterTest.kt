@@ -1,7 +1,7 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
-import io.islandtime.base.DateProperty
+import io.islandtime.properties.DateProperty
 import io.islandtime.test.temporalWith
 import kotlin.test.Test
 import kotlin.test.assertEquals

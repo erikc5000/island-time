@@ -4,7 +4,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.*
-import io.islandtime.base.TimePoint
+import io.islandtime.TimePoint
 import io.islandtime.measures.days
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName

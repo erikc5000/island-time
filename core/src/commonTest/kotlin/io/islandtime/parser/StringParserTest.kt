@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.base.TimeZoneProperty
+import io.islandtime.properties.TimeZoneProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

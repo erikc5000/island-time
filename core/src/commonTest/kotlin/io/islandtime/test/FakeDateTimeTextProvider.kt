@@ -1,12 +1,11 @@
 package io.islandtime.test
 
 import io.islandtime.DateTimeException
-import io.islandtime.base.NumberProperty
 import io.islandtime.format.AbstractDateTimeTextProvider
-import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.ParsableTextList
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
+import io.islandtime.base.NumberProperty
 
 object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
     override fun parsableTextFor(

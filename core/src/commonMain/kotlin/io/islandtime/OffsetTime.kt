@@ -3,6 +3,8 @@ package io.islandtime
 import io.islandtime.base.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.TimeProperty
+import io.islandtime.properties.UtcOffsetProperty
 
 /**
  * A time of day with an offset from UTC.
@@ -101,10 +103,29 @@ class OffsetTime(
     operator fun minus(nanoseconds: IntNanoseconds) = copy(time = time - nanoseconds)
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property is TimeProperty || property is UtcOffsetProperty
+        return when (property) {
+            is TimeProperty, is UtcOffsetProperty -> true
+            else -> super.has(property)
+        }
+    }
+
+    override fun get(property: BooleanProperty): Boolean {
+        return when (property) {
+            is TimeProperty -> time.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            else -> super.get(property)
+        }
     }
 
     override fun get(property: NumberProperty): Long {
+        return when (property) {
+            is TimeProperty -> time.get(property)
+            is UtcOffsetProperty -> offset.get(property)
+            else -> super.get(property)
+        }
+    }
+
+    override fun <T> get(property: ObjectProperty<T>): T {
         return when (property) {
             is TimeProperty -> time.get(property)
             is UtcOffsetProperty -> offset.get(property)

@@ -1,5 +1,3 @@
-@file:Suppress("NOTHING_TO_INLINE")
-
 package io.islandtime.internal
 
 import io.islandtime.*
@@ -8,8 +6,8 @@ import io.islandtime.measures.IntWeeks
 import io.islandtime.measures.weeks
 import io.islandtime.measures.years
 
-internal inline fun Date.weekOfMonthImpl(settings: WeekSettings): Int = weekNumber(dayOfMonth, settings)
-internal inline fun Date.weekOfYearImpl(settings: WeekSettings): Int = weekNumber(dayOfYear, settings)
+internal fun Date.weekOfMonthImpl(settings: WeekSettings): Int = weekNumber(dayOfMonth, settings)
+internal fun Date.weekOfYearImpl(settings: WeekSettings): Int = weekNumber(dayOfYear, settings)
 
 internal fun Date.weekBasedYearImpl(settings: WeekSettings): Int {
     val dayOfYear = dayOfYear

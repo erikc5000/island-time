@@ -3,10 +3,11 @@ package io.islandtime.format
 import io.islandtime.DateTimeException
 import io.islandtime.UtcOffset
 import io.islandtime.Year
-import io.islandtime.base.*
 import io.islandtime.measures.hours
 import io.islandtime.measures.minutes
 import io.islandtime.measures.seconds
+import io.islandtime.base.TemporalPropertyException
+import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.temporalWith
 import kotlin.test.Test

@@ -1,10 +1,15 @@
 package io.islandtime.parser
 
+import io.islandtime.base.Temporal
 import io.islandtime.format.NumberStyle
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
 import io.islandtime.parser.internal.ParseContext
 import io.islandtime.parser.internal.TemporalParserBuilderImpl
+
+fun interface Resolver<T : Temporal> {
+    fun TemporalParseResult.resolve(): T?
+}
 
 /**
  * A parser that converts text into a collection of properties that are understood throughout Island

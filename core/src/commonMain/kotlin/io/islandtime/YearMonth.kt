@@ -1,9 +1,13 @@
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.BooleanProperty
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.DateProperty
 import io.islandtime.ranges.DateRange
 
 /**
@@ -88,18 +92,14 @@ class YearMonth(
     val endDate: Date get() = Date(year, month, month.lastDayIn(year))
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return if (property is DateProperty) {
-            when (property) {
-                is DateProperty.Year,
-                is DateProperty.YearOfEra,
-                is DateProperty.Era,
-                is DateProperty.MonthOfYear,
-                is DateProperty.IsFarPast,
-                is DateProperty.IsFarFuture -> true
-                else -> false
-            }
-        } else {
-            false
+        return when (property) {
+            is DateProperty.Year,
+            is DateProperty.YearOfEra,
+            is DateProperty.Era,
+            is DateProperty.MonthOfYear,
+            is DateProperty.IsFarPast,
+            is DateProperty.IsFarFuture -> true
+            else -> super.has(property)
         }
     }
 
@@ -107,7 +107,7 @@ class YearMonth(
         return when (property) {
             is DateProperty.IsFarPast -> this == MIN
             is DateProperty.IsFarFuture -> this == MAX
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }
     }
 
@@ -117,7 +117,7 @@ class YearMonth(
             is DateProperty.YearOfEra -> if (year >= 1) year else 1 - year
             is DateProperty.Era -> if (year >= 1) 1 else 0
             is DateProperty.MonthOfYear -> monthNumber
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }.toLong()
     }
 

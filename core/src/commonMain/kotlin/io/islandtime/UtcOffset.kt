@@ -2,13 +2,16 @@
 
 package io.islandtime
 
-import io.islandtime.base.*
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.Temporal
+import io.islandtime.base.TemporalProperty
 import io.islandtime.internal.SECONDS_PER_HOUR
 import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.properties.UtcOffsetProperty
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
@@ -55,7 +58,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
     }
 
     override fun has(property: TemporalProperty<*>): Boolean {
-        return property is UtcOffsetProperty
+        return property is UtcOffsetProperty || super.has(property)
     }
 
     override fun get(property: NumberProperty): Long {
@@ -65,7 +68,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Temporal, Comparable<UtcO
             is UtcOffsetProperty.Minutes -> (totalSeconds.absoluteValue.value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE
             is UtcOffsetProperty.Seconds -> totalSeconds.absoluteValue.value % SECONDS_PER_MINUTE
             is UtcOffsetProperty.TotalSeconds -> totalSeconds.value
-            else -> throwUnsupportedTemporalPropertyException(property)
+            else -> super.get(property)
         }.toLong()
     }
 
