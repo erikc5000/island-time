@@ -1,8 +1,9 @@
 package io.islandtime.parser
 
 import io.islandtime.MAX_TIME_ZONE_STRING_LENGTH
-import io.islandtime.base.*
+import io.islandtime.base.BooleanProperty
 import io.islandtime.format.TextStyle
+import io.islandtime.parser.dsl.*
 import io.islandtime.properties.*
 
 /**
@@ -29,7 +30,7 @@ inline fun TemporalParserBuilder.year(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(DateProperty.Year)
         builder()
     }
@@ -59,7 +60,7 @@ inline fun TemporalParserBuilder.yearOfEra(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(DateProperty.YearOfEra)
         builder()
     }
@@ -71,7 +72,7 @@ inline fun TemporalParserBuilder.yearOfEra(
  * The result will be associated with [DateProperty.Era].
  */
 fun TemporalParserBuilder.era(styles: Set<TextStyle>) {
-    localizedText(DateProperty.Era, styles)
+    localizedDateTimeText(DateProperty.Era, styles)
 }
 
 /**
@@ -80,7 +81,7 @@ fun TemporalParserBuilder.era(styles: Set<TextStyle>) {
  * The result will be associated with [DateProperty.Era].
  */
 fun TemporalParserBuilder.era(style: TextStyle) {
-    localizedText(DateProperty.Era, setOf(style))
+    localizedDateTimeText(DateProperty.Era, setOf(style))
 }
 
 /**
@@ -107,7 +108,7 @@ inline fun TemporalParserBuilder.monthNumber(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(DateProperty.MonthOfYear)
         builder()
     }
@@ -119,7 +120,7 @@ inline fun TemporalParserBuilder.monthNumber(
  * The result will be associated with [DateProperty.MonthOfYear].
  */
 fun TemporalParserBuilder.localizedMonth(styles: Set<TextStyle>) {
-    localizedText(DateProperty.MonthOfYear, styles)
+    localizedDateTimeText(DateProperty.MonthOfYear, styles)
 }
 
 /**
@@ -128,7 +129,7 @@ fun TemporalParserBuilder.localizedMonth(styles: Set<TextStyle>) {
  * The result will be associated with [DateProperty.MonthOfYear].
  */
 fun TemporalParserBuilder.localizedMonth(style: TextStyle) {
-    localizedText(DateProperty.MonthOfYear, setOf(style))
+    localizedDateTimeText(DateProperty.MonthOfYear, setOf(style))
 }
 
 /**
@@ -155,7 +156,7 @@ inline fun TemporalParserBuilder.dayOfYear(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(DateProperty.DayOfYear)
         builder()
     }
@@ -185,7 +186,7 @@ inline fun TemporalParserBuilder.dayOfMonth(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(DateProperty.DayOfMonth)
         builder()
     }
@@ -200,7 +201,7 @@ inline fun TemporalParserBuilder.dayOfWeekNumber(
     length: Int = 1,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(DateProperty.DayOfWeek)
         builder()
     }
@@ -212,7 +213,7 @@ inline fun TemporalParserBuilder.dayOfWeekNumber(
  * The result will be associated with [DateProperty.DayOfWeek].
  */
 fun TemporalParserBuilder.localizedDayOfWeek(styles: Set<TextStyle>) {
-    localizedText(DateProperty.DayOfWeek, styles)
+    localizedDateTimeText(DateProperty.DayOfWeek, styles)
 }
 
 /**
@@ -221,7 +222,7 @@ fun TemporalParserBuilder.localizedDayOfWeek(styles: Set<TextStyle>) {
  * The result will be associated with [DateProperty.DayOfWeek].
  */
 fun TemporalParserBuilder.localizedDayOfWeek(style: TextStyle) {
-    localizedText(DateProperty.DayOfWeek, setOf(style))
+    localizedDateTimeText(DateProperty.DayOfWeek, setOf(style))
 }
 
 /**
@@ -230,7 +231,7 @@ fun TemporalParserBuilder.localizedDayOfWeek(style: TextStyle) {
  * The result will be associated with [TimeProperty.AmPmOfDay].
  */
 fun TemporalParserBuilder.amPm() {
-    localizedText(TimeProperty.AmPmOfDay, setOf(TextStyle.FULL))
+    localizedDateTimeText(TimeProperty.AmPmOfDay, setOf(TextStyle.FULL))
 }
 
 /**
@@ -257,7 +258,7 @@ inline fun TemporalParserBuilder.hourOfDay(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(TimeProperty.HourOfDay)
         builder()
     }
@@ -287,7 +288,7 @@ inline fun TemporalParserBuilder.minuteOfHour(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(TimeProperty.MinuteOfHour)
         builder()
     }
@@ -317,7 +318,7 @@ inline fun TemporalParserBuilder.secondOfMinute(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(TimeProperty.SecondOfMinute)
         builder()
     }
@@ -355,14 +356,14 @@ inline fun TemporalParserBuilder.fractionalSecondOfMinute(
     fractionScale: Int = 9,
     crossinline builder: DecimalNumberParserBuilder.() -> Unit = {}
 ) {
-    fractionalSecondOfMinute(wholeLength..wholeLength, fractionLength, fractionScale, builder)
+    fractionalSecondOfMinute(wholeLength = wholeLength..wholeLength, fractionLength, fractionScale, builder)
 }
 
 inline fun TemporalParserBuilder.utcOffsetHours(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(UtcOffsetProperty.Hours)
         builder()
     }
@@ -372,7 +373,7 @@ inline fun TemporalParserBuilder.utcOffsetMinutes(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(UtcOffsetProperty.Minutes)
         builder()
     }
@@ -382,7 +383,7 @@ inline fun TemporalParserBuilder.utcOffsetSeconds(
     length: Int,
     crossinline builder: WholeNumberParserBuilder.() -> Unit = {}
 ) {
-    wholeNumber(length) {
+    wholeNumber(length = length) {
         associateWith(UtcOffsetProperty.Seconds)
         builder()
     }
@@ -402,7 +403,7 @@ fun TemporalParserBuilder.utcOffsetSign() {
  */
 fun TemporalParserBuilder.utcDesignator() {
     literal('Z') {
-        onParsed { this[UtcOffsetProperty.TotalSeconds] = 0L }
+        onParsed { result[UtcOffsetProperty.TotalSeconds] = 0L }
     }
 }
 
@@ -546,7 +547,7 @@ inline fun TemporalParserBuilder.durationOfFractionalSeconds(
  * [TimeZoneProperty.Id].
  */
 fun TemporalParserBuilder.timeZoneId() {
-    string(length = 1..MAX_TIME_ZONE_STRING_LENGTH) {
+    text(length = 1..MAX_TIME_ZONE_STRING_LENGTH) {
         onEachChar { char, index ->
             if (index == 0) {
                 when (char) {
@@ -567,7 +568,7 @@ fun TemporalParserBuilder.timeZoneId() {
             }
         }
 
-        onParsed { this[TimeZoneProperty.Id] = it }
+        onParsed { result[TimeZoneProperty.Id] = it }
     }
 }
 

@@ -1,7 +1,7 @@
 package io.islandtime.format.internal
 
-import io.islandtime.format.LengthExceededBehavior
-import io.islandtime.format.NumberFormatterBuilder
+import io.islandtime.format.dsl.LengthExceededBehavior
+import io.islandtime.format.dsl.NumberFormatterBuilder
 import io.islandtime.format.SignStyle
 import io.islandtime.format.TemporalFormatter
 

@@ -24,6 +24,7 @@ class LocalizedTimeZoneTextFormatterTest : AbstractIslandTimeTest(
             localizedTimeZoneText(TextStyle.SHORT, generic = true)
         }
 
+        // Note: America/Boston doesn't exist
         assertEquals(
             "America/Boston",
             formatter.format(

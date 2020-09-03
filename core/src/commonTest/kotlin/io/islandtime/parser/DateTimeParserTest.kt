@@ -1,28 +1,19 @@
 package io.islandtime.parser
 
-import io.islandtime.properties.DateProperty
+import io.islandtime.Date
+import io.islandtime.test.AbstractIslandTimeTest
+import io.islandtime.test.FakeDateTimeTextProvider
+import io.islandtime.toDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
-class DateTimeParserTest {
+class DateTimeParserTest : AbstractIslandTimeTest(
+    testDateTimeTextProvider = FakeDateTimeTextProvider
+) {
     @Test
-    fun `parses empty strings when the parser is empty`() {
-        val result = TemporalParser {}.parse("")
-        assertTrue { result.isEmpty() }
-    }
-
-    @Test
-    fun `throws an exception when there are unexpected characters after all parsers complete`() {
-        val parser = TemporalParser {
-            wholeNumber(1) {
-                associateWith(DateProperty.DayOfWeek)
-            }
-        }
-
-        val exception = assertFailsWith<TemporalParseException> { parser.parse("1 ") }
-        assertEquals(1, exception.errorIndex)
-        assertEquals("1 ", exception.parsedString)
+    fun `create parser from date-time pattern`() {
+        val parser = DateTimeParser("uuuu-MM-dd")
+        val date = "2020-10-26".toDate(parser)
+        assertEquals(Date(2020, 10, 26), date)
     }
 }

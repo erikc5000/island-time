@@ -8,12 +8,17 @@ import io.islandtime.locale.Locale
  */
 interface DateTimeFormatProvider {
     /**
-     * Get a localized formatter with the specified date and time styles.
+     * Gets a localized formatter with the specified date and time styles.
      */
     fun formatterFor(dateStyle: FormatStyle?, timeStyle: FormatStyle?, locale: Locale): TemporalFormatter
 
     /**
-     * Get the best localized formatter from an input skeleton, as defined in
+     * Checks if localized skeletons are supported by this provider.
+     */
+    val supportsSkeletons: Boolean get() = false
+
+    /**
+     * Gets the best localized formatter from an input skeleton, as defined in
      * [Unicode Technical Standard #35](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).
      */
     fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? = null

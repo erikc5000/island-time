@@ -433,7 +433,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toDateTimeInterval() throws an exception when required properties are missing`() {
-        val customParser = groupedTemporalParser {
+        val customParser = GroupedTemporalParser {
             group {
                 optional {
                     anyOf(DateTimeParsers.Iso.DATE_TIME, DateTimeParsers.Iso.YEAR)

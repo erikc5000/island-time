@@ -1,36 +1,41 @@
 package io.islandtime.format.internal
 
 import io.islandtime.DateTimeException
-import io.islandtime.properties.TimePointProperty
 import io.islandtime.UtcOffset
-import io.islandtime.base.*
+import io.islandtime.base.NumberProperty
+import io.islandtime.base.StringProperty
 import io.islandtime.format.*
+import io.islandtime.format.dsl.FormatOption
+import io.islandtime.format.dsl.IsoFormat
+import io.islandtime.format.dsl.LengthExceededBehavior
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.internal.toIntExact
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.seconds
-import io.islandtime.properties.*
+import io.islandtime.properties.TimePointProperty
+import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
 import kotlin.math.absoluteValue
 
 internal object EmptyFormatter : TemporalFormatter() {
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) = Unit
+    override fun format(context: Context, stringBuilder: StringBuilder) = Unit
 }
 
 internal class CompositeFormatter(
     private val childFormatters: List<TemporalFormatter>
 ) : TemporalFormatter() {
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         childFormatters.forEach { it.format(context, stringBuilder) }
     }
 }
 
 internal class OnlyIfFormatter(
-    private val condition: TemporalFormatter.Context.() -> Boolean,
+    private val condition: Context.() -> Boolean,
     private val childFormatter: TemporalFormatter
 ) : TemporalFormatter() {
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         if (condition(context)) {
             childFormatter.format(context, stringBuilder)
         }
@@ -38,21 +43,21 @@ internal class OnlyIfFormatter(
 }
 
 internal class CharLiteralFormatter(private val literal: Char) : TemporalFormatter() {
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         stringBuilder.append(literal)
     }
 }
 
 internal class StringLiteralFormatter(private val literal: String) : TemporalFormatter() {
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         stringBuilder.append(literal)
     }
 }
 
 internal class SignFormatter(private val property: NumberProperty) : TemporalFormatter() {
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
-        val numberStyle = context.settings.numberStyle
+        val numberStyle = context.numberStyle
 
         stringBuilder.append(
             when {
@@ -79,7 +84,7 @@ internal class WholeNumberFormatter(
         require(maxLength <= 19) { "maxLength must be in 1..19" }
     }
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = valueTransform(value(context))
 
         val numberString = when (value) {
@@ -98,7 +103,7 @@ internal class WholeNumberFormatter(
             signStyle
         }
 
-        val numberStyle = context.settings.numberStyle
+        val numberStyle = context.numberStyle
         stringBuilder.appendSign(value, adjustedSignStyle, numberStyle)
 
         val requiredPadding = minLength - numberString.length
@@ -153,10 +158,10 @@ internal class DecimalNumberFormatter(
         require(fractionScale in 1..9) { "fractionScale must in 1..9" }
     }
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val wholeValue = context.temporal.get(wholeProperty)
         val fractionValue = context.temporal.get(fractionProperty)
-        val numberStyle = context.settings.numberStyle
+        val numberStyle = context.numberStyle
 
         if (wholeValue < 0L || (wholeValue == 0L && fractionValue < 0L)) {
             stringBuilder.append(numberStyle.minusSign.first())
@@ -212,7 +217,7 @@ internal class FractionFormatter(
         require(scale in 1..9) { "scale must in in 1..9" }
     }
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property).absoluteValue
         validateFractionValue(property, value, scale)
 
@@ -221,13 +226,13 @@ internal class FractionFormatter(
             minLength,
             maxLength,
             scale,
-            context.settings.numberStyle
+            context.numberStyle
         )
     }
 }
 
 internal class TextFormatter(private val property: StringProperty) : TemporalFormatter() {
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
         stringBuilder.append(value)
     }
@@ -244,7 +249,7 @@ internal class LocalizedDateTimeStyleFormatter(
         }
     }
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         DateTimeFormatProvider.formatterFor(dateStyle, timeStyle, context.locale).format(context, stringBuilder)
     }
 }
@@ -253,7 +258,7 @@ internal class LocalizedDateTimeSkeletonFormatter(
     private val skeleton: String
 ) : TemporalFormatter() {
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         DateTimeFormatProvider.formatterFor(skeleton, context.locale)
             ?.format(context, stringBuilder)
             ?: throw UnsupportedOperationException(
@@ -270,7 +275,7 @@ internal class LocalizedDateTimeTextFormatter(
 
     private val provider get() = overrideProvider ?: DateTimeTextProvider.Companion
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
         val text = provider.textFor(property, value, style, context.locale)
         stringBuilder.append(text)
@@ -284,7 +289,7 @@ internal class LocalizedTimeZoneTextFormatter(
 
     private val style: TextStyle = style.asNormal()
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val temporal = context.temporal
         val zone = temporal.get(TimeZoneProperty.TimeZoneObject)
         var useGeneric = generic
@@ -336,7 +341,7 @@ internal class UtcOffsetFormatter(
         }
     }
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val totalSeconds = context.temporal.get(UtcOffsetProperty.TotalSeconds)
         val offset = UtcOffset(totalSeconds.seconds.toIntSeconds()).validated()
 
@@ -400,7 +405,7 @@ internal class LocalizedUtcOffsetFormatter(private val style: TextStyle) : Tempo
         }
     }
 
-    override fun format(context: FormatContext, stringBuilder: StringBuilder) {
+    override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(UtcOffsetProperty.TotalSeconds).toIntExact()
         val offset = UtcOffset(value.seconds).validated()
 

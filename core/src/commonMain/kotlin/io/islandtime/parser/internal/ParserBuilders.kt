@@ -1,12 +1,14 @@
 package io.islandtime.parser.internal
 
+import io.islandtime.base.NumberProperty
 import io.islandtime.format.SignStyle
-import io.islandtime.parser.*
+import io.islandtime.parser.TemporalParser
+import io.islandtime.parser.dsl.*
 
 internal class SignParserBuilderImpl : SignParserBuilder {
-    private val onParsed = mutableListOf<TemporalParseResult.(parsed: Int) -> Unit>()
+    private val onParsed = mutableListOf<TemporalParser.Context.(parsed: Int) -> Unit>()
 
-    override fun onParsed(action: TemporalParseResult.(parsed: Int) -> Unit) {
+    override fun onParsed(action: TemporalParser.Context.(parsed: Int) -> Unit) {
         onParsed += action
     }
 
@@ -15,44 +17,37 @@ internal class SignParserBuilderImpl : SignParserBuilder {
     }
 }
 
-internal abstract class WholeNumberParserBuilderImpl : WholeNumberParserBuilder {
-    protected val onParsed = mutableListOf<TemporalParseResult.(parsed: Long) -> Unit>()
-    protected var signStyle: SignStyle? = null
+internal class WholeNumberParserBuilderImpl(
+    private val minLength: Int,
+    private val maxLength: Int
+) : WholeNumberParserBuilder {
+
+    private val onParsed = mutableListOf<TemporalParser.Context.(parsed: Long) -> Unit>()
+    private var signStyle: SignStyle? = null
 
     override fun enforceSignStyle(signStyle: SignStyle) {
         this.signStyle = signStyle
     }
 
-    override fun onParsed(action: TemporalParseResult.(parsed: Long) -> Unit) {
+    override fun onParsed(action: TemporalParser.Context.(parsed: Long) -> Unit) {
         onParsed += action
     }
-}
-
-internal class FixedLengthNumberParserBuilderImpl(
-    private val length: Int
-) : WholeNumberParserBuilderImpl() {
 
     fun build(): TemporalParser {
-        return FixedLengthNumberParser(
-            length,
-            onParsed,
-            signStyle
-        )
-    }
-}
-
-internal class VariableLengthNumberParserBuilderImpl(
-    private val minLength: Int,
-    private val maxLength: Int
-) : WholeNumberParserBuilderImpl() {
-
-    fun build(): TemporalParser {
-        return VariableLengthNumberParser(
-            minLength,
-            maxLength,
-            onParsed,
-            signStyle
-        )
+        return if (minLength == maxLength) {
+            FixedLengthNumberParser(
+                minLength,
+                onParsed,
+                signStyle
+            )
+        } else {
+            VariableLengthNumberParser(
+                minLength,
+                maxLength,
+                onParsed,
+                signStyle
+            )
+        }
     }
 }
 
@@ -61,17 +56,17 @@ internal class DecimalNumberParserBuilderImpl(
     private val maxWholeLength: Int,
     private val minFractionLength: Int,
     private val maxFractionLength: Int,
-    private val fractionScale: Int
+    private val fractionScale: Int,
 ) : DecimalNumberParserBuilder {
 
     private var signStyle: SignStyle? = null
-    private val onParsed = mutableListOf<TemporalParseResult.(whole: Long, fraction: Long) -> Unit>()
+    private val onParsed = mutableListOf<TemporalParser.Context.(whole: Long, fraction: Long) -> Unit>()
 
     override fun enforceSignStyle(signStyle: SignStyle) {
         this.signStyle = signStyle
     }
 
-    override fun onParsed(action: TemporalParseResult.(whole: Long, fraction: Long) -> Unit) {
+    override fun onParsed(action: TemporalParser.Context.(whole: Long, fraction: Long) -> Unit) {
         onParsed += action
     }
 
@@ -88,30 +83,48 @@ internal class DecimalNumberParserBuilderImpl(
     }
 }
 
-internal class StringParserBuilderImpl(
-    private val length: IntRange
-) : StringParserBuilder {
-    private val onEachChar = mutableListOf<TemporalParseResult.(char: Char, index: Int) -> StringParseAction>()
-    private val onParsed = mutableListOf<TemporalParseResult.(parsed: String) -> Unit>()
+internal class FractionParserBuilderImpl(
+    private val minLength: Int,
+    private val maxLength: Int,
+    private val scale: Int
+) : FractionParserBuilder {
 
-    override fun onEachChar(action: TemporalParseResult.(char: Char, index: Int) -> StringParseAction) {
+    private val onParsed = mutableListOf<TemporalParser.Context.(parsed: Long) -> Unit>()
+
+    override fun onParsed(action: TemporalParser.Context.(parsed: Long) -> Unit) {
+        onParsed += action
+    }
+
+    fun build(): TemporalParser = FractionParser(minLength, maxLength, scale, onParsed)
+}
+
+internal class TextParserBuilderImpl(
+    private val minLength: Int,
+    private val maxLength: Int
+) : TextParserBuilder {
+
+    private val onEachChar = mutableListOf<TemporalParser.Context.(char: Char, index: Int) -> StringParseAction>()
+    private val onParsed = mutableListOf<TemporalParser.Context.(parsed: String) -> Unit>()
+
+    override fun onEachChar(action: TemporalParser.Context.(char: Char, index: Int) -> StringParseAction) {
         onEachChar += action
     }
 
-    override fun onParsed(action: TemporalParseResult.(parsed: String) -> Unit) {
+    override fun onParsed(action: TemporalParser.Context.(parsed: String) -> Unit) {
         onParsed += action
     }
 
     fun build(): TemporalParser {
         return StringParser(
-            length,
+            minLength,
+            maxLength,
             onEachChar.ifEmpty { DEFAULT_ON_PARSED },
             onParsed
         )
     }
 
     companion object {
-        private val DEFAULT_ON_PARSED = listOf<TemporalParseResult.(char: Char, index: Int) -> StringParseAction>(
+        private val DEFAULT_ON_PARSED = listOf<TemporalParser.Context.(char: Char, index: Int) -> StringParseAction>(
             { _, _ -> StringParseAction.REJECT_AND_STOP }
         )
     }
@@ -120,9 +133,9 @@ internal class StringParserBuilderImpl(
 internal class CharLiteralParserBuilderImpl(
     private val char: Char
 ) : LiteralParserBuilder {
-    private val onParsed = mutableListOf<TemporalParseResult.() -> Unit>()
+    private val onParsed = mutableListOf<TemporalParser.Context.() -> Unit>()
 
-    override fun onParsed(action: TemporalParseResult.() -> Unit) {
+    override fun onParsed(action: TemporalParser.Context.() -> Unit) {
         onParsed += action
     }
 
@@ -134,9 +147,9 @@ internal class CharLiteralParserBuilderImpl(
 internal class StringLiteralParserBuilderImpl(
     private val string: String
 ) : LiteralParserBuilder {
-    private val onParsed = mutableListOf<TemporalParseResult.() -> Unit>()
+    private val onParsed = mutableListOf<TemporalParser.Context.() -> Unit>()
 
-    override fun onParsed(action: TemporalParseResult.() -> Unit) {
+    override fun onParsed(action: TemporalParser.Context.() -> Unit) {
         onParsed += action
     }
 

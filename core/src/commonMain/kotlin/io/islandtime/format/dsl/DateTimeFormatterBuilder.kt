@@ -1,4 +1,6 @@
-package io.islandtime.format
+package io.islandtime.format.dsl
+
+import io.islandtime.format.FormatStyle
 
 @IslandTimeFormatDsl
 interface DateTimeFormatterBuilder :
@@ -28,7 +30,8 @@ interface DateTimeFormatterBuilder :
 
     /**
      * Appends the best localized date-time format based on a [skeleton], which defines only the components that should
-     * be included in the final pattern.
+     * be included in the final pattern. Support for this feature depends on the configured [DateTimeFormatProvider],
+     * but isn't available on all platforms.
      *
      * For more information on acceptable patterns, see
      * [Unicode Technical Standard #35](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).

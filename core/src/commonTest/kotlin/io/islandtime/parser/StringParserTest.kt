@@ -1,5 +1,7 @@
 package io.islandtime.parser
 
+import io.islandtime.parser.dsl.StringParseAction
+import io.islandtime.parser.dsl.text
 import io.islandtime.properties.TimeZoneProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,17 +20,17 @@ class StringParserTest {
 
         val parser = TemporalParser {
             +' '
-            string {
+            text {
                 onEachChar { char, index ->
                     assertEquals(char, expectedCharMap[index]!!)
                     StringParseAction.ACCEPT_AND_CONTINUE
                 }
-                onParsed { this[TimeZoneProperty.Id] = it }
+                onParsed { result[TimeZoneProperty.Id] = it }
             }
         }
 
         val result = parser.parse(" Test")
-        assertTrue { result.size == 1 }
+        assertTrue { result.propertyCount == 1 }
         assertEquals("Test", result[TimeZoneProperty.Id])
     }
 
@@ -36,19 +38,19 @@ class StringParserTest {
     fun `parsing can be stopped with REJECT_AND_STOP`() {
         val parser = TemporalParser {
             +' '
-            string {
+            text {
                 onEachChar { char, index ->
                     assertEquals('.', char)
                     assertEquals(0, index)
                     StringParseAction.REJECT_AND_STOP
                 }
-                onParsed { this[TimeZoneProperty.Id] = it }
+                onParsed { result[TimeZoneProperty.Id] = it }
             }
             +'.'
         }
 
         val result = parser.parse(" .")
-        assertTrue { result.size == 1 }
+        assertTrue { result.propertyCount == 1 }
         assertTrue { result[TimeZoneProperty.Id]!!.isEmpty() }
     }
 
@@ -56,8 +58,8 @@ class StringParserTest {
     fun `reports an error when there are no characters to parse`() {
         val parser = TemporalParser {
             +' '
-            string {
-                onEachChar { _, _ ->  StringParseAction.ACCEPT_AND_CONTINUE }
+            text {
+                onEachChar { _, _ -> StringParseAction.ACCEPT_AND_CONTINUE }
             }
         }
 
@@ -70,7 +72,7 @@ class StringParserTest {
     fun `reports an error when the min length isn't satisfied`() {
         val parser = TemporalParser {
             +' '
-            string(2..10) {
+            text(length = 2..10) {
                 onEachChar { char, _ ->
                     if (char in 'A'..'Z') {
                         StringParseAction.ACCEPT_AND_CONTINUE
@@ -78,7 +80,7 @@ class StringParserTest {
                         StringParseAction.REJECT_AND_STOP
                     }
                 }
-                onParsed { this[TimeZoneProperty.Id] = it }
+                onParsed { result[TimeZoneProperty.Id] = it }
             }
             +'.'
         }
@@ -92,7 +94,7 @@ class StringParserTest {
     fun `reports an error when the max length isn't satisfied`() {
         val parser = TemporalParser {
             +' '
-            string(1..4) {
+            text(length = 1..4) {
                 onEachChar { char, _ ->
                     if (char in 'A'..'Z') {
                         StringParseAction.ACCEPT_AND_CONTINUE
@@ -100,7 +102,7 @@ class StringParserTest {
                         StringParseAction.REJECT_AND_STOP
                     }
                 }
-                onParsed { this[TimeZoneProperty.Id] = it }
+                onParsed { result[TimeZoneProperty.Id] = it }
             }
             +'.'
         }

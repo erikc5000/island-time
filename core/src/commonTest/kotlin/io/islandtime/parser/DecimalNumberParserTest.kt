@@ -1,5 +1,6 @@
 package io.islandtime.parser
 
+import io.islandtime.parser.dsl.decimalNumber
 import io.islandtime.properties.DurationProperty
 import io.islandtime.properties.TimeProperty
 import kotlin.test.Test
@@ -60,8 +61,8 @@ class DecimalNumberParserTest {
         val parser = TemporalParser {
             decimalNumber {
                 onParsed { whole, fraction ->
-                    set(TimeProperty.SecondOfMinute, whole)
-                    set(TimeProperty.NanosecondOfSecond, fraction)
+                    result[TimeProperty.SecondOfMinute] = whole
+                    result[TimeProperty.NanosecondOfSecond] = fraction
                 }
             }
             +' '
@@ -83,10 +84,10 @@ class DecimalNumberParserTest {
     @Test
     fun `allows decimal numbers with a zero length whole component`() {
         val parser = TemporalParser {
-            decimalNumber(0..19) {
+            decimalNumber(wholeLength = 0..19) {
                 onParsed { whole, fraction ->
-                    set(TimeProperty.SecondOfMinute, whole)
-                    set(TimeProperty.NanosecondOfSecond, fraction)
+                    result[TimeProperty.SecondOfMinute] = whole
+                    result[TimeProperty.NanosecondOfSecond] = fraction
                 }
             }
         }
@@ -160,7 +161,7 @@ class DecimalNumberParserTest {
     fun `fractionScale controls the magnitude of the fractional part`() {
         val parser = TemporalParser {
             decimalNumber(fractionScale = 3) {
-                onParsed { _, fraction -> set(TimeProperty.MillisecondOfSecond, fraction) }
+                onParsed { _, fraction -> result[TimeProperty.MillisecondOfSecond] = fraction }
             }
         }
 
@@ -182,10 +183,10 @@ class DecimalNumberParserTest {
     @Test
     fun `reports an error if the whole and fractional parts are both absent`() {
         val parser1 = TemporalParser {
-            decimalNumber(0..19) {
+            decimalNumber(wholeLength = 0..19) {
                 onParsed { whole, fraction ->
-                    set(TimeProperty.SecondOfMinute, whole)
-                    set(TimeProperty.NanosecondOfSecond, fraction)
+                    result[TimeProperty.SecondOfMinute] = whole
+                    result[TimeProperty.NanosecondOfSecond] = fraction
                 }
             }
         }
@@ -202,7 +203,7 @@ class DecimalNumberParserTest {
         }
 
         val parser2 = TemporalParser {
-            childParser(parser1)
+            use(parser1)
             +' '
         }
 
@@ -231,7 +232,7 @@ class DecimalNumberParserTest {
             +' '
             decimalNumber {
                 onParsed { whole, _ ->
-                    set(DurationProperty.Hours, whole)
+                    result[DurationProperty.Hours] = whole
                 }
             }
         }

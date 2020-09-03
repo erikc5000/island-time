@@ -1,23 +1,20 @@
 package io.islandtime.parser
 
-import io.islandtime.base.Temporal
+import io.islandtime.calendar.LocalizationContext
+import io.islandtime.calendar.WeekSettings
+import io.islandtime.calendar.weekSettings
 import io.islandtime.format.NumberStyle
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
-import io.islandtime.parser.internal.ParseContext
+import io.islandtime.parser.dsl.TemporalParserBuilder
 import io.islandtime.parser.internal.TemporalParserBuilderImpl
 
-fun interface Resolver<T : Temporal> {
-    fun TemporalParseResult.resolve(): T?
-}
-
 /**
- * A parser that converts text into a collection of properties that are understood throughout Island
- * Time.
+ * A parser that converts text into a collection of properties that are understood throughout Island Time.
  */
 abstract class TemporalParser internal constructor() {
     /**
-     * Parse [text] into a [TemporalParseResult] containing all parsed properties.
+     * Parses [text] into a [TemporalParseResult] containing all parsed properties.
      *
      * @param text text to parse
      * @param settings customize parsing behavior
@@ -28,8 +25,8 @@ abstract class TemporalParser internal constructor() {
         text: CharSequence,
         settings: Settings = Settings.DEFAULT
     ): TemporalParseResult {
-        val context = ParseContext(settings)
-        val endPosition = parse(context, text, 0)
+        val context = MutableContext(settings)
+        val endPosition = parse(context, text, position = 0)
 
         if (endPosition < 0) {
             val errorPosition = endPosition.inv()
@@ -59,7 +56,7 @@ abstract class TemporalParser internal constructor() {
      */
     internal open val isConst: Boolean get() = false
 
-    internal abstract fun parse(context: ParseContext, text: CharSequence, position: Int): Int
+    internal abstract fun parse(context: MutableContext, text: CharSequence, position: Int): Int
 
     /**
      * Settings that control the parsing behavior.
@@ -70,13 +67,15 @@ abstract class TemporalParser internal constructor() {
     data class Settings(
         val numberStyle: NumberStyle = NumberStyle.DEFAULT,
         val locale: () -> Locale = { defaultLocale() },
+        val weekSettingsOverride: WeekSettings? = null,
         val isCaseSensitive: Boolean = true
     ) {
         constructor(
             numberStyle: NumberStyle = NumberStyle.DEFAULT,
             locale: Locale,
+            weekSettingsOverride: WeekSettings? = null,
             isCaseSensitive: Boolean = true
-        ) : this(numberStyle, { locale }, isCaseSensitive)
+        ) : this(numberStyle, { locale }, weekSettingsOverride, isCaseSensitive)
 
         companion object {
             /**
@@ -84,6 +83,20 @@ abstract class TemporalParser internal constructor() {
              */
             val DEFAULT = Settings()
         }
+    }
+
+    interface Context : LocalizationContext {
+        val numberStyle: NumberStyle
+        val isCaseSensitive: Boolean
+        val result: TemporalParseResult
+    }
+
+    internal class MutableContext(private val settings: Settings) : Context {
+        override val locale by lazy(LazyThreadSafetyMode.NONE, settings.locale)
+        override val weekSettings: WeekSettings get() = settings.weekSettingsOverride ?: locale.weekSettings
+        override val numberStyle: NumberStyle get() = settings.numberStyle
+        override var isCaseSensitive = settings.isCaseSensitive
+        override var result = TemporalParseResult()
     }
 }
 

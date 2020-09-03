@@ -1,8 +1,8 @@
 package io.islandtime.format.internal
 
-import io.islandtime.format.DateTimeFormatBuilder
-import io.islandtime.format.FormatOption
-import io.islandtime.format.IsoFormat
+import io.islandtime.format.dsl.DateTimeFormatBuilder
+import io.islandtime.format.dsl.FormatOption
+import io.islandtime.format.dsl.IsoFormat
 import io.islandtime.format.TextStyle
 
 internal fun parseDateTimePatternTo(builder: DateTimeFormatBuilder, pattern: CharSequence): Unit = with(builder) {
@@ -59,12 +59,15 @@ private fun DateTimeFormatBuilder.parsePatternLetter(letter: Char, count: Int) {
     when (letter) {
         'G' -> parseEra(letter, count)
         'y' -> parseYearOfEra(count)
+        'Y' -> parseWeekBasedYear(count)
         'u' -> parseYear(count)
         // Not supported yet
         // 'Q' -> QUARTER_OF_YEAR
         // 'q' -> QUARTER_OF_YEAR
         'M' -> parseFormatMonth(letter, count)
         'L' -> parseStandaloneMonth(letter, count)
+        'w' -> parseWeekOfWeekBasedYear(letter, count)
+        'W' -> parseWeekOfMonth(letter, count)
         'd' -> parseDayOfMonth(letter, count)
         'D' -> parseDayOfYear(letter, count)
         'F' -> parseDayOfWeekInMonth(letter, count)
@@ -115,6 +118,13 @@ private fun DateTimeFormatBuilder.parseYearOfEra(count: Int) {
     }
 }
 
+private fun DateTimeFormatBuilder.parseWeekBasedYear(count: Int) {
+    when (count) {
+        2 -> twoDigitWeekBasedYear()
+        else -> weekBasedYear(minLength = count)
+    }
+}
+
 private fun DateTimeFormatBuilder.parseYear(count: Int) {
     year(minLength = count)
 }
@@ -137,6 +147,14 @@ private fun DateTimeFormatBuilder.parseStandaloneMonth(letter: Char, count: Int)
         5 -> monthName(TextStyle.NARROW_STANDALONE)
         else -> throwTooManyLettersException(letter)
     }
+}
+
+private fun DateTimeFormatBuilder.parseWeekOfWeekBasedYear(letter: Char, count: Int) {
+    parseNumberPattern(letter, count, 2, ::weekOfWeekBasedYear)
+}
+
+private fun DateTimeFormatBuilder.parseWeekOfMonth(letter: Char, count: Int) {
+    parseNumberPattern(letter, count, 2, ::weekOfMonth)
 }
 
 private fun DateTimeFormatBuilder.parseDayOfMonth(letter: Char, count: Int) {

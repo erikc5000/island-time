@@ -1,7 +1,8 @@
 package io.islandtime.parser.internal
 
 import io.islandtime.parser.*
-import io.islandtime.parser.GroupedTemporalParserBuilder
+import io.islandtime.parser.dsl.GroupedTemporalParserBuilder
+import io.islandtime.parser.dsl.TemporalParserBuilder
 
 @PublishedApi
 internal class GroupedTemporalParserBuilderImpl : GroupedTemporalParserBuilder {
@@ -27,9 +28,9 @@ internal class GroupedTemporalParserBuilderImpl : GroupedTemporalParserBuilder {
         }
     }
 
-    override fun anyOf(vararg childParsers: GroupedTemporalParser) {
-        if (childParsers.isNotEmpty()) {
-            parsers += GroupedTemporalParser(childParsers.asList(), isAnyOf = true)
+    override fun anyOf(vararg parsers: GroupedTemporalParser) {
+        if (parsers.isNotEmpty()) {
+            this.parsers += GroupedTemporalParser(parsers.asList(), isAnyOf = true)
         }
     }
 

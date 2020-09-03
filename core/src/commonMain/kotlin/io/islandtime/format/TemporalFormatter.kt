@@ -3,7 +3,8 @@ package io.islandtime.format
 import io.islandtime.base.Temporal
 import io.islandtime.calendar.LocalizationContext
 import io.islandtime.calendar.WeekSettings
-import io.islandtime.format.internal.FormatContext
+import io.islandtime.calendar.weekSettings
+import io.islandtime.format.dsl.TemporalFormatterBuilder
 import io.islandtime.format.internal.TemporalFormatterBuilderImpl
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
@@ -27,12 +28,12 @@ abstract class TemporalFormatter internal constructor() {
         temporal: Temporal,
         settings: Settings = Settings.DEFAULT
     ): StringBuilder {
-        val context = FormatContext(temporal, settings)
+        val context = MutableContext(temporal, settings)
         format(context, stringBuilder)
         return stringBuilder
     }
 
-    internal abstract fun format(context: FormatContext, stringBuilder: StringBuilder)
+    internal abstract fun format(context: Context, stringBuilder: StringBuilder)
 
     /**
      * Settings that control the formatting behavior.
@@ -60,17 +61,26 @@ abstract class TemporalFormatter internal constructor() {
     }
 
     interface Context : LocalizationContext {
+        val numberStyle: NumberStyle
         val temporal: Temporal
+    }
+
+    internal class MutableContext(
+        override var temporal: Temporal,
+        private val settings: Settings
+    ) : Context {
+        override val locale: Locale by lazy(LazyThreadSafetyMode.NONE, settings.locale)
+        override val numberStyle: NumberStyle get() = settings.numberStyle
+        override val weekSettings: WeekSettings get() = settings.weekSettingsOverride ?: locale.weekSettings
     }
 }
 
 /**
  * Builds a custom [TemporalFormatter] using an un-opinionated, low-level interface. In most cases, you should use
- * [DateTimeFormatter] instead. This is available primarily as a tool to work around corner cases or build support
- * for new types of formatters.
+ * [DateTimeFormatter] instead. This is available primarily as a tool to work around corner cases or build support for
+ * new types of formatters.
  * @see DateTimeFormatter
- * @see DateTimeFormatter
- * @see LocalizedTimeFormatter
+ * @see LocalizedDateTimeFormatter
  */
 @Suppress("FunctionName")
 inline fun TemporalFormatter(builder: TemporalFormatterBuilder.() -> Unit): TemporalFormatter {

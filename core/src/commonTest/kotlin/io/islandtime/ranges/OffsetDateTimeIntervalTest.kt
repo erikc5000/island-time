@@ -5,7 +5,7 @@ import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
 import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.groupedTemporalParser
+import io.islandtime.parser.GroupedTemporalParser
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -436,7 +436,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `String_toOffsetDateTimeInterval() throws an exception when required properties are missing`() {
-        val customParser = groupedTemporalParser {
+        val customParser = GroupedTemporalParser {
             group {
                 optional {
                     anyOf(DateTimeParsers.Iso.OFFSET_DATE_TIME, DateTimeParsers.Iso.YEAR)

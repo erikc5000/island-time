@@ -1,19 +1,50 @@
 package io.islandtime.test
 
 import io.islandtime.DateTimeException
+import io.islandtime.base.NumberProperty
 import io.islandtime.format.AbstractDateTimeTextProvider
 import io.islandtime.format.ParsableTextList
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
-import io.islandtime.base.NumberProperty
 
 object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
+    private val descendingTextComparator =
+        compareByDescending<Pair<String, Long>> { it.first.length }.thenBy { it.second }
+
+    private data class ParsableTextKey(
+        val property: NumberProperty,
+        val styles: Set<TextStyle>,
+        val locale: Locale
+    )
+
     override fun parsableTextFor(
         property: NumberProperty,
         styles: Set<TextStyle>,
         locale: Locale
     ): ParsableTextList {
-        TODO("Not yet implemented")
+        if (styles.isEmpty() || !supports(property)) {
+            return emptyList()
+        }
+
+        val valueMap = mutableMapOf<String, MutableSet<Long>>()
+
+        styles.forEach { style ->
+            property.valueRange
+                .mapNotNull { value -> textFor(property, value, style, locale)?.let { it to value } }
+                .forEach { (text, value) ->
+                    valueMap.getOrPut(text) { mutableSetOf() } += value
+                }
+        }
+
+        return valueMap
+            .mapNotNull {
+                if (it.value.size == 1) {
+                    it.key to it.value.first()
+                } else {
+                    null
+                }
+            }
+            .sortedWith(descendingTextComparator)
     }
 
     override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {

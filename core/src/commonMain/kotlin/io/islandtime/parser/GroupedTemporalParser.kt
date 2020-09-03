@@ -1,6 +1,6 @@
 package io.islandtime.parser
 
-import io.islandtime.parser.internal.ParseContext
+import io.islandtime.parser.dsl.GroupedTemporalParserBuilder
 import io.islandtime.parser.internal.GroupedTemporalParserBuilderImpl
 
 class GroupedTemporalParser internal constructor(
@@ -20,7 +20,7 @@ class GroupedTemporalParser internal constructor(
         text: CharSequence,
         settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
     ): List<TemporalParseResult> {
-        val context = ParseContext(settings)
+        val context = TemporalParser.MutableContext(settings)
         val (endPosition, results) = parse(context, text, 0)
 
         if (endPosition < 0) {
@@ -43,7 +43,7 @@ class GroupedTemporalParser internal constructor(
     }
 
     internal fun parse(
-        context: ParseContext,
+        context: TemporalParser.MutableContext,
         text: CharSequence,
         position: Int
     ): Pair<Int, List<TemporalParseResult>> {
@@ -102,12 +102,13 @@ class GroupedTemporalParser internal constructor(
 }
 
 /**
- * Creates a [GroupedDateTimeParser].
+ * Creates a [GroupedTemporalParser].
  *
  * A grouped parser is capable of grouping the parsed properties into separate results, allowing the
  * same property to be reused multiple times within a character sequence.
  */
-inline fun groupedTemporalParser(
+@Suppress("FunctionName")
+inline fun GroupedTemporalParser(
     builder: GroupedTemporalParserBuilder.() -> Unit
 ): GroupedTemporalParser {
     return GroupedTemporalParserBuilderImpl().apply(builder).build()

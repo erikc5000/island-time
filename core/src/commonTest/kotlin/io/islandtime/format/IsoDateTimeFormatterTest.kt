@@ -1,6 +1,8 @@
 package io.islandtime.format
 
 import io.islandtime.*
+import io.islandtime.format.dsl.IsoDateTimeFormatter
+import io.islandtime.format.dsl.IsoFormat
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

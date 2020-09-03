@@ -1,9 +1,10 @@
-package io.islandtime.format
+package io.islandtime.format.dsl
 
 import io.islandtime.base.BooleanProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.TemporalProperty
 import io.islandtime.base.getOrElse
+import io.islandtime.format.TemporalFormatter
 
 @IslandTimeFormatDsl
 interface ComposableFormatterBuilder {

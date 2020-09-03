@@ -1,9 +1,12 @@
-package io.islandtime.format
+package io.islandtime.format.dsl
 
+import io.islandtime.calendar.WeekProperty
+import io.islandtime.format.TemporalFormatter
+import io.islandtime.format.TextStyle
+import io.islandtime.format.internal.parseDateTimePatternTo
 import io.islandtime.properties.DateProperty
 import io.islandtime.properties.TimeProperty
 import io.islandtime.properties.UtcOffsetProperty
-import io.islandtime.format.internal.parseDateTimePatternTo
 
 @IslandTimeFormatDsl
 interface DateTimeFormatBuilder : LiteralFormatBuilder {
@@ -29,6 +32,20 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     fun twoDigitYearOfEra()
 
     /**
+     * Appends the week-based year, padding the start with zero as necessary to satisfy [minLength].
+     *
+     * The property [WeekProperty.LocalizedWeekBasedYear] is required during formatting.
+     */
+    fun weekBasedYear(minLength: Int = 1, maxLength: Int = 19)
+
+    /**
+     * Appends the two-digit week-based year.
+     *
+     * The property [WeekProperty.LocalizedWeekBasedYear] is required during formatting.
+     */
+    fun twoDigitWeekBasedYear()
+
+    /**
      * Appends a year, padding the start with zero as necessary to satisfy [minLength].
      *
      * The property [DateProperty.Year] is required during formatting.
@@ -36,7 +53,7 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     fun year(minLength: Int = 1, maxLength: Int = 19)
 
     /**
-     * Appends the month of year number with a fixed number of digits.
+     * Appends the month of year number.
      *
      * The property [DateProperty.MonthOfYear] is required during formatting.
      */
@@ -48,6 +65,20 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
      * The property [DateProperty.MonthOfYear] is required during formatting.
      */
     fun monthName(style: TextStyle)
+
+    /**
+     * Appends the week of the week-based year.
+     *
+     * The property [WeekProperty.LocalizedWeekOfYear] is required during formatting.
+     */
+    fun weekOfWeekBasedYear(minLength: Int = 1, maxLength: Int = 2)
+
+    /**
+     * Appends the week of the month.
+     *
+     * The property [WeekProperty.LocalizedWeekOfMonth] is required during formatting.
+     */
+    fun weekOfMonth(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the day of the year value with a fixed number of digits.
@@ -73,7 +104,7 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     /**
      * Appends the localized day of week number with a fixed number of digits.
      *
-     * The property [DateProperty.DayOfWeek] is required during formatting.
+     * The property [WeekProperty.LocalizedDayOfWeek] is required during formatting.
      */
     fun localizedDayOfWeekNumber(length: Int = 1)
 

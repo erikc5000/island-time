@@ -1,5 +1,6 @@
-package io.islandtime.format
+package io.islandtime.format.dsl
 
+import io.islandtime.format.TemporalFormatter
 import io.islandtime.format.internal.IsoDateTimeFormatterBuilderImpl
 
 enum class IsoFormat {

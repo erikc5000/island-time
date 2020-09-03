@@ -1,5 +1,7 @@
 package io.islandtime.parser
 
+import io.islandtime.parser.dsl.associateWith
+import io.islandtime.parser.dsl.wholeNumber
 import io.islandtime.properties.DateProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,14 +34,14 @@ class AnyOfParserTest {
                     associateWith(DateProperty.Year)
                 }
             }, {
-                wholeNumber(4) {
+                wholeNumber(length = 4) {
                     associateWith(DateProperty.MonthOfYear)
                 }
             })
         }
 
         val result = parser.parse("2301")
-        assertEquals(1, result.size)
+        assertEquals(1, result.propertyCount)
         assertEquals(2301L, result[DateProperty.Year])
     }
 

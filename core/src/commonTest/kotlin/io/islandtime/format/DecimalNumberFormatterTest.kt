@@ -1,6 +1,7 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
+import io.islandtime.format.dsl.decimalNumber
 import io.islandtime.properties.TimeProperty
 import io.islandtime.test.temporalWith
 import kotlin.test.Test

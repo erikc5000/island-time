@@ -7,21 +7,23 @@ import io.islandtime.format.SignStyle
 import io.islandtime.format.TextStyle
 import io.islandtime.internal.negateExact
 import io.islandtime.internal.plusExact
-import io.islandtime.parser.*
+import io.islandtime.parser.TemporalParseException
+import io.islandtime.parser.TemporalParser
+import io.islandtime.parser.dsl.StringParseAction
 
-internal object EmptyDateTimeParser : TemporalParser() {
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+internal object EmptyParser : TemporalParser() {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         return position
     }
 
     override val isConst: Boolean get() = true
 }
 
-internal class CompositeDateTimeParser(
+internal class CompositeParser(
     private val childParsers: List<TemporalParser>
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         var currentPosition = position
 
         for (parser in childParsers) {
@@ -38,11 +40,11 @@ internal class CompositeDateTimeParser(
     override val isConst: Boolean = childParsers.all { it.isConst }
 }
 
-internal class OptionalDateTimeParser(
+internal class OptionalParser(
     private val childParser: TemporalParser
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
             return position
         }
@@ -63,11 +65,11 @@ internal class OptionalDateTimeParser(
     override val isConst: Boolean get() = childParser.isConst
 }
 
-internal class AnyOfDateTimeParser(
+internal class AnyOfParser(
     private val childParsers: Array<out TemporalParser>
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         var currentPosition = position
 
         for (parser in childParsers) {
@@ -90,12 +92,12 @@ internal class AnyOfDateTimeParser(
     override val isConst: Boolean = childParsers.all { it.isConst }
 }
 
-internal class CaseSensitiveDateTimeParser(
+internal class CaseSensitiveParser(
     private val isCaseSensitive: Boolean,
     private val childParser: TemporalParser
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         val previousCaseSensitivity = context.isCaseSensitive
         context.isCaseSensitive = isCaseSensitive
         val currentPosition = childParser.parse(context, text, position)
@@ -109,17 +111,17 @@ internal class CaseSensitiveDateTimeParser(
 
 internal class CharLiteralParser(
     private val char: Char,
-    private val onParsed: List<TemporalParseResult.() -> Unit>
+    private val onParsed: List<Context.() -> Unit>
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length) {
             position.inv()
         } else {
             val charFound = text[position]
 
             if (charFound.equals(char, ignoreCase = !context.isCaseSensitive)) {
-                onParsed.forEach { it(context.result) }
+                onParsed.forEach { it(context) }
                 position + 1
             } else {
                 position.inv()
@@ -134,17 +136,17 @@ internal class CharLiteralParser(
 
 internal class StringLiteralParser(
     private val string: String,
-    private val onParsed: List<TemporalParseResult.() -> Unit>
+    private val onParsed: List<Context.() -> Unit>
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length ||
             string.length > text.length - position ||
             !text.regionMatches(position, string, 0, string.length, !context.isCaseSensitive)
         ) {
             position.inv()
         } else {
-            onParsed.forEach { it(context.result) }
+            onParsed.forEach { it(context) }
             position + string.length
         }
     }
@@ -160,7 +162,7 @@ internal class LocalizedTextParser(
     private val provider: DateTimeTextProvider = DateTimeTextProvider.Companion
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
             return position.inv()
         }
@@ -186,22 +188,28 @@ internal class LocalizedTextParser(
 }
 
 internal class StringParser(
-    private val length: IntRange,
-    private val onEachChar: List<TemporalParseResult.(char: Char, index: Int) -> StringParseAction>,
-    private val onParsed: List<TemporalParseResult.(parsed: String) -> Unit>
+    private val minLength: Int,
+    private val maxLength: Int,
+    private val onEachChar: List<Context.(char: Char, index: Int) -> StringParseAction>,
+    private val onParsed: List<Context.(parsed: String) -> Unit>
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    init {
+        require(minLength >= 0) { "minLength cannot be less than 0" }
+        require(minLength <= maxLength) { "minLength cannot be greater than maxLength" }
+    }
+
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
             return position.inv()
         }
 
         var currentPosition = position
 
-        while (currentPosition < text.length && (length.isEmpty() || currentPosition - position <= length.last)) {
+        while (currentPosition < text.length && (currentPosition - position <= maxLength)) {
             if (onEachChar.any {
                     it(
-                        context.result,
+                        context,
                         text[currentPosition],
                         currentPosition - position
                     ) == StringParseAction.REJECT_AND_STOP
@@ -212,32 +220,32 @@ internal class StringParser(
             currentPosition++
         }
 
-        if (!length.isEmpty() && currentPosition - position !in length) {
+        if (currentPosition - position !in minLength..maxLength) {
             return position.inv()
         }
 
-        onParsed.forEach { it(context.result, text.substring(position, currentPosition)) }
+        onParsed.forEach { it(context, text.substring(position, currentPosition)) }
         return currentPosition
     }
 }
 
 internal class SignParser(
-    private val onParsed: List<TemporalParseResult.(parsed: Int) -> Unit>
+    private val onParsed: List<Context.(parsed: Int) -> Unit>
 ) : TemporalParser() {
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         return if (position >= text.length) {
             position.inv()
         } else {
-            val numberStyle = context.settings.numberStyle
+            val numberStyle = context.numberStyle
 
             when (text[position]) {
                 in numberStyle.plusSign -> {
-                    onParsed.forEach { it(context.result, 1) }
+                    onParsed.forEach { it(context, 1) }
                     position + 1
                 }
                 in numberStyle.minusSign -> {
-                    onParsed.forEach { it(context.result, -1) }
+                    onParsed.forEach { it(context, -1) }
                     position + 1
                 }
                 else -> position.inv()
@@ -283,7 +291,7 @@ internal abstract class AbstractNumberParser(
 
 internal class FixedLengthNumberParser(
     private val length: Int,
-    private val onParsed: List<TemporalParseResult.(parsed: Long) -> Unit>,
+    private val onParsed: List<Context.(parsed: Long) -> Unit>,
     signStyle: SignStyle?
 ) : AbstractNumberParser(signStyle) {
 
@@ -291,7 +299,7 @@ internal class FixedLengthNumberParser(
         require(length in 1..MAX_LONG_DIGITS) { "length must be from 1-19" }
     }
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         val textLength = text.length
         var currentPosition = position
 
@@ -299,7 +307,7 @@ internal class FixedLengthNumberParser(
             return currentPosition.inv()
         }
 
-        val signResult = parseSign(context.settings.numberStyle, text, currentPosition)
+        val signResult = parseSign(context.numberStyle, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -316,7 +324,7 @@ internal class FixedLengthNumberParser(
                 }
 
                 val char = text[currentPosition]
-                val digit = char.toDigit(context.settings.numberStyle)
+                val digit = char.toDigit(context.numberStyle)
 
                 if (digit < 0) {
                     return currentPosition.inv()
@@ -333,7 +341,7 @@ internal class FixedLengthNumberParser(
             throw TemporalParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
-        onParsed.forEach { it(context.result, value) }
+        onParsed.forEach { it(context, value) }
         return currentPosition
     }
 
@@ -343,7 +351,7 @@ internal class FixedLengthNumberParser(
 internal class VariableLengthNumberParser(
     private val minLength: Int,
     private val maxLength: Int,
-    private val onParsed: List<TemporalParseResult.(parsed: Long) -> Unit>,
+    private val onParsed: List<Context.(parsed: Long) -> Unit>,
     signStyle: SignStyle?
 ) : AbstractNumberParser(signStyle) {
 
@@ -353,7 +361,7 @@ internal class VariableLengthNumberParser(
         require(maxLength in 1..MAX_LONG_DIGITS) { "maxLength must be from 1-19" }
     }
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         val textLength = text.length
         var currentPosition = position
 
@@ -361,8 +369,7 @@ internal class VariableLengthNumberParser(
             return currentPosition.inv()
         }
 
-        val settings = context.settings
-        val signResult = parseSign(settings.numberStyle, text, currentPosition)
+        val signResult = parseSign(context.numberStyle, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -373,7 +380,7 @@ internal class VariableLengthNumberParser(
         var numberLength = 0
 
         for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberStyle) < 0) {
+            if (text[i].toDigit(context.numberStyle) < 0) {
                 break
             }
             numberLength++
@@ -390,7 +397,7 @@ internal class VariableLengthNumberParser(
         try {
             for (i in numberLength downTo 1) {
                 val char = text[currentPosition]
-                val digit = char.toDigit(settings.numberStyle)
+                val digit = char.toDigit(context.numberStyle)
                 value = value plusExact digit * FACTOR[i]
                 currentPosition++
             }
@@ -402,7 +409,7 @@ internal class VariableLengthNumberParser(
             throw TemporalParseException("Parsed number exceeds the max Long value", text.toString(), position, e)
         }
 
-        onParsed.forEach { it(context.result, value) }
+        onParsed.forEach { it(context, value) }
         return currentPosition
     }
 
@@ -416,7 +423,7 @@ internal class DecimalNumberParser(
     private val maxFractionLength: Int,
     private val fractionScale: Int,
     signStyle: SignStyle?,
-    private val onParsed: List<TemporalParseResult.(whole: Long, fraction: Long) -> Unit>
+    private val onParsed: List<Context.(whole: Long, fraction: Long) -> Unit>
 ) : AbstractNumberParser(signStyle) {
 
     init {
@@ -431,7 +438,7 @@ internal class DecimalNumberParser(
         require(fractionScale in 1..9) { "fractionScale must be from 1-9" }
     }
 
-    override fun parse(context: ParseContext, text: CharSequence, position: Int): Int {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         val textLength = text.length
         var currentPosition = position
 
@@ -439,8 +446,7 @@ internal class DecimalNumberParser(
             return currentPosition.inv()
         }
 
-        val settings = context.settings
-        val signResult = parseSign(settings.numberStyle, text, currentPosition)
+        val signResult = parseSign(context.numberStyle, text, currentPosition)
 
         if (signResult == ParseSignResult.ERROR) {
             return currentPosition.inv()
@@ -451,7 +457,7 @@ internal class DecimalNumberParser(
         var wholeNumberLength = 0
 
         for (i in currentPosition until textLength) {
-            if (text[i].toDigit(settings.numberStyle) < 0) {
+            if (text[i].toDigit(context.numberStyle) < 0) {
                 break
             }
             wholeNumberLength++
@@ -468,7 +474,7 @@ internal class DecimalNumberParser(
         try {
             for (i in wholeNumberLength downTo 1) {
                 val char = text[currentPosition]
-                val digit = char.toDigit(settings.numberStyle)
+                val digit = char.toDigit(context.numberStyle)
                 wholeResult = wholeResult plusExact digit * FACTOR[i]
                 currentPosition++
             }
@@ -482,7 +488,7 @@ internal class DecimalNumberParser(
 
         if (currentPosition < textLength &&
             maxFractionLength > 0 &&
-            text[currentPosition] in settings.numberStyle.decimalSeparator
+            text[currentPosition] in context.numberStyle.decimalSeparator
         ) {
             currentPosition++
 
@@ -493,7 +499,7 @@ internal class DecimalNumberParser(
             var fractionNumberLength = 0
 
             for (i in currentPosition until textLength) {
-                if (text[i].toDigit(settings.numberStyle) < 0) {
+                if (text[i].toDigit(context.numberStyle) < 0) {
                     break
                 }
                 fractionNumberLength++
@@ -508,7 +514,7 @@ internal class DecimalNumberParser(
 
                     for (i in fractionScale downTo fractionScale - fractionNumberLength + 1) {
                         val char = text[currentPosition]
-                        val digit = char.toDigit(settings.numberStyle)
+                        val digit = char.toDigit(context.numberStyle)
                         fractionResult += digit * FACTOR[i]
                         currentPosition++
                     }
@@ -517,7 +523,7 @@ internal class DecimalNumberParser(
                         fractionResult = -fractionResult
                     }
 
-                    onParsed.forEach { it(context.result, wholeResult, fractionResult) }
+                    onParsed.forEach { it(context, wholeResult, fractionResult) }
                     currentPosition
                 }
             }
@@ -526,8 +532,62 @@ internal class DecimalNumberParser(
         return if (minFractionLength > 0 || wholeNumberLength == 0) {
             currentPosition.inv()
         } else {
-            onParsed.forEach { it(context.result, wholeResult, 0L) }
+            onParsed.forEach { it(context, wholeResult, 0L) }
             currentPosition
+        }
+    }
+
+    override val isConst: Boolean get() = onParsed.isEmpty()
+}
+
+internal class FractionParser(
+    private val minLength: Int,
+    private val maxLength: Int,
+    private val scale: Int,
+    private val onParsed: List<Context.(fraction: Long) -> Unit>
+) : TemporalParser() {
+
+    init {
+        require(minLength <= maxLength) { "minFractionLength must be <= maxFractionLength" }
+        require(minLength in 1..9) { "minFractionLength must be from 1-9" }
+        require(maxLength in 1..9) { "maxFractionLength must be from 1-9" }
+        require(scale in 1..9) { "fractionScale must be from 1-9" }
+    }
+
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
+        val textLength = text.length
+        var currentPosition = position
+
+        if (currentPosition >= textLength) {
+            return currentPosition.inv()
+        }
+
+        var fractionNumberLength = 0
+
+        for (i in currentPosition until textLength) {
+            if (text[i].toDigit(context.numberStyle) < 0) {
+                break
+            }
+            fractionNumberLength++
+        }
+
+        return when {
+            fractionNumberLength < minLength -> (currentPosition + fractionNumberLength).inv()
+            fractionNumberLength > maxLength -> (currentPosition + maxLength).inv()
+            fractionNumberLength == 0 -> currentPosition.inv()
+            else -> {
+                var fractionResult = 0L
+
+                for (i in scale downTo scale - fractionNumberLength + 1) {
+                    val char = text[currentPosition]
+                    val digit = char.toDigit(context.numberStyle)
+                    fractionResult += digit * FACTOR[i]
+                    currentPosition++
+                }
+
+                onParsed.forEach { it(context, fractionResult) }
+                currentPosition
+            }
         }
     }
 

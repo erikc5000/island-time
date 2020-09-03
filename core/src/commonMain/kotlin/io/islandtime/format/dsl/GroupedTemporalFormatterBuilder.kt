@@ -1,4 +1,4 @@
-package io.islandtime.format
+package io.islandtime.format.dsl
 
 import io.islandtime.base.Temporal
 

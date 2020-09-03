@@ -930,13 +930,13 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `String_toDateTime() parses valid ISO-8601 ordinal date strings with custom parser`() {
         val parser = TemporalParser {
             anyOf({
-                childParser(DateTimeParsers.Iso.Basic.DATE)
+                use(DateTimeParsers.Iso.Basic.DATE)
                 anyOf({ +'T' }, { +' ' })
-                childParser(DateTimeParsers.Iso.Basic.TIME)
+                use(DateTimeParsers.Iso.Basic.TIME)
             }, {
-                childParser(DateTimeParsers.Iso.Extended.DATE)
+                use(DateTimeParsers.Iso.Extended.DATE)
                 anyOf({ +'T' }, { +' ' })
-                childParser(DateTimeParsers.Iso.Extended.TIME)
+                use(DateTimeParsers.Iso.Extended.TIME)
             })
         }
 

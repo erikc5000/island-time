@@ -4,9 +4,9 @@ import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
 import io.islandtime.base.get
 import io.islandtime.calendar.LocalizedNumberProperty
-import io.islandtime.format.NumberFormatterBuilder
+import io.islandtime.format.dsl.NumberFormatterBuilder
 import io.islandtime.format.TemporalFormatter
-import io.islandtime.format.TemporalFormatterBuilder
+import io.islandtime.format.dsl.TemporalFormatterBuilder
 import io.islandtime.format.TextStyle
 
 @PublishedApi
@@ -98,9 +98,12 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
         builder: TemporalFormatterBuilder.() -> Unit
     ) {
         val child = TemporalFormatterBuilderImpl().apply(builder).build()
+        onlyIf(predicate, child)
+    }
 
-        if (child != EmptyFormatter) {
-            formatters += OnlyIfFormatter(predicate, child)
+    fun onlyIf(predicate: TemporalFormatter.Context.() -> Boolean, formatter: TemporalFormatter) {
+        if (formatter != EmptyFormatter) {
+            formatters += OnlyIfFormatter(predicate, formatter)
         }
     }
 

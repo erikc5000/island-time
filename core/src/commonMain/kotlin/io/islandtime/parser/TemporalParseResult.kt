@@ -5,13 +5,13 @@ import io.islandtime.base.*
 /**
  * The result of a parsing operation.
  */
-inline class TemporalParseResult(
+class TemporalParseResult(
     @PublishedApi
     internal val properties: MutableMap<TemporalProperty<*>, Any> = hashMapOf()
 ) : Temporal {
     fun isEmpty() = properties.isEmpty()
     fun isNotEmpty() = !isEmpty()
-    val size: Int get() = properties.size
+    val propertyCount: Int get() = properties.size
 
     inline operator fun <reified T> set(property: TemporalProperty<T>, value: T) {
         properties[property] = value as Any

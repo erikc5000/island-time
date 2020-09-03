@@ -49,6 +49,8 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
         }
     }
 
+    override val supportsSkeletons: Boolean get() = true
+
     @ExperimentalUnsignedTypes
     override fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
         val adjustedLocale = locale.withDefaultCalendar()

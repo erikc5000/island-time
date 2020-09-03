@@ -2,6 +2,8 @@
 
 package io.islandtime.format
 
+import io.islandtime.format.dsl.DateTimeFormatterBuilder
+import io.islandtime.format.dsl.pattern
 import io.islandtime.format.internal.DateTimeFormatterBuilderImpl
 
 /**

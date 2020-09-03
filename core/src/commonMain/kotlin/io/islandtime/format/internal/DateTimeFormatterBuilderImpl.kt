@@ -5,6 +5,10 @@ import io.islandtime.properties.TimeProperty
 import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.calendar.WeekProperty
 import io.islandtime.format.*
+import io.islandtime.format.dsl.DateTimeFormatterBuilder
+import io.islandtime.format.dsl.FormatOption
+import io.islandtime.format.dsl.IsoFormat
+import io.islandtime.format.dsl.LengthExceededBehavior
 
 @PublishedApi
 internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
@@ -27,10 +31,7 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
         builder: DateTimeFormatterBuilder.() -> Unit
     ) {
         val child = DateTimeFormatterBuilderImpl().apply(builder).build()
-
-        if (child != EmptyFormatter) {
-            use(OnlyIfFormatter(predicate, child))
-        }
+        temporalFormatterBuilder.onlyIf(predicate, child)
     }
 
     override fun localizedDate(style: FormatStyle) {
@@ -68,6 +69,19 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
         }
     }
 
+    override fun weekBasedYear(minLength: Int, maxLength: Int) {
+        temporalFormatterBuilder.wholeNumber(WeekProperty.LocalizedWeekBasedYear, minLength, maxLength) {
+            signStyle = SignStyle.NEVER
+        }
+    }
+
+    override fun twoDigitWeekBasedYear() {
+        temporalFormatterBuilder.wholeNumber(WeekProperty.LocalizedWeekBasedYear, 2) {
+            signStyle = SignStyle.NEVER
+            valueTransform = { it % 100 }
+        }
+    }
+
     override fun year(minLength: Int, maxLength: Int) {
         temporalFormatterBuilder.wholeNumber(DateProperty.Year, minLength, maxLength) {
             lengthExceededBehavior = LengthExceededBehavior.SIGN_STYLE_ALWAYS
@@ -82,6 +96,18 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
 
     override fun monthName(style: TextStyle) {
         temporalFormatterBuilder.localizedDateTimeText(DateProperty.MonthOfYear, style)
+    }
+
+    override fun weekOfWeekBasedYear(minLength: Int, maxLength: Int) {
+        temporalFormatterBuilder.wholeNumber(WeekProperty.LocalizedWeekOfWeekBasedYear, minLength, maxLength) {
+            signStyle = SignStyle.NEVER
+        }
+    }
+
+    override fun weekOfMonth(minLength: Int, maxLength: Int) {
+        temporalFormatterBuilder.wholeNumber(WeekProperty.LocalizedWeekOfMonth, minLength, maxLength) {
+            signStyle = SignStyle.NEVER
+        }
     }
 
     override fun dayOfYear(minLength: Int, maxLength: Int) {

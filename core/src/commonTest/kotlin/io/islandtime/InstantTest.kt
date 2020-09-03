@@ -308,8 +308,8 @@ class InstantTest : AbstractIslandTimeTest() {
             +'-'
             dayOfMonth(2)
             +'T'
-            childParser(DateTimeParsers.Iso.Extended.TIME)
-            childParser(DateTimeParsers.Iso.Extended.UTC_OFFSET)
+            use(DateTimeParsers.Iso.Extended.TIME)
+            use(DateTimeParsers.Iso.Extended.UTC_OFFSET)
         }
 
         val exception1 = assertFailsWith<TemporalParseException> {

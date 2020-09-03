@@ -32,6 +32,13 @@ data class NumberStyle(
         require(decimalSeparator.isNotEmpty()) { "At least one decimal separator character is required" }
     }
 
+    constructor(
+        zeroDigit: Char,
+        plusSign: Char,
+        minusSign: Char,
+        decimalSeparator: Char
+    ) : this(zeroDigit, listOf(plusSign), listOf(minusSign), listOf(decimalSeparator))
+
     companion object {
         /**
          * A locale-agnostic set of characters, matching those allowed in the date-time formats defined in ISO-8601.

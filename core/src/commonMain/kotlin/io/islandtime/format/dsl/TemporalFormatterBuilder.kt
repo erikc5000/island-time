@@ -1,8 +1,11 @@
-package io.islandtime.format
+package io.islandtime.format.dsl
 
 import io.islandtime.calendar.LocalizedNumberProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
+import io.islandtime.format.SignStyle
+import io.islandtime.format.TextStyle
+import io.islandtime.properties.TimeZoneProperty
 
 @IslandTimeFormatDsl
 interface TemporalFormatterBuilder :
@@ -103,6 +106,8 @@ interface TemporalFormatterBuilder :
 
     /**
      * Appends the localized time zone text in the specified [style].
+     *
+     * The property [TimeZoneProperty.TimeZoneObject] is required.
      */
     fun localizedTimeZoneText(style: TextStyle, generic: Boolean = false)
 }

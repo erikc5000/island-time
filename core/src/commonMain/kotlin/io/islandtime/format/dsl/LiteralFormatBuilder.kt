@@ -1,7 +1,4 @@
-package io.islandtime.format
-
-@DslMarker
-annotation class IslandTimeFormatDsl
+package io.islandtime.format.dsl
 
 @IslandTimeFormatDsl
 interface LiteralFormatBuilder {
@@ -28,13 +25,4 @@ interface LiteralFormatBuilder {
      * Appends a string literal.
      */
     fun literal(string: String)
-}
-
-/**
- * Indicates when a particular component of a format should be present.
- */
-enum class FormatOption {
-    NEVER,
-    OPTIONAL,
-    ALWAYS
 }

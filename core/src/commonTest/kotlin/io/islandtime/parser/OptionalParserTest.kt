@@ -1,5 +1,6 @@
 package io.islandtime.parser
 
+import io.islandtime.parser.dsl.associateWith
 import io.islandtime.properties.DateProperty
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,11 +22,11 @@ class OptionalParserTest {
         }
 
         val result1 = parser.parse("13")
-        assertEquals(1, result1.size)
+        assertEquals(1, result1.propertyCount)
         assertEquals(13, result1[DateProperty.MonthOfYear])
 
         val result2 = parser.parse("13/2012")
-        assertEquals(2, result2.size)
+        assertEquals(2, result2.propertyCount)
         assertEquals(13, result2[DateProperty.MonthOfYear])
         assertEquals(2012, result2[DateProperty.Year])
     }

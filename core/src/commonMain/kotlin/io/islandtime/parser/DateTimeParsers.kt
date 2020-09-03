@@ -1,7 +1,7 @@
 package io.islandtime.parser
 
-import io.islandtime.properties.DateProperty
 import io.islandtime.format.SignStyle
+import io.islandtime.properties.DateProperty
 
 /**
  * A set of predefined parsers.
@@ -134,9 +134,9 @@ object DateTimeParsers {
          * - `2008-09`
          */
         val YEAR_MONTH = TemporalParser {
-            childParser(ISO_EXPANDED_YEAR_COMPONENT)
+            use(ISO_EXPANDED_YEAR_COMPONENT)
             +'-'
-            childParser(ISO_MONTH_COMPONENT)
+            use(ISO_MONTH_COMPONENT)
         }
 
         /**
@@ -153,7 +153,7 @@ object DateTimeParsers {
          */
         val YEAR = TemporalParser {
             anyOf({
-                childParser(ISO_EXPANDED_YEAR_COMPONENT)
+                use(ISO_EXPANDED_YEAR_COMPONENT)
             }, {
                 // Letter-prefixed year allowed in ISO-8601-2 (for standalone year only)
                 +'Y'
@@ -233,45 +233,45 @@ object DateTimeParsers {
          * - `../..`
          * - (empty string)
          */
-        val DATE_RANGE = groupedTemporalParser {
+        val DATE_RANGE = GroupedTemporalParser {
             anyOf(Extended.DATE_RANGE, Basic.DATE_RANGE)
         }
 
-        val DATE_TIME_INTERVAL = groupedTemporalParser {
+        val DATE_TIME_INTERVAL = GroupedTemporalParser {
             anyOf(Extended.DATE_TIME_INTERVAL, Basic.DATE_TIME_INTERVAL)
         }
 
-        val OFFSET_DATE_TIME_INTERVAL = groupedTemporalParser {
+        val OFFSET_DATE_TIME_INTERVAL = GroupedTemporalParser {
             anyOf(Extended.OFFSET_DATE_TIME_INTERVAL, Basic.OFFSET_DATE_TIME_INTERVAL)
         }
 
-        val ZONED_DATE_TIME_INTERVAL = groupedTemporalParser {
+        val ZONED_DATE_TIME_INTERVAL = GroupedTemporalParser {
             anyOf(Extended.ZONED_DATE_TIME_INTERVAL, Basic.ZONED_DATE_TIME_INTERVAL)
         }
 
-        val INSTANT_INTERVAL = groupedTemporalParser {
+        val INSTANT_INTERVAL = GroupedTemporalParser {
             anyOf(Extended.INSTANT_INTERVAL, Basic.INSTANT_INTERVAL)
         }
 
         object Basic {
             val CALENDAR_DATE = TemporalParser {
-                childParser(ISO_STANDARD_YEAR_COMPONENT)
-                childParser(ISO_MONTH_COMPONENT)
-                childParser(ISO_DAY_OF_MONTH_COMPONENT)
+                use(ISO_STANDARD_YEAR_COMPONENT)
+                use(ISO_MONTH_COMPONENT)
+                use(ISO_DAY_OF_MONTH_COMPONENT)
             }
 
             val ORDINAL_DATE = TemporalParser {
-                childParser(ISO_STANDARD_YEAR_COMPONENT)
-                childParser(ISO_DAY_OF_YEAR_COMPONENT)
+                use(ISO_STANDARD_YEAR_COMPONENT)
+                use(ISO_DAY_OF_YEAR_COMPONENT)
             }
 
             val DATE = TemporalParser {
-                childParser(ISO_STANDARD_YEAR_COMPONENT)
+                use(ISO_STANDARD_YEAR_COMPONENT)
                 anyOf({
-                    childParser(ISO_MONTH_COMPONENT)
-                    childParser(ISO_DAY_OF_MONTH_COMPONENT)
+                    use(ISO_MONTH_COMPONENT)
+                    use(ISO_DAY_OF_MONTH_COMPONENT)
                 }, {
-                    childParser(ISO_DAY_OF_YEAR_COMPONENT)
+                    use(ISO_DAY_OF_YEAR_COMPONENT)
                 })
             }
 
@@ -321,14 +321,14 @@ object DateTimeParsers {
              * - `20080901 1830`
              */
             val DATE_TIME = TemporalParser {
-                childParser(CALENDAR_DATE)
+                use(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
-                childParser(TIME)
+                use(TIME)
             }
 
             val OFFSET_TIME = TemporalParser {
-                childParser(TIME)
-                childParser(UTC_OFFSET)
+                use(TIME)
+                use(UTC_OFFSET)
             }
 
             /**
@@ -340,8 +340,8 @@ object DateTimeParsers {
              * - `20080901 1830-04`
              */
             val OFFSET_DATE_TIME = TemporalParser {
-                childParser(DATE_TIME)
-                childParser(UTC_OFFSET)
+                use(DATE_TIME)
+                use(UTC_OFFSET)
             }
 
             /**
@@ -354,8 +354,8 @@ object DateTimeParsers {
              * - `20080901 1830-04[America/New_York]`
              */
             val ZONED_DATE_TIME = TemporalParser {
-                childParser(DATE_TIME)
-                childParser(UTC_OFFSET)
+                use(DATE_TIME)
+                use(UTC_OFFSET)
                 optional {
                     +'['
                     timeZoneId()
@@ -372,7 +372,7 @@ object DateTimeParsers {
              * - `20010510 0024Z`
              */
             val INSTANT = TemporalParser {
-                childParser(DATE_TIME)
+                use(DATE_TIME)
                 utcDesignator()
             }
 
@@ -396,28 +396,28 @@ object DateTimeParsers {
 
         object Extended {
             val CALENDAR_DATE = TemporalParser {
-                childParser(ISO_EXPANDED_YEAR_COMPONENT)
+                use(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
-                childParser(ISO_MONTH_COMPONENT)
+                use(ISO_MONTH_COMPONENT)
                 +'-'
-                childParser(ISO_DAY_OF_MONTH_COMPONENT)
+                use(ISO_DAY_OF_MONTH_COMPONENT)
             }
 
             val ORDINAL_DATE = TemporalParser {
-                childParser(ISO_EXPANDED_YEAR_COMPONENT)
+                use(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
-                childParser(ISO_DAY_OF_YEAR_COMPONENT)
+                use(ISO_DAY_OF_YEAR_COMPONENT)
             }
 
             val DATE = TemporalParser {
-                childParser(ISO_EXPANDED_YEAR_COMPONENT)
+                use(ISO_EXPANDED_YEAR_COMPONENT)
                 +'-'
                 anyOf({
-                    childParser(ISO_MONTH_COMPONENT)
+                    use(ISO_MONTH_COMPONENT)
                     +'-'
-                    childParser(ISO_DAY_OF_MONTH_COMPONENT)
+                    use(ISO_DAY_OF_MONTH_COMPONENT)
                 }, {
-                    childParser(ISO_DAY_OF_YEAR_COMPONENT)
+                    use(ISO_DAY_OF_YEAR_COMPONENT)
                 })
             }
 
@@ -471,14 +471,14 @@ object DateTimeParsers {
              * - `2008-09-01 18:30`
              */
             val DATE_TIME = TemporalParser {
-                childParser(CALENDAR_DATE)
+                use(CALENDAR_DATE)
                 anyOf({ +'T' }, { +' ' })
-                childParser(TIME)
+                use(TIME)
             }
 
             val OFFSET_TIME = TemporalParser {
-                childParser(TIME)
-                childParser(UTC_OFFSET)
+                use(TIME)
+                use(UTC_OFFSET)
             }
 
             /**
@@ -490,8 +490,8 @@ object DateTimeParsers {
              * - `2008-09-01 18:30-04`
              */
             val OFFSET_DATE_TIME = TemporalParser {
-                childParser(DATE_TIME)
-                childParser(UTC_OFFSET)
+                use(DATE_TIME)
+                use(UTC_OFFSET)
             }
 
             /**
@@ -503,8 +503,8 @@ object DateTimeParsers {
              * - `2008-09-01 18:30:00Z`
              */
             val ZONED_DATE_TIME = TemporalParser {
-                childParser(DATE_TIME)
-                childParser(UTC_OFFSET)
+                use(DATE_TIME)
+                use(UTC_OFFSET)
                 optional {
                     +'['
                     timeZoneId()
@@ -520,7 +520,7 @@ object DateTimeParsers {
              * - `2001-05-10T00:24Z`
              */
             val INSTANT = TemporalParser {
-                childParser(DATE_TIME)
+                use(DATE_TIME)
                 utcDesignator()
             }
 
@@ -579,14 +579,14 @@ private val ISO_DAY_OF_YEAR_COMPONENT = TemporalParser {
 }
 
 private fun buildIsoIntervalParser(elementParser: TemporalParser): GroupedTemporalParser {
-    return groupedTemporalParser {
+    return GroupedTemporalParser {
         anyOf({
             group {
-                anyOf({ unboundedDesignator(DateProperty.IsFarPast) }, { childParser(elementParser) })
+                anyOf({ unboundedDesignator(DateProperty.IsFarPast) }, { use(elementParser) })
             }
             +'/'
             group {
-                anyOf({ unboundedDesignator(DateProperty.IsFarFuture) }, { childParser(elementParser) })
+                anyOf({ unboundedDesignator(DateProperty.IsFarFuture) }, { use(elementParser) })
             }
         }, {
             repeat(2) { group {} }

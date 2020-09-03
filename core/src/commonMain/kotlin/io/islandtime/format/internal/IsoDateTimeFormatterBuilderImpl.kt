@@ -3,6 +3,7 @@ package io.islandtime.format.internal
 import io.islandtime.TimeZone
 import io.islandtime.base.*
 import io.islandtime.format.*
+import io.islandtime.format.dsl.*
 import io.islandtime.properties.*
 
 @PublishedApi
