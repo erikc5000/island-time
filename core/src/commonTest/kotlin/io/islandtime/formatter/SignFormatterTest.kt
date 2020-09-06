@@ -1,6 +1,7 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.base.TemporalPropertyException
+import io.islandtime.format.NumberStyle
 import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.test.AbstractIslandTimeTest

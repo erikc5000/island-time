@@ -1,7 +1,11 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
-import io.islandtime.*
+import io.islandtime.Date
+import io.islandtime.Month
 import io.islandtime.Time.Companion.NOON
+import io.islandtime.TimeZone
+import io.islandtime.at
+import io.islandtime.format.TextStyle
 import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeTimeZoneTextProvider

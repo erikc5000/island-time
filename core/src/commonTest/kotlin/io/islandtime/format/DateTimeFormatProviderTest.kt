@@ -1,6 +1,7 @@
 package io.islandtime.format
 
 import io.islandtime.*
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test

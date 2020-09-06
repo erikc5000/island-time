@@ -187,7 +187,7 @@ internal class LocalizedTextParser(
     }
 }
 
-internal class StringParser(
+internal class TextParser(
     private val minLength: Int,
     private val maxLength: Int,
     private val onEachChar: List<Context.(char: Char, index: Int) -> StringParseAction>,

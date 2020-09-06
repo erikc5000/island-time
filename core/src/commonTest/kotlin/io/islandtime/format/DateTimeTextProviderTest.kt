@@ -1,9 +1,9 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
+import io.islandtime.locale.toLocale
 import io.islandtime.properties.DateProperty
 import io.islandtime.properties.TimeProperty
-import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 

@@ -1,6 +1,8 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.DateTimeException
+import io.islandtime.format.NumberStyle
+import io.islandtime.format.SignStyle
 import io.islandtime.properties.DateProperty
 import io.islandtime.test.temporalWith
 import kotlin.test.Test

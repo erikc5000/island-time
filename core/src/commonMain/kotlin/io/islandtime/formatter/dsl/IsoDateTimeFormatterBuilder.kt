@@ -1,12 +1,8 @@
-package io.islandtime.format.dsl
+package io.islandtime.formatter.dsl
 
-import io.islandtime.format.TemporalFormatter
-import io.islandtime.format.internal.IsoDateTimeFormatterBuilderImpl
-
-enum class IsoFormat {
-    BASIC,
-    EXTENDED
-}
+import io.islandtime.format.dsl.IslandTimeFormatDsl
+import io.islandtime.format.dsl.IsoFormat
+import io.islandtime.format.dsl.IsoTimeDesignator
 
 //@TemporalFormatterDsl
 //interface UtcOffsetFormatterBuilder {
@@ -28,12 +24,6 @@ enum class IsoFormat {
 //    YEAR_MONTH_DAY,
 //    YEAR_DAY
 //}
-
-enum class IsoTimeDesignator(val char: Char?) {
-    T('T'),
-    NONE(null),
-    SPACE(' ') // Non-standard extension
-}
 
 @IslandTimeFormatDsl
 interface IsoDateTimeFormatterBuilder {
@@ -97,13 +87,6 @@ interface IsoDateTimeFormatterBuilder {
 //interface IsoExpandedYearRepresentationBuilder {
 //    //var digits
 //}
-
-@Suppress("FunctionName")
-inline fun IsoDateTimeFormatter(
-    builder: IsoDateTimeFormatterBuilder.() -> Unit = {}
-): TemporalFormatter {
-    return IsoDateTimeFormatterBuilderImpl().apply(builder).build()
-}
 
 //val formatter = isoDateTimeFormatter {
 //    format = IsoFormat.BASIC

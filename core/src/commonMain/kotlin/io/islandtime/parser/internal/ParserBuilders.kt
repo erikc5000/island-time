@@ -1,6 +1,5 @@
 package io.islandtime.parser.internal
 
-import io.islandtime.base.NumberProperty
 import io.islandtime.format.SignStyle
 import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.dsl.*
@@ -115,7 +114,7 @@ internal class TextParserBuilderImpl(
     }
 
     fun build(): TemporalParser {
-        return StringParser(
+        return TextParser(
             minLength,
             maxLength,
             onEachChar.ifEmpty { DEFAULT_ON_PARSED },

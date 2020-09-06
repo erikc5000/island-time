@@ -3,7 +3,7 @@ package io.islandtime.darwin
 import io.islandtime.Month
 import io.islandtime.YearMonth
 import io.islandtime.format.DateTimeFormatProvider
-import io.islandtime.format.TemporalFormatter
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.locale.localeOf
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test

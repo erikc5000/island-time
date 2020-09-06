@@ -1,11 +1,15 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.Date
 import io.islandtime.Time
 import io.islandtime.TimeZone
 import io.islandtime.at
-import io.islandtime.base.*
-import io.islandtime.properties.*
+import io.islandtime.base.getOrElse
+import io.islandtime.base.getOrNull
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.TimeProperty
+import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeFormatProvider
 import io.islandtime.test.FakeDateTimeTextProvider

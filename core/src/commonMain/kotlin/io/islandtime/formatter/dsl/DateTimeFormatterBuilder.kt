@@ -1,6 +1,8 @@
-package io.islandtime.format.dsl
+package io.islandtime.formatter.dsl
 
 import io.islandtime.format.FormatStyle
+import io.islandtime.format.dsl.DateTimeFormatBuilder
+import io.islandtime.format.dsl.IslandTimeFormatDsl
 
 @IslandTimeFormatDsl
 interface DateTimeFormatterBuilder :

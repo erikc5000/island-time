@@ -1,11 +1,12 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.base.Temporal
 import io.islandtime.calendar.LocalizationContext
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.weekSettings
-import io.islandtime.format.dsl.TemporalFormatterBuilder
-import io.islandtime.format.internal.TemporalFormatterBuilderImpl
+import io.islandtime.format.NumberStyle
+import io.islandtime.formatter.dsl.TemporalFormatterBuilder
+import io.islandtime.formatter.internal.TemporalFormatterBuilderImpl
 import io.islandtime.locale.Locale
 import io.islandtime.locale.defaultLocale
 

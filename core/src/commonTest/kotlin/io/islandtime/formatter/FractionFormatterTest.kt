@@ -1,7 +1,7 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.DateTimeException
-import io.islandtime.format.dsl.fraction
+import io.islandtime.formatter.dsl.fraction
 import io.islandtime.properties.TimeProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.temporalWith

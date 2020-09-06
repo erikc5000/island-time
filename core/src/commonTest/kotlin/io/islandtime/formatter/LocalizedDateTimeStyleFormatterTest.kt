@@ -1,7 +1,8 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.*
 import io.islandtime.base.TemporalPropertyException
+import io.islandtime.format.FormatStyle
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeFormatProvider
 import io.islandtime.test.FakeDateTimeTextProvider

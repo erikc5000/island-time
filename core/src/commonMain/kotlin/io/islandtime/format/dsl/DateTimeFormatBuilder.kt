@@ -1,7 +1,7 @@
 package io.islandtime.format.dsl
 
 import io.islandtime.calendar.WeekProperty
-import io.islandtime.format.TemporalFormatter
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.format.TextStyle
 import io.islandtime.format.internal.parseDateTimePatternTo
 import io.islandtime.properties.DateProperty

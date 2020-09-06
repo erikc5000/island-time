@@ -1,4 +1,4 @@
-package io.islandtime.format
+package io.islandtime.formatter
 
 import io.islandtime.DateTimeException
 import io.islandtime.UtcOffset

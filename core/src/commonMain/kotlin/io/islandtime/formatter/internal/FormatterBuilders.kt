@@ -1,9 +1,9 @@
-package io.islandtime.format.internal
+package io.islandtime.formatter.internal
 
-import io.islandtime.format.dsl.LengthExceededBehavior
-import io.islandtime.format.dsl.NumberFormatterBuilder
 import io.islandtime.format.SignStyle
-import io.islandtime.format.TemporalFormatter
+import io.islandtime.formatter.TemporalFormatter
+import io.islandtime.formatter.dsl.LengthExceededBehavior
+import io.islandtime.formatter.dsl.NumberFormatterBuilder
 
 internal class NumberFormatterBuilderImpl(
     private val propertyName: String,

@@ -1,10 +1,11 @@
 @file:Suppress("FunctionName")
 
-package io.islandtime.format
+package io.islandtime.formatter
 
-import io.islandtime.format.dsl.DateTimeFormatterBuilder
+import io.islandtime.format.FormatStyle
+import io.islandtime.formatter.dsl.DateTimeFormatterBuilder
 import io.islandtime.format.dsl.pattern
-import io.islandtime.format.internal.DateTimeFormatterBuilderImpl
+import io.islandtime.formatter.internal.DateTimeFormatterBuilderImpl
 
 /**
  * Builds a custom date-time formatter.

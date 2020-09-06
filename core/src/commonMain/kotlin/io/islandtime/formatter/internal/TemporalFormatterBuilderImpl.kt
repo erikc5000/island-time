@@ -1,12 +1,12 @@
-package io.islandtime.format.internal
+package io.islandtime.formatter.internal
 
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
 import io.islandtime.base.get
 import io.islandtime.calendar.LocalizedNumberProperty
-import io.islandtime.format.dsl.NumberFormatterBuilder
-import io.islandtime.format.TemporalFormatter
-import io.islandtime.format.dsl.TemporalFormatterBuilder
+import io.islandtime.formatter.dsl.NumberFormatterBuilder
+import io.islandtime.formatter.TemporalFormatter
+import io.islandtime.formatter.dsl.TemporalFormatterBuilder
 import io.islandtime.format.TextStyle
 
 @PublishedApi

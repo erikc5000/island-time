@@ -1,9 +1,9 @@
 package io.islandtime.test
 
 import io.islandtime.format.DateTimeFormatProvider
-import io.islandtime.format.DateTimeFormatter
+import io.islandtime.formatter.DateTimeFormatter
 import io.islandtime.format.FormatStyle
-import io.islandtime.format.TemporalFormatter
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.locale.Locale
 
 object FakeDateTimeFormatProvider : DateTimeFormatProvider {

@@ -1,6 +1,6 @@
 package io.islandtime.parser.internal
 
-import io.islandtime.parser.*
+import io.islandtime.parser.GroupedTemporalParser
 import io.islandtime.parser.dsl.GroupedTemporalParserBuilder
 import io.islandtime.parser.dsl.TemporalParserBuilder
 

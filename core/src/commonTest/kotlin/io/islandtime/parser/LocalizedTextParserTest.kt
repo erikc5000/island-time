@@ -1,8 +1,8 @@
 package io.islandtime.parser
 
-import io.islandtime.properties.DateProperty
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.toLocale
+import io.islandtime.properties.DateProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

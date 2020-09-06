@@ -1,6 +1,7 @@
 package io.islandtime.format
 
 import io.islandtime.IslandTime
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.locale.Locale
 
 /**
