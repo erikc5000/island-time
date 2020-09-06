@@ -12,9 +12,9 @@ class DarwinNumberFormatTest {
         assertEquals(
             NumberStyle(
                 zeroDigit = '٠',
-                plusSign = listOf('+'),
-                minusSign = listOf('-'),
-                decimalSeparator = listOf('٫')
+                plusSign = '+',
+                minusSign = '-',
+                decimalSeparator = '٫'
             ),
             locale.numberStyle
         )

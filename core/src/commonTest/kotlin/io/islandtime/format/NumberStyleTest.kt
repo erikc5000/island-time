@@ -30,9 +30,9 @@ class NumberStyleTest {
         assertEquals(
             NumberStyle(
                 zeroDigit = '0',
-                plusSign = listOf('+'),
-                minusSign = listOf('-'),
-                decimalSeparator = listOf('.')
+                plusSign = '+',
+                minusSign = '-',
+                decimalSeparator = '.'
             ),
             en_US.numberStyle
         )
@@ -40,9 +40,9 @@ class NumberStyleTest {
         assertEquals(
             NumberStyle(
                 zeroDigit = '0',
-                plusSign = listOf('+'),
-                minusSign = listOf('-'),
-                decimalSeparator = listOf(',')
+                plusSign = '+',
+                minusSign = '-',
+                decimalSeparator = ','
             ),
             de_DE.numberStyle
         )
@@ -52,9 +52,9 @@ class NumberStyleTest {
             assertEquals(
                 NumberStyle(
                     zeroDigit = '०',
-                    plusSign = listOf('+'),
-                    minusSign = listOf('-'),
-                    decimalSeparator = listOf('.')
+                    plusSign = '+',
+                    minusSign = '-',
+                    decimalSeparator = '.'
                 ),
                 hi_IN_u_nu_native.numberStyle
             )

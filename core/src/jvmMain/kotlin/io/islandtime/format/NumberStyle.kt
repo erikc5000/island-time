@@ -5,12 +5,12 @@ import java.text.DecimalFormatSymbols
 
 actual val Locale.numberStyle: NumberStyle
     get() {
-        val symbols = DecimalFormatSymbols.getInstance(this)
-
-        return NumberStyle(
-            zeroDigit = symbols.zeroDigit,
-            plusSign = listOf('+'),
-            minusSign = listOf(symbols.minusSign),
-            decimalSeparator = listOf(symbols.decimalSeparator)
-        )
+        return DecimalFormatSymbols.getInstance(this).let { symbols ->
+            NumberStyle(
+                zeroDigit = symbols.zeroDigit,
+                plusSign = '+',
+                minusSign = symbols.minusSign,
+                decimalSeparator = symbols.decimalSeparator
+            )
+        }
     }

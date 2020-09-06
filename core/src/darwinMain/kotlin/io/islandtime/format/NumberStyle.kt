@@ -11,9 +11,9 @@ actual val Locale.numberStyle: NumberStyle
 
         return NumberStyle(
             zeroDigit = formatter.stringFromNumber(NSNumber(int = 0))?.singleOrNull() ?: '0',
-            plusSign = listOf(formatter.plusSign.singleOrElse { '+' }),
-            minusSign = listOf(formatter.minusSign.singleOrElse { '-' }),
-            decimalSeparator = listOf(decimalSeparator.singleOrElse { '.' })
+            plusSign = formatter.plusSign.singleOrElse { '+' },
+            minusSign = formatter.minusSign.singleOrElse { '-' },
+            decimalSeparator = decimalSeparator.singleOrElse { '.' }
         )
     }
 
