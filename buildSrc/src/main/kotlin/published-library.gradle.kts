@@ -8,7 +8,6 @@ plugins {
 
 repositories {
     jcenter()
-    maven(url = "https://maven.pkg.jetbrains.space/kotlin/p/dokka/dev")
 }
 
 val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
