@@ -22,7 +22,7 @@ Due to the experimental status of [inline classes](https://kotlinlang.org/docs/r
 | --- | --- |
 | 0.1.x | 1.3.6x |
 | 0.2.x | 1.3.7x |
-| 0.3.x | 1.4.0x |
+| 0.3.x | 1.4.0/1.4.10 |
 
 ### JVM
 
