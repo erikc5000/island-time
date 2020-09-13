@@ -1,6 +1,7 @@
 package io.islandtime.formatter.internal
 
 import io.islandtime.DateTimeException
+import io.islandtime.TimeZone
 import io.islandtime.UtcOffset
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
@@ -245,9 +246,7 @@ internal class LocalizedDateTimeStyleFormatter(
 ) : TemporalFormatter() {
 
     init {
-        require(dateStyle != null || timeStyle != null) {
-            "At least one date or time style must be non-null"
-        }
+        require(dateStyle != null || timeStyle != null) { "At least one date or time style must be non-null" }
     }
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
@@ -283,49 +282,29 @@ internal class LocalizedDateTimeTextFormatter(
     }
 }
 
-internal class LocalizedTimeZoneTextFormatter(
-    style: TextStyle,
-    private val generic: Boolean
+internal class TimeZoneNameFormatter(
+    private val style: ContextualTimeZoneNameStyle
 ) : TemporalFormatter() {
-
-    private val style: TextStyle = style.asNormal()
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
         val temporal = context.temporal
-        val zone = temporal.get(TimeZoneProperty.TimeZoneObject)
-        var useGeneric = generic
-        var useDaylight = false
 
-        if (!generic) {
-            if (temporal.has(TimePointProperty.InstantObject)) {
-                val instant = temporal.get(TimePointProperty.InstantObject)
-                useDaylight = zone.rules.isDaylightSavingsAt(instant)
-            } else {
-                useGeneric = true
+        when (val zone = temporal.get(TimeZoneProperty.TimeZoneObject)) {
+            is TimeZone.Region -> {
+                val specificStyle = when {
+                    style.isGeneric -> style.toTimeZoneNameStyle()
+                    temporal.has(TimePointProperty.InstantObject) -> {
+                        val instant = temporal.get(TimePointProperty.InstantObject)
+                        style.toTimeZoneNameStyle(zone.rules.isDaylightSavingsAt(instant))
+                    }
+                    else -> style.asGeneric().toTimeZoneNameStyle()
+                }
+
+                val text = TimeZoneNameProvider.getNameFor(zone.id, specificStyle, context.locale) ?: zone.id
+                stringBuilder.append(text)
             }
+            is TimeZone.FixedOffset -> style.toLocalizedUtcOffsetFormatter().format(context, stringBuilder)
         }
-
-        val text = style.toTimeZoneTextStyle(useDaylight, useGeneric)
-            ?.let { TimeZoneTextProvider.textFor(zone, it, context.locale) }
-            ?: zone.id
-
-        stringBuilder.append(text)
-    }
-}
-
-private fun TextStyle.toTimeZoneTextStyle(daylight: Boolean, generic: Boolean): TimeZoneTextStyle? {
-    return when (this) {
-        TextStyle.SHORT -> when {
-            generic -> TimeZoneTextStyle.SHORT_GENERIC
-            daylight -> TimeZoneTextStyle.SHORT_DAYLIGHT_SAVING
-            else -> TimeZoneTextStyle.SHORT_STANDARD
-        }
-        TextStyle.FULL -> when {
-            generic -> TimeZoneTextStyle.GENERIC
-            daylight -> TimeZoneTextStyle.DAYLIGHT_SAVING
-            else -> TimeZoneTextStyle.STANDARD
-        }
-        else -> null
     }
 }
 
@@ -398,13 +377,8 @@ internal class UtcOffsetFormatter(
     }
 }
 
-internal class LocalizedUtcOffsetFormatter(private val style: TextStyle) : TemporalFormatter() {
-
-    init {
-        require(style == TextStyle.SHORT || style == TextStyle.FULL) {
-            "The localized offset style must be ${TextStyle.SHORT} or ${TextStyle.FULL}"
-        }
-    }
+internal sealed class LocalizedUtcOffsetFormatter : TemporalFormatter() {
+    protected abstract val style: TextStyle
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(UtcOffsetProperty.TotalSeconds).toIntExact()
@@ -445,6 +419,32 @@ internal class LocalizedUtcOffsetFormatter(private val style: TextStyle) : Tempo
             }
         }
     }
+}
+
+internal object ShortLocalizedUtcOffsetFormatter : LocalizedUtcOffsetFormatter() {
+    override val style: TextStyle get() = TextStyle.SHORT
+}
+
+internal object LongLocalizedUtcOffsetFormatter : LocalizedUtcOffsetFormatter() {
+    override val style: TextStyle get() = TextStyle.FULL
+}
+
+internal fun TextStyle.toLocalizedUtcOffsetFormatter(): TemporalFormatter {
+    return when (this) {
+        TextStyle.SHORT -> ShortLocalizedUtcOffsetFormatter
+        TextStyle.FULL -> LongLocalizedUtcOffsetFormatter
+        else -> throw IllegalArgumentException(
+            "The localized offset style must be ${TextStyle.SHORT} or ${TextStyle.FULL}"
+        )
+    }
+}
+
+internal fun ContextualTimeZoneNameStyle.toLocalizedUtcOffsetFormatter(): TemporalFormatter {
+    return if (isShort) ShortLocalizedUtcOffsetFormatter else LongLocalizedUtcOffsetFormatter
+}
+
+internal fun TimeZoneNameStyle.toLocalizedUtcOffsetFormatter(): TemporalFormatter {
+    return if (isShort) ShortLocalizedUtcOffsetFormatter else LongLocalizedUtcOffsetFormatter
 }
 
 private fun validateFractionValue(property: NumberProperty, value: Long, scale: Int) {

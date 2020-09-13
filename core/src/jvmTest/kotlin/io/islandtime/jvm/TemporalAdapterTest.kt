@@ -8,7 +8,6 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.chrono.IsoChronology
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoField
 import java.time.temporal.TemporalQueries
 import java.time.temporal.UnsupportedTemporalTypeException
@@ -18,26 +17,6 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 
 class TemporalAdapterTest : AbstractIslandTimeTest() {
-    @Test
-    fun `day of week in month`() {
-        println(
-            "day of week in month: ${
-                LocalDate.of(2020, 3, 15)
-                    .getLong(java.time.temporal.ChronoField.ALIGNED_DAY_OF_WEEK_IN_MONTH)
-            }"
-        )
-
-        println(
-            "week in month: ${
-                LocalDate.of(2020, 3, 15).getLong(ChronoField.ALIGNED_WEEK_OF_MONTH)
-            }"
-        )
-
-        println("formatter: ${
-            LocalDate.now().format(DateTimeFormatter.ofPattern("F ww W YYYY"))
-        }")
-    }
-
     @Test
     fun `Date can provide expected values`() {
         val date = Date(2019, Month.FEBRUARY, 2)

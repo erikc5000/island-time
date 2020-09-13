@@ -2,6 +2,7 @@ package io.islandtime.parser.internal
 
 import io.islandtime.MAX_TIME_ZONE_STRING_LENGTH
 import io.islandtime.calendar.WeekProperty
+import io.islandtime.format.ContextualTimeZoneNameStyle
 import io.islandtime.format.SignStyle
 import io.islandtime.format.TextStyle
 import io.islandtime.format.dsl.FormatOption
@@ -229,7 +230,11 @@ class DateTimeParserBuilderImpl : DateTimeParserBuilder {
     }
 
     override fun localizedOffset(style: TextStyle) {
-        TODO("Not yet implemented")
+        require(style == TextStyle.SHORT || style == TextStyle.FULL) {
+            "The style must be ${TextStyle.SHORT} or ${TextStyle.FULL}"
+        }
+
+        temporalParserBuilder.localizedOffset(longFormatOnly = style == TextStyle.FULL)
     }
 
     override fun timeZoneId() {
@@ -258,8 +263,12 @@ class DateTimeParserBuilderImpl : DateTimeParserBuilder {
         }
     }
 
-    override fun timeZoneName(style: TextStyle, generic: Boolean) {
-        TODO("Support parsing localized time zone names")
+    override fun timeZoneName(style: ContextualTimeZoneNameStyle) {
+        temporalParserBuilder.timeZoneName { styles = style.toTimeZoneNameStyleSet() }
+    }
+
+    override fun timeZoneName(builder: TimeZoneNameParserBuilder.() -> Unit) {
+        temporalParserBuilder.timeZoneName(builder)
     }
 
     override fun optional(builder: DateTimeParserBuilder.() -> Unit) {

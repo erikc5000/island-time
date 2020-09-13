@@ -4,10 +4,11 @@ import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
 import io.islandtime.base.get
 import io.islandtime.calendar.LocalizedNumberProperty
-import io.islandtime.formatter.dsl.NumberFormatterBuilder
-import io.islandtime.formatter.TemporalFormatter
-import io.islandtime.formatter.dsl.TemporalFormatterBuilder
+import io.islandtime.format.ContextualTimeZoneNameStyle
 import io.islandtime.format.TextStyle
+import io.islandtime.formatter.TemporalFormatter
+import io.islandtime.formatter.dsl.NumberFormatterBuilder
+import io.islandtime.formatter.dsl.TemporalFormatterBuilder
 
 @PublishedApi
 internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
@@ -89,8 +90,12 @@ internal class TemporalFormatterBuilderImpl : TemporalFormatterBuilder {
         formatters += LocalizedDateTimeTextFormatter(property, style)
     }
 
-    override fun localizedTimeZoneText(style: TextStyle, generic: Boolean) {
-        formatters += LocalizedTimeZoneTextFormatter(style, generic)
+    override fun localizedOffset(style: TextStyle) {
+        formatters += style.toLocalizedUtcOffsetFormatter()
+    }
+
+    override fun timeZoneName(style: ContextualTimeZoneNameStyle) {
+        formatters += TimeZoneNameFormatter(style)
     }
 
     override fun onlyIf(

@@ -14,7 +14,7 @@ import io.islandtime.parser.internal.TemporalParserBuilderImpl
  */
 abstract class TemporalParser internal constructor() {
     /**
-     * Parses [text] into a [TemporalParseResult] containing all parsed properties.
+     * Parses [text] into a [ParseResult] containing all parsed properties.
      *
      * @param text text to parse
      * @param settings customize parsing behavior
@@ -24,7 +24,7 @@ abstract class TemporalParser internal constructor() {
     fun parse(
         text: CharSequence,
         settings: Settings = Settings.DEFAULT
-    ): TemporalParseResult {
+    ): ParseResult {
         val context = MutableContext(settings)
         val endPosition = parse(context, text, position = 0)
 
@@ -88,7 +88,7 @@ abstract class TemporalParser internal constructor() {
     interface Context : LocalizationContext {
         val numberStyle: NumberStyle
         val isCaseSensitive: Boolean
-        val result: TemporalParseResult
+        val result: ParseResult
     }
 
     internal class MutableContext(private val settings: Settings) : Context {
@@ -96,7 +96,7 @@ abstract class TemporalParser internal constructor() {
         override val weekSettings: WeekSettings get() = settings.weekSettingsOverride ?: locale.weekSettings
         override val numberStyle: NumberStyle get() = settings.numberStyle
         override var isCaseSensitive = settings.isCaseSensitive
-        override var result = TemporalParseResult()
+        override var result = ParseResult()
     }
 }
 

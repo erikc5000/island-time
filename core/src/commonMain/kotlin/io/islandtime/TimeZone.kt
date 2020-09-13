@@ -2,18 +2,18 @@
 
 package io.islandtime
 
-import io.islandtime.base.BooleanProperty
-import io.islandtime.base.ObjectProperty
-import io.islandtime.base.Temporal
-import io.islandtime.base.TemporalProperty
-import io.islandtime.format.TimeZoneTextProvider
-import io.islandtime.format.TimeZoneTextStyle
+import io.islandtime.base.*
+import io.islandtime.format.TimeZoneNameProvider
+import io.islandtime.format.TimeZoneNameStyle
+import io.islandtime.formatter.TemporalFormatter
+import io.islandtime.formatter.internal.toLocalizedUtcOffsetFormatter
 import io.islandtime.internal.systemDefaultTimeZone
 import io.islandtime.locale.Locale
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
 import io.islandtime.parser.*
 import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.zone.FixedTimeZoneRules
 import io.islandtime.zone.TimeZoneRules
 import io.islandtime.zone.TimeZoneRulesException
@@ -61,7 +61,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
 
     /**
      * The localized name of this time zone, if available for the [locale] in the specified style. The result depends on
-     * the configured [TimeZoneTextProvider] and may differ between platforms.
+     * the configured [TimeZoneNameProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
      * - Standard: "Eastern Standard Time"
@@ -73,15 +73,13 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
      *
      * @see displayName
      */
-    fun localizedName(style: TimeZoneTextStyle, locale: Locale): String? {
-        return TimeZoneTextProvider.textFor(this, style, locale)
-    }
+    abstract fun localizedName(style: TimeZoneNameStyle, locale: Locale): String?
 
     /**
      * A textual representation of this time zone, suitable for display purposes. The localized name will be returned,
      * if available for the [locale] in the specified style. If not, the [id] will be returned instead.
      *
-     * The result depends on the configured [TimeZoneTextProvider] and may differ between platforms.
+     * The result depends on the configured [TimeZoneNameProvider] and may differ between platforms.
      *
      * Example output for the "America/New_York" ID and "en-US" locale:
      * - Standard: "Eastern Standard Time"
@@ -94,7 +92,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
      * @see localizedName
      * @see id
      */
-    fun displayName(style: TimeZoneTextStyle, locale: Locale): String {
+    fun displayName(style: TimeZoneNameStyle, locale: Locale): String {
         return localizedName(style, locale) ?: id
     }
 
@@ -150,6 +148,10 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
             }
         }
 
+        override fun localizedName(style: TimeZoneNameStyle, locale: Locale): String? {
+            return TimeZoneNameProvider.getNameFor(id, style, locale)
+        }
+
         override fun get(property: BooleanProperty): Boolean {
             return when (property) {
                 TimeZoneProperty.IsFixedOffset -> false
@@ -186,10 +188,28 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
         override val rules: TimeZoneRules get() = FixedTimeZoneRules(offset)
         override fun normalized(): FixedOffset = this
 
+        override fun localizedName(style: TimeZoneNameStyle, locale: Locale): String {
+            val settings = TemporalFormatter.Settings(locale = locale)
+            return style.toLocalizedUtcOffsetFormatter().format(this, settings)
+        }
+
+        override fun has(property: TemporalProperty<*>): Boolean {
+            return property is UtcOffsetProperty || super.has(property)
+        }
+
         override fun get(property: BooleanProperty): Boolean {
             return when (property) {
                 TimeZoneProperty.IsFixedOffset -> true
+                is UtcOffsetProperty -> offset.get(property)
                 else -> super.get(property)
+            }
+        }
+
+        override fun get(property: NumberProperty): Long {
+            return if (property is UtcOffsetProperty) {
+                offset.get(property)
+            } else {
+                super.get(property)
             }
         }
 

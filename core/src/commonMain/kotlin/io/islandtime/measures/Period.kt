@@ -5,7 +5,7 @@ import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.internal.timesExact
 import io.islandtime.internal.toIntExact
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.ParseResult
 import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.throwParserPropertyResolutionException
 import io.islandtime.properties.*
@@ -356,7 +356,7 @@ fun String.toPeriod(
     return result.toPeriod() ?: throwParserPropertyResolutionException<Period>(this)
 }
 
-internal fun TemporalParseResult.toPeriod(): Period? {
+internal fun ParseResult.toPeriod(): Period? {
     val sign = this[DurationProperty.Sign]?.toInt() ?: 1
     val yearsValue = this[DurationProperty.Years]
     val monthsValue = this[DurationProperty.Months]

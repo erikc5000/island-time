@@ -19,7 +19,7 @@ import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeTextProvider
-import io.islandtime.test.FakeTimeZoneTextProvider
+import io.islandtime.test.FakeTimeZoneNameProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -28,7 +28,7 @@ import kotlin.test.todo
 @Suppress("PrivatePropertyName")
 class DateTimePatternTest : AbstractIslandTimeTest(
     testDateTimeTextProvider = FakeDateTimeTextProvider,
-    testTimeZoneTextProvider = FakeTimeZoneTextProvider
+    testTimeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     private val emptyTemporal = object : Temporal {}
 
@@ -735,13 +735,37 @@ class DateTimePatternTest : AbstractIslandTimeTest(
         ).forEach { (pattern, value) ->
             val message = "pattern = $pattern value = $value\n"
 
-            todo {
-                val parsed = DateTimeParser(pattern).parse(value, en_US_parserSettings)
-                assertEquals(1, parsed.propertyCount, message)
-                assertEquals("America/New_York", parsed[TimeZoneProperty.Id], message)
-            }
+            val parsed = DateTimeParser(pattern).parse(value, en_US_parserSettings)
+            assertEquals(1, parsed.propertyCount, message)
+
+            // Multiple zones map to Eastern Time. By default, the first one alphabetically is picked.
+            assertEquals("America/Detroit", parsed[TimeZoneProperty.Id], message)
 
             assertEquals(value, DateTimeFormatter(pattern).format(zonedDateTime, en_US_formatterSettings), message)
+        }
+    }
+
+    @Test
+    fun `parses and formats specific non-location fixed offset zone correctly`() {
+        listOf(
+            "z" to "GMT-4",
+            "zz" to "GMT-4",
+            "zzz" to "GMT-4",
+            "zzzz" to "GMT-04:00"
+        ).forEach { (pattern, value) ->
+            val message = "pattern = $pattern value = $value\n"
+
+            val parsed = DateTimeParser(pattern).parse(value, en_US_parserSettings).toUtcOffset()
+            assertEquals(-14400, parsed?.totalSeconds?.value)
+            // FIXME!
+            //assertEquals(1, parsed.propertyCount, message)
+            //assertEquals("America/New_York", parsed[TimeZoneProperty.Id], message)
+
+            assertEquals(
+                value,
+                DateTimeFormatter(pattern).format(zonedDateTime.withFixedOffsetZone(), en_US_formatterSettings),
+                message
+            )
         }
     }
 

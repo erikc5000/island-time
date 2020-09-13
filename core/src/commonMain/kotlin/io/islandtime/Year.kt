@@ -193,7 +193,7 @@ fun String.toYear(
     return result.toYear() ?: throwParserPropertyResolutionException<Year>(this)
 }
 
-internal fun TemporalParseResult.toYear(): Year? {
+internal fun ParseResult.toYear(): Year? {
     val value = this[DateProperty.Year]
 
     return if (value != null) {

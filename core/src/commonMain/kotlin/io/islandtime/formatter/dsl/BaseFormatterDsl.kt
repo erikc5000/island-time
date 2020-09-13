@@ -26,22 +26,37 @@ interface ConditionalFormatterBuilder<T> {
     fun onlyIf(predicate: TemporalFormatter.Context.() -> Boolean, builder: T.() -> Unit)
 }
 
+/**
+ * Performs the formatting steps defined in [builder] only if the [property] is present.
+ */
 fun <T> ConditionalFormatterBuilder<T>.onlyIfPresent(property: TemporalProperty<*>, builder: T.() -> Unit) {
     return onlyIf({ temporal.has(property) }, builder)
 }
 
+/**
+ * Performs the formatting steps defined in [builder] only if the [property] is absent.
+ */
 fun <T> ConditionalFormatterBuilder<T>.onlyIfAbsent(property: TemporalProperty<*>, builder: T.() -> Unit) {
     return onlyIf({ !temporal.has(property) }, builder)
 }
 
+/**
+ * Performs the formatting steps defined in [builder] only if the [property] is present and not equal to zero.
+ */
 fun <T> ConditionalFormatterBuilder<T>.onlyIfPresentAndNonZero(property: NumberProperty, builder: T.() -> Unit) {
     return onlyIf({ temporal.getOrElse(property) { 0L } != 0L }, builder)
 }
 
+/**
+ * Performs the formatting steps defined in [builder] only if the [property] is `true`.
+ */
 fun <T> ConditionalFormatterBuilder<T>.onlyIfTrue(property: BooleanProperty, builder: T.() -> Unit) {
     return onlyIf({ temporal.get(property) }, builder)
 }
 
+/**
+ * Performs the formatting steps defined in [builder] only if the [property] is `false`.
+ */
 fun <T> ConditionalFormatterBuilder<T>.onlyIfFalse(property: BooleanProperty, builder: T.() -> Unit) {
     return onlyIf({ !temporal.get(property) }, builder)
 }

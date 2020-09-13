@@ -678,7 +678,7 @@ fun String.toZonedDateTime(
     return result.toZonedDateTime() ?: throwParserPropertyResolutionException<ZonedDateTime>(this)
 }
 
-internal fun TemporalParseResult.toZonedDateTime(): ZonedDateTime? {
+internal fun ParseResult.toZonedDateTime(): ZonedDateTime? {
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
 

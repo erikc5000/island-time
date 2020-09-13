@@ -11,7 +11,7 @@ abstract class AbstractIslandTimeTest(
     private val testTimeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider,
     private val testDateTimeFormatProvider: DateTimeFormatProvider = PlatformDateTimeFormatProvider,
     private val testDateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider,
-    private val testTimeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
+    private val testTimeZoneNameProvider: TimeZoneNameProvider = PlatformTimeZoneNameProvider
 ) {
     @BeforeTest
     fun setUp() {
@@ -21,7 +21,7 @@ abstract class AbstractIslandTimeTest(
             timeZoneRulesProvider = testTimeZoneRulesProvider
             dateTimeFormatProvider = testDateTimeFormatProvider
             dateTimeTextProvider = testDateTimeTextProvider
-            timeZoneTextProvider = testTimeZoneTextProvider
+            timeZoneNameProvider = testTimeZoneNameProvider
         }
     }
 

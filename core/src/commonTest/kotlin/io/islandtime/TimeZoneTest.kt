@@ -1,6 +1,6 @@
 package io.islandtime
 
-import io.islandtime.format.TimeZoneTextStyle
+import io.islandtime.format.TimeZoneNameStyle
 import io.islandtime.locale.toLocale
 import io.islandtime.measures.hours
 import io.islandtime.test.AbstractIslandTimeTest
@@ -91,19 +91,23 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     fun `localizedName() and displayName() get localized text from the provider`() {
         assertEquals(
             "Greenwich Mean Time",
-            TimeZone("Europe/London").localizedName(TimeZoneTextStyle.STANDARD, "en-GB".toLocale())
+            TimeZone("Europe/London").localizedName(TimeZoneNameStyle.LONG_STANDARD, "en-GB".toLocale())
         )
         assertEquals(
             "Greenwich Mean Time",
-            TimeZone("Europe/London").displayName(TimeZoneTextStyle.STANDARD, "en-GB".toLocale())
+            TimeZone("Europe/London").displayName(TimeZoneNameStyle.LONG_STANDARD, "en-GB".toLocale())
         )
     }
 
     @Test
-    fun `displayName() returns the ID on a fixed offset zone`() {
+    fun `displayName() returns localized GMT format on a fixed offset zone`() {
         assertEquals(
-            "+01:00",
-            TimeZone("+01:00").displayName(TimeZoneTextStyle.STANDARD, "en-GB".toLocale())
+            "GMT+01:00",
+            TimeZone("+01:00").displayName(TimeZoneNameStyle.LONG_STANDARD, "en-GB".toLocale())
+        )
+        assertEquals(
+            "GMT+1",
+            TimeZone("+01:00").displayName(TimeZoneNameStyle.SHORT_STANDARD, "en-GB".toLocale())
         )
     }
 
@@ -111,7 +115,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     fun `displayName() returns the ID on an invalid zone`() {
         assertEquals(
             "America/Buffalo",
-            TimeZone("America/Buffalo").displayName(TimeZoneTextStyle.STANDARD, "en-US".toLocale())
+            TimeZone("America/Buffalo").displayName(TimeZoneNameStyle.LONG_STANDARD, "en-US".toLocale())
         )
     }
 
@@ -127,7 +131,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `normalized() doesn't touch a fixed region-based zone`() {
+    fun `normalized() has no effect on a fixed region-based zone`() {
         listOf(
             "+00:00",
             "-05:00",

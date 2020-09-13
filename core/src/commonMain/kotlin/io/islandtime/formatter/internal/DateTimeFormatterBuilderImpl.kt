@@ -1,6 +1,7 @@
 package io.islandtime.formatter.internal
 
 import io.islandtime.calendar.WeekProperty
+import io.islandtime.format.ContextualTimeZoneNameStyle
 import io.islandtime.format.FormatStyle
 import io.islandtime.format.SignStyle
 import io.islandtime.format.TextStyle
@@ -223,15 +224,15 @@ internal class DateTimeFormatterBuilderImpl : DateTimeFormatterBuilder {
     }
 
     override fun localizedOffset(style: TextStyle) {
-        use(LocalizedUtcOffsetFormatter(style))
+        temporalFormatterBuilder.localizedOffset(style)
     }
 
     override fun timeZoneId() {
         temporalFormatterBuilder.text(TimeZoneProperty.Id)
     }
 
-    override fun timeZoneName(style: TextStyle, generic: Boolean) {
-        temporalFormatterBuilder.localizedTimeZoneText(style, generic)
+    override fun timeZoneName(style: ContextualTimeZoneNameStyle) {
+        temporalFormatterBuilder.timeZoneName(style)
     }
 
     fun build(): TemporalFormatter {

@@ -13,7 +13,7 @@ import io.islandtime.properties.UtcOffsetProperty
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeFormatProvider
 import io.islandtime.test.FakeDateTimeTextProvider
-import io.islandtime.test.FakeTimeZoneTextProvider
+import io.islandtime.test.FakeTimeZoneNameProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -21,7 +21,7 @@ import kotlin.test.assertEquals
 class DateTimeFormatterTest : AbstractIslandTimeTest(
     testDateTimeFormatProvider = FakeDateTimeFormatProvider,
     testDateTimeTextProvider = FakeDateTimeTextProvider,
-    testTimeZoneTextProvider = FakeTimeZoneTextProvider
+    testTimeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     @Test
     fun `can model an iso format`() {

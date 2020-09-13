@@ -29,38 +29,3 @@ enum class TextStyle {
     fun asNormal(): TextStyle = values()[ordinal and 1.inv()]
 }
 
-/**
- * A time zone text style.
- *
- * Standard versions indicate the name for standard time, like "Eastern Standard Time". Daylight versions indicate the
- * name of daylight savings time, like "Eastern Daylight Time". Generic is agnostic to daylight savings -- ie.
- * "Eastern Time".
- */
-enum class TimeZoneTextStyle {
-    STANDARD,
-    SHORT_STANDARD,
-    DAYLIGHT_SAVING,
-    SHORT_DAYLIGHT_SAVING,
-    GENERIC,
-    SHORT_GENERIC;
-
-    /**
-     * Is this a short style?
-     */
-    fun isShort(): Boolean = this == SHORT_STANDARD || this == SHORT_DAYLIGHT_SAVING || this == SHORT_GENERIC
-
-    /**
-     * Is this a standard style?
-     */
-    fun isStandard(): Boolean = this == STANDARD || this == SHORT_STANDARD
-
-    /**
-     * Is this a daylight savings style?
-     */
-    fun isDaylightSaving(): Boolean = this == DAYLIGHT_SAVING || this == SHORT_DAYLIGHT_SAVING
-
-    /**
-     * Is this a generic style?
-     */
-    fun isGeneric(): Boolean = this == GENERIC || this == SHORT_GENERIC
-}

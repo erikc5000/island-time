@@ -2,10 +2,7 @@
 
 package io.islandtime
 
-import io.islandtime.base.NumberProperty
-import io.islandtime.base.ObjectProperty
-import io.islandtime.base.Temporal
-import io.islandtime.base.TemporalProperty
+import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.measures.internal.plusWithOverflow
@@ -386,16 +383,16 @@ fun String.toInstant(
 
 private const val SECONDS_PER_10000_YEARS = 146097L * 25L * 86400L
 
-internal fun TemporalParseResult.toInstant(): Instant? {
+internal fun ParseResult.toInstant(): Instant? {
     // FIXME: Require the year field here for now and make it fit within DateTime's supported range
-    val parsedYear = this[DateProperty.Year] ?: return null
+    val parsedYear = getOrNull(DateProperty.Year) ?: return null
 
-    this[DateProperty.Year] = parsedYear % 10_000
+    override(DateProperty.Year, value = parsedYear % 10_000)
     val dateTime = this.toDateTime()
     val offset = this.toUtcOffset()
 
     // Restore the original parsed year
-    this[DateProperty.Year] = parsedYear
+    override(DateProperty.Year, value = parsedYear)
 
     return if (dateTime != null && offset != null) {
         val secondOfEpoch = dateTime.secondOfUnixEpochAt(offset) +

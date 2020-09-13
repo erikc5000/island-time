@@ -233,7 +233,7 @@ fun String.toOffsetTime(
     return result.toOffsetTime() ?: throwParserPropertyResolutionException<OffsetTime>(this)
 }
 
-internal fun TemporalParseResult.toOffsetTime(): OffsetTime? {
+internal fun ParseResult.toOffsetTime(): OffsetTime? {
     val time = this.toTime()
     val utcOffset = this.toUtcOffset()
 

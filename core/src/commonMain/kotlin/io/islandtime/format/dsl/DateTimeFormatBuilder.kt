@@ -1,11 +1,13 @@
 package io.islandtime.format.dsl
 
 import io.islandtime.calendar.WeekProperty
-import io.islandtime.formatter.TemporalFormatter
+import io.islandtime.format.ContextualTimeZoneNameStyle
 import io.islandtime.format.TextStyle
 import io.islandtime.format.internal.parseDateTimePatternTo
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.properties.DateProperty
 import io.islandtime.properties.TimeProperty
+import io.islandtime.properties.TimeZoneProperty
 import io.islandtime.properties.UtcOffsetProperty
 
 @IslandTimeFormatDsl
@@ -20,98 +22,101 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     /**
      * Appends the year of the era, padding the start with zero as necessary to satisfy [minLength].
      *
-     * The property [DateProperty.YearOfEra] is required during formatting.
+     * The property [DateProperty.YearOfEra] is required during formatting and will be populated when parsing.
      */
     fun yearOfEra(minLength: Int = 1, maxLength: Int = 19)
 
     /**
      * Appends the two-digit year of the era.
      *
-     * The property [DateProperty.YearOfEra] is required during formatting.
+     * The property [DateProperty.YearOfEra] is required during formatting and will be populated when parsing.
      */
     fun twoDigitYearOfEra()
 
     /**
      * Appends the week-based year, padding the start with zero as necessary to satisfy [minLength].
      *
-     * The property [WeekProperty.LocalizedWeekBasedYear] is required during formatting.
+     * The property [WeekProperty.LocalizedWeekBasedYear] is required during formatting and will be populated when
+     * parsing.
      */
     fun weekBasedYear(minLength: Int = 1, maxLength: Int = 19)
 
     /**
      * Appends the two-digit week-based year.
      *
-     * The property [WeekProperty.LocalizedWeekBasedYear] is required during formatting.
+     * The property [WeekProperty.LocalizedWeekBasedYear] is required during formatting and will be populated when
+     * parsing.
      */
     fun twoDigitWeekBasedYear()
 
     /**
      * Appends a year, padding the start with zero as necessary to satisfy [minLength].
      *
-     * The property [DateProperty.Year] is required during formatting.
+     * The property [DateProperty.Year] is required during formatting and will be populated when parsing.
      */
     fun year(minLength: Int = 1, maxLength: Int = 19)
 
     /**
      * Appends the month of year number.
      *
-     * The property [DateProperty.MonthOfYear] is required during formatting.
+     * The property [DateProperty.MonthOfYear] is required during formatting and will be populated when parsing.
      */
     fun monthNumber(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the localized name of the month in a specific style.
      *
-     * The property [DateProperty.MonthOfYear] is required during formatting.
+     * The property [DateProperty.MonthOfYear] is required during formatting and will be populated when parsing.
      */
     fun monthName(style: TextStyle)
 
     /**
      * Appends the week of the week-based year.
      *
-     * The property [WeekProperty.LocalizedWeekOfYear] is required during formatting.
+     * The property [WeekProperty.LocalizedWeekOfYear] is required during formatting and will be populated when parsing.
      */
     fun weekOfWeekBasedYear(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the week of the month.
      *
-     * The property [WeekProperty.LocalizedWeekOfMonth] is required during formatting.
+     * The property [WeekProperty.LocalizedWeekOfMonth] is required during formatting and will be populated when
+     * parsing.
      */
     fun weekOfMonth(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the day of the year value with a fixed number of digits.
      *
-     * The property [DateProperty.DayOfYear] is required during formatting.
+     * The property [DateProperty.DayOfYear] is required during formatting and will be populated when parsing.
      */
     fun dayOfYear(minLength: Int = 1, maxLength: Int = 3)
 
     /**
      * Appends the day of the month value with a fixed number of digits.
      *
-     * The property [DateProperty.DayOfMonth] is required during formatting.
+     * The property [DateProperty.DayOfMonth] is required during formatting and will be populated when parsing.
      */
     fun dayOfMonth(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the ISO day of week number with a fixed number of digits.
      *
-     * The property [DateProperty.DayOfWeek] is required during formatting.
+     * The property [DateProperty.DayOfWeek] is required during formatting and will be populated when parsing.
      */
     fun dayOfWeekNumber(length: Int = 1)
 
     /**
      * Appends the localized day of week number with a fixed number of digits.
      *
-     * The property [WeekProperty.LocalizedDayOfWeek] is required during formatting.
+     * The property [WeekProperty.LocalizedDayOfWeek] is required during formatting and will be populated when parsing.
      */
     fun localizedDayOfWeekNumber(length: Int = 1)
 
     /**
      * Appends the localized name of the day of the week in the specified style.
      *
-     * The property [DateProperty.DayOfWeek] is required during formatting.
+     * The property [DateProperty.DayOfWeek] is required during formatting and will be populated when parsing.
      */
     fun dayOfWeekName(style: TextStyle)
 
@@ -123,49 +128,49 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     /**
      * Appends the textual representation of the AM or PM of the day.
      *
-     * The property [TimeProperty.AmPmOfDay] is required during formatting.
+     * The property [TimeProperty.AmPmOfDay] is required during formatting and will be populated when parsing.
      */
     fun amPm()
 
     /**
      * Appends the hour of the day with a fixed number of digits.
      *
-     * The property [TimeProperty.HourOfDay] is required during formatting.
+     * The property [TimeProperty.HourOfDay] is required during formatting and will be populated when parsing.
      */
     fun hourOfDay(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the hour of AM-PM with a fixed number of digits.
      *
-     * The property [TimeProperty.HourOfAmPm] is required during formatting.
+     * The property [TimeProperty.HourOfAmPm] is required during formatting and will be populated when parsing.
      */
     fun hourOfAmPm(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the clock hour of the day with a fixed number of digits.
      *
-     * The property [TimeProperty.ClockHourOfDay] is required during formatting.
+     * The property [TimeProperty.ClockHourOfDay] is required during formatting and will be populated when parsing.
      */
     fun clockHourOfDay(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the clock hour of AM-PM with a fixed number of digits.
      *
-     * The property [TimeProperty.ClockHourOfAmPm] is required during formatting.
+     * The property [TimeProperty.ClockHourOfAmPm] is required during formatting and will be populated when parsing.
      */
     fun clockHourOfAmPm(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the minute of the hour with a fixed number of digits.
      *
-     * The property [TimeProperty.MinuteOfHour] is required during formatting.
+     * The property [TimeProperty.MinuteOfHour] is required during formatting and will be populated when parsing.
      */
     fun minuteOfHour(minLength: Int = 1, maxLength: Int = 2)
 
     /**
      * Appends the second of the minute with a fixed number of digits.
      *
-     * The property [TimeProperty.SecondOfMinute] is required during formatting.
+     * The property [TimeProperty.SecondOfMinute] is required during formatting and will be populated when parsing.
      */
     fun secondOfMinute(minLength: Int = 1, maxLength: Int = 2)
 
@@ -186,21 +191,23 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     /**
      * Appends the millisecond of the day with a fixed number of digits.
      *
-     * The property [TimeProperty.MillisecondOfDay] is required during formatting.
+     * The property [TimeProperty.MillisecondOfDay] is required during formatting and will be populated when parsing.
      */
     fun millisecondOfDay(minLength: Int = 1, maxLength: Int = 19)
 
     /**
      * Appends the nanosecond of the second as a fractional value.
      *
-     * The property [TimeProperty.NanosecondOfSecond] is required during formatting.
+     * The property [TimeProperty.NanosecondOfSecond] is required during formatting and will be populated when parsing.
      */
     fun nanosecondOfSecond(minLength: Int = 1, maxLength: Int = 9)
 
     /**
      * Appends the UTC offset in an ISO-8601-compatible format.
      *
-     * The property [UtcOffsetProperty.TotalSeconds] is required during formatting.
+     * The property [UtcOffsetProperty.TotalSeconds] is required during formatting. During parsing, either
+     * [UtcOffsetProperty.TotalSeconds] or the combination of [UtcOffsetProperty.Sign], [UtcOffsetProperty.Hours],
+     * [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds] will be populated.
      */
     fun offset(
         format: IsoFormat = IsoFormat.EXTENDED,
@@ -212,7 +219,9 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
     /**
      * Appends the localized UTC offset in either short or long format.
      *
-     * The property [UtcOffsetProperty.TotalSeconds] is required during formatting.
+     * The property [UtcOffsetProperty.TotalSeconds] is required during formatting. During parsing, either
+     * [UtcOffsetProperty.TotalSeconds] or the combination of [UtcOffsetProperty.Sign], [UtcOffsetProperty.Hours],
+     * [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds] will be populated.
      *
      * @param style [TextStyle.SHORT] for short format or [TextStyle.FULL] for long format
      * @throws IllegalArgumentException if style is not [TextStyle.SHORT] or [TextStyle.FULL]
@@ -221,13 +230,20 @@ interface DateTimeFormatBuilder : LiteralFormatBuilder {
 
     /**
      * Appends the time zone ID.
+     *
+     * The property [TimeZoneProperty.Id] is required during formatting and will be populated when parsing.
      */
     fun timeZoneId()
 
     /**
      * Appends the localized time zone name in the specified [style].
+     *
+     * The property [TimeZoneProperty.TimeZoneObject] is required during formatting. During parsing,
+     * [TimeZoneProperty.Id] will be populated for region-based zones while [UtcOffsetProperty.TotalSeconds] or the
+     * combination of [UtcOffsetProperty.Sign], [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and
+     * [UtcOffsetProperty.Seconds] will be populated for fixed-offset zones.
      */
-    fun timeZoneName(style: TextStyle, generic: Boolean)
+    fun timeZoneName(style: ContextualTimeZoneNameStyle)
 }
 
 /**

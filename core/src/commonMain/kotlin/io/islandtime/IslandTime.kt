@@ -18,8 +18,8 @@ object IslandTime {
     internal val dateTimeFormatProvider: DateTimeFormatProvider
         get() = settings.dateTimeFormatProvider
 
-    internal val timeZoneTextProvider: TimeZoneTextProvider
-        get() = settings.timeZoneTextProvider
+    internal val timeZoneNameProvider: TimeZoneNameProvider
+        get() = settings.timeZoneNameProvider
 
     @Suppress("ObjectPropertyName")
     private val _settings = atomic<Settings?>(null)
@@ -93,21 +93,21 @@ object IslandTime {
         /**
          * The time zone text provider to use.
          */
-        var timeZoneTextProvider: TimeZoneTextProvider
+        var timeZoneNameProvider: TimeZoneNameProvider
     }
 
     private class InitializerImpl : Initializer {
         override var timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider
         override var dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider
         override var dateTimeFormatProvider: DateTimeFormatProvider = PlatformDateTimeFormatProvider
-        override var timeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
+        override var timeZoneNameProvider: TimeZoneNameProvider = PlatformTimeZoneNameProvider
 
         fun build(): Settings {
             return Settings(
                 timeZoneRulesProvider,
                 dateTimeTextProvider,
                 dateTimeFormatProvider,
-                timeZoneTextProvider
+                timeZoneNameProvider
             )
         }
     }
@@ -116,6 +116,6 @@ object IslandTime {
         val timeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider,
         val dateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider,
         val dateTimeFormatProvider: DateTimeFormatProvider = PlatformDateTimeFormatProvider,
-        val timeZoneTextProvider: TimeZoneTextProvider = PlatformTimeZoneTextProvider
+        val timeZoneNameProvider: TimeZoneNameProvider = PlatformTimeZoneNameProvider
     )
 }

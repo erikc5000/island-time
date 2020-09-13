@@ -6,7 +6,7 @@ import io.islandtime.measures.Duration.Companion.create
 import io.islandtime.measures.TimeUnit.*
 import io.islandtime.measures.internal.plusWithOverflow
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.parser.TemporalParseResult
+import io.islandtime.parser.ParseResult
 import io.islandtime.parser.TemporalParser
 import io.islandtime.properties.*
 import io.islandtime.base.throwUnsupportedTemporalPropertyException
@@ -713,7 +713,7 @@ fun String.toDuration(
     return result.toDuration()
 }
 
-internal fun TemporalParseResult.toDuration(): Duration {
+internal fun ParseResult.toDuration(): Duration {
     // TODO: Make sure we have at least one component
     val days = (this[DurationProperty.Days] ?: 0L).days
     val hours = (this[DurationProperty.Hours] ?: 0L).hours

@@ -718,7 +718,7 @@ fun String.toDateTime(
     return result.toDateTime() ?: throwParserPropertyResolutionException<DateTime>(this)
 }
 
-internal fun TemporalParseResult.toDateTime(): DateTime? {
+internal fun ParseResult.toDateTime(): DateTime? {
     val date = this.toDate()
     val time = this.toTime()
 

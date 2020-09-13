@@ -32,10 +32,10 @@ internal inline fun <reified T> throwParserGroupResolutionException(
     )
 }
 
-internal inline fun <reified T> List<TemporalParseResult>.expectingGroupCount(
+internal inline fun <reified T> List<ParseResult>.expectingGroupCount(
     expected: Int,
     parsedText: String
-): List<TemporalParseResult> {
+): List<ParseResult> {
     if (size != expected) {
         throwParserGroupResolutionException<T>(2, size, parsedText)
     }

@@ -471,7 +471,7 @@ fun String.toOffsetDateTime(
     return result.toOffsetDateTime() ?: throwParserPropertyResolutionException<OffsetDateTime>(this)
 }
 
-internal fun TemporalParseResult.toOffsetDateTime(): OffsetDateTime? {
+internal fun ParseResult.toOffsetDateTime(): OffsetDateTime? {
     val dateTime = this.toDateTime()
     val utcOffset = this.toUtcOffset()
 

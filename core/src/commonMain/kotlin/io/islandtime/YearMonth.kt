@@ -252,7 +252,7 @@ fun String.toYearMonth(
     return result.toYearMonth() ?: throwParserPropertyResolutionException<YearMonth>(this)
 }
 
-internal fun TemporalParseResult.toYearMonth(): YearMonth? {
+internal fun ParseResult.toYearMonth(): YearMonth? {
     val year = this[DateProperty.Year]
     val month = this[DateProperty.MonthOfYear]
 

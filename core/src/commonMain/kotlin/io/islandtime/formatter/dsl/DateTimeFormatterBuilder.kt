@@ -1,5 +1,6 @@
 package io.islandtime.formatter.dsl
 
+import io.islandtime.format.DateTimeFormatProvider
 import io.islandtime.format.FormatStyle
 import io.islandtime.format.dsl.DateTimeFormatBuilder
 import io.islandtime.format.dsl.IslandTimeFormatDsl

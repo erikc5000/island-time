@@ -1,9 +1,10 @@
 package io.islandtime.format.internal
 
+import io.islandtime.format.ContextualTimeZoneNameStyle
+import io.islandtime.format.TextStyle
 import io.islandtime.format.dsl.DateTimeFormatBuilder
 import io.islandtime.format.dsl.FormatOption
 import io.islandtime.format.dsl.IsoFormat
-import io.islandtime.format.TextStyle
 
 internal fun parseDateTimePatternTo(builder: DateTimeFormatBuilder, pattern: CharSequence): Unit = with(builder) {
     var position = 0
@@ -244,16 +245,16 @@ private fun DateTimeFormatBuilder.parseMillisecondOfDay(count: Int) {
 
 private fun DateTimeFormatBuilder.parseSpecificNonLocationTimeZone(letter: Char, count: Int) {
     when {
-        count <= 3 -> timeZoneName(TextStyle.SHORT, generic = false)
-        count == 4 -> timeZoneName(TextStyle.FULL, generic = false)
+        count <= 3 -> timeZoneName(ContextualTimeZoneNameStyle.SHORT_SPECIFIC)
+        count == 4 -> timeZoneName(ContextualTimeZoneNameStyle.LONG_SPECIFIC)
         else -> throwTooManyLettersException(letter)
     }
 }
 
 private fun DateTimeFormatBuilder.parseGenericNonLocationTimeZone(letter: Char, count: Int) {
     when (count) {
-        1 -> timeZoneName(TextStyle.SHORT, generic = true)
-        4 -> timeZoneName(TextStyle.FULL, generic = true)
+        1 -> timeZoneName(ContextualTimeZoneNameStyle.SHORT_GENERIC)
+        4 -> timeZoneName(ContextualTimeZoneNameStyle.LONG_GENERIC)
         else -> throw IllegalArgumentException("'$letter' must be used 1 or 4 times")
     }
 }

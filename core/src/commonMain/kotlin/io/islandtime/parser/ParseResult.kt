@@ -5,7 +5,7 @@ import io.islandtime.base.*
 /**
  * The result of a parsing operation.
  */
-class TemporalParseResult(
+class ParseResult(
     @PublishedApi
     internal val properties: MutableMap<TemporalProperty<*>, Any> = hashMapOf()
 ) : Temporal {
@@ -13,8 +13,16 @@ class TemporalParseResult(
     fun isNotEmpty() = !isEmpty()
     val propertyCount: Int get() = properties.size
 
-    inline operator fun <reified T> set(property: TemporalProperty<T>, value: T) {
+    inline fun <reified T> override(property: TemporalProperty<*>, value: T) {
         properties[property] = value as Any
+    }
+
+    inline operator fun <reified T> set(property: TemporalProperty<T>, value: T) {
+        val previousValue = properties.put(property, value as Any)
+
+        if (previousValue != null && previousValue != value) {
+            throw TemporalParseException("Conflicting values were found for $property: '$previousValue' vs. '$value'")
+        }
     }
 
     inline operator fun <reified T> get(property: TemporalProperty<T>): T? = properties[property] as T?
@@ -40,18 +48,9 @@ class TemporalParseResult(
         return get(property).also { properties[property] = it }
     }
 
-//    inline fun <reified T, R> replace(
-//        existingProperty: TemporalProperty<T>,
-//        newProperty: TemporalProperty<R>,
-//        valueTransform: (T) -> R
-//    ): Boolean {
-//        return if (existingProperty in properties) {
-//            val newValue = valueTransform(properties[existingProperty])
-//
-//        } else {
-//            false
-//        }
-//    }
+    override fun toString(): String {
+        return "TemporalParseResult[$properties]"
+    }
 
-    internal fun deepCopy() = TemporalParseResult(properties.toMutableMap())
+    internal fun deepCopy() = ParseResult(properties.toMutableMap())
 }

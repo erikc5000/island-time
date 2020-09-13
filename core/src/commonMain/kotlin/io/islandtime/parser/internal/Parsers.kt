@@ -1,15 +1,17 @@
 package io.islandtime.parser.internal
 
 import io.islandtime.base.NumberProperty
-import io.islandtime.format.DateTimeTextProvider
-import io.islandtime.format.NumberStyle
-import io.islandtime.format.SignStyle
-import io.islandtime.format.TextStyle
+import io.islandtime.format.*
 import io.islandtime.internal.negateExact
 import io.islandtime.internal.plusExact
+import io.islandtime.locale.Locale
 import io.islandtime.parser.TemporalParseException
 import io.islandtime.parser.TemporalParser
+import io.islandtime.parser.dsl.DisambiguationAction
 import io.islandtime.parser.dsl.StringParseAction
+import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
+import io.islandtime.zone.TimeZoneRulesProvider
 
 internal object EmptyParser : TemporalParser() {
     override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
@@ -156,11 +158,13 @@ internal class StringLiteralParser(
     override val isConst: Boolean get() = onParsed.isEmpty()
 }
 
-internal class LocalizedTextParser(
+internal class LocalizedDateTimeTextParser(
     private val property: NumberProperty,
     private val styles: Set<TextStyle>,
-    private val provider: DateTimeTextProvider = DateTimeTextProvider.Companion
+    private val overrideProvider: DateTimeTextProvider? = null
 ) : TemporalParser() {
+
+    private val provider get() = overrideProvider ?: DateTimeTextProvider.Companion
 
     override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
         if (position >= text.length) {
@@ -169,10 +173,6 @@ internal class LocalizedTextParser(
 
         val remainingLength = text.length - position
         val possibleValues = provider.parsableTextFor(property, styles, context.locale)
-
-        if (possibleValues.isEmpty()) {
-            return position.inv()
-        }
 
         for ((string, value) in possibleValues) {
             if (string.length <= remainingLength &&
@@ -184,6 +184,233 @@ internal class LocalizedTextParser(
         }
 
         return position.inv()
+    }
+}
+
+// TODO: Get localized GMT string
+private const val GMT_STRING = "GMT"
+
+internal sealed class LocalizedUtcOffsetParser : TemporalParser() {
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
+        if (text.length - position < GMT_STRING.length ||
+            !text.regionMatches(position, GMT_STRING, 0, GMT_STRING.length, !context.isCaseSensitive)
+        ) {
+            return position.inv()
+        }
+
+        val currentPosition = position + GMT_STRING.length
+
+        if (currentPosition < text.length) {
+            val signChar = text[currentPosition]
+
+            if (signChar == '-' || signChar == '+') {
+                val result = parseOffset(signChar, context, text, currentPosition + 1)
+
+                if (result >= 0) {
+                    return result
+                }
+            }
+        }
+
+        context.result[UtcOffsetProperty.TotalSeconds] = 0L
+        return currentPosition
+    }
+
+    protected abstract fun parseOffset(
+        signChar: Char,
+        context: MutableContext,
+        text: CharSequence,
+        position: Int
+    ): Int
+}
+
+internal object LongLocalizedUtcOffsetParser : LocalizedUtcOffsetParser() {
+    override fun parseOffset(
+        signChar: Char,
+        context: MutableContext,
+        text: CharSequence,
+        position: Int
+    ): Int {
+        if (position + 2 >= text.length) {
+            return position.inv()
+        }
+
+        var currentPosition = position
+        val hour1 = text[currentPosition].toDigit()
+        val hour2 = text[currentPosition + 1].toDigit()
+
+        if (hour1 < 0 || hour2 < 0) {
+            return currentPosition.inv()
+        }
+
+        val hours = hour1 * 10 + hour2
+        currentPosition += 2
+
+        if (currentPosition + 2 >= text.length || text[currentPosition] != ':') {
+            return currentPosition.inv()
+        }
+
+        val minute1 = text[currentPosition + 1].toDigit()
+        val minute2 = text[currentPosition + 2].toDigit()
+
+        if (minute1 < 0 || minute2 < 0) {
+            return currentPosition.inv()
+        }
+
+        val minutes = minute1 * 10 + minute2
+        currentPosition += 3
+
+        context.result[UtcOffsetProperty.Sign] = if (signChar == '-') -1 else 1
+        context.result[UtcOffsetProperty.Hours] = hours.toLong()
+        context.result[UtcOffsetProperty.Minutes] = minutes.toLong()
+
+        if (currentPosition + 2 < text.length && text[currentPosition] == ':') {
+            val second1 = text[currentPosition + 1].toDigit()
+            val second2 = text[currentPosition + 2].toDigit()
+
+            if (second1 >= 0 && second2 >= 0) {
+                val seconds = second1 * 10 + second2
+                context.result[UtcOffsetProperty.Seconds] = seconds.toLong()
+                currentPosition += 3
+            }
+        }
+
+        return currentPosition
+    }
+}
+
+internal object ShortLocalizedUtcOffsetParser : LocalizedUtcOffsetParser() {
+    override fun parseOffset(
+        signChar: Char,
+        context: MutableContext,
+        text: CharSequence,
+        position: Int
+    ): Int {
+        if (position >= text.length) {
+            return position.inv()
+        }
+
+        var currentPosition = position
+        var hours = text[currentPosition].toDigit()
+
+        if (hours < 0) {
+            return currentPosition.inv()
+        }
+
+        currentPosition++
+
+        if (currentPosition < text.length) {
+            val char = text[currentPosition]
+
+            if (char.isDigit()) {
+                hours = hours * 10 + char.toDigit()
+                currentPosition++
+            }
+
+            if (currentPosition + 2 < text.length && text[currentPosition] == ':') {
+                val minute1 = text[currentPosition + 1].toDigit()
+                val minute2 = text[currentPosition + 2].toDigit()
+
+                if (minute1 >= 0 && minute2 >= 0) {
+                    val minutes = minute1 * 10 + minute2
+                    context.result[UtcOffsetProperty.Minutes] = minutes.toLong()
+                    currentPosition += 3
+
+                    if (currentPosition + 2 < text.length && text[currentPosition] == ':') {
+                        val second1 = text[currentPosition + 1].toDigit()
+                        val second2 = text[currentPosition + 2].toDigit()
+
+                        if (second1 >= 0 && second2 >= 0) {
+                            val seconds = second1 * 10 + second2
+                            context.result[UtcOffsetProperty.Seconds] = seconds.toLong()
+                            currentPosition += 3
+                        }
+                    }
+                }
+            }
+        }
+
+        context.result[UtcOffsetProperty.Sign] = if (signChar == '-') -1 else 1
+        context.result[UtcOffsetProperty.Hours] = hours.toLong()
+        return currentPosition
+    }
+}
+
+private fun Char.isDigit(): Boolean = this in '0'..'9'
+
+private typealias TimeZoneNameToIdList = List<Pair<String, List<String>>>
+
+private val DESCENDING_LENGTH_COMPARATOR =
+    compareByDescending<Pair<String, List<String>>> { it.first.length }.thenBy { it.first }
+
+internal class TimeZoneNameParser(
+    private val styles: Set<TimeZoneNameStyle>,
+    private val disambiguate: DisambiguationAction
+) : TemporalParser() {
+
+    init {
+        require(styles.isNotEmpty()) { "At least one style is required" }
+    }
+
+    override fun parse(context: MutableContext, text: CharSequence, position: Int): Int {
+        if (position >= text.length) {
+            return position.inv()
+        }
+
+        val remainingLength = text.length - position
+        val regionIds = TimeZoneRulesProvider.availableRegionIds
+        val possibleNames = getNameToIdList(regionIds, styles, context.locale)
+
+        val found: Pair<String, List<String>>? = possibleNames.firstOrNull { (name) ->
+            name.length <= remainingLength &&
+                text.regionMatches(position, name, 0, name.length, !context.isCaseSensitive)
+        }
+
+        if (found == null || found.first.startsWith(GMT_STRING, ignoreCase = !context.isCaseSensitive)) {
+            val resultingPosition = ShortLocalizedUtcOffsetParser.parse(context, text, position)
+
+            if (resultingPosition > 0) {
+                return resultingPosition
+            }
+        }
+
+        if (found != null) {
+            val (name, ids) = found
+
+            context.result[TimeZoneProperty.Id] = if (ids.size == 1) {
+                ids.first()
+            } else {
+                disambiguate(context, name, ids) ?: return position.inv()
+            }
+
+            return position + name.length
+        }
+
+        return position.inv()
+    }
+
+    // TODO: Optimize this
+    @OptIn(ExperimentalStdlibApi::class)
+    private fun getNameToIdList(
+        regionIds: Iterable<String>,
+        styles: Set<TimeZoneNameStyle>,
+        locale: Locale
+    ): TimeZoneNameToIdList {
+        return buildMap<String, MutableSet<String>> {
+            for (id in regionIds) {
+                get(id)?.let { it += id } ?: put(id, mutableSetOf(id))
+
+                for (style in styles) {
+                    val name = TimeZoneNameProvider.getNameFor(id, style, locale) ?: continue
+
+                    if (name.isNotEmpty()) {
+                        get(name)?.let { it += id } ?: put(name, mutableSetOf(id))
+                    }
+                }
+            }
+        }
+            .map { (name, ids) -> name to ids.sorted() }
+            .sortedWith(DESCENDING_LENGTH_COMPARATOR)
     }
 }
 
@@ -621,5 +848,10 @@ private val FACTOR = arrayOf(
 
 internal fun Char.toDigit(numberStyle: NumberStyle): Int {
     val digit = this - numberStyle.zeroDigit
+    return if (digit in 0..9) digit else -1
+}
+
+internal fun Char.toDigit(): Int {
+    val digit = this - '0'
     return if (digit in 0..9) digit else -1
 }

@@ -6,7 +6,7 @@ import io.islandtime.format.FormatStyle
 import io.islandtime.test.AbstractIslandTimeTest
 import io.islandtime.test.FakeDateTimeFormatProvider
 import io.islandtime.test.FakeDateTimeTextProvider
-import io.islandtime.test.FakeTimeZoneTextProvider
+import io.islandtime.test.FakeTimeZoneNameProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -14,7 +14,7 @@ import kotlin.test.assertFailsWith
 class LocalizedDateTimeStyleFormatterTest : AbstractIslandTimeTest(
     testDateTimeFormatProvider = FakeDateTimeFormatProvider,
     testDateTimeTextProvider = FakeDateTimeTextProvider,
-    testTimeZoneTextProvider = FakeTimeZoneTextProvider
+    testTimeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     @Test
     fun `localized date only`() {

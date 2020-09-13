@@ -3,11 +3,12 @@ package io.islandtime.formatter.dsl
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.StringProperty
 import io.islandtime.calendar.LocalizedNumberProperty
-import io.islandtime.format.SignStyle
-import io.islandtime.format.TextStyle
+import io.islandtime.format.*
 import io.islandtime.format.dsl.IslandTimeFormatDsl
 import io.islandtime.format.dsl.LiteralFormatBuilder
+import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
 
 @IslandTimeFormatDsl
 interface TemporalFormatterBuilder :
@@ -43,7 +44,7 @@ interface TemporalFormatterBuilder :
     /**
      * Appends a whole number, padding the start with zero if necessary to satisfy the [minLength].
      *
-     * @param value a function that obtains the value to output
+     * @param property the number property to append the value of
      * @param minLength the minimum number of characters to append, excluding any sign
      * @param maxLength the maximum number of characters to append
      * @param builder configure formatter behavior
@@ -107,11 +108,21 @@ interface TemporalFormatterBuilder :
     fun localizedDateTimeText(property: NumberProperty, style: TextStyle)
 
     /**
-     * Appends the localized time zone text in the specified [style].
+     * Appends the localized UTC offset in either short or long format.
+     *
+     * The property [UtcOffsetProperty.TotalSeconds] is required.
+     *
+     * @param style [TextStyle.SHORT] for short format or [TextStyle.FULL] for long format
+     * @throws IllegalArgumentException if style is not [TextStyle.SHORT] or [TextStyle.FULL]
+     */
+    fun localizedOffset(style: TextStyle)
+
+    /**
+     * Appends the localized time zone name in the specified [style].
      *
      * The property [TimeZoneProperty.TimeZoneObject] is required.
      */
-    fun localizedTimeZoneText(style: TextStyle, generic: Boolean = false)
+    fun timeZoneName(style: ContextualTimeZoneNameStyle)
 }
 
 /**

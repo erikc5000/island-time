@@ -18,7 +18,9 @@ internal class TemporalParserBuilderImpl : TemporalParserBuilder {
     }
 
     override fun literal(string: String, builder: LiteralParserBuilder.() -> Unit) {
-        parsers += StringLiteralParserBuilderImpl(string).apply(builder).build()
+        if (string.isNotEmpty()) {
+            parsers += StringLiteralParserBuilderImpl(string).apply(builder).build()
+        }
     }
 
     override fun sign(builder: SignParserBuilder.() -> Unit) {
@@ -57,7 +59,17 @@ internal class TemporalParserBuilderImpl : TemporalParserBuilder {
     }
 
     override fun localizedDateTimeText(property: NumberProperty, styles: Set<TextStyle>) {
-        parsers += LocalizedTextParser(property, styles)
+        if (styles.isNotEmpty()) {
+            parsers += LocalizedDateTimeTextParser(property, styles)
+        }
+    }
+
+    override fun localizedOffset(longFormatOnly: Boolean) {
+        parsers += if (longFormatOnly) LongLocalizedUtcOffsetParser else ShortLocalizedUtcOffsetParser
+    }
+
+    override fun timeZoneName(builder: TimeZoneNameParserBuilder.() -> Unit) {
+        parsers += TimeZoneNameParserBuilderImpl().apply(builder).build()
     }
 
     override fun optional(builder: TemporalParserBuilder.() -> Unit) {

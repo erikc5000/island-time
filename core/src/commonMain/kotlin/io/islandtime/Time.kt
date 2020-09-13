@@ -398,7 +398,7 @@ fun String.toTime(
     return result.toTime() ?: throwParserPropertyResolutionException<Time>(this)
 }
 
-internal fun TemporalParseResult.toTime(): Time? {
+internal fun ParseResult.toTime(): Time? {
     val hour = this[TimeProperty.HourOfDay]
 
     // TODO: Add support for SECOND_OF_DAY, NANOSECOND_OF_DAY, and so forth

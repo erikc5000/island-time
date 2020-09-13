@@ -433,7 +433,7 @@ fun String.toDate(
 //    }
 //}
 
-internal fun TemporalParseResult.toDate(): Date? {
+internal fun ParseResult.toDate(): Date? {
     val year = this[DateProperty.Year]
 
     if (year != null) {

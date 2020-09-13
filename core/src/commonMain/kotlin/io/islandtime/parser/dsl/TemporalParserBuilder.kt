@@ -2,13 +2,12 @@ package io.islandtime.parser.dsl
 
 import io.islandtime.base.BooleanProperty
 import io.islandtime.base.NumberProperty
-import io.islandtime.format.DateTimeTextProvider
-import io.islandtime.format.NumberStyle
-import io.islandtime.format.SignStyle
-import io.islandtime.format.TextStyle
+import io.islandtime.format.*
 import io.islandtime.format.dsl.IslandTimeFormatDsl
 import io.islandtime.format.dsl.LiteralFormatBuilder
 import io.islandtime.parser.TemporalParser
+import io.islandtime.properties.TimeZoneProperty
+import io.islandtime.properties.UtcOffsetProperty
 
 @IslandTimeFormatDsl
 interface TemporalParserBuilder : LiteralFormatBuilder, BaseParserBuilder<TemporalParserBuilder> {
@@ -93,6 +92,21 @@ interface TemporalParserBuilder : LiteralFormatBuilder, BaseParserBuilder<Tempor
      * @see DateTimeTextProvider
      */
     fun localizedDateTimeText(property: NumberProperty, styles: Set<TextStyle>)
+
+    /**
+     * Appends a localized UTC offset, optionally accepting the long format only.
+     *
+     * The result will be associated with either [UtcOffsetProperty.TotalSeconds] or the combination of
+     * [UtcOffsetProperty.Sign], [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and
+     * [UtcOffsetProperty.Seconds] as appropriate.
+     */
+    fun localizedOffset(longFormatOnly: Boolean = false)
+
+    /**
+     * Appends a localized time zone name, associating the result with [TimeZoneProperty.Id] or in the case of a fixed
+     * offset, some combination of [UtcOffsetProperty].
+     */
+    fun timeZoneName(builder: TimeZoneNameParserBuilder.() -> Unit = {})
 }
 
 fun TemporalParserBuilder.wholeNumber(length: IntRange = 1..19, builder: WholeNumberParserBuilder.() -> Unit = {}) {
@@ -241,4 +255,35 @@ interface TextParserBuilder {
      * Performs an action when parsing succeeds.
      */
     fun onParsed(action: TemporalParser.Context.(parsed: String) -> Unit)
+}
+
+
+typealias DisambiguationAction = TemporalParser.Context.(name: String, possibleValues: Iterable<String>) -> String?
+
+@IslandTimeFormatDsl
+interface LocalizedTextParserBuilder {
+    /**
+     * Determines the value to use when more than one possibility exists.
+     */
+    fun disambiguate(action: DisambiguationAction)
+}
+
+/**
+ * A behavior that can be used to disambiguate parsing results.
+ */
+enum class DisambiguationStrategy(internal val action: DisambiguationAction) {
+    PICK_FIRST({ _, possibleValues -> possibleValues.first() }),
+    RAISE_ERROR({ _, _ -> null })
+}
+
+/**
+ * Uses the provided [strategy] to determine the value to use when more than one possibility exists.
+ */
+fun LocalizedTextParserBuilder.disambiguate(strategy: DisambiguationStrategy): Unit = disambiguate(strategy.action)
+
+interface TimeZoneNameParserBuilder : LocalizedTextParserBuilder {
+    /**
+     * The set of styles to parse. If empty, all styles will be used.
+     */
+    var styles: Set<TimeZoneNameStyle>
 }

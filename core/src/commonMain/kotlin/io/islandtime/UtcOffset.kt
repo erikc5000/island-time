@@ -181,7 +181,7 @@ fun String.toUtcOffset(
  * Required properties are [UtcOffsetProperty.TotalSeconds] or [UtcOffsetProperty.Sign] in conjunction with any
  * combination of [UtcOffsetProperty.Hours], [UtcOffsetProperty.Minutes], and [UtcOffsetProperty.Seconds].
  */
-internal fun TemporalParseResult.toUtcOffset(): UtcOffset? {
+internal fun ParseResult.toUtcOffset(): UtcOffset? {
     val totalSeconds = this[UtcOffsetProperty.TotalSeconds]
 
     if (totalSeconds != null) {

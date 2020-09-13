@@ -19,7 +19,7 @@ class GroupedTemporalParser internal constructor(
     fun parse(
         text: CharSequence,
         settings: TemporalParser.Settings = TemporalParser.Settings.DEFAULT
-    ): List<TemporalParseResult> {
+    ): List<ParseResult> {
         val context = TemporalParser.MutableContext(settings)
         val (endPosition, results) = parse(context, text, 0)
 
@@ -46,16 +46,16 @@ class GroupedTemporalParser internal constructor(
         context: TemporalParser.MutableContext,
         text: CharSequence,
         position: Int
-    ): Pair<Int, List<TemporalParseResult>> {
+    ): Pair<Int, List<ParseResult>> {
         var currentPosition = position
-        val results = mutableListOf<TemporalParseResult>()
+        val results = mutableListOf<ParseResult>()
         var first = true
 
         for (parser in childParsers) {
             if (first) {
                 first = false
             } else {
-                context.result = TemporalParseResult()
+                context.result = ParseResult()
             }
 
             val doneParsing = when (parser) {

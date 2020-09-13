@@ -1,8 +1,27 @@
 package io.islandtime.parser.internal
 
 import io.islandtime.format.SignStyle
+import io.islandtime.format.TimeZoneNameStyle
 import io.islandtime.parser.TemporalParser
 import io.islandtime.parser.dsl.*
+
+internal class TimeZoneNameParserBuilderImpl : TimeZoneNameParserBuilder {
+    private var disambiguationAction: DisambiguationAction? = null
+    override var styles: Set<TimeZoneNameStyle> = TimeZoneNameStyle.values().toSet()
+
+    override fun disambiguate(action: DisambiguationAction) {
+        if (disambiguationAction != null) {
+            throw UnsupportedOperationException("A disambiguation action has already been defined.")
+        }
+
+        disambiguationAction = action
+    }
+
+    fun build(): TemporalParser = TimeZoneNameParser(
+        styles,
+        disambiguate = disambiguationAction ?: DisambiguationStrategy.PICK_FIRST.action
+    )
+}
 
 internal class SignParserBuilderImpl : SignParserBuilder {
     private val onParsed = mutableListOf<TemporalParser.Context.(parsed: Int) -> Unit>()
