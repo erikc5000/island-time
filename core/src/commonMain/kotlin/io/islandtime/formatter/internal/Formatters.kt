@@ -250,7 +250,7 @@ internal class LocalizedDateTimeStyleFormatter(
     }
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
-        DateTimeFormatProvider.formatterFor(dateStyle, timeStyle, context.locale).format(context, stringBuilder)
+        DateTimeFormatProvider.getFormatterFor(dateStyle, timeStyle, context.locale).format(context, stringBuilder)
     }
 }
 
@@ -259,7 +259,7 @@ internal class LocalizedDateTimeSkeletonFormatter(
 ) : TemporalFormatter() {
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
-        DateTimeFormatProvider.formatterFor(skeleton, context.locale)
+        DateTimeFormatProvider.getFormatterFor(skeleton, context.locale)
             ?.format(context, stringBuilder)
             ?: throw UnsupportedOperationException(
                 "The configured DateTimeFormatProvider does not support localized format skeletons"
@@ -277,7 +277,7 @@ internal class LocalizedDateTimeTextFormatter(
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(property)
-        val text = provider.textFor(property, value, style, context.locale)
+        val text = provider.getTextFor(property, value, style, context.locale)
         stringBuilder.append(text)
     }
 }

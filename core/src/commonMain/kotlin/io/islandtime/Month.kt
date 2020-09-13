@@ -110,7 +110,7 @@ enum class Month : Temporal {
      * @see displayName
      */
     fun localizedName(style: TextStyle, locale: Locale): String? {
-        return DateTimeTextProvider.textFor(DateProperty.MonthOfYear, number.toLong(), style, locale)
+        return DateTimeTextProvider.getTextFor(DateProperty.MonthOfYear, number.toLong(), style, locale)
     }
 
     /**

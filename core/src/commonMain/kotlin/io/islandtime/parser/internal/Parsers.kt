@@ -172,7 +172,7 @@ internal class LocalizedDateTimeTextParser(
         }
 
         val remainingLength = text.length - position
-        val possibleValues = provider.parsableTextFor(property, styles, context.locale)
+        val possibleValues = provider.getParsableTextFor(property, styles, context.locale)
 
         for ((string, value) in possibleValues) {
             if (string.length <= remainingLength &&

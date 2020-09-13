@@ -1,5 +1,3 @@
-@file:Suppress("NewApi")
-
 package io.islandtime.format
 
 import io.islandtime.formatter.DateTimeFormatter
@@ -10,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.time.format.DateTimeFormatterBuilder as JavaDateTimeFormatterBuilder
 
 actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
-    private val cache = ConcurrentHashMap<CacheKey, TemporalFormatter>(16)
+    private val cache = ConcurrentHashMap<CacheKey, TemporalFormatter>()
 
     private data class CacheKey(
         val locale: Locale,
@@ -18,7 +16,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
         val timeStyle: FormatStyle?
     )
 
-    override fun formatterFor(
+    override fun getFormatterFor(
         dateStyle: FormatStyle?,
         timeStyle: FormatStyle?,
         locale: Locale
@@ -29,7 +27,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
 
         val key = CacheKey(locale, dateStyle, timeStyle)
 
-        return cache.getOrElse(key) {
+        return cache.getOrPut(key) {
             val pattern = JavaDateTimeFormatterBuilder.getLocalizedDateTimePattern(
                 dateStyle,
                 timeStyle,
@@ -37,9 +35,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
                 locale
             )
 
-            val formatter = DateTimeFormatter(pattern)
-            cache.putIfAbsent(key, formatter)
-            formatter
+            DateTimeFormatter(pattern)
         }
     }
 }

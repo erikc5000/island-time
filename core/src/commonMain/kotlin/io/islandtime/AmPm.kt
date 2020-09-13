@@ -5,7 +5,6 @@ import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.locale.Locale
 import io.islandtime.properties.*
-import io.islandtime.base.throwUnsupportedTemporalPropertyException
 
 /**
  * The AM or PM of the day.
@@ -23,7 +22,7 @@ enum class AmPm : Temporal {
      * @see displayName
      */
     fun localizedName(locale: Locale): String? {
-        return DateTimeTextProvider.textFor(TimeProperty.AmPmOfDay, ordinal.toLong(), TextStyle.FULL, locale)
+        return DateTimeTextProvider.getTextFor(TimeProperty.AmPmOfDay, ordinal.toLong(), TextStyle.FULL, locale)
     }
 
     /**

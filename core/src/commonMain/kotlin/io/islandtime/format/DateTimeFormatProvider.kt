@@ -10,8 +10,9 @@ import io.islandtime.locale.Locale
 interface DateTimeFormatProvider {
     /**
      * Gets a localized formatter with the specified date and time styles.
+     * @throws IllegalArgumentException if both the date and time style are `null`
      */
-    fun formatterFor(dateStyle: FormatStyle?, timeStyle: FormatStyle?, locale: Locale): TemporalFormatter
+    fun getFormatterFor(dateStyle: FormatStyle?, timeStyle: FormatStyle?, locale: Locale): TemporalFormatter
 
     /**
      * Checks if localized skeletons are supported by this provider.
@@ -19,22 +20,23 @@ interface DateTimeFormatProvider {
     val supportsSkeletons: Boolean get() = false
 
     /**
-     * Gets the best localized formatter from an input skeleton, as defined in
-     * [Unicode Technical Standard #35](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table).
+     * Gets the best localized formatter from an input [skeleton], as defined in
+     * [Unicode Technical Standard #35](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table). If
+     * skeleton patterns are unsupported or a suitable formatter cannot be provided, `null` will be returned.
      */
-    fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? = null
+    fun getFormatterFor(skeleton: String, locale: Locale): TemporalFormatter? = null
 
     companion object : DateTimeFormatProvider {
-        override fun formatterFor(
+        override fun getFormatterFor(
             dateStyle: FormatStyle?,
             timeStyle: FormatStyle?,
             locale: Locale
         ): TemporalFormatter {
-            return IslandTime.dateTimeFormatProvider.formatterFor(dateStyle, timeStyle, locale)
+            return IslandTime.dateTimeFormatProvider.getFormatterFor(dateStyle, timeStyle, locale)
         }
 
-        override fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
-            return IslandTime.dateTimeFormatProvider.formatterFor(skeleton, locale)
+        override fun getFormatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
+            return IslandTime.dateTimeFormatProvider.getFormatterFor(skeleton, locale)
         }
     }
 }

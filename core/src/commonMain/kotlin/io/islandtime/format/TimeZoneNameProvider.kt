@@ -8,12 +8,8 @@ import io.islandtime.locale.Locale
  */
 interface TimeZoneNameProvider {
     /**
-     * Gets the localized name associated with a time zone region ID.
-     *
-     * @param regionId the region ID
-     * @param style the style of the name
-     * @param locale the locale
-     * @return the localized time zone name or `null` if unavailable in the specified style
+     * Gets the localized name associated with a time zone region ID or `null` if unavailable for the specified [style]
+     * and [locale].
      */
     fun getNameFor(regionId: String, style: TimeZoneNameStyle, locale: Locale): String?
 

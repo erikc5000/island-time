@@ -37,15 +37,15 @@ class LocalizedDateTimeSkeletonFormatterTest : AbstractIslandTimeTest(
     }
 
     private object FakeDateTimeFormatProviderWithSkeletonSupport : DateTimeFormatProvider {
-        override fun formatterFor(
+        override fun getFormatterFor(
             dateStyle: FormatStyle?,
             timeStyle: FormatStyle?,
             locale: Locale
         ): TemporalFormatter {
-            return FakeDateTimeFormatProvider.formatterFor(dateStyle, timeStyle, locale)
+            return FakeDateTimeFormatProvider.getFormatterFor(dateStyle, timeStyle, locale)
         }
 
-        override fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
+        override fun getFormatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
             val pattern = when (skeleton) {
                 "MMMy" -> "MMM y"
                 else -> ""

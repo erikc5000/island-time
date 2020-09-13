@@ -18,7 +18,7 @@ class DateTimeFormatProviderTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when date and time style are both null`() {
         assertFailsWith<IllegalArgumentException> {
-            DateTimeFormatProvider.formatterFor(null, null, en_US)
+            DateTimeFormatProvider.getFormatterFor(null, null, en_US)
         }
     }
 
@@ -31,7 +31,7 @@ class DateTimeFormatProviderTest : AbstractIslandTimeTest() {
             en_US_ca_japanese to "Saturday, February 1, 2020",
             de_DE to "Samstag, 1. Februar 2020"
         ).forEach { (locale, expectedResult) ->
-            val formatter = DateTimeFormatProvider.formatterFor(
+            val formatter = DateTimeFormatProvider.getFormatterFor(
                 FormatStyle.FULL,
                 null,
                 locale
@@ -53,7 +53,7 @@ class DateTimeFormatProviderTest : AbstractIslandTimeTest() {
             en_US_ca_japanese to "1:30:30 PM",
             de_DE to "13:30:30"
         ).forEach { (locale, expectedResult) ->
-            val formatter = DateTimeFormatProvider.formatterFor(
+            val formatter = DateTimeFormatProvider.getFormatterFor(
                 null,
                 FormatStyle.MEDIUM,
                 locale
@@ -77,7 +77,7 @@ class DateTimeFormatProviderTest : AbstractIslandTimeTest() {
             en_US_ca_japanese to "2/1/20 1:30:30 PM EST",
             de_DE to listOf("01.02.20 13:30:30 GMT-5", "01.02.20 13:30:30 EST")
         ).forEach { (locale, expectedResult) ->
-            val formatter = DateTimeFormatProvider.formatterFor(
+            val formatter = DateTimeFormatProvider.getFormatterFor(
                 FormatStyle.SHORT,
                 FormatStyle.LONG,
                 locale

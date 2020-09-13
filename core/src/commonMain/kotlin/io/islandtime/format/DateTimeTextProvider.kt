@@ -2,10 +2,10 @@ package io.islandtime.format
 
 import io.islandtime.DateTimeException
 import io.islandtime.IslandTime
-import io.islandtime.properties.DateProperty
 import io.islandtime.base.NumberProperty
-import io.islandtime.properties.TimeProperty
 import io.islandtime.locale.Locale
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.TimeProperty
 
 typealias ParsableTextList = List<Pair<String, Long>>
 
@@ -14,83 +14,68 @@ typealias ParsableTextList = List<Pair<String, Long>>
  */
 interface DateTimeTextProvider {
     /**
-     * Get localized text for the specified property, value, style, and locale.
-     *
-     * @param property the property to get text for
-     * @param value the value of the property
-     * @param style the style of the text
-     * @param locale the locale
-     * @return the localized text or `null` if unavailable
-     * @throws DateTimeException if the value if out of range for the specified property
+     * Gets localized text associated with the specified [property], [value], [style], and [locale] &mdash or `null` if
+     * unavailable.
+     * @throws DateTimeException if the value is out of range for the specified property
      */
-    fun textFor(property: NumberProperty, value: Long, style: TextStyle, locale: Locale): String?
+    fun getTextFor(property: NumberProperty, value: Long, style: TextStyle, locale: Locale): String?
 
     /**
-     * Get a list of all localized text in a particular style along with the values associated that
-     * text. The list will be sorted in descending order by the length of text, making it suitable
-     * for parsing.
+     * Gets a list of all localized text available for the specified [property] in a set of [styles] along with the
+     * values associated with that text. The list will be sorted in descending order by the length of text, making it
+     * suitable for parsing.
      *
-     * Any text with conflicting values will be excluded. For example, the English narrow month name
-     * "M" could be `March` or `May`, so any attempt to parse it would be ambiguous.
+     * Any text with conflicting values will be excluded. For example, the English narrow month name "M" could be
+     * `March` or `May`, so any attempt to parse it would be ambiguous.
      *
-     * @param property the property to get text for
-     * @param style the style of the text
-     * @param locale the locale
-     * @return the list of parsable text -- empty if the property is invalid
+     * @return the list of parsable text &mdash empty if the property is invalid or no styles are specified
      */
-    fun parsableTextFor(
-        property: NumberProperty,
-        style: TextStyle,
-        locale: Locale
-    ): ParsableTextList {
-        return parsableTextFor(property, setOf(style), locale)
-    }
-
-    /**
-     * Get a list of all localized text in a set of styles along with the values associated that
-     * text. The list will be sorted in descending order by the length of text, making it suitable
-     * for parsing.
-     *
-     * Any text with conflicting values will be excluded. For example, the English narrow month name
-     * "M" could be `March` or `May`, so any attempt to parse it would be ambiguous.
-     *
-     * @param property the property to get text for
-     * @param styles the set of styles to include
-     * @param locale the locale
-     * @return the list of parsable text -- empty if the property is invalid or no styles are
-     * specified
-     */
-    fun parsableTextFor(
+    fun getParsableTextFor(
         property: NumberProperty,
         styles: Set<TextStyle>,
         locale: Locale
     ): ParsableTextList
 
     companion object : DateTimeTextProvider {
-        override fun textFor(
+        override fun getTextFor(
             property: NumberProperty,
             value: Long,
             style: TextStyle,
             locale: Locale
         ): String? {
-            return IslandTime.dateTimeTextProvider.textFor(property, value, style, locale)
+            return IslandTime.dateTimeTextProvider.getTextFor(property, value, style, locale)
         }
 
-        override fun parsableTextFor(
+        override fun getParsableTextFor(
             property: NumberProperty,
             styles: Set<TextStyle>,
             locale: Locale
         ): ParsableTextList {
-            return IslandTime.dateTimeTextProvider.parsableTextFor(property, styles, locale)
+            return IslandTime.dateTimeTextProvider.getParsableTextFor(property, styles, locale)
         }
     }
 }
 
 /**
+ * Gets a list of all localized text available for the specified [property] and [style] along with the values associated
+ * with that text. The list will be sorted in descending order by the length of text, making it suitable for parsing.
+ *
+ * Any text with conflicting values will be excluded. For example, the English narrow month name "M" could be `March` or
+ * `May`, so any attempt to parse it would be ambiguous.
+ *
+ * @return the list of parsable text &mdash empty if the property is invalid or no styles are specified
+ */
+fun DateTimeTextProvider.getParsableTextFor(
+    property: NumberProperty,
+    style: TextStyle,
+    locale: Locale
+): ParsableTextList = getParsableTextFor(property, setOf(style), locale)
+
+/**
  * An abstract [DateTimeTextProvider] that supports the standard set of available properties.
  */
 abstract class AbstractDateTimeTextProvider : DateTimeTextProvider {
-    override fun textFor(
+    override fun getTextFor(
         property: NumberProperty,
         value: Long,
         style: TextStyle,
@@ -101,10 +86,10 @@ abstract class AbstractDateTimeTextProvider : DateTimeTextProvider {
         }
 
         return when (property) {
-            DateProperty.DayOfWeek -> dayOfWeekTextFor(value, style, locale)
-            DateProperty.MonthOfYear -> monthTextFor(value, style, locale)
-            TimeProperty.AmPmOfDay -> amPmTextFor(value, locale)
-            DateProperty.Era -> eraTextFor(value, style, locale)
+            DateProperty.DayOfWeek -> getDayOfWeekTextFor(value, style, locale)
+            DateProperty.MonthOfYear -> getMonthTextFor(value, style, locale)
+            TimeProperty.AmPmOfDay -> getAmPmTextFor(value, locale)
+            DateProperty.Era -> getEraTextFor(value, style, locale)
             else -> null
         }
     }
@@ -120,47 +105,32 @@ abstract class AbstractDateTimeTextProvider : DateTimeTextProvider {
     }
 
     /**
-     * Get the localized day of the week text for a given ISO day of week number.
-     *
-     * @param value an ISO day of week number, from Monday (1) to Sunday (7)
-     * @param style the style of the text
-     * @param locale the locale
-     * @return the localized day of week text or `null` if unavailable
-     * @throws DateTimeException if the value is not a valid day of the week number
+     * Gets the localized day of week text for a given ISO day of week number, from Monday (1) to Sunday (7). If no text\
+     * is available, `null` will be returned.
+     * @throws DateTimeException if the value is not a valid day of week number
      */
-    protected abstract fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String?
+    protected abstract fun getDayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String?
 
     /**
-     * Get the localized month text for a given ISO month number.
-     *
-     * @param value an ISO month number, from January (1) to December (12)
-     * @param style the style of the text
-     * @param locale the locale
-     * @return the localized month text or `null` if unavailable
+     * Gets the localized month text for a given ISO month number, from January (1) to December (12). If no text is
+     * available, `null` will be returned.
      * @throws DateTimeException if the value is not a valid month number
      */
-    protected abstract fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String?
+    protected abstract fun getMonthTextFor(value: Long, style: TextStyle, locale: Locale): String?
 
     /**
-     * Get the localized AM/PM text.
-     *
-     * @param value `0` for AM or `1` for PM
-     * @param locale the locale
-     * @return the localized AM/PM text or `null` if unavailable
+     * Gets the localized AM/PM text for a given [value], `0` for AM or `1` for PM. If no text is available, `null` will
+     * be returned.
      * @throws DateTimeException if the value is not `0` or `1`
      */
-    protected abstract fun amPmTextFor(value: Long, locale: Locale): String?
+    protected abstract fun getAmPmTextFor(value: Long, locale: Locale): String?
 
     /**
-     * Get the localized ISO era text.
-     *
-     * @param value `0` for BCE or `1` for CE
-     * @param locale the locale
-     * @param style the style of the text
-     * @return the localized era text or `null` if unavailable
+     * Gets the localized ISO era text for a given [value], `0` for BCE or `1` for CE. If no text is available, `null`
+     * will be returned.
      * @throws DateTimeException if the value is not `0` or `1`
      */
-    protected abstract fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String?
+    protected abstract fun getEraTextFor(value: Long, style: TextStyle, locale: Locale): String?
 }
 
 /**

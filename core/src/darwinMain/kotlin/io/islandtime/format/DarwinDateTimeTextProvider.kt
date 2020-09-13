@@ -26,7 +26,7 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         val locale: String
     )
 
-    override fun parsableTextFor(
+    override fun getParsableTextFor(
         property: NumberProperty,
         styles: Set<TextStyle>,
         locale: Locale
@@ -59,18 +59,18 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getDayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return allDayOfWeekTextFor(style, locale)?.run {
             val index = if (value == 7L) 0 else value.toInt()
             get(index)
         }
     }
 
-    override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getMonthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return allMonthTextFor(style, locale)?.get(value.toInt() - 1)
     }
 
-    override fun amPmTextFor(value: Long, locale: Locale): String? {
+    override fun getAmPmTextFor(value: Long, locale: Locale): String? {
         return withCalendarIn(locale) {
             when (value) {
                 0L -> AMSymbol
@@ -80,7 +80,7 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getEraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return allEraTextFor(style, locale)?.get(value.toInt())
     }
 

@@ -14,7 +14,7 @@ import java.time.zone.ZoneRulesProvider
 import java.time.Instant as JavaInstant
 
 /**
- * A time zone rules provider that draws from the database built into the java.time library.
+ * A time zone rules provider that draws from the database included with the java.time library.
  */
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
 
@@ -32,16 +32,16 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
         return availableRegionIds.contains(regionId)
     }
 
-    override fun rulesFor(regionId: String): TimeZoneRules {
+    override fun getRulesFor(regionId: String): TimeZoneRules {
         return try {
-            JavaTimeZoneRules(ZoneId.of(regionId).rules)
+            JvmTimeZoneRules(ZoneId.of(regionId).rules)
         } catch (e: ZoneRulesException) {
             throw TimeZoneRulesException(e.message, e)
         }
     }
 }
 
-private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZoneRules {
+private class JvmTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZoneRules {
 
     override val hasFixedOffset: Boolean get() = javaZoneRules.isFixedOffset
 
@@ -80,7 +80,7 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
 
     override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
         val transition = javaZoneRules.getTransition(dateTime.toJavaLocalDateTime())
-        return if (transition != null) JavaTimeZoneOffsetTransition(transition) else null
+        return if (transition != null) JvmTimeZoneOffsetTransition(transition) else null
     }
 
     override fun isValidOffset(
@@ -99,7 +99,7 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
     }
 }
 
-private class JavaTimeZoneOffsetTransition(
+private class JvmTimeZoneOffsetTransition(
     private val javaZoneOffsetTransition: ZoneOffsetTransition
 ) : TimeZoneOffsetTransition {
 

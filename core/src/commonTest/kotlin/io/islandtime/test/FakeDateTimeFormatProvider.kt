@@ -7,7 +7,7 @@ import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.locale.Locale
 
 object FakeDateTimeFormatProvider : DateTimeFormatProvider {
-    override fun formatterFor(
+    override fun getFormatterFor(
         dateStyle: FormatStyle?,
         timeStyle: FormatStyle?,
         locale: Locale

@@ -24,7 +24,7 @@ class DarwinDateTimeFormatProviderTest : AbstractIslandTimeTest() {
             en_US_ca_japanese to "March 2020",
             de_DE to "März 2020"
         ).forEach { (locale, expectedResult) ->
-            val formatter = DateTimeFormatProvider.formatterFor("MMMMy", locale)
+            val formatter = DateTimeFormatProvider.getFormatterFor("MMMMy", locale)
 
             assertEquals(
                 expectedResult,
@@ -42,7 +42,7 @@ class DarwinDateTimeFormatProviderTest : AbstractIslandTimeTest() {
             en_US_ca_japanese to "",
             de_DE to ""
         ).forEach { (locale, expectedResult) ->
-            val formatter = DateTimeFormatProvider.formatterFor("RR", locale)
+            val formatter = DateTimeFormatProvider.getFormatterFor("RR", locale)
 
             assertEquals(
                 expectedResult,

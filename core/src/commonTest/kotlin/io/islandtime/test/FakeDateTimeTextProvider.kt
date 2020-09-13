@@ -17,7 +17,7 @@ object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
         val locale: Locale
     )
 
-    override fun parsableTextFor(
+    override fun getParsableTextFor(
         property: NumberProperty,
         styles: Set<TextStyle>,
         locale: Locale
@@ -30,7 +30,7 @@ object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
 
         styles.forEach { style ->
             property.valueRange
-                .mapNotNull { value -> textFor(property, value, style, locale)?.let { it to value } }
+                .mapNotNull { value -> getTextFor(property, value, style, locale)?.let { it to value } }
                 .forEach { (text, value) ->
                     valueMap.getOrPut(text) { mutableSetOf() } += value
                 }
@@ -47,7 +47,7 @@ object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
             .sortedWith(descendingTextComparator)
     }
 
-    override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getEraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return when (value) {
             0L -> when (style) {
                 TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> "B"
@@ -63,7 +63,7 @@ object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getMonthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return when (value) {
             1L -> when (style) {
                 TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> "J ($style)"
@@ -129,7 +129,7 @@ object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getDayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return when (value) {
             1L -> when (style) {
                 TextStyle.NARROW, TextStyle.NARROW_STANDALONE -> "M ($style)"
@@ -170,7 +170,7 @@ object FakeDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun amPmTextFor(value: Long, locale: Locale): String? {
+    override fun getAmPmTextFor(value: Long, locale: Locale): String? {
         return when (value) {
             0L -> "AM"
             1L -> "PM"

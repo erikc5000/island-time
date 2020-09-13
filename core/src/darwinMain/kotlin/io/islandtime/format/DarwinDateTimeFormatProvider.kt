@@ -9,9 +9,6 @@ import kotlin.native.concurrent.Worker
 @SharedImmutable
 private val worker = Worker.start(errorReporting = false)
 
-/**
- * The default provider of localized date-time format styles for the current platform.
- */
 actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
     private val styleCache = worker.confine { hashMapOf<StyleCacheKey, TemporalFormatter>() }
     private val skeletonCache = worker.confine { hashMapOf<SkeletonCacheKey, TemporalFormatter?>() }
@@ -24,7 +21,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
 
     private data class SkeletonCacheKey(val skeleton: String, val locale: String)
 
-    override fun formatterFor(
+    override fun getFormatterFor(
         dateStyle: FormatStyle?,
         timeStyle: FormatStyle?,
         locale: Locale
@@ -54,7 +51,7 @@ actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
     override val supportsSkeletons: Boolean get() = true
 
     @ExperimentalUnsignedTypes
-    override fun formatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
+    override fun getFormatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
         val adjustedLocale = locale.withDefaultCalendar()
 
         return skeletonCache.use { cache ->

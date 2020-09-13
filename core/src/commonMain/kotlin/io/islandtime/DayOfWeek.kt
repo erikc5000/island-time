@@ -55,7 +55,7 @@ enum class DayOfWeek : Temporal {
      * @see displayName
      */
     fun localizedName(style: TextStyle, locale: Locale): String? {
-        return DateTimeTextProvider.textFor(DateProperty.DayOfWeek, number.toLong(), style, locale)
+        return DateTimeTextProvider.getTextFor(DateProperty.DayOfWeek, number.toLong(), style, locale)
     }
 
     /**

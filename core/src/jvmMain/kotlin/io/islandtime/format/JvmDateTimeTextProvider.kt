@@ -1,9 +1,9 @@
 package io.islandtime.format
 
-import io.islandtime.properties.DateProperty
 import io.islandtime.base.NumberProperty
-import io.islandtime.properties.TimeProperty
 import io.islandtime.locale.Locale
+import io.islandtime.properties.DateProperty
+import io.islandtime.properties.TimeProperty
 import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,7 +24,7 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         val locale: Locale
     )
 
-    override fun parsableTextFor(
+    override fun getParsableTextFor(
         property: NumberProperty,
         styles: Set<TextStyle>,
         locale: Locale
@@ -55,7 +55,7 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getDayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         val symbols = DateFormatSymbols.getInstance(locale)
         val index = if (value == 7L) 1 else value.toInt() + 1
 
@@ -69,15 +69,15 @@ actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
         }
     }
 
-    override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getMonthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return allMonthTextFor(style, locale)[value.toInt() - 1]
     }
 
-    override fun amPmTextFor(value: Long, locale: Locale): String? {
+    override fun getAmPmTextFor(value: Long, locale: Locale): String? {
         return allAmPmTextFor(locale)[value.toInt()]
     }
 
-    override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+    override fun getEraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
         return allEraTextFor(style, locale)[value.toInt()]
     }
 

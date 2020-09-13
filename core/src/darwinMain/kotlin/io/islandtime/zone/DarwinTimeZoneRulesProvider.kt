@@ -1,10 +1,8 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.darwin.toIslandDateTimeAt
 import io.islandtime.darwin.toNSDate
 import io.islandtime.darwin.toNSDateComponents
-import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.internal.confine
 import io.islandtime.measures.*
@@ -16,7 +14,7 @@ import kotlin.native.concurrent.Worker
 private val worker = Worker.start(errorReporting = false)
 
 /**
- * A time zone rules provider that draws from the database included on Darwin platforms.
+ * A time zone rules provider that draws from the database included on Apple platforms.
  */
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     private val timeZoneRules = worker.confine { hashMapOf<String, TimeZoneRules>() }
@@ -31,7 +29,7 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
         return cachedRegionIds.contains(regionId) || NSTimeZone.timeZoneWithName(regionId) != null
     }
 
-    override fun rulesFor(regionId: String): TimeZoneRules {
+    override fun getRulesFor(regionId: String): TimeZoneRules {
         return timeZoneRules.use {
             it.getOrPut(regionId) {
                 DarwinTimeZoneRules(

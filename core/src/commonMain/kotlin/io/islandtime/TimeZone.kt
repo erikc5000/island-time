@@ -138,7 +138,7 @@ sealed class TimeZone : Temporal, Comparable<TimeZone> {
             get() = TimeZoneRulesProvider.hasRulesFor(id)
 
         override val rules: TimeZoneRules
-            get() = TimeZoneRulesProvider.rulesFor(id)
+            get() = TimeZoneRulesProvider.getRulesFor(id)
 
         override fun normalized(): TimeZone = rules.run {
             if (hasFixedOffset) {
