@@ -13,11 +13,14 @@ import java.time.zone.ZoneRulesException
 import java.time.zone.ZoneRulesProvider
 import java.time.Instant as JavaInstant
 
+internal actual fun createDefaultTimeZoneRulesProvider(): TimeZoneRulesProvider {
+    return JvmTimeZoneRulesProvider()
+}
+
 /**
  * A time zone rules provider that draws from the database included with the java.time library.
  */
-actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
-
+private class JvmTimeZoneRulesProvider : TimeZoneRulesProvider {
     override val databaseVersion: String
         get() = try {
             ZoneRulesProvider.getVersions("Etc/UTC")?.lastEntry()?.key.orEmpty()

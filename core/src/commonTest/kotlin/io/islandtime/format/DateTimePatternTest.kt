@@ -27,8 +27,8 @@ import kotlin.test.todo
 
 @Suppress("PrivatePropertyName")
 class DateTimePatternTest : AbstractIslandTimeTest(
-    testDateTimeTextProvider = FakeDateTimeTextProvider,
-    testTimeZoneNameProvider = FakeTimeZoneNameProvider
+    dateTimeTextProvider = FakeDateTimeTextProvider,
+    timeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     private val emptyTemporal = object : Temporal {}
 

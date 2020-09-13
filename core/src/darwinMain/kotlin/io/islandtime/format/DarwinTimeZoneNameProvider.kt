@@ -3,7 +3,9 @@ package io.islandtime.format
 import io.islandtime.locale.Locale
 import platform.Foundation.*
 
-actual object PlatformTimeZoneNameProvider : TimeZoneNameProvider {
+internal actual fun createDefaultTimeZoneNameProvider(): TimeZoneNameProvider = DarwinTimeZoneNameProvider()
+
+private class DarwinTimeZoneNameProvider : TimeZoneNameProvider {
     override fun getNameFor(regionId: String, style: TimeZoneNameStyle, locale: Locale): String? {
         return NSTimeZone.timeZoneWithName(regionId)?.run {
             val darwinStyle = style.toNSTimeZoneNameStyle()

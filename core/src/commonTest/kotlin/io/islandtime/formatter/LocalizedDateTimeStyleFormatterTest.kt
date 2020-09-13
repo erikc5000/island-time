@@ -12,9 +12,9 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class LocalizedDateTimeStyleFormatterTest : AbstractIslandTimeTest(
-    testDateTimeFormatProvider = FakeDateTimeFormatProvider,
-    testDateTimeTextProvider = FakeDateTimeTextProvider,
-    testTimeZoneNameProvider = FakeTimeZoneNameProvider
+    dateTimeFormatProvider = FakeDateTimeFormatProvider,
+    dateTimeTextProvider = FakeDateTimeTextProvider,
+    timeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     @Test
     fun `localized date only`() {

@@ -1,8 +1,8 @@
 package io.islandtime.format
 
-import io.islandtime.IslandTime
 import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.locale.Locale
+import io.islandtime.base.ProviderProxy
 
 /**
  * An abstraction that allows formatters for localized date and time styles to be supplied from different data sources.
@@ -26,22 +26,21 @@ interface DateTimeFormatProvider {
      */
     fun getFormatterFor(skeleton: String, locale: Locale): TemporalFormatter? = null
 
-    companion object : DateTimeFormatProvider {
+    companion object : ProviderProxy<DateTimeFormatProvider>(), DateTimeFormatProvider {
         override fun getFormatterFor(
             dateStyle: FormatStyle?,
             timeStyle: FormatStyle?,
             locale: Locale
         ): TemporalFormatter {
-            return IslandTime.dateTimeFormatProvider.getFormatterFor(dateStyle, timeStyle, locale)
+            return provider.getFormatterFor(dateStyle, timeStyle, locale)
         }
 
         override fun getFormatterFor(skeleton: String, locale: Locale): TemporalFormatter? {
-            return IslandTime.dateTimeFormatProvider.getFormatterFor(skeleton, locale)
+            return provider.getFormatterFor(skeleton, locale)
         }
+
+        override fun createDefault(): DateTimeFormatProvider = createDefaultDateTimeFormatProvider()
     }
 }
 
-/**
- * The default provider of localized date-time format styles for the current platform.
- */
-expect object PlatformDateTimeFormatProvider : DateTimeFormatProvider
+internal expect fun createDefaultDateTimeFormatProvider(): DateTimeFormatProvider

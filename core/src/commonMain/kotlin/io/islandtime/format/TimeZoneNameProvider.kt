@@ -1,6 +1,6 @@
 package io.islandtime.format
 
-import io.islandtime.IslandTime
+import io.islandtime.base.ProviderProxy
 import io.islandtime.locale.Locale
 
 /**
@@ -13,14 +13,13 @@ interface TimeZoneNameProvider {
      */
     fun getNameFor(regionId: String, style: TimeZoneNameStyle, locale: Locale): String?
 
-    companion object : TimeZoneNameProvider {
+    companion object : ProviderProxy<TimeZoneNameProvider>(), TimeZoneNameProvider {
         override fun getNameFor(regionId: String, style: TimeZoneNameStyle, locale: Locale): String? {
-            return IslandTime.timeZoneNameProvider.getNameFor(regionId, style, locale)
+            return provider.getNameFor(regionId, style, locale)
         }
+
+        override fun createDefault(): TimeZoneNameProvider = createDefaultTimeZoneNameProvider()
     }
 }
 
-/**
- * The default provider of localized time zone names for the current platform.
- */
-expect object PlatformTimeZoneNameProvider : TimeZoneNameProvider
+internal expect fun createDefaultTimeZoneNameProvider(): TimeZoneNameProvider

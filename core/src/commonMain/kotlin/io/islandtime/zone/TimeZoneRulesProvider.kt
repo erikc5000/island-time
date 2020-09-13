@@ -1,6 +1,6 @@
 package io.islandtime.zone
 
-import io.islandtime.IslandTime
+import io.islandtime.base.ProviderProxy
 import io.islandtime.internal.deprecatedToError
 
 /**
@@ -43,24 +43,14 @@ interface TimeZoneRulesProvider {
     )
     fun rulesFor(regionId: String): TimeZoneRules = deprecatedToError()
 
-    companion object : TimeZoneRulesProvider {
-        override val databaseVersion: String
-            get() = IslandTime.timeZoneRulesProvider.databaseVersion
+    companion object : ProviderProxy<TimeZoneRulesProvider>(), TimeZoneRulesProvider {
+        override val databaseVersion: String get() = provider.databaseVersion
+        override val availableRegionIds: Set<String> get() = provider.availableRegionIds
+        override fun hasRulesFor(regionId: String): Boolean = provider.hasRulesFor(regionId)
+        override fun getRulesFor(regionId: String): TimeZoneRules = provider.getRulesFor(regionId)
 
-        override val availableRegionIds: Set<String>
-            get() = IslandTime.timeZoneRulesProvider.availableRegionIds
-
-        override fun hasRulesFor(regionId: String): Boolean {
-            return IslandTime.timeZoneRulesProvider.hasRulesFor(regionId)
-        }
-
-        override fun getRulesFor(regionId: String): TimeZoneRules {
-            return IslandTime.timeZoneRulesProvider.getRulesFor(regionId)
-        }
+        override fun createDefault(): TimeZoneRulesProvider = createDefaultTimeZoneRulesProvider()
     }
 }
 
-/**
- * The default time zone rules provider implementation for the current platform.
- */
-expect object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider
+internal expect fun createDefaultTimeZoneRulesProvider(): TimeZoneRulesProvider

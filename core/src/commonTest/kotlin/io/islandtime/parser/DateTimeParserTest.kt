@@ -8,7 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class DateTimeParserTest : AbstractIslandTimeTest(
-    testDateTimeTextProvider = FakeDateTimeTextProvider
+    dateTimeTextProvider = FakeDateTimeTextProvider
 ) {
     @Test
     fun `create parser from date-time pattern`() {

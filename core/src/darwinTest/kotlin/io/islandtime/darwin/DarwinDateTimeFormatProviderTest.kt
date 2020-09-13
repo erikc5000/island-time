@@ -4,16 +4,16 @@ import io.islandtime.Month
 import io.islandtime.YearMonth
 import io.islandtime.format.DateTimeFormatProvider
 import io.islandtime.formatter.TemporalFormatter
-import io.islandtime.locale.localeOf
+import io.islandtime.locale.toLocale
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @Suppress("PrivatePropertyName")
 class DarwinDateTimeFormatProviderTest : AbstractIslandTimeTest() {
-    private val en_US = localeOf("en-US")
-    private val en_US_ca_japanese = localeOf("en-US-u-ca-japanese")
-    private val de_DE = localeOf("de-DE")
+    private val en_US = "en-US".toLocale()
+    private val en_US_ca_japanese = "en-US-u-ca-japanese".toLocale()
+    private val de_DE = "de-DE".toLocale()
 
     @Test
     fun `formatter from year-month skeleton`() {

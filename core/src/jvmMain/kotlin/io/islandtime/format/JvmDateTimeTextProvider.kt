@@ -9,7 +9,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
+
+internal actual fun createDefaultDateTimeTextProvider(): DateTimeTextProvider = JvmDateTimeTextProvider()
+
+private class JvmDateTimeTextProvider : AbstractDateTimeTextProvider() {
     private val monthText = ConcurrentHashMap<Locale, HashMap<TextStyle, Array<String>>>()
     private val parsableText = ConcurrentHashMap<ParsableTextKey, ParsableTextList>()
     private val narrowEraSymbols = arrayOf("B", "A")

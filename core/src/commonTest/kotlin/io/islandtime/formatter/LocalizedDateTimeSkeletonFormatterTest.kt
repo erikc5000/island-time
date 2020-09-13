@@ -17,8 +17,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 class LocalizedDateTimeSkeletonFormatterTest : AbstractIslandTimeTest(
-    testDateTimeFormatProvider = FakeDateTimeFormatProviderWithSkeletonSupport,
-    testDateTimeTextProvider = FakeDateTimeTextProvider
+    dateTimeFormatProvider = FakeDateTimeFormatProviderWithSkeletonSupport,
+    dateTimeTextProvider = FakeDateTimeTextProvider
 ) {
     @Test
     fun `throws an exception when the Temporal can't provide required properties`() {
@@ -57,8 +57,8 @@ class LocalizedDateTimeSkeletonFormatterTest : AbstractIslandTimeTest(
 }
 
 class LocalizedDateTimeSkeletonFormatterNoSupportTest : AbstractIslandTimeTest(
-    testDateTimeFormatProvider = FakeDateTimeFormatProvider,
-    testDateTimeTextProvider = FakeDateTimeTextProvider
+    dateTimeFormatProvider = FakeDateTimeFormatProvider,
+    dateTimeTextProvider = FakeDateTimeTextProvider
 ) {
     @Test
     fun `throws an exception when skeletons aren't supported`() {

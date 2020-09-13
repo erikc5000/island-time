@@ -7,7 +7,9 @@ import java.time.chrono.IsoChronology
 import java.util.concurrent.ConcurrentHashMap
 import java.time.format.DateTimeFormatterBuilder as JavaDateTimeFormatterBuilder
 
-actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
+internal actual fun createDefaultDateTimeFormatProvider(): DateTimeFormatProvider = JvmDateTimeFormatProvider()
+
+open class JvmDateTimeFormatProvider : DateTimeFormatProvider {
     private val cache = ConcurrentHashMap<CacheKey, TemporalFormatter>()
 
     private data class CacheKey(

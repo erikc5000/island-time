@@ -1,32 +1,31 @@
 package io.islandtime.test
 
-import io.islandtime.IslandTime
-import io.islandtime.format.*
-import io.islandtime.zone.PlatformTimeZoneRulesProvider
+import io.islandtime.format.DateTimeFormatProvider
+import io.islandtime.format.DateTimeTextProvider
+import io.islandtime.format.TimeZoneNameProvider
 import io.islandtime.zone.TimeZoneRulesProvider
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 abstract class AbstractIslandTimeTest(
-    private val testTimeZoneRulesProvider: TimeZoneRulesProvider = PlatformTimeZoneRulesProvider,
-    private val testDateTimeFormatProvider: DateTimeFormatProvider = PlatformDateTimeFormatProvider,
-    private val testDateTimeTextProvider: DateTimeTextProvider = PlatformDateTimeTextProvider,
-    private val testTimeZoneNameProvider: TimeZoneNameProvider = PlatformTimeZoneNameProvider
+    private val timeZoneRulesProvider: TimeZoneRulesProvider? = null,
+    private val dateTimeFormatProvider: DateTimeFormatProvider? = null,
+    private val dateTimeTextProvider: DateTimeTextProvider? = null,
+    private val timeZoneNameProvider: TimeZoneNameProvider? = null
 ) {
     @BeforeTest
     fun setUp() {
-        IslandTime.reset()
-
-        IslandTime.initialize {
-            timeZoneRulesProvider = testTimeZoneRulesProvider
-            dateTimeFormatProvider = testDateTimeFormatProvider
-            dateTimeTextProvider = testDateTimeTextProvider
-            timeZoneNameProvider = testTimeZoneNameProvider
-        }
+        timeZoneRulesProvider?.let { TimeZoneRulesProvider.set(it) }
+        dateTimeTextProvider?.let { DateTimeTextProvider.set(it) }
+        dateTimeFormatProvider?.let { DateTimeFormatProvider.set(it) }
+        timeZoneNameProvider?.let { TimeZoneNameProvider.set(it) }
     }
 
     @AfterTest
     fun tearDown() {
-        IslandTime.reset()
+        TimeZoneRulesProvider.reset()
+        DateTimeTextProvider.reset()
+        DateTimeFormatProvider.reset()
+        TimeZoneNameProvider.reset()
     }
 }

@@ -3,13 +3,14 @@ package io.islandtime.extensions.parcelize
 import android.os.Parcelable
 import io.islandtime.*
 import io.islandtime.extensions.parcelize.test.testParcelable
+import io.islandtime.zone.TimeZoneRulesProvider
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.TypeParceler
 import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 
-class ZonedDateTimeTimeTest {
+class ZonedDateTimeParcelerTest {
     @Parcelize
     @TypeParceler<ZonedDateTime, ZonedDateTimeParceler>
     data class TestData(val zonedDateTime: ZonedDateTime) : Parcelable
@@ -41,13 +42,13 @@ class ZonedDateTimeTimeTest {
         @JvmStatic
         @BeforeClass
         fun setUp() {
-            IslandTime.reset()
+            TimeZoneRulesProvider.reset()
         }
 
         @JvmStatic
         @AfterClass
         fun tearDown() {
-            IslandTime.reset()
+            TimeZoneRulesProvider.reset()
         }
     }
 }

@@ -4,7 +4,9 @@ import io.islandtime.locale.Locale
 import java.text.DateFormatSymbols
 import java.util.concurrent.ConcurrentHashMap
 
-actual object PlatformTimeZoneNameProvider : TimeZoneNameProvider {
+internal actual fun createDefaultTimeZoneNameProvider(): TimeZoneNameProvider = JvmTimeZoneNameProvider()
+
+open class JvmTimeZoneNameProvider : TimeZoneNameProvider {
     private val zoneNameCache = ConcurrentHashMap<Locale, Map<String, Array<String>>>()
 
     override fun getNameFor(regionId: String, style: TimeZoneNameStyle, locale: Locale): String? {

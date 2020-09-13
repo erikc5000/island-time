@@ -13,7 +13,9 @@ import kotlin.native.concurrent.Worker
 @SharedImmutable
 private val worker = Worker.start(errorReporting = false)
 
-actual object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider() {
+internal actual fun createDefaultDateTimeTextProvider(): DateTimeTextProvider = DarwinDateTimeTextProvider()
+
+private class DarwinDateTimeTextProvider : AbstractDateTimeTextProvider() {
     private val narrowEraTextSymbols = listOf("B", "A")
     private val parsableText = worker.confine { hashMapOf<ParsableTextKey, ParsableTextList>() }
 

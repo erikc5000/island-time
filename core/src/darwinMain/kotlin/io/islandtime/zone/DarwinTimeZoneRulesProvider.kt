@@ -13,10 +13,14 @@ import kotlin.native.concurrent.Worker
 @SharedImmutable
 private val worker = Worker.start(errorReporting = false)
 
+internal actual fun createDefaultTimeZoneRulesProvider(): TimeZoneRulesProvider {
+    return DarwinTimeZoneRulesProvider()
+}
+
 /**
  * A time zone rules provider that draws from the database included on Apple platforms.
  */
-actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
+private class DarwinTimeZoneRulesProvider : TimeZoneRulesProvider {
     private val timeZoneRules = worker.confine { hashMapOf<String, TimeZoneRules>() }
 
     @Suppress("UNCHECKED_CAST")

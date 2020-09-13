@@ -19,9 +19,9 @@ import kotlin.test.assertEquals
 
 @Suppress("PrivatePropertyName")
 class DateTimeFormatterTest : AbstractIslandTimeTest(
-    testDateTimeFormatProvider = FakeDateTimeFormatProvider,
-    testDateTimeTextProvider = FakeDateTimeTextProvider,
-    testTimeZoneNameProvider = FakeTimeZoneNameProvider
+    dateTimeFormatProvider = FakeDateTimeFormatProvider,
+    dateTimeTextProvider = FakeDateTimeTextProvider,
+    timeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     @Test
     fun `can model an iso format`() {

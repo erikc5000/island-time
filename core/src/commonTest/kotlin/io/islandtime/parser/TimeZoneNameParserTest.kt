@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 @Suppress("PrivatePropertyName")
-class TimeZoneNameParserTest : AbstractIslandTimeTest(testTimeZoneNameProvider = FakeTimeZoneNameProvider) {
+class TimeZoneNameParserTest : AbstractIslandTimeTest(timeZoneNameProvider = FakeTimeZoneNameProvider) {
     private val en_US = "en-US".toLocale()
 
     @Test

@@ -14,7 +14,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TimeZoneNameFormatterTest : AbstractIslandTimeTest(
-    testTimeZoneNameProvider = FakeTimeZoneNameProvider
+    timeZoneNameProvider = FakeTimeZoneNameProvider
 ) {
     private val standardTimeDate =
         Date(2020, Month.FEBRUARY, 15) at NOON at TimeZone("America/New_York")

@@ -1,12 +1,12 @@
 package io.islandtime.extensions.parcelize.ranges
 
 import android.os.Parcelable
-import io.islandtime.IslandTime
 import io.islandtime.TimeZone
 import io.islandtime.ZonedDateTime
 import io.islandtime.extensions.parcelize.test.testParcelable
 import io.islandtime.ranges.ZonedDateTimeInterval
 import io.islandtime.ranges.until
+import io.islandtime.zone.TimeZoneRulesProvider
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.TypeParceler
 import org.junit.AfterClass
@@ -36,13 +36,13 @@ class ZonedDateTimeIntervalRangeTest {
         @JvmStatic
         @BeforeClass
         fun setUp() {
-            IslandTime.reset()
+            TimeZoneRulesProvider.reset()
         }
 
         @JvmStatic
         @AfterClass
         fun tearDown() {
-            IslandTime.reset()
+            TimeZoneRulesProvider.reset()
         }
     }
 }

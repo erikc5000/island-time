@@ -1,8 +1,8 @@
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
-import io.islandtime.IslandTime
 import io.islandtime.base.NumberProperty
+import io.islandtime.base.ProviderProxy
 import io.islandtime.locale.Locale
 import io.islandtime.properties.DateProperty
 import io.islandtime.properties.TimeProperty
@@ -36,23 +36,21 @@ interface DateTimeTextProvider {
         locale: Locale
     ): ParsableTextList
 
-    companion object : DateTimeTextProvider {
+    companion object : ProviderProxy<DateTimeTextProvider>(), DateTimeTextProvider {
         override fun getTextFor(
             property: NumberProperty,
             value: Long,
             style: TextStyle,
             locale: Locale
-        ): String? {
-            return IslandTime.dateTimeTextProvider.getTextFor(property, value, style, locale)
-        }
+        ): String? = provider.getTextFor(property, value, style, locale)
 
         override fun getParsableTextFor(
             property: NumberProperty,
             styles: Set<TextStyle>,
             locale: Locale
-        ): ParsableTextList {
-            return IslandTime.dateTimeTextProvider.getParsableTextFor(property, styles, locale)
-        }
+        ): ParsableTextList = provider.getParsableTextFor(property, styles, locale)
+
+        override fun createDefault(): DateTimeTextProvider = createDefaultDateTimeTextProvider()
     }
 }
 
@@ -133,7 +131,4 @@ abstract class AbstractDateTimeTextProvider : DateTimeTextProvider {
     protected abstract fun getEraTextFor(value: Long, style: TextStyle, locale: Locale): String?
 }
 
-/**
- * The default provider of localized date-time text for the current platform.
- */
-expect object PlatformDateTimeTextProvider : AbstractDateTimeTextProvider
+internal expect fun createDefaultDateTimeTextProvider(): DateTimeTextProvider

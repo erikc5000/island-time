@@ -9,7 +9,9 @@ import kotlin.native.concurrent.Worker
 @SharedImmutable
 private val worker = Worker.start(errorReporting = false)
 
-actual object PlatformDateTimeFormatProvider : DateTimeFormatProvider {
+internal actual fun createDefaultDateTimeFormatProvider(): DateTimeFormatProvider = DarwinDateTimeFormatProvider()
+
+private class DarwinDateTimeFormatProvider : DateTimeFormatProvider {
     private val styleCache = worker.confine { hashMapOf<StyleCacheKey, TemporalFormatter>() }
     private val skeletonCache = worker.confine { hashMapOf<SkeletonCacheKey, TemporalFormatter?>() }
 
