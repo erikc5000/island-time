@@ -39,7 +39,7 @@ subprojects {
             configureEach {
                 val pomArtifactId: String? by project
                 val pomMppArtifactId: String? by project
-                (pomArtifactId ?: pomMppArtifactId)?.let { moduleDisplayName.set(it) }
+                (pomArtifactId ?: pomMppArtifactId)?.let { moduleName.set(it) }
 
                 includes.from(project.file("MODULE.md"))
                 skipEmptyPackages.set(true)

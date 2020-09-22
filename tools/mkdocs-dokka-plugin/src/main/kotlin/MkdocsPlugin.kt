@@ -7,6 +7,7 @@ import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.renderers.DefaultRenderer
 import org.jetbrains.dokka.base.renderers.PackageListCreator
 import org.jetbrains.dokka.base.renderers.RootCreator
+import org.jetbrains.dokka.base.renderers.isImage
 import org.jetbrains.dokka.base.resolvers.local.DokkaLocationProvider
 import org.jetbrains.dokka.base.resolvers.local.LocationProviderFactory
 import org.jetbrains.dokka.base.resolvers.shared.RecognizedLinkFormat
@@ -225,7 +226,10 @@ class MkdocsRenderer(
     }
 
     override fun MarkdownContent.buildResource(node: ContentEmbeddedResource, pageContext: ContentPage) {
-        append("Resource")
+        if (node.isImage()) {
+            append("!")
+        }
+        append("[${node.altText}](${node.address})")
     }
 
     override fun MarkdownContent.buildTable(
@@ -424,8 +428,8 @@ class MkdocsRenderer(
 
     private fun MarkdownContent.buildLink(to: PageNode, from: PageNode) =
         buildLink(locationProvider.resolve(to, from)!!) {
-        append(to.name)
-    }
+            append(to.name)
+        }
 
     override suspend fun renderPage(page: PageNode) {
         val path by lazy {
