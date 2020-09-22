@@ -9,8 +9,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.jetbrains.dokka:dokka-core:1.4.0")
-    implementation("org.jetbrains.dokka:dokka-base:1.4.0")
+    compileOnly("org.jetbrains.dokka:dokka-core:1.4.10")
+    implementation("org.jetbrains.dokka:dokka-base:1.4.10")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
