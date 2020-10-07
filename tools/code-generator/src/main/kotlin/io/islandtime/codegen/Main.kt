@@ -22,6 +22,8 @@ fun measures(name: String) = ClassName(MEASURES_PACKAGE_NAME, name)
 fun ranges(name: String) = ClassName(RANGES_PACKAGE_NAME, name)
 fun rangesInternal(name: String) = ClassName(RANGES_INTERNAL_PACKAGE_NAME, name)
 
+fun javamath2kmp(name: String) = ClassName("dev.erikchristensen.javamath2kmp", name)
+
 private val generators = arrayOf(
     TemporalUnitGenerator,
     ConstantsGenerator,

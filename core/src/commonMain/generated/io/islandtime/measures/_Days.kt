@@ -6,6 +6,11 @@
 
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.minusExact
+import dev.erikchristensen.javamath2kmp.negateExact
+import dev.erikchristensen.javamath2kmp.plusExact
+import dev.erikchristensen.javamath2kmp.timesExact
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.internal.DAYS_PER_WEEK
 import io.islandtime.internal.HOURS_PER_DAY
 import io.islandtime.internal.MICROSECONDS_PER_DAY
@@ -13,11 +18,6 @@ import io.islandtime.internal.MILLISECONDS_PER_DAY
 import io.islandtime.internal.MINUTES_PER_DAY
 import io.islandtime.internal.NANOSECONDS_PER_DAY
 import io.islandtime.internal.SECONDS_PER_DAY
-import io.islandtime.internal.minusExact
-import io.islandtime.internal.negateExact
-import io.islandtime.internal.plusExact
-import io.islandtime.internal.timesExact
-import io.islandtime.internal.toIntExact
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int

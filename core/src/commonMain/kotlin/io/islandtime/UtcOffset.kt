@@ -2,9 +2,9 @@
 
 package io.islandtime
 
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.appendZeroPadded
-import io.islandtime.internal.toIntExact
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import kotlin.math.absoluteValue

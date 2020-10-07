@@ -1,11 +1,10 @@
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.timesExact
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
-import io.islandtime.internal.timesExact
-import io.islandtime.internal.toIntExact
 import io.islandtime.parser.*
-import io.islandtime.parser.throwParserFieldResolutionException
 
 /**
  * A date-based period of time, such as "2 years, 5 months, 16 days". Unlike [Duration], which uses exact increments,
