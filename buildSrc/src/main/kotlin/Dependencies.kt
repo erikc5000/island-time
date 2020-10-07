@@ -5,6 +5,7 @@ object Versions {
     const val androidxTest = "1.2.0"
     const val googleTruth = "1.0.1"
     const val androidDesugarJdkLibs = "1.0.10"
+    const val javamath2kmp = "0.1.0"
 }
 
 object Libs {
@@ -25,4 +26,5 @@ object Libs {
 
     const val googleTruth = "com.google.truth:truth:${Versions.googleTruth}"
     const val androidDesugarJdkLibs = "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
+    const val javamath2kmp = "dev.erikchristensen.javamath2kmp:javamath2kmp:${Versions.javamath2kmp}"
 }

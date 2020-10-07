@@ -4,6 +4,7 @@
 
 package io.islandtime
 
+import dev.erikchristensen.javamath2kmp.floorMod
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.internal.*
 import io.islandtime.measures.*

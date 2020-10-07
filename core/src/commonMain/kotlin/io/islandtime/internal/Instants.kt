@@ -1,5 +1,6 @@
 package io.islandtime.internal
 
+import dev.erikchristensen.javamath2kmp.floorDiv
 import io.islandtime.*
 
 internal fun toTimeAt(offset: UtcOffset, secondOfUnixEpoch: Long, nanosecond: Int): Time {

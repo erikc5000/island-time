@@ -14,6 +14,10 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated")
+
+            dependencies {
+                implementation(Libs.javamath2kmp)
+            }
         }
 
         val commonTest by getting {

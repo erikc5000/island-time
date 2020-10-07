@@ -1,11 +1,11 @@
 package io.islandtime.parser.internal
 
+import dev.erikchristensen.javamath2kmp.negateExact
+import dev.erikchristensen.javamath2kmp.plusExact
 import io.islandtime.base.DateTimeField
 import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.NumberStyle
 import io.islandtime.format.TextStyle
-import io.islandtime.internal.negateExact
-import io.islandtime.internal.plusExact
 import io.islandtime.parser.*
 
 internal object EmptyDateTimeParser : DateTimeParser() {

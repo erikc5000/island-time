@@ -1,5 +1,7 @@
 package io.islandtime
 
+import dev.erikchristensen.javamath2kmp.floorDiv
+import dev.erikchristensen.javamath2kmp.floorMod
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
@@ -115,7 +117,8 @@ class DateTime(
         ReplaceWith("this.toYearMonth()"),
         DeprecationLevel.ERROR
     )
-    inline val yearMonth: YearMonth get() = toYearMonth()
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     /**
      * Returns this date-time with [period] added to it.
@@ -590,7 +593,7 @@ class DateTime(
             val localMilliseconds = millisecondsSinceUnixEpoch + offset.totalSeconds
             val localEpochDay = localMilliseconds.value floorDiv MILLISECONDS_PER_DAY
             val nanosecondOfDay =
-                (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.inNanosecondsUnchecked.value
+                (localMilliseconds.value floorMod MILLISECONDS_PER_DAY).milliseconds.inNanoseconds.value
             val date = Date.fromDayOfUnixEpoch(localEpochDay)
             val time = Time.fromNanosecondOfDay(nanosecondOfDay)
             return DateTime(date, time)
