@@ -3,7 +3,7 @@ name: Deploy website
 on:
   release:
     types: [published]
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   deploy-website:
