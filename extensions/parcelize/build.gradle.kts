@@ -5,7 +5,7 @@ plugins {
 
 android {
     compileOptions {
-        coreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = true
     }
 
     sourceSets {
