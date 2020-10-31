@@ -8,6 +8,7 @@ plugins {
 
 repositories {
     jcenter()
+    maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
 }
 
 val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
