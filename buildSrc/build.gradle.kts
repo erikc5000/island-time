@@ -1,14 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.20-RC"
+    kotlin("jvm") version "1.4.20"
     `kotlin-dsl`
 }
 
 repositories {
     jcenter()
     google()
-    maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
 }
 
 dependencies {
