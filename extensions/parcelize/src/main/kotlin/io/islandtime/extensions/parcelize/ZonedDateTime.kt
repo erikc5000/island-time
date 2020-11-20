@@ -6,7 +6,7 @@ import io.islandtime.TimeZone
 import io.islandtime.UtcOffset
 import io.islandtime.ZonedDateTime
 import io.islandtime.measures.seconds
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object ZonedDateTimeParceler : Parceler<ZonedDateTime> {
     override fun create(parcel: Parcel): ZonedDateTime = parcel.readZonedDateTime()

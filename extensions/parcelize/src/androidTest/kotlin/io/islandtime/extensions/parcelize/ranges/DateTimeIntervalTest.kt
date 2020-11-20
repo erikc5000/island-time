@@ -6,8 +6,8 @@ import io.islandtime.ranges.DateTimeInterval
 import io.islandtime.Month
 import io.islandtime.extensions.parcelize.test.testParcelable
 import io.islandtime.ranges.until
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.TypeParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 import org.junit.Test
 
 class DateTimeIntervalRangeTest {
