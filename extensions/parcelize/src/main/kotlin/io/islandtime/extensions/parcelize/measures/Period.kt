@@ -2,7 +2,7 @@ package io.islandtime.extensions.parcelize.measures
 
 import android.os.Parcel
 import io.islandtime.measures.*
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object PeriodParceler : Parceler<Period> {
     override fun create(parcel: Parcel): Period {

@@ -4,7 +4,7 @@ import android.os.Parcel
 import io.islandtime.extensions.parcelize.readDate
 import io.islandtime.extensions.parcelize.writeDate
 import io.islandtime.ranges.DateRange
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object DateRangeParceler: Parceler<DateRange> {
     override fun create(parcel: Parcel): DateRange = DateRange(parcel.readDate(), parcel.readDate())

@@ -2,7 +2,7 @@ package io.islandtime.extensions.parcelize
 
 import android.os.Parcel
 import io.islandtime.Instant
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object InstantParceler : Parceler<Instant> {
     override fun create(parcel: Parcel): Instant = parcel.readInstant()

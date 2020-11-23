@@ -2,7 +2,7 @@ package io.islandtime.extensions.parcelize
 
 import android.os.Parcel
 import io.islandtime.YearMonth
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object YearMonthParceler : Parceler<YearMonth> {
     override fun create(parcel: Parcel): YearMonth {
