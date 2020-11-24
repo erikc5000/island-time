@@ -14,7 +14,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "io.islandtime.codegen.MainKt"
+    mainClass.set("io.islandtime.codegen.MainKt")
 }
 
 tasks.withType<KotlinCompile>().configureEach {
