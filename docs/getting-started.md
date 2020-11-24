@@ -22,7 +22,9 @@ Due to the experimental status of [inline classes](https://kotlinlang.org/docs/r
 | --- | --- |
 | 0.1.x | 1.3.6x |
 | 0.2.x | 1.3.7x |
-| 0.3.x | 1.4.0/1.4.10 |
+| 0.3.x/0.4.x | 1.4.x |
+
+Note that Island Time 0.4.0 is built/published with Kotlin 1.4.20. While binary compatible with earlier versions, if you're using [HMPP](https://kotlinlang.org/docs/reference/mpp-share-on-platforms.html#share-code-on-similar-platforms) in your project, you'll need to update to 1.4.20 due to publishing changes. See the Kotlin 1.4.20 [release notes](https://blog.jetbrains.com/kotlin/2020/11/kotlin-1-4-20-released/) for details.
 
 ### JVM
 
