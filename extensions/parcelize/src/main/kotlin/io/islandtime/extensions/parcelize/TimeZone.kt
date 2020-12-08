@@ -2,7 +2,7 @@ package io.islandtime.extensions.parcelize
 
 import android.os.Parcel
 import io.islandtime.TimeZone
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object TimeZoneParceler : Parceler<TimeZone> {
     override fun create(parcel: Parcel): TimeZone {

@@ -4,8 +4,8 @@ import android.os.Parcelable
 import io.islandtime.OffsetTime
 import io.islandtime.UtcOffset
 import io.islandtime.extensions.parcelize.test.testParcelable
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.TypeParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 import org.junit.Test
 
 class OffsetOffsetTimeTest {

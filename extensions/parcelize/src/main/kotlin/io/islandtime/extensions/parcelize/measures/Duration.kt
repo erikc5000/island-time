@@ -5,7 +5,7 @@ import io.islandtime.measures.Duration
 import io.islandtime.measures.durationOf
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object DurationParceler : Parceler<Duration> {
     override fun create(parcel: Parcel): Duration {

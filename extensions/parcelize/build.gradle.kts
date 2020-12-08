@@ -1,6 +1,6 @@
 plugins {
     `android-library`
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
 }
 
 android {

@@ -6,8 +6,8 @@ import io.islandtime.ranges.InstantInterval
 import io.islandtime.extensions.parcelize.test.testParcelable
 import io.islandtime.measures.seconds
 import io.islandtime.ranges.until
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.TypeParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 import org.junit.Test
 
 class InstantIntervalRangeTest {

@@ -3,8 +3,8 @@ package io.islandtime.extensions.parcelize.measures
 import android.os.Parcelable
 import io.islandtime.extensions.parcelize.test.testParcelable
 import io.islandtime.measures.*
-import kotlinx.android.parcel.Parcelize
-import kotlinx.android.parcel.TypeParceler
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.TypeParceler
 import org.junit.Test
 
 class PeriodTest {

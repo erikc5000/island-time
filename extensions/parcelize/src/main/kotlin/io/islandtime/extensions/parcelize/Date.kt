@@ -2,7 +2,7 @@ package io.islandtime.extensions.parcelize
 
 import android.os.Parcel
 import io.islandtime.Date
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object DateParceler : Parceler<Date> {
     override fun create(parcel: Parcel): Date = parcel.readDate()

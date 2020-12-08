@@ -4,7 +4,7 @@ import android.os.Parcel
 import io.islandtime.extensions.parcelize.readOffsetDateTime
 import io.islandtime.extensions.parcelize.writeOffsetDateTime
 import io.islandtime.ranges.OffsetDateTimeInterval
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object OffsetDateTimeIntervalParceler: Parceler<OffsetDateTimeInterval> {
     override fun create(parcel: Parcel): OffsetDateTimeInterval {

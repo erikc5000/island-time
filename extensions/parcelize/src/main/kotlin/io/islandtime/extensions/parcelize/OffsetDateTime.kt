@@ -5,7 +5,7 @@ import io.islandtime.DateTime
 import io.islandtime.UtcOffset
 import io.islandtime.OffsetDateTime
 import io.islandtime.measures.seconds
-import kotlinx.android.parcel.Parceler
+import kotlinx.parcelize.Parceler
 
 object OffsetDateTimeParceler : Parceler<OffsetDateTime> {
     override fun create(parcel: Parcel): OffsetDateTime = parcel.readOffsetDateTime()
