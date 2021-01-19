@@ -44,6 +44,12 @@ private fun <T> Worker.executeImmediately(block: () -> T): T {
     return execute(
         TransferMode.SAFE,
         { block.freeze() },
-        { runCatching { it() }.freeze() }
+        {
+            try {
+                Result.success(it())
+            } catch (e: Throwable) {
+                Result.failure(e)
+            }.freeze()
+        }
     ).result.getOrThrow()
 }
