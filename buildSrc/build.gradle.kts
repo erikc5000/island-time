@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.4.30-RC"
+    kotlin("jvm") version "1.4.30"
     `kotlin-dsl`
 }
 
