@@ -23,9 +23,11 @@ data class TestData(
     @Contextual val offsetDateTime: OffsetDateTime,
     @Contextual val zonedDateTime: ZonedDateTime,
     @Contextual val yearMonth: YearMonth,
+    @Contextual val year: Year,
     @Contextual val instant: Instant,
     @Serializable(with = TimeZoneSerializer::class) val zoneRegion: TimeZone,
     @Serializable(with = TimeZoneSerializer::class) val fixedZone: TimeZone,
+    @Contextual val offset: UtcOffset,
     @Contextual val duration: Duration,
     @Contextual val period: Period,
     @Contextual val dateRange: DateRange,
@@ -44,7 +46,9 @@ class SerializerTest {
         contextual(OffsetDateTimeSerializer)
         contextual(ZonedDateTimeSerializer)
         contextual(YearMonthSerializer)
+        contextual(YearSerializer)
         contextual(InstantSerializer)
+        contextual(UtcOffsetSerializer)
         contextual(DurationSerializer)
         contextual(PeriodSerializer)
         contextual(DateRangeSerializer)
@@ -80,9 +84,11 @@ class SerializerTest {
             TimeZone("America/New_York")
         ),
         yearMonth = YearMonth(2019, Month.FEBRUARY),
+        year = Year(2019),
         instant = Instant(1L.seconds, 1.nanoseconds),
         zoneRegion = TimeZone("America/Non_Existent_Zone"),
         fixedZone = TimeZone("+04:30"),
+        offset = UtcOffset(4.hours, 30.minutes),
         duration = durationOf(1.seconds, 500.nanoseconds),
         period = periodOf(1.years, 2.months, 3.days),
         dateRange = "2019-01-01/2019-05-31".toDateRange(),
@@ -111,9 +117,11 @@ class SerializerTest {
                     "offsetDateTime": "2019-02-21T01:02:03.000000004+04:30",
                     "zonedDateTime": "2019-02-21T01:02:03.000000004-05:00[America/New_York]",
                     "yearMonth": "2019-02",
+                    "year": "2019",
                     "instant": "1970-01-01T00:00:01.000000001Z",
                     "zoneRegion": "America/Non_Existent_Zone",
                     "fixedZone": "+04:30",
+                    "offset": "+04:30",
                     "duration": "PT1.0000005S",
                     "period": "P1Y2M3D",
                     "dateRange": "2019-01-01/2019-05-31",
