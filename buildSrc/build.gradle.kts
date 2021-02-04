@@ -1,7 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "1.4.20"
+    kotlin("jvm") version "1.4.30"
     `kotlin-dsl`
 }
 
@@ -12,18 +10,10 @@ repositories {
 
 dependencies {
     implementation(kotlin("gradle-plugin"))
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.10")
     implementation("com.android.tools.build:gradle:4.1.1")
 }
 
 kotlinDslPluginOptions {
     experimentalWarning.set(false)
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
