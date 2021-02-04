@@ -29,7 +29,7 @@ android {
 afterEvaluate {
     val androidSourcesJar by tasks.registering(Jar::class) {
         archiveClassifier.set("sources")
-        from(android.sourceSets["main"].java.sourceFiles)
+        from(android.sourceSets["main"].java.srcDirs)
     }
 
     publishing {
