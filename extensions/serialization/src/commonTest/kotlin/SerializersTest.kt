@@ -1,9 +1,6 @@
-package io.islandtime.extensions.serialization
+package io.islandtime.serialization
 
 import io.islandtime.*
-import io.islandtime.extensions.serialization.measures.DurationSerializer
-import io.islandtime.extensions.serialization.measures.PeriodSerializer
-import io.islandtime.extensions.serialization.ranges.*
 import io.islandtime.measures.*
 import io.islandtime.ranges.*
 import kotlinx.serialization.Contextual
@@ -37,7 +34,7 @@ data class TestData(
     @Contextual val zonedDateTimeInterval: ZonedDateTimeInterval
 )
 
-class SerializerTest {
+class SerializersTest {
     private val stringModule = SerializersModule {
         contextual(DateSerializer)
         contextual(TimeSerializer)
