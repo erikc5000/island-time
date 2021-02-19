@@ -2,9 +2,8 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     `multiplatform-library`
+    id("kotlinx-atomicfu")
 }
-
-apply(plugin = "kotlinx-atomicfu")
 
 kotlin {
     jvm {

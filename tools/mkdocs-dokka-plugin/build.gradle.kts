@@ -4,10 +4,6 @@ plugins {
     kotlin("jvm") version "1.4.30"
 }
 
-repositories {
-    jcenter()
-}
-
 dependencies {
     compileOnly("org.jetbrains.dokka:dokka-core:1.4.10")
     implementation("org.jetbrains.dokka:dokka-base:1.4.10")

@@ -9,10 +9,6 @@ plugins {
     signing
 }
 
-repositories {
-    jcenter()
-}
-
 val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
 
 tasks.register<DokkaTask>("dokkaMkdocs") {

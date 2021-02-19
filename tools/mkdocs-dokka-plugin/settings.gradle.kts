@@ -3,3 +3,10 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
