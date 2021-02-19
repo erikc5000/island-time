@@ -1,8 +1,3 @@
-repositories {
-    google()
-    jcenter()
-}
-
 plugins {
     id("com.android.library")
     kotlin("android")

@@ -14,11 +14,6 @@ object Libs {
         const val json = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serialization}"
     }
 
-    object AtomicFU {
-        const val gradlePlugin = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:${Versions.atomicfu}"
-        const val runtime = "org.jetbrains.kotlinx:atomicfu:${Versions.atomicfu}"
-    }
-
     object AndroidxTest {
         const val runner = "androidx.test:runner:${Versions.androidxTest}"
         const val orchestrator = "androidx.test:orchestrator:${Versions.androidxTest}"
