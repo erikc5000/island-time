@@ -68,33 +68,21 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `isValid property returns true is offset is inside the valid range`() {
-        assertTrue { UtcOffset.MAX.isValid }
-        assertTrue { UtcOffset.MIN.isValid }
-    }
-
-    @Test
-    fun `isValid property returns false if offset is outside of +-18_00`() {
-        assertFalse { UtcOffset(UtcOffset.MAX_TOTAL_SECONDS + 1.seconds).isValid }
-        assertFalse { UtcOffset(UtcOffset.MIN_TOTAL_SECONDS - 1.seconds).isValid }
-    }
-
-    @Test
     fun `isZero() returns true only when the offset is zero`() {
         assertTrue { UtcOffset(0.seconds).isZero() }
         assertFalse { UtcOffset((-1).seconds).isZero() }
     }
 
     @Test
-    fun `validated() returns the unmodified offset when within the valid range`() {
-        assertEquals(UtcOffset.MAX, UtcOffset.MAX.validated())
-        assertEquals(UtcOffset.MIN, UtcOffset.MIN.validated())
+    fun `construction succeeds when the offset is within the valid range`() {
+        assertEquals(UtcOffset.MAX_TOTAL_SECONDS, UtcOffset.MAX.totalSeconds)
+        assertEquals(UtcOffset.MIN_TOTAL_SECONDS, UtcOffset.MIN.totalSeconds)
     }
 
     @Test
-    fun `validated() throws an exception if the offset is outside the valid range`() {
-        assertFailsWith<DateTimeException> { UtcOffset(UtcOffset.MAX_TOTAL_SECONDS + 1.seconds).validated() }
-        assertFailsWith<DateTimeException> { UtcOffset(UtcOffset.MIN_TOTAL_SECONDS - 1.seconds).validated() }
+    fun `construction throws an exception if the offset is outside the valid range`() {
+        assertFailsWith<DateTimeException> { UtcOffset(UtcOffset.MAX_TOTAL_SECONDS + 1.seconds) }
+        assertFailsWith<DateTimeException> { UtcOffset(UtcOffset.MIN_TOTAL_SECONDS - 1.seconds) }
     }
 
     @Test

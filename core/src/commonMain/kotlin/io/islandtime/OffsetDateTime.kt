@@ -24,10 +24,6 @@ class OffsetDateTime(
     val offset: UtcOffset
 ) : TimePoint<OffsetDateTime> {
 
-    init {
-        offset.validate()
-    }
-
     /**
      * Creates an [OffsetDateTime].
      * @throws DateTimeException if the offset is invalid
@@ -143,21 +139,24 @@ class OffsetDateTime(
         ReplaceWith("this.toYearMonth()"),
         DeprecationLevel.ERROR
     )
-    inline val yearMonth: YearMonth get() = toYearMonth()
+    inline val yearMonth: YearMonth
+        get() = toYearMonth()
 
     @Deprecated(
         "Use toOffsetTime() instead.",
         ReplaceWith("this.toOffsetTime()"),
         DeprecationLevel.ERROR
     )
-    inline val offsetTime: OffsetTime get() = toOffsetTime()
+    inline val offsetTime: OffsetTime
+        get() = toOffsetTime()
 
     @Deprecated(
         "Use toInstant() instead.",
         ReplaceWith("this.toInstant()"),
         DeprecationLevel.ERROR
     )
-    inline val instant: Instant get() = toInstant()
+    inline val instant: Instant
+        get() = toInstant()
 
     override val secondsSinceUnixEpoch: LongSeconds
         get() = dateTime.secondsSinceUnixEpochAt(offset)

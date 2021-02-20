@@ -152,10 +152,6 @@ sealed class TimeZone : Comparable<TimeZone> {
         val offset: UtcOffset
     ) : TimeZone() {
 
-        init {
-            offset.validate()
-        }
-
         override val id: String get() = offset.toString()
         override val isValid: Boolean get() = true
         override val rules: TimeZoneRules get() = FixedTimeZoneRules(offset)
