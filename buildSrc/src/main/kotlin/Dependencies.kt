@@ -5,7 +5,7 @@ object Versions {
     const val androidxTest = "1.3.0"
     const val googleTruth = "1.1"
     const val androidDesugarJdkLibs = "1.1.1"
-    const val javamath2kmp = "0.2.0"
+    const val javamath2kmp = "0.3.0"
 }
 
 object Libs {
