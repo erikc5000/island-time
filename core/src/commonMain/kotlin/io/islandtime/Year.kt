@@ -11,8 +11,8 @@ import kotlin.math.absoluteValue
  * A year as defined by ISO-8601.
  * @constructor Creates a [Year].
  * @param value the year
- * @property value The year value.
  * @throws DateTimeException if the year is invalid
+ * @property value The year value.
  */
 inline class Year(val value: Int) : Comparable<Year> {
 
@@ -67,7 +67,7 @@ inline class Year(val value: Int) : Comparable<Year> {
         return Year(value + years.value)
     }
 
-    operator fun plus(years: IntYears) = plus(years.toLongYears())
+    operator fun plus(years: IntYears): Year = plus(years.toLongYears())
 
     operator fun minus(years: LongYears): Year {
         return if (years.value == Long.MIN_VALUE) {
@@ -177,7 +177,7 @@ internal fun checkValidYear(year: Int): Int {
     if (!isValidYear(year)) {
         throw DateTimeException(getInvalidYearMessage(year.toLong()))
     }
-    return year.toInt()
+    return year
 }
 
 internal fun checkValidYear(year: Long): Int {
