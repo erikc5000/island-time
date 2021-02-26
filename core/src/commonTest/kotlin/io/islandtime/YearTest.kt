@@ -11,25 +11,46 @@ import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
 class YearTest : AbstractIslandTimeTest() {
-    private val invalidYears = listOf(
+    private val invalidIntYears = listOf(
         Year.MIN_VALUE - 1,
         Year.MAX_VALUE + 1,
         Int.MAX_VALUE,
         Int.MIN_VALUE
     )
 
+    private val invalidLongYears = listOf(
+        Year.MIN_VALUE - 1L,
+        Year.MAX_VALUE + 1L,
+        Long.MAX_VALUE,
+        Long.MIN_VALUE
+    )
+
     @Test
-    fun `isValid can be used to check if the Year was initialized with an invalid value`() {
-        invalidYears.forEach {
-            assertFalse { Year(it).isValid }
+    fun `Int constructor throws an exception if the value is invalid`() {
+        invalidIntYears.forEach {
+            assertFailsWith<DateTimeException> { Year(it) }
         }
     }
 
     @Test
-    fun `validated() throws an exception if the current value is invalid`() {
-        invalidYears.forEach {
-            assertFailsWith<DateTimeException> { Year(it).validated() }
+    fun `Long constructor throws an exception if the value is invalid`() {
+        invalidLongYears.forEach {
+            assertFailsWith<DateTimeException> { Year(it) }
         }
+    }
+
+    @Test
+    fun `Int construction succeeds with valid years`() {
+        assertEquals(2000, Year(2000).value)
+        assertEquals(Year.MIN_VALUE, Year.MIN.value)
+        assertEquals(Year.MAX_VALUE, Year.MAX.value)
+    }
+
+    @Test
+    fun `Long construction succeeds with valid years`() {
+        assertEquals(2000, Year(2000L).value)
+        assertEquals(Year.MIN_VALUE, Year(Year.MIN_VALUE.toLong()).value)
+        assertEquals(Year.MAX_VALUE, Year(Year.MAX_VALUE.toLong()).value)
     }
 
     @Test

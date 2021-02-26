@@ -13,18 +13,16 @@ import kotlin.math.sign
 /**
  * The time shift between a local time and UTC.
  *
- * To ensure that the offset is within the valid supported range, you must explicitly call [validate] or [validated].
- *
  * @param totalSeconds the total number of seconds to offset by
- * @see validate
- * @see validated
+ * @throws DateTimeException if the offset is outside the supported range
  */
 inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
 
-    /**
-     * Checks if this offset is within the supported range.
-     */
-    val isValid: Boolean get() = totalSeconds in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS
+    init {
+        if (totalSeconds !in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {
+            throw DateTimeException("'$totalSeconds' is outside the valid offset range of +/-18:00")
+        }
+    }
 
     /**
      * Checks if this is the UTC offset of +00:00.
@@ -66,31 +64,13 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
         }
     }
 
-    /**
-     * Checks if the offset is valid and throws an exception if it isn't.
-     * @throws DateTimeException if the offset is outside the supported range
-     * @see isValid
-     */
-    fun validate() {
-        if (!isValid) {
-            throw DateTimeException("'$totalSeconds' is outside the valid offset range of +/-18:00")
-        }
-    }
-
-    /**
-     * Ensures that the offset is valid, throwing an exception if it isn't.
-     * @throws DateTimeException if the offset is outside the supported range
-     * @see isValid
-     */
-    fun validated(): UtcOffset = apply { validate() }
-
     companion object {
-        val MAX_TOTAL_SECONDS = 18.hours.inSecondsUnchecked
-        val MIN_TOTAL_SECONDS = (-18).hours.inSecondsUnchecked
+        val MAX_TOTAL_SECONDS: IntSeconds = 18.hours.inSecondsUnchecked
+        val MIN_TOTAL_SECONDS: IntSeconds = (-18).hours.inSecondsUnchecked
 
-        val MIN = UtcOffset(MIN_TOTAL_SECONDS)
-        val MAX = UtcOffset(MAX_TOTAL_SECONDS)
-        val ZERO = UtcOffset(0.seconds)
+        val MIN: UtcOffset = UtcOffset(MIN_TOTAL_SECONDS)
+        val MAX: UtcOffset = UtcOffset(MAX_TOTAL_SECONDS)
+        val ZERO: UtcOffset = UtcOffset(0.seconds)
     }
 }
 
@@ -100,7 +80,7 @@ inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
  * @param hours hours to offset by, within +/-18
  * @param minutes minutes to offset by, within +/-59
  * @param seconds seconds to offset by, within +/-59
- * @throws DateTimeException if any of the individual components is outside the valid range
+ * @throws DateTimeException if the offset or any of its components are invalid
  * @return a [UtcOffset]
  */
 fun UtcOffset(
@@ -167,7 +147,7 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
     val totalSeconds = fields[DateTimeField.UTC_OFFSET_TOTAL_SECONDS]
 
     if (totalSeconds != null) {
-        return UtcOffset(totalSeconds.toIntExact().seconds).validated()
+        return UtcOffset(totalSeconds.toIntExact().seconds)
     }
 
     val sign = fields[DateTimeField.UTC_OFFSET_SIGN]
@@ -178,9 +158,9 @@ internal fun DateTimeParseResult.toUtcOffset(): UtcOffset? {
         val seconds = (fields[DateTimeField.UTC_OFFSET_SECONDS]?.toIntExact() ?: 0).seconds
 
         return if (sign < 0L) {
-            UtcOffset(-hours, -minutes, -seconds).validated()
+            UtcOffset(-hours, -minutes, -seconds)
         } else {
-            UtcOffset(hours, minutes, seconds).validated()
+            UtcOffset(hours, minutes, seconds)
         }
     }
 
@@ -210,13 +190,13 @@ internal fun StringBuilder.appendUtcOffset(offset: UtcOffset): StringBuilder {
 
 private fun validateUtcOffsetComponents(hours: IntHours, minutes: IntMinutes, seconds: IntSeconds) {
     when {
-        hours.isPositive() -> if (minutes.isNegative() || seconds.isNegative()) {
+        hours.value > 0 -> if (minutes.value < 0 || seconds.value < 0) {
             throw DateTimeException("Time offset minutes and seconds must be positive when hours are positive")
         }
-        hours.isNegative() -> if (minutes.isPositive() || seconds.isPositive()) {
+        hours.value < 0 -> if (minutes.value > 0 || seconds.value > 0) {
             throw DateTimeException("Time offset minutes and seconds must be negative when hours are negative")
         }
-        else -> if ((minutes.isNegative() && seconds.isPositive()) || (minutes.isPositive() && seconds.isNegative())) {
+        else -> if ((minutes.value < 0 && seconds.value > 0) || (minutes.value > 0 && seconds.value < 0)) {
             throw DateTimeException("Time offset minutes and seconds must have the same sign")
         }
     }
