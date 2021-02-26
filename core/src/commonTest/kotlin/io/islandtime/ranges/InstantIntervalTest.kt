@@ -203,7 +203,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn* properties return zero when the range is empty`() {
+    fun `lengthIn properties return zero when the range is empty`() {
         assertEquals(0L.days, InstantInterval.EMPTY.lengthInDays)
         assertEquals(0L.hours, InstantInterval.EMPTY.lengthInHours)
         assertEquals(0L.minutes, InstantInterval.EMPTY.lengthInMinutes)
@@ -214,7 +214,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn* properties throw an exception when the interval is unbounded`() {
+    fun `lengthIn properties throw an exception when the interval is unbounded`() {
         assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInDays }
         assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInHours }
         assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.lengthInMinutes }
