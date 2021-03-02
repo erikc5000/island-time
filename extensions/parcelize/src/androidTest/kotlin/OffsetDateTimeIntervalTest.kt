@@ -4,7 +4,7 @@ import android.os.Parcelable
 import io.islandtime.OffsetDateTime
 import io.islandtime.ranges.OffsetDateTimeInterval
 import io.islandtime.UtcOffset
-import io.islandtime.arcelize.test.testParcelable
+import io.islandtime.parcelize.test.testParcelable
 import io.islandtime.measures.hours
 import io.islandtime.ranges.until
 import kotlinx.parcelize.Parcelize

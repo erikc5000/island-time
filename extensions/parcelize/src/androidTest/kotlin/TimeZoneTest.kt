@@ -2,7 +2,7 @@ package io.islandtime.parcelize
 
 import android.os.Parcelable
 import io.islandtime.TimeZone
-import io.islandtime.extensions.parcelize.test.testParcelable
+import io.islandtime.parcelize.test.testParcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.TypeParceler
 import org.junit.Test
