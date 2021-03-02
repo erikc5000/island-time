@@ -1,3 +1,3 @@
-<manifest package="io.islandtime.extensions.parcelize">
+<manifest package="io.islandtime.parcelize">
     <application/>
 </manifest>
