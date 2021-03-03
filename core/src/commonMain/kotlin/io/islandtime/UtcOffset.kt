@@ -15,6 +15,7 @@ import kotlin.math.sign
  *
  * @param totalSeconds the total number of seconds to offset by
  * @throws DateTimeException if the offset is outside the supported range
+ * @property totalSeconds The number of seconds relative to UTC.
  */
 inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
 
