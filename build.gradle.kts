@@ -2,7 +2,7 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     id("org.jetbrains.dokka")
-    id("kotlinx-atomicfu") version "0.14.4" apply false
+    id("kotlinx-atomicfu") version Versions.atomicfu apply false
 }
 
 subprojects {
