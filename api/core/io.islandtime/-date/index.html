@@ -1,0 +1,988 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Island Time - A Kotlin Multiplatform library for working with dates and times">
+      
+      
+      
+        <meta name="author" content="Erik Christensen">
+      
+      
+        <link rel="canonical" href="https://islandtime.io/api/core/io.islandtime/-date/">
+      
+      <link rel="shortcut icon" href="../../../../assets/images/logo.svg">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.4">
+    
+    
+      
+        <title>Date - Island Time</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#00bdd6">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="cyan" data-md-color-accent="cyan">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#date" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://islandtime.io" title="Island Time" class="md-header__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Island Time
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Date
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://islandtime.io" title="Island Time" class="md-nav__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Island Time
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        The Basics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="The Basics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          The Basics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/dates-and-times/" class="md-nav__link">
+        Dates and Times
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/durations/" class="md-nav__link">
+        Durations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/intervals/" class="md-nav__link">
+        Ranges and Intervals
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/interop/" class="md-nav__link">
+        Interoperating with Platform Libraries
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/formatting/" class="md-nav__link">
+        Formatting
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/parsing/" class="md-nav__link">
+        Parsing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/clocks/" class="md-nav__link">
+        Clocks
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Advanced Topics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../advanced/custom-providers/" class="md-nav__link">
+        Custom Providers
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Extensions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Extensions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Extensions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../extensions/serialization/" class="md-nav__link">
+        Serialization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../extensions/parcelize/" class="md-nav__link">
+        Parcelize
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        API
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        core
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../parcelize-extensions/" class="md-nav__link">
+        parcelize-extensions
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../serialization-extensions/" class="md-nav__link">
+        serialization-extensions
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    Parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#throws" class="md-nav__link">
+    Throws
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructors" class="md-nav__link">
+    Constructors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extensions" class="md-nav__link">
+    Extensions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/erikc5000/island-time/edit/master/docs/api/core/io.islandtime/-date/index.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <p>//<a href="../../">core</a>/<a href="../">io.islandtime</a>/<a href="./">Date</a></p>
+<h1 id="date">Date<a class="headerlink" href="#date" title="Permalink">&para;</a></h1>
+<p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p>
+<p><code>class <a href="./">Date</a>(<b>year</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, <b>month</b>: <a href="../-month/">Month</a>, <b>day</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="./">Date</a>&gt; </code></p>
+<p>A date in an ambiguous region.</p>
+<h2 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permalink">&para;</a></h2>
+<p>common</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>year</td>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>the year</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>month</td>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>the month</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>day</td>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>the day of the month</td>
+</tr>
+</tbody>
+</table>
+<h4 id="throws">Throws<a class="headerlink" href="#throws" title="Permalink">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a><a href="../-date-time-exception/">io.islandtime.DateTimeException</a></td>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a>if the year or day is invalid</td>
+</tr>
+</tbody>
+</table>
+<h2 id="constructors">Constructors<a class="headerlink" href="#constructors" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date/Date/#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><a href="-date/">Date</a></td>
+<td><a name="io.islandtime/Date/Date/#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, monthNumber: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>)</code><br><br>Creates a <a href="./">Date</a> from a year, ISO month number, and day of month.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/Date/#kotlin.Int#io.islandtime.Month#kotlin.Int/PointingToDeclaration/"></a><a href="-date/">Date</a></td>
+<td><a name="io.islandtime/Date/Date/#kotlin.Int#io.islandtime.Month#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, month: <a href="../-month/">Month</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>)</code><br><br>Creates a <a href="./">Date</a> from a year, month, and day of month.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date.Companion///PointingToDeclaration/"></a><a href="-companion/">Companion</a></td>
+<td><a name="io.islandtime/Date.Companion///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>object <a href="-companion/">Companion</a></code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date/compareTo/#io.islandtime.Date/PointingToDeclaration/"></a><a href="compare-to/">compareTo</a></td>
+<td><a name="io.islandtime/Date/compareTo/#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>open operator override fun <a href="compare-to/">compareTo</a>(other: <a href="./">Date</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/component1/#/PointingToDeclaration/"></a><a href="component1/">component1</a></td>
+<td><a name="io.islandtime/Date/component1/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="component1/">component1</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/component2/#/PointingToDeclaration/"></a><a href="component2/">component2</a></td>
+<td><a name="io.islandtime/Date/component2/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="component2/">component2</a>(): <a href="../-month/">Month</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/component3/#/PointingToDeclaration/"></a><a href="component3/">component3</a></td>
+<td><a name="io.islandtime/Date/component3/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="component3/">component3</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/copy/#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><a href="copy/">copy</a></td>
+<td><a name="io.islandtime/Date/copy/#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="copy/">copy</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = this.year, dayOfYear: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = this.dayOfYear): <a href="./">Date</a></code><br><br><code>fun <a href="copy/">copy</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = this.year, month: <a href="../-month/">Month</a> = this.month, dayOfMonth: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = this.day): <a href="./">Date</a></code><br><br><code>fun <a href="copy/">copy</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = this.year, monthNumber: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, dayOfMonth: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = this.day): <a href="./">Date</a></code><br><br>Returns a copy of this date with the values of any individual components replaced by the new values specified.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/equals/#kotlin.Any?/PointingToDeclaration/"></a><a href="equals/">equals</a></td>
+<td><a name="io.islandtime/Date/equals/#kotlin.Any?/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>open operator override fun <a href="equals/">equals</a>(other: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>?): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/hashCode/#/PointingToDeclaration/"></a><a href="hash-code/">hashCode</a></td>
+<td><a name="io.islandtime/Date/hashCode/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>open override fun <a href="hash-code/">hashCode</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/minus/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><a href="minus/">minus</a></td>
+<td><a name="io.islandtime/Date/minus/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="minus/">minus</a>(days: <a href="../../io.islandtime.measures/-int-days/">IntDays</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(months: <a href="../../io.islandtime.measures/-int-months/">IntMonths</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(weeks: <a href="../../io.islandtime.measures/-int-weeks/">IntWeeks</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(years: <a href="../../io.islandtime.measures/-int-years/">IntYears</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(days: <a href="../../io.islandtime.measures/-long-days/">LongDays</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(months: <a href="../../io.islandtime.measures/-long-months/">LongMonths</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(weeks: <a href="../../io.islandtime.measures/-long-weeks/">LongWeeks</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="minus/">minus</a>(years: <a href="../../io.islandtime.measures/-long-years/">LongYears</a>): <a href="./">Date</a></code><br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="minus/">minus</a>(period: <a href="../../io.islandtime.measures/-period/">Period</a>): <a href="./">Date</a></code><br><br>Returns this date with period subtracted from it.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/plus/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><a href="plus/">plus</a></td>
+<td><a name="io.islandtime/Date/plus/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="plus/">plus</a>(days: <a href="../../io.islandtime.measures/-int-days/">IntDays</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(months: <a href="../../io.islandtime.measures/-int-months/">IntMonths</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(weeks: <a href="../../io.islandtime.measures/-int-weeks/">IntWeeks</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(years: <a href="../../io.islandtime.measures/-int-years/">IntYears</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(days: <a href="../../io.islandtime.measures/-long-days/">LongDays</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(months: <a href="../../io.islandtime.measures/-long-months/">LongMonths</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(weeks: <a href="../../io.islandtime.measures/-long-weeks/">LongWeeks</a>): <a href="./">Date</a></code><br><br><code>operator fun <a href="plus/">plus</a>(years: <a href="../../io.islandtime.measures/-long-years/">LongYears</a>): <a href="./">Date</a></code><br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="plus/">plus</a>(period: <a href="../../io.islandtime.measures/-period/">Period</a>): <a href="./">Date</a></code><br><br>Returns this date with period added to it.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/rangeTo/#io.islandtime.Date/PointingToDeclaration/"></a><a href="range-to/">rangeTo</a></td>
+<td><a name="io.islandtime/Date/rangeTo/#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="range-to/">rangeTo</a>(other: <a href="./">Date</a>): <a href="../../io.islandtime.ranges/-date-range/">DateRange</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/toString/#/PointingToDeclaration/"></a><a href="to-string/">toString</a></td>
+<td><a name="io.islandtime/Date/toString/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>open override fun <a href="to-string/">toString</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></code><br><br>Converts this date to a string in ISO-8601 extended format using the "calendar date" form.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date/dayOfMonth/#/PointingToDeclaration/"></a><a href="day-of-month/">dayOfMonth</a></td>
+<td><a name="io.islandtime/Date/dayOfMonth/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="day-of-month/">dayOfMonth</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The day of the month.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/dayOfUnixEpoch/#/PointingToDeclaration/"></a><a href="day-of-unix-epoch/">dayOfUnixEpoch</a></td>
+<td><a name="io.islandtime/Date/dayOfUnixEpoch/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="day-of-unix-epoch/">dayOfUnixEpoch</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></code><br><br>The day of the Unix epoch.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/dayOfWeek/#/PointingToDeclaration/"></a><a href="day-of-week/">dayOfWeek</a></td>
+<td><a name="io.islandtime/Date/dayOfWeek/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="day-of-week/">dayOfWeek</a>: <a href="../-day-of-week/">DayOfWeek</a></code><br><br>The day of the week.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/dayOfYear/#/PointingToDeclaration/"></a><a href="day-of-year/">dayOfYear</a></td>
+<td><a name="io.islandtime/Date/dayOfYear/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="day-of-year/">dayOfYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The day of the year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/daysSinceUnixEpoch/#/PointingToDeclaration/"></a><a href="days-since-unix-epoch/">daysSinceUnixEpoch</a></td>
+<td><a name="io.islandtime/Date/daysSinceUnixEpoch/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="days-since-unix-epoch/">daysSinceUnixEpoch</a>: <a href="../../io.islandtime.measures/-long-days/">LongDays</a></code><br><br>The number of days away from the Unix epoch (<code>1970-01-01T00:00Z</code>) that this date falls.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/month/#/PointingToDeclaration/"></a><a href="month/">month</a></td>
+<td><a name="io.islandtime/Date/month/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="month/">month</a>: <a href="../-month/">Month</a></code><br><br>The month of the year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/monthNumber/#/PointingToDeclaration/"></a><a href="month-number/">monthNumber</a></td>
+<td><a name="io.islandtime/Date/monthNumber/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="month-number/">monthNumber</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The ISO month number, from 1-12.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Date/year/#/PointingToDeclaration/"></a><a href="year/">year</a></td>
+<td><a name="io.islandtime/Date/year/#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="year/">year</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The year.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="extensions">Extensions<a class="headerlink" href="#extensions" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime//at/io.islandtime.Date#io.islandtime.Time/PointingToDeclaration/"></a><a href="../at/">at</a></td>
+<td><a name="io.islandtime//at/io.islandtime.Date#io.islandtime.Time/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="./">Date</a>.<a href="../at/">at</a>(time: <a href="../-time/">Time</a>): <a href="../-date-time/">DateTime</a></code><br><br>Combines a <a href="./">Date</a> with a <a href="../-time/">Time</a> to create a <a href="../-date-time/">DateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="./">Date</a>.<a href="../at/">at</a>(offsetTime: <a href="../-offset-time/">OffsetTime</a>): <a href="../-offset-date-time/">OffsetDateTime</a></code><br><br>Combines a local date with a time and UTC offset to create an <a href="../-offset-date-time/">OffsetDateTime</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//atTime/io.islandtime.Date#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><a href="../at-time/">atTime</a></td>
+<td><a name="io.islandtime//atTime/io.islandtime.Date#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../at-time/">atTime</a>(hour: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, minute: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, second: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 0, nanosecond: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 0): <a href="../-date-time/">DateTime</a></code><br><br>Combines a <a href="./">Date</a> with a time to create a <a href="../-date-time/">DateTime</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//downTo/io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="../../io.islandtime.ranges/down-to/">downTo</a></td>
+<td><a name="io.islandtime.ranges//downTo/io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="./">Date</a>.<a href="../../io.islandtime.ranges/down-to/">downTo</a>(to: <a href="./">Date</a>): <a href="../../io.islandtime.ranges/-date-day-progression/">DateDayProgression</a></code><br><br>Creates a progression of dates in descending order.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../end-of-day/">endOfDay</a></td>
+<td><a name="io.islandtime//endOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../end-of-day/">endOfDay</a>: <a href="../-date-time/">DateTime</a></code><br><br>The <a href="../-date-time/">DateTime</a> at the last representable instant of the day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="../end-of-day-at/">endOfDayAt</a></td>
+<td><a name="io.islandtime//endOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../end-of-day-at/">endOfDayAt</a>(zone: <a href="../-time-zone/">TimeZone</a>): <a href="../-zoned-date-time/">ZonedDateTime</a></code><br><br>The <a href="../-zoned-date-time/">ZonedDateTime</a> at the last representable instant of the day in zone, taking into account any daylight savings transitions.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../end-of-month/">endOfMonth</a></td>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../end-of-month/">endOfMonth</a>: <a href="./">Date</a></code><br><br>The date at the end of the month that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../end-of-week/">endOfWeek</a></td>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../end-of-week/">endOfWeek</a>: <a href="./">Date</a></code><br><br>The date at the end of the ISO week that this date falls in.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../end-of-week/">endOfWeek</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="./">Date</a></code><br><br><code>fun <a href="./">Date</a>.<a href="../end-of-week/">endOfWeek</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="./">Date</a></code><br><br>The date at the end of the week that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../end-of-year/">endOfYear</a></td>
+<td><a name="io.islandtime//endOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../end-of-year/">endOfYear</a>: <a href="./">Date</a></code><br><br>The date at the end of the year that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../is-in-leap-year/">isInLeapYear</a></td>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../is-in-leap-year/">isInLeapYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date falls within a leap year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isLeapDay/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../is-leap-day/">isLeapDay</a></td>
+<td><a name="io.islandtime//isLeapDay/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../is-leap-day/">isLeapDay</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date is February 29.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../length-of-month/">lengthOfMonth</a></td>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../length-of-month/">lengthOfMonth</a>: <a href="../../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date's month in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../length-of-week-based-year/">lengthOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../length-of-week-based-year/">lengthOfWeekBasedYear</a>: <a href="../../io.islandtime.measures/-int-weeks/">IntWeeks</a></code><br><br>The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../length-of-year/">lengthOfYear</a></td>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../length-of-year/">lengthOfYear</a>: <a href="../../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date's year in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//next/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="../next/">next</a></td>
+<td><a name="io.islandtime//next/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../next/">next</a>(dayOfWeek: <a href="../-day-of-week/">DayOfWeek</a>): <a href="./">Date</a></code><br><br>The next date after this one that falls on dayOfWeek.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//nextOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="../next-or-same/">nextOrSame</a></td>
+<td><a name="io.islandtime//nextOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../next-or-same/">nextOrSame</a>(dayOfWeek: <a href="../-day-of-week/">DayOfWeek</a>): <a href="./">Date</a></code><br><br>The next date that falls on dayOfWeek, or this date if it falls on the same day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//previous/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="../previous/">previous</a></td>
+<td><a name="io.islandtime//previous/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../previous/">previous</a>(dayOfWeek: <a href="../-day-of-week/">DayOfWeek</a>): <a href="./">Date</a></code><br><br>The last date before this one that falls on dayOfWeek.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//previousOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="../previous-or-same/">previousOrSame</a></td>
+<td><a name="io.islandtime//previousOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../previous-or-same/">previousOrSame</a>(dayOfWeek: <a href="../-day-of-week/">DayOfWeek</a>): <a href="./">Date</a></code><br><br>The previous date that falls on dayOfWeek, or this date if it falls on the same day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../start-of-day/">startOfDay</a></td>
+<td><a name="io.islandtime//startOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../start-of-day/">startOfDay</a>: <a href="../-date-time/">DateTime</a></code><br><br>The <a href="../-date-time/">DateTime</a> at the start of the day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="../start-of-day-at/">startOfDayAt</a></td>
+<td><a name="io.islandtime//startOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../start-of-day-at/">startOfDayAt</a>(zone: <a href="../-time-zone/">TimeZone</a>): <a href="../-zoned-date-time/">ZonedDateTime</a></code><br><br>The <a href="../-zoned-date-time/">ZonedDateTime</a> at the start of the day in zone, taking into account any daylight savings transitions.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../start-of-month/">startOfMonth</a></td>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../start-of-month/">startOfMonth</a>: <a href="./">Date</a></code><br><br>The date at the start of the month that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../start-of-week/">startOfWeek</a></td>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../start-of-week/">startOfWeek</a>: <a href="./">Date</a></code><br><br>The date at the start of the ISO week that this date falls in.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../start-of-week/">startOfWeek</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="./">Date</a></code><br><br><code>fun <a href="./">Date</a>.<a href="../start-of-week/">startOfWeek</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="./">Date</a></code><br><br>The date at the start of the week that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../start-of-year/">startOfYear</a></td>
+<td><a name="io.islandtime//startOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../start-of-year/">startOfYear</a>: <a href="./">Date</a></code><br><br>The date at the start of the year that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.jvm//toJavaLocalDate/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../../io.islandtime.jvm/to-java-local-date/">toJavaLocalDate</a></td>
+<td><a name="io.islandtime.jvm//toJavaLocalDate/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-jvm source-set-tag">jvm</span></p><code>fun <a href="./#%5Bio.islandtime%2FDate%2F%2F%2FPointingToDeclaration%2F%5D%2FExtensions%2F813134569">Date</a>.<a href="../../io.islandtime.jvm/to-java-local-date/">toJavaLocalDate</a>(): <a href="https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html">LocalDate</a></code><br><br>Converts this date to an equivalent Java <code>LocalDate</code>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.darwin//toNSDateComponents/io.islandtime.Date#kotlin.Boolean/PointingToDeclaration/"></a><a href="../../io.islandtime.darwin/to-n-s-date-components/">toNSDateComponents</a></td>
+<td><a name="io.islandtime.darwin//toNSDateComponents/io.islandtime.Date#kotlin.Boolean/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-darwin source-set-tag">darwin</span></p><code>fun <a href="./#%5Bio.islandtime%2FDate%2F%2F%2FPointingToDeclaration%2F%5D%2FExtensions%2F519887857">Date</a>.<a href="../../io.islandtime.darwin/to-n-s-date-components/">toNSDateComponents</a>(includeCalendar: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a> = false): <ERROR CLASS></code><br><br>Converts this date to an equivalent <code>NSDateComponents</code> object.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toWeekDate/io.islandtime.Date#kotlin.Function3[kotlin.Int,kotlin.Int,kotlin.Int,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/"></a><a href="../to-week-date/">toWeekDate</a></td>
+<td><a name="io.islandtime//toWeekDate/io.islandtime.Date#kotlin.Function3[kotlin.Int,kotlin.Int,kotlin.Int,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline fun &lt;<a href="../to-week-date/">T</a>&gt; <a href="./">Date</a>.<a href="../to-week-date/">toWeekDate</a>(action: (year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) -&gt; <a href="../to-week-date/">T</a>): <a href="../to-week-date/">T</a></code><br><br>Converts this date to an ISO week date representation.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline fun &lt;<a href="../to-week-date/">T</a>&gt; <a href="./">Date</a>.<a href="../to-week-date/">toWeekDate</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>, action: (year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) -&gt; <a href="../to-week-date/">T</a>): <a href="../to-week-date/">T</a></code><br><br>Converts this date to a week date representation using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline fun &lt;<a href="../to-week-date/">T</a>&gt; <a href="./">Date</a>.<a href="../to-week-date/">toWeekDate</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>, action: (year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) -&gt; <a href="../to-week-date/">T</a>): <a href="../to-week-date/">T</a></code><br><br>Converts this date to a week date representation using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../to-year/">toYear</a></td>
+<td><a name="io.islandtime//toYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../to-year/">toYear</a>(): <a href="../-year/">Year</a></code><br><br>Returns this date with the precision reduced to the year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toYearMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../to-year-month/">toYearMonth</a></td>
+<td><a name="io.islandtime//toYearMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../to-year-month/">toYearMonth</a>(): <a href="../-year-month/">YearMonth</a></code><br><br>Returns this date with the precision reduced to the month.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//until/io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="../../io.islandtime.ranges/until/">until</a></td>
+<td><a name="io.islandtime.ranges//until/io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="./">Date</a>.<a href="../../io.islandtime.ranges/until/">until</a>(to: <a href="./">Date</a>): <a href="../../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br>Creates a <a href="../../io.islandtime.ranges/-date-range/">DateRange</a> containing all of the days from this date up to, but not including to.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//week/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../week/">week</a></td>
+<td><a name="io.islandtime//week/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../week/">week</a>: <a href="../../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br>The range defining the ISO week that this date falls within.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week/">week</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="../../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br><code>fun <a href="./">Date</a>.<a href="../week/">week</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="../../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br>The range defining the week that this date falls within.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../week-based-year/">weekBasedYear</a></td>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../week-based-year/">weekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-based-year/">weekBasedYear</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-based-year/">weekBasedYear</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year, calculated using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../week-of-month/">weekOfMonth</a></td>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../week-of-month/">weekOfMonth</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the ISO week definition.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-of-month/">weekOfMonth</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-of-month/">weekOfMonth</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the default week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../week-of-week-based-year/">weekOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../week-of-week-based-year/">weekOfWeekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-of-week-based-year/">weekOfWeekBasedYear</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number of the week-based year, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-of-week-based-year/">weekOfWeekBasedYear</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number of the week-based year, calculated using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="../week-of-year/">weekOfYear</a></td>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="./">Date</a>.<a href="../week-of-year/">weekOfYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the ISO week definition.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-of-year/">weekOfYear</a>(settings: <a href="../../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="./">Date</a>.<a href="../week-of-year/">weekOfYear</a>(locale: <a href="../../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the week definition associated with the provided locale.</td>
+</tr>
+</tbody>
+</table>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+    
+    <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+            <div class="md-footer-copyright">
+                
+                <div class="md-footer-copyright__highlight">
+                    Copyright &copy; 2020-2021 Erik Christensen
+                </div>
+                
+                powered by
+                <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+                and
+                <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+                    Material for MkDocs</a>
+                | Icons made by
+                <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+                from
+                <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            </div>
+            
+        </div>
+    </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.9b151c6a.min.js"></script>
+      
+    
+  </body>
+</html>

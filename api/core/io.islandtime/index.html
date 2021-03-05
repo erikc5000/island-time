@@ -1,0 +1,1200 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Island Time - A Kotlin Multiplatform library for working with dates and times">
+      
+      
+      
+        <meta name="author" content="Erik Christensen">
+      
+      
+        <link rel="canonical" href="https://islandtime.io/api/core/io.islandtime/">
+      
+      <link rel="shortcut icon" href="../../../assets/images/logo.svg">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.4">
+    
+    
+      
+        <title>io.islandtime - Island Time</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#00bdd6">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="cyan" data-md-color-accent="cyan">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#package-ioislandtime" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://islandtime.io" title="Island Time" class="md-header__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Island Time
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              io.islandtime
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://islandtime.io" title="Island Time" class="md-nav__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Island Time
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        The Basics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="The Basics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          The Basics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/dates-and-times/" class="md-nav__link">
+        Dates and Times
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/durations/" class="md-nav__link">
+        Durations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/intervals/" class="md-nav__link">
+        Ranges and Intervals
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/interop/" class="md-nav__link">
+        Interoperating with Platform Libraries
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/formatting/" class="md-nav__link">
+        Formatting
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/parsing/" class="md-nav__link">
+        Parsing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/clocks/" class="md-nav__link">
+        Clocks
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Advanced Topics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/custom-providers/" class="md-nav__link">
+        Custom Providers
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Extensions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Extensions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Extensions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/serialization/" class="md-nav__link">
+        Serialization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/parcelize/" class="md-nav__link">
+        Parcelize
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        API
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        core
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parcelize-extensions/" class="md-nav__link">
+        parcelize-extensions
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../serialization-extensions/" class="md-nav__link">
+        serialization-extensions
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/erikc5000/island-time/edit/master/docs/api/core/io.islandtime/index.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <p>//<a href="../">core</a>/<a href="./">io.islandtime</a></p>
+<h1 id="package-ioislandtime">Package io.islandtime<a class="headerlink" href="#package-ioislandtime" title="Permalink">&para;</a></h1>
+<p style="text-align: right"><span class="source-set-common source-set-tag">common</span> <span class="source-set-darwin source-set-tag">darwin</span> <span class="source-set-jvm source-set-tag">jvm</span></p>
+<p>Date-time primitives and core concepts, including classes such as <code>Date</code>, <code>Time</code>, <code>Instant</code>, and <code>ZonedDateTime</code>.</p>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a><a href="-date/">Date</a></td>
+<td><a name="io.islandtime/Date///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-date/">Date</a>(<b>year</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, <b>month</b>: <a href="-month/">Month</a>, <b>day</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-date/">Date</a>&gt; </code><br><br>A date in an ambiguous region.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/DateTime///PointingToDeclaration/"></a><a href="-date-time/">DateTime</a></td>
+<td><a name="io.islandtime/DateTime///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-date-time/">DateTime</a>(<b>date</b>: <a href="-date/">Date</a>, <b>time</b>: <a href="-time/">Time</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-date-time/">DateTime</a>&gt; </code><br><br>A date and time of day in an ambiguous region.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/DateTimeException///PointingToDeclaration/"></a><a href="-date-time-exception/">DateTimeException</a></td>
+<td><a name="io.islandtime/DateTimeException///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>open class <a href="-date-time-exception/">DateTimeException</a>(<b>message</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>?, <b>cause</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html">Throwable</a>?) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-exception/index.html">Exception</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/DayOfWeek///PointingToDeclaration/"></a><a href="-day-of-week/">DayOfWeek</a></td>
+<td><a name="io.islandtime/DayOfWeek///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>enum <a href="-day-of-week/">DayOfWeek</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a>&lt;<a href="-day-of-week/">DayOfWeek</a>&gt; </code><br><br>A day of the week.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Instant///PointingToDeclaration/"></a><a href="-instant/">Instant</a></td>
+<td><a name="io.islandtime/Instant///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-instant/">Instant</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-instant/">Instant</a>&gt; , <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-instant/">Instant</a>&gt; </code><br><br>An instant in time with nanosecond-precision.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/IslandTime///PointingToDeclaration/"></a><a href="-island-time/">IslandTime</a></td>
+<td><a name="io.islandtime/IslandTime///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>object <a href="-island-time/">IslandTime</a></code><br><br>Global configuration for Island Time.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Month///PointingToDeclaration/"></a><a href="-month/">Month</a></td>
+<td><a name="io.islandtime/Month///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>enum <a href="-month/">Month</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a>&lt;<a href="-month/">Month</a>&gt; </code><br><br>A month of the year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/OffsetConversionStrategy///PointingToDeclaration/"></a><a href="-offset-conversion-strategy/">OffsetConversionStrategy</a></td>
+<td><a name="io.islandtime/OffsetConversionStrategy///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>enum <a href="-offset-conversion-strategy/">OffsetConversionStrategy</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a>&lt;<a href="-offset-conversion-strategy/">OffsetConversionStrategy</a>&gt; </code><br><br>Strategy to use when converting a local date-time accompanied by a <a href="-utc-offset/">UtcOffset</a> to a date and time that are valid according to the rules of a <a href="-time-zone/">TimeZone</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/OffsetDateTime///PointingToDeclaration/"></a><a href="-offset-date-time/">OffsetDateTime</a></td>
+<td><a name="io.islandtime/OffsetDateTime///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-offset-date-time/">OffsetDateTime</a>(<b>dateTime</b>: <a href="-date-time/">DateTime</a>, <b>offset</b>: <a href="-utc-offset/">UtcOffset</a>) : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-offset-date-time/">OffsetDateTime</a>&gt; </code><br><br>A date and time of day with an offset from UTC.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/OffsetTime///PointingToDeclaration/"></a><a href="-offset-time/">OffsetTime</a></td>
+<td><a name="io.islandtime/OffsetTime///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-offset-time/">OffsetTime</a>(<b>time</b>: <a href="-time/">Time</a>, <b>offset</b>: <a href="-utc-offset/">UtcOffset</a>)</code><br><br>A time of day with an offset from UTC.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/PlatformInstant///PointingToDeclaration/"></a><a href="-platform-instant/">PlatformInstant</a></td>
+<td><a name="io.islandtime/PlatformInstant///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-platform-instant/">PlatformInstant</a></code><br><br>A platform-specific representation of an instant in time.<br><br><p style="text-align: right"><span class="source-set-darwin source-set-tag">darwin</span> <span class="source-set-jvm source-set-tag">jvm</span></p><p style="text-align: right"><span class="source-set-darwin source-set-tag">darwin</span></p><code>typealias <a href="-platform-instant/">PlatformInstant</a> = <ERROR CLASS></code><br><br><p style="text-align: right"><span class="source-set-jvm source-set-tag">jvm</span></p><code>typealias <a href="-platform-instant/">PlatformInstant</a> = <a href="https://docs.oracle.com/javase/8/docs/api/java/time/Instant.html">Instant</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Time///PointingToDeclaration/"></a><a href="-time/">Time</a></td>
+<td><a name="io.islandtime/Time///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-time/">Time</a>(<b>hour</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, <b>minute</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, <b>second</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, <b>nanosecond</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-time/">Time</a>&gt; </code><br><br>A time of day in an ambiguous region.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/TimeZone///PointingToDeclaration/"></a><a href="-time-zone/">TimeZone</a></td>
+<td><a name="io.islandtime/TimeZone///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>sealed class <a href="-time-zone/">TimeZone</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-time-zone/">TimeZone</a>&gt; </code><br><br>A time zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/UtcOffset///PointingToDeclaration/"></a><a href="-utc-offset/">UtcOffset</a></td>
+<td><a name="io.islandtime/UtcOffset///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-utc-offset/">UtcOffset</a>(<b>totalSeconds</b>: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-utc-offset/">UtcOffset</a>&gt; </code><br><br>The time shift between a local time and UTC.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/Year///PointingToDeclaration/"></a><a href="-year/">Year</a></td>
+<td><a name="io.islandtime/Year///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-year/">Year</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-year/">Year</a>&gt; </code><br><br>A year as defined by ISO-8601.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/YearMonth///PointingToDeclaration/"></a><a href="-year-month/">YearMonth</a></td>
+<td><a name="io.islandtime/YearMonth///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-year-month/">YearMonth</a>(<b>year</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, <b>month</b>: <a href="-month/">Month</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-year-month/">YearMonth</a>&gt; </code><br><br>A month in a particular year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime/ZonedDateTime///PointingToDeclaration/"></a><a href="-zoned-date-time/">ZonedDateTime</a></td>
+<td><a name="io.islandtime/ZonedDateTime///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-zoned-date-time/">ZonedDateTime</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-zoned-date-time/">ZonedDateTime</a>&gt; </code><br><br>A date and time of day in a particular region.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime//asTimeZone/io.islandtime.UtcOffset#/PointingToDeclaration/"></a><a href="as-time-zone/">asTimeZone</a></td>
+<td><a name="io.islandtime//asTimeZone/io.islandtime.UtcOffset#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-utc-offset/">UtcOffset</a>.<a href="as-time-zone/">asTimeZone</a>(): <a href="-time-zone/">TimeZone</a></code><br><br>Converts this <a href="-utc-offset/">UtcOffset</a> into a fixed-offset <a href="-time-zone/">TimeZone</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//asUtcOffset/io.islandtime.measures.IntHours#/PointingToDeclaration/"></a><a href="as-utc-offset/">asUtcOffset</a></td>
+<td><a name="io.islandtime//asUtcOffset/io.islandtime.measures.IntHours#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="../io.islandtime.measures/-int-hours/">IntHours</a>.<a href="as-utc-offset/">asUtcOffset</a>(): <a href="-utc-offset/">UtcOffset</a></code><br><br>Converts a duration of hours into a <a href="-utc-offset/">UtcOffset</a> of the same length.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>.<a href="as-utc-offset/">asUtcOffset</a>(): <a href="-utc-offset/">UtcOffset</a></code><br><br>Converts a duration of minutes into a <a href="-utc-offset/">UtcOffset</a> of the same length.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>.<a href="as-utc-offset/">asUtcOffset</a>(): <a href="-utc-offset/">UtcOffset</a></code><br><br>Converts a duration of seconds into a <a href="-utc-offset/">UtcOffset</a> of the same length.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//asZonedDateTime/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="as-zoned-date-time/">asZonedDateTime</a></td>
+<td><a name="io.islandtime//asZonedDateTime/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="as-zoned-date-time/">asZonedDateTime</a>(): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Converts this <a href="-offset-date-time/">OffsetDateTime</a> to an equivalent <a href="-zoned-date-time/">ZonedDateTime</a> using a fixed-offset time zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//at/io.islandtime.Date#io.islandtime.OffsetTime/PointingToDeclaration/"></a><a href="at/">at</a></td>
+<td><a name="io.islandtime//at/io.islandtime.Date#io.islandtime.OffsetTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date/">Date</a>.<a href="at/">at</a>(offsetTime: <a href="-offset-time/">OffsetTime</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>Combines a local date with a time and UTC offset to create an <a href="-offset-date-time/">OffsetDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date/">Date</a>.<a href="at/">at</a>(time: <a href="-time/">Time</a>): <a href="-date-time/">DateTime</a></code><br><br>Combines a <a href="-date/">Date</a> with a <a href="-time/">Time</a> to create a <a href="-date-time/">DateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-time/">DateTime</a>.<a href="at/">at</a>(zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Combines a local date and time with a time zone to create a <a href="-zoned-date-time/">ZonedDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-time/">DateTime</a>.<a href="at/">at</a>(offset: <a href="-utc-offset/">UtcOffset</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>Combines a local date and time with a UTC offset to create an <a href="-offset-date-time/">OffsetDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-instant/">Instant</a>.<a href="at/">at</a>(zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Combines an instant with a time zone to create a <a href="-zoned-date-time/">ZonedDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-instant/">Instant</a>.<a href="at/">at</a>(offset: <a href="-utc-offset/">UtcOffset</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>Combines an instant with a UTC offset to create an <a href="-offset-date-time/">OffsetDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-time/">Time</a>.<a href="at/">at</a>(offset: <a href="-utc-offset/">UtcOffset</a>): <a href="-offset-time/">OffsetTime</a></code><br><br>Combines a local time with a UTC offset to create an <a href="-offset-time/">OffsetTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-year/">Year</a>.<a href="at/">at</a>(month: <a href="-month/">Month</a>): <a href="-year-month/">YearMonth</a></code><br><br>Combines a year and month to create a <a href="-year-month/">YearMonth</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//atDay/io.islandtime.YearMonth#kotlin.Int/PointingToDeclaration/"></a><a href="at-day/">atDay</a></td>
+<td><a name="io.islandtime//atDay/io.islandtime.YearMonth#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-year-month/">YearMonth</a>.<a href="at-day/">atDay</a>(day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="-date/">Date</a></code><br><br>Combines a <a href="-year-month/">YearMonth</a> with a day of the month to create a <a href="-date/">Date</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//atMonth/io.islandtime.Year#kotlin.Int/PointingToDeclaration/"></a><a href="at-month/">atMonth</a></td>
+<td><a name="io.islandtime//atMonth/io.islandtime.Year#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-year/">Year</a>.<a href="at-month/">atMonth</a>(number: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="-year-month/">YearMonth</a></code><br><br>Combines a year and month number to create a <a href="-year-month/">YearMonth</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//atTime/io.islandtime.Date#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><a href="at-time/">atTime</a></td>
+<td><a name="io.islandtime//atTime/io.islandtime.Date#kotlin.Int#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="at-time/">atTime</a>(hour: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, minute: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, second: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 0, nanosecond: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> = 0): <a href="-date-time/">DateTime</a></code><br><br>Combines a <a href="-date/">Date</a> with a time to create a <a href="-date-time/">DateTime</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//Date/#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><a href="-date/">Date</a></td>
+<td><a name="io.islandtime//Date/#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, dayOfYear: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="-date/">Date</a></code><br><br>Creates a <a href="-date/">Date</a> from a year and day of year</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="end-of-day-at/">endOfDayAt</a></td>
+<td><a name="io.islandtime//endOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="end-of-day-at/">endOfDayAt</a>(zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The <a href="-zoned-date-time/">ZonedDateTime</a> at the last representable instant of the day in zone, taking into account any daylight savings transitions.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="end-of-week/">endOfWeek</a></td>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="end-of-week/">endOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-date/">Date</a></code><br><br><code>fun <a href="-date/">Date</a>.<a href="end-of-week/">endOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-date/">Date</a></code><br><br>The date at the end of the week that this date falls in.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="end-of-week/">endOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="end-of-week/">endOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="end-of-week/">endOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="end-of-week/">endOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="end-of-week/">endOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="end-of-week/">endOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the last representable instant of the week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//fromWeekDate/io.islandtime.Date.Companion#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><a href="from-week-date/">fromWeekDate</a></td>
+<td><a name="io.islandtime//fromWeekDate/io.islandtime.Date.Companion#kotlin.Int#kotlin.Int#kotlin.Int/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/-companion/">Date.Companion</a>.<a href="from-week-date/">fromWeekDate</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>): <a href="-date/">Date</a></code><br><br>Creates a <a href="-date/">Date</a> from an ISO week date.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/-companion/">Date.Companion</a>.<a href="from-week-date/">fromWeekDate</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-date/">Date</a></code><br><br>Creates a <a href="-date/">Date</a> from a week date representation using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/-companion/">Date.Companion</a>.<a href="from-week-date/">fromWeekDate</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-date/">Date</a></code><br><br>Creates a <a href="-date/">Date</a> from a week date representation using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//Instant/#io.islandtime.measures.LongMilliseconds/PointingToDeclaration/"></a><a href="-instant/">Instant</a></td>
+<td><a name="io.islandtime//Instant/#io.islandtime.measures.LongMilliseconds/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>(millisecondsSinceUnixEpoch: <a href="../io.islandtime.measures/-long-milliseconds/">LongMilliseconds</a>): <a href="-instant/">Instant</a></code><br><br>Creates the <a href="-instant/">Instant</a> represented by a number of milliseconds relative to the Unix epoch of 1970-01-01T00:00Z.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>(secondsSinceUnixEpoch: <a href="../io.islandtime.measures/-long-seconds/">LongSeconds</a>): <a href="-instant/">Instant</a></code><br><br>Creates the <a href="-instant/">Instant</a> represented by a number of seconds relative to the Unix epoch of 1970-01-01T00:00Z.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>(secondsSinceUnixEpoch: <a href="../io.islandtime.measures/-long-seconds/">LongSeconds</a>, nanosecondAdjustment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-instant/">Instant</a></code><br><br><code>fun <a href="-instant/">Instant</a>(secondsSinceUnixEpoch: <a href="../io.islandtime.measures/-long-seconds/">LongSeconds</a>, nanosecondAdjustment: <a href="../io.islandtime.measures/-long-nanoseconds/">LongNanoseconds</a>): <a href="-instant/">Instant</a></code><br><br>Creates the <a href="-instant/">Instant</a> represented by a number of seconds and additional nanoseconds relative to the Unix epoch of 1970-01-01T00:00Z.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//next/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="next/">next</a></td>
+<td><a name="io.islandtime//next/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="next/">next</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date/">Date</a></code><br><br>The next date after this one that falls on dayOfWeek.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="next/">next</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="next/">next</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="next/">next</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The next date-time after this one that falls on dayOfWeek.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//nextOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="next-or-same/">nextOrSame</a></td>
+<td><a name="io.islandtime//nextOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="next-or-same/">nextOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date/">Date</a></code><br><br>The next date that falls on dayOfWeek, or this date if it falls on the same day.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="next-or-same/">nextOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="next-or-same/">nextOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="next-or-same/">nextOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The next date-time that falls on dayOfWeek, or this date-time if it falls on the same day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//previous/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="previous/">previous</a></td>
+<td><a name="io.islandtime//previous/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="previous/">previous</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date/">Date</a></code><br><br>The last date before this one that falls on dayOfWeek.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="previous/">previous</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="previous/">previous</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="previous/">previous</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The last date-time before this one that falls on dayOfWeek.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//previousOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><a href="previous-or-same/">previousOrSame</a></td>
+<td><a name="io.islandtime//previousOrSame/io.islandtime.Date#io.islandtime.DayOfWeek/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="previous-or-same/">previousOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date/">Date</a></code><br><br>The previous date that falls on dayOfWeek, or this date if it falls on the same day.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="previous-or-same/">previousOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="previous-or-same/">previousOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="previous-or-same/">previousOrSame</a>(dayOfWeek: <a href="-day-of-week/">DayOfWeek</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The previous date-time that falls on dayOfWeek, or this date-time if it falls on the same day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//roundedDownTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><a href="rounded-down-to/">roundedDownTo</a></td>
+<td><a name="io.islandtime//roundedDownTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to/">roundedDownTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to/">roundedDownTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to/">roundedDownTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to/">roundedDownTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to/">roundedDownTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to/">roundedDownTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to match the precision of a given unit.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//roundedDownToNearest/io.islandtime.DateTime#io.islandtime.measures.IntHours/PointingToDeclaration/"></a><a href="rounded-down-to-nearest/">roundedDownToNearest</a></td>
+<td><a name="io.islandtime//roundedDownToNearest/io.islandtime.DateTime#io.islandtime.measures.IntHours/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to the nearest second that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to the nearest second that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-down-to-nearest/">roundedDownToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to the nearest second that satisfies the increment.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//roundedTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><a href="rounded-to/">roundedTo</a></td>
+<td><a name="io.islandtime//roundedTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to/">roundedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to/">roundedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to/">roundedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to/">roundedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to/">roundedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to/">roundedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to match the precision of a given unit.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//roundedToNearest/io.islandtime.DateTime#io.islandtime.measures.IntHours/PointingToDeclaration/"></a><a href="rounded-to-nearest/">roundedToNearest</a></td>
+<td><a name="io.islandtime//roundedToNearest/io.islandtime.DateTime#io.islandtime.measures.IntHours/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded to the nearest second that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded to the nearest second that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-to-nearest/">roundedToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded to the nearest second that satisfies the increment.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//roundedUpTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><a href="rounded-up-to/">roundedUpTo</a></td>
+<td><a name="io.islandtime//roundedUpTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to/">roundedUpTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to/">roundedUpTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to/">roundedUpTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to/">roundedUpTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to/">roundedUpTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to/">roundedUpTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to match the precision of a given unit.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//roundedUpToNearest/io.islandtime.DateTime#io.islandtime.measures.IntHours/PointingToDeclaration/"></a><a href="rounded-up-to-nearest/">roundedUpToNearest</a></td>
+<td><a name="io.islandtime//roundedUpToNearest/io.islandtime.DateTime#io.islandtime.measures.IntHours/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded up to the nearest second that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded up to the nearest second that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to the nearest hour that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to the nearest microsecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to the nearest millisecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to the nearest minute that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to the nearest nanosecond that satisfies the increment.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="rounded-up-to-nearest/">roundedUpToNearest</a>(increment: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded up to the nearest second that satisfies the increment.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="start-of-day-at/">startOfDayAt</a></td>
+<td><a name="io.islandtime//startOfDayAt/io.islandtime.Date#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="start-of-day-at/">startOfDayAt</a>(zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The <a href="-zoned-date-time/">ZonedDateTime</a> at the start of the day in zone, taking into account any daylight savings transitions.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="start-of-week/">startOfWeek</a></td>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="start-of-week/">startOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-date/">Date</a></code><br><br><code>fun <a href="-date/">Date</a>.<a href="start-of-week/">startOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-date/">Date</a></code><br><br>The date at the start of the week that this date falls in.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="start-of-week/">startOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="start-of-week/">startOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="start-of-week/">startOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="start-of-week/">startOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="start-of-week/">startOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="start-of-week/">startOfWeek</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the first instant of the week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//TimeZone/#kotlin.String/PointingToDeclaration/"></a><a href="-time-zone/">TimeZone</a></td>
+<td><a name="io.islandtime//TimeZone/#kotlin.String/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-time-zone/">TimeZone</a>(id: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>): <a href="-time-zone/">TimeZone</a></code><br><br>Creates a <a href="-time-zone/">TimeZone</a> from an identifier.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toDate/kotlin.String#/PointingToDeclaration/"></a><a href="to-date/">toDate</a></td>
+<td><a name="io.islandtime//toDate/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date/">toDate</a>(): <a href="-date/">Date</a></code><br><br>Converts a string to a <a href="-date/">Date</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date/">toDate</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-date/">Date</a></code><br><br>Converts a string to a <a href="-date/">Date</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toDateAt/io.islandtime.Instant#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="to-date-at/">toDateAt</a></td>
+<td><a name="io.islandtime//toDateAt/io.islandtime.Instant#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="to-date-at/">toDateAt</a>(zone: <a href="-time-zone/">TimeZone</a>): <a href="-date/">Date</a></code><br><br>Converts this instant to the corresponding <a href="-date/">Date</a> in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="to-date-at/">toDateAt</a>(offset: <a href="-utc-offset/">UtcOffset</a>): <a href="-date/">Date</a></code><br><br>Converts this instant to the corresponding <a href="-date/">Date</a> at offset.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toDateTime/kotlin.String#/PointingToDeclaration/"></a><a href="to-date-time/">toDateTime</a></td>
+<td><a name="io.islandtime//toDateTime/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date-time/">toDateTime</a>(): <a href="-date-time/">DateTime</a></code><br><br>Convert a string to a <a href="-date-time/">DateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date-time/">toDateTime</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-date-time/">DateTime</a></code><br><br>Converts a string to a <a href="-date-time/">DateTime</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toDateTimeAt/io.islandtime.Instant#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="to-date-time-at/">toDateTimeAt</a></td>
+<td><a name="io.islandtime//toDateTimeAt/io.islandtime.Instant#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="to-date-time-at/">toDateTimeAt</a>(zone: <a href="-time-zone/">TimeZone</a>): <a href="-date-time/">DateTime</a></code><br><br>Converts this instant to the corresponding <a href="-date-time/">DateTime</a> in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="to-date-time-at/">toDateTimeAt</a>(offset: <a href="-utc-offset/">UtcOffset</a>): <a href="-date-time/">DateTime</a></code><br><br>Converts this instant to the corresponding <a href="-date-time/">DateTime</a> at offset.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toDayOfWeek/kotlin.Int#/PointingToDeclaration/"></a><a href="to-day-of-week/">toDayOfWeek</a></td>
+<td><a name="io.islandtime//toDayOfWeek/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="to-day-of-week/">toDayOfWeek</a>(): <a href="-day-of-week/">DayOfWeek</a></code><br><br>Converts an ISO day of week number to a <a href="-day-of-week/">DayOfWeek</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="to-day-of-week/">toDayOfWeek</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="-day-of-week/">DayOfWeek</a></code><br><br>Converts a day of week number (1-7) to a <a href="-day-of-week/">DayOfWeek</a> using the week definition provided by settings.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toInstant/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="to-instant/">toInstant</a></td>
+<td><a name="io.islandtime//toInstant/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="to-instant/">toInstant</a>(): <a href="-instant/">Instant</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="to-instant/">toInstant</a>(): <a href="-instant/">Instant</a></code><br><br>Converts this date-time to an <a href="-instant/">Instant</a> representing the same time point.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-instant/">toInstant</a>(): <a href="-instant/">Instant</a></code><br><br>Converts a string to an <a href="-instant/">Instant</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-instant/">toInstant</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-instant/">Instant</a></code><br><br>Converts a string to an <a href="-instant/">Instant</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toInstantAt/io.islandtime.DateTime#io.islandtime.UtcOffset/PointingToDeclaration/"></a><a href="to-instant-at/">toInstantAt</a></td>
+<td><a name="io.islandtime//toInstantAt/io.islandtime.DateTime#io.islandtime.UtcOffset/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="to-instant-at/">toInstantAt</a>(offset: <a href="-utc-offset/">UtcOffset</a>): <a href="-instant/">Instant</a></code><br><br>Converts this date-time to the corresponding <a href="-instant/">Instant</a> at offset.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toMonth/kotlin.Int#/PointingToDeclaration/"></a><a href="to-month/">toMonth</a></td>
+<td><a name="io.islandtime//toMonth/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="to-month/">toMonth</a>(): <a href="-month/">Month</a></code><br><br>Converts an ISO month number, from 1-12, to a <a href="-month/">Month</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toOffsetDateTime/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="to-offset-date-time/">toOffsetDateTime</a></td>
+<td><a name="io.islandtime//toOffsetDateTime/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="to-offset-date-time/">toOffsetDateTime</a>(): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>Returns the combined date, time, and UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-offset-date-time/">toOffsetDateTime</a>(): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>Converts a string to an <a href="-offset-date-time/">OffsetDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-offset-date-time/">toOffsetDateTime</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>Converts a string to an <a href="-offset-date-time/">OffsetDateTime</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toOffsetTime/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="to-offset-time/">toOffsetTime</a></td>
+<td><a name="io.islandtime//toOffsetTime/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="to-offset-time/">toOffsetTime</a>(): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="to-offset-time/">toOffsetTime</a>(): <a href="-offset-time/">OffsetTime</a></code><br><br>Returns the combined time and UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-offset-time/">toOffsetTime</a>(): <a href="-offset-time/">OffsetTime</a></code><br><br>Converts a string to an <a href="-offset-time/">OffsetTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-offset-time/">toOffsetTime</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-offset-time/">OffsetTime</a></code><br><br>Converts a string to an <a href="-offset-time/">OffsetTime</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toTime/kotlin.String#/PointingToDeclaration/"></a><a href="to-time/">toTime</a></td>
+<td><a name="io.islandtime//toTime/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-time/">toTime</a>(): <a href="-time/">Time</a></code><br><br>Converts a string to a <a href="-time/">Time</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-time/">toTime</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-time/">Time</a></code><br><br>Converts a string to a <a href="-time/">Time</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toUtcOffset/kotlin.String#/PointingToDeclaration/"></a><a href="to-utc-offset/">toUtcOffset</a></td>
+<td><a name="io.islandtime//toUtcOffset/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-utc-offset/">toUtcOffset</a>(): <a href="-utc-offset/">UtcOffset</a></code><br><br>Converts a string to a <a href="-utc-offset/">UtcOffset</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-utc-offset/">toUtcOffset</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-utc-offset/">UtcOffset</a></code><br><br>Converts a string to a <a href="-utc-offset/">UtcOffset</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toWeekDate/io.islandtime.Date#kotlin.Function3[kotlin.Int,kotlin.Int,kotlin.Int,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/"></a><a href="to-week-date/">toWeekDate</a></td>
+<td><a name="io.islandtime//toWeekDate/io.islandtime.Date#kotlin.Function3[kotlin.Int,kotlin.Int,kotlin.Int,TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline fun &lt;<a href="to-week-date/">T</a>&gt; <a href="-date/">Date</a>.<a href="to-week-date/">toWeekDate</a>(action: (year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) -&gt; <a href="to-week-date/">T</a>): <a href="to-week-date/">T</a></code><br><br>Converts this date to an ISO week date representation.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline fun &lt;<a href="to-week-date/">T</a>&gt; <a href="-date/">Date</a>.<a href="to-week-date/">toWeekDate</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>, action: (year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) -&gt; <a href="to-week-date/">T</a>): <a href="to-week-date/">T</a></code><br><br>Converts this date to a week date representation using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline fun &lt;<a href="to-week-date/">T</a>&gt; <a href="-date/">Date</a>.<a href="to-week-date/">toWeekDate</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>, action: (year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, week: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) -&gt; <a href="to-week-date/">T</a>): <a href="to-week-date/">T</a></code><br><br>Converts this date to a week date representation using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="to-year/">toYear</a></td>
+<td><a name="io.islandtime//toYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="to-year/">toYear</a>(): <a href="-year/">Year</a></code><br><br>Returns this date with the precision reduced to the year.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="to-year/">toYear</a>(): <a href="-year/">Year</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="to-year/">toYear</a>(): <a href="-year/">Year</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="to-year/">toYear</a>(): <a href="-year/">Year</a></code><br><br>Returns this date-time with the precision reduced to the year.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-year-month/">YearMonth</a>.<a href="to-year/">toYear</a>(): <a href="-year/">Year</a></code><br><br>Returns this year-month with the precision reduced to the year.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-year/">toYear</a>(): <a href="-year/">Year</a></code><br><br>Converts a string to a <a href="-year/">Year</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-year/">toYear</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-year/">Year</a></code><br><br>Converts a string to a <a href="-year/">Year</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toYearMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="to-year-month/">toYearMonth</a></td>
+<td><a name="io.islandtime//toYearMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="to-year-month/">toYearMonth</a>(): <a href="-year-month/">YearMonth</a></code><br><br>Returns this date with the precision reduced to the month.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="to-year-month/">toYearMonth</a>(): <a href="-year-month/">YearMonth</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="to-year-month/">toYearMonth</a>(): <a href="-year-month/">YearMonth</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="to-year-month/">toYearMonth</a>(): <a href="-year-month/">YearMonth</a></code><br><br>Returns this date-time with the precision reduced to the month.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-year-month/">toYearMonth</a>(): <a href="-year-month/">YearMonth</a></code><br><br>Converts a string to a <a href="-year-month/">YearMonth</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-year-month/">toYearMonth</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-year-month/">YearMonth</a></code><br><br>Converts a string to a <a href="-year-month/">YearMonth</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//toZonedDateTime/kotlin.String#/PointingToDeclaration/"></a><a href="to-zoned-date-time/">toZonedDateTime</a></td>
+<td><a name="io.islandtime//toZonedDateTime/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-zoned-date-time/">toZonedDateTime</a>(): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Converts a string to a <a href="-zoned-date-time/">ZonedDateTime</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="to-zoned-date-time/">toZonedDateTime</a>(zone: <a href="-time-zone/">TimeZone</a>, strategy: <a href="-offset-conversion-strategy/">OffsetConversionStrategy</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Converts this <a href="-offset-date-time/">OffsetDateTime</a> to a <a href="-zoned-date-time/">ZonedDateTime</a> using the specified strategy to adjust it to a valid date, time, and offset in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-zoned-date-time/">toZonedDateTime</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Converts a string to a <a href="-zoned-date-time/">ZonedDateTime</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//truncatedTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><a href="truncated-to/">truncatedTo</a></td>
+<td><a name="io.islandtime//truncatedTo/io.islandtime.DateTime#io.islandtime.measures.TimeUnit/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="truncated-to/">truncatedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-date-time/">DateTime</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="truncated-to/">truncatedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="truncated-to/">truncatedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns this date-time, rounded down to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant/">Instant</a>.<a href="truncated-to/">truncatedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-instant/">Instant</a></code><br><br>Returns this instant, rounded down to match the precision of a given unit.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-time/">OffsetTime</a>.<a href="truncated-to/">truncatedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-offset-time/">OffsetTime</a></code><br><br><code>fun <a href="-time/">Time</a>.<a href="truncated-to/">truncatedTo</a>(unit: <a href="../io.islandtime.measures/-time-unit/">TimeUnit</a>): <a href="-time/">Time</a></code><br><br>Returns this time, rounded down to match the precision of a given unit.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//UtcOffset/#io.islandtime.measures.IntHours#io.islandtime.measures.IntMinutes#io.islandtime.measures.IntSeconds/PointingToDeclaration/"></a><a href="-utc-offset/">UtcOffset</a></td>
+<td><a name="io.islandtime//UtcOffset/#io.islandtime.measures.IntHours#io.islandtime.measures.IntMinutes#io.islandtime.measures.IntSeconds/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-utc-offset/">UtcOffset</a>(hours: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>, minutes: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a> = 0.minutes, seconds: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a> = 0.seconds): <a href="-utc-offset/">UtcOffset</a></code><br><br>Creates a UTC offset of hours, minutes, and seconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//week/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="week/">week</a></td>
+<td><a name="io.islandtime//week/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week/">week</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br><code>fun <a href="-date/">Date</a>.<a href="week/">week</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br>The range defining the week that this date falls within.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time/">DateTime</a>.<a href="week/">week</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="../io.islandtime.ranges/-date-time-interval/">DateTimeInterval</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week/">week</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="../io.islandtime.ranges/-date-time-interval/">DateTimeInterval</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week/">week</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="../io.islandtime.ranges/-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week/">week</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="../io.islandtime.ranges/-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week/">week</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="../io.islandtime.ranges/-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week/">week</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="../io.islandtime.ranges/-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>The interval defining the week that this date-time falls within.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="week-based-year/">weekBasedYear</a></td>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-based-year/">weekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-based-year/">weekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-based-year/">weekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-based-year/">weekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-based-year/">weekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-based-year/">weekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-based-year/">weekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-based-year/">weekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year, calculated using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="week-of-month/">weekOfMonth</a></td>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-of-month/">weekOfMonth</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-of-month/">weekOfMonth</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-month/">weekOfMonth</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-month/">weekOfMonth</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-of-month/">weekOfMonth</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-of-month/">weekOfMonth</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-month/">weekOfMonth</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-month/">weekOfMonth</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the default week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="week-of-week-based-year/">weekOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number of the week-based year, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number of the week-based year, calculated using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><a href="week-of-year/">weekOfYear</a></td>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.Date#io.islandtime.calendar.WeekSettings/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-of-year/">weekOfYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-of-year/">weekOfYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-year/">weekOfYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-year/">weekOfYear</a>(settings: <a href="../io.islandtime.calendar/-week-settings/">WeekSettings</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the week definition in settings.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date/">Date</a>.<a href="week-of-year/">weekOfYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-date-time/">DateTime</a>.<a href="week-of-year/">weekOfYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-year/">weekOfYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-year/">weekOfYear</a>(locale: <a href="../io.islandtime.locale/-locale/">Locale</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the week definition associated with the provided locale.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//ZonedDateTime/#io.islandtime.DateTime#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="-zoned-date-time/">ZonedDateTime</a></td>
+<td><a name="io.islandtime//ZonedDateTime/#io.islandtime.DateTime#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>(dateTime: <a href="-date-time/">DateTime</a>, zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>(date: <a href="-date/">Date</a>, time: <a href="-time/">Time</a>, zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, dayOfYear: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, hour: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, minute: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, second: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, nanosecond: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, month: <a href="-month/">Month</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, hour: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, minute: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, second: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, nanosecond: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br><code>fun <a href="-zoned-date-time/">ZonedDateTime</a>(year: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, monthNumber: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, day: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, hour: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, minute: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, second: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, nanosecond: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>, zone: <a href="-time-zone/">TimeZone</a>): <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>Creates a <a href="-zoned-date-time/">ZonedDateTime</a> from a local date and time.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime//endOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><a href="end-of-day/">endOfDay</a></td>
+<td><a name="io.islandtime//endOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="end-of-day/">endOfDay</a>: <a href="-date-time/">DateTime</a></code><br><br>The <a href="-date-time/">DateTime</a> at the last representable instant of the day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="end-of-month/">endOfMonth</a></td>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="end-of-month/">endOfMonth</a>: <a href="-date/">Date</a></code><br><br>The date at the end of the month that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="end-of-month/">endOfMonth</a></td>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="end-of-month/">endOfMonth</a>: <a href="-date-time/">DateTime</a></code><br><br>The date-time at the last representable instant of the month that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="end-of-month/">endOfMonth</a></td>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="end-of-month/">endOfMonth</a>: <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>The date-time at the last representable instant of the month that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="end-of-month/">endOfMonth</a></td>
+<td><a name="io.islandtime//endOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="end-of-month/">endOfMonth</a>: <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the last representable instant of the month that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><a href="end-of-week/">endOfWeek</a></td>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="end-of-week/">endOfWeek</a>: <a href="-date/">Date</a></code><br><br>The date at the end of the ISO week that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="end-of-week/">endOfWeek</a></td>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="end-of-week/">endOfWeek</a>: <a href="-date-time/">DateTime</a></code><br><br>The date-time at the last representable instant of the ISO week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="end-of-week/">endOfWeek</a></td>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="end-of-week/">endOfWeek</a>: <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>The date-time at the last representable instant of the ISO week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="end-of-week/">endOfWeek</a></td>
+<td><a name="io.islandtime//endOfWeek/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="end-of-week/">endOfWeek</a>: <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the last representable instant of the ISO week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="end-of-year/">endOfYear</a></td>
+<td><a name="io.islandtime//endOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="end-of-year/">endOfYear</a>: <a href="-date/">Date</a></code><br><br>The date at the end of the year that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="end-of-year/">endOfYear</a></td>
+<td><a name="io.islandtime//endOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="end-of-year/">endOfYear</a>: <a href="-date-time/">DateTime</a></code><br><br>The date-time at the last representable instant of the year that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="end-of-year/">endOfYear</a></td>
+<td><a name="io.islandtime//endOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="end-of-year/">endOfYear</a>: <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>The date-time at the last representable instant of the year that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//endOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="end-of-year/">endOfYear</a></td>
+<td><a name="io.islandtime//endOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="end-of-year/">endOfYear</a>: <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the last representable instant of the year that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapDay/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="is-in-leap-day/">isInLeapDay</a></td>
+<td><a name="io.islandtime//isInLeapDay/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="is-in-leap-day/">isInLeapDay</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date-time falls within February 29.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapDay/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="is-in-leap-day/">isInLeapDay</a></td>
+<td><a name="io.islandtime//isInLeapDay/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="is-in-leap-day/">isInLeapDay</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date-time falls within February 29.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapDay/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="is-in-leap-day/">isInLeapDay</a></td>
+<td><a name="io.islandtime//isInLeapDay/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="is-in-leap-day/">isInLeapDay</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date-time falls within February 29.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="is-in-leap-year/">isInLeapYear</a></td>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="is-in-leap-year/">isInLeapYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date falls within a leap year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="is-in-leap-year/">isInLeapYear</a></td>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="is-in-leap-year/">isInLeapYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date-time falls within a leap year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="is-in-leap-year/">isInLeapYear</a></td>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="is-in-leap-year/">isInLeapYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date-time falls within a leap year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="is-in-leap-year/">isInLeapYear</a></td>
+<td><a name="io.islandtime//isInLeapYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="is-in-leap-year/">isInLeapYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date-time falls within a leap year.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//isLeapDay/io.islandtime.Date#/PointingToDeclaration/"></a><a href="is-leap-day/">isLeapDay</a></td>
+<td><a name="io.islandtime//isLeapDay/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="is-leap-day/">isLeapDay</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this date is February 29.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="length-of-month/">lengthOfMonth</a></td>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="length-of-month/">lengthOfMonth</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date's month in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="length-of-month/">lengthOfMonth</a></td>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="length-of-month/">lengthOfMonth</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date-time's month in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="length-of-month/">lengthOfMonth</a></td>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="length-of-month/">lengthOfMonth</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date-time's month in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="length-of-month/">lengthOfMonth</a></td>
+<td><a name="io.islandtime//lengthOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="length-of-month/">lengthOfMonth</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date-time's month in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="length-of-week-based-year/">lengthOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="length-of-week-based-year/">lengthOfWeekBasedYear</a>: <a href="../io.islandtime.measures/-int-weeks/">IntWeeks</a></code><br><br>The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="length-of-week-based-year/">lengthOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="length-of-week-based-year/">lengthOfWeekBasedYear</a>: <a href="../io.islandtime.measures/-int-weeks/">IntWeeks</a></code><br><br>The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="length-of-week-based-year/">lengthOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="length-of-week-based-year/">lengthOfWeekBasedYear</a>: <a href="../io.islandtime.measures/-int-weeks/">IntWeeks</a></code><br><br>The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="length-of-week-based-year/">lengthOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//lengthOfWeekBasedYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="length-of-week-based-year/">lengthOfWeekBasedYear</a>: <a href="../io.islandtime.measures/-int-weeks/">IntWeeks</a></code><br><br>The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="length-of-year/">lengthOfYear</a></td>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="length-of-year/">lengthOfYear</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date's year in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="length-of-year/">lengthOfYear</a></td>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="length-of-year/">lengthOfYear</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date-time's year in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="length-of-year/">lengthOfYear</a></td>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="length-of-year/">lengthOfYear</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date-time's year in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="length-of-year/">lengthOfYear</a></td>
+<td><a name="io.islandtime//lengthOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="length-of-year/">lengthOfYear</a>: <a href="../io.islandtime.measures/-int-days/">IntDays</a></code><br><br>The length of this date-time's year in days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><a href="start-of-day/">startOfDay</a></td>
+<td><a name="io.islandtime//startOfDay/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="start-of-day/">startOfDay</a>: <a href="-date-time/">DateTime</a></code><br><br>The <a href="-date-time/">DateTime</a> at the start of the day.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="start-of-month/">startOfMonth</a></td>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="start-of-month/">startOfMonth</a>: <a href="-date/">Date</a></code><br><br>The date at the start of the month that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="start-of-month/">startOfMonth</a></td>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="start-of-month/">startOfMonth</a>: <a href="-date-time/">DateTime</a></code><br><br>The date-time at the first instant of the month that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="start-of-month/">startOfMonth</a></td>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="start-of-month/">startOfMonth</a>: <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>The date-time at the first instant of the month that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="start-of-month/">startOfMonth</a></td>
+<td><a name="io.islandtime//startOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="start-of-month/">startOfMonth</a>: <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the first instant of the month that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><a href="start-of-week/">startOfWeek</a></td>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="start-of-week/">startOfWeek</a>: <a href="-date/">Date</a></code><br><br>The date at the start of the ISO week that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="start-of-week/">startOfWeek</a></td>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="start-of-week/">startOfWeek</a>: <a href="-date-time/">DateTime</a></code><br><br>The date-time at the first instant of the ISO week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="start-of-week/">startOfWeek</a></td>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="start-of-week/">startOfWeek</a>: <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>The date-time at the first instant of the ISO week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="start-of-week/">startOfWeek</a></td>
+<td><a name="io.islandtime//startOfWeek/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="start-of-week/">startOfWeek</a>: <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the first instant of the ISO week that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="start-of-year/">startOfYear</a></td>
+<td><a name="io.islandtime//startOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="start-of-year/">startOfYear</a>: <a href="-date/">Date</a></code><br><br>The date at the start of the year that this date falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="start-of-year/">startOfYear</a></td>
+<td><a name="io.islandtime//startOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="start-of-year/">startOfYear</a>: <a href="-date-time/">DateTime</a></code><br><br>The date-time at the first instant of the year that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="start-of-year/">startOfYear</a></td>
+<td><a name="io.islandtime//startOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="start-of-year/">startOfYear</a>: <a href="-offset-date-time/">OffsetDateTime</a></code><br><br>The date-time at the first instant of the year that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//startOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="start-of-year/">startOfYear</a></td>
+<td><a name="io.islandtime//startOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="start-of-year/">startOfYear</a>: <a href="-zoned-date-time/">ZonedDateTime</a></code><br><br>The date-time at the first instant of the year that this date-time falls in.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//week/io.islandtime.Date#/PointingToDeclaration/"></a><a href="week/">week</a></td>
+<td><a name="io.islandtime//week/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="week/">week</a>: <a href="../io.islandtime.ranges/-date-range/">DateRange</a></code><br><br>The range defining the ISO week that this date falls within.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//week/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="week/">week</a></td>
+<td><a name="io.islandtime//week/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="week/">week</a>: <a href="../io.islandtime.ranges/-date-time-interval/">DateTimeInterval</a></code><br><br>The interval defining the ISO week that this date-time falls within.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//week/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="week/">week</a></td>
+<td><a name="io.islandtime//week/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week/">week</a>: <a href="../io.islandtime.ranges/-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br>The interval defining the ISO week that this date-time falls within.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//week/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="week/">week</a></td>
+<td><a name="io.islandtime//week/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week/">week</a>: <a href="../io.islandtime.ranges/-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>The interval defining the ISO week that this date-time falls within.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="week-based-year/">weekBasedYear</a></td>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="week-based-year/">weekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="week-based-year/">weekBasedYear</a></td>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="week-based-year/">weekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="week-based-year/">weekBasedYear</a></td>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-based-year/">weekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="week-based-year/">weekBasedYear</a></td>
+<td><a name="io.islandtime//weekBasedYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-based-year/">weekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week-based year used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><a href="week-of-month/">weekOfMonth</a></td>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="week-of-month/">weekOfMonth</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="week-of-month/">weekOfMonth</a></td>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="week-of-month/">weekOfMonth</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="week-of-month/">weekOfMonth</a></td>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-month/">weekOfMonth</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="week-of-month/">weekOfMonth</a></td>
+<td><a name="io.islandtime//weekOfMonth/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-month/">weekOfMonth</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the month, from 0-6, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="week-of-week-based-year/">weekOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="week-of-week-based-year/">weekOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="week-of-week-based-year/">weekOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="week-of-week-based-year/">weekOfWeekBasedYear</a></td>
+<td><a name="io.islandtime//weekOfWeekBasedYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-week-based-year/">weekOfWeekBasedYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week number used in the ISO <a href="https://en.wikipedia.org/wiki/ISO_week_date">week date system</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><a href="week-of-year/">weekOfYear</a></td>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.Date#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date/">Date</a>.<a href="week-of-year/">weekOfYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><a href="week-of-year/">weekOfYear</a></td>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.DateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-date-time/">DateTime</a>.<a href="week-of-year/">weekOfYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><a href="week-of-year/">weekOfYear</a></td>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.OffsetDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-offset-date-time/">OffsetDateTime</a>.<a href="week-of-year/">weekOfYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the ISO week definition.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><a href="week-of-year/">weekOfYear</a></td>
+<td><a name="io.islandtime//weekOfYear/io.islandtime.ZonedDateTime#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="-zoned-date-time/">ZonedDateTime</a>.<a href="week-of-year/">weekOfYear</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></code><br><br>The week of the year, calculated using the ISO week definition.</td>
+</tr>
+</tbody>
+</table>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+    
+    <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+            <div class="md-footer-copyright">
+                
+                <div class="md-footer-copyright__highlight">
+                    Copyright &copy; 2020-2021 Erik Christensen
+                </div>
+                
+                powered by
+                <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+                and
+                <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+                    Material for MkDocs</a>
+                | Icons made by
+                <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+                from
+                <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            </div>
+            
+        </div>
+    </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9b151c6a.min.js"></script>
+      
+    
+  </body>
+</html>

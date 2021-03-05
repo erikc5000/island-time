@@ -1,0 +1,19 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:io.islandtime.zone/PlatformTimeZoneRulesProvider/availableRegionIds/#/PointingToDeclaration/io.islandtime.zone/-platform-time-zone-rules-provider/[jvm]available-region-ids.md
+$dokka.location:io.islandtime.zone/PlatformTimeZoneRulesProvider/databaseVersion/#/PointingToDeclaration/io.islandtime.zone/-platform-time-zone-rules-provider/[jvm]database-version.md
+$dokka.location:io.islandtime.zone/PlatformTimeZoneRulesProvider/hasRulesFor/#kotlin.String/PointingToDeclaration/io.islandtime.zone/-platform-time-zone-rules-provider/[jvm]has-rules-for.md
+$dokka.location:io.islandtime.zone/PlatformTimeZoneRulesProvider/rulesFor/#kotlin.String/PointingToDeclaration/io.islandtime.zone/-platform-time-zone-rules-provider/[jvm]rules-for.md
+io.islandtime
+io.islandtime.base
+io.islandtime.calendar
+io.islandtime.clock
+io.islandtime.darwin
+io.islandtime.format
+io.islandtime.jvm
+io.islandtime.locale
+io.islandtime.measures
+io.islandtime.parser
+io.islandtime.ranges
+io.islandtime.zone
+

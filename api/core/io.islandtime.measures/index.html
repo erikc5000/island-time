@@ -1,0 +1,948 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Island Time - A Kotlin Multiplatform library for working with dates and times">
+      
+      
+      
+        <meta name="author" content="Erik Christensen">
+      
+      
+        <link rel="canonical" href="https://islandtime.io/api/core/io.islandtime.measures/">
+      
+      <link rel="shortcut icon" href="../../../assets/images/logo.svg">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.4">
+    
+    
+      
+        <title>io.islandtime.measures - Island Time</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#00bdd6">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="cyan" data-md-color-accent="cyan">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#package-ioislandtimemeasures" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://islandtime.io" title="Island Time" class="md-header__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Island Time
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              io.islandtime.measures
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://islandtime.io" title="Island Time" class="md-nav__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Island Time
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        The Basics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="The Basics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          The Basics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/dates-and-times/" class="md-nav__link">
+        Dates and Times
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/durations/" class="md-nav__link">
+        Durations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/intervals/" class="md-nav__link">
+        Ranges and Intervals
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/interop/" class="md-nav__link">
+        Interoperating with Platform Libraries
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/formatting/" class="md-nav__link">
+        Formatting
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/parsing/" class="md-nav__link">
+        Parsing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/clocks/" class="md-nav__link">
+        Clocks
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Advanced Topics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/custom-providers/" class="md-nav__link">
+        Custom Providers
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Extensions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Extensions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Extensions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/serialization/" class="md-nav__link">
+        Serialization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/parcelize/" class="md-nav__link">
+        Parcelize
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        API
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        core
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parcelize-extensions/" class="md-nav__link">
+        parcelize-extensions
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../serialization-extensions/" class="md-nav__link">
+        serialization-extensions
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    Properties
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/erikc5000/island-time/edit/master/docs/api/core/io.islandtime.measures/index.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <p>//<a href="../">core</a>/<a href="./">io.islandtime.measures</a></p>
+<h1 id="package-ioislandtimemeasures">Package io.islandtime.measures<a class="headerlink" href="#package-ioislandtimemeasures" title="Permalink">&para;</a></h1>
+<p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p>
+<p>Classes related to the measurement of time, including <code>Duration</code>, <code>Period</code>, and more specific units, such as <code>IntHours</code> or <code>LongYears</code>.</p>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime.measures/Duration///PointingToDeclaration/"></a><a href="-duration/">Duration</a></td>
+<td><a name="io.islandtime.measures/Duration///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-duration/">Duration</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-duration/">Duration</a>&gt; </code><br><br>A duration of time at nanosecond precision.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntCenturies///PointingToDeclaration/"></a><a href="-int-centuries/">IntCenturies</a></td>
+<td><a name="io.islandtime.measures/IntCenturies///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-centuries/">IntCenturies</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-centuries/">IntCenturies</a>&gt; </code><br><br>A number of centuries.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntDays///PointingToDeclaration/"></a><a href="-int-days/">IntDays</a></td>
+<td><a name="io.islandtime.measures/IntDays///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-days/">IntDays</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-days/">IntDays</a>&gt; </code><br><br>A number of days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntDecades///PointingToDeclaration/"></a><a href="-int-decades/">IntDecades</a></td>
+<td><a name="io.islandtime.measures/IntDecades///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-decades/">IntDecades</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-decades/">IntDecades</a>&gt; </code><br><br>A number of decades.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntHours///PointingToDeclaration/"></a><a href="-int-hours/">IntHours</a></td>
+<td><a name="io.islandtime.measures/IntHours///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-hours/">IntHours</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-hours/">IntHours</a>&gt; </code><br><br>A number of hours.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntMicroseconds///PointingToDeclaration/"></a><a href="-int-microseconds/">IntMicroseconds</a></td>
+<td><a name="io.islandtime.measures/IntMicroseconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-microseconds/">IntMicroseconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-microseconds/">IntMicroseconds</a>&gt; </code><br><br>A number of microseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntMilliseconds///PointingToDeclaration/"></a><a href="-int-milliseconds/">IntMilliseconds</a></td>
+<td><a name="io.islandtime.measures/IntMilliseconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-milliseconds/">IntMilliseconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-milliseconds/">IntMilliseconds</a>&gt; </code><br><br>A number of milliseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntMinutes///PointingToDeclaration/"></a><a href="-int-minutes/">IntMinutes</a></td>
+<td><a name="io.islandtime.measures/IntMinutes///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-minutes/">IntMinutes</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-minutes/">IntMinutes</a>&gt; </code><br><br>A number of minutes.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntMonths///PointingToDeclaration/"></a><a href="-int-months/">IntMonths</a></td>
+<td><a name="io.islandtime.measures/IntMonths///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-months/">IntMonths</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-months/">IntMonths</a>&gt; </code><br><br>A number of months.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntNanoseconds///PointingToDeclaration/"></a><a href="-int-nanoseconds/">IntNanoseconds</a></td>
+<td><a name="io.islandtime.measures/IntNanoseconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-nanoseconds/">IntNanoseconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-nanoseconds/">IntNanoseconds</a>&gt; </code><br><br>A number of nanoseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntSeconds///PointingToDeclaration/"></a><a href="-int-seconds/">IntSeconds</a></td>
+<td><a name="io.islandtime.measures/IntSeconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-seconds/">IntSeconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-seconds/">IntSeconds</a>&gt; </code><br><br>A number of seconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntWeeks///PointingToDeclaration/"></a><a href="-int-weeks/">IntWeeks</a></td>
+<td><a name="io.islandtime.measures/IntWeeks///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-weeks/">IntWeeks</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-weeks/">IntWeeks</a>&gt; </code><br><br>A number of weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/IntYears///PointingToDeclaration/"></a><a href="-int-years/">IntYears</a></td>
+<td><a name="io.islandtime.measures/IntYears///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-int-years/">IntYears</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-int-years/">IntYears</a>&gt; </code><br><br>A number of years.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongCenturies///PointingToDeclaration/"></a><a href="-long-centuries/">LongCenturies</a></td>
+<td><a name="io.islandtime.measures/LongCenturies///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-centuries/">LongCenturies</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-centuries/">LongCenturies</a>&gt; </code><br><br>A number of centuries.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongDays///PointingToDeclaration/"></a><a href="-long-days/">LongDays</a></td>
+<td><a name="io.islandtime.measures/LongDays///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-days/">LongDays</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-days/">LongDays</a>&gt; </code><br><br>A number of days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongDecades///PointingToDeclaration/"></a><a href="-long-decades/">LongDecades</a></td>
+<td><a name="io.islandtime.measures/LongDecades///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-decades/">LongDecades</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-decades/">LongDecades</a>&gt; </code><br><br>A number of decades.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongHours///PointingToDeclaration/"></a><a href="-long-hours/">LongHours</a></td>
+<td><a name="io.islandtime.measures/LongHours///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-hours/">LongHours</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-hours/">LongHours</a>&gt; </code><br><br>A number of hours.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongMicroseconds///PointingToDeclaration/"></a><a href="-long-microseconds/">LongMicroseconds</a></td>
+<td><a name="io.islandtime.measures/LongMicroseconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-microseconds/">LongMicroseconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-microseconds/">LongMicroseconds</a>&gt; </code><br><br>A number of microseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongMilliseconds///PointingToDeclaration/"></a><a href="-long-milliseconds/">LongMilliseconds</a></td>
+<td><a name="io.islandtime.measures/LongMilliseconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-milliseconds/">LongMilliseconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-milliseconds/">LongMilliseconds</a>&gt; </code><br><br>A number of milliseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongMinutes///PointingToDeclaration/"></a><a href="-long-minutes/">LongMinutes</a></td>
+<td><a name="io.islandtime.measures/LongMinutes///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-minutes/">LongMinutes</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-minutes/">LongMinutes</a>&gt; </code><br><br>A number of minutes.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongMonths///PointingToDeclaration/"></a><a href="-long-months/">LongMonths</a></td>
+<td><a name="io.islandtime.measures/LongMonths///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-months/">LongMonths</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-months/">LongMonths</a>&gt; </code><br><br>A number of months.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongNanoseconds///PointingToDeclaration/"></a><a href="-long-nanoseconds/">LongNanoseconds</a></td>
+<td><a name="io.islandtime.measures/LongNanoseconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-nanoseconds/">LongNanoseconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-nanoseconds/">LongNanoseconds</a>&gt; </code><br><br>A number of nanoseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongSeconds///PointingToDeclaration/"></a><a href="-long-seconds/">LongSeconds</a></td>
+<td><a name="io.islandtime.measures/LongSeconds///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-seconds/">LongSeconds</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-seconds/">LongSeconds</a>&gt; </code><br><br>A number of seconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongWeeks///PointingToDeclaration/"></a><a href="-long-weeks/">LongWeeks</a></td>
+<td><a name="io.islandtime.measures/LongWeeks///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-weeks/">LongWeeks</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-weeks/">LongWeeks</a>&gt; </code><br><br>A number of weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/LongYears///PointingToDeclaration/"></a><a href="-long-years/">LongYears</a></td>
+<td><a name="io.islandtime.measures/LongYears///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>inline class <a href="-long-years/">LongYears</a>(<b>value</b>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-long-years/">LongYears</a>&gt; </code><br><br>A number of years.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/Period///PointingToDeclaration/"></a><a href="-period/">Period</a></td>
+<td><a name="io.islandtime.measures/Period///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-period/">Period</a></code><br><br>A date-based period of time, such as "2 years, 5 months, 16 days".</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures/TimeUnit///PointingToDeclaration/"></a><a href="-time-unit/">TimeUnit</a></td>
+<td><a name="io.islandtime.measures/TimeUnit///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>enum <a href="-time-unit/">TimeUnit</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a>&lt;<a href="-time-unit/">TimeUnit</a>&gt; </code><br><br>A unit of time measurement.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime.measures//abs/#io.islandtime.measures.Duration/PointingToDeclaration/"></a><a href="abs/">abs</a></td>
+<td><a name="io.islandtime.measures//abs/#io.islandtime.measures.Duration/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="abs/">abs</a>(duration: <a href="-duration/">Duration</a>): <a href="-duration/">Duration</a></code><br><br>Returns the absolute value of duration.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//asDuration/io.islandtime.measures.IntDays#/PointingToDeclaration/"></a><a href="as-duration/">asDuration</a></td>
+<td><a name="io.islandtime.measures//asDuration/io.islandtime.measures.IntDays#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-int-days/">IntDays</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-int-hours/">IntHours</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-int-microseconds/">IntMicroseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-int-milliseconds/">IntMilliseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-int-minutes/">IntMinutes</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-int-nanoseconds/">IntNanoseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-int-seconds/">IntSeconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-days/">LongDays</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-hours/">LongHours</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-microseconds/">LongMicroseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-milliseconds/">LongMilliseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-minutes/">LongMinutes</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-nanoseconds/">LongNanoseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-long-seconds/">LongSeconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//asPeriod/io.islandtime.measures.IntDays#/PointingToDeclaration/"></a><a href="as-period/">asPeriod</a></td>
+<td><a name="io.islandtime.measures//asPeriod/io.islandtime.measures.IntDays#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-int-days/">IntDays</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br><code>fun <a href="-long-days/">LongDays</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-int-months/">IntMonths</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br><code>fun <a href="-long-months/">LongMonths</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of months.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-int-weeks/">IntWeeks</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br><code>fun <a href="-long-weeks/">LongWeeks</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of weeks.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-int-years/">IntYears</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br><code>fun <a href="-long-years/">LongYears</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of years.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//durationOf/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><a href="duration-of/">durationOf</a></td>
+<td><a name="io.islandtime.measures//durationOf/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(days: <a href="-int-days/">IntDays</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(days: <a href="-long-days/">LongDays</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of 24-hour days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(hours: <a href="-int-hours/">IntHours</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(hours: <a href="-long-hours/">LongHours</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of hours.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(microseconds: <a href="-int-microseconds/">IntMicroseconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(microseconds: <a href="-long-microseconds/">LongMicroseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of microseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(milliseconds: <a href="-int-milliseconds/">IntMilliseconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(milliseconds: <a href="-long-milliseconds/">LongMilliseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of milliseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(minutes: <a href="-int-minutes/">IntMinutes</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(minutes: <a href="-long-minutes/">LongMinutes</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of minutes.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(nanoseconds: <a href="-int-nanoseconds/">IntNanoseconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(nanoseconds: <a href="-long-nanoseconds/">LongNanoseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of nanoseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-int-seconds/">IntSeconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-long-seconds/">LongSeconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of seconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-int-seconds/">IntSeconds</a>, nanoseconds: <a href="-int-nanoseconds/">IntNanoseconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-int-seconds/">IntSeconds</a>, nanoseconds: <a href="-long-nanoseconds/">LongNanoseconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-long-seconds/">LongSeconds</a>, nanoseconds: <a href="-int-nanoseconds/">IntNanoseconds</a>): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-long-seconds/">LongSeconds</a>, nanoseconds: <a href="-long-nanoseconds/">LongNanoseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//minus/io.islandtime.measures.IntDays#io.islandtime.measures.Period/PointingToDeclaration/"></a><a href="minus/">minus</a></td>
+<td><a name="io.islandtime.measures//minus/io.islandtime.measures.IntDays#io.islandtime.measures.Period/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="-int-days/">IntDays</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-int-months/">IntMonths</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-int-weeks/">IntWeeks</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-int-years/">IntYears</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-days/">LongDays</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-months/">LongMonths</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-weeks/">LongWeeks</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-years/">LongYears</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//periodOf/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><a href="period-of/">periodOf</a></td>
+<td><a name="io.islandtime.measures//periodOf/#io.islandtime.measures.IntDays/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="period-of/">periodOf</a>(days: <a href="-int-days/">IntDays</a>): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(weeks: <a href="-int-weeks/">IntWeeks</a>): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(months: <a href="-int-months/">IntMonths</a>, days: <a href="-int-days/">IntDays</a> = 0.days): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(years: <a href="-int-years/">IntYears</a>, days: <a href="-int-days/">IntDays</a>): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(years: <a href="-int-years/">IntYears</a>, months: <a href="-int-months/">IntMonths</a> = 0.months, days: <a href="-int-days/">IntDays</a> = 0.days): <a href="-period/">Period</a></code><br><br>Creates a <a href="-period/">Period</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//plus/io.islandtime.measures.IntDays#io.islandtime.measures.Period/PointingToDeclaration/"></a><a href="plus/">plus</a></td>
+<td><a name="io.islandtime.measures//plus/io.islandtime.measures.IntDays#io.islandtime.measures.Period/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="-int-days/">IntDays</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-int-months/">IntMonths</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-int-weeks/">IntWeeks</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-int-years/">IntYears</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-days/">LongDays</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-months/">LongMonths</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-weeks/">LongWeeks</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-long-years/">LongYears</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//times/kotlin.Int#io.islandtime.measures.Duration/PointingToDeclaration/"></a><a href="times/">times</a></td>
+<td><a name="io.islandtime.measures//times/kotlin.Int#io.islandtime.measures.Duration/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(duration: <a href="-duration/">Duration</a>): <a href="-duration/">Duration</a></code><br><br>Multiplies this value by a duration.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(centuries: <a href="-int-centuries/">IntCenturies</a>): <a href="-int-centuries/">IntCenturies</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(centuries: <a href="-long-centuries/">LongCenturies</a>): <a href="-long-centuries/">LongCenturies</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(centuries: <a href="-int-centuries/">IntCenturies</a>): <a href="-long-centuries/">LongCenturies</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(centuries: <a href="-long-centuries/">LongCenturies</a>): <a href="-long-centuries/">LongCenturies</a></code><br><br>Multiplies this value by a duration of centuries.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(days: <a href="-int-days/">IntDays</a>): <a href="-int-days/">IntDays</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(days: <a href="-long-days/">LongDays</a>): <a href="-long-days/">LongDays</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(days: <a href="-int-days/">IntDays</a>): <a href="-long-days/">LongDays</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(days: <a href="-long-days/">LongDays</a>): <a href="-long-days/">LongDays</a></code><br><br>Multiplies this value by a duration of days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(decades: <a href="-int-decades/">IntDecades</a>): <a href="-int-decades/">IntDecades</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(decades: <a href="-long-decades/">LongDecades</a>): <a href="-long-decades/">LongDecades</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(decades: <a href="-int-decades/">IntDecades</a>): <a href="-long-decades/">LongDecades</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(decades: <a href="-long-decades/">LongDecades</a>): <a href="-long-decades/">LongDecades</a></code><br><br>Multiplies this value by a duration of decades.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(hours: <a href="-int-hours/">IntHours</a>): <a href="-int-hours/">IntHours</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(hours: <a href="-long-hours/">LongHours</a>): <a href="-long-hours/">LongHours</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(hours: <a href="-int-hours/">IntHours</a>): <a href="-long-hours/">LongHours</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(hours: <a href="-long-hours/">LongHours</a>): <a href="-long-hours/">LongHours</a></code><br><br>Multiplies this value by a duration of hours.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(microseconds: <a href="-int-microseconds/">IntMicroseconds</a>): <a href="-long-microseconds/">LongMicroseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(microseconds: <a href="-long-microseconds/">LongMicroseconds</a>): <a href="-long-microseconds/">LongMicroseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(microseconds: <a href="-int-microseconds/">IntMicroseconds</a>): <a href="-long-microseconds/">LongMicroseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(microseconds: <a href="-long-microseconds/">LongMicroseconds</a>): <a href="-long-microseconds/">LongMicroseconds</a></code><br><br>Multiplies this value by a duration of microseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(milliseconds: <a href="-int-milliseconds/">IntMilliseconds</a>): <a href="-long-milliseconds/">LongMilliseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(milliseconds: <a href="-long-milliseconds/">LongMilliseconds</a>): <a href="-long-milliseconds/">LongMilliseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(milliseconds: <a href="-int-milliseconds/">IntMilliseconds</a>): <a href="-long-milliseconds/">LongMilliseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(milliseconds: <a href="-long-milliseconds/">LongMilliseconds</a>): <a href="-long-milliseconds/">LongMilliseconds</a></code><br><br>Multiplies this value by a duration of milliseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(minutes: <a href="-int-minutes/">IntMinutes</a>): <a href="-int-minutes/">IntMinutes</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(minutes: <a href="-long-minutes/">LongMinutes</a>): <a href="-long-minutes/">LongMinutes</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(minutes: <a href="-int-minutes/">IntMinutes</a>): <a href="-long-minutes/">LongMinutes</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(minutes: <a href="-long-minutes/">LongMinutes</a>): <a href="-long-minutes/">LongMinutes</a></code><br><br>Multiplies this value by a duration of minutes.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(months: <a href="-int-months/">IntMonths</a>): <a href="-int-months/">IntMonths</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(months: <a href="-long-months/">LongMonths</a>): <a href="-long-months/">LongMonths</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(months: <a href="-int-months/">IntMonths</a>): <a href="-long-months/">LongMonths</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(months: <a href="-long-months/">LongMonths</a>): <a href="-long-months/">LongMonths</a></code><br><br>Multiplies this value by a duration of months.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(nanoseconds: <a href="-int-nanoseconds/">IntNanoseconds</a>): <a href="-long-nanoseconds/">LongNanoseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(nanoseconds: <a href="-long-nanoseconds/">LongNanoseconds</a>): <a href="-long-nanoseconds/">LongNanoseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(nanoseconds: <a href="-int-nanoseconds/">IntNanoseconds</a>): <a href="-long-nanoseconds/">LongNanoseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(nanoseconds: <a href="-long-nanoseconds/">LongNanoseconds</a>): <a href="-long-nanoseconds/">LongNanoseconds</a></code><br><br>Multiplies this value by a duration of nanoseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(seconds: <a href="-int-seconds/">IntSeconds</a>): <a href="-int-seconds/">IntSeconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(seconds: <a href="-long-seconds/">LongSeconds</a>): <a href="-long-seconds/">LongSeconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(seconds: <a href="-int-seconds/">IntSeconds</a>): <a href="-long-seconds/">LongSeconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(seconds: <a href="-long-seconds/">LongSeconds</a>): <a href="-long-seconds/">LongSeconds</a></code><br><br>Multiplies this value by a duration of seconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(weeks: <a href="-int-weeks/">IntWeeks</a>): <a href="-int-weeks/">IntWeeks</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(weeks: <a href="-long-weeks/">LongWeeks</a>): <a href="-long-weeks/">LongWeeks</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(weeks: <a href="-int-weeks/">IntWeeks</a>): <a href="-long-weeks/">LongWeeks</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(weeks: <a href="-long-weeks/">LongWeeks</a>): <a href="-long-weeks/">LongWeeks</a></code><br><br>Multiplies this value by a duration of weeks.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(years: <a href="-int-years/">IntYears</a>): <a href="-int-years/">IntYears</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(years: <a href="-long-years/">LongYears</a>): <a href="-long-years/">LongYears</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(years: <a href="-int-years/">IntYears</a>): <a href="-long-years/">LongYears</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(years: <a href="-long-years/">LongYears</a>): <a href="-long-years/">LongYears</a></code><br><br>Multiplies this value by a duration of years.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toDuration/kotlin.String#/PointingToDeclaration/"></a><a href="to-duration/">toDuration</a></td>
+<td><a name="io.islandtime.measures//toDuration/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-duration/">toDuration</a>(): <a href="-duration/">Duration</a></code><br><br>Converts an ISO-8601 duration string to a <a href="-duration/">Duration</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-duration/">toDuration</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-duration/">Duration</a></code><br><br>Converts a string to a <a href="-duration/">Duration</a> using parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandDays/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-days/">toIslandDays</a></td>
+<td><a name="io.islandtime.measures//toIslandDays/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-days/">toIslandDays</a>(): <a href="-long-days/">LongDays</a></code><br><br>Converts this duration to Island Time <a href="-long-days/">LongDays</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandDuration/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-duration/">toIslandDuration</a></td>
+<td><a name="io.islandtime.measures//toIslandDuration/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-duration/">toIslandDuration</a>(): <a href="-duration/">Duration</a></code><br><br>Converts this duration to an equivalent Island Time <a href="-duration/">Duration</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandHours/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-hours/">toIslandHours</a></td>
+<td><a name="io.islandtime.measures//toIslandHours/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-hours/">toIslandHours</a>(): <a href="-long-hours/">LongHours</a></code><br><br>Converts this duration to Island Time <a href="-long-hours/">LongHours</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandMicroseconds/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-microseconds/">toIslandMicroseconds</a></td>
+<td><a name="io.islandtime.measures//toIslandMicroseconds/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-microseconds/">toIslandMicroseconds</a>(): <a href="-long-microseconds/">LongMicroseconds</a></code><br><br>Converts this duration to Island Time <a href="-long-microseconds/">LongMicroseconds</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandMilliseconds/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-milliseconds/">toIslandMilliseconds</a></td>
+<td><a name="io.islandtime.measures//toIslandMilliseconds/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-milliseconds/">toIslandMilliseconds</a>(): <a href="-long-milliseconds/">LongMilliseconds</a></code><br><br>Converts this duration to Island Time <a href="-long-milliseconds/">LongMilliseconds</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandMinutes/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-minutes/">toIslandMinutes</a></td>
+<td><a name="io.islandtime.measures//toIslandMinutes/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-minutes/">toIslandMinutes</a>(): <a href="-long-minutes/">LongMinutes</a></code><br><br>Converts this duration to Island Time <a href="-long-minutes/">LongMinutes</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandNanoseconds/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-nanoseconds/">toIslandNanoseconds</a></td>
+<td><a name="io.islandtime.measures//toIslandNanoseconds/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-nanoseconds/">toIslandNanoseconds</a>(): <a href="-long-nanoseconds/">LongNanoseconds</a></code><br><br>Converts this duration to Island Time <a href="-long-nanoseconds/">LongNanoseconds</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toIslandSeconds/kotlin.time.Duration#/PointingToDeclaration/"></a><a href="to-island-seconds/">toIslandSeconds</a></td>
+<td><a name="io.islandtime.measures//toIslandSeconds/kotlin.time.Duration#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-experimental-time/index.html">ExperimentalTime</a>()<br><br>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-seconds/">toIslandSeconds</a>(): <a href="-long-seconds/">LongSeconds</a></code><br><br>Converts this duration to Island Time <a href="-long-seconds/">LongSeconds</a>.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//toPeriod/kotlin.String#/PointingToDeclaration/"></a><a href="to-period/">toPeriod</a></td>
+<td><a name="io.islandtime.measures//toPeriod/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-period/">toPeriod</a>(): <a href="-period/">Period</a></code><br><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-period/">toPeriod</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-period/">Period</a></code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime.measures//centuries/kotlin.Int#/PointingToDeclaration/"></a><a href="centuries/">centuries</a></td>
+<td><a name="io.islandtime.measures//centuries/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="centuries/">centuries</a>: <a href="-int-centuries/">IntCenturies</a></code><br><br>Converts this value to a duration of centuries.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//centuries/kotlin.Long#/PointingToDeclaration/"></a><a href="centuries/">centuries</a></td>
+<td><a name="io.islandtime.measures//centuries/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="centuries/">centuries</a>: <a href="-long-centuries/">LongCenturies</a></code><br><br>Converts this value to a duration of centuries.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//days/kotlin.Int#/PointingToDeclaration/"></a><a href="days/">days</a></td>
+<td><a name="io.islandtime.measures//days/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="days/">days</a>: <a href="-int-days/">IntDays</a></code><br><br>Converts this value to a duration of days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//days/kotlin.Long#/PointingToDeclaration/"></a><a href="days/">days</a></td>
+<td><a name="io.islandtime.measures//days/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="days/">days</a>: <a href="-long-days/">LongDays</a></code><br><br>Converts this value to a duration of days.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//decades/kotlin.Int#/PointingToDeclaration/"></a><a href="decades/">decades</a></td>
+<td><a name="io.islandtime.measures//decades/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="decades/">decades</a>: <a href="-int-decades/">IntDecades</a></code><br><br>Converts this value to a duration of decades.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//decades/kotlin.Long#/PointingToDeclaration/"></a><a href="decades/">decades</a></td>
+<td><a name="io.islandtime.measures//decades/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="decades/">decades</a>: <a href="-long-decades/">LongDecades</a></code><br><br>Converts this value to a duration of decades.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//hours/kotlin.Int#/PointingToDeclaration/"></a><a href="hours/">hours</a></td>
+<td><a name="io.islandtime.measures//hours/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="hours/">hours</a>: <a href="-int-hours/">IntHours</a></code><br><br>Converts this value to a duration of hours.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//hours/kotlin.Long#/PointingToDeclaration/"></a><a href="hours/">hours</a></td>
+<td><a name="io.islandtime.measures//hours/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="hours/">hours</a>: <a href="-long-hours/">LongHours</a></code><br><br>Converts this value to a duration of hours.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//microseconds/kotlin.Int#/PointingToDeclaration/"></a><a href="microseconds/">microseconds</a></td>
+<td><a name="io.islandtime.measures//microseconds/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="microseconds/">microseconds</a>: <a href="-int-microseconds/">IntMicroseconds</a></code><br><br>Converts this value to a duration of microseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//microseconds/kotlin.Long#/PointingToDeclaration/"></a><a href="microseconds/">microseconds</a></td>
+<td><a name="io.islandtime.measures//microseconds/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="microseconds/">microseconds</a>: <a href="-long-microseconds/">LongMicroseconds</a></code><br><br>Converts this value to a duration of microseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//milliseconds/kotlin.Int#/PointingToDeclaration/"></a><a href="milliseconds/">milliseconds</a></td>
+<td><a name="io.islandtime.measures//milliseconds/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="milliseconds/">milliseconds</a>: <a href="-int-milliseconds/">IntMilliseconds</a></code><br><br>Converts this value to a duration of milliseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//milliseconds/kotlin.Long#/PointingToDeclaration/"></a><a href="milliseconds/">milliseconds</a></td>
+<td><a name="io.islandtime.measures//milliseconds/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="milliseconds/">milliseconds</a>: <a href="-long-milliseconds/">LongMilliseconds</a></code><br><br>Converts this value to a duration of milliseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//minutes/kotlin.Int#/PointingToDeclaration/"></a><a href="minutes/">minutes</a></td>
+<td><a name="io.islandtime.measures//minutes/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="minutes/">minutes</a>: <a href="-int-minutes/">IntMinutes</a></code><br><br>Converts this value to a duration of minutes.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//minutes/kotlin.Long#/PointingToDeclaration/"></a><a href="minutes/">minutes</a></td>
+<td><a name="io.islandtime.measures//minutes/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="minutes/">minutes</a>: <a href="-long-minutes/">LongMinutes</a></code><br><br>Converts this value to a duration of minutes.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//months/kotlin.Int#/PointingToDeclaration/"></a><a href="months/">months</a></td>
+<td><a name="io.islandtime.measures//months/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="months/">months</a>: <a href="-int-months/">IntMonths</a></code><br><br>Converts this value to a duration of months.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//months/kotlin.Long#/PointingToDeclaration/"></a><a href="months/">months</a></td>
+<td><a name="io.islandtime.measures//months/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="months/">months</a>: <a href="-long-months/">LongMonths</a></code><br><br>Converts this value to a duration of months.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//nanoseconds/kotlin.Int#/PointingToDeclaration/"></a><a href="nanoseconds/">nanoseconds</a></td>
+<td><a name="io.islandtime.measures//nanoseconds/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="nanoseconds/">nanoseconds</a>: <a href="-int-nanoseconds/">IntNanoseconds</a></code><br><br>Converts this value to a duration of nanoseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//nanoseconds/kotlin.Long#/PointingToDeclaration/"></a><a href="nanoseconds/">nanoseconds</a></td>
+<td><a name="io.islandtime.measures//nanoseconds/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="nanoseconds/">nanoseconds</a>: <a href="-long-nanoseconds/">LongNanoseconds</a></code><br><br>Converts this value to a duration of nanoseconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//seconds/kotlin.Int#/PointingToDeclaration/"></a><a href="seconds/">seconds</a></td>
+<td><a name="io.islandtime.measures//seconds/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="seconds/">seconds</a>: <a href="-int-seconds/">IntSeconds</a></code><br><br>Converts this value to a duration of seconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//seconds/kotlin.Long#/PointingToDeclaration/"></a><a href="seconds/">seconds</a></td>
+<td><a name="io.islandtime.measures//seconds/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="seconds/">seconds</a>: <a href="-long-seconds/">LongSeconds</a></code><br><br>Converts this value to a duration of seconds.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//weeks/kotlin.Int#/PointingToDeclaration/"></a><a href="weeks/">weeks</a></td>
+<td><a name="io.islandtime.measures//weeks/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="weeks/">weeks</a>: <a href="-int-weeks/">IntWeeks</a></code><br><br>Converts this value to a duration of weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//weeks/kotlin.Long#/PointingToDeclaration/"></a><a href="weeks/">weeks</a></td>
+<td><a name="io.islandtime.measures//weeks/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="weeks/">weeks</a>: <a href="-long-weeks/">LongWeeks</a></code><br><br>Converts this value to a duration of weeks.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//years/kotlin.Int#/PointingToDeclaration/"></a><a href="years/">years</a></td>
+<td><a name="io.islandtime.measures//years/kotlin.Int#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="years/">years</a>: <a href="-int-years/">IntYears</a></code><br><br>Converts this value to a duration of years.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.measures//years/kotlin.Long#/PointingToDeclaration/"></a><a href="years/">years</a></td>
+<td><a name="io.islandtime.measures//years/kotlin.Long#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="years/">years</a>: <a href="-long-years/">LongYears</a></code><br><br>Converts this value to a duration of years.</td>
+</tr>
+</tbody>
+</table>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+    
+    <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+            <div class="md-footer-copyright">
+                
+                <div class="md-footer-copyright__highlight">
+                    Copyright &copy; 2020-2021 Erik Christensen
+                </div>
+                
+                powered by
+                <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+                and
+                <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+                    Material for MkDocs</a>
+                | Icons made by
+                <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+                from
+                <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            </div>
+            
+        </div>
+    </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9b151c6a.min.js"></script>
+      
+    
+  </body>
+</html>

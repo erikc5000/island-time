@@ -1,0 +1,818 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Island Time - A Kotlin Multiplatform library for working with dates and times">
+      
+      
+      
+        <meta name="author" content="Erik Christensen">
+      
+      
+        <link rel="canonical" href="https://islandtime.io/api/core/io.islandtime.ranges/">
+      
+      <link rel="shortcut icon" href="../../../assets/images/logo.svg">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.4">
+    
+    
+      
+        <title>io.islandtime.ranges - Island Time</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.77f3fd56.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#00bdd6">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="cyan" data-md-color-accent="cyan">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#package-ioislandtimeranges" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://islandtime.io" title="Island Time" class="md-header__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Island Time
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              io.islandtime.ranges
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://islandtime.io" title="Island Time" class="md-nav__button md-logo" aria-label="Island Time">
+      
+  <img src="../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Island Time
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/erikc5000/island-time/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      <label class="md-nav__link" for="__nav_3">
+        The Basics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="The Basics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          The Basics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/dates-and-times/" class="md-nav__link">
+        Dates and Times
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/durations/" class="md-nav__link">
+        Durations
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/intervals/" class="md-nav__link">
+        Ranges and Intervals
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/interop/" class="md-nav__link">
+        Interoperating with Platform Libraries
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/formatting/" class="md-nav__link">
+        Formatting
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/parsing/" class="md-nav__link">
+        Parsing
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../basics/clocks/" class="md-nav__link">
+        Clocks
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      <label class="md-nav__link" for="__nav_4">
+        Advanced Topics
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced/custom-providers/" class="md-nav__link">
+        Custom Providers
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      <label class="md-nav__link" for="__nav_5">
+        Extensions
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="Extensions" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Extensions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/serialization/" class="md-nav__link">
+        Serialization
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/parcelize/" class="md-nav__link">
+        Parcelize
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      <label class="md-nav__link" for="__nav_6">
+        API
+        <span class="md-nav__icon md-icon"></span>
+      </label>
+      <nav class="md-nav" aria-label="API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        core
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parcelize-extensions/" class="md-nav__link">
+        parcelize-extensions
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../serialization-extensions/" class="md-nav__link">
+        serialization-extensions
+      </a>
+    </li>
+  
+
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    Types
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/erikc5000/island-time/edit/master/docs/api/core/io.islandtime.ranges/index.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                <p>//<a href="../">core</a>/<a href="./">io.islandtime.ranges</a></p>
+<h1 id="package-ioislandtimeranges">Package io.islandtime.ranges<a class="headerlink" href="#package-ioislandtimeranges" title="Permalink">&para;</a></h1>
+<p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p>
+<p>Date ranges, time intervals, and the ability to iterate over them and perform various operations.</p>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime.ranges/DateDayProgression///PointingToDeclaration/"></a><a href="-date-day-progression/">DateDayProgression</a></td>
+<td><a name="io.islandtime.ranges/DateDayProgression///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>abstract class <a href="-date-day-progression/">DateDayProgression</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a>&lt;<a href="../io.islandtime/-date/">Date</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/DateMonthProgression///PointingToDeclaration/"></a><a href="-date-month-progression/">DateMonthProgression</a></td>
+<td><a name="io.islandtime.ranges/DateMonthProgression///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-date-month-progression/">DateMonthProgression</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a>&lt;<a href="../io.islandtime/-date/">Date</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/DateRange///PointingToDeclaration/"></a><a href="-date-range/">DateRange</a></td>
+<td><a name="io.islandtime.ranges/DateRange///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-date-range/">DateRange</a>(<b>start</b>: <a href="../io.islandtime/-date/">Date</a>, <b>endInclusive</b>: <a href="../io.islandtime/-date/">Date</a>) : <a href="-date-day-progression/">DateDayProgression</a>, <a href="-interval/">Interval</a>&lt;<a href="../io.islandtime/-date/">Date</a>&gt; , <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.ranges/-closed-range/index.html">ClosedRange</a>&lt;<a href="../io.islandtime/-date/">Date</a>&gt; </code><br><br>An inclusive range of dates.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/DateTimeInterval///PointingToDeclaration/"></a><a href="-date-time-interval/">DateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges/DateTimeInterval///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-date-time-interval/">DateTimeInterval</a>(<b>start</b>: <a href="../io.islandtime/-date-time/">DateTime</a>, <b>endExclusive</b>: <a href="../io.islandtime/-date-time/">DateTime</a>) : <a href="-interval/">Interval</a>&lt;<a href="../io.islandtime/-date-time/">DateTime</a>&gt; </code><br><br>An interval between two date-times, assumed to be at the same offset from UTC.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/InstantInterval///PointingToDeclaration/"></a><a href="-instant-interval/">InstantInterval</a></td>
+<td><a name="io.islandtime.ranges/InstantInterval///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-instant-interval/">InstantInterval</a>(<b>start</b>: <a href="../io.islandtime/-instant/">Instant</a>, <b>endExclusive</b>: <a href="../io.islandtime/-instant/">Instant</a>) : <a href="-time-point-interval/">TimePointInterval</a>&lt;<a href="../io.islandtime/-instant/">Instant</a>&gt; , <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="../io.islandtime/-instant/">Instant</a>&gt; </code><br><br>A half-open interval between two instants.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/Interval///PointingToDeclaration/"></a><a href="-interval/">Interval</a></td>
+<td><a name="io.islandtime.ranges/Interval///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>interface <a href="-interval/">Interval</a>&lt;<a href="-interval/">T</a>&gt;</code><br><br>A half-open or closed interval.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/OffsetDateTimeInterval///PointingToDeclaration/"></a><a href="-offset-date-time-interval/">OffsetDateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges/OffsetDateTimeInterval///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>(<b>start</b>: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>, <b>endExclusive</b>: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>) : <a href="-time-point-interval/">TimePointInterval</a>&lt;<a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>&gt; </code><br><br>A half-open interval between two offset date-times based on timeline order.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/TimePointInterval///PointingToDeclaration/"></a><a href="-time-point-interval/">TimePointInterval</a></td>
+<td><a name="io.islandtime.ranges/TimePointInterval///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>abstract class <a href="-time-point-interval/">TimePointInterval</a>&lt;<a href="-time-point-interval/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-time-point-interval/">T</a>&gt;&gt; : <a href="-interval/">Interval</a>&lt;<a href="-time-point-interval/">T</a>&gt; </code><br><br>A half-open interval of time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/TimePointNanosecondProgression///PointingToDeclaration/"></a><a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a></td>
+<td><a name="io.islandtime.ranges/TimePointNanosecondProgression///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="-time-point-nanosecond-progression/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-time-point-nanosecond-progression/">T</a>&gt;&gt; : <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="-time-point-nanosecond-progression/">T</a>&gt; , <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a>&lt;<a href="-time-point-nanosecond-progression/">T</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/TimePointProgressionBuilder///PointingToDeclaration/"></a><a href="-time-point-progression-builder/">TimePointProgressionBuilder</a></td>
+<td><a name="io.islandtime.ranges/TimePointProgressionBuilder///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>interface <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="-time-point-progression-builder/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-time-point-progression-builder/">T</a>&gt;&gt;</code><br><br>A time point progression builder.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/TimePointSecondProgression///PointingToDeclaration/"></a><a href="-time-point-second-progression/">TimePointSecondProgression</a></td>
+<td><a name="io.islandtime.ranges/TimePointSecondProgression///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-time-point-second-progression/">TimePointSecondProgression</a>&lt;<a href="-time-point-second-progression/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="-time-point-second-progression/">T</a>&gt;&gt; : <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="-time-point-second-progression/">T</a>&gt; , <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/index.html">Iterable</a>&lt;<a href="-time-point-second-progression/">T</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges/ZonedDateTimeInterval///PointingToDeclaration/"></a><a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges/ZonedDateTimeInterval///PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>class <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>(<b>start</b>: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>, <b>endExclusive</b>: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>) : <a href="-time-point-interval/">TimePointInterval</a>&lt;<a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>&gt; </code><br><br>A half-open interval of zoned date-times based on timeline order.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="io.islandtime.ranges//asZonedDateTimeInterval/io.islandtime.ranges.OffsetDateTimeInterval#/PointingToDeclaration/"></a><a href="as-zoned-date-time-interval/">asZonedDateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges//asZonedDateTimeInterval/io.islandtime.ranges.OffsetDateTimeInterval#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="as-zoned-date-time-interval/">asZonedDateTimeInterval</a>(): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Converts this interval to an equivalent <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> where both endpoints are given a fixed-offset time zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//at/io.islandtime.ranges.DateRange#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="at/">at</a></td>
+<td><a name="io.islandtime.ranges//at/io.islandtime.ranges.DateRange#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-range/">DateRange</a>.<a href="at/">at</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Combines this <a href="-date-range/">DateRange</a> with a <a href="../io.islandtime/-time-zone/">TimeZone</a> to create a <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> between the start of the first day and the end of the last day in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="at/">at</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Combines this <a href="-date-time-interval/">DateTimeInterval</a> with a <a href="../io.islandtime/-time-zone/">TimeZone</a> to create a <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> where both endpoints are in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-instant-interval/">InstantInterval</a>.<a href="at/">at</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Combines this <a href="-instant-interval/">InstantInterval</a> with a <a href="../io.islandtime/-time-zone/">TimeZone</a> to create an equivalent <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> where both endpoints are in zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//contains/io.islandtime.ranges.Interval[TypeParam(bounds=[kotlin.Any?])]#TypeParam(bounds=[kotlin.Any?])?/PointingToDeclaration/"></a><a href="contains/">contains</a></td>
+<td><a name="io.islandtime.ranges//contains/io.islandtime.ranges.Interval[TypeParam(bounds=[kotlin.Any?])]#TypeParam(bounds=[kotlin.Any?])?/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="contains/">T</a>&gt; <a href="-interval/">Interval</a>&lt;<a href="contains/">T</a>&gt;.<a href="contains/">contains</a>(value: <a href="contains/">T</a>?): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br><code>operator fun &lt;<a href="contains/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="contains/">T</a>&gt;&gt; <a href="-time-point-interval/">TimePointInterval</a>&lt;<a href="contains/">T</a>&gt;.<a href="contains/">contains</a>(value: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;*&gt;?): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></code><br><br>Checks if this interval contains value.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//daysBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="days-between/">daysBetween</a></td>
+<td><a name="io.islandtime.ranges//daysBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="days-between/">daysBetween</a>(start: <a href="../io.islandtime/-date/">Date</a>, endExclusive: <a href="../io.islandtime/-date/">Date</a>): <a href="../io.islandtime.measures/-long-days/">LongDays</a></code><br><br>Gets the number of days between two dates.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="days-between/">daysBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-days/">LongDays</a></code><br><br>Gets the number whole days between two date-times, assuming they're in the same time zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="days-between/">daysBetween</a>(start: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>, endExclusive: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>): <a href="../io.islandtime.measures/-long-days/">LongDays</a></code><br><br>Gets the number whole days between two date-times, adjusting the offset of endExclusive if necessary to match the starting date-time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="days-between/">daysBetween</a>(start: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>, endExclusive: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>): <a href="../io.islandtime.measures/-long-days/">LongDays</a></code><br><br>Gets the number of whole days between two zoned date-times, adjusting the time zone of endExclusive if necessary to match the starting date-time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="days-between/">T1</a>, <a href="days-between/">T2</a>&gt; <a href="days-between/">daysBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="days-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="days-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-days/">LongDays</a></code><br><br>Gets the number of 24-hour days between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//downTo/TypeParam(bounds=[io.islandtime.base.TimePoint[^]])#TypeParam(bounds=[io.islandtime.base.TimePoint[^]])/PointingToDeclaration/"></a><a href="down-to/">downTo</a></td>
+<td><a name="io.islandtime.ranges//downTo/TypeParam(bounds=[io.islandtime.base.TimePoint[^]])#TypeParam(bounds=[io.islandtime.base.TimePoint[^]])/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun &lt;<a href="down-to/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="down-to/">T</a>&gt;&gt; <a href="down-to/">T</a>.<a href="down-to/">downTo</a>(to: <a href="down-to/">T</a>): <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="down-to/">T</a>&gt;</code><br><br>Creates a progression of time points in descending order.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="../io.islandtime/-date/">Date</a>.<a href="down-to/">downTo</a>(to: <a href="../io.islandtime/-date/">Date</a>): <a href="-date-day-progression/">DateDayProgression</a></code><br><br>Creates a progression of dates in descending order.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//durationBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="duration-between/">durationBetween</a></td>
+<td><a name="io.islandtime.ranges//durationBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="duration-between/">durationBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-duration/">Duration</a></code><br><br>Gets the <a href="../io.islandtime.measures/-duration/">Duration</a> between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="duration-between/">T1</a>, <a href="duration-between/">T2</a>&gt; <a href="duration-between/">durationBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="duration-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="duration-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-duration/">Duration</a></code><br><br>Gets the <a href="../io.islandtime.measures/-duration/">Duration</a> between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//hoursBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="hours-between/">hoursBetween</a></td>
+<td><a name="io.islandtime.ranges//hoursBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="hours-between/">hoursBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-hours/">LongHours</a></code><br><br>Gets the number of whole hours between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="hours-between/">T1</a>, <a href="hours-between/">T2</a>&gt; <a href="hours-between/">hoursBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="hours-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="hours-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-hours/">LongHours</a></code><br><br>Gets the number of whole hours between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//microsecondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="microseconds-between/">microsecondsBetween</a></td>
+<td><a name="io.islandtime.ranges//microsecondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="microseconds-between/">microsecondsBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-microseconds/">LongMicroseconds</a></code><br><br>Gets the number of whole microseconds between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="microseconds-between/">T1</a>, <a href="microseconds-between/">T2</a>&gt; <a href="microseconds-between/">microsecondsBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="microseconds-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="microseconds-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-microseconds/">LongMicroseconds</a></code><br><br>Gets the number of whole microseconds between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//millisecondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="milliseconds-between/">millisecondsBetween</a></td>
+<td><a name="io.islandtime.ranges//millisecondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="milliseconds-between/">millisecondsBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-milliseconds/">LongMilliseconds</a></code><br><br>Gets the number of whole milliseconds between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="milliseconds-between/">T1</a>, <a href="milliseconds-between/">T2</a>&gt; <a href="milliseconds-between/">millisecondsBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="milliseconds-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="milliseconds-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-milliseconds/">LongMilliseconds</a></code><br><br>Gets the number of whole milliseconds between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//minutesBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="minutes-between/">minutesBetween</a></td>
+<td><a name="io.islandtime.ranges//minutesBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="minutes-between/">minutesBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-minutes/">LongMinutes</a></code><br><br>Gets the number of whole minutes between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="minutes-between/">T1</a>, <a href="minutes-between/">T2</a>&gt; <a href="minutes-between/">minutesBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="minutes-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="minutes-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-minutes/">LongMinutes</a></code><br><br>Gets the number of whole minutes between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//monthsBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="months-between/">monthsBetween</a></td>
+<td><a name="io.islandtime.ranges//monthsBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="months-between/">monthsBetween</a>(start: <a href="../io.islandtime/-date/">Date</a>, endExclusive: <a href="../io.islandtime/-date/">Date</a>): <a href="../io.islandtime.measures/-int-months/">IntMonths</a></code><br><br>Gets the number of whole months between two dates.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="months-between/">monthsBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-int-months/">IntMonths</a></code><br><br>Gets the number of whole months between two date-times, assuming they're in the same time zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="months-between/">monthsBetween</a>(start: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>, endExclusive: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>): <a href="../io.islandtime.measures/-int-months/">IntMonths</a></code><br><br>Gets the number of whole months between two date-times, adjusting the offset of endExclusive if necessary to match the starting date-time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="months-between/">monthsBetween</a>(start: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>, endExclusive: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>): <a href="../io.islandtime.measures/-int-months/">IntMonths</a></code><br><br>Gets the number of whole months between two zoned date-times, adjusting the time zone of endExclusive if necessary to match the starting date-time.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//nanosecondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="nanoseconds-between/">nanosecondsBetween</a></td>
+<td><a name="io.islandtime.ranges//nanosecondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="nanoseconds-between/">nanosecondsBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-nanoseconds/">LongNanoseconds</a></code><br><br>Gets the number of nanoseconds between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="nanoseconds-between/">T1</a>, <a href="nanoseconds-between/">T2</a>&gt; <a href="nanoseconds-between/">nanosecondsBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="nanoseconds-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="nanoseconds-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-nanoseconds/">LongNanoseconds</a></code><br><br>Gets the number of nanoseconds between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//periodBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="period-between/">periodBetween</a></td>
+<td><a name="io.islandtime.ranges//periodBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="period-between/">periodBetween</a>(start: <a href="../io.islandtime/-date/">Date</a>, endExclusive: <a href="../io.islandtime/-date/">Date</a>): <a href="../io.islandtime.measures/-period/">Period</a></code><br><br>Gets the <a href="../io.islandtime.measures/-period/">Period</a> between two dates.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="period-between/">periodBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-period/">Period</a></code><br><br>Gets the <a href="../io.islandtime.measures/-period/">Period</a> between two date-times, assuming they're in the same time zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="period-between/">periodBetween</a>(start: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>, endExclusive: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>): <a href="../io.islandtime.measures/-period/">Period</a></code><br><br>Gets the <a href="../io.islandtime.measures/-period/">Period</a> between two date-times, adjusting the offset of endExclusive if necessary to match the starting date-time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="period-between/">periodBetween</a>(start: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>, endExclusive: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>): <a href="../io.islandtime.measures/-period/">Period</a></code><br><br>Gets the <a href="../io.islandtime.measures/-period/">Period</a> between two zoned date-times, adjusting the time zone of endExclusive if necessary to match the starting date-time.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//random/io.islandtime.ranges.DateRange#/PointingToDeclaration/"></a><a href="random/">random</a></td>
+<td><a name="io.islandtime.ranges//random/io.islandtime.ranges.DateRange#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-range/">DateRange</a>.<a href="random/">random</a>(): <a href="../io.islandtime/-date/">Date</a></code><br><br>Returns a random date within this range using the default random number generator.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="random/">random</a>(): <a href="../io.islandtime/-date-time/">DateTime</a></code><br><br><code>fun <a href="-instant-interval/">InstantInterval</a>.<a href="random/">random</a>(): <a href="../io.islandtime/-instant/">Instant</a></code><br><br><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="random/">random</a>(): <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="random/">random</a>(): <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns a random date within this interval using the default random number generator.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-range/">DateRange</a>.<a href="random/">random</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-date/">Date</a></code><br><br>Returns a random date within this range using the supplied random number generator.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="random/">random</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-date-time/">DateTime</a></code><br><br><code>fun <a href="-instant-interval/">InstantInterval</a>.<a href="random/">random</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-instant/">Instant</a></code><br><br><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="random/">random</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a></code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="random/">random</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a></code><br><br>Returns a random date within this interval using the supplied random number generator.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//randomOrNull/io.islandtime.ranges.DateRange#/PointingToDeclaration/"></a><a href="random-or-null/">randomOrNull</a></td>
+<td><a name="io.islandtime.ranges//randomOrNull/io.islandtime.ranges.DateRange#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-range/">DateRange</a>.<a href="random-or-null/">randomOrNull</a>(): <a href="../io.islandtime/-date/">Date</a>?</code><br><br>Returns a random date within this range using the default random number generator or <code>null</code> if the interval is empty or unbounded.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="random-or-null/">randomOrNull</a>(): <a href="../io.islandtime/-date-time/">DateTime</a>?</code><br><br><code>fun <a href="-instant-interval/">InstantInterval</a>.<a href="random-or-null/">randomOrNull</a>(): <a href="../io.islandtime/-instant/">Instant</a>?</code><br><br><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="random-or-null/">randomOrNull</a>(): <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>?</code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="random-or-null/">randomOrNull</a>(): <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>?</code><br><br>Returns a random date within this interval using the default random number generator or <code>null</code> if the interval is empty or unbounded.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-range/">DateRange</a>.<a href="random-or-null/">randomOrNull</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-date/">Date</a>?</code><br><br>Returns a random date within this range using the supplied random number generator or <code>null</code> if the interval is empty or unbounded.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="random-or-null/">randomOrNull</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-date-time/">DateTime</a>?</code><br><br><code>fun <a href="-instant-interval/">InstantInterval</a>.<a href="random-or-null/">randomOrNull</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-instant/">Instant</a>?</code><br><br><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="random-or-null/">randomOrNull</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>?</code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="random-or-null/">randomOrNull</a>(random: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.random/-random/index.html">Random</a>): <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>?</code><br><br>Returns a random date within this interval using the supplied random number generator or <code>null</code> if the interval is empty or unbounded.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//reversed/io.islandtime.ranges.DateDayProgression#/PointingToDeclaration/"></a><a href="reversed/">reversed</a></td>
+<td><a name="io.islandtime.ranges//reversed/io.islandtime.ranges.DateDayProgression#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="reversed/">reversed</a>(): <a href="-date-day-progression/">DateDayProgression</a></code><br><br><code>fun <a href="-date-month-progression/">DateMonthProgression</a>.<a href="reversed/">reversed</a>(): <a href="-date-month-progression/">DateMonthProgression</a></code><br><br>Reverses this progression such that it counts down instead of up, or vice versa.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//secondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><a href="seconds-between/">secondsBetween</a></td>
+<td><a name="io.islandtime.ranges//secondsBetween/#io.islandtime.DateTime#io.islandtime.DateTime/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="seconds-between/">secondsBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-seconds/">LongSeconds</a></code><br><br>Gets the number of whole seconds between two date-times, assuming they have the same UTC offset.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun &lt;<a href="seconds-between/">T1</a>, <a href="seconds-between/">T2</a>&gt; <a href="seconds-between/">secondsBetween</a>(start: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="seconds-between/">T1</a>&gt;, endExclusive: <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="seconds-between/">T2</a>&gt;): <a href="../io.islandtime.measures/-long-seconds/">LongSeconds</a></code><br><br>Gets the number of whole seconds between two time points.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//step/io.islandtime.ranges.DateDayProgression#io.islandtime.measures.IntCenturies/PointingToDeclaration/"></a><a href="step/">step</a></td>
+<td><a name="io.islandtime.ranges//step/io.islandtime.ranges.DateDayProgression#io.islandtime.measures.IntCenturies/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-centuries/">IntCenturies</a>): <a href="-date-month-progression/">DateMonthProgression</a></code><br><br>Creates a progression that steps over the dates in this progression in increments of centuries.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-days/">IntDays</a>): <a href="-date-day-progression/">DateDayProgression</a></code><br><br>Creates a progression that steps over the dates in this progression in increments of days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-decades/">IntDecades</a>): <a href="-date-month-progression/">DateMonthProgression</a></code><br><br>Creates a progression that steps over the dates in this progression in increments of decades.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-months/">IntMonths</a>): <a href="-date-month-progression/">DateMonthProgression</a></code><br><br>Creates a progression that steps over the dates in this progression in increments of months.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-weeks/">IntWeeks</a>): <a href="-date-day-progression/">DateDayProgression</a></code><br><br>Creates a progression that steps over the dates in this progression in increments of weeks.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="-date-day-progression/">DateDayProgression</a>.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-years/">IntYears</a>): <a href="-date-month-progression/">DateMonthProgression</a></code><br><br>Creates a progression that steps over the dates in this progression in increments of years.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-days/">IntDays</a>): <a href="-time-point-second-progression/">TimePointSecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-hours/">IntHours</a>): <a href="-time-point-second-progression/">TimePointSecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-microseconds/">IntMicroseconds</a>): <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-milliseconds/">IntMilliseconds</a>): <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-minutes/">IntMinutes</a>): <a href="-time-point-second-progression/">TimePointSecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-nanoseconds/">IntNanoseconds</a>): <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-int-seconds/">IntSeconds</a>): <a href="-time-point-second-progression/">TimePointSecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-long-microseconds/">LongMicroseconds</a>): <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-long-milliseconds/">LongMilliseconds</a>): <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="step/">T</a>&gt;</code><br><br><code>infix fun &lt;<a href="step/">T</a> : <a href="../io.islandtime.base/-time-point/">TimePoint</a>&lt;<a href="step/">T</a>&gt;&gt; <a href="-time-point-progression-builder/">TimePointProgressionBuilder</a>&lt;<a href="step/">T</a>&gt;.<a href="step/">step</a>(step: <a href="../io.islandtime.measures/-long-nanoseconds/">LongNanoseconds</a>): <a href="-time-point-nanosecond-progression/">TimePointNanosecondProgression</a>&lt;<a href="step/">T</a>&gt;</code></td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toDateRange/io.islandtime.ranges.DateTimeInterval#/PointingToDeclaration/"></a><a href="to-date-range/">toDateRange</a></td>
+<td><a name="io.islandtime.ranges//toDateRange/io.islandtime.ranges.DateTimeInterval#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="to-date-range/">toDateRange</a>(): <a href="-date-range/">DateRange</a></code><br><br><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="to-date-range/">toDateRange</a>(): <a href="-date-range/">DateRange</a></code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="to-date-range/">toDateRange</a>(): <a href="-date-range/">DateRange</a></code><br><br>Returns this interval with the precision reduced to just the date.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date-range/">toDateRange</a>(): <a href="-date-range/">DateRange</a></code><br><br>Converts a string to a <a href="-date-range/">DateRange</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date-range/">toDateRange</a>(parser: <a href="../io.islandtime.parser/-grouped-date-time-parser/">GroupedDateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-date-range/">DateRange</a></code><br><br>Converts a string to a <a href="-date-range/">DateRange</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toDateRangeAt/io.islandtime.ranges.InstantInterval#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="to-date-range-at/">toDateRangeAt</a></td>
+<td><a name="io.islandtime.ranges//toDateRangeAt/io.islandtime.ranges.InstantInterval#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant-interval/">InstantInterval</a>.<a href="to-date-range-at/">toDateRangeAt</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-date-range/">DateRange</a></code><br><br>Converts this interval to the equivalent <a href="-date-range/">DateRange</a> when both endpoints are in zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toDateTimeInterval/io.islandtime.ranges.OffsetDateTimeInterval#/PointingToDeclaration/"></a><a href="to-date-time-interval/">toDateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges//toDateTimeInterval/io.islandtime.ranges.OffsetDateTimeInterval#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="to-date-time-interval/">toDateTimeInterval</a>(): <a href="-date-time-interval/">DateTimeInterval</a></code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="to-date-time-interval/">toDateTimeInterval</a>(): <a href="-date-time-interval/">DateTimeInterval</a></code><br><br>Returns this interval with the precision reduced to only the local date and time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date-time-interval/">toDateTimeInterval</a>(): <a href="-date-time-interval/">DateTimeInterval</a></code><br><br>Converts a string to a <a href="-date-time-interval/">DateTimeInterval</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-date-time-interval/">toDateTimeInterval</a>(parser: <a href="../io.islandtime.parser/-grouped-date-time-parser/">GroupedDateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-date-time-interval/">DateTimeInterval</a></code><br><br>Converts a string to a <a href="-date-time-interval/">DateTimeInterval</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toDateTimeIntervalAt/io.islandtime.ranges.InstantInterval#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="to-date-time-interval-at/">toDateTimeIntervalAt</a></td>
+<td><a name="io.islandtime.ranges//toDateTimeIntervalAt/io.islandtime.ranges.InstantInterval#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-instant-interval/">InstantInterval</a>.<a href="to-date-time-interval-at/">toDateTimeIntervalAt</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-date-time-interval/">DateTimeInterval</a></code><br><br>Converts this interval to the equivalent <a href="-date-time-interval/">DateTimeInterval</a> when both endpoints are in zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toInstantInterval/io.islandtime.ranges.OffsetDateTimeInterval#/PointingToDeclaration/"></a><a href="to-instant-interval/">toInstantInterval</a></td>
+<td><a name="io.islandtime.ranges//toInstantInterval/io.islandtime.ranges.OffsetDateTimeInterval#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="to-instant-interval/">toInstantInterval</a>(): <a href="-instant-interval/">InstantInterval</a></code><br><br><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="to-instant-interval/">toInstantInterval</a>(): <a href="-instant-interval/">InstantInterval</a></code><br><br>Converts this interval to an <a href="-instant-interval/">InstantInterval</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-instant-interval/">toInstantInterval</a>(): <a href="-instant-interval/">InstantInterval</a></code><br><br>Converts a string to an <a href="-instant-interval/">InstantInterval</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-instant-interval/">toInstantInterval</a>(parser: <a href="../io.islandtime.parser/-grouped-date-time-parser/">GroupedDateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-instant-interval/">InstantInterval</a></code><br><br>Converts a string to an <a href="-instant-interval/">InstantInterval</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toInstantIntervalAt/io.islandtime.ranges.DateRange#io.islandtime.TimeZone/PointingToDeclaration/"></a><a href="to-instant-interval-at/">toInstantIntervalAt</a></td>
+<td><a name="io.islandtime.ranges//toInstantIntervalAt/io.islandtime.ranges.DateRange#io.islandtime.TimeZone/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-range/">DateRange</a>.<a href="to-instant-interval-at/">toInstantIntervalAt</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-instant-interval/">InstantInterval</a></code><br><br>Converts this range to an <a href="-instant-interval/">InstantInterval</a> between the start of the first day and the end of the last day in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-date-time-interval/">DateTimeInterval</a>.<a href="to-instant-interval-at/">toInstantIntervalAt</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>): <a href="-instant-interval/">InstantInterval</a></code><br><br>Converts this interval to an <a href="-instant-interval/">InstantInterval</a> where both endpoints are in zone.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toOffsetDateTimeInterval/io.islandtime.ranges.ZonedDateTimeInterval#/PointingToDeclaration/"></a><a href="to-offset-date-time-interval/">toOffsetDateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges//toOffsetDateTimeInterval/io.islandtime.ranges.ZonedDateTimeInterval#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<a href="to-offset-date-time-interval/">toOffsetDateTimeInterval</a>(): <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br>Converts this interval to an <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-offset-date-time-interval/">toOffsetDateTimeInterval</a>(): <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br>Converts a string to an <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-offset-date-time-interval/">toOffsetDateTimeInterval</a>(parser: <a href="../io.islandtime.parser/-grouped-date-time-parser/">GroupedDateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br>Converts a string to an <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//toZonedDateTimeInterval/kotlin.String#/PointingToDeclaration/"></a><a href="to-zoned-date-time-interval/">toZonedDateTimeInterval</a></td>
+<td><a name="io.islandtime.ranges//toZonedDateTimeInterval/kotlin.String#/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-zoned-date-time-interval/">toZonedDateTimeInterval</a>(): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Converts a string to a <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a>.<a href="to-zoned-date-time-interval/">toZonedDateTimeInterval</a>(zone: <a href="../io.islandtime/-time-zone/">TimeZone</a>, strategy: <a href="../io.islandtime/-offset-conversion-strategy/">OffsetConversionStrategy</a>): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Converts this interval to a <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> using the specified strategy to adjust each endpoint to a valid date, time, and offset in zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-zoned-date-time-interval/">toZonedDateTimeInterval</a>(parser: <a href="../io.islandtime.parser/-grouped-date-time-parser/">GroupedDateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Converts a string to a <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> using a specific parser.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//until/io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="until/">until</a></td>
+<td><a name="io.islandtime.ranges//until/io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="../io.islandtime/-date/">Date</a>.<a href="until/">until</a>(to: <a href="../io.islandtime/-date/">Date</a>): <a href="-date-range/">DateRange</a></code><br><br>Creates a <a href="-date-range/">DateRange</a> containing all of the days from this date up to, but not including to.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="../io.islandtime/-date-time/">DateTime</a>.<a href="until/">until</a>(to: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="-date-time-interval/">DateTimeInterval</a></code><br><br>Creates a <a href="-date-time-interval/">DateTimeInterval</a> from this date-time up to, but not including the nanosecond represented by to.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="../io.islandtime/-instant/">Instant</a>.<a href="until/">until</a>(to: <a href="../io.islandtime/-instant/">Instant</a>): <a href="-instant-interval/">InstantInterval</a></code><br><br>Creates an <a href="-instant-interval/">InstantInterval</a> from this instant up to, but not including to.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>.<a href="until/">until</a>(to: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>): <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a></code><br><br>Creates an <a href="-offset-date-time-interval/">OffsetDateTimeInterval</a> from this date-time up to, but not including to.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>infix fun <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>.<a href="until/">until</a>(to: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>): <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a></code><br><br>Creates a <a href="-zoned-date-time-interval/">ZonedDateTimeInterval</a> from this date-time up to, but not including to.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//weeksBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="weeks-between/">weeksBetween</a></td>
+<td><a name="io.islandtime.ranges//weeksBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="weeks-between/">weeksBetween</a>(start: <a href="../io.islandtime/-date/">Date</a>, endExclusive: <a href="../io.islandtime/-date/">Date</a>): <a href="../io.islandtime.measures/-long-weeks/">LongWeeks</a></code><br><br>Gets the number of whole weeks between two dates.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="weeks-between/">weeksBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-long-weeks/">LongWeeks</a></code><br><br>Gets the number whole weeks between two date-times, assuming they're in the same time zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="weeks-between/">weeksBetween</a>(start: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>, endExclusive: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>): <a href="../io.islandtime.measures/-long-weeks/">LongWeeks</a></code><br><br>Gets the number whole weeks between two date-times, adjusting the offset of endExclusive if necessary to match the starting date-time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="weeks-between/">weeksBetween</a>(start: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>, endExclusive: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>): <a href="../io.islandtime.measures/-long-weeks/">LongWeeks</a></code><br><br>Gets the number of whole weeks between two zoned date-times, adjusting the time zone of endExclusive if necessary to match the starting date-time.</td>
+</tr>
+<tr>
+<td><a name="io.islandtime.ranges//yearsBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><a href="years-between/">yearsBetween</a></td>
+<td><a name="io.islandtime.ranges//yearsBetween/#io.islandtime.Date#io.islandtime.Date/PointingToDeclaration/"></a><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="years-between/">yearsBetween</a>(start: <a href="../io.islandtime/-date/">Date</a>, endExclusive: <a href="../io.islandtime/-date/">Date</a>): <a href="../io.islandtime.measures/-int-years/">IntYears</a></code><br><br>Gets the number of whole years between two dates.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="years-between/">yearsBetween</a>(start: <a href="../io.islandtime/-date-time/">DateTime</a>, endExclusive: <a href="../io.islandtime/-date-time/">DateTime</a>): <a href="../io.islandtime.measures/-int-years/">IntYears</a></code><br><br>Gets the number of whole years between two date-times, assuming they're in the same time zone.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="years-between/">yearsBetween</a>(start: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>, endExclusive: <a href="../io.islandtime/-offset-date-time/">OffsetDateTime</a>): <a href="../io.islandtime.measures/-int-years/">IntYears</a></code><br><br>Gets the number of whole years between two date-times, adjusting the offset of endExclusive if necessary to match the starting date-time.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><code>fun <a href="years-between/">yearsBetween</a>(start: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>, endExclusive: <a href="../io.islandtime/-zoned-date-time/">ZonedDateTime</a>): <a href="../io.islandtime.measures/-int-years/">IntYears</a></code><br><br>Gets the number of whole years between two zoned date-times, adjusting the time zone of endExclusive if necessary to match the starting date-time.</td>
+</tr>
+</tbody>
+</table>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+    
+    <div class="md-footer-meta md-typeset">
+        <div class="md-footer-meta__inner md-grid">
+            <div class="md-footer-copyright">
+                
+                <div class="md-footer-copyright__highlight">
+                    Copyright &copy; 2020-2021 Erik Christensen
+                </div>
+                
+                powered by
+                <a href="https://www.mkdocs.org" target="_blank" rel="noopener">MkDocs</a>
+                and
+                <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+                    Material for MkDocs</a>
+                | Icons made by
+                <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+                from
+                <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+            </div>
+            
+        </div>
+    </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.9b151c6a.min.js"></script>
+      
+    
+  </body>
+</html>
