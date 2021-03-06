@@ -2,9 +2,8 @@ import org.jetbrains.dokka.gradle.DokkaTask
 
 plugins {
     `multiplatform-library`
+    id("kotlinx-atomicfu")
 }
-
-apply(plugin = "kotlinx-atomicfu")
 
 kotlin {
     jvm {
@@ -14,6 +13,10 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated")
+
+            dependencies {
+                implementation(Libs.javamath2kmp)
+            }
         }
 
         val commonTest by getting {

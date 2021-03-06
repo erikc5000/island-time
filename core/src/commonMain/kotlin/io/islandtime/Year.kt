@@ -15,31 +15,36 @@ import kotlin.math.absoluteValue
  * A year as defined by ISO-8601.
  * @constructor Creates a [Year].
  * @param value the year
+ * @throws DateTimeException if the year is invalid
  * @property value The year value.
  */
 inline class Year(val value: Int) : Temporal, Comparable<Year> {
 
     /**
-     * Checks if this year is within the supported range.
+     * Creates a [Year].
+     * @param value the year
+     * @throws DateTimeException if the year is invalid
      */
-    val isValid: Boolean get() = value in MIN_VALUE..MAX_VALUE
+    constructor(value: Long) : this(checkValidYear(value))
+
+    init {
+        checkValidYear(value)
+    }
 
     /**
      * Checks if this is a leap year.
      */
-    val isLeap: Boolean
-        get() = value % 4 == 0 && (value % 100 != 0 || value % 400 == 0)
+    val isLeap: Boolean get() = isLeapYear(value)
 
     /**
      * The length of the year in days.
      */
-    val length: IntDays
-        get() = if (isLeap) 366.days else 365.days
+    val length: IntDays get() = lengthOfYear(value)
 
     /**
      * The last day of the year. This will be either `365` or `366` depending on whether this is a common or leap year.
      */
-    val lastDay: Int get() = length.value
+    val lastDay: Int get() = lastDayOfYear(value)
 
     /**
      * The day range of the year. This will be either `1..365` or `1.366` depending on whether this is a common or leap
@@ -63,11 +68,10 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
     val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
     operator fun plus(years: LongYears): Year {
-        val newValue = checkValidYear(value + years.value)
-        return Year(newValue)
+        return Year(value + years.value)
     }
 
-    operator fun plus(years: IntYears) = plus(years.toLongYears())
+    operator fun plus(years: IntYears): Year = plus(years.toLongYears())
 
     operator fun minus(years: LongYears): Year {
         return if (years.value == Long.MIN_VALUE) {
@@ -77,22 +81,10 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
         }
     }
 
-    operator fun minus(years: IntYears) = plus(years.toLongYears().negateUnchecked())
+    operator fun minus(years: IntYears): Year = plus(years.toLongYears().negateUnchecked())
 
     operator fun contains(yearMonth: YearMonth): Boolean = yearMonth.year == value
     operator fun contains(date: Date): Boolean = date.year == value
-
-    /**
-     * Ensures that this year is valid, throwing an exception if it isn't.
-     * @throws DateTimeException if the year is invalid
-     * @see isValid
-     */
-    fun validated(): Year {
-        if (!isValid) {
-            throw DateTimeException(getInvalidYearMessage(value.toLong()))
-        }
-        return this
-    }
 
     override fun has(property: TemporalProperty<*>): Boolean {
         return when (property) {
@@ -145,22 +137,22 @@ inline class Year(val value: Int) : Temporal, Comparable<Year> {
         /**
          * The earliest supported year value.
          */
-        const val MIN_VALUE = -999_999_999
+        const val MIN_VALUE: Int = -999_999_999
 
         /**
          * The latest supported year value.
          */
-        const val MAX_VALUE = 999_999_999
+        const val MAX_VALUE: Int = 999_999_999
 
         /**
          * The earliest supported [Year], which can be used as a "far past" sentinel.
          */
-        val MIN = Year(MIN_VALUE)
+        val MIN: Year = Year(MIN_VALUE)
 
         /**
          * The latest supported [Year], which can be used as a "far future" sentinel.
          */
-        val MAX = Year(MAX_VALUE)
+        val MAX: Year = Year(MAX_VALUE)
     }
 }
 
@@ -197,22 +189,38 @@ internal fun ParseResult.toYear(): Year? {
     val value = this[DateProperty.Year]
 
     return if (value != null) {
-        Year(checkValidYear(value))
+        Year(value)
     } else {
         null
     }
 }
 
-internal fun isLeapYear(year: Int) = Year(year).isLeap
-internal fun lengthOfYear(year: Int) = Year(year).length
-internal fun lastDayOfYear(year: Int): Int = Year(year).lastDay
-internal fun checkValidYear(year: Int) = Year(year).validated().value
+internal fun isLeapYear(year: Int): Boolean {
+    return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+}
+
+internal fun lengthOfYear(year: Int): IntDays {
+    return if (isLeapYear(year)) 366.days else 365.days
+}
+
+internal fun lastDayOfYear(year: Int): Int = lengthOfYear(year).value
+
+internal fun checkValidYear(year: Int): Int {
+    if (!isValidYear(year)) {
+        throw DateTimeException(getInvalidYearMessage(year.toLong()))
+    }
+    return year
+}
 
 internal fun checkValidYear(year: Long): Int {
     if (!isValidYear(year)) {
         throw DateTimeException(getInvalidYearMessage(year))
     }
     return year.toInt()
+}
+
+internal fun isValidYear(year: Int): Boolean {
+    return year in Year.MIN_VALUE..Year.MAX_VALUE
 }
 
 internal fun isValidYear(year: Long): Boolean {

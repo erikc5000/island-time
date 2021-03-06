@@ -1,12 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.30"
     application
-}
-
-repositories {
-    jcenter()
 }
 
 dependencies {
@@ -14,7 +10,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "io.islandtime.codegen.MainKt"
+    mainClass.set("io.islandtime.codegen.MainKt")
 }
 
 tasks.withType<KotlinCompile>().configureEach {

@@ -1,5 +1,8 @@
 package io.islandtime
 
+import dev.erikchristensen.javamath2kmp.floorDiv
+import dev.erikchristensen.javamath2kmp.floorMod
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.base.BooleanProperty
 import io.islandtime.base.NumberProperty
 import io.islandtime.base.Temporal

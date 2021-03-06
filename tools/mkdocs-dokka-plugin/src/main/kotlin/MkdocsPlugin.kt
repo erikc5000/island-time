@@ -7,6 +7,7 @@ import org.jetbrains.dokka.base.DokkaBase
 import org.jetbrains.dokka.base.renderers.DefaultRenderer
 import org.jetbrains.dokka.base.renderers.PackageListCreator
 import org.jetbrains.dokka.base.renderers.RootCreator
+import org.jetbrains.dokka.base.renderers.isImage
 import org.jetbrains.dokka.base.resolvers.local.DokkaLocationProvider
 import org.jetbrains.dokka.base.resolvers.local.LocationProviderFactory
 import org.jetbrains.dokka.base.resolvers.shared.RecognizedLinkFormat
@@ -60,11 +61,9 @@ class MarkdownContent {
                 append("<code>")
                 codeBlockIsTerminated = false
             }
-
-            append(content.replace("<", "&lt;").replace(">", "&gt;"))
-        } else {
-            append(content)
         }
+        
+        append(content)
     }
 
     fun appendNonCode(content: String): Unit = with(stringBuilder) {
@@ -128,7 +127,7 @@ class MkdocsRenderer(
         return when {
             node.dci.kind == ContentKind.Symbol && node.hasStyle(TextStyle.Monospace) -> {
                 inlineCodeBlock { childrenCallback() }
-                buildNewLine()
+                buildParagraph()
             }
             node.hasStyle(TextStyle.Block) -> {
                 childrenCallback()
@@ -225,7 +224,10 @@ class MkdocsRenderer(
     }
 
     override fun MarkdownContent.buildResource(node: ContentEmbeddedResource, pageContext: ContentPage) {
-        append("Resource")
+        if (node.isImage()) {
+            append("!")
+        }
+        append("[${node.altText}](${node.address})")
     }
 
     override fun MarkdownContent.buildTable(
@@ -278,6 +280,7 @@ class MkdocsRenderer(
                 val builder = MarkdownContent()
                 it.children.forEach {
                     builder.append("| ")
+                    builder.append("<a name=\"${it.dci.dri.first()}\"></a>")
                     builder.append(
                         buildMarkdownContent { it.build(this, pageContext) }.replace(
                             Regex("#+ "),
@@ -294,11 +297,11 @@ class MkdocsRenderer(
 
     override fun MarkdownContent.buildText(textNode: ContentText) {
         if (textNode.text.isNotBlank()) {
-            val decorators = if (!inInlineCodeBlock) decorators(textNode.style) else ""
+            val decorators = decorators(textNode.style, inInlineCodeBlock)
             append(textNode.text.takeWhile { it == ' ' })
-            append(decorators)
+            append(decorators.first)
             append(textNode.text.trim())
-            append(decorators.reversed())
+            append(decorators.second)
             append(textNode.text.takeLastWhile { it == ' ' })
         }
     }
@@ -407,15 +410,23 @@ class MkdocsRenderer(
         append("`")
     }
 
-    private fun decorators(styles: Set<Style>) = buildString {
-        styles.forEach {
-            when (it) {
-                TextStyle.Bold -> append("**")
-                TextStyle.Italic -> append("*")
-                TextStyle.Strong -> append("**")
-                TextStyle.Strikethrough -> append("~~")
-                else -> Unit
+    private fun decorators(styles: Set<Style>, inInlineCodeBlock: Boolean): Pair<String, String> {
+        val decorators = buildString {
+            styles.forEach {
+                when (it) {
+                    TextStyle.Bold -> if (inInlineCodeBlock) append("<b>") else append("**")
+                    TextStyle.Italic -> if (inInlineCodeBlock) append("<i>") else append("*")
+                    TextStyle.Strong -> if (inInlineCodeBlock) append("<strong>") else append("**")
+                    TextStyle.Strikethrough -> if (inInlineCodeBlock) append("<strike>") else append("~~")
+                    else -> Unit
+                }
             }
+        }
+
+        return if (inInlineCodeBlock) {
+            decorators to decorators.replace("<", "</")
+        } else {
+            decorators to decorators.reversed()
         }
     }
 
@@ -424,8 +435,8 @@ class MkdocsRenderer(
 
     private fun MarkdownContent.buildLink(to: PageNode, from: PageNode) =
         buildLink(locationProvider.resolve(to, from)!!) {
-        append(to.name)
-    }
+            append(to.name)
+        }
 
     override suspend fun renderPage(page: PageNode) {
         val path by lazy {

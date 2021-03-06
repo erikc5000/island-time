@@ -31,10 +31,6 @@ class OffsetDateTime(
     val offset: UtcOffset
 ) : TimePoint<OffsetDateTime> {
 
-    init {
-        offset.validate()
-    }
-
     /**
      * Creates an [OffsetDateTime].
      * @throws DateTimeException if the offset is invalid

@@ -1,5 +1,6 @@
 package io.islandtime.formatter.internal
 
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.DateTimeException
 import io.islandtime.TimeZone
 import io.islandtime.UtcOffset
@@ -11,7 +12,6 @@ import io.islandtime.format.dsl.IsoFormat
 import io.islandtime.formatter.TemporalFormatter
 import io.islandtime.formatter.dsl.LengthExceededBehavior
 import io.islandtime.internal.appendZeroPadded
-import io.islandtime.internal.toIntExact
 import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.seconds
 import io.islandtime.properties.TimePointProperty
@@ -323,7 +323,7 @@ internal class UtcOffsetFormatter(
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
         val totalSeconds = context.temporal.get(UtcOffsetProperty.TotalSeconds)
-        val offset = UtcOffset(totalSeconds.seconds.toIntSeconds()).validated()
+        val offset = UtcOffset(totalSeconds.seconds.toIntSeconds())
 
         stringBuilder.apply {
             if (offset.isZero()) {
@@ -382,7 +382,7 @@ internal sealed class LocalizedUtcOffsetFormatter : TemporalFormatter() {
 
     override fun format(context: Context, stringBuilder: StringBuilder) {
         val value = context.temporal.get(UtcOffsetProperty.TotalSeconds).toIntExact()
-        val offset = UtcOffset(value.seconds).validated()
+        val offset = UtcOffset(value.seconds)
 
         // TODO: This could be localized on platforms offering more complete CLDR data (or if using
         //  the ICU), but only JDK14+ seems to have any support for it and it doesn't seem

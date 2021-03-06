@@ -144,7 +144,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn* properties return zero when the range is empty`() {
+    fun `lengthIn properties return zero when the range is empty`() {
         assertEquals(0.years, ZonedDateTimeInterval.EMPTY.lengthInYears)
         assertEquals(0.months, ZonedDateTimeInterval.EMPTY.lengthInMonths)
         assertEquals(0L.weeks, ZonedDateTimeInterval.EMPTY.lengthInWeeks)
@@ -158,7 +158,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn* properties throw an exception when the interval is unbounded`() {
+    fun `lengthIn properties throw an exception when the interval is unbounded`() {
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInWeeks }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInDays }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInHours }

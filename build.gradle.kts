@@ -1,45 +1,17 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaTask
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-
-    dependencies {
-        classpath(Libs.AtomicFU.gradlePlugin)
-    }
+plugins {
+    id("org.jetbrains.dokka")
+    id("kotlinx-atomicfu") version "0.14.4" apply false
 }
 
 subprojects {
-    tasks.withType<JavaCompile>().configureEach {
-        sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-        targetCompatibility = JavaVersion.VERSION_1_8.toString()
-    }
-
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
-            jvmTarget = "1.8"
-        }
-    }
-
-    tasks.withType(AbstractTestTask::class).configureEach {
-        testLogging {
-            events = setOf(TestLogEvent.FAILED)
-            exceptionFormat = TestExceptionFormat.FULL
-            showStackTraces = true
-        }
-    }
-
     tasks.withType<DokkaTask>().configureEach {
         dokkaSourceSets {
             configureEach {
                 val pomArtifactId: String? by project
                 val pomMppArtifactId: String? by project
-                (pomArtifactId ?: pomMppArtifactId)?.let { moduleDisplayName.set(it) }
+                (pomArtifactId ?: pomMppArtifactId)?.let { moduleName.set(it) }
 
                 includes.from(project.file("MODULE.md"))
                 skipEmptyPackages.set(true)

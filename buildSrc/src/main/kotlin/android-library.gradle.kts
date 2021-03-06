@@ -1,8 +1,3 @@
-repositories {
-    google()
-    jcenter()
-}
-
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -10,7 +5,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion(29)
+    compileSdkVersion(30)
 
     defaultConfig {
         minSdkVersion(21)
@@ -29,7 +24,7 @@ android {
 afterEvaluate {
     val androidSourcesJar by tasks.registering(Jar::class) {
         archiveClassifier.set("sources")
-        from(android.sourceSets["main"].java.sourceFiles)
+        from(android.sourceSets["main"].java.srcDirs)
     }
 
     publishing {

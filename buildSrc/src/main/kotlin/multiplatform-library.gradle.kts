@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
     kotlin("multiplatform")
     id("published-library")
@@ -46,21 +44,16 @@ kotlin {
     }
 }
 
-val emptySourcesJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("sources")
-}
-
 publishing {
     val pomMppArtifactId: String? by project
 
     publications.withType<MavenPublication>().configureEach {
-        if (name == "kotlinMultiplatform") {
-            if (pomMppArtifactId != null) {
-                artifactId = pomMppArtifactId
+        if (pomMppArtifactId != null) {
+            artifactId = if (name == "kotlinMultiplatform") {
+                pomMppArtifactId
+            } else {
+                "${pomMppArtifactId}-$name"
             }
-            artifact(emptySourcesJar.get())
-        } else if (pomMppArtifactId != null) {
-            artifactId = "${pomMppArtifactId}-$name"
         }
     }
 }

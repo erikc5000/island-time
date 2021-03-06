@@ -6,14 +6,14 @@
 
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.minusExact
+import dev.erikchristensen.javamath2kmp.negateExact
+import dev.erikchristensen.javamath2kmp.plusExact
+import dev.erikchristensen.javamath2kmp.timesExact
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.internal.MONTHS_PER_CENTURY
 import io.islandtime.internal.MONTHS_PER_DECADE
 import io.islandtime.internal.MONTHS_PER_YEAR
-import io.islandtime.internal.minusExact
-import io.islandtime.internal.negateExact
-import io.islandtime.internal.plusExact
-import io.islandtime.internal.timesExact
-import io.islandtime.internal.toIntExact
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int

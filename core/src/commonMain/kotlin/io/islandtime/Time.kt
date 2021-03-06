@@ -1,5 +1,6 @@
 package io.islandtime
 
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*

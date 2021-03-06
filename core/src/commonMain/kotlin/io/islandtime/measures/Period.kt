@@ -1,9 +1,9 @@
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.timesExact
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.base.*
 import io.islandtime.internal.MONTHS_PER_YEAR
-import io.islandtime.internal.timesExact
-import io.islandtime.internal.toIntExact
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.ParseResult
 import io.islandtime.parser.TemporalParser

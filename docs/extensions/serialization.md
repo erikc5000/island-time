@@ -42,8 +42,8 @@ Now, we can serialize the `EventDto` class to JSON with the following code:
 
 ```kotlin
 fun writeToJson(val event: EventDto): String {
-    val json = Json(JsonConfiguration.Stable.copy(prettyPrint = true))
-    return json.stringify(EventDto.serializer(), event)
+    val json = Json { prettyPrint = true }
+    return json.encodeToString(EventDto.serializer(), event)
 }
 ```
 

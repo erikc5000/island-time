@@ -6,17 +6,17 @@
 
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.minusExact
+import dev.erikchristensen.javamath2kmp.negateExact
+import dev.erikchristensen.javamath2kmp.plusExact
+import dev.erikchristensen.javamath2kmp.timesExact
+import dev.erikchristensen.javamath2kmp.toIntExact
 import io.islandtime.internal.NANOSECONDS_PER_DAY
 import io.islandtime.internal.NANOSECONDS_PER_HOUR
 import io.islandtime.internal.NANOSECONDS_PER_MICROSECOND
 import io.islandtime.internal.NANOSECONDS_PER_MILLISECOND
 import io.islandtime.internal.NANOSECONDS_PER_MINUTE
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.internal.minusExact
-import io.islandtime.internal.negateExact
-import io.islandtime.internal.plusExact
-import io.islandtime.internal.timesExact
-import io.islandtime.internal.toIntExact
 import io.islandtime.internal.toZeroPaddedString
 import kotlin.Boolean
 import kotlin.Comparable

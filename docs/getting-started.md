@@ -13,16 +13,12 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 
 ## Version Requirements
 
-!!! warning "Important"
-    Your project's Kotlin compiler version must match the version used by Island Time.
-
-Due to the experimental status of [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html), which are used in Island Time's public API, the version of Kotlin that you use in your project must match the version used by Island Time &mdash; even for non-native targets.
-
-| Island Time Version | Kotlin Version |
-| --- | --- |
+| Island Time Version | Kotlin Version | Notes |
+| --- | --- | --- |
 | 0.1.x | 1.3.6x |
 | 0.2.x | 1.3.7x |
-| 0.3.x | 1.4.0/1.4.10 |
+| 0.3.x/0.4.x | 1.4.x | Island Time 0.4.0 is built/published with Kotlin 1.4.20. While binary compatible with earlier versions, if you're using [HMPP](https://kotlinlang.org/docs/reference/mpp-share-on-platforms.html#share-code-on-similar-platforms) in your project, you'll need to update to at least 1.4.20 due to publishing changes. See the Kotlin 1.4.20 [release notes](https://blog.jetbrains.com/kotlin/2020/11/kotlin-1-4-20-released/) for details. |
+| 0.5.x | 1.4.3x | Island Time 0.5.0 uses the [new inline class name mangling](https://kotlinlang.org/docs/whatsnew1430.html#improved-inline-classes) introduced in Kotlin 1.4.30, requiring that you use at least that version. |
 
 ### JVM
 

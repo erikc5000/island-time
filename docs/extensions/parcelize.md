@@ -1,6 +1,6 @@
 #`@Parcelize`
 
-The `parcelize-extensions` artifact provides a set of parcelers for use with the [Parcelable implementation generator](https://kotlinlang.org/docs/reference/compiler-plugins.html#parcelable-implementations-generator) in the Kotlin Android Extensions.
+The `parcelize-extensions` artifact provides a set of parcelers for use with the [Parcelable implementation generator](https://kotlinlang.org/docs/reference/compiler-plugins.html#parcelable-implementations-generator) plugin.
 
 ## Gradle Setup
 

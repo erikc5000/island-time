@@ -174,7 +174,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn* properties return zero when the range is empty`() {
+    fun `lengthIn properties return zero when the range is empty`() {
         assertEquals(0.years, OffsetDateTimeInterval.EMPTY.lengthInYears)
         assertEquals(0.months, OffsetDateTimeInterval.EMPTY.lengthInMonths)
         assertEquals(0L.weeks, OffsetDateTimeInterval.EMPTY.lengthInWeeks)
@@ -188,7 +188,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn* properties throw an exception when the interval is unbounded`() {
+    fun `lengthIn properties throw an exception when the interval is unbounded`() {
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInYears }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMonths }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInWeeks }

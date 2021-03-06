@@ -2,6 +2,10 @@
 
 package io.islandtime
 
+import dev.erikchristensen.javamath2kmp.floorDiv
+import dev.erikchristensen.javamath2kmp.floorMod
+import dev.erikchristensen.javamath2kmp.plusExact
+import dev.erikchristensen.javamath2kmp.timesExact
 import io.islandtime.base.*
 import io.islandtime.internal.*
 import io.islandtime.measures.*

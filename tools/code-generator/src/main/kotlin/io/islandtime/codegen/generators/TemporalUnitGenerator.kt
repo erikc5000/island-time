@@ -9,6 +9,7 @@ import io.islandtime.codegen.descriptions.TemporalUnitDescription
 import io.islandtime.codegen.descriptions.per
 import io.islandtime.codegen.dsl.*
 import io.islandtime.codegen.internal
+import io.islandtime.codegen.javamath2kmp
 import io.islandtime.codegen.measures
 import io.islandtime.codegen.util.zero
 import java.util.*
@@ -339,7 +340,7 @@ fun TemporalUnitClassGenerator.buildWholeToStringCodeBlock() = io.islandtime.cod
     val arguments = mapOf(
         "value" to valuePropertySpec,
         "absoluteValue" to ClassName("kotlin.math", "absoluteValue"),
-        "timesExact" to internal("timesExact"),
+        "timesExact" to javamath2kmp("timesExact"),
         "minValue" to "${primitiveTypeName.simpleName}.MIN_VALUE"
     )
 
@@ -404,7 +405,7 @@ fun LongTemporalUnitClassGenerator.buildToIntFunSpec() = buildFunSpec("toInt") {
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
     )
-    addStatement("return %N.%T()", valuePropertySpec, internal("toIntExact"))
+    addStatement("return %N.%T()", valuePropertySpec, javamath2kmp("toIntExact"))
 }
 
 fun LongTemporalUnitClassGenerator.buildToIntUncheckedFunSpec() = buildFunSpec(
@@ -428,7 +429,7 @@ fun LongTemporalUnitClassGenerator.buildToIntUnitFunSpec() = buildFunSpec(
         "return %T(%N.%T())",
         description.intClassName,
         valuePropertySpec,
-        internal("toIntExact")
+        javamath2kmp("toIntExact")
     )
 }
 
@@ -454,7 +455,7 @@ fun TemporalUnitClassGenerator.buildUnaryMinusFunSpec() = buildFunSpec("unaryMin
         "return %T(%N.%T())",
         className,
         valuePropertySpec,
-        internal("negateExact")
+        javamath2kmp("negateExact")
     )
 }
 
@@ -472,12 +473,12 @@ enum class PlusOrMinusOperator(
 ) {
     PLUS(
         functionName = "plus",
-        operator = internal("plusExact"),
+        operator = javamath2kmp("plusExact"),
         uncheckedOperator = "+"
     ),
     MINUS(
         functionName = "minus",
-        operator = internal("minusExact"),
+        operator = javamath2kmp("minusExact"),
         uncheckedOperator = "-"
     )
 }
@@ -653,7 +654,7 @@ fun TemporalUnitClassGenerator.buildTimesFunSpec(
             "return %T(%N %T %N)",
             className,
             valuePropertySpec,
-            internal("timesExact"),
+            javamath2kmp("timesExact"),
             scalar
         )
     }
@@ -801,7 +802,7 @@ fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
                             "return (%N %T %T).${conversion.toUnit.lowerPluralName}"
                         },
                         valuePropertySpec,
-                        internal("timesExact"),
+                        javamath2kmp("timesExact"),
                         conversion.propertyClassName
                     )
                 }

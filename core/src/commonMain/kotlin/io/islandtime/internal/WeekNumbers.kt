@@ -1,5 +1,6 @@
 package io.islandtime.internal
 
+import dev.erikchristensen.javamath2kmp.floorMod
 import io.islandtime.*
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.measures.IntWeeks

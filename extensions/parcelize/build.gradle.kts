@@ -1,11 +1,11 @@
 plugins {
     `android-library`
-    id("kotlin-android-extensions")
+    id("kotlin-parcelize")
 }
 
 android {
     compileOptions {
-        coreLibraryDesugaringEnabled = true
+        isCoreLibraryDesugaringEnabled = true
     }
 
     sourceSets {
