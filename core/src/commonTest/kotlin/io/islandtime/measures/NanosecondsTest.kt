@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 import kotlin.time.ExperimentalTime
-import kotlin.time.nanoseconds as kotlinNanoseconds
+import kotlin.time.Duration as KotlinDuration
 
 class NanosecondsTest {
     @Test
@@ -239,18 +239,22 @@ class NanosecondsTest {
     @ExperimentalTime
     @Test
     fun `conversion to Kotlin Duration`() {
-        assertEquals(0.kotlinNanoseconds, 0.nanoseconds.toKotlinDuration())
-        assertEquals(1.kotlinNanoseconds, 1.nanoseconds.toKotlinDuration())
-        assertEquals((-1).kotlinNanoseconds, (-1L).nanoseconds.toKotlinDuration())
-        assertEquals(Long.MIN_VALUE.kotlinNanoseconds, Long.MIN_VALUE.nanoseconds.toKotlinDuration())
+        assertEquals(KotlinDuration.nanoseconds(0), 0.nanoseconds.toKotlinDuration())
+        assertEquals(KotlinDuration.nanoseconds(1), 1.nanoseconds.toKotlinDuration())
+        assertEquals(KotlinDuration.nanoseconds(-1), (-1L).nanoseconds.toKotlinDuration())
+        assertEquals(KotlinDuration.nanoseconds(Long.MIN_VALUE), Long.MIN_VALUE.nanoseconds.toKotlinDuration())
     }
 
     @ExperimentalTime
     @Test
     fun `conversion from Kotlin Duration`() {
-        assertEquals(0L.nanoseconds, 0.kotlinNanoseconds.toIslandNanoseconds())
-        assertEquals(1L.nanoseconds, 1.kotlinNanoseconds.toIslandNanoseconds())
-        assertEquals((-1L).nanoseconds, (-1L).kotlinNanoseconds.toIslandNanoseconds())
-        assertEquals(Long.MIN_VALUE.nanoseconds, Long.MIN_VALUE.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals(0L.nanoseconds, KotlinDuration.nanoseconds(0).toIslandNanoseconds())
+        assertEquals(1L.nanoseconds, KotlinDuration.nanoseconds(1).toIslandNanoseconds())
+        assertEquals((-1L).nanoseconds, KotlinDuration.nanoseconds(-1L).toIslandNanoseconds())
+
+        assertEquals(
+            Long.MIN_VALUE.nanoseconds.inMilliseconds.inNanoseconds,
+            KotlinDuration.nanoseconds(Long.MIN_VALUE).toIslandNanoseconds()
+        )
     }
 }

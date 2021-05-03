@@ -6,20 +6,22 @@
 
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.absExact
 import dev.erikchristensen.javamath2kmp.minusExact
 import dev.erikchristensen.javamath2kmp.negateExact
 import dev.erikchristensen.javamath2kmp.plusExact
 import dev.erikchristensen.javamath2kmp.timesExact
 import dev.erikchristensen.javamath2kmp.toIntExact
-import io.islandtime.internal.MONTHS_PER_CENTURY
-import io.islandtime.internal.MONTHS_PER_DECADE
-import io.islandtime.internal.MONTHS_PER_YEAR
+import io.islandtime.`internal`.MONTHS_PER_CENTURY
+import io.islandtime.`internal`.MONTHS_PER_DECADE
+import io.islandtime.`internal`.MONTHS_PER_YEAR
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -27,64 +29,66 @@ import kotlin.math.absoluteValue
 /**
  * A number of months.
  */
-inline class IntMonths(
+@JvmInline
+public value class IntMonths(
   /**
    * The underlying value.
    */
-  val value: Int
+  public val `value`: Int
 ) : Comparable<IntMonths> {
   /**
    * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  val absoluteValue: IntMonths
-    get() = if (value < 0) -this else this
+  public val absoluteValue: IntMonths
+    get() = IntMonths(absExact(`value`))
+
   /**
    * Converts this duration to the number of whole years.
    */
-  val inYears: IntYears
-    get() = (value / MONTHS_PER_YEAR).years
+  public val inYears: IntYears
+    get() = (`value` / MONTHS_PER_YEAR).years
 
   /**
    * Converts this duration to the number of whole decades.
    */
-  val inDecades: IntDecades
-    get() = (value / MONTHS_PER_DECADE).decades
+  public val inDecades: IntDecades
+    get() = (`value` / MONTHS_PER_DECADE).decades
 
   /**
    * Converts this duration to the number of whole centuries.
    */
-  val inCenturies: IntCenturies
-    get() = (value / MONTHS_PER_CENTURY).centuries
+  public val inCenturies: IntCenturies
+    get() = (`value` / MONTHS_PER_CENTURY).centuries
 
   /**
    * Checks if this duration is zero.
    */
-  fun isZero(): Boolean = value == 0
+  public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
-  fun isNegative(): Boolean = value < 0
+  public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
-  fun isPositive(): Boolean = value > 0
+  public fun isPositive(): Boolean = `value` > 0
 
-  override fun compareTo(other: IntMonths): Int = value.compareTo(other.value)
+  public override fun compareTo(other: IntMonths): Int = `value`.compareTo(other.`value`)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  override fun toString(): String {
-     return when (value) {
+  public override fun toString(): String {
+     return when (`value`) {
        0 -> "P0M"
        Int.MIN_VALUE -> "-P2147483648M"
        else -> buildString {
-         if (value < 0) { append('-') }
+         if (`value` < 0) { append('-') }
          append("P")
-         append(value.absoluteValue)
+         append(`value`.absoluteValue)
          append('M')
        }
      }
@@ -94,34 +98,34 @@ inline class IntMonths(
    * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun unaryMinus() = IntMonths(value.negateExact())
+  public operator fun unaryMinus(): IntMonths = IntMonths(`value`.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked() = IntMonths(-value)
+  internal fun negateUnchecked(): IntMonths = IntMonths(-`value`)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Int) = IntMonths(value timesExact scalar)
+  public operator fun times(scalar: Int): IntMonths = IntMonths(`value` timesExact scalar)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Long) = this.toLongMonths() * scalar
+  public operator fun times(scalar: Long): LongMonths = this.toLongMonths() * scalar
 
   /**
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Int): IntMonths {
+  public operator fun div(scalar: Int): IntMonths {
      return if (scalar == -1) {
        -this
      } else {
-       IntMonths(value / scalar)
+       IntMonths(`value` / scalar)
      }
   }
 
@@ -129,175 +133,185 @@ inline class IntMonths(
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
-  operator fun div(scalar: Long): LongMonths = this.toLongMonths() / scalar
-  operator fun rem(scalar: Int) = IntMonths(value % scalar)
+  public operator fun div(scalar: Long): LongMonths = this.toLongMonths() / scalar
 
-  operator fun rem(scalar: Long) = this.toLongMonths() % scalar
+  public operator fun rem(scalar: Int): IntMonths = IntMonths(`value` % scalar)
 
-  operator fun plus(months: IntMonths) = IntMonths(value plusExact months.value)
+  public operator fun rem(scalar: Long): LongMonths = this.toLongMonths() % scalar
 
-  operator fun minus(months: IntMonths) = IntMonths(value minusExact months.value)
+  public operator fun plus(months: IntMonths): IntMonths = IntMonths(`value` plusExact months.value)
 
-  operator fun plus(months: LongMonths) = LongMonths(value.toLong() plusExact months.value)
+  public operator fun minus(months: IntMonths): IntMonths = IntMonths(`value` minusExact
+      months.value)
 
-  operator fun minus(months: LongMonths) = LongMonths(value.toLong() minusExact months.value)
+  public operator fun plus(months: LongMonths): LongMonths = LongMonths(`value`.toLong() plusExact
+      months.value)
 
-  operator fun plus(years: IntYears) = this + years.inMonths
+  public operator fun minus(months: LongMonths): LongMonths = LongMonths(`value`.toLong() minusExact
+      months.value)
 
-  operator fun minus(years: IntYears) = this - years.inMonths
+  public operator fun plus(years: IntYears): IntMonths = this + years.inMonths
 
-  operator fun plus(years: LongYears) = this.toLongMonths() + years.inMonths
+  public operator fun minus(years: IntYears): IntMonths = this - years.inMonths
 
-  operator fun minus(years: LongYears) = this.toLongMonths() - years.inMonths
+  public operator fun plus(years: LongYears): LongMonths = this.toLongMonths() + years.inMonths
 
-  operator fun plus(decades: IntDecades) = this + decades.inMonths
+  public operator fun minus(years: LongYears): LongMonths = this.toLongMonths() - years.inMonths
 
-  operator fun minus(decades: IntDecades) = this - decades.inMonths
+  public operator fun plus(decades: IntDecades): IntMonths = this + decades.inMonths
 
-  operator fun plus(decades: LongDecades) = this.toLongMonths() + decades.inMonths
+  public operator fun minus(decades: IntDecades): IntMonths = this - decades.inMonths
 
-  operator fun minus(decades: LongDecades) = this.toLongMonths() - decades.inMonths
+  public operator fun plus(decades: LongDecades): LongMonths = this.toLongMonths() +
+      decades.inMonths
 
-  operator fun plus(centuries: IntCenturies) = this + centuries.inMonths
+  public operator fun minus(decades: LongDecades): LongMonths = this.toLongMonths() -
+      decades.inMonths
 
-  operator fun minus(centuries: IntCenturies) = this - centuries.inMonths
+  public operator fun plus(centuries: IntCenturies): IntMonths = this + centuries.inMonths
 
-  operator fun plus(centuries: LongCenturies) = this.toLongMonths() + centuries.inMonths
+  public operator fun minus(centuries: IntCenturies): IntMonths = this - centuries.inMonths
 
-  operator fun minus(centuries: LongCenturies) = this.toLongMonths() - centuries.inMonths
+  public operator fun plus(centuries: LongCenturies): LongMonths = this.toLongMonths() +
+      centuries.inMonths
 
-  inline fun <T> toComponents(action: (years: IntYears, months: IntMonths) -> T): T {
-    val years = (value / MONTHS_PER_YEAR).years
-    val months = (value % MONTHS_PER_YEAR).months
+  public operator fun minus(centuries: LongCenturies): LongMonths = this.toLongMonths() -
+      centuries.inMonths
+
+  public inline fun <T> toComponents(action: (years: IntYears, months: IntMonths) -> T): T {
+    val years = (`value` / MONTHS_PER_YEAR).years
+    val months = (`value` % MONTHS_PER_YEAR).months
     return action(years, months)
   }
 
-  inline fun <T> toComponents(action: (
+  public inline fun <T> toComponents(action: (
     decades: IntDecades,
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val decades = (value / MONTHS_PER_DECADE).decades
-    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).years
-    val months = (value % MONTHS_PER_YEAR).months
+    val decades = (`value` / MONTHS_PER_DECADE).decades
+    val years = ((`value` % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).years
+    val months = (`value` % MONTHS_PER_YEAR).months
     return action(decades, years, months)
   }
 
-  inline fun <T> toComponents(action: (
+  public inline fun <T> toComponents(action: (
     centuries: IntCenturies,
     decades: IntDecades,
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val centuries = (value / MONTHS_PER_CENTURY).centuries
-    val decades = ((value % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).decades
-    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).years
-    val months = (value % MONTHS_PER_YEAR).months
+    val centuries = (`value` / MONTHS_PER_CENTURY).centuries
+    val decades = ((`value` % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).decades
+    val years = ((`value` % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).years
+    val months = (`value` % MONTHS_PER_YEAR).months
     return action(centuries, decades, years, months)
   }
 
   /**
    * Converts this duration to [LongMonths].
    */
-  fun toLongMonths() = LongMonths(value.toLong())
+  public fun toLongMonths(): LongMonths = LongMonths(`value`.toLong())
 
   /**
    * Converts this duration to a `Long` value.
    */
-  fun toLong() = value.toLong()
+  public fun toLong(): Long = `value`.toLong()
 
-  companion object {
+  public companion object {
     /**
      * The smallest supported value.
      */
-    val MIN: IntMonths = IntMonths(Int.MIN_VALUE)
+    public val MIN: IntMonths = IntMonths(Int.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    val MAX: IntMonths = IntMonths(Int.MAX_VALUE)
+    public val MAX: IntMonths = IntMonths(Int.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of months.
  */
-val Int.months: IntMonths
+public val Int.months: IntMonths
   get() = IntMonths(this)
 
 /**
  * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Int.times(months: IntMonths) = months * this
+public operator fun Int.times(months: IntMonths): IntMonths = months * this
 
 /**
  * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Long.times(months: IntMonths) = months * this
+public operator fun Long.times(months: IntMonths): LongMonths = months * this
 
 /**
  * A number of months.
  */
-inline class LongMonths(
+@JvmInline
+public value class LongMonths(
   /**
    * The underlying value.
    */
-  val value: Long
+  public val `value`: Long
 ) : Comparable<LongMonths> {
   /**
    * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  val absoluteValue: LongMonths
-    get() = if (value < 0) -this else this
+  public val absoluteValue: LongMonths
+    get() = LongMonths(absExact(`value`))
+
   /**
    * Converts this duration to the number of whole years.
    */
-  val inYears: LongYears
-    get() = (value / MONTHS_PER_YEAR).years
+  public val inYears: LongYears
+    get() = (`value` / MONTHS_PER_YEAR).years
 
   /**
    * Converts this duration to the number of whole decades.
    */
-  val inDecades: LongDecades
-    get() = (value / MONTHS_PER_DECADE).decades
+  public val inDecades: LongDecades
+    get() = (`value` / MONTHS_PER_DECADE).decades
 
   /**
    * Converts this duration to the number of whole centuries.
    */
-  val inCenturies: LongCenturies
-    get() = (value / MONTHS_PER_CENTURY).centuries
+  public val inCenturies: LongCenturies
+    get() = (`value` / MONTHS_PER_CENTURY).centuries
 
   /**
    * Checks if this duration is zero.
    */
-  fun isZero(): Boolean = value == 0L
+  public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
-  fun isNegative(): Boolean = value < 0L
+  public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
-  fun isPositive(): Boolean = value > 0L
+  public fun isPositive(): Boolean = `value` > 0L
 
-  override fun compareTo(other: LongMonths): Int = value.compareTo(other.value)
+  public override fun compareTo(other: LongMonths): Int = `value`.compareTo(other.`value`)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  override fun toString(): String {
-     return when (value) {
+  public override fun toString(): String {
+     return when (`value`) {
        0L -> "P0M"
        Long.MIN_VALUE -> "-P9223372036854775808M"
        else -> buildString {
-         if (value < 0) { append('-') }
+         if (`value` < 0) { append('-') }
          append("P")
-         append(value.absoluteValue)
+         append(`value`.absoluteValue)
          append('M')
        }
      }
@@ -307,34 +321,34 @@ inline class LongMonths(
    * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun unaryMinus() = LongMonths(value.negateExact())
+  public operator fun unaryMinus(): LongMonths = LongMonths(`value`.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked() = LongMonths(-value)
+  internal fun negateUnchecked(): LongMonths = LongMonths(-`value`)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Int) = LongMonths(value timesExact scalar)
+  public operator fun times(scalar: Int): LongMonths = LongMonths(`value` timesExact scalar)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Long) = LongMonths(value timesExact scalar)
+  public operator fun times(scalar: Long): LongMonths = LongMonths(`value` timesExact scalar)
 
   /**
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Int): LongMonths {
+  public operator fun div(scalar: Int): LongMonths {
      return if (scalar == -1) {
        -this
      } else {
-       LongMonths(value / scalar)
+       LongMonths(`value` / scalar)
      }
   }
 
@@ -342,77 +356,81 @@ inline class LongMonths(
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Long): LongMonths {
+  public operator fun div(scalar: Long): LongMonths {
      return if (scalar == -1L) {
        -this
      } else {
-       LongMonths(value / scalar)
+       LongMonths(`value` / scalar)
      }
   }
 
-  operator fun rem(scalar: Int) = LongMonths(value % scalar)
+  public operator fun rem(scalar: Int): LongMonths = LongMonths(`value` % scalar)
 
-  operator fun rem(scalar: Long) = LongMonths(value % scalar)
+  public operator fun rem(scalar: Long): LongMonths = LongMonths(`value` % scalar)
 
-  operator fun plus(months: IntMonths) = LongMonths(value plusExact months.value)
+  public operator fun plus(months: IntMonths): LongMonths = LongMonths(`value` plusExact
+      months.value)
 
-  operator fun minus(months: IntMonths) = LongMonths(value minusExact months.value)
+  public operator fun minus(months: IntMonths): LongMonths = LongMonths(`value` minusExact
+      months.value)
 
-  operator fun plus(months: LongMonths) = LongMonths(value plusExact months.value)
+  public operator fun plus(months: LongMonths): LongMonths = LongMonths(`value` plusExact
+      months.value)
 
-  operator fun minus(months: LongMonths) = LongMonths(value minusExact months.value)
+  public operator fun minus(months: LongMonths): LongMonths = LongMonths(`value` minusExact
+      months.value)
 
-  operator fun plus(years: IntYears) = this + years.inMonths
+  public operator fun plus(years: IntYears): LongMonths = this + years.inMonths
 
-  operator fun minus(years: IntYears) = this - years.inMonths
+  public operator fun minus(years: IntYears): LongMonths = this - years.inMonths
 
-  operator fun plus(years: LongYears) = this + years.inMonths
+  public operator fun plus(years: LongYears): LongMonths = this + years.inMonths
 
-  operator fun minus(years: LongYears) = this - years.inMonths
+  public operator fun minus(years: LongYears): LongMonths = this - years.inMonths
 
-  operator fun plus(decades: IntDecades) = this + decades.inMonths
+  public operator fun plus(decades: IntDecades): LongMonths = this + decades.inMonths
 
-  operator fun minus(decades: IntDecades) = this - decades.inMonths
+  public operator fun minus(decades: IntDecades): LongMonths = this - decades.inMonths
 
-  operator fun plus(decades: LongDecades) = this + decades.inMonths
+  public operator fun plus(decades: LongDecades): LongMonths = this + decades.inMonths
 
-  operator fun minus(decades: LongDecades) = this - decades.inMonths
+  public operator fun minus(decades: LongDecades): LongMonths = this - decades.inMonths
 
-  operator fun plus(centuries: IntCenturies) = this + centuries.inMonths
+  public operator fun plus(centuries: IntCenturies): LongMonths = this + centuries.inMonths
 
-  operator fun minus(centuries: IntCenturies) = this - centuries.inMonths
+  public operator fun minus(centuries: IntCenturies): LongMonths = this - centuries.inMonths
 
-  operator fun plus(centuries: LongCenturies) = this + centuries.inMonths
+  public operator fun plus(centuries: LongCenturies): LongMonths = this + centuries.inMonths
 
-  operator fun minus(centuries: LongCenturies) = this - centuries.inMonths
+  public operator fun minus(centuries: LongCenturies): LongMonths = this - centuries.inMonths
 
-  inline fun <T> toComponents(action: (years: LongYears, months: IntMonths) -> T): T {
-    val years = (value / MONTHS_PER_YEAR).years
-    val months = (value % MONTHS_PER_YEAR).toInt().months
+  public inline fun <T> toComponents(action: (years: LongYears, months: IntMonths) -> T): T {
+    val years = (`value` / MONTHS_PER_YEAR).years
+    val months = (`value` % MONTHS_PER_YEAR).toInt().months
     return action(years, months)
   }
 
-  inline fun <T> toComponents(action: (
+  public inline fun <T> toComponents(action: (
     decades: LongDecades,
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val decades = (value / MONTHS_PER_DECADE).decades
-    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt().years
-    val months = (value % MONTHS_PER_YEAR).toInt().months
+    val decades = (`value` / MONTHS_PER_DECADE).decades
+    val years = ((`value` % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt().years
+    val months = (`value` % MONTHS_PER_YEAR).toInt().months
     return action(decades, years, months)
   }
 
-  inline fun <T> toComponents(action: (
+  public inline fun <T> toComponents(action: (
     centuries: LongCenturies,
     decades: IntDecades,
     years: IntYears,
     months: IntMonths
   ) -> T): T {
-    val centuries = (value / MONTHS_PER_CENTURY).centuries
-    val decades = ((value % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).toInt().decades
-    val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt().years
-    val months = (value % MONTHS_PER_YEAR).toInt().months
+    val centuries = (`value` / MONTHS_PER_CENTURY).centuries
+    val decades = ((`value` % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).toInt().decades
+    val years = ((`value` % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt().years
+    val months = (`value` % MONTHS_PER_YEAR).toInt().months
     return action(centuries, decades, years, months)
   }
 
@@ -420,52 +438,52 @@ inline class LongMonths(
    * Converts this duration to [IntMonths].
    * @throws ArithmeticException if overflow occurs
    */
-  fun toIntMonths() = IntMonths(value.toIntExact())
+  public fun toIntMonths(): IntMonths = IntMonths(`value`.toIntExact())
 
   /**
    * Converts this duration to [IntMonths] without checking for overflow.
    */
   @PublishedApi
-  internal fun toIntMonthsUnchecked() = IntMonths(value.toInt())
+  internal fun toIntMonthsUnchecked(): IntMonths = IntMonths(`value`.toInt())
 
   /**
    * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
-  fun toInt() = value.toIntExact()
+  public fun toInt(): Int = `value`.toIntExact()
 
   /**
    * Converts this duration to an `Int` value without checking for overflow.
    */
-  internal fun toIntUnchecked() = value.toInt()
+  internal fun toIntUnchecked(): Int = `value`.toInt()
 
-  companion object {
+  public companion object {
     /**
      * The smallest supported value.
      */
-    val MIN: LongMonths = LongMonths(Long.MIN_VALUE)
+    public val MIN: LongMonths = LongMonths(Long.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    val MAX: LongMonths = LongMonths(Long.MAX_VALUE)
+    public val MAX: LongMonths = LongMonths(Long.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of months.
  */
-val Long.months: LongMonths
+public val Long.months: LongMonths
   get() = LongMonths(this)
 
 /**
  * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Int.times(months: LongMonths) = months * this
+public operator fun Int.times(months: LongMonths): LongMonths = months * this
 
 /**
  * Multiplies this value by a duration of months.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Long.times(months: LongMonths) = months * this
+public operator fun Long.times(months: LongMonths): LongMonths = months * this

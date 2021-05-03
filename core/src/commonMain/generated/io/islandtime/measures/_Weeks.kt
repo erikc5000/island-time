@@ -6,18 +6,20 @@
 
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.absExact
 import dev.erikchristensen.javamath2kmp.minusExact
 import dev.erikchristensen.javamath2kmp.negateExact
 import dev.erikchristensen.javamath2kmp.plusExact
 import dev.erikchristensen.javamath2kmp.timesExact
 import dev.erikchristensen.javamath2kmp.toIntExact
-import io.islandtime.internal.DAYS_PER_WEEK
+import io.islandtime.`internal`.DAYS_PER_WEEK
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
@@ -25,59 +27,61 @@ import kotlin.math.absoluteValue
 /**
  * A number of weeks.
  */
-inline class IntWeeks(
+@JvmInline
+public value class IntWeeks(
   /**
    * The underlying value.
    */
-  val value: Int
+  public val `value`: Int
 ) : Comparable<IntWeeks> {
   /**
    * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  val absoluteValue: IntWeeks
-    get() = if (value < 0) -this else this
+  public val absoluteValue: IntWeeks
+    get() = IntWeeks(absExact(`value`))
+
   /**
    * Converts this duration to days.
    * @throws ArithmeticException if overflow occurs
    */
-  val inDays: IntDays
-    get() = (value timesExact DAYS_PER_WEEK).days
+  public val inDays: IntDays
+    get() = (`value` timesExact DAYS_PER_WEEK).days
 
   /**
    * Converts this duration to days without checking for overflow.
    */
   internal val inDaysUnchecked: IntDays
-    get() = (value * DAYS_PER_WEEK).days
+    get() = (`value` * DAYS_PER_WEEK).days
 
   /**
    * Checks if this duration is zero.
    */
-  fun isZero(): Boolean = value == 0
+  public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
-  fun isNegative(): Boolean = value < 0
+  public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
-  fun isPositive(): Boolean = value > 0
+  public fun isPositive(): Boolean = `value` > 0
 
-  override fun compareTo(other: IntWeeks): Int = value.compareTo(other.value)
+  public override fun compareTo(other: IntWeeks): Int = `value`.compareTo(other.`value`)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  override fun toString(): String {
-     return when (value) {
+  public override fun toString(): String {
+     return when (`value`) {
        0 -> "P0W"
        Int.MIN_VALUE -> "-P2147483648W"
        else -> buildString {
-         if (value < 0) { append('-') }
+         if (`value` < 0) { append('-') }
          append("P")
-         append(value.absoluteValue)
+         append(`value`.absoluteValue)
          append('W')
        }
      }
@@ -87,34 +91,34 @@ inline class IntWeeks(
    * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun unaryMinus() = IntWeeks(value.negateExact())
+  public operator fun unaryMinus(): IntWeeks = IntWeeks(`value`.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked() = IntWeeks(-value)
+  internal fun negateUnchecked(): IntWeeks = IntWeeks(-`value`)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Int) = IntWeeks(value timesExact scalar)
+  public operator fun times(scalar: Int): IntWeeks = IntWeeks(`value` timesExact scalar)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Long) = this.toLongWeeks() * scalar
+  public operator fun times(scalar: Long): LongWeeks = this.toLongWeeks() * scalar
 
   /**
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Int): IntWeeks {
+  public operator fun div(scalar: Int): IntWeeks {
      return if (scalar == -1) {
        -this
      } else {
-       IntWeeks(value / scalar)
+       IntWeeks(`value` / scalar)
      }
   }
 
@@ -122,124 +126,129 @@ inline class IntWeeks(
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
-  operator fun div(scalar: Long): LongWeeks = this.toLongWeeks() / scalar
-  operator fun rem(scalar: Int) = IntWeeks(value % scalar)
+  public operator fun div(scalar: Long): LongWeeks = this.toLongWeeks() / scalar
 
-  operator fun rem(scalar: Long) = this.toLongWeeks() % scalar
+  public operator fun rem(scalar: Int): IntWeeks = IntWeeks(`value` % scalar)
 
-  operator fun plus(days: IntDays) = this.inDays + days
+  public operator fun rem(scalar: Long): LongWeeks = this.toLongWeeks() % scalar
 
-  operator fun minus(days: IntDays) = this.inDays - days
+  public operator fun plus(days: IntDays): IntDays = this.inDays + days
 
-  operator fun plus(days: LongDays) = this.toLongWeeks().inDays + days
+  public operator fun minus(days: IntDays): IntDays = this.inDays - days
 
-  operator fun minus(days: LongDays) = this.toLongWeeks().inDays - days
+  public operator fun plus(days: LongDays): LongDays = this.toLongWeeks().inDays + days
 
-  operator fun plus(weeks: IntWeeks) = IntWeeks(value plusExact weeks.value)
+  public operator fun minus(days: LongDays): LongDays = this.toLongWeeks().inDays - days
 
-  operator fun minus(weeks: IntWeeks) = IntWeeks(value minusExact weeks.value)
+  public operator fun plus(weeks: IntWeeks): IntWeeks = IntWeeks(`value` plusExact weeks.value)
 
-  operator fun plus(weeks: LongWeeks) = LongWeeks(value.toLong() plusExact weeks.value)
+  public operator fun minus(weeks: IntWeeks): IntWeeks = IntWeeks(`value` minusExact weeks.value)
 
-  operator fun minus(weeks: LongWeeks) = LongWeeks(value.toLong() minusExact weeks.value)
+  public operator fun plus(weeks: LongWeeks): LongWeeks = LongWeeks(`value`.toLong() plusExact
+      weeks.value)
+
+  public operator fun minus(weeks: LongWeeks): LongWeeks = LongWeeks(`value`.toLong() minusExact
+      weeks.value)
 
   /**
    * Converts this duration to [LongWeeks].
    */
-  fun toLongWeeks() = LongWeeks(value.toLong())
+  public fun toLongWeeks(): LongWeeks = LongWeeks(`value`.toLong())
 
   /**
    * Converts this duration to a `Long` value.
    */
-  fun toLong() = value.toLong()
+  public fun toLong(): Long = `value`.toLong()
 
-  companion object {
+  public companion object {
     /**
      * The smallest supported value.
      */
-    val MIN: IntWeeks = IntWeeks(Int.MIN_VALUE)
+    public val MIN: IntWeeks = IntWeeks(Int.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    val MAX: IntWeeks = IntWeeks(Int.MAX_VALUE)
+    public val MAX: IntWeeks = IntWeeks(Int.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of weeks.
  */
-val Int.weeks: IntWeeks
+public val Int.weeks: IntWeeks
   get() = IntWeeks(this)
 
 /**
  * Multiplies this value by a duration of weeks.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Int.times(weeks: IntWeeks) = weeks * this
+public operator fun Int.times(weeks: IntWeeks): IntWeeks = weeks * this
 
 /**
  * Multiplies this value by a duration of weeks.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Long.times(weeks: IntWeeks) = weeks * this
+public operator fun Long.times(weeks: IntWeeks): LongWeeks = weeks * this
 
 /**
  * A number of weeks.
  */
-inline class LongWeeks(
+@JvmInline
+public value class LongWeeks(
   /**
    * The underlying value.
    */
-  val value: Long
+  public val `value`: Long
 ) : Comparable<LongWeeks> {
   /**
    * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  val absoluteValue: LongWeeks
-    get() = if (value < 0) -this else this
+  public val absoluteValue: LongWeeks
+    get() = LongWeeks(absExact(`value`))
+
   /**
    * Converts this duration to days.
    * @throws ArithmeticException if overflow occurs
    */
-  val inDays: LongDays
-    get() = (value timesExact DAYS_PER_WEEK).days
+  public val inDays: LongDays
+    get() = (`value` timesExact DAYS_PER_WEEK).days
 
   /**
    * Converts this duration to days without checking for overflow.
    */
   internal val inDaysUnchecked: LongDays
-    get() = (value * DAYS_PER_WEEK).days
+    get() = (`value` * DAYS_PER_WEEK).days
 
   /**
    * Checks if this duration is zero.
    */
-  fun isZero(): Boolean = value == 0L
+  public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
-  fun isNegative(): Boolean = value < 0L
+  public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
-  fun isPositive(): Boolean = value > 0L
+  public fun isPositive(): Boolean = `value` > 0L
 
-  override fun compareTo(other: LongWeeks): Int = value.compareTo(other.value)
+  public override fun compareTo(other: LongWeeks): Int = `value`.compareTo(other.`value`)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  override fun toString(): String {
-     return when (value) {
+  public override fun toString(): String {
+     return when (`value`) {
        0L -> "P0W"
        Long.MIN_VALUE -> "-P9223372036854775808W"
        else -> buildString {
-         if (value < 0) { append('-') }
+         if (`value` < 0) { append('-') }
          append("P")
-         append(value.absoluteValue)
+         append(`value`.absoluteValue)
          append('W')
        }
      }
@@ -249,34 +258,34 @@ inline class LongWeeks(
    * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun unaryMinus() = LongWeeks(value.negateExact())
+  public operator fun unaryMinus(): LongWeeks = LongWeeks(`value`.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked() = LongWeeks(-value)
+  internal fun negateUnchecked(): LongWeeks = LongWeeks(-`value`)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Int) = LongWeeks(value timesExact scalar)
+  public operator fun times(scalar: Int): LongWeeks = LongWeeks(`value` timesExact scalar)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Long) = LongWeeks(value timesExact scalar)
+  public operator fun times(scalar: Long): LongWeeks = LongWeeks(`value` timesExact scalar)
 
   /**
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Int): LongWeeks {
+  public operator fun div(scalar: Int): LongWeeks {
      return if (scalar == -1) {
        -this
      } else {
-       LongWeeks(value / scalar)
+       LongWeeks(`value` / scalar)
      }
   }
 
@@ -284,84 +293,84 @@ inline class LongWeeks(
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Long): LongWeeks {
+  public operator fun div(scalar: Long): LongWeeks {
      return if (scalar == -1L) {
        -this
      } else {
-       LongWeeks(value / scalar)
+       LongWeeks(`value` / scalar)
      }
   }
 
-  operator fun rem(scalar: Int) = LongWeeks(value % scalar)
+  public operator fun rem(scalar: Int): LongWeeks = LongWeeks(`value` % scalar)
 
-  operator fun rem(scalar: Long) = LongWeeks(value % scalar)
+  public operator fun rem(scalar: Long): LongWeeks = LongWeeks(`value` % scalar)
 
-  operator fun plus(days: IntDays) = this.inDays + days
+  public operator fun plus(days: IntDays): LongDays = this.inDays + days
 
-  operator fun minus(days: IntDays) = this.inDays - days
+  public operator fun minus(days: IntDays): LongDays = this.inDays - days
 
-  operator fun plus(days: LongDays) = this.inDays + days
+  public operator fun plus(days: LongDays): LongDays = this.inDays + days
 
-  operator fun minus(days: LongDays) = this.inDays - days
+  public operator fun minus(days: LongDays): LongDays = this.inDays - days
 
-  operator fun plus(weeks: IntWeeks) = LongWeeks(value plusExact weeks.value)
+  public operator fun plus(weeks: IntWeeks): LongWeeks = LongWeeks(`value` plusExact weeks.value)
 
-  operator fun minus(weeks: IntWeeks) = LongWeeks(value minusExact weeks.value)
+  public operator fun minus(weeks: IntWeeks): LongWeeks = LongWeeks(`value` minusExact weeks.value)
 
-  operator fun plus(weeks: LongWeeks) = LongWeeks(value plusExact weeks.value)
+  public operator fun plus(weeks: LongWeeks): LongWeeks = LongWeeks(`value` plusExact weeks.value)
 
-  operator fun minus(weeks: LongWeeks) = LongWeeks(value minusExact weeks.value)
+  public operator fun minus(weeks: LongWeeks): LongWeeks = LongWeeks(`value` minusExact weeks.value)
 
   /**
    * Converts this duration to [IntWeeks].
    * @throws ArithmeticException if overflow occurs
    */
-  fun toIntWeeks() = IntWeeks(value.toIntExact())
+  public fun toIntWeeks(): IntWeeks = IntWeeks(`value`.toIntExact())
 
   /**
    * Converts this duration to [IntWeeks] without checking for overflow.
    */
   @PublishedApi
-  internal fun toIntWeeksUnchecked() = IntWeeks(value.toInt())
+  internal fun toIntWeeksUnchecked(): IntWeeks = IntWeeks(`value`.toInt())
 
   /**
    * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
-  fun toInt() = value.toIntExact()
+  public fun toInt(): Int = `value`.toIntExact()
 
   /**
    * Converts this duration to an `Int` value without checking for overflow.
    */
-  internal fun toIntUnchecked() = value.toInt()
+  internal fun toIntUnchecked(): Int = `value`.toInt()
 
-  companion object {
+  public companion object {
     /**
      * The smallest supported value.
      */
-    val MIN: LongWeeks = LongWeeks(Long.MIN_VALUE)
+    public val MIN: LongWeeks = LongWeeks(Long.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    val MAX: LongWeeks = LongWeeks(Long.MAX_VALUE)
+    public val MAX: LongWeeks = LongWeeks(Long.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of weeks.
  */
-val Long.weeks: LongWeeks
+public val Long.weeks: LongWeeks
   get() = LongWeeks(this)
 
 /**
  * Multiplies this value by a duration of weeks.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Int.times(weeks: LongWeeks) = weeks * this
+public operator fun Int.times(weeks: LongWeeks): LongWeeks = weeks * this
 
 /**
  * Multiplies this value by a duration of weeks.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Long.times(weeks: LongWeeks) = weeks * this
+public operator fun Long.times(weeks: LongWeeks): LongWeeks = weeks * this

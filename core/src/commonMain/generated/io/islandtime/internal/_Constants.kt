@@ -4,7 +4,7 @@
 @file:JvmMultifileClass
 @file:JvmName("ConstantsKt")
 
-package io.islandtime.internal
+package io.islandtime.`internal`
 
 import kotlin.Int
 import kotlin.Long

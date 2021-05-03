@@ -1,7 +1,6 @@
 package io.islandtime.codegen.descriptions
 
-import java.util.*
-
+@OptIn(ExperimentalStdlibApi::class)
 enum class TemporalUnitDescription(
     val pluralName: String,
     val conversionFactor: Int,
@@ -45,8 +44,8 @@ enum class TemporalUnitDescription(
     val intName: String get() = "Int$pluralName"
     val longName: String get() = "Long$pluralName"
     open val singularName: String get() = pluralName.dropLast(1)
-    val lowerSingularName: String get() = singularName.toLowerCase(Locale.US)
-    val lowerPluralName: String get() = pluralName.toLowerCase(Locale.US)
+    val lowerSingularName: String get() = singularName.lowercase()
+    val lowerPluralName: String get() = pluralName.lowercase()
     val valueName: String get() = "value"
     val inUnitPropertyName: String get() = "in$pluralName"
     val inUnitUncheckedPropertyName: String get() = "${inUnitPropertyName}Unchecked"
@@ -85,10 +84,11 @@ data class TemporalUnitConversion(
 
     fun isNecessary() = operator != ConversionOperator.NONE
 
+    @OptIn(ExperimentalStdlibApi::class)
     val constantName: String
         get() {
             val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
-            return "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".toUpperCase(Locale.US)
+            return "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".uppercase()
         }
 
     val operator: ConversionOperator

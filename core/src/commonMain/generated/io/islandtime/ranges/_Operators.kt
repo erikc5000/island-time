@@ -11,8 +11,8 @@ import io.islandtime.DateTime
 import io.islandtime.Instant
 import io.islandtime.OffsetDateTime
 import io.islandtime.ZonedDateTime
-import io.islandtime.ranges.internal.randomImpl
-import io.islandtime.ranges.internal.randomOrNullImpl
+import io.islandtime.ranges.`internal`.randomImpl
+import io.islandtime.ranges.`internal`.randomOrNullImpl
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.random.Random
@@ -24,7 +24,7 @@ import kotlin.random.Random
  * @throws UnsupportedOperationException if the range is unbounded
  * @see DateRange.randomOrNull
  */
-fun DateRange.random(): Date = randomImpl(Random)
+public fun DateRange.random(): Date = randomImpl(Random)
 
 /**
  * Returns a random date within this range using the supplied random number generator. 
@@ -33,7 +33,7 @@ fun DateRange.random(): Date = randomImpl(Random)
  * @throws UnsupportedOperationException if the range is unbounded
  * @see DateRange.randomOrNull
  */
-fun DateRange.random(random: Random): Date = randomImpl(random)
+public fun DateRange.random(random: Random): Date = randomImpl(random)
 
 /**
  * Returns a random date within this range using the default random number generator or `null` if
@@ -41,7 +41,7 @@ fun DateRange.random(random: Random): Date = randomImpl(random)
  *
  * @see DateRange.random
  */
-fun DateRange.randomOrNull(): Date? = randomOrNullImpl(Random)
+public fun DateRange.randomOrNull(): Date? = randomOrNullImpl(Random)
 
 /**
  * Returns a random date within this range using the supplied random number generator or `null` if
@@ -49,7 +49,7 @@ fun DateRange.randomOrNull(): Date? = randomOrNullImpl(Random)
  *
  * @see DateRange.random
  */
-fun DateRange.randomOrNull(random: Random): Date? = randomImpl(random)
+public fun DateRange.randomOrNull(random: Random): Date? = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator.
@@ -58,7 +58,7 @@ fun DateRange.randomOrNull(random: Random): Date? = randomImpl(random)
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see DateTimeInterval.randomOrNull
  */
-fun DateTimeInterval.random(): DateTime = randomImpl(Random)
+public fun DateTimeInterval.random(): DateTime = randomImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator. 
@@ -67,7 +67,7 @@ fun DateTimeInterval.random(): DateTime = randomImpl(Random)
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see DateTimeInterval.randomOrNull
  */
-fun DateTimeInterval.random(random: Random): DateTime = randomImpl(random)
+public fun DateTimeInterval.random(random: Random): DateTime = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator or `null` if
@@ -75,7 +75,7 @@ fun DateTimeInterval.random(random: Random): DateTime = randomImpl(random)
  *
  * @see DateTimeInterval.random
  */
-fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNullImpl(Random)
+public fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNullImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator or `null`
@@ -83,7 +83,7 @@ fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNullImpl(Random)
  *
  * @see DateTimeInterval.random
  */
-fun DateTimeInterval.randomOrNull(random: Random): DateTime? = randomImpl(random)
+public fun DateTimeInterval.randomOrNull(random: Random): DateTime? = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator. The offset
@@ -93,7 +93,7 @@ fun DateTimeInterval.randomOrNull(random: Random): DateTime? = randomImpl(random
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see OffsetDateTimeInterval.randomOrNull
  */
-fun OffsetDateTimeInterval.random(): OffsetDateTime = randomImpl(Random)
+public fun OffsetDateTimeInterval.random(): OffsetDateTime = randomImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator. The offset
@@ -103,7 +103,7 @@ fun OffsetDateTimeInterval.random(): OffsetDateTime = randomImpl(Random)
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see OffsetDateTimeInterval.randomOrNull
  */
-fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime = randomImpl(random)
+public fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator or `null` if
@@ -111,7 +111,7 @@ fun OffsetDateTimeInterval.random(random: Random): OffsetDateTime = randomImpl(r
  *
  * @see OffsetDateTimeInterval.random
  */
-fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNullImpl(Random)
+public fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNullImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator or `null`
@@ -119,7 +119,7 @@ fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNullImpl(Ra
  *
  * @see OffsetDateTimeInterval.random
  */
-fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? = randomImpl(random)
+public fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator. The zone of
@@ -129,7 +129,7 @@ fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? = rando
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see ZonedDateTimeInterval.randomOrNull
  */
-fun ZonedDateTimeInterval.random(): ZonedDateTime = randomImpl(Random)
+public fun ZonedDateTimeInterval.random(): ZonedDateTime = randomImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator. The zone
@@ -139,7 +139,7 @@ fun ZonedDateTimeInterval.random(): ZonedDateTime = randomImpl(Random)
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see ZonedDateTimeInterval.randomOrNull
  */
-fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime = randomImpl(random)
+public fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator or `null` if
@@ -147,7 +147,7 @@ fun ZonedDateTimeInterval.random(random: Random): ZonedDateTime = randomImpl(ran
  *
  * @see ZonedDateTimeInterval.random
  */
-fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNullImpl(Random)
+public fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNullImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator or `null`
@@ -155,7 +155,7 @@ fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNullImpl(Rand
  *
  * @see ZonedDateTimeInterval.random
  */
-fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? = randomImpl(random)
+public fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator.
@@ -164,7 +164,7 @@ fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? = randomI
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see InstantInterval.randomOrNull
  */
-fun InstantInterval.random(): Instant = randomImpl(Random)
+public fun InstantInterval.random(): Instant = randomImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator. 
@@ -173,7 +173,7 @@ fun InstantInterval.random(): Instant = randomImpl(Random)
  * @throws UnsupportedOperationException if the interval is unbounded
  * @see InstantInterval.randomOrNull
  */
-fun InstantInterval.random(random: Random): Instant = randomImpl(random)
+public fun InstantInterval.random(random: Random): Instant = randomImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator or `null` if
@@ -181,7 +181,7 @@ fun InstantInterval.random(random: Random): Instant = randomImpl(random)
  *
  * @see InstantInterval.random
  */
-fun InstantInterval.randomOrNull(): Instant? = randomOrNullImpl(Random)
+public fun InstantInterval.randomOrNull(): Instant? = randomOrNullImpl(Random)
 
 /**
  * Returns a random date within this interval using the supplied random number generator or `null`
@@ -189,4 +189,4 @@ fun InstantInterval.randomOrNull(): Instant? = randomOrNullImpl(Random)
  *
  * @see InstantInterval.random
  */
-fun InstantInterval.randomOrNull(random: Random): Instant? = randomImpl(random)
+public fun InstantInterval.randomOrNull(random: Random): Instant? = randomImpl(random)

@@ -6,151 +6,155 @@
 
 package io.islandtime.measures
 
+import dev.erikchristensen.javamath2kmp.absExact
 import dev.erikchristensen.javamath2kmp.minusExact
 import dev.erikchristensen.javamath2kmp.negateExact
 import dev.erikchristensen.javamath2kmp.plusExact
 import dev.erikchristensen.javamath2kmp.timesExact
 import dev.erikchristensen.javamath2kmp.toIntExact
-import io.islandtime.internal.DAYS_PER_WEEK
-import io.islandtime.internal.HOURS_PER_DAY
-import io.islandtime.internal.MICROSECONDS_PER_DAY
-import io.islandtime.internal.MILLISECONDS_PER_DAY
-import io.islandtime.internal.MINUTES_PER_DAY
-import io.islandtime.internal.NANOSECONDS_PER_DAY
-import io.islandtime.internal.SECONDS_PER_DAY
+import io.islandtime.`internal`.DAYS_PER_WEEK
+import io.islandtime.`internal`.HOURS_PER_DAY
+import io.islandtime.`internal`.MICROSECONDS_PER_DAY
+import io.islandtime.`internal`.MILLISECONDS_PER_DAY
+import io.islandtime.`internal`.MINUTES_PER_DAY
+import io.islandtime.`internal`.NANOSECONDS_PER_DAY
+import io.islandtime.`internal`.SECONDS_PER_DAY
 import kotlin.Boolean
 import kotlin.Comparable
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
 import kotlin.time.ExperimentalTime
 import kotlin.time.Duration as KotlinDuration
-import kotlin.time.days as kotlinDays
+import kotlin.time.DurationUnit as KotlinDurationUnit
 
 /**
  * A number of days.
  */
-inline class IntDays(
+@JvmInline
+public value class IntDays(
   /**
    * The underlying value.
    */
-  val value: Int
+  public val `value`: Int
 ) : Comparable<IntDays> {
   /**
    * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  val absoluteValue: IntDays
-    get() = if (value < 0) -this else this
+  public val absoluteValue: IntDays
+    get() = IntDays(absExact(`value`))
+
   /**
    * Converts this duration to nanoseconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inNanoseconds: LongNanoseconds
-    get() = (value.toLong() timesExact NANOSECONDS_PER_DAY).nanoseconds
+  public val inNanoseconds: LongNanoseconds
+    get() = (`value`.toLong() timesExact NANOSECONDS_PER_DAY).nanoseconds
 
   /**
    * Converts this duration to nanoseconds without checking for overflow.
    */
   internal val inNanosecondsUnchecked: LongNanoseconds
-    get() = (value.toLong() * NANOSECONDS_PER_DAY).nanoseconds
+    get() = (`value`.toLong() * NANOSECONDS_PER_DAY).nanoseconds
 
   /**
    * Converts this duration to microseconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inMicroseconds: LongMicroseconds
-    get() = (value.toLong() timesExact MICROSECONDS_PER_DAY).microseconds
+  public val inMicroseconds: LongMicroseconds
+    get() = (`value`.toLong() timesExact MICROSECONDS_PER_DAY).microseconds
 
   /**
    * Converts this duration to microseconds without checking for overflow.
    */
   internal val inMicrosecondsUnchecked: LongMicroseconds
-    get() = (value.toLong() * MICROSECONDS_PER_DAY).microseconds
+    get() = (`value`.toLong() * MICROSECONDS_PER_DAY).microseconds
 
   /**
    * Converts this duration to milliseconds.
    */
-  val inMilliseconds: LongMilliseconds
-    get() = (value.toLong() * MILLISECONDS_PER_DAY).milliseconds
+  public val inMilliseconds: LongMilliseconds
+    get() = (`value`.toLong() * MILLISECONDS_PER_DAY).milliseconds
 
   /**
    * Converts this duration to seconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inSeconds: IntSeconds
-    get() = (value timesExact SECONDS_PER_DAY).seconds
+  public val inSeconds: IntSeconds
+    get() = (`value` timesExact SECONDS_PER_DAY).seconds
 
   /**
    * Converts this duration to seconds without checking for overflow.
    */
   internal val inSecondsUnchecked: IntSeconds
-    get() = (value * SECONDS_PER_DAY).seconds
+    get() = (`value` * SECONDS_PER_DAY).seconds
 
   /**
    * Converts this duration to minutes.
    * @throws ArithmeticException if overflow occurs
    */
-  val inMinutes: IntMinutes
-    get() = (value timesExact MINUTES_PER_DAY).minutes
+  public val inMinutes: IntMinutes
+    get() = (`value` timesExact MINUTES_PER_DAY).minutes
 
   /**
    * Converts this duration to minutes without checking for overflow.
    */
   internal val inMinutesUnchecked: IntMinutes
-    get() = (value * MINUTES_PER_DAY).minutes
+    get() = (`value` * MINUTES_PER_DAY).minutes
 
   /**
    * Converts this duration to hours.
    * @throws ArithmeticException if overflow occurs
    */
-  val inHours: IntHours
-    get() = (value timesExact HOURS_PER_DAY).hours
+  public val inHours: IntHours
+    get() = (`value` timesExact HOURS_PER_DAY).hours
 
   /**
    * Converts this duration to hours without checking for overflow.
    */
   internal val inHoursUnchecked: IntHours
-    get() = (value * HOURS_PER_DAY).hours
+    get() = (`value` * HOURS_PER_DAY).hours
 
   /**
    * Converts this duration to the number of whole weeks.
    */
-  val inWeeks: IntWeeks
-    get() = (value / DAYS_PER_WEEK).weeks
+  public val inWeeks: IntWeeks
+    get() = (`value` / DAYS_PER_WEEK).weeks
 
   /**
    * Checks if this duration is zero.
    */
-  fun isZero(): Boolean = value == 0
+  public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
-  fun isNegative(): Boolean = value < 0
+  public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
-  fun isPositive(): Boolean = value > 0
+  public fun isPositive(): Boolean = `value` > 0
 
-  override fun compareTo(other: IntDays): Int = value.compareTo(other.value)
+  public override fun compareTo(other: IntDays): Int = `value`.compareTo(other.`value`)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  override fun toString(): String {
-     return when (value) {
+  public override fun toString(): String {
+     return when (`value`) {
        0 -> "P0D"
        Int.MIN_VALUE -> "-P2147483648D"
        else -> buildString {
-         if (value < 0) { append('-') }
+         if (`value` < 0) { append('-') }
          append("P")
-         append(value.absoluteValue)
+         append(`value`.absoluteValue)
          append('D')
        }
      }
@@ -160,34 +164,34 @@ inline class IntDays(
    * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun unaryMinus() = IntDays(value.negateExact())
+  public operator fun unaryMinus(): IntDays = IntDays(`value`.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked() = IntDays(-value)
+  internal fun negateUnchecked(): IntDays = IntDays(-`value`)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Int) = IntDays(value timesExact scalar)
+  public operator fun times(scalar: Int): IntDays = IntDays(`value` timesExact scalar)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Long) = this.toLongDays() * scalar
+  public operator fun times(scalar: Long): LongDays = this.toLongDays() * scalar
 
   /**
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Int): IntDays {
+  public operator fun div(scalar: Int): IntDays {
      return if (scalar == -1) {
        -this
      } else {
-       IntDays(value / scalar)
+       IntDays(`value` / scalar)
      }
   }
 
@@ -195,82 +199,97 @@ inline class IntDays(
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if the scalar is zero
    */
-  operator fun div(scalar: Long): LongDays = this.toLongDays() / scalar
-  operator fun rem(scalar: Int) = IntDays(value % scalar)
+  public operator fun div(scalar: Long): LongDays = this.toLongDays() / scalar
 
-  operator fun rem(scalar: Long) = this.toLongDays() % scalar
+  public operator fun rem(scalar: Int): IntDays = IntDays(`value` % scalar)
 
-  operator fun plus(nanoseconds: IntNanoseconds) = this.inNanoseconds + nanoseconds
+  public operator fun rem(scalar: Long): LongDays = this.toLongDays() % scalar
 
-  operator fun minus(nanoseconds: IntNanoseconds) = this.inNanoseconds - nanoseconds
+  public operator fun plus(nanoseconds: IntNanoseconds): LongNanoseconds = this.inNanoseconds +
+      nanoseconds
 
-  operator fun plus(nanoseconds: LongNanoseconds) = this.toLongDays().inNanoseconds + nanoseconds
+  public operator fun minus(nanoseconds: IntNanoseconds): LongNanoseconds = this.inNanoseconds -
+      nanoseconds
 
-  operator fun minus(nanoseconds: LongNanoseconds) = this.toLongDays().inNanoseconds - nanoseconds
+  public operator fun plus(nanoseconds: LongNanoseconds): LongNanoseconds =
+      this.toLongDays().inNanoseconds + nanoseconds
 
-  operator fun plus(microseconds: IntMicroseconds) = this.inMicroseconds + microseconds
+  public operator fun minus(nanoseconds: LongNanoseconds): LongNanoseconds =
+      this.toLongDays().inNanoseconds - nanoseconds
 
-  operator fun minus(microseconds: IntMicroseconds) = this.inMicroseconds - microseconds
-
-  operator fun plus(microseconds: LongMicroseconds) = this.toLongDays().inMicroseconds +
+  public operator fun plus(microseconds: IntMicroseconds): LongMicroseconds = this.inMicroseconds +
       microseconds
 
-  operator fun minus(microseconds: LongMicroseconds) = this.toLongDays().inMicroseconds -
+  public operator fun minus(microseconds: IntMicroseconds): LongMicroseconds = this.inMicroseconds -
       microseconds
 
-  operator fun plus(milliseconds: IntMilliseconds) = this.inMilliseconds + milliseconds
+  public operator fun plus(microseconds: LongMicroseconds): LongMicroseconds =
+      this.toLongDays().inMicroseconds + microseconds
 
-  operator fun minus(milliseconds: IntMilliseconds) = this.inMilliseconds - milliseconds
+  public operator fun minus(microseconds: LongMicroseconds): LongMicroseconds =
+      this.toLongDays().inMicroseconds - microseconds
 
-  operator fun plus(milliseconds: LongMilliseconds) = this.toLongDays().inMilliseconds +
+  public operator fun plus(milliseconds: IntMilliseconds): LongMilliseconds = this.inMilliseconds +
       milliseconds
 
-  operator fun minus(milliseconds: LongMilliseconds) = this.toLongDays().inMilliseconds -
+  public operator fun minus(milliseconds: IntMilliseconds): LongMilliseconds = this.inMilliseconds -
       milliseconds
 
-  operator fun plus(seconds: IntSeconds) = this.inSeconds + seconds
+  public operator fun plus(milliseconds: LongMilliseconds): LongMilliseconds =
+      this.toLongDays().inMilliseconds + milliseconds
 
-  operator fun minus(seconds: IntSeconds) = this.inSeconds - seconds
+  public operator fun minus(milliseconds: LongMilliseconds): LongMilliseconds =
+      this.toLongDays().inMilliseconds - milliseconds
 
-  operator fun plus(seconds: LongSeconds) = this.toLongDays().inSeconds + seconds
+  public operator fun plus(seconds: IntSeconds): IntSeconds = this.inSeconds + seconds
 
-  operator fun minus(seconds: LongSeconds) = this.toLongDays().inSeconds - seconds
+  public operator fun minus(seconds: IntSeconds): IntSeconds = this.inSeconds - seconds
 
-  operator fun plus(minutes: IntMinutes) = this.inMinutes + minutes
+  public operator fun plus(seconds: LongSeconds): LongSeconds = this.toLongDays().inSeconds +
+      seconds
 
-  operator fun minus(minutes: IntMinutes) = this.inMinutes - minutes
+  public operator fun minus(seconds: LongSeconds): LongSeconds = this.toLongDays().inSeconds -
+      seconds
 
-  operator fun plus(minutes: LongMinutes) = this.toLongDays().inMinutes + minutes
+  public operator fun plus(minutes: IntMinutes): IntMinutes = this.inMinutes + minutes
 
-  operator fun minus(minutes: LongMinutes) = this.toLongDays().inMinutes - minutes
+  public operator fun minus(minutes: IntMinutes): IntMinutes = this.inMinutes - minutes
 
-  operator fun plus(hours: IntHours) = this.inHours + hours
+  public operator fun plus(minutes: LongMinutes): LongMinutes = this.toLongDays().inMinutes +
+      minutes
 
-  operator fun minus(hours: IntHours) = this.inHours - hours
+  public operator fun minus(minutes: LongMinutes): LongMinutes = this.toLongDays().inMinutes -
+      minutes
 
-  operator fun plus(hours: LongHours) = this.toLongDays().inHours + hours
+  public operator fun plus(hours: IntHours): IntHours = this.inHours + hours
 
-  operator fun minus(hours: LongHours) = this.toLongDays().inHours - hours
+  public operator fun minus(hours: IntHours): IntHours = this.inHours - hours
 
-  operator fun plus(days: IntDays) = IntDays(value plusExact days.value)
+  public operator fun plus(hours: LongHours): LongHours = this.toLongDays().inHours + hours
 
-  operator fun minus(days: IntDays) = IntDays(value minusExact days.value)
+  public operator fun minus(hours: LongHours): LongHours = this.toLongDays().inHours - hours
 
-  operator fun plus(days: LongDays) = LongDays(value.toLong() plusExact days.value)
+  public operator fun plus(days: IntDays): IntDays = IntDays(`value` plusExact days.value)
 
-  operator fun minus(days: LongDays) = LongDays(value.toLong() minusExact days.value)
+  public operator fun minus(days: IntDays): IntDays = IntDays(`value` minusExact days.value)
 
-  operator fun plus(weeks: IntWeeks) = this + weeks.inDays
+  public operator fun plus(days: LongDays): LongDays = LongDays(`value`.toLong() plusExact
+      days.value)
 
-  operator fun minus(weeks: IntWeeks) = this - weeks.inDays
+  public operator fun minus(days: LongDays): LongDays = LongDays(`value`.toLong() minusExact
+      days.value)
 
-  operator fun plus(weeks: LongWeeks) = this.toLongDays() + weeks.inDays
+  public operator fun plus(weeks: IntWeeks): IntDays = this + weeks.inDays
 
-  operator fun minus(weeks: LongWeeks) = this.toLongDays() - weeks.inDays
+  public operator fun minus(weeks: IntWeeks): IntDays = this - weeks.inDays
 
-  inline fun <T> toComponents(action: (weeks: IntWeeks, days: IntDays) -> T): T {
-    val weeks = (value / DAYS_PER_WEEK).weeks
-    val days = (value % DAYS_PER_WEEK).days
+  public operator fun plus(weeks: LongWeeks): LongDays = this.toLongDays() + weeks.inDays
+
+  public operator fun minus(weeks: LongWeeks): LongDays = this.toLongDays() - weeks.inDays
+
+  public inline fun <T> toComponents(action: (weeks: IntWeeks, days: IntDays) -> T): T {
+    val weeks = (`value` / DAYS_PER_WEEK).weeks
+    val days = (`value` % DAYS_PER_WEEK).days
     return action(weeks, days)
   }
 
@@ -278,176 +297,178 @@ inline class IntDays(
    * Converts this duration to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): KotlinDuration = value.kotlinDays
+  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.days(`value`)
 
   /**
    * Converts this duration to [LongDays].
    */
-  fun toLongDays() = LongDays(value.toLong())
+  public fun toLongDays(): LongDays = LongDays(`value`.toLong())
 
   /**
    * Converts this duration to a `Long` value.
    */
-  fun toLong() = value.toLong()
+  public fun toLong(): Long = `value`.toLong()
 
-  companion object {
+  public companion object {
     /**
      * The smallest supported value.
      */
-    val MIN: IntDays = IntDays(Int.MIN_VALUE)
+    public val MIN: IntDays = IntDays(Int.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    val MAX: IntDays = IntDays(Int.MAX_VALUE)
+    public val MAX: IntDays = IntDays(Int.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of days.
  */
-val Int.days: IntDays
+public val Int.days: IntDays
   get() = IntDays(this)
 
 /**
  * Multiplies this value by a duration of days.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Int.times(days: IntDays) = days * this
+public operator fun Int.times(days: IntDays): IntDays = days * this
 
 /**
  * Multiplies this value by a duration of days.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Long.times(days: IntDays) = days * this
+public operator fun Long.times(days: IntDays): LongDays = days * this
 
 /**
  * A number of days.
  */
-inline class LongDays(
+@JvmInline
+public value class LongDays(
   /**
    * The underlying value.
    */
-  val value: Long
+  public val `value`: Long
 ) : Comparable<LongDays> {
   /**
    * The absolute value of this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  val absoluteValue: LongDays
-    get() = if (value < 0) -this else this
+  public val absoluteValue: LongDays
+    get() = LongDays(absExact(`value`))
+
   /**
    * Converts this duration to nanoseconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inNanoseconds: LongNanoseconds
-    get() = (value timesExact NANOSECONDS_PER_DAY).nanoseconds
+  public val inNanoseconds: LongNanoseconds
+    get() = (`value` timesExact NANOSECONDS_PER_DAY).nanoseconds
 
   /**
    * Converts this duration to nanoseconds without checking for overflow.
    */
   internal val inNanosecondsUnchecked: LongNanoseconds
-    get() = (value * NANOSECONDS_PER_DAY).nanoseconds
+    get() = (`value` * NANOSECONDS_PER_DAY).nanoseconds
 
   /**
    * Converts this duration to microseconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inMicroseconds: LongMicroseconds
-    get() = (value timesExact MICROSECONDS_PER_DAY).microseconds
+  public val inMicroseconds: LongMicroseconds
+    get() = (`value` timesExact MICROSECONDS_PER_DAY).microseconds
 
   /**
    * Converts this duration to microseconds without checking for overflow.
    */
   internal val inMicrosecondsUnchecked: LongMicroseconds
-    get() = (value * MICROSECONDS_PER_DAY).microseconds
+    get() = (`value` * MICROSECONDS_PER_DAY).microseconds
 
   /**
    * Converts this duration to milliseconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inMilliseconds: LongMilliseconds
-    get() = (value timesExact MILLISECONDS_PER_DAY).milliseconds
+  public val inMilliseconds: LongMilliseconds
+    get() = (`value` timesExact MILLISECONDS_PER_DAY).milliseconds
 
   /**
    * Converts this duration to milliseconds without checking for overflow.
    */
   internal val inMillisecondsUnchecked: LongMilliseconds
-    get() = (value * MILLISECONDS_PER_DAY).milliseconds
+    get() = (`value` * MILLISECONDS_PER_DAY).milliseconds
 
   /**
    * Converts this duration to seconds.
    * @throws ArithmeticException if overflow occurs
    */
-  val inSeconds: LongSeconds
-    get() = (value timesExact SECONDS_PER_DAY).seconds
+  public val inSeconds: LongSeconds
+    get() = (`value` timesExact SECONDS_PER_DAY).seconds
 
   /**
    * Converts this duration to seconds without checking for overflow.
    */
   internal val inSecondsUnchecked: LongSeconds
-    get() = (value * SECONDS_PER_DAY).seconds
+    get() = (`value` * SECONDS_PER_DAY).seconds
 
   /**
    * Converts this duration to minutes.
    * @throws ArithmeticException if overflow occurs
    */
-  val inMinutes: LongMinutes
-    get() = (value timesExact MINUTES_PER_DAY).minutes
+  public val inMinutes: LongMinutes
+    get() = (`value` timesExact MINUTES_PER_DAY).minutes
 
   /**
    * Converts this duration to minutes without checking for overflow.
    */
   internal val inMinutesUnchecked: LongMinutes
-    get() = (value * MINUTES_PER_DAY).minutes
+    get() = (`value` * MINUTES_PER_DAY).minutes
 
   /**
    * Converts this duration to hours.
    * @throws ArithmeticException if overflow occurs
    */
-  val inHours: LongHours
-    get() = (value timesExact HOURS_PER_DAY).hours
+  public val inHours: LongHours
+    get() = (`value` timesExact HOURS_PER_DAY).hours
 
   /**
    * Converts this duration to hours without checking for overflow.
    */
   internal val inHoursUnchecked: LongHours
-    get() = (value * HOURS_PER_DAY).hours
+    get() = (`value` * HOURS_PER_DAY).hours
 
   /**
    * Converts this duration to the number of whole weeks.
    */
-  val inWeeks: LongWeeks
-    get() = (value / DAYS_PER_WEEK).weeks
+  public val inWeeks: LongWeeks
+    get() = (`value` / DAYS_PER_WEEK).weeks
 
   /**
    * Checks if this duration is zero.
    */
-  fun isZero(): Boolean = value == 0L
+  public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
-  fun isNegative(): Boolean = value < 0L
+  public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
-  fun isPositive(): Boolean = value > 0L
+  public fun isPositive(): Boolean = `value` > 0L
 
-  override fun compareTo(other: LongDays): Int = value.compareTo(other.value)
+  public override fun compareTo(other: LongDays): Int = `value`.compareTo(other.`value`)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  override fun toString(): String {
-     return when (value) {
+  public override fun toString(): String {
+     return when (`value`) {
        0L -> "P0D"
        Long.MIN_VALUE -> "-P9223372036854775808D"
        else -> buildString {
-         if (value < 0) { append('-') }
+         if (`value` < 0) { append('-') }
          append("P")
-         append(value.absoluteValue)
+         append(`value`.absoluteValue)
          append('D')
        }
      }
@@ -457,34 +478,34 @@ inline class LongDays(
    * Negates this duration.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun unaryMinus() = LongDays(value.negateExact())
+  public operator fun unaryMinus(): LongDays = LongDays(`value`.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked() = LongDays(-value)
+  internal fun negateUnchecked(): LongDays = LongDays(-`value`)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Int) = LongDays(value timesExact scalar)
+  public operator fun times(scalar: Int): LongDays = LongDays(`value` timesExact scalar)
 
   /**
    * Multiplies this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs
    */
-  operator fun times(scalar: Long) = LongDays(value timesExact scalar)
+  public operator fun times(scalar: Long): LongDays = LongDays(`value` timesExact scalar)
 
   /**
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Int): LongDays {
+  public operator fun div(scalar: Int): LongDays {
      return if (scalar == -1) {
        -this
      } else {
-       LongDays(value / scalar)
+       LongDays(`value` / scalar)
      }
   }
 
@@ -492,85 +513,97 @@ inline class LongDays(
    * Divides this duration by a scalar value.
    * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
-  operator fun div(scalar: Long): LongDays {
+  public operator fun div(scalar: Long): LongDays {
      return if (scalar == -1L) {
        -this
      } else {
-       LongDays(value / scalar)
+       LongDays(`value` / scalar)
      }
   }
 
-  operator fun rem(scalar: Int) = LongDays(value % scalar)
+  public operator fun rem(scalar: Int): LongDays = LongDays(`value` % scalar)
 
-  operator fun rem(scalar: Long) = LongDays(value % scalar)
+  public operator fun rem(scalar: Long): LongDays = LongDays(`value` % scalar)
 
-  operator fun plus(nanoseconds: IntNanoseconds) = this.inNanoseconds + nanoseconds
+  public operator fun plus(nanoseconds: IntNanoseconds): LongNanoseconds = this.inNanoseconds +
+      nanoseconds
 
-  operator fun minus(nanoseconds: IntNanoseconds) = this.inNanoseconds - nanoseconds
+  public operator fun minus(nanoseconds: IntNanoseconds): LongNanoseconds = this.inNanoseconds -
+      nanoseconds
 
-  operator fun plus(nanoseconds: LongNanoseconds) = this.inNanoseconds + nanoseconds
+  public operator fun plus(nanoseconds: LongNanoseconds): LongNanoseconds = this.inNanoseconds +
+      nanoseconds
 
-  operator fun minus(nanoseconds: LongNanoseconds) = this.inNanoseconds - nanoseconds
+  public operator fun minus(nanoseconds: LongNanoseconds): LongNanoseconds = this.inNanoseconds -
+      nanoseconds
 
-  operator fun plus(microseconds: IntMicroseconds) = this.inMicroseconds + microseconds
+  public operator fun plus(microseconds: IntMicroseconds): LongMicroseconds = this.inMicroseconds +
+      microseconds
 
-  operator fun minus(microseconds: IntMicroseconds) = this.inMicroseconds - microseconds
+  public operator fun minus(microseconds: IntMicroseconds): LongMicroseconds = this.inMicroseconds -
+      microseconds
 
-  operator fun plus(microseconds: LongMicroseconds) = this.inMicroseconds + microseconds
+  public operator fun plus(microseconds: LongMicroseconds): LongMicroseconds = this.inMicroseconds +
+      microseconds
 
-  operator fun minus(microseconds: LongMicroseconds) = this.inMicroseconds - microseconds
+  public operator fun minus(microseconds: LongMicroseconds): LongMicroseconds =
+      this.inMicroseconds - microseconds
 
-  operator fun plus(milliseconds: IntMilliseconds) = this.inMilliseconds + milliseconds
+  public operator fun plus(milliseconds: IntMilliseconds): LongMilliseconds = this.inMilliseconds +
+      milliseconds
 
-  operator fun minus(milliseconds: IntMilliseconds) = this.inMilliseconds - milliseconds
+  public operator fun minus(milliseconds: IntMilliseconds): LongMilliseconds = this.inMilliseconds -
+      milliseconds
 
-  operator fun plus(milliseconds: LongMilliseconds) = this.inMilliseconds + milliseconds
+  public operator fun plus(milliseconds: LongMilliseconds): LongMilliseconds = this.inMilliseconds +
+      milliseconds
 
-  operator fun minus(milliseconds: LongMilliseconds) = this.inMilliseconds - milliseconds
+  public operator fun minus(milliseconds: LongMilliseconds): LongMilliseconds =
+      this.inMilliseconds - milliseconds
 
-  operator fun plus(seconds: IntSeconds) = this.inSeconds + seconds
+  public operator fun plus(seconds: IntSeconds): LongSeconds = this.inSeconds + seconds
 
-  operator fun minus(seconds: IntSeconds) = this.inSeconds - seconds
+  public operator fun minus(seconds: IntSeconds): LongSeconds = this.inSeconds - seconds
 
-  operator fun plus(seconds: LongSeconds) = this.inSeconds + seconds
+  public operator fun plus(seconds: LongSeconds): LongSeconds = this.inSeconds + seconds
 
-  operator fun minus(seconds: LongSeconds) = this.inSeconds - seconds
+  public operator fun minus(seconds: LongSeconds): LongSeconds = this.inSeconds - seconds
 
-  operator fun plus(minutes: IntMinutes) = this.inMinutes + minutes
+  public operator fun plus(minutes: IntMinutes): LongMinutes = this.inMinutes + minutes
 
-  operator fun minus(minutes: IntMinutes) = this.inMinutes - minutes
+  public operator fun minus(minutes: IntMinutes): LongMinutes = this.inMinutes - minutes
 
-  operator fun plus(minutes: LongMinutes) = this.inMinutes + minutes
+  public operator fun plus(minutes: LongMinutes): LongMinutes = this.inMinutes + minutes
 
-  operator fun minus(minutes: LongMinutes) = this.inMinutes - minutes
+  public operator fun minus(minutes: LongMinutes): LongMinutes = this.inMinutes - minutes
 
-  operator fun plus(hours: IntHours) = this.inHours + hours
+  public operator fun plus(hours: IntHours): LongHours = this.inHours + hours
 
-  operator fun minus(hours: IntHours) = this.inHours - hours
+  public operator fun minus(hours: IntHours): LongHours = this.inHours - hours
 
-  operator fun plus(hours: LongHours) = this.inHours + hours
+  public operator fun plus(hours: LongHours): LongHours = this.inHours + hours
 
-  operator fun minus(hours: LongHours) = this.inHours - hours
+  public operator fun minus(hours: LongHours): LongHours = this.inHours - hours
 
-  operator fun plus(days: IntDays) = LongDays(value plusExact days.value)
+  public operator fun plus(days: IntDays): LongDays = LongDays(`value` plusExact days.value)
 
-  operator fun minus(days: IntDays) = LongDays(value minusExact days.value)
+  public operator fun minus(days: IntDays): LongDays = LongDays(`value` minusExact days.value)
 
-  operator fun plus(days: LongDays) = LongDays(value plusExact days.value)
+  public operator fun plus(days: LongDays): LongDays = LongDays(`value` plusExact days.value)
 
-  operator fun minus(days: LongDays) = LongDays(value minusExact days.value)
+  public operator fun minus(days: LongDays): LongDays = LongDays(`value` minusExact days.value)
 
-  operator fun plus(weeks: IntWeeks) = this + weeks.inDays
+  public operator fun plus(weeks: IntWeeks): LongDays = this + weeks.inDays
 
-  operator fun minus(weeks: IntWeeks) = this - weeks.inDays
+  public operator fun minus(weeks: IntWeeks): LongDays = this - weeks.inDays
 
-  operator fun plus(weeks: LongWeeks) = this + weeks.inDays
+  public operator fun plus(weeks: LongWeeks): LongDays = this + weeks.inDays
 
-  operator fun minus(weeks: LongWeeks) = this - weeks.inDays
+  public operator fun minus(weeks: LongWeeks): LongDays = this - weeks.inDays
 
-  inline fun <T> toComponents(action: (weeks: LongWeeks, days: IntDays) -> T): T {
-    val weeks = (value / DAYS_PER_WEEK).weeks
-    val days = (value % DAYS_PER_WEEK).toInt().days
+  public inline fun <T> toComponents(action: (weeks: LongWeeks, days: IntDays) -> T): T {
+    val weeks = (`value` / DAYS_PER_WEEK).weeks
+    val days = (`value` % DAYS_PER_WEEK).toInt().days
     return action(weeks, days)
   }
 
@@ -578,64 +611,64 @@ inline class LongDays(
    * Converts this duration to a [kotlin.time.Duration].
    */
   @ExperimentalTime
-  fun toKotlinDuration(): KotlinDuration = value.kotlinDays
+  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.days(`value`)
 
   /**
    * Converts this duration to [IntDays].
    * @throws ArithmeticException if overflow occurs
    */
-  fun toIntDays() = IntDays(value.toIntExact())
+  public fun toIntDays(): IntDays = IntDays(`value`.toIntExact())
 
   /**
    * Converts this duration to [IntDays] without checking for overflow.
    */
   @PublishedApi
-  internal fun toIntDaysUnchecked() = IntDays(value.toInt())
+  internal fun toIntDaysUnchecked(): IntDays = IntDays(`value`.toInt())
 
   /**
    * Converts this duration to an `Int` value.
    * @throws ArithmeticException if overflow occurs
    */
-  fun toInt() = value.toIntExact()
+  public fun toInt(): Int = `value`.toIntExact()
 
   /**
    * Converts this duration to an `Int` value without checking for overflow.
    */
-  internal fun toIntUnchecked() = value.toInt()
+  internal fun toIntUnchecked(): Int = `value`.toInt()
 
-  companion object {
+  public companion object {
     /**
      * The smallest supported value.
      */
-    val MIN: LongDays = LongDays(Long.MIN_VALUE)
+    public val MIN: LongDays = LongDays(Long.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    val MAX: LongDays = LongDays(Long.MAX_VALUE)
+    public val MAX: LongDays = LongDays(Long.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of days.
  */
-val Long.days: LongDays
+public val Long.days: LongDays
   get() = LongDays(this)
 
 /**
  * Multiplies this value by a duration of days.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Int.times(days: LongDays) = days * this
+public operator fun Int.times(days: LongDays): LongDays = days * this
 
 /**
  * Multiplies this value by a duration of days.
  * @throws ArithmeticException if overflow occurs
  */
-operator fun Long.times(days: LongDays) = days * this
+public operator fun Long.times(days: LongDays): LongDays = days * this
 
 /**
  * Converts this duration to Island Time [LongDays].
  */
 @ExperimentalTime
-fun KotlinDuration.toIslandDays() = LongDays(this.toLong(kotlin.time.DurationUnit.DAYS))
+public fun KotlinDuration.toIslandDays(): LongDays = LongDays(this.toLong(KotlinDurationUnit.DAYS))

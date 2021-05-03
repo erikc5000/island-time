@@ -16,6 +16,7 @@ import java.util.*
 import kotlin.reflect.KClass
 
 private val KOTLIN_DURATION_CLASS_NAME = ClassName("kotlin.time", "Duration")
+private val KOTLIN_DURATION_UNIT_CLASS_NAME = ClassName("kotlin.time", "DurationUnit")
 private val EXPERIMENTAL_TIME_CLASS_NAME = ClassName("kotlin.time", "ExperimentalTime")
 private val INT_TYPE_NAME = Int::class.asTypeName()
 private val LONG_TYPE_NAME = Long::class.asTypeName()
@@ -61,7 +62,7 @@ fun TemporalUnitDescription.toFileSpec(): FileSpec {
 
         if (isTimeBased) {
             addAliasedImport(KOTLIN_DURATION_CLASS_NAME, "KotlinDuration")
-            addAliasedImport(ClassName("kotlin.time", lowerPluralName), "kotlin$pluralName")
+            addAliasedImport(KOTLIN_DURATION_UNIT_CLASS_NAME, "KotlinDurationUnit")
         }
 
         listOf(
@@ -161,7 +162,8 @@ abstract class TemporalUnitClassGenerator(
 
     fun buildClass() = io.islandtime.codegen.dsl.buildClassTypeSpec(className) {
         addKdoc("A number of ${description.lowerPluralName}.")
-        addModifiers(KModifier.INLINE)
+        addAnnotation(JvmInline::class)
+        addModifiers(KModifier.VALUE)
         primaryConstructor(constructorFunSpec)
         addSuperinterface(ClassName("kotlin", "Comparable").parameterizedBy(className))
 
@@ -239,10 +241,14 @@ fun TemporalUnitClassGenerator.buildAbsoluteValuePropertySpec() = buildPropertyS
     )
     getter(
         buildGetterFunSpec {
-            val arguments = mapOf("value" to valuePropertySpec)
+            val arguments = mapOf(
+                "className" to className,
+                "value" to valuePropertySpec,
+                "absExact" to javamath2kmp("absExact")
+            )
 
             addNamedCode(
-                "return if (%value:N < 0) -this else this",
+                "return %className:T(%absExact:T(%value:N))",
                 arguments
             )
         }
@@ -297,7 +303,12 @@ fun TemporalUnitClassGenerator.buildToKotlinDurationFunSpec() =
         addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
         addKdoc("Converts this duration to a [${KOTLIN_DURATION_CLASS_NAME.canonicalName}].")
         returns(KOTLIN_DURATION_CLASS_NAME)
-        addStatement("return %N.%T", valuePropertySpec, ClassName("kotlin.time", description.lowerPluralName))
+
+        addStatement(
+            "return %T.${description.lowerPluralName}(%N)",
+            KOTLIN_DURATION_CLASS_NAME,
+            valuePropertySpec
+        )
     }
 
 fun TemporalUnitClassGenerator.buildFractionalToStringCodeBlock() = io.islandtime.codegen.dsl.buildCodeBlock {
@@ -390,11 +401,13 @@ fun IntTemporalUnitClassGenerator.buildToLongUnitFunSpec() = buildFunSpec(
     "to${description.longName}"
 ) {
     addKdoc("Converts this duration to [${description.longName}].")
+    returns(description.longClassName)
     addStatement("return %T(%N.toLong())", description.longClassName, valuePropertySpec)
 }
 
 fun IntTemporalUnitClassGenerator.buildToLongFunSpec() = buildFunSpec("toLong") {
     addKdoc("Converts this duration to a `Long` value.")
+    returns(Long::class)
     addStatement("return %N.toLong()", valuePropertySpec)
 }
 
@@ -405,6 +418,7 @@ fun LongTemporalUnitClassGenerator.buildToIntFunSpec() = buildFunSpec("toInt") {
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
     )
+    returns(Int::class)
     addStatement("return %N.%T()", valuePropertySpec, javamath2kmp("toIntExact"))
 }
 
@@ -413,6 +427,7 @@ fun LongTemporalUnitClassGenerator.buildToIntUncheckedFunSpec() = buildFunSpec(
 ) {
     addModifiers(KModifier.INTERNAL)
     addKdoc("Converts this duration to an `Int` value without checking for overflow.")
+    returns(Int::class)
     addStatement("return %N.toInt()", valuePropertySpec)
 }
 
@@ -425,6 +440,9 @@ fun LongTemporalUnitClassGenerator.buildToIntUnitFunSpec() = buildFunSpec(
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
     )
+
+    returns(description.intClassName)
+
     addStatement(
         "return %T(%N.%T())",
         description.intClassName,
@@ -439,6 +457,7 @@ fun LongTemporalUnitClassGenerator.buildToIntUnitUncheckedFunSpec() = buildFunSp
     addModifiers(KModifier.INTERNAL)
     addKdoc("Converts this duration to [${description.intName}] without checking for overflow.")
     addAnnotation(PublishedApi::class)
+    returns(description.intClassName)
     addStatement("return %T(%N.toInt())", description.intClassName, valuePropertySpec)
 }
 
@@ -450,6 +469,7 @@ fun TemporalUnitClassGenerator.buildUnaryMinusFunSpec() = buildFunSpec("unaryMin
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
     )
+    returns(className)
 
     addStatement(
         "return %T(%N.%T())",
@@ -463,6 +483,7 @@ fun TemporalUnitClassGenerator.buildNegateUncheckedFunSpec() =
     buildFunSpec("negateUnchecked") {
         addModifiers(KModifier.INTERNAL)
         addKdoc("Negates this duration without checking for overflow.")
+        returns(className)
         addStatement("return %T(-%N)", className, valuePropertySpec)
     }
 
@@ -509,6 +530,8 @@ fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
             if (this@buildIntPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator &&
                 description.forceLongInOperators
             ) {
+                returns(conversion.fromUnit.longClassName)
+
                 addStatement(
                     "return this.%N() %L %N.${description.inUnitPropertyName}",
                     toLongUnitFunSpec,
@@ -516,6 +539,8 @@ fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
                     amount
                 )
             } else {
+                returns(className)
+
                 addStatement(
                     "return this %L %N.${description.inUnitPropertyName}",
                     plusOrMinusOperator.uncheckedOperator,
@@ -527,6 +552,8 @@ fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
             if (this@buildIntPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator &&
                 description.forceLongInOperators
             ) {
+                returns(conversion.toUnit.longClassName)
+
                 addStatement(
                     "return this.%N().${conversion.toUnit.inUnitPropertyName} %L %N.to${conversion.toUnit.longName}()",
                     toLongUnitFunSpec,
@@ -534,6 +561,14 @@ fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
                     amount
                 )
             } else {
+                returns(
+                    if (conversion.toUnit.forceLongInOperators) {
+                        conversion.toUnit.longClassName
+                    } else {
+                        conversion.toUnit.classNameFor(primitive)
+                    }
+                )
+
                 addStatement(
                     "return this.${conversion.toUnit.inUnitPropertyName} %L %N",
                     plusOrMinusOperator.uncheckedOperator,
@@ -543,16 +578,20 @@ fun TemporalUnitClassGenerator.buildIntPlusMinusOperatorFunSpec(
         }
         ConversionOperator.NONE -> {
             if (primitive == Int::class && description.forceLongInOperators) {
+                returns(description.longClassName)
+
                 addStatement(
-                    "return %T(%N.toLong() %T %N.${description.valueName})",
+                    "return %T(%N.toLong()·%T %N.${description.valueName})",
                     description.longClassName,
                     valuePropertySpec,
                     plusOrMinusOperator.operator,
                     amount
                 )
             } else {
+                returns(className)
+
                 addStatement(
-                    "return %T(%N %T %N.${description.valueName})",
+                    "return %T(%N·%T %N.${description.valueName})",
                     className,
                     valuePropertySpec,
                     plusOrMinusOperator.operator,
@@ -575,6 +614,8 @@ fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
     when (conversion.operator) {
         ConversionOperator.DIV -> {
             if (this@buildLongPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator) {
+                returns(conversion.fromUnit.longClassName)
+
                 addStatement(
                     "return this.%N() %L %N.${description.inUnitPropertyName}",
                     toLongUnitFunSpec,
@@ -582,6 +623,8 @@ fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
                     amount
                 )
             } else {
+                returns(className)
+
                 addStatement(
                     "return this %L %N.${description.inUnitPropertyName}",
                     plusOrMinusOperator.uncheckedOperator,
@@ -591,6 +634,8 @@ fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
         }
         ConversionOperator.TIMES -> {
             if (this@buildLongPlusMinusOperatorFunSpec is IntTemporalUnitClassGenerator) {
+                returns(conversion.toUnit.longClassName)
+
                 addStatement(
                     "return this.%N().${conversion.toUnit.inUnitPropertyName} %L %N",
                     toLongUnitFunSpec,
@@ -598,6 +643,8 @@ fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
                     amount
                 )
             } else {
+                returns(conversion.toUnit.classNameFor(primitive))
+
                 addStatement(
                     "return this.${conversion.toUnit.inUnitPropertyName} %L %N",
                     plusOrMinusOperator.uncheckedOperator,
@@ -607,16 +654,20 @@ fun TemporalUnitClassGenerator.buildLongPlusMinusOperatorFunSpec(
         }
         ConversionOperator.NONE -> {
             if (primitive == Int::class) {
+                returns(conversion.toUnit.longClassName)
+
                 addStatement(
-                    "return %T(%N.toLong() %T %N.${description.valueName})",
+                    "return %T(%N.toLong()·%T %N.${description.valueName})",
                     description.longClassName,
                     valuePropertySpec,
                     plusOrMinusOperator.operator,
                     amount
                 )
             } else {
+                returns(className)
+
                 addStatement(
-                    "return %T(%N %T %N.${description.valueName})",
+                    "return %T(%N·%T %N.${description.valueName})",
                     className,
                     valuePropertySpec,
                     plusOrMinusOperator.operator,
@@ -644,14 +695,18 @@ fun TemporalUnitClassGenerator.buildTimesFunSpec(
     if (this@buildTimesFunSpec is IntTemporalUnitClassGenerator &&
         (scalarPrimitive == Long::class || description.forceLongInOperators)
     ) {
+        returns(description.longClassName)
+
         addStatement(
             "return this.%N() * %N",
             toLongUnitFunSpec,
             scalar
         )
     } else {
+        returns(className)
+
         addStatement(
-            "return %T(%N %T %N)",
+            "return %T(%N·%T %N)",
             className,
             valuePropertySpec,
             javamath2kmp("timesExact"),
@@ -720,8 +775,10 @@ fun TemporalUnitClassGenerator.buildRemFunSpec(
     addParameter(scalar)
 
     if (this@buildRemFunSpec is IntTemporalUnitClassGenerator && scalarPrimitive == Long::class) {
+        returns(description.longClassName)
         addStatement("return this.%N() %% %N", toLongUnitFunSpec, scalar)
     } else {
+        returns(className)
         addStatement("return %T(%N %% %N)", className, valuePropertySpec, scalar)
     }
 }
@@ -797,9 +854,9 @@ fun TemporalUnitClassGenerator.buildInSmallerUnitConversionSpecs(
                 buildGetterFunSpec {
                     addStatement(
                         if (primitive == Int::class && conversion.toUnit.forceLongInOperators) {
-                            "return (%N.toLong() %T %T).${conversion.toUnit.lowerPluralName}"
+                            "return (%N.toLong()·%T %T).${conversion.toUnit.lowerPluralName}"
                         } else {
-                            "return (%N %T %T).${conversion.toUnit.lowerPluralName}"
+                            "return (%N·%T %T).${conversion.toUnit.lowerPluralName}"
                         },
                         valuePropertySpec,
                         javamath2kmp("timesExact"),
@@ -872,17 +929,31 @@ fun TemporalUnitClassGenerator.buildTimesExtensionFunSpec(
 
     val unit = ParameterSpec(description.lowerPluralName, className)
     addParameter(unit)
+
+    returns(
+        if (this@buildTimesExtensionFunSpec is IntTemporalUnitClassGenerator &&
+            (scalarPrimitive == Long::class || description.forceLongInOperators)
+        ) {
+            description.longClassName
+        } else {
+            className
+        }
+    )
+
     addStatement("return %N * this", unit)
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 fun TemporalUnitClassGenerator.buildKotlinDurationExtensionFunSpec() =
     buildFunSpec("toIsland${description.pluralName}") {
         receiver(KOTLIN_DURATION_CLASS_NAME)
         addAnnotation(EXPERIMENTAL_TIME_CLASS_NAME)
         addKdoc("Converts this duration to Island Time [%T].", className)
+        returns(className)
         addStatement(
-            "return %T(this.toLong(kotlin.time.DurationUnit.${description.pluralName.toUpperCase(Locale.US)}))",
-            className
+            "return %T(this.toLong(%T.${description.pluralName.uppercase()}))",
+            className,
+            KOTLIN_DURATION_UNIT_CLASS_NAME
         )
     }
 

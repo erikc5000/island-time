@@ -3,14 +3,6 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
     }
-
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.id == "kotlinx-atomicfu") {
-                useModule("org.jetbrains.kotlinx:atomicfu-gradle-plugin:${requested.version}")
-            }
-        }
-    }
 }
 
 dependencyResolutionManagement {
