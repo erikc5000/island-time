@@ -8,7 +8,3 @@ dependencies {
     implementation("com.android.tools.build:gradle:4.1.3")
     implementation("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.1")
 }
-
-kotlinDslPluginOptions {
-    experimentalWarning.set(false)
-}
