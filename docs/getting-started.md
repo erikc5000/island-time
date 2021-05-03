@@ -8,7 +8,7 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 - Android
 - iOS ARM64/x64
 - macOS x64
-- watchOS ARM64/x86
+- watchOS ARM64/x86/x64
 - tvOS ARM64/x64
 
 ## Version Requirements
