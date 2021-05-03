@@ -7,6 +7,7 @@ import io.islandtime.base.DateTimeField
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import kotlin.jvm.JvmInline
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
@@ -17,7 +18,8 @@ import kotlin.math.sign
  * @throws DateTimeException if the offset is outside the supported range
  * @property totalSeconds The number of seconds relative to UTC.
  */
-inline class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
+@JvmInline
+value class UtcOffset(val totalSeconds: IntSeconds) : Comparable<UtcOffset> {
 
     init {
         if (totalSeconds !in MIN_TOTAL_SECONDS..MAX_TOTAL_SECONDS) {

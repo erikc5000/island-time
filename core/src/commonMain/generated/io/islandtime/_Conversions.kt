@@ -12,44 +12,44 @@ import kotlin.jvm.JvmName
 /**
  * Returns this year-month with the precision reduced to the year.
  */
-fun YearMonth.toYear(): Year = Year(year)
+public fun YearMonth.toYear(): Year = Year(year)
 
 /**
  * Returns this date with the precision reduced to the year.
  */
-fun Date.toYear(): Year = Year(year)
+public fun Date.toYear(): Year = Year(year)
 
 /**
  * Returns this date with the precision reduced to the month.
  */
-fun Date.toYearMonth(): YearMonth = YearMonth(year, month)
+public fun Date.toYearMonth(): YearMonth = YearMonth(year, month)
 
 /**
  * Returns this date-time with the precision reduced to the year.
  */
-fun DateTime.toYear(): Year = date.toYear()
+public fun DateTime.toYear(): Year = date.toYear()
 
 /**
  * Returns this date-time with the precision reduced to the month.
  */
-fun DateTime.toYearMonth(): YearMonth = date.toYearMonth()
+public fun DateTime.toYearMonth(): YearMonth = date.toYearMonth()
 
 /**
  * Returns this date-time with the precision reduced to the year.
  */
-fun OffsetDateTime.toYear(): Year = dateTime.toYear()
+public fun OffsetDateTime.toYear(): Year = dateTime.toYear()
 
 /**
  * Returns this date-time with the precision reduced to the month.
  */
-fun OffsetDateTime.toYearMonth(): YearMonth = dateTime.toYearMonth()
+public fun OffsetDateTime.toYearMonth(): YearMonth = dateTime.toYearMonth()
 
 /**
  * Returns this date-time with the precision reduced to the year.
  */
-fun ZonedDateTime.toYear(): Year = dateTime.toYear()
+public fun ZonedDateTime.toYear(): Year = dateTime.toYear()
 
 /**
  * Returns this date-time with the precision reduced to the month.
  */
-fun ZonedDateTime.toYearMonth(): YearMonth = dateTime.toYearMonth()
+public fun ZonedDateTime.toYearMonth(): YearMonth = dateTime.toYearMonth()

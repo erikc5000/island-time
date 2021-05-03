@@ -104,7 +104,35 @@ interface DateTimeTextProvider {
      */
     fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? = null
 
-    companion object : DateTimeTextProvider by IslandTime.dateTimeTextProvider
+    companion object : DateTimeTextProvider {
+        override fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
+            return IslandTime.dateTimeTextProvider.textFor(field, value, style, locale)
+        }
+
+        override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
+            return IslandTime.dateTimeTextProvider.parsableTextFor(field, styles, locale)
+        }
+
+        override fun amPmTextFor(value: Long, locale: Locale): String? {
+            return IslandTime.dateTimeTextProvider.amPmTextFor(value, locale)
+        }
+
+        override fun dayOfWeekTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+            return IslandTime.dateTimeTextProvider.dayOfWeekTextFor(value, style, locale)
+        }
+
+        override fun eraTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+            return IslandTime.dateTimeTextProvider.eraTextFor(value, style, locale)
+        }
+
+        override fun monthTextFor(value: Long, style: TextStyle, locale: Locale): String? {
+            return IslandTime.dateTimeTextProvider.monthTextFor(value, style, locale)
+        }
+
+        override fun parsableTextFor(field: DateTimeField, style: TextStyle, locale: Locale): ParsableTextList {
+            return IslandTime.dateTimeTextProvider.parsableTextFor(field, style, locale)
+        }
+    }
 }
 
 /**

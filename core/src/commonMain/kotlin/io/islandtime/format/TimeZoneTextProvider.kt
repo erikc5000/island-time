@@ -18,7 +18,11 @@ interface TimeZoneTextProvider {
      */
     fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? = null
 
-    companion object : TimeZoneTextProvider by IslandTime.timeZoneTextProvider
+    companion object : TimeZoneTextProvider {
+        override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
+            return IslandTime.timeZoneTextProvider.timeZoneTextFor(zone, style, locale)
+        }
+    }
 }
 /**
  * The default provider of localized time zone text for the current platform.

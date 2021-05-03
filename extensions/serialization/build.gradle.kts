@@ -14,16 +14,8 @@ kotlin {
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation(Libs.Serialization.json)
-            }
-        }
-
-        val jvmTest by getting {
-            dependencies {
                 implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
+                implementation(Libs.Serialization.json)
             }
         }
     }

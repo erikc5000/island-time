@@ -6,13 +6,13 @@
 
 package io.islandtime
 
+import io.islandtime.`internal`.lengthOfWeekBasedYear
+import io.islandtime.`internal`.weekBasedYearImpl
+import io.islandtime.`internal`.weekOfMonthImpl
+import io.islandtime.`internal`.weekOfWeekBasedYearImpl
+import io.islandtime.`internal`.weekOfYearImpl
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.weekSettings
-import io.islandtime.internal.lengthOfWeekBasedYear
-import io.islandtime.internal.weekBasedYearImpl
-import io.islandtime.internal.weekOfMonthImpl
-import io.islandtime.internal.weekOfWeekBasedYearImpl
-import io.islandtime.internal.weekOfYearImpl
 import io.islandtime.locale.Locale
 import io.islandtime.measures.IntDays
 import io.islandtime.measures.IntWeeks
@@ -32,14 +32,15 @@ import kotlin.jvm.JvmName
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-val Date.week: DateRange
+public val Date.week: DateRange
   get() = startOfWeek.let { it..it + 6.days }
 
 /**
  * The range defining the week that this date falls within. The first day of the week will be
  * determined by the provided [settings].
  */
-fun Date.week(settings: WeekSettings): DateRange = startOfWeek(settings).let { it..it + 6.days }
+public fun Date.week(settings: WeekSettings): DateRange =
+    startOfWeek(settings).let { it..it + 6.days }
 
 /**
  * The range defining the week that this date falls within. The first day of the week will be the
@@ -49,18 +50,18 @@ fun Date.week(settings: WeekSettings): DateRange = startOfWeek(settings).let { i
  * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
  * instead.
  */
-fun Date.week(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
+public fun Date.week(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
 
 /**
  * The week of the month, from 0-6, calculated using the ISO week definition.
  */
-val Date.weekOfMonth: Int
+public val Date.weekOfMonth: Int
   get() = weekOfMonthImpl(WeekSettings.ISO)
 
 /**
  * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
-fun Date.weekOfMonth(settings: WeekSettings): Int = weekOfMonthImpl(settings)
+public fun Date.weekOfMonth(settings: WeekSettings): Int = weekOfMonthImpl(settings)
 
 /**
  * The week of the month, from 0-6, calculated using the default week definition associated with the
@@ -70,7 +71,7 @@ fun Date.weekOfMonth(settings: WeekSettings): Int = weekOfMonthImpl(settings)
  * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
  * instead.
  */
-fun Date.weekOfMonth(locale: Locale): Int = weekOfMonthImpl(locale.weekSettings)
+public fun Date.weekOfMonth(locale: Locale): Int = weekOfMonthImpl(locale.weekSettings)
 
 /**
  * The week of the year, calculated using the ISO week definition. If the week number is associated
@@ -80,7 +81,7 @@ fun Date.weekOfMonth(locale: Locale): Int = weekOfMonthImpl(locale.weekSettings)
  *
  * @see weekOfWeekBasedYear
  */
-val Date.weekOfYear: Int
+public val Date.weekOfYear: Int
   get() = weekOfYearImpl(WeekSettings.ISO)
 
 /**
@@ -91,7 +92,7 @@ val Date.weekOfYear: Int
  *
  * @see weekOfWeekBasedYear
  */
-fun Date.weekOfYear(settings: WeekSettings): Int = weekOfYearImpl(settings)
+public fun Date.weekOfYear(settings: WeekSettings): Int = weekOfYearImpl(settings)
 
 /**
  * The week of the year, calculated using the week definition associated with the provided [locale].
@@ -105,7 +106,7 @@ fun Date.weekOfYear(settings: WeekSettings): Int = weekOfYearImpl(settings)
  *
  * @see weekOfWeekBasedYear
  */
-fun Date.weekOfYear(locale: Locale): Int = weekOfYearImpl(locale.weekSettings)
+public fun Date.weekOfYear(locale: Locale): Int = weekOfYearImpl(locale.weekSettings)
 
 /**
  * The week-based year used in the ISO
@@ -114,7 +115,7 @@ fun Date.weekOfYear(locale: Locale): Int = weekOfYearImpl(locale.weekSettings)
  *
  * @see weekOfWeekBasedYear
  */
-val Date.weekBasedYear: Int
+public val Date.weekBasedYear: Int
   get() = weekBasedYearImpl(WeekSettings.ISO)
 
 /**
@@ -123,7 +124,7 @@ val Date.weekBasedYear: Int
  *
  * @see weekOfWeekBasedYear
  */
-fun Date.weekBasedYear(settings: WeekSettings): Int = weekBasedYearImpl(settings)
+public fun Date.weekBasedYear(settings: WeekSettings): Int = weekBasedYearImpl(settings)
 
 /**
  * The week-based year, calculated using the week definition associated with the provided [locale].
@@ -136,14 +137,14 @@ fun Date.weekBasedYear(settings: WeekSettings): Int = weekBasedYearImpl(settings
  *
  * @see weekOfWeekBasedYear
  */
-fun Date.weekBasedYear(locale: Locale): Int = weekBasedYearImpl(locale.weekSettings)
+public fun Date.weekBasedYear(locale: Locale): Int = weekBasedYearImpl(locale.weekSettings)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
  *
  * @see weekBasedYear
  */
-val Date.weekOfWeekBasedYear: Int
+public val Date.weekOfWeekBasedYear: Int
   get() = weekOfWeekBasedYearImpl(WeekSettings.ISO)
 
 /**
@@ -151,7 +152,7 @@ val Date.weekOfWeekBasedYear: Int
  *
  * @see weekBasedYear
  */
-fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearImpl(settings)
+public fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearImpl(settings)
 
 /**
  * The week number of the week-based year, calculated using the week definition associated with the
@@ -163,42 +164,43 @@ fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBasedYearI
  *
  * @see weekBasedYear
  */
-fun Date.weekOfWeekBasedYear(locale: Locale): Int = weekOfWeekBasedYearImpl(locale.weekSettings)
+public fun Date.weekOfWeekBasedYear(locale: Locale): Int =
+    weekOfWeekBasedYearImpl(locale.weekSettings)
 
 /**
  * Checks if this date falls within a leap year.
  */
-val Date.isInLeapYear: Boolean
+public val Date.isInLeapYear: Boolean
   get() = isLeapYear(year)
 
 /**
  * Checks if this date is February 29.
  */
-val Date.isLeapDay: Boolean
+public val Date.isLeapDay: Boolean
   get() = month == Month.FEBRUARY && dayOfMonth == 29
 
 /**
  * The length of this date's month in days.
  */
-val Date.lengthOfMonth: IntDays
+public val Date.lengthOfMonth: IntDays
   get() = month.lengthIn(year)
 
 /**
  * The length of this date's year in days.
  */
-val Date.lengthOfYear: IntDays
+public val Date.lengthOfYear: IntDays
   get() = lengthOfYear(year)
 
 /**
  * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
  */
-val Date.lengthOfWeekBasedYear: IntWeeks
+public val Date.lengthOfWeekBasedYear: IntWeeks
   get() = lengthOfWeekBasedYear(weekBasedYear)
 
 /**
  * The next date after this one that falls on [dayOfWeek].
  */
-fun Date.next(dayOfWeek: DayOfWeek): Date {
+public fun Date.next(dayOfWeek: DayOfWeek): Date {
   val dayDiff = this.dayOfWeek.ordinal - dayOfWeek.ordinal
 
   return if (dayDiff >= 0) {
@@ -211,13 +213,13 @@ fun Date.next(dayOfWeek: DayOfWeek): Date {
 /**
  * The next date that falls on [dayOfWeek], or this date if it falls on the same day.
  */
-fun Date.nextOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayOfWeek) this else
+public fun Date.nextOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayOfWeek) this else
     next(dayOfWeek)
 
 /**
  * The last date before this one that falls on [dayOfWeek].
  */
-fun Date.previous(dayOfWeek: DayOfWeek): Date {
+public fun Date.previous(dayOfWeek: DayOfWeek): Date {
   val dayDiff = dayOfWeek.ordinal - this.dayOfWeek.ordinal
 
   return if (dayDiff >= 0) {
@@ -230,22 +232,22 @@ fun Date.previous(dayOfWeek: DayOfWeek): Date {
 /**
  * The previous date that falls on [dayOfWeek], or this date if it falls on the same day.
  */
-fun Date.previousOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayOfWeek) this else
-    previous(dayOfWeek)
+public fun Date.previousOrSame(dayOfWeek: DayOfWeek): Date = if (dayOfWeek == this.dayOfWeek) this
+    else previous(dayOfWeek)
 
 /**
  * The interval defining the ISO week that this date-time falls within.
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-val DateTime.week: DateTimeInterval
+public val DateTime.week: DateTimeInterval
   get() = startOfWeek.let { it until it + 7.days }
 
 /**
  * The interval defining the week that this date-time falls within. The first day of the week will
  * be determined by the provided [settings].
  */
-fun DateTime.week(settings: WeekSettings): DateTimeInterval =
+public fun DateTime.week(settings: WeekSettings): DateTimeInterval =
     startOfWeek(settings).let { it until it + 7.days }
 
 /**
@@ -256,19 +258,19 @@ fun DateTime.week(settings: WeekSettings): DateTimeInterval =
  * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
  * instead.
  */
-fun DateTime.week(locale: Locale): DateTimeInterval =
+public fun DateTime.week(locale: Locale): DateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
 
 /**
  * The week of the month, from 0-6, calculated using the ISO week definition.
  */
-val DateTime.weekOfMonth: Int
+public val DateTime.weekOfMonth: Int
   inline get() = date.weekOfMonth
 
 /**
  * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
-fun DateTime.weekOfMonth(settings: WeekSettings): Int = date.weekOfMonth(settings)
+public fun DateTime.weekOfMonth(settings: WeekSettings): Int = date.weekOfMonth(settings)
 
 /**
  * The week of the month, from 0-6, calculated using the default week definition associated with the
@@ -278,7 +280,7 @@ fun DateTime.weekOfMonth(settings: WeekSettings): Int = date.weekOfMonth(setting
  * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
  * instead.
  */
-fun DateTime.weekOfMonth(locale: Locale): Int = date.weekOfMonth(locale)
+public fun DateTime.weekOfMonth(locale: Locale): Int = date.weekOfMonth(locale)
 
 /**
  * The week of the year, calculated using the ISO week definition. If the week number is associated
@@ -288,7 +290,7 @@ fun DateTime.weekOfMonth(locale: Locale): Int = date.weekOfMonth(locale)
  *
  * @see weekOfWeekBasedYear
  */
-val DateTime.weekOfYear: Int
+public val DateTime.weekOfYear: Int
   inline get() = date.weekOfYear
 
 /**
@@ -299,7 +301,7 @@ val DateTime.weekOfYear: Int
  *
  * @see weekOfWeekBasedYear
  */
-fun DateTime.weekOfYear(settings: WeekSettings): Int = date.weekOfYear(settings)
+public fun DateTime.weekOfYear(settings: WeekSettings): Int = date.weekOfYear(settings)
 
 /**
  * The week of the year, calculated using the week definition associated with the provided [locale].
@@ -313,7 +315,7 @@ fun DateTime.weekOfYear(settings: WeekSettings): Int = date.weekOfYear(settings)
  *
  * @see weekOfWeekBasedYear
  */
-fun DateTime.weekOfYear(locale: Locale): Int = date.weekOfYear(locale)
+public fun DateTime.weekOfYear(locale: Locale): Int = date.weekOfYear(locale)
 
 /**
  * The week-based year used in the ISO
@@ -322,7 +324,7 @@ fun DateTime.weekOfYear(locale: Locale): Int = date.weekOfYear(locale)
  *
  * @see weekOfWeekBasedYear
  */
-val DateTime.weekBasedYear: Int
+public val DateTime.weekBasedYear: Int
   inline get() = date.weekBasedYear
 
 /**
@@ -331,7 +333,7 @@ val DateTime.weekBasedYear: Int
  *
  * @see weekOfWeekBasedYear
  */
-fun DateTime.weekBasedYear(settings: WeekSettings): Int = date.weekBasedYear(settings)
+public fun DateTime.weekBasedYear(settings: WeekSettings): Int = date.weekBasedYear(settings)
 
 /**
  * The week-based year, calculated using the week definition associated with the provided [locale].
@@ -344,14 +346,14 @@ fun DateTime.weekBasedYear(settings: WeekSettings): Int = date.weekBasedYear(set
  *
  * @see weekOfWeekBasedYear
  */
-fun DateTime.weekBasedYear(locale: Locale): Int = date.weekBasedYear(locale)
+public fun DateTime.weekBasedYear(locale: Locale): Int = date.weekBasedYear(locale)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
  *
  * @see weekBasedYear
  */
-val DateTime.weekOfWeekBasedYear: Int
+public val DateTime.weekOfWeekBasedYear: Int
   inline get() = date.weekOfWeekBasedYear
 
 /**
@@ -359,7 +361,8 @@ val DateTime.weekOfWeekBasedYear: Int
  *
  * @see weekBasedYear
  */
-fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekBasedYear(settings)
+public fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
+    date.weekOfWeekBasedYear(settings)
 
 /**
  * The week number of the week-based year, calculated using the week definition associated with the
@@ -371,253 +374,58 @@ fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int = date.weekOfWeekB
  *
  * @see weekBasedYear
  */
-fun DateTime.weekOfWeekBasedYear(locale: Locale): Int = date.weekOfWeekBasedYear(locale)
+public fun DateTime.weekOfWeekBasedYear(locale: Locale): Int = date.weekOfWeekBasedYear(locale)
 
 /**
  * Checks if this date-time falls within a leap year.
  */
-val DateTime.isInLeapYear: Boolean
+public val DateTime.isInLeapYear: Boolean
   inline get() = date.isInLeapYear
 
 /**
  * Checks if this date-time falls within February 29.
  */
-val DateTime.isInLeapDay: Boolean
+public val DateTime.isInLeapDay: Boolean
   inline get() = date.isLeapDay
 
 /**
  * The length of this date-time's month in days.
  */
-val DateTime.lengthOfMonth: IntDays
+public val DateTime.lengthOfMonth: IntDays
   inline get() = date.lengthOfMonth
 
 /**
  * The length of this date-time's year in days.
  */
-val DateTime.lengthOfYear: IntDays
+public val DateTime.lengthOfYear: IntDays
   inline get() = date.lengthOfYear
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
-val DateTime.lengthOfWeekBasedYear: IntWeeks
+public val DateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = date.lengthOfWeekBasedYear
 
 /**
  * The next date-time after this one that falls on [dayOfWeek].
  */
-fun DateTime.next(dayOfWeek: DayOfWeek): DateTime = copy(date = date.next(dayOfWeek))
+public fun DateTime.next(dayOfWeek: DayOfWeek): DateTime = copy(date = date.next(dayOfWeek))
 
 /**
  * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
  */
-fun DateTime.nextOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek == this.dayOfWeek) this else
-    next(dayOfWeek)
+public fun DateTime.nextOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek == this.dayOfWeek)
+    this else next(dayOfWeek)
 
 /**
  * The last date-time before this one that falls on [dayOfWeek].
  */
-fun DateTime.previous(dayOfWeek: DayOfWeek): DateTime = copy(date = date.previous(dayOfWeek))
+public fun DateTime.previous(dayOfWeek: DayOfWeek): DateTime = copy(date = date.previous(dayOfWeek))
 
 /**
  * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
  */
-fun DateTime.previousOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek == this.dayOfWeek) this
-    else previous(dayOfWeek)
-
-/**
- * The interval defining the ISO week that this date-time falls within.
- *
- * The ISO week starts on Monday and ends on Sunday.
- */
-val OffsetDateTime.week: OffsetDateTimeInterval
-  get() = startOfWeek.let { it until it + 7.days }
-
-/**
- * The interval defining the week that this date-time falls within. The first day of the week will
- * be determined by the provided [settings].
- */
-fun OffsetDateTime.week(settings: WeekSettings): OffsetDateTimeInterval =
-    startOfWeek(settings).let { it until it + 7.days }
-
-/**
- * The interval defining the week that this date-time falls within. The first day of the week will
- * be the default associated with the provided [locale].
- *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
- */
-fun OffsetDateTime.week(locale: Locale): OffsetDateTimeInterval =
-    startOfWeek(locale).let { it until it + 7.days }
-
-/**
- * The week of the month, from 0-6, calculated using the ISO week definition.
- */
-val OffsetDateTime.weekOfMonth: Int
-  inline get() = dateTime.weekOfMonth
-
-/**
- * The week of the month, from 0-6, calculated using the week definition in [settings].
- */
-fun OffsetDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMonth(settings)
-
-/**
- * The week of the month, from 0-6, calculated using the default week definition associated with the
- * provided [locale].
- *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
- */
-fun OffsetDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
-
-/**
- * The week of the year, calculated using the ISO week definition. If the week number is associated
- * with the preceding year, `0` will be returned.
- *
- * To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
- *
- * @see weekOfWeekBasedYear
- */
-val OffsetDateTime.weekOfYear: Int
-  inline get() = dateTime.weekOfYear
-
-/**
- * The week of the year, calculated using the week definition in [settings]. If the week number is
- * associated with the preceding year, `0` will be returned.
- *
- * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
- *
- * @see weekOfWeekBasedYear
- */
-fun OffsetDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(settings)
-
-/**
- * The week of the year, calculated using the week definition associated with the provided [locale].
- * If the week number is associated with the preceding year, `0` will be returned.
- *
- * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
- *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
- *
- * @see weekOfWeekBasedYear
- */
-fun OffsetDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
-
-/**
- * The week-based year used in the ISO
- * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This value differs from the regular
- * ISO year when the week number falls in the preceding or following year.
- *
- * @see weekOfWeekBasedYear
- */
-val OffsetDateTime.weekBasedYear: Int
-  inline get() = dateTime.weekBasedYear
-
-/**
- * The week-based year, calculated using the week definition in [settings]. This value differs from
- * the regular ISO year when the week number falls in the preceding or following year.
- *
- * @see weekOfWeekBasedYear
- */
-fun OffsetDateTime.weekBasedYear(settings: WeekSettings): Int = dateTime.weekBasedYear(settings)
-
-/**
- * The week-based year, calculated using the week definition associated with the provided [locale].
- * This value differs from the regular ISO year when the week number falls in the preceding or
- * following year.
- *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
- *
- * @see weekOfWeekBasedYear
- */
-fun OffsetDateTime.weekBasedYear(locale: Locale): Int = dateTime.weekBasedYear(locale)
-
-/**
- * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
- *
- * @see weekBasedYear
- */
-val OffsetDateTime.weekOfWeekBasedYear: Int
-  inline get() = dateTime.weekOfWeekBasedYear
-
-/**
- * The week number of the week-based year, calculated using the week definition in [settings].
- *
- * @see weekBasedYear
- */
-fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
-    dateTime.weekOfWeekBasedYear(settings)
-
-/**
- * The week number of the week-based year, calculated using the week definition associated with the
- * provided [locale].
- *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
- *
- * @see weekBasedYear
- */
-fun OffsetDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWeekBasedYear(locale)
-
-/**
- * Checks if this date-time falls within a leap year.
- */
-val OffsetDateTime.isInLeapYear: Boolean
-  inline get() = dateTime.isInLeapYear
-
-/**
- * Checks if this date-time falls within February 29.
- */
-val OffsetDateTime.isInLeapDay: Boolean
-  inline get() = date.isLeapDay
-
-/**
- * The length of this date-time's month in days.
- */
-val OffsetDateTime.lengthOfMonth: IntDays
-  inline get() = dateTime.lengthOfMonth
-
-/**
- * The length of this date-time's year in days.
- */
-val OffsetDateTime.lengthOfYear: IntDays
-  inline get() = dateTime.lengthOfYear
-
-/**
- * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
- */
-val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
-  inline get() = dateTime.lengthOfWeekBasedYear
-
-/**
- * The next date-time after this one that falls on [dayOfWeek].
- */
-fun OffsetDateTime.next(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTime =
-    dateTime.next(dayOfWeek))
-
-/**
- * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
- */
-fun OffsetDateTime.nextOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
-    this.dayOfWeek) this else next(dayOfWeek)
-
-/**
- * The last date-time before this one that falls on [dayOfWeek].
- */
-fun OffsetDateTime.previous(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTime =
-    dateTime.previous(dayOfWeek))
-
-/**
- * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
- */
-fun OffsetDateTime.previousOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
+public fun DateTime.previousOrSame(dayOfWeek: DayOfWeek): DateTime = if (dayOfWeek ==
     this.dayOfWeek) this else previous(dayOfWeek)
 
 /**
@@ -625,14 +433,14 @@ fun OffsetDateTime.previousOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (da
  *
  * The ISO week starts on Monday and ends on Sunday.
  */
-val ZonedDateTime.week: ZonedDateTimeInterval
+public val OffsetDateTime.week: OffsetDateTimeInterval
   get() = startOfWeek.let { it until it + 7.days }
 
 /**
  * The interval defining the week that this date-time falls within. The first day of the week will
  * be determined by the provided [settings].
  */
-fun ZonedDateTime.week(settings: WeekSettings): ZonedDateTimeInterval =
+public fun OffsetDateTime.week(settings: WeekSettings): OffsetDateTimeInterval =
     startOfWeek(settings).let { it until it + 7.days }
 
 /**
@@ -643,19 +451,19 @@ fun ZonedDateTime.week(settings: WeekSettings): ZonedDateTimeInterval =
  * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
  * instead.
  */
-fun ZonedDateTime.week(locale: Locale): ZonedDateTimeInterval =
+public fun OffsetDateTime.week(locale: Locale): OffsetDateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
 
 /**
  * The week of the month, from 0-6, calculated using the ISO week definition.
  */
-val ZonedDateTime.weekOfMonth: Int
+public val OffsetDateTime.weekOfMonth: Int
   inline get() = dateTime.weekOfMonth
 
 /**
  * The week of the month, from 0-6, calculated using the week definition in [settings].
  */
-fun ZonedDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMonth(settings)
+public fun OffsetDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMonth(settings)
 
 /**
  * The week of the month, from 0-6, calculated using the default week definition associated with the
@@ -665,7 +473,7 @@ fun ZonedDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMont
  * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
  * instead.
  */
-fun ZonedDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
+public fun OffsetDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
 
 /**
  * The week of the year, calculated using the ISO week definition. If the week number is associated
@@ -675,7 +483,7 @@ fun ZonedDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale
  *
  * @see weekOfWeekBasedYear
  */
-val ZonedDateTime.weekOfYear: Int
+public val OffsetDateTime.weekOfYear: Int
   inline get() = dateTime.weekOfYear
 
 /**
@@ -686,7 +494,7 @@ val ZonedDateTime.weekOfYear: Int
  *
  * @see weekOfWeekBasedYear
  */
-fun ZonedDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(settings)
+public fun OffsetDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(settings)
 
 /**
  * The week of the year, calculated using the week definition associated with the provided [locale].
@@ -700,7 +508,7 @@ fun ZonedDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(
  *
  * @see weekOfWeekBasedYear
  */
-fun ZonedDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
+public fun OffsetDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
 
 /**
  * The week-based year used in the ISO
@@ -709,7 +517,7 @@ fun ZonedDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
  *
  * @see weekOfWeekBasedYear
  */
-val ZonedDateTime.weekBasedYear: Int
+public val OffsetDateTime.weekBasedYear: Int
   inline get() = dateTime.weekBasedYear
 
 /**
@@ -718,7 +526,8 @@ val ZonedDateTime.weekBasedYear: Int
  *
  * @see weekOfWeekBasedYear
  */
-fun ZonedDateTime.weekBasedYear(settings: WeekSettings): Int = dateTime.weekBasedYear(settings)
+public fun OffsetDateTime.weekBasedYear(settings: WeekSettings): Int =
+    dateTime.weekBasedYear(settings)
 
 /**
  * The week-based year, calculated using the week definition associated with the provided [locale].
@@ -731,14 +540,14 @@ fun ZonedDateTime.weekBasedYear(settings: WeekSettings): Int = dateTime.weekBase
  *
  * @see weekOfWeekBasedYear
  */
-fun ZonedDateTime.weekBasedYear(locale: Locale): Int = dateTime.weekBasedYear(locale)
+public fun OffsetDateTime.weekBasedYear(locale: Locale): Int = dateTime.weekBasedYear(locale)
 
 /**
  * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
  *
  * @see weekBasedYear
  */
-val ZonedDateTime.weekOfWeekBasedYear: Int
+public val OffsetDateTime.weekOfWeekBasedYear: Int
   inline get() = dateTime.weekOfWeekBasedYear
 
 /**
@@ -746,7 +555,7 @@ val ZonedDateTime.weekOfWeekBasedYear: Int
  *
  * @see weekBasedYear
  */
-fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
+public fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
     dateTime.weekOfWeekBasedYear(settings)
 
 /**
@@ -759,58 +568,256 @@ fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
  *
  * @see weekBasedYear
  */
-fun ZonedDateTime.weekOfWeekBasedYear(locale: Locale): Int = dateTime.weekOfWeekBasedYear(locale)
+public fun OffsetDateTime.weekOfWeekBasedYear(locale: Locale): Int =
+    dateTime.weekOfWeekBasedYear(locale)
 
 /**
  * Checks if this date-time falls within a leap year.
  */
-val ZonedDateTime.isInLeapYear: Boolean
+public val OffsetDateTime.isInLeapYear: Boolean
   inline get() = dateTime.isInLeapYear
 
 /**
  * Checks if this date-time falls within February 29.
  */
-val ZonedDateTime.isInLeapDay: Boolean
+public val OffsetDateTime.isInLeapDay: Boolean
   inline get() = date.isLeapDay
 
 /**
  * The length of this date-time's month in days.
  */
-val ZonedDateTime.lengthOfMonth: IntDays
+public val OffsetDateTime.lengthOfMonth: IntDays
   inline get() = dateTime.lengthOfMonth
 
 /**
  * The length of this date-time's year in days.
  */
-val ZonedDateTime.lengthOfYear: IntDays
+public val OffsetDateTime.lengthOfYear: IntDays
   inline get() = dateTime.lengthOfYear
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
-val ZonedDateTime.lengthOfWeekBasedYear: IntWeeks
+public val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
   inline get() = dateTime.lengthOfWeekBasedYear
 
 /**
  * The next date-time after this one that falls on [dayOfWeek].
  */
-fun ZonedDateTime.next(dayOfWeek: DayOfWeek): ZonedDateTime = copy(dateTime =
+public fun OffsetDateTime.next(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTime =
     dateTime.next(dayOfWeek))
 
 /**
  * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
  */
-fun ZonedDateTime.nextOrSame(dayOfWeek: DayOfWeek): ZonedDateTime = if (dayOfWeek == this.dayOfWeek)
-    this else next(dayOfWeek)
+public fun OffsetDateTime.nextOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
+    this.dayOfWeek) this else next(dayOfWeek)
 
 /**
  * The last date-time before this one that falls on [dayOfWeek].
  */
-fun ZonedDateTime.previous(dayOfWeek: DayOfWeek): ZonedDateTime = copy(dateTime =
+public fun OffsetDateTime.previous(dayOfWeek: DayOfWeek): OffsetDateTime = copy(dateTime =
     dateTime.previous(dayOfWeek))
 
 /**
  * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
  */
-fun ZonedDateTime.previousOrSame(dayOfWeek: DayOfWeek): ZonedDateTime = if (dayOfWeek ==
+public fun OffsetDateTime.previousOrSame(dayOfWeek: DayOfWeek): OffsetDateTime = if (dayOfWeek ==
+    this.dayOfWeek) this else previous(dayOfWeek)
+
+/**
+ * The interval defining the ISO week that this date-time falls within.
+ *
+ * The ISO week starts on Monday and ends on Sunday.
+ */
+public val ZonedDateTime.week: ZonedDateTimeInterval
+  get() = startOfWeek.let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be determined by the provided [settings].
+ */
+public fun ZonedDateTime.week(settings: WeekSettings): ZonedDateTimeInterval =
+    startOfWeek(settings).let { it until it + 7.days }
+
+/**
+ * The interval defining the week that this date-time falls within. The first day of the week will
+ * be the default associated with the provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+public fun ZonedDateTime.week(locale: Locale): ZonedDateTimeInterval =
+    startOfWeek(locale).let { it until it + 7.days }
+
+/**
+ * The week of the month, from 0-6, calculated using the ISO week definition.
+ */
+public val ZonedDateTime.weekOfMonth: Int
+  inline get() = dateTime.weekOfMonth
+
+/**
+ * The week of the month, from 0-6, calculated using the week definition in [settings].
+ */
+public fun ZonedDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.weekOfMonth(settings)
+
+/**
+ * The week of the month, from 0-6, calculated using the default week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ */
+public fun ZonedDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
+
+/**
+ * The week of the year, calculated using the ISO week definition. If the week number is associated
+ * with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number used in the ISO week date system, use [weekOfWeekBasedYear] instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+public val ZonedDateTime.weekOfYear: Int
+  inline get() = dateTime.weekOfYear
+
+/**
+ * The week of the year, calculated using the week definition in [settings]. If the week number is
+ * associated with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+public fun ZonedDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.weekOfYear(settings)
+
+/**
+ * The week of the year, calculated using the week definition associated with the provided [locale].
+ * If the week number is associated with the preceding year, `0` will be returned.
+ *
+ * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+public fun ZonedDateTime.weekOfYear(locale: Locale): Int = dateTime.weekOfYear(locale)
+
+/**
+ * The week-based year used in the ISO
+ * [week date system](https://en.wikipedia.org/wiki/ISO_week_date). This value differs from the regular
+ * ISO year when the week number falls in the preceding or following year.
+ *
+ * @see weekOfWeekBasedYear
+ */
+public val ZonedDateTime.weekBasedYear: Int
+  inline get() = dateTime.weekBasedYear
+
+/**
+ * The week-based year, calculated using the week definition in [settings]. This value differs from
+ * the regular ISO year when the week number falls in the preceding or following year.
+ *
+ * @see weekOfWeekBasedYear
+ */
+public fun ZonedDateTime.weekBasedYear(settings: WeekSettings): Int =
+    dateTime.weekBasedYear(settings)
+
+/**
+ * The week-based year, calculated using the week definition associated with the provided [locale].
+ * This value differs from the regular ISO year when the week number falls in the preceding or
+ * following year.
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekOfWeekBasedYear
+ */
+public fun ZonedDateTime.weekBasedYear(locale: Locale): Int = dateTime.weekBasedYear(locale)
+
+/**
+ * The week number used in the ISO [week date system](https://en.wikipedia.org/wiki/ISO_week_date).
+ *
+ * @see weekBasedYear
+ */
+public val ZonedDateTime.weekOfWeekBasedYear: Int
+  inline get() = dateTime.weekOfWeekBasedYear
+
+/**
+ * The week number of the week-based year, calculated using the week definition in [settings].
+ *
+ * @see weekBasedYear
+ */
+public fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
+    dateTime.weekOfWeekBasedYear(settings)
+
+/**
+ * The week number of the week-based year, calculated using the week definition associated with the
+ * provided [locale].
+ *
+ * Keep in mind that that the system's calendar settings may differ from that of the default locale
+ * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
+ * instead.
+ *
+ * @see weekBasedYear
+ */
+public fun ZonedDateTime.weekOfWeekBasedYear(locale: Locale): Int =
+    dateTime.weekOfWeekBasedYear(locale)
+
+/**
+ * Checks if this date-time falls within a leap year.
+ */
+public val ZonedDateTime.isInLeapYear: Boolean
+  inline get() = dateTime.isInLeapYear
+
+/**
+ * Checks if this date-time falls within February 29.
+ */
+public val ZonedDateTime.isInLeapDay: Boolean
+  inline get() = date.isLeapDay
+
+/**
+ * The length of this date-time's month in days.
+ */
+public val ZonedDateTime.lengthOfMonth: IntDays
+  inline get() = dateTime.lengthOfMonth
+
+/**
+ * The length of this date-time's year in days.
+ */
+public val ZonedDateTime.lengthOfYear: IntDays
+  inline get() = dateTime.lengthOfYear
+
+/**
+ * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
+ */
+public val ZonedDateTime.lengthOfWeekBasedYear: IntWeeks
+  inline get() = dateTime.lengthOfWeekBasedYear
+
+/**
+ * The next date-time after this one that falls on [dayOfWeek].
+ */
+public fun ZonedDateTime.next(dayOfWeek: DayOfWeek): ZonedDateTime = copy(dateTime =
+    dateTime.next(dayOfWeek))
+
+/**
+ * The next date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+public fun ZonedDateTime.nextOrSame(dayOfWeek: DayOfWeek): ZonedDateTime = if (dayOfWeek ==
+    this.dayOfWeek) this else next(dayOfWeek)
+
+/**
+ * The last date-time before this one that falls on [dayOfWeek].
+ */
+public fun ZonedDateTime.previous(dayOfWeek: DayOfWeek): ZonedDateTime = copy(dateTime =
+    dateTime.previous(dayOfWeek))
+
+/**
+ * The previous date-time that falls on [dayOfWeek], or this date-time if it falls on the same day.
+ */
+public fun ZonedDateTime.previousOrSame(dayOfWeek: DayOfWeek): ZonedDateTime = if (dayOfWeek ==
     this.dayOfWeek) this else previous(dayOfWeek)

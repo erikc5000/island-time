@@ -108,9 +108,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
         jvmTarget = "1.8"
-        useIR = true
     }
 }
 

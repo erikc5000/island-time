@@ -41,7 +41,15 @@ interface TimeZoneRulesProvider {
      */
     fun rulesFor(regionId: String): TimeZoneRules
 
-    companion object : TimeZoneRulesProvider by IslandTime.timeZoneRulesProvider
+    companion object : TimeZoneRulesProvider {
+        override val availableRegionIds: Set<String> get() = IslandTime.timeZoneRulesProvider.availableRegionIds
+
+        override fun hasRulesFor(regionId: String): Boolean = IslandTime.timeZoneRulesProvider.hasRulesFor(regionId)
+
+        override fun rulesFor(regionId: String): TimeZoneRules = IslandTime.timeZoneRulesProvider.rulesFor(regionId)
+
+        override val databaseVersion: String get() = IslandTime.timeZoneRulesProvider.databaseVersion
+    }
 }
 
 /**
