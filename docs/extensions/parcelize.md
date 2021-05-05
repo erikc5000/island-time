@@ -31,7 +31,7 @@ data class MyParcelable(
 ) : Parcelable
 ```
 
-In the above example, [DateParceler](../api/parcelize-extensions/io.islandtime.extensions.parcelize/-date-parceler/index.md) is used to generate a class containing a non-nullable `Date`. You could make the `Date` nullable instead by using [NullableDateParceler](../api/parcelize-extensions/io.islandtime.extensions.parcelize/-nullable-date-parceler/index.md).
+In the above example, [DateParceler](../api/parcelize-extensions/io.islandtime.parcelize/-date-parceler/index.md) is used to generate a class containing a non-nullable `Date`. You could make the `Date` nullable instead by using [NullableDateParceler](../api/parcelize-extensions/io.islandtime.parcelize/-nullable-date-parceler/index.md).
 
 ```kotlin
 @Parcelize
