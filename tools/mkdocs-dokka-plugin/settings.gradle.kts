@@ -7,6 +7,5 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        jcenter()
     }
 }
