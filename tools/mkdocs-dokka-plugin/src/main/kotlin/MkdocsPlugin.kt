@@ -18,6 +18,8 @@ import org.jetbrains.dokka.plugability.DokkaPlugin
 import org.jetbrains.dokka.plugability.plugin
 import org.jetbrains.dokka.plugability.query
 import org.jetbrains.dokka.transformers.pages.PageTransformer
+//import org.jetbrains.dokka.gfm.GfmCommand.Companion.templateCommand
+//import org.jetbrains.dokka.gfm.ResolveLinkGfmCommand
 import java.util.*
 
 class MkdocsPlugin : DokkaPlugin() {
@@ -48,13 +50,13 @@ class MkdocsPlugin : DokkaPlugin() {
     }
 }
 
-class MarkdownContent {
+class MarkdownContent : Appendable {
     private var inlineCodeBlockLevel = 0
     val inInlineCodeBlock: Boolean get() = inlineCodeBlockLevel > 0
     private var codeBlockIsTerminated = true
     private val stringBuilder = StringBuilder()
 
-    fun append(content: String): Unit = with(stringBuilder) {
+    override fun append(content: CharSequence): MarkdownContent = with(stringBuilder) {
         if (inInlineCodeBlock) {
             if (codeBlockIsTerminated) {
                 //append('`')
@@ -62,8 +64,17 @@ class MarkdownContent {
                 codeBlockIsTerminated = false
             }
         }
-        
+
         append(content)
+        this@MarkdownContent
+    }
+
+    override fun append(csq: CharSequence?, start: Int, end: Int): MarkdownContent {
+        return if (csq != null) append(csq.subSequence(start, end)) else this
+    }
+
+    override fun append(c: Char): MarkdownContent {
+        return append(c.toString())
     }
 
     fun appendNonCode(content: String): Unit = with(stringBuilder) {
@@ -118,6 +129,8 @@ class MkdocsRenderer(
 ) : DefaultRenderer<MarkdownContent>(context) {
 
     override val preprocessors = context.plugin<MkdocsPlugin>().query { mkdocsPreprocessors }
+
+//    private val isPartial = context.configuration.delayTemplateSubstitution
 
     override fun MarkdownContent.wrapGroup(
         node: ContentGroup,
@@ -186,6 +199,22 @@ class MkdocsRenderer(
         }
     }
 
+    override fun MarkdownContent.buildDRILink(
+        node: ContentDRILink,
+        pageContext: ContentPage,
+        sourceSetRestriction: Set<DisplaySourceSet>?
+    ) {
+        locationProvider.resolve(node.address, node.sourceSets, pageContext)?.let {
+            buildLink(it) {
+                buildText(node.children, pageContext, sourceSetRestriction)
+            }
+        } ?: /*if (isPartial) {
+            templateCommand(ResolveLinkGfmCommand(node.address)) {
+                buildText(node.children, pageContext, sourceSetRestriction)
+            }
+        } else*/ buildText(node.children, pageContext, sourceSetRestriction)
+    }
+
     override fun MarkdownContent.buildNewLine() {
         appendNewLine()
     }
@@ -249,32 +278,25 @@ class MkdocsRenderer(
                 buildNewLine()
             }
         } else {
-            val size = node.header.size
+            val size = node.header.firstOrNull()?.children?.size ?: node.children.firstOrNull()?.children?.size ?: 0
 
             if (node.header.isNotEmpty()) {
-                append("|")
                 node.header.forEach {
+                    append("| ")
                     it.children.forEach {
                         append(" ")
                         it.build(this, pageContext, it.sourceSets)
+                        append(" | ")
                     }
-                    append(" |")
+                    append("\n")
                 }
-                appendNewLine()
             } else {
                 append("| ".repeat(size))
-                if (size > 0) {
-                    append("|")
-                    appendNewLine()
-                }
+                if (size > 0) append("|\n")
             }
 
             append("|---".repeat(size))
-
-            if (size > 0) {
-                append("|")
-                appendNewLine()
-            }
+            if (size > 0) append("|\n")
 
             node.children.forEach {
                 val builder = MarkdownContent()
@@ -289,7 +311,7 @@ class MkdocsRenderer(
                     )  // Workaround for headers inside tables
                 }
                 append(builder.build().withEntersAsHtml())
-                append(" | ".repeat(size - it.children.size))
+                append("|".repeat(size + 1 - it.children.size))
                 appendNewLine()
             }
         }

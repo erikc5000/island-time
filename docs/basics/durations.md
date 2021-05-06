@@ -4,7 +4,7 @@ In Island Time, durations are fully type-safe. The use of durations in terms of 
 
 ## Single Unit Durations
 
-Island Time provides [inline classes](https://kotlinlang.org/docs/reference/inline-classes.html) representing each individual duration unit, backed by either a `Long` or `Int` &mdash; such as `IntYears`, `IntHours`, or `LongNanoseconds`. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
+Island Time provides [value classes](https://kotlinlang.org/docs/reference/inline-classes.html) representing each individual duration unit, backed by either a `Long` or `Int` &mdash; such as `IntYears`, `IntHours`, or `LongNanoseconds`. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
 
 ```kotlin
 // The minimum necessary unit granularity is preserved when
