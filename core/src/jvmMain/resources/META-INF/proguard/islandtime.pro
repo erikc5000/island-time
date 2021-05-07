@@ -1,3 +1,3 @@
--keepclassmembernames class io.islandtime.** {
+-keepclassmembers class io.islandtime.** {
     volatile <fields>;
 }

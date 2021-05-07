@@ -9,6 +9,10 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            resources.setSrcDirs(emptyList<String>())
+        }
+
         val commonMain by getting {
             kotlin.srcDirs("src/commonMain/generated")
 
@@ -22,6 +26,10 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
             }
+        }
+
+        val jvmMain by getting {
+            resources.srcDirs("src/jvmMain/resources")
         }
 
         val jvmTest by getting {
