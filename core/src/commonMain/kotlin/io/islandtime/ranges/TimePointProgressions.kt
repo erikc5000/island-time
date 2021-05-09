@@ -30,7 +30,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
     Iterable<T> {
 
     init {
-        require(!step.isZero()) { "Step must be non-zero" }
+        require(step != 0L.seconds) { "Step must be non-zero" }
     }
 
     override val first: T = start
@@ -76,7 +76,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
             rangeStart: T,
             rangeEnd: T,
             step: LongSeconds
-        ) = TimePointSecondProgression(rangeStart, rangeEnd, step)
+        ): TimePointSecondProgression<T> = TimePointSecondProgression(rangeStart, rangeEnd, step)
     }
 }
 
@@ -88,7 +88,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
     Iterable<T> {
 
     init {
-        require(!step.isZero()) { "Step must be non-zero" }
+        require(step != 0L.nanoseconds) { "Step must be non-zero" }
     }
 
     override val first: T = start
@@ -134,7 +134,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
             rangeStart: T,
             rangeEnd: T,
             step: LongNanoseconds
-        ) = TimePointNanosecondProgression(rangeStart, rangeEnd, step)
+        ): TimePointNanosecondProgression<T> = TimePointNanosecondProgression(rangeStart, rangeEnd, step)
     }
 }
 

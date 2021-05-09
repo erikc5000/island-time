@@ -21,6 +21,7 @@ import io.islandtime.`internal`.NANOSECONDS_PER_SECOND
 import io.islandtime.`internal`.toZeroPaddedString
 import kotlin.Boolean
 import kotlin.Comparable
+import kotlin.Deprecated
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
@@ -89,16 +90,31 @@ public value class IntNanoseconds(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0.nanoseconds"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0.nanoseconds"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0.nanoseconds"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0
 
   public override fun compareTo(other: IntNanoseconds): Int = `value`.compareTo(other.`value`)
@@ -448,16 +464,31 @@ public value class LongNanoseconds(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0L.nanoseconds"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0L.nanoseconds"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0L.nanoseconds"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0L
 
   public override fun compareTo(other: LongNanoseconds): Int = `value`.compareTo(other.`value`)
@@ -724,6 +755,11 @@ public value class LongNanoseconds(
    * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked(): Int = `value`.toInt()
+
+  /**
+   * Converts this duration to a `Long` value.
+   */
+  public fun toLong(): Long = `value`
 
   public companion object {
     /**

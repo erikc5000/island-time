@@ -21,6 +21,7 @@ import io.islandtime.`internal`.NANOSECONDS_PER_DAY
 import io.islandtime.`internal`.SECONDS_PER_DAY
 import kotlin.Boolean
 import kotlin.Comparable
+import kotlin.Deprecated
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
@@ -130,16 +131,31 @@ public value class IntDays(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0.days"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0.days"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0.days"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0
 
   public override fun compareTo(other: IntDays): Int = `value`.compareTo(other.`value`)
@@ -444,16 +460,31 @@ public value class LongDays(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0L.days"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0L.days"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0L.days"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0L
 
   public override fun compareTo(other: LongDays): Int = `value`.compareTo(other.`value`)
@@ -635,6 +666,11 @@ public value class LongDays(
    * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked(): Int = `value`.toInt()
+
+  /**
+   * Converts this duration to a `Long` value.
+   */
+  public fun toLong(): Long = `value`
 
   public companion object {
     /**

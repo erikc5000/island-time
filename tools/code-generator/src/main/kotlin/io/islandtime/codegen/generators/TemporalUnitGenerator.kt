@@ -200,6 +200,7 @@ class LongTemporalUnitClassGenerator(
     val toIntUnitUncheckedFunSpec by lazy(::buildToIntUnitUncheckedFunSpec)
     val toIntFunSpec by lazy(::buildToIntFunSpec)
     val toIntUncheckedFunSpec by lazy(::buildToIntUncheckedFunSpec)
+    val toLongFunSpec by lazy(::buildToLongFunSpec)
 
     val kotlinDurationExtensionFunSpec by lazy(::buildKotlinDurationExtensionFunSpec)
 
@@ -208,7 +209,8 @@ class LongTemporalUnitClassGenerator(
             toIntUnitFunSpec,
             toIntUnitUncheckedFunSpec,
             toIntFunSpec,
-            toIntUncheckedFunSpec
+            toIntUncheckedFunSpec,
+            toLongFunSpec
         )
     }
 
@@ -261,18 +263,48 @@ fun TemporalUnitClassGenerator.buildConstructorFunSpec() = buildConstructorFunSp
 
 fun TemporalUnitClassGenerator.buildIsZeroFunSpec() = buildFunSpec("isZero") {
     addKdoc("Checks if this duration is zero.")
+    addAnnotation(
+        buildAnnotationSpec(Deprecated::class) {
+            addMember("message = %S", "Replace with direct comparison.")
+            addMember(
+                "replaceWith = ReplaceWith(%S)",
+                "this == ${valuePropertySpec.type.zeroValueString}.${description.lowerPluralName}"
+            )
+            addMember("level = DeprecationLevel.ERROR")
+        }
+    )
     returns(Boolean::class)
     addStatement("return %N == ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
 }
 
 fun TemporalUnitClassGenerator.buildIsNegativeFunSpec() = buildFunSpec("isNegative") {
     addKdoc("Checks if this duration is negative.")
+    addAnnotation(
+        buildAnnotationSpec(Deprecated::class) {
+            addMember("message = %S", "Replace with direct comparison.")
+            addMember(
+                "replaceWith = ReplaceWith(%S)",
+                "this < ${valuePropertySpec.type.zeroValueString}.${description.lowerPluralName}"
+            )
+            addMember("level = DeprecationLevel.ERROR")
+        }
+    )
     returns(Boolean::class)
     addStatement("return %N < ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
 }
 
 fun TemporalUnitClassGenerator.buildIsPositiveFunSpec() = buildFunSpec("isPositive") {
     addKdoc("Checks if this duration is positive.")
+    addAnnotation(
+        buildAnnotationSpec(Deprecated::class) {
+            addMember("message = %S", "Replace with direct comparison.")
+            addMember(
+                "replaceWith = ReplaceWith(%S)",
+                "this > ${valuePropertySpec.type.zeroValueString}.${description.lowerPluralName}"
+            )
+            addMember("level = DeprecationLevel.ERROR")
+        }
+    )
     returns(Boolean::class)
     addStatement("return %N > ${valuePropertySpec.type.zeroValueString}", valuePropertySpec)
 }
@@ -459,6 +491,12 @@ fun LongTemporalUnitClassGenerator.buildToIntUnitUncheckedFunSpec() = buildFunSp
     addAnnotation(PublishedApi::class)
     returns(description.intClassName)
     addStatement("return %T(%N.toInt())", description.intClassName, valuePropertySpec)
+}
+
+fun LongTemporalUnitClassGenerator.buildToLongFunSpec() = buildFunSpec("toLong") {
+    addKdoc("Converts this duration to a `Long` value.")
+    returns(Long::class)
+    addStatement("return %N", valuePropertySpec)
 }
 
 fun TemporalUnitClassGenerator.buildUnaryMinusFunSpec() = buildFunSpec("unaryMinus") {

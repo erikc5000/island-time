@@ -20,6 +20,7 @@ import io.islandtime.`internal`.NANOSECONDS_PER_HOUR
 import io.islandtime.`internal`.SECONDS_PER_HOUR
 import kotlin.Boolean
 import kotlin.Comparable
+import kotlin.Deprecated
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
@@ -109,16 +110,31 @@ public value class IntHours(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0.hours"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0.hours"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0.hours"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0
 
   public override fun compareTo(other: IntHours): Int = `value`.compareTo(other.`value`)
@@ -402,16 +418,31 @@ public value class LongHours(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0L.hours"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0L.hours"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0L.hours"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0L
 
   public override fun compareTo(other: LongHours): Int = `value`.compareTo(other.`value`)
@@ -585,6 +616,11 @@ public value class LongHours(
    * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked(): Int = `value`.toInt()
+
+  /**
+   * Converts this duration to a `Long` value.
+   */
+  public fun toLong(): Long = `value`
 
   public companion object {
     /**

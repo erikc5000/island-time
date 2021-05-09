@@ -17,6 +17,7 @@ import io.islandtime.`internal`.MONTHS_PER_DECADE
 import io.islandtime.`internal`.MONTHS_PER_YEAR
 import kotlin.Boolean
 import kotlin.Comparable
+import kotlin.Deprecated
 import kotlin.Int
 import kotlin.Long
 import kotlin.PublishedApi
@@ -64,16 +65,31 @@ public value class IntMonths(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0.months"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0.months"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0.months"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0
 
   public override fun compareTo(other: IntMonths): Int = `value`.compareTo(other.`value`)
@@ -287,16 +303,31 @@ public value class LongMonths(
   /**
    * Checks if this duration is zero.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0L.months"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isZero(): Boolean = `value` == 0L
 
   /**
    * Checks if this duration is negative.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0L.months"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isNegative(): Boolean = `value` < 0L
 
   /**
    * Checks if this duration is positive.
    */
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0L.months"),
+    level = DeprecationLevel.ERROR
+  )
   public fun isPositive(): Boolean = `value` > 0L
 
   public override fun compareTo(other: LongMonths): Int = `value`.compareTo(other.`value`)
@@ -456,6 +487,11 @@ public value class LongMonths(
    * Converts this duration to an `Int` value without checking for overflow.
    */
   internal fun toIntUnchecked(): Int = `value`.toInt()
+
+  /**
+   * Converts this duration to a `Long` value.
+   */
+  public fun toLong(): Long = `value`
 
   public companion object {
     /**
