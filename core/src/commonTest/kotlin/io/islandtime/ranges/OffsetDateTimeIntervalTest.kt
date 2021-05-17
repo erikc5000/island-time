@@ -7,6 +7,7 @@ import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.groupedDateTimeParser
 import io.islandtime.test.AbstractIslandTimeTest
+import kotlin.random.Random
 import kotlin.test.*
 
 class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
@@ -112,12 +113,14 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `random() throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { OffsetDateTimeInterval.EMPTY.random() }
+        assertFailsWith<NoSuchElementException> { OffsetDateTimeInterval.EMPTY.random(Random) }
     }
 
     @Test
     fun `random() throws an exception when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.random(Random) }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval(start = dateTime).random() }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval(endExclusive = dateTime).random() }
     }
@@ -125,12 +128,14 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `randomOrNull() returns null when the interval is empty`() {
         assertNull(OffsetDateTimeInterval.EMPTY.randomOrNull())
+        assertNull(OffsetDateTimeInterval.EMPTY.randomOrNull(Random))
     }
 
     @Test
     fun `randomOrNull() returns null when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         assertNull(OffsetDateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(OffsetDateTimeInterval.UNBOUNDED.randomOrNull(Random))
         assertNull(OffsetDateTimeInterval(start = dateTime).randomOrNull())
         assertNull(OffsetDateTimeInterval(endExclusive = dateTime).randomOrNull())
     }
