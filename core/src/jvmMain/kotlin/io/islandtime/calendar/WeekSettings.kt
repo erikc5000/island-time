@@ -18,5 +18,5 @@ internal actual val Locale.firstDayOfWeek: DayOfWeek
 
 private fun Locale.withoutVariant() = Locale(language, country)
 
-private val Calendar.firstIslandDayOfWeek
+private val Calendar.firstIslandDayOfWeek: DayOfWeek
     get() = DayOfWeek.SUNDAY + (firstDayOfWeek - 1).days

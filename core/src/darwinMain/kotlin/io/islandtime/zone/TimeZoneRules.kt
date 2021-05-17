@@ -53,14 +53,14 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
         return offsetAt(date)
     }
 
-    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
+    override fun offsetAt(secondsSinceUnixEpoch: Seconds, nanoOfSeconds: Nanoseconds): UtcOffset {
         val date = NSDate.dateWithTimeIntervalSince1970(
-            secondsSinceUnixEpoch.value.toDouble() + nanoOfSeconds.value.toDouble() / NANOSECONDS_PER_SECOND
+            secondsSinceUnixEpoch.toDouble() + nanoOfSeconds.toDouble() / NANOSECONDS_PER_SECOND
         )
         return offsetAt(date)
     }
 
-    override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
+    override fun offsetAt(millisecondsSinceUnixEpoch: Milliseconds): UtcOffset {
         return offsetAt(NSDate.fromMillisecondsSinceUnixEpoch(millisecondsSinceUnixEpoch))
     }
 
@@ -92,8 +92,8 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
         return timeZone.isDaylightSavingTimeForDate(instant.toNSDate())
     }
 
-    override fun daylightSavingsAt(instant: Instant): IntSeconds {
-        return timeZone.daylightSavingTimeOffsetForDate(instant.toNSDate()).toInt().seconds
+    override fun daylightSavingsAt(instant: Instant): Seconds {
+        return timeZone.daylightSavingTimeOffsetForDate(instant.toNSDate()).seconds
     }
 
     override val hasFixedOffset: Boolean
@@ -145,7 +145,7 @@ private class DarwinTimeZoneOffsetTransition(
     }
 
     override val dateTimeAfter: DateTime get() = dateTimeBefore + duration
-    override val duration: IntSeconds get() = offsetAfter.totalSeconds - offsetBefore.totalSeconds
+    override val duration: Seconds get() = offsetAfter.totalSeconds - offsetBefore.totalSeconds
     override val isGap: Boolean get() = offsetAfter > offsetBefore
     override val isOverlap: Boolean get() = offsetAfter < offsetBefore
 
@@ -164,8 +164,8 @@ private class DarwinTimeZoneOffsetTransition(
     }
 }
 
-private fun NSDate.Companion.fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds): NSDate {
-    return NSDate.dateWithTimeIntervalSince1970(milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND)
+private fun NSDate.Companion.fromMillisecondsSinceUnixEpoch(milliseconds: Milliseconds): NSDate {
+    return NSDate.dateWithTimeIntervalSince1970(milliseconds.toDouble() / MILLISECONDS_PER_SECOND)
 }
 
 private fun DateTime.toNSDateOrNull(calendar: NSCalendar) = calendar.dateFromComponents(toNSDateComponents())

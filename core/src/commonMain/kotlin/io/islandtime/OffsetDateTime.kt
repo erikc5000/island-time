@@ -1,6 +1,7 @@
 package io.islandtime
 
 import io.islandtime.base.TimePoint
+import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.OffsetDateTimeInterval
@@ -158,14 +159,11 @@ class OffsetDateTime(
     inline val instant: Instant
         get() = toInstant()
 
-    override val secondsSinceUnixEpoch: LongSeconds
-        get() = dateTime.secondsSinceUnixEpochAt(offset)
+    override val secondOfUnixEpoch: Long
+        get() = dateTime.secondOfUnixEpochAt(offset)
 
-    override val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
-        get() = dateTime.additionalNanosecondsSinceUnixEpoch
-
-    override val millisecondsSinceUnixEpoch: LongMilliseconds
-        get() = dateTime.millisecondsSinceUnixEpochAt(offset)
+    override val millisecondOfUnixEpoch: Long
+        get() = dateTime.millisecondOfUnixEpochAt(offset)
 
     /**
      * Changes the offset of this [OffsetDateTime], adjusting the date and time components such that the instant
@@ -186,30 +184,20 @@ class OffsetDateTime(
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
      * be coerced into the valid range.
      */
-    operator fun plus(period: Period) = copy(dateTime = dateTime + period)
+    operator fun plus(period: Period): OffsetDateTime = copy(dateTime = dateTime + period)
 
-    operator fun plus(duration: Duration) = copy(dateTime = dateTime + duration)
+    operator fun plus(duration: Duration): OffsetDateTime = copy(dateTime = dateTime + duration)
 
-    operator fun plus(years: LongYears) = copy(dateTime = dateTime + years)
-    operator fun plus(years: IntYears) = copy(dateTime = dateTime + years)
-    operator fun plus(months: LongMonths) = copy(dateTime = dateTime + months)
-    operator fun plus(months: IntMonths) = copy(dateTime = dateTime + months)
-    operator fun plus(weeks: LongWeeks) = copy(dateTime = dateTime + weeks)
-    operator fun plus(weeks: IntWeeks) = copy(dateTime = dateTime + weeks)
-    operator fun plus(days: LongDays) = copy(dateTime = dateTime + days)
-    operator fun plus(days: IntDays) = copy(dateTime = dateTime + days)
-    override operator fun plus(hours: LongHours) = copy(dateTime = dateTime + hours)
-    override operator fun plus(hours: IntHours) = copy(dateTime = dateTime + hours)
-    override operator fun plus(minutes: LongMinutes) = copy(dateTime = dateTime + minutes)
-    override operator fun plus(minutes: IntMinutes) = copy(dateTime = dateTime + minutes)
-    override operator fun plus(seconds: LongSeconds) = copy(dateTime = dateTime + seconds)
-    override operator fun plus(seconds: IntSeconds) = copy(dateTime = dateTime + seconds)
-    override operator fun plus(milliseconds: LongMilliseconds) = copy(dateTime = dateTime + milliseconds)
-    override operator fun plus(milliseconds: IntMilliseconds) = copy(dateTime = dateTime + milliseconds)
-    override operator fun plus(microseconds: LongMicroseconds) = copy(dateTime = dateTime + microseconds)
-    override operator fun plus(microseconds: IntMicroseconds) = copy(dateTime = dateTime + microseconds)
-    override operator fun plus(nanoseconds: LongNanoseconds) = copy(dateTime = dateTime + nanoseconds)
-    override operator fun plus(nanoseconds: IntNanoseconds) = copy(dateTime = dateTime + nanoseconds)
+    operator fun plus(years: Years): OffsetDateTime = copy(dateTime = dateTime + years)
+    operator fun plus(months: Months): OffsetDateTime = copy(dateTime = dateTime + months)
+    operator fun plus(weeks: Weeks): OffsetDateTime = copy(dateTime = dateTime + weeks)
+    operator fun plus(days: Days): OffsetDateTime = copy(dateTime = dateTime + days)
+    override operator fun plus(hours: Hours): OffsetDateTime = copy(dateTime = dateTime + hours)
+    override operator fun plus(minutes: Minutes): OffsetDateTime = copy(dateTime = dateTime + minutes)
+    override operator fun plus(seconds: Seconds): OffsetDateTime = copy(dateTime = dateTime + seconds)
+    override operator fun plus(milliseconds: Milliseconds): OffsetDateTime = copy(dateTime = dateTime + milliseconds)
+    override operator fun plus(microseconds: Microseconds): OffsetDateTime = copy(dateTime = dateTime + microseconds)
+    override operator fun plus(nanoseconds: Nanoseconds): OffsetDateTime = copy(dateTime = dateTime + nanoseconds)
 
     /**
      * Returns this date-time with [period] subtracted from it.
@@ -217,30 +205,20 @@ class OffsetDateTime(
      * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
      * be coerced into the valid range.
      */
-    operator fun minus(period: Period) = copy(dateTime = dateTime - period)
+    operator fun minus(period: Period): OffsetDateTime = copy(dateTime = dateTime - period)
 
-    operator fun minus(duration: Duration) = copy(dateTime = dateTime - duration)
+    operator fun minus(duration: Duration): OffsetDateTime = copy(dateTime = dateTime - duration)
 
-    operator fun minus(years: LongYears) = copy(dateTime = dateTime - years)
-    operator fun minus(years: IntYears) = copy(dateTime = dateTime - years)
-    operator fun minus(months: LongMonths) = copy(dateTime = dateTime - months)
-    operator fun minus(months: IntMonths) = copy(dateTime = dateTime - months)
-    operator fun minus(weeks: LongWeeks) = copy(dateTime = dateTime - weeks)
-    operator fun minus(weeks: IntWeeks) = copy(dateTime = dateTime - weeks)
-    operator fun minus(days: LongDays) = copy(dateTime = dateTime - days)
-    operator fun minus(days: IntDays) = copy(dateTime = dateTime - days)
-    override operator fun minus(hours: LongHours) = copy(dateTime = dateTime - hours)
-    override operator fun minus(hours: IntHours) = copy(dateTime = dateTime - hours)
-    override operator fun minus(minutes: LongMinutes) = copy(dateTime = dateTime - minutes)
-    override operator fun minus(minutes: IntMinutes) = copy(dateTime = dateTime - minutes)
-    override operator fun minus(seconds: LongSeconds) = copy(dateTime = dateTime - seconds)
-    override operator fun minus(seconds: IntSeconds) = copy(dateTime = dateTime - seconds)
-    override operator fun minus(milliseconds: LongMilliseconds) = copy(dateTime = dateTime - milliseconds)
-    override operator fun minus(milliseconds: IntMilliseconds) = copy(dateTime = dateTime - milliseconds)
-    override operator fun minus(microseconds: LongMicroseconds) = copy(dateTime = dateTime - microseconds)
-    override operator fun minus(microseconds: IntMicroseconds) = copy(dateTime = dateTime - microseconds)
-    override operator fun minus(nanoseconds: LongNanoseconds) = copy(dateTime = dateTime - nanoseconds)
-    override operator fun minus(nanoseconds: IntNanoseconds) = copy(dateTime = dateTime - nanoseconds)
+    operator fun minus(years: Years): OffsetDateTime = copy(dateTime = dateTime - years)
+    operator fun minus(months: Months): OffsetDateTime = copy(dateTime = dateTime - months)
+    operator fun minus(weeks: Weeks): OffsetDateTime = copy(dateTime = dateTime - weeks)
+    operator fun minus(days: Days): OffsetDateTime = copy(dateTime = dateTime - days)
+    override operator fun minus(hours: Hours): OffsetDateTime = copy(dateTime = dateTime - hours)
+    override operator fun minus(minutes: Minutes): OffsetDateTime = copy(dateTime = dateTime - minutes)
+    override operator fun minus(seconds: Seconds): OffsetDateTime = copy(dateTime = dateTime - seconds)
+    override operator fun minus(milliseconds: Milliseconds): OffsetDateTime = copy(dateTime = dateTime - milliseconds)
+    override operator fun minus(microseconds: Microseconds): OffsetDateTime = copy(dateTime = dateTime - microseconds)
+    override operator fun minus(nanoseconds: Nanoseconds): OffsetDateTime = copy(dateTime = dateTime - nanoseconds)
 
     operator fun rangeTo(other: OffsetDateTime): OffsetDateTimeInterval =
         OffsetDateTimeInterval.withInclusiveEnd(this, other)
@@ -269,7 +247,7 @@ class OffsetDateTime(
     fun copy(
         dateTime: DateTime = this.dateTime,
         offset: UtcOffset = this.offset
-    ) = OffsetDateTime(dateTime, offset)
+    ): OffsetDateTime = OffsetDateTime(dateTime, offset)
 
     /**
      * Returns a copy of this date-time with the values of any individual components replaced by the new values
@@ -280,7 +258,7 @@ class OffsetDateTime(
         date: Date = this.date,
         time: Time = this.time,
         offset: UtcOffset = this.offset
-    ) = OffsetDateTime(date, time, offset)
+    ): OffsetDateTime = OffsetDateTime(date, time, offset)
 
     /**
      * Returns a copy of this date-time with the values of any individual components replaced by the new values
@@ -295,7 +273,7 @@ class OffsetDateTime(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset
-    ) = OffsetDateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond), offset)
+    ): OffsetDateTime = OffsetDateTime(date.copy(year, dayOfYear), time.copy(hour, minute, second, nanosecond), offset)
 
     /**
      * Returns a copy of this date-time with the values of any individual components replaced by the new values
@@ -311,18 +289,21 @@ class OffsetDateTime(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset
-    ) = OffsetDateTime(date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond), offset)
+    ): OffsetDateTime = OffsetDateTime(
+        date.copy(year, month, dayOfMonth), time.copy(hour, minute, second, nanosecond),
+        offset
+    )
 
     companion object {
         /**
          * The earliest supported [OffsetDateTime], which can be used as a "far past" sentinel.
          */
-        val MIN = DateTime.MIN at UtcOffset.MAX
+        val MIN: OffsetDateTime = DateTime.MIN at UtcOffset.MAX
 
         /**
          * The latest supported [OffsetDateTime], which can be used as a "far future" sentinel.
          */
-        val MAX = DateTime.MAX at UtcOffset.MIN
+        val MAX: OffsetDateTime = DateTime.MAX at UtcOffset.MIN
 
         /**
          * A [Comparator] that compares by instant, then date-time. Using this `Comparator` guarantees a deterministic
@@ -340,7 +321,7 @@ class OffsetDateTime(
         /**
          * Creates an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].
          */
-        fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, offset: UtcOffset): OffsetDateTime {
+        fun fromMillisecondsSinceUnixEpoch(milliseconds: Milliseconds, offset: UtcOffset): OffsetDateTime {
             return OffsetDateTime(DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset), offset)
         }
 
@@ -349,8 +330,8 @@ class OffsetDateTime(
          * with some number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
-            seconds: LongSeconds,
-            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds,
+            seconds: Seconds,
+            nanosecondAdjustment: Nanoseconds = 0.nanoseconds,
             offset: UtcOffset
         ): OffsetDateTime {
             return OffsetDateTime(DateTime.fromSecondsSinceUnixEpoch(seconds, nanosecondAdjustment, offset), offset)
@@ -376,18 +357,17 @@ class OffsetDateTime(
             ReplaceWith("OffsetDateTime.fromMillisecondOfUnixEpoch(millisecond, offset)"),
             DeprecationLevel.ERROR
         )
-        fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): OffsetDateTime {
-            return fromMillisecondOfUnixEpoch(millisecond, offset)
-        }
+        @Suppress("UNUSED_PARAMETER", "unused")
+        fun fromUnixEpochMillisecond(millisecond: Long, offset: UtcOffset): OffsetDateTime = deprecatedToError()
 
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("OffsetDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, offset)"),
             DeprecationLevel.ERROR
         )
-        fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, offset: UtcOffset): OffsetDateTime {
-            return fromSecondOfUnixEpoch(second, nanoOfSecond, offset)
-        }
+        @Suppress("UNUSED_PARAMETER", "unused")
+        fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, offset: UtcOffset): OffsetDateTime =
+            deprecatedToError()
     }
 }
 
@@ -446,4 +426,5 @@ internal fun StringBuilder.appendOffsetDateTime(offsetDateTime: OffsetDateTime):
     ReplaceWith("this.toOffsetDateTime()"),
     DeprecationLevel.ERROR
 )
-fun ZonedDateTime.asOffsetDateTime() = toOffsetDateTime()
+@Suppress("unused")
+fun ZonedDateTime.asOffsetDateTime(): OffsetDateTime = deprecatedToError()

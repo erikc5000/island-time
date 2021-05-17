@@ -2,55 +2,53 @@ package io.islandtime.ranges.internal
 
 import io.islandtime.DateTime
 import io.islandtime.measures.*
-import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.Interval
 
-internal val MAX_INCLUSIVE_END_DATE_TIME = DateTime.MAX - 2.nanoseconds
+internal val MAX_INCLUSIVE_END_DATE_TIME: DateTime = DateTime.MAX - 2.nanoseconds
 
 internal fun secondsBetween(
-    startSeconds: LongSeconds,
-    startNanoseconds: IntNanoseconds,
-    endExclusiveSeconds: LongSeconds,
-    endExclusiveNanoseconds: IntNanoseconds
-): LongSeconds {
-    val secondDiff = endExclusiveSeconds - startSeconds
-    val nanoDiff = endExclusiveNanoseconds minusWithOverflow startNanoseconds
+    startSecond: Long,
+    startNanosecond: Int,
+    endExclusiveSecond: Long,
+    endExclusiveNanosecond: Int
+): Seconds {
+    val secondDiff = endExclusiveSecond - startSecond
+    val nanoDiff = endExclusiveNanosecond - startNanosecond
 
     return when {
-        secondDiff.value > 0 && nanoDiff.value < 0 -> secondDiff - 1.seconds
-        secondDiff.value < 0 && nanoDiff.value > 0 -> secondDiff + 1.seconds
+        secondDiff > 0 && nanoDiff < 0 -> secondDiff - 1
+        secondDiff < 0 && nanoDiff > 0 -> secondDiff + 1
         else -> secondDiff
-    }
+    }.seconds
 }
 
 internal fun millisecondsBetween(
-    startSeconds: LongSeconds,
-    startNanoseconds: IntNanoseconds,
-    endExclusiveSeconds: LongSeconds,
-    endExclusiveNanoseconds: IntNanoseconds
-): LongMilliseconds {
-    return (endExclusiveSeconds - startSeconds).inMilliseconds +
-        (endExclusiveNanoseconds - startNanoseconds).inMilliseconds
+    startSecond: Long,
+    startNanosecond: Int,
+    endExclusiveSecond: Long,
+    endExclusiveNanosecond: Int
+): Milliseconds {
+    return (endExclusiveSecond - startSecond).seconds +
+        (endExclusiveNanosecond - startNanosecond).nanoseconds.inWholeMilliseconds
 }
 
 internal fun microsecondsBetween(
-    startSeconds: LongSeconds,
-    startNanoseconds: IntNanoseconds,
-    endExclusiveSeconds: LongSeconds,
-    endExclusiveNanoseconds: IntNanoseconds
-): LongMicroseconds {
-    return (endExclusiveSeconds - startSeconds).inMicroseconds +
-        (endExclusiveNanoseconds - startNanoseconds).inMicroseconds
+    startSecond: Long,
+    startNanosecond: Int,
+    endExclusiveSecond: Long,
+    endExclusiveNanosecond: Int
+): Microseconds {
+    return (endExclusiveSecond - startSecond).seconds +
+        (endExclusiveNanosecond - startNanosecond).nanoseconds.inWholeMicroseconds
 }
 
 internal fun nanosecondsBetween(
-    startSeconds: LongSeconds,
-    startNanoseconds: IntNanoseconds,
-    endExclusiveSeconds: LongSeconds,
-    endExclusiveNanoseconds: IntNanoseconds
-): LongNanoseconds {
-    return (endExclusiveSeconds - startSeconds).inNanoseconds +
-        (endExclusiveNanoseconds - startNanoseconds)
+    startSecond: Long,
+    startNanosecond: Int,
+    endExclusiveSecond: Long,
+    endExclusiveNanosecond: Int
+): Nanoseconds {
+    return (endExclusiveSecond - startSecond).seconds + (endExclusiveNanosecond - startNanosecond).nanoseconds
 }
 
 internal inline fun <T> Interval<T>.buildIsoString(

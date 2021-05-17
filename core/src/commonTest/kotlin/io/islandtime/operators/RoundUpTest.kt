@@ -21,8 +21,8 @@ class RoundUpTest {
                 0.hours,
                 25.hours,
                 48.hours,
-                Int.MIN_VALUE.hours,
-                Int.MAX_VALUE.hours
+                Long.MIN_VALUE.hours,
+                Long.MAX_VALUE.hours
             )
         )
     }
@@ -59,8 +59,8 @@ class RoundUpTest {
                 (-1).minutes,
                 0.minutes,
                 61.minutes,
-                Int.MIN_VALUE.minutes,
-                Int.MAX_VALUE.minutes
+                Long.MIN_VALUE.minutes,
+                Long.MAX_VALUE.minutes
             )
         )
     }
@@ -109,8 +109,8 @@ class RoundUpTest {
                 (-1).seconds,
                 0.seconds,
                 61.seconds,
-                Int.MIN_VALUE.seconds,
-                Int.MAX_VALUE.seconds
+                Long.MIN_VALUE.seconds,
+                Long.MAX_VALUE.seconds
             )
         )
     }
@@ -139,9 +139,9 @@ class RoundUpTest {
             listOf(
                 (-1).milliseconds,
                 0.milliseconds,
-                (1.seconds + 1.milliseconds).toIntMilliseconds(),
-                Int.MIN_VALUE.milliseconds,
-                Int.MAX_VALUE.milliseconds
+                1.seconds + 1.milliseconds,
+                Long.MIN_VALUE.milliseconds,
+                Long.MAX_VALUE.milliseconds
             )
         )
     }
@@ -199,8 +199,8 @@ class RoundUpTest {
                 (-1).microseconds,
                 0.microseconds,
                 1_000_001.microseconds,
-                Int.MIN_VALUE.microseconds,
-                Int.MAX_VALUE.microseconds
+                Long.MIN_VALUE.microseconds,
+                Long.MAX_VALUE.microseconds
             )
         )
     }
@@ -236,8 +236,8 @@ class RoundUpTest {
                 (-1).nanoseconds,
                 0.nanoseconds,
                 1_000_000_001.nanoseconds,
-                Int.MIN_VALUE.nanoseconds,
-                Int.MAX_VALUE.nanoseconds
+                Long.MIN_VALUE.nanoseconds,
+                Long.MAX_VALUE.nanoseconds
             )
         )
     }
@@ -334,7 +334,7 @@ class RoundUpTest {
     }
 
     @JvmName("testExceptionHours")
-    private fun testException(invalidIncrements: List<IntHours>) {
+    private fun testException(invalidIncrements: List<Hours>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedUpToNearest(it)
@@ -358,7 +358,7 @@ class RoundUpTest {
     }
 
     @JvmName("testExceptionMinutes")
-    private fun testException(invalidIncrements: List<IntMinutes>) {
+    private fun testException(invalidIncrements: List<Minutes>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedUpToNearest(it)
@@ -382,7 +382,7 @@ class RoundUpTest {
     }
 
     @JvmName("testExceptionSeconds")
-    private fun testException(invalidIncrements: List<IntSeconds>) {
+    private fun testException(invalidIncrements: List<Seconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedUpToNearest(it)
@@ -406,7 +406,7 @@ class RoundUpTest {
     }
 
     @JvmName("testExceptionMilliseconds")
-    private fun testException(invalidIncrements: List<IntMilliseconds>) {
+    private fun testException(invalidIncrements: List<Milliseconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedUpToNearest(it)
@@ -430,7 +430,7 @@ class RoundUpTest {
     }
 
     @JvmName("testExceptionMicroseconds")
-    private fun testException(invalidIncrements: List<IntMicroseconds>) {
+    private fun testException(invalidIncrements: List<Microseconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedUpToNearest(it)
@@ -454,7 +454,7 @@ class RoundUpTest {
     }
 
     @JvmName("testExceptionNanoseconds")
-    private fun testException(invalidIncrements: List<IntNanoseconds>) {
+    private fun testException(invalidIncrements: List<Nanoseconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedUpToNearest(it)
@@ -521,7 +521,7 @@ class RoundUpTest {
             }
     }
 
-    private fun testRoundedUpToNearest(increment: IntHours, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedUpToNearest(increment: Hours, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedUpToNearest(increment))
@@ -541,7 +541,7 @@ class RoundUpTest {
             }
     }
 
-    private fun testRoundedUpToNearest(increment: IntMinutes, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedUpToNearest(increment: Minutes, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedUpToNearest(increment))
@@ -561,7 +561,7 @@ class RoundUpTest {
             }
     }
 
-    private fun testRoundedUpToNearest(increment: IntSeconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedUpToNearest(increment: Seconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedUpToNearest(increment))
@@ -581,7 +581,7 @@ class RoundUpTest {
             }
     }
 
-    private fun testRoundedUpToNearest(increment: IntMilliseconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedUpToNearest(increment: Milliseconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedUpToNearest(increment))
@@ -601,7 +601,7 @@ class RoundUpTest {
             }
     }
 
-    private fun testRoundedUpToNearest(increment: IntMicroseconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedUpToNearest(increment: Microseconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedUpToNearest(increment))
@@ -621,7 +621,7 @@ class RoundUpTest {
             }
     }
 
-    private fun testRoundedUpToNearest(increment: IntNanoseconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedUpToNearest(increment: Nanoseconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedUpToNearest(increment))

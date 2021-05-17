@@ -5,7 +5,10 @@ import io.islandtime.Instant
 import io.islandtime.PlatformInstant
 import io.islandtime.UtcOffset
 import io.islandtime.jvm.*
-import io.islandtime.measures.*
+import io.islandtime.measures.Milliseconds
+import io.islandtime.measures.Nanoseconds
+import io.islandtime.measures.Seconds
+import io.islandtime.measures.seconds
 import java.time.ZoneId
 import java.time.zone.ZoneOffsetTransition
 import java.time.zone.ZoneRules
@@ -45,13 +48,13 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
 
     override val hasFixedOffset: Boolean get() = javaZoneRules.isFixedOffset
 
-    override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset {
+    override fun offsetAt(millisecondsSinceUnixEpoch: Milliseconds): UtcOffset {
         val javaInstant = JavaInstant.ofEpochMilli(millisecondsSinceUnixEpoch.value)
         return offsetAt(javaInstant)
     }
 
-    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
-        val javaInstant = JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanoOfSeconds.value.toLong())
+    override fun offsetAt(secondsSinceUnixEpoch: Seconds, nanoOfSeconds: Nanoseconds): UtcOffset {
+        val javaInstant = JavaInstant.ofEpochSecond(secondsSinceUnixEpoch.value, nanoOfSeconds.value)
         return offsetAt(javaInstant)
     }
 
@@ -94,8 +97,8 @@ private class JavaTimeZoneRules(private val javaZoneRules: ZoneRules) : TimeZone
         return javaZoneRules.isDaylightSavings(instant.toJavaInstant())
     }
 
-    override fun daylightSavingsAt(instant: Instant): IntSeconds {
-        return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.toInt().seconds
+    override fun daylightSavingsAt(instant: Instant): Seconds {
+        return javaZoneRules.getDaylightSavings(instant.toJavaInstant()).seconds.seconds
     }
 }
 
@@ -115,7 +118,7 @@ private class JavaTimeZoneOffsetTransition(
     override val offsetAfter: UtcOffset
         get() = javaZoneOffsetTransition.offsetAfter.toIslandUtcOffset()
 
-    override val duration: IntSeconds
+    override val duration: Seconds
         get() = offsetAfter.totalSeconds - offsetBefore.totalSeconds
 
     override val isGap: Boolean

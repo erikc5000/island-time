@@ -1,13 +1,13 @@
 package io.islandtime.ranges
 
 import io.islandtime.Date
-import io.islandtime.measures.IntDays
-import io.islandtime.measures.IntMonths
+import io.islandtime.measures.Days
+import io.islandtime.measures.Months
 
 internal class DateDayProgressionIterator(
     first: Date,
     last: Date,
-    private val step: IntDays
+    private val step: Days
 ) : Iterator<Date> {
 
     private val finalElement = last
@@ -36,7 +36,7 @@ internal class DateDayProgressionIterator(
 internal class DateMonthProgressionIterator(
     first: Date,
     last: Date,
-    private val step: IntMonths
+    private val step: Months
 ) : Iterator<Date> {
 
     private val finalElement = last

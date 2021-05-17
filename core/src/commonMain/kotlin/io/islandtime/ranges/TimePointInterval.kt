@@ -2,7 +2,6 @@ package io.islandtime.ranges
 
 import io.islandtime.base.TimePoint
 import io.islandtime.measures.*
-import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.ranges.internal.*
 
 /**
@@ -48,7 +47,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of 24-hour days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    open val lengthInDays: LongDays
+    open val lengthInDays: Days
         get() = when {
             isEmpty() -> 0L.days
             isBounded() -> daysBetween(start, endExclusive)
@@ -59,7 +58,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of whole hours in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInHours: LongHours
+    val lengthInHours: Hours
         get() = when {
             isEmpty() -> 0L.hours
             isBounded() -> hoursBetween(start, endExclusive)
@@ -70,7 +69,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of whole minutes in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMinutes: LongMinutes
+    val lengthInMinutes: Minutes
         get() = when {
             isEmpty() -> 0L.minutes
             isBounded() -> minutesBetween(start, endExclusive)
@@ -81,7 +80,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of whole seconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInSeconds: LongSeconds
+    val lengthInSeconds: Seconds
         get() = when {
             isEmpty() -> 0L.seconds
             isBounded() -> secondsBetween(start, endExclusive)
@@ -92,7 +91,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of whole milliseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMilliseconds: LongMilliseconds
+    val lengthInMilliseconds: Milliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
             isBounded() -> millisecondsBetween(start, endExclusive)
@@ -103,7 +102,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of whole microseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMicroseconds: LongMicroseconds
+    val lengthInMicroseconds: Microseconds
         get() = when {
             isEmpty() -> 0L.microseconds
             isBounded() -> microsecondsBetween(start, endExclusive)
@@ -114,7 +113,7 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
      * The number of whole nanoseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInNanoseconds: LongNanoseconds
+    val lengthInNanoseconds: Nanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
             isBounded() -> nanosecondsBetween(start, endExclusive)
@@ -134,44 +133,43 @@ operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*
 /**
  * Gets the [Duration] between two time points.
  */
-fun <T1, T2> durationBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): Duration {
-    val secondDiff = endExclusive.secondsSinceUnixEpoch - start.secondsSinceUnixEpoch
-    val nanoDiff =
-        endExclusive.additionalNanosecondsSinceUnixEpoch minusWithOverflow start.additionalNanosecondsSinceUnixEpoch
-    return durationOf(secondDiff, nanoDiff)
+fun durationBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Duration {
+    val secondDiff = endExclusive.secondOfUnixEpoch - start.secondOfUnixEpoch
+    val nanoDiff = endExclusive.nanosecond - start.nanosecond
+    return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
 }
 
 /**
  * Gets the number of 24-hour days between two time points.
  */
-fun <T1, T2> daysBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongDays {
-    return secondsBetween(start, endExclusive).inDays
+fun daysBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Days {
+    return secondsBetween(start, endExclusive).inWholeDays
 }
 
 /**
  * Gets the number of whole hours between two time points.
  */
-fun <T1, T2> hoursBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongHours {
-    return secondsBetween(start, endExclusive).inHours
+fun hoursBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Hours {
+    return secondsBetween(start, endExclusive).inWholeHours
 }
 
 /**
  * Gets the number of whole minutes between two time points.
  */
-fun <T1, T2> minutesBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongMinutes {
-    return secondsBetween(start, endExclusive).inMinutes
+fun minutesBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Minutes {
+    return secondsBetween(start, endExclusive).inWholeMinutes
 }
 
 /**
  * Gets the number of whole seconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): LongSeconds {
+fun secondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Seconds {
     return secondsBetween(
-        start.secondsSinceUnixEpoch,
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpoch,
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpoch,
+        start.nanosecond,
+        endExclusive.secondOfUnixEpoch,
+        endExclusive.nanosecond
     )
 }
 
@@ -179,15 +177,12 @@ fun <T1, T2> secondsBetween(start: TimePoint<T1>, endExclusive: TimePoint<T2>): 
  * Gets the number of whole milliseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> millisecondsBetween(
-    start: TimePoint<T1>,
-    endExclusive: TimePoint<T2>
-): LongMilliseconds {
+fun millisecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Milliseconds {
     return millisecondsBetween(
-        start.secondsSinceUnixEpoch,
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpoch,
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpoch,
+        start.nanosecond,
+        endExclusive.secondOfUnixEpoch,
+        endExclusive.nanosecond
     )
 }
 
@@ -195,15 +190,12 @@ fun <T1, T2> millisecondsBetween(
  * Gets the number of whole microseconds between two time points.
  *  @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> microsecondsBetween(
-    start: TimePoint<T1>,
-    endExclusive: TimePoint<T2>
-): LongMicroseconds {
+fun microsecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Microseconds {
     return microsecondsBetween(
-        start.secondsSinceUnixEpoch,
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpoch,
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpoch,
+        start.nanosecond,
+        endExclusive.secondOfUnixEpoch,
+        endExclusive.nanosecond
     )
 }
 
@@ -211,14 +203,11 @@ fun <T1, T2> microsecondsBetween(
  * Gets the number of nanoseconds between two time points.
  * @throws ArithmeticException if the result overflows
  */
-fun <T1, T2> nanosecondsBetween(
-    start: TimePoint<T1>,
-    endExclusive: TimePoint<T2>
-): LongNanoseconds {
+fun nanosecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Nanoseconds {
     return nanosecondsBetween(
-        start.secondsSinceUnixEpoch,
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpoch,
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpoch,
+        start.nanosecond,
+        endExclusive.secondOfUnixEpoch,
+        endExclusive.nanosecond
     )
 }

@@ -5,7 +5,7 @@ package io.islandtime.internal
 import dev.erikchristensen.javamath2kmp.floorMod
 import io.islandtime.*
 import io.islandtime.calendar.WeekSettings
-import io.islandtime.measures.IntWeeks
+import io.islandtime.measures.Weeks
 import io.islandtime.measures.weeks
 import io.islandtime.measures.years
 
@@ -21,7 +21,7 @@ internal fun Date.weekBasedYearImpl(settings: WeekSettings): Int {
         year - 1
     } else {
         val weekOfNextYear = weekNumber(
-            dayOfMonthOrYear = lengthOfYear.value + settings.minimumDaysInFirstWeek,
+            dayOfMonthOrYear = lengthOfYear.toIntUnchecked() + settings.minimumDaysInFirstWeek,
             startOfWeekOffset = offset
         )
 
@@ -38,7 +38,7 @@ internal fun Date.weekOfWeekBasedYearImpl(settings: WeekSettings): Int {
         (toYear() - 1.years).endDate.weekOfWeekBasedYear(settings)
     } else {
         val weekOfNextYear = weekNumber(
-            dayOfMonthOrYear = lengthOfYear.value + settings.minimumDaysInFirstWeek,
+            dayOfMonthOrYear = lengthOfYear.toIntUnchecked() + settings.minimumDaysInFirstWeek,
             startOfWeekOffset = offset
         )
 
@@ -46,7 +46,7 @@ internal fun Date.weekOfWeekBasedYearImpl(settings: WeekSettings): Int {
     }
 }
 
-internal fun lengthOfWeekBasedYear(weekBasedYear: Int): IntWeeks {
+internal fun lengthOfWeekBasedYear(weekBasedYear: Int): Weeks {
     return lastWeekOfWeekBasedYear(weekBasedYear).weeks
 }
 

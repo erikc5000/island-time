@@ -17,9 +17,9 @@ import kotlin.jvm.JvmName
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
-fun Time.roundedUpToNearest(increment: IntHours): Time {
+fun Time.roundedUpToNearest(increment: Hours): Time {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment.toLongHours().inNanosecondsUnchecked)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -27,9 +27,9 @@ fun Time.roundedUpToNearest(increment: IntHours): Time {
  *
  * The [increment] must multiply evenly into an hour.
  */
-fun Time.roundedUpToNearest(increment: IntMinutes): Time {
+fun Time.roundedUpToNearest(increment: Minutes): Time {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment.toLongMinutes().inNanosecondsUnchecked)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -37,9 +37,9 @@ fun Time.roundedUpToNearest(increment: IntMinutes): Time {
  *
  * The [increment] must multiply evenly into a minute.
  */
-fun Time.roundedUpToNearest(increment: IntSeconds): Time {
+fun Time.roundedUpToNearest(increment: Seconds): Time {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment.toLongSeconds().inNanosecondsUnchecked)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -47,8 +47,9 @@ fun Time.roundedUpToNearest(increment: IntSeconds): Time {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun Time.roundedUpToNearest(increment: IntMilliseconds): Time {
-    return roundedUpToNearest(increment.inNanoseconds)
+fun Time.roundedUpToNearest(increment: Milliseconds): Time {
+    checkRoundingIncrement(increment)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -56,8 +57,9 @@ fun Time.roundedUpToNearest(increment: IntMilliseconds): Time {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun Time.roundedUpToNearest(increment: IntMicroseconds): Time {
-    return roundedUpToNearest(increment.inNanoseconds)
+fun Time.roundedUpToNearest(increment: Microseconds): Time {
+    checkRoundingIncrement(increment)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -65,8 +67,9 @@ fun Time.roundedUpToNearest(increment: IntMicroseconds): Time {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun Time.roundedUpToNearest(increment: IntNanoseconds): Time {
-    return roundedUpToNearest(increment.toLongNanoseconds())
+fun Time.roundedUpToNearest(increment: Nanoseconds): Time {
+    checkRoundingIncrement(increment)
+    return roundedUpToNearestUnchecked(increment)
 }
 
 /**
@@ -89,7 +92,7 @@ fun Time.roundedUpTo(unit: TimeUnit): Time {
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
-fun OffsetTime.roundedUpToNearest(increment: IntHours): OffsetTime {
+fun OffsetTime.roundedUpToNearest(increment: Hours): OffsetTime {
     return copyIfChanged(time = time.roundedUpToNearest(increment))
 }
 
@@ -98,7 +101,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntHours): OffsetTime {
  *
  * The [increment] must multiply evenly into an hour.
  */
-fun OffsetTime.roundedUpToNearest(increment: IntMinutes): OffsetTime {
+fun OffsetTime.roundedUpToNearest(increment: Minutes): OffsetTime {
     return copyIfChanged(time = time.roundedUpToNearest(increment))
 }
 
@@ -107,7 +110,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntMinutes): OffsetTime {
  *
  * The [increment] must multiply evenly into a minute.
  */
-fun OffsetTime.roundedUpToNearest(increment: IntSeconds): OffsetTime {
+fun OffsetTime.roundedUpToNearest(increment: Seconds): OffsetTime {
     return copyIfChanged(time = time.roundedUpToNearest(increment))
 }
 
@@ -116,7 +119,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntSeconds): OffsetTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun OffsetTime.roundedUpToNearest(increment: IntMilliseconds): OffsetTime {
+fun OffsetTime.roundedUpToNearest(increment: Milliseconds): OffsetTime {
     return copyIfChanged(time = time.roundedUpToNearest(increment))
 }
 
@@ -125,7 +128,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntMilliseconds): OffsetTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun OffsetTime.roundedUpToNearest(increment: IntMicroseconds): OffsetTime {
+fun OffsetTime.roundedUpToNearest(increment: Microseconds): OffsetTime {
     return copyIfChanged(time = time.roundedUpToNearest(increment))
 }
 
@@ -134,7 +137,7 @@ fun OffsetTime.roundedUpToNearest(increment: IntMicroseconds): OffsetTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun OffsetTime.roundedUpToNearest(increment: IntNanoseconds): OffsetTime {
+fun OffsetTime.roundedUpToNearest(increment: Nanoseconds): OffsetTime {
     return copyIfChanged(time = time.roundedUpToNearest(increment))
 }
 
@@ -150,9 +153,9 @@ fun OffsetTime.roundedUpTo(unit: TimeUnit): OffsetTime {
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
-fun DateTime.roundedUpToNearest(increment: IntHours): DateTime {
+fun DateTime.roundedUpToNearest(increment: Hours): DateTime {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment.toLongHours().inNanosecondsUnchecked)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -160,9 +163,9 @@ fun DateTime.roundedUpToNearest(increment: IntHours): DateTime {
  *
  * The [increment] must multiply evenly into an hour.
  */
-fun DateTime.roundedUpToNearest(increment: IntMinutes): DateTime {
+fun DateTime.roundedUpToNearest(increment: Minutes): DateTime {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment.toLongMinutes().inNanosecondsUnchecked)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -170,9 +173,9 @@ fun DateTime.roundedUpToNearest(increment: IntMinutes): DateTime {
  *
  * The [increment] must multiply evenly into a minute.
  */
-fun DateTime.roundedUpToNearest(increment: IntSeconds): DateTime {
+fun DateTime.roundedUpToNearest(increment: Seconds): DateTime {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment.toLongSeconds().inNanosecondsUnchecked)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -180,8 +183,9 @@ fun DateTime.roundedUpToNearest(increment: IntSeconds): DateTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun DateTime.roundedUpToNearest(increment: IntMilliseconds): DateTime {
-    return roundedUpToNearest(increment.inNanoseconds)
+fun DateTime.roundedUpToNearest(increment: Milliseconds): DateTime {
+    checkRoundingIncrement(increment)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -189,8 +193,9 @@ fun DateTime.roundedUpToNearest(increment: IntMilliseconds): DateTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun DateTime.roundedUpToNearest(increment: IntMicroseconds): DateTime {
-    return roundedUpToNearest(increment.inNanoseconds)
+fun DateTime.roundedUpToNearest(increment: Microseconds): DateTime {
+    checkRoundingIncrement(increment)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -198,8 +203,9 @@ fun DateTime.roundedUpToNearest(increment: IntMicroseconds): DateTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun DateTime.roundedUpToNearest(increment: IntNanoseconds): DateTime {
-    return roundedUpToNearest(increment.toLongNanoseconds())
+fun DateTime.roundedUpToNearest(increment: Nanoseconds): DateTime {
+    checkRoundingIncrement(increment)
+    return roundedUpToNearestUnchecked(increment)
 }
 
 /**
@@ -224,7 +230,7 @@ fun DateTime.roundedUpTo(unit: TimeUnit): DateTime {
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
-fun OffsetDateTime.roundedUpToNearest(increment: IntHours): OffsetDateTime {
+fun OffsetDateTime.roundedUpToNearest(increment: Hours): OffsetDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -233,7 +239,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntHours): OffsetDateTime {
  *
  * The [increment] must multiply evenly into an hour.
  */
-fun OffsetDateTime.roundedUpToNearest(increment: IntMinutes): OffsetDateTime {
+fun OffsetDateTime.roundedUpToNearest(increment: Minutes): OffsetDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -242,7 +248,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntMinutes): OffsetDateTime {
  *
  * The [increment] must multiply evenly into a minute.
  */
-fun OffsetDateTime.roundedUpToNearest(increment: IntSeconds): OffsetDateTime {
+fun OffsetDateTime.roundedUpToNearest(increment: Seconds): OffsetDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -251,7 +257,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntSeconds): OffsetDateTime {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun OffsetDateTime.roundedUpToNearest(increment: IntMilliseconds): OffsetDateTime {
+fun OffsetDateTime.roundedUpToNearest(increment: Milliseconds): OffsetDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -260,7 +266,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntMilliseconds): OffsetDateTim
  *
  * The [increment] must multiply evenly into a second.
  */
-fun OffsetDateTime.roundedUpToNearest(increment: IntMicroseconds): OffsetDateTime {
+fun OffsetDateTime.roundedUpToNearest(increment: Microseconds): OffsetDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -269,7 +275,7 @@ fun OffsetDateTime.roundedUpToNearest(increment: IntMicroseconds): OffsetDateTim
  *
  * The [increment] must multiply evenly into a second.
  */
-fun OffsetDateTime.roundedUpToNearest(increment: IntNanoseconds): OffsetDateTime {
+fun OffsetDateTime.roundedUpToNearest(increment: Nanoseconds): OffsetDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -292,7 +298,7 @@ fun OffsetDateTime.roundedUpTo(unit: TimeUnit): OffsetDateTime {
  * (meaning the local time exists twice), the offset will be retained if possible. Otherwise, the earlier offset will be
  * used.
  */
-fun ZonedDateTime.roundedUpToNearest(increment: IntHours): ZonedDateTime {
+fun ZonedDateTime.roundedUpToNearest(increment: Hours): ZonedDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -306,7 +312,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntHours): ZonedDateTime {
  * (meaning the local time exists twice), the offset will be retained if possible. Otherwise, the earlier offset will be
  * used.
  */
-fun ZonedDateTime.roundedUpToNearest(increment: IntMinutes): ZonedDateTime {
+fun ZonedDateTime.roundedUpToNearest(increment: Minutes): ZonedDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -320,7 +326,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntMinutes): ZonedDateTime {
  * (meaning the local time exists twice), the offset will be retained if possible. Otherwise, the earlier offset will be
  * used.
  */
-fun ZonedDateTime.roundedUpToNearest(increment: IntSeconds): ZonedDateTime {
+fun ZonedDateTime.roundedUpToNearest(increment: Seconds): ZonedDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -334,7 +340,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntSeconds): ZonedDateTime {
  * (meaning the local time exists twice), the offset will be retained if possible. Otherwise, the earlier offset will be
  * used.
  */
-fun ZonedDateTime.roundedUpToNearest(increment: IntMilliseconds): ZonedDateTime {
+fun ZonedDateTime.roundedUpToNearest(increment: Milliseconds): ZonedDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -348,7 +354,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntMilliseconds): ZonedDateTime 
  * (meaning the local time exists twice), the offset will be retained if possible. Otherwise, the earlier offset will be
  * used.
  */
-fun ZonedDateTime.roundedUpToNearest(increment: IntMicroseconds): ZonedDateTime {
+fun ZonedDateTime.roundedUpToNearest(increment: Microseconds): ZonedDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -362,7 +368,7 @@ fun ZonedDateTime.roundedUpToNearest(increment: IntMicroseconds): ZonedDateTime 
  * (meaning the local time exists twice), the offset will be retained if possible. Otherwise, the earlier offset will be
  * used.
  */
-fun ZonedDateTime.roundedUpToNearest(increment: IntNanoseconds): ZonedDateTime {
+fun ZonedDateTime.roundedUpToNearest(increment: Nanoseconds): ZonedDateTime {
     return copyIfChanged(dateTime.roundedUpToNearest(increment))
 }
 
@@ -385,7 +391,7 @@ fun ZonedDateTime.roundedUpTo(unit: TimeUnit): ZonedDateTime {
  *
  * The [increment] must multiply evenly into a 24-hour day.
  */
-fun Instant.roundedUpToNearest(increment: IntHours): Instant {
+fun Instant.roundedUpToNearest(increment: Hours): Instant {
     checkRoundingIncrement(increment)
     return roundedUpToNearestUnchecked(increment.inSecondsUnchecked)
 }
@@ -395,7 +401,7 @@ fun Instant.roundedUpToNearest(increment: IntHours): Instant {
  *
  * The [increment] must multiply evenly into an hour.
  */
-fun Instant.roundedUpToNearest(increment: IntMinutes): Instant {
+fun Instant.roundedUpToNearest(increment: Minutes): Instant {
     checkRoundingIncrement(increment)
     return roundedUpToNearestUnchecked(increment.inSecondsUnchecked)
 }
@@ -405,7 +411,7 @@ fun Instant.roundedUpToNearest(increment: IntMinutes): Instant {
  *
  * The [increment] must multiply evenly into a minute.
  */
-fun Instant.roundedUpToNearest(increment: IntSeconds): Instant {
+fun Instant.roundedUpToNearest(increment: Seconds): Instant {
     checkRoundingIncrement(increment)
     return roundedUpToNearestUnchecked(increment)
 }
@@ -415,9 +421,9 @@ fun Instant.roundedUpToNearest(increment: IntSeconds): Instant {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun Instant.roundedUpToNearest(increment: IntMilliseconds): Instant {
+fun Instant.roundedUpToNearest(increment: Milliseconds): Instant {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked((increment.value * NANOSECONDS_PER_MILLISECOND).nanoseconds)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -425,9 +431,9 @@ fun Instant.roundedUpToNearest(increment: IntMilliseconds): Instant {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun Instant.roundedUpToNearest(increment: IntMicroseconds): Instant {
+fun Instant.roundedUpToNearest(increment: Microseconds): Instant {
     checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked((increment.value * NANOSECONDS_PER_MICROSECOND).nanoseconds)
+    return roundedUpToNearestUnchecked(increment.inNanosecondsUnchecked)
 }
 
 /**
@@ -435,7 +441,7 @@ fun Instant.roundedUpToNearest(increment: IntMicroseconds): Instant {
  *
  * The [increment] must multiply evenly into a second.
  */
-fun Instant.roundedUpToNearest(increment: IntNanoseconds): Instant {
+fun Instant.roundedUpToNearest(increment: Nanoseconds): Instant {
     checkRoundingIncrement(increment)
     return roundedUpToNearestUnchecked(increment)
 }
@@ -455,22 +461,12 @@ fun Instant.roundedUpTo(unit: TimeUnit): Instant {
     }
 }
 
-private fun Time.roundedUpToNearest(increment: LongNanoseconds): Time {
-    checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment)
-}
-
-private fun Time.roundedUpToNearestUnchecked(increment: LongNanoseconds): Time {
+private fun Time.roundedUpToNearestUnchecked(increment: Nanoseconds): Time {
     val remainder = nanosecondsSinceStartOfDay % increment.value
     return if (remainder.value > 0) this + (increment - remainder) else this
 }
 
-private fun DateTime.roundedUpToNearest(increment: LongNanoseconds): DateTime {
-    checkRoundingIncrement(increment)
-    return roundedUpToNearestUnchecked(increment)
-}
-
-private fun DateTime.roundedUpToNearestUnchecked(increment: LongNanoseconds): DateTime {
+private fun DateTime.roundedUpToNearestUnchecked(increment: Nanoseconds): DateTime {
     val newTime = time.roundedUpToNearestUnchecked(increment)
 
     return when {
@@ -480,12 +476,12 @@ private fun DateTime.roundedUpToNearestUnchecked(increment: LongNanoseconds): Da
     }
 }
 
-private fun Instant.roundedUpToNearestUnchecked(increment: IntSeconds): Instant {
+private fun Instant.roundedUpToNearestUnchecked(increment: Seconds): Instant {
     val remainder = (secondOfUnixEpoch floorMod increment.value).seconds + additionalNanosecondsSinceUnixEpoch
     return if (remainder.value > 0) this + (increment - remainder) else this
 }
 
-private fun Instant.roundedUpToNearestUnchecked(increment: IntNanoseconds): Instant {
+private fun Instant.roundedUpToNearestUnchecked(increment: Nanoseconds): Instant {
     val remainder = additionalNanosecondsSinceUnixEpoch % increment.value
     return if (remainder.value > 0) this + (increment - remainder) else this
 }

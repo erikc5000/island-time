@@ -7,16 +7,16 @@ import kotlinx.parcelize.Parceler
 object PeriodParceler : Parceler<Period> {
     override fun create(parcel: Parcel): Period {
         return periodOf(
-            parcel.readInt().years,
-            parcel.readInt().months,
-            parcel.readInt().days
+            parcel.readLong().years,
+            parcel.readLong().months,
+            parcel.readLong().days
         )
     }
 
     override fun Period.write(parcel: Parcel, flags: Int) {
-        parcel.writeInt(years.value)
-        parcel.writeInt(months.value)
-        parcel.writeInt(days.value)
+        parcel.writeLong(years.value)
+        parcel.writeLong(months.value)
+        parcel.writeLong(days.value)
     }
 }
 
@@ -25,9 +25,9 @@ object NullablePeriodParceler : Parceler<Period?> {
         return when {
             parcel.readByte() == NULL_VALUE -> null
             else -> periodOf(
-                parcel.readInt().years,
-                parcel.readInt().months,
-                parcel.readInt().days
+                parcel.readLong().years,
+                parcel.readLong().months,
+                parcel.readLong().days
             )
         }
     }
@@ -37,9 +37,9 @@ object NullablePeriodParceler : Parceler<Period?> {
             parcel.writeByte(NULL_VALUE)
         } else {
             parcel.writeByte(NON_NULL_VALUE)
-            parcel.writeInt(years.value)
-            parcel.writeInt(months.value)
-            parcel.writeInt(days.value)
+            parcel.writeLong(years.value)
+            parcel.writeLong(months.value)
+            parcel.writeLong(days.value)
         }
     }
 

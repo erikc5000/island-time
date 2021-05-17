@@ -31,7 +31,7 @@ object NullableZonedDateTimeParceler : Parceler<ZonedDateTime?> {
                     parcel.readInt()
                 ),
                 TimeZone(parcel.readString().orEmpty()),
-                UtcOffset(parcel.readInt().seconds)
+                UtcOffset.fromTotalSeconds(parcel.readInt())
             )
         }
     }
@@ -49,12 +49,12 @@ internal fun Parcel.readZonedDateTime(): ZonedDateTime {
     return ZonedDateTime.fromLocal(
         readDateTime(),
         TimeZone(readString().orEmpty()),
-        UtcOffset(readInt().seconds)
+        UtcOffset.fromTotalSeconds(readInt())
     )
 }
 
 internal fun Parcel.writeZonedDateTime(zonedDateTime: ZonedDateTime) {
     writeDateTime(zonedDateTime.dateTime)
     writeString(zonedDateTime.zone.id)
-    writeInt(zonedDateTime.offset.totalSeconds.value)
+    writeInt(zonedDateTime.offset.totalSecondsValue)
 }

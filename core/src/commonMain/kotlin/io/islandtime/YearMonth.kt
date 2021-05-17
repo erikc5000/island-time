@@ -58,12 +58,12 @@ class YearMonth(
     /**
      * The length of the year-month in days.
      */
-    val lengthOfMonth: IntDays get() = month.lengthIn(year)
+    val lengthOfMonth: Days get() = month.lengthIn(year)
 
     /**
      * The length of the year in days.
      */
-    val lengthOfYear: IntDays get() = lengthOfYear(year)
+    val lengthOfYear: Days get() = lengthOfYear(year)
 
     /**
      * The last day of the year-month.
@@ -133,9 +133,7 @@ class YearMonth(
      */
     fun copy(year: Int = this.year, monthNumber: Int): YearMonth = YearMonth(year, monthNumber)
 
-    operator fun plus(years: IntYears): YearMonth = plus(years.toLongYears())
-
-    operator fun plus(years: LongYears): YearMonth {
+    operator fun plus(years: Years): YearMonth {
         return if (years.value == 0L) {
             this
         } else {
@@ -144,22 +142,18 @@ class YearMonth(
         }
     }
 
-    operator fun plus(months: IntMonths): YearMonth = plus(months.toLongMonths())
-
-    operator fun plus(months: LongMonths): YearMonth {
+    operator fun plus(months: Months): YearMonth {
         return if (months.value == 0L) {
             this
         } else {
             val newMonthsSinceYear0 = year.toLong() * MONTHS_PER_YEAR + month.ordinal + months.value
             val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_PER_YEAR)
-            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_PER_YEAR).toInt()]
+            val newMonth = Month.values()[newMonthsSinceYear0 floorMod MONTHS_PER_YEAR]
             YearMonth(newYear, newMonth)
         }
     }
 
-    operator fun minus(years: IntYears): YearMonth = plus(years.toLongYears().negateUnchecked())
-
-    operator fun minus(years: LongYears): YearMonth {
+    operator fun minus(years: Years): YearMonth {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
         } else {
@@ -167,9 +161,7 @@ class YearMonth(
         }
     }
 
-    operator fun minus(months: IntMonths): YearMonth = plus(months.toLongMonths().negateUnchecked())
-
-    operator fun minus(months: LongMonths): YearMonth {
+    operator fun minus(months: Months): YearMonth {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1L.months
         } else {
@@ -183,12 +175,12 @@ class YearMonth(
         /**
          * The earliest supported [YearMonth], which may be used to indicate the "far past".
          */
-        val MIN = YearMonth(Year.MIN_VALUE, Month.MIN)
+        val MIN: YearMonth = YearMonth(Year.MIN_VALUE, Month.MIN)
 
         /**
          * The latest supported [YearMonth], which may be used to indicate the "far future".
          */
-        val MAX = YearMonth(Year.MAX_VALUE, Month.MAX)
+        val MAX: YearMonth = YearMonth(Year.MAX_VALUE, Month.MAX)
     }
 }
 

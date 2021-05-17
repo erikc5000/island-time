@@ -8,127 +8,95 @@ import kotlin.test.assertTrue
 
 class YearsTest {
     @Test
-    fun `IntYears can be compared to other IntYears`() {
+    fun `Years can be compared to other Years`() {
         assertTrue { 0.years < 1.years }
         assertTrue { 0.years == 0.years }
         assertTrue { 5.years > (-1).years }
     }
-
-    @Test
-    fun `LongYears can be compared to other LongYears`() {
-        assertTrue { 0L.years < 1L.years }
-        assertTrue { 0L.years == 0L.years }
-        assertTrue { 5L.years > (-1L).years }
-    }
-
+    
     @Test
     fun `absoluteValue returns the same value for 0 or positive values`() {
-        listOf(0, 1, Int.MAX_VALUE).forEach {
+        listOf(0, 1, Long.MAX_VALUE).forEach {
             assertEquals(it.years, it.years.absoluteValue)
-            assertEquals(it.toLong().years, it.toLong().years.absoluteValue)
         }
-
-        assertEquals(Long.MAX_VALUE.years, Long.MAX_VALUE.years.absoluteValue)
     }
 
     @Test
-    fun `absoluteValue returns a positive value for negatives values`() {
+    fun `absoluteValue returns a positive value for negative values`() {
         assertEquals(1.years, (-1).years.absoluteValue)
-        assertEquals(1L.years, (-1L).years.absoluteValue)
     }
 
     @Test
     fun `absoluteValue throws an exception when value is MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { Int.MIN_VALUE.years.absoluteValue }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years.absoluteValue }
     }
 
     @Test
     fun `unary minus negates the value`() {
         listOf(
-            0 to 0,
-            1 to -1,
-            -1 to 1,
-            Int.MAX_VALUE to -Int.MAX_VALUE
+            0L to 0L,
+            1L to -1L,
+            -1L to 1L,
+            Long.MAX_VALUE to -Long.MAX_VALUE
         ).forEach {
             assertEquals(it.second.years, -it.first.years)
-            assertEquals(it.second.toLong().years, -it.first.toLong().years)
         }
-
-        assertEquals((-Long.MAX_VALUE).years, -Long.MAX_VALUE.years)
     }
 
     @Test
     fun `unary minus throws an exception when value in MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { -Int.MIN_VALUE.years }
         assertFailsWith<ArithmeticException> { -Long.MIN_VALUE.years }
     }
 
     @Test
     fun `multiplying by a scalar value throws an exception when overflow occurs`() {
-        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.years * 2 }
-        assertFailsWith<ArithmeticException> { Int.MIN_VALUE.years * -1 }
-
         assertFailsWith<ArithmeticException> { Long.MAX_VALUE.years * 2 }
         assertFailsWith<ArithmeticException> { Long.MAX_VALUE.years * 2L }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years * -1 }
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years * -1L }
     }
 
     @Test
     fun `division by a scalar value`() {
         assertEquals(3.years, 9.years / 3)
-        assertEquals(3L.years, 9.years / 3L)
-        assertEquals((-3L).years, 9L.years / -3)
-        assertEquals((-3L).years, 9L.years / -3L)
+        assertEquals(3.years, 9.years / 3L)
+        assertEquals((-3).years, 9.years / -3)
+        assertEquals((-3).years, 9.years / -3L)
     }
 
     @Test
     fun `dividing by -1 throws an exception when value is MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { Int.MIN_VALUE.years / -1 }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years / -1  }
     }
 
     @Test
     fun `adding months to years produces months`() {
         assertEquals(15.months, 1.years + 3.months)
-        assertEquals(Int.MAX_VALUE.months, 1.years + (Int.MAX_VALUE - 12).months)
-        assertEquals(Int.MAX_VALUE.toLong().months, 1.years + (Int.MAX_VALUE - 12L).months)
-        assertEquals(Int.MIN_VALUE.months, (-1).years + (Int.MIN_VALUE + 12).months)
-        assertEquals(Int.MIN_VALUE.toLong().months, (-1).years + (Int.MIN_VALUE + 12L).months)
-
-        assertEquals(15L.months, 1L.years + 3L.months)
-        assertEquals(Long.MAX_VALUE.months, 1L.years + (Long.MAX_VALUE - 12L).months)
-        assertEquals(Long.MAX_VALUE.months, 1L.years + (Long.MAX_VALUE - 12).months)
-        assertEquals(Long.MIN_VALUE.months, (-1L).years + (Long.MIN_VALUE + 12L).months)
-        assertEquals(Long.MIN_VALUE.months, (-1L).years + (Long.MIN_VALUE + 12).months)
+        assertEquals(Long.MAX_VALUE.months, 1.years + (Long.MAX_VALUE - 12).months)
+        assertEquals(Long.MIN_VALUE.months, (-1).years + (Long.MIN_VALUE + 12).months)
     }
 
     @Test
     fun `throws an exception when adding months to years causes overflow`() {
-        assertFailsWith<ArithmeticException> { 1.years + (Int.MAX_VALUE - 11).months }
-        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.years + 1.months }
-        assertFailsWith<ArithmeticException> { (-1).years + (Int.MIN_VALUE + 11).months }
-        assertFailsWith<ArithmeticException> { Int.MIN_VALUE.years + (-1).months }
+        assertFailsWith<ArithmeticException> { 1.years + (Long.MAX_VALUE - 11).months }
+        assertFailsWith<ArithmeticException> { Long.MAX_VALUE.years + 1.months }
+        assertFailsWith<ArithmeticException> { (-1).years + (Long.MIN_VALUE + 11).months }
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years + (-1).months }
     }
 
     @Test
     fun `subtracting months from years produces months`() {
         assertEquals(21.months, 2.years - 3.months)
-        assertEquals(21L.months, 2.years - 3L.months)
-        assertEquals(21L.months, 2L.years - 3.months)
-        assertEquals(21L.months, 2L.years - 3L.months)
     }
 
     @Test
     fun `rem operator works`() {
         assertEquals(1.years, 5.years % 2)
-        assertEquals(1L.years, 5.years % 2L)
-        assertEquals(1L.years, 5L.years % 2)
-        assertEquals(1L.years, 5L.years % 2L)
+        assertEquals(1.years, 5.years % 2L)
     }
 
     @Test
-    fun `inCenturies converts years to centuries`() {
+    fun `inWholeCenturies converts years to centuries`() {
         listOf(
             0 to 0,
             99 to 0,
@@ -136,13 +104,12 @@ class YearsTest {
             100 to 1,
             -100 to -1
         ).forEach {
-            assertEquals(it.second.centuries, it.first.years.inCenturies)
-            assertEquals(it.second.toLong().centuries, it.first.toLong().years.inCenturies)
+            assertEquals(it.second.centuries, it.first.years.inWholeCenturies)
         }
     }
 
     @Test
-    fun `inDecades converts years to decades`() {
+    fun `inWholeDecades converts years to decades`() {
         listOf(
             0 to 0,
             9 to 0,
@@ -150,8 +117,7 @@ class YearsTest {
             10 to 1,
             -10 to -1
         ).forEach {
-            assertEquals(it.second.decades, it.first.years.inDecades)
-            assertEquals(it.second.toLong().decades, it.first.toLong().years.inDecades)
+            assertEquals(it.second.decades, it.first.years.inWholeDecades)
         }
     }
 
@@ -166,66 +132,42 @@ class YearsTest {
         ).forEach {
             assertEquals(it.second, it.first.inMonths)
         }
-
-        listOf(
-            0L.years to 0L.months,
-            (-1L).years to (-12L).months,
-            1L.years to 12L.months
-        ).forEach {
-            assertEquals(it.second, it.first.inMonths)
-        }
     }
 
     @Test
     fun `inMonths throws an exception when overflow occurs`() {
-        listOf(Int.MAX_VALUE, Int.MIN_VALUE, 178956971, -178956971).forEach {
-            assertFailsWith<ArithmeticException> { it.years.inMonths }
-        }
-
         listOf(Long.MAX_VALUE, Long.MIN_VALUE).forEach {
             assertFailsWith<ArithmeticException> { it.years.inMonths }
         }
     }
 
     @Test
-    fun `toLong() and toLongYears() convert to Long`() {
-        listOf(0, -1, 1, Int.MIN_VALUE, Int.MAX_VALUE).forEach {
-            assertEquals(it.toLong(), it.years.toLong())
-            assertEquals(it.toLong().years, it.years.toLongYears())
+    fun `toLong() converts to Long`() {
+        listOf(0, -1, 1, Long.MIN_VALUE, Long.MAX_VALUE).forEach {
+            assertEquals(it, it.years.toLong())
         }
     }
 
     @Test
-    fun `toInt() and toIntYears() throw an exception if overflow occurs during conversion`() {
+    fun `toInt() throws an exception if overflow occurs during conversion`() {
         listOf(Int.MAX_VALUE + 1L, Int.MIN_VALUE - 1L).forEach {
             assertFailsWith<ArithmeticException> { it.years.toInt() }
-            assertFailsWith<ArithmeticException> { it.years.toIntYears() }
         }
     }
 
     @Test
-    fun `toInt() and toIntYears() convert to Int`() {
+    fun `toInt() converts to Int`() {
         listOf(0, -1, 1, Int.MAX_VALUE, Int.MIN_VALUE).forEach {
-            assertEquals(it.years, it.toLong().years.toIntYears())
-            assertEquals(it, it.toLong().years.toInt())
+            assertEquals(it, it.years.toInt())
         }
     }
 
     @Test
     fun `toString() returns an ISO duration string`() {
         listOf(
-            0 to "P0Y",
-            1 to "P1Y",
-            -1 to "-P1Y",
-            Int.MAX_VALUE to "P${Int.MAX_VALUE}Y",
-            Int.MIN_VALUE + 1 to "-P${(Int.MIN_VALUE + 1L).absoluteValue}Y",
-            Int.MIN_VALUE to "-P${Int.MIN_VALUE.toLong().absoluteValue}Y"
-        ).forEach {
-            assertEquals(it.second, it.first.years.toString())
-            assertEquals(it.second, it.first.toLong().years.toString())
-        }
-
-        listOf(
+            0L to "P0Y",
+            1L to "P1Y",
+            -1L to "-P1Y",
             Long.MAX_VALUE to "P${Long.MAX_VALUE}Y",
             Long.MIN_VALUE to "-P9223372036854775808Y"
         ).forEach {
@@ -234,7 +176,7 @@ class YearsTest {
     }
 
     @Test
-    fun `toComponents() with centuries and decades`() {
+    fun `toComponents() and toComponentValues() with centuries and decades`() {
         listOf(
             0 to listOf(0, 0, 0),
             1 to listOf(0, 0, 1),
@@ -250,16 +192,16 @@ class YearsTest {
                 assertEquals(it.second[2].years, years)
             }
 
-            it.first.toLong().years.toComponents { centuries, decades, years ->
-                assertEquals(it.second[0].toLong().centuries, centuries)
-                assertEquals(it.second[1].decades, decades)
-                assertEquals(it.second[2].years, years)
+            it.first.years.toComponentValues { centuries, decades, years ->
+                assertEquals(it.second[0].toLong(), centuries)
+                assertEquals(it.second[1], decades)
+                assertEquals(it.second[2], years)
             }
         }
     }
 
     @Test
-    fun `toComponents() with decades`() {
+    fun `toComponents() and toComponentValues() with decades`() {
         listOf(
             0 to listOf(0, 0),
             1 to listOf(0, 1),
@@ -272,9 +214,9 @@ class YearsTest {
                 assertEquals(it.second[1].years, years)
             }
 
-            it.first.toLong().years.toComponents { decades, years ->
-                assertEquals(it.second[0].toLong().decades, decades)
-                assertEquals(it.second[1].years, years)
+            it.first.years.toComponentValues { decades, years ->
+                assertEquals(it.second[0].toLong(), decades)
+                assertEquals(it.second[1], years)
             }
         }
     }

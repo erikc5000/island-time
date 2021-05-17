@@ -1,7 +1,10 @@
 package io.islandtime.zone
 
 import io.islandtime.*
-import io.islandtime.measures.*
+import io.islandtime.measures.Milliseconds
+import io.islandtime.measures.Nanoseconds
+import io.islandtime.measures.Seconds
+import io.islandtime.measures.seconds
 
 class TimeZoneRulesException(
     message: String? = null,
@@ -94,7 +97,7 @@ interface TimeZoneOffsetTransition {
     /**
      * The duration of the transition period in seconds.
      */
-    val duration: IntSeconds
+    val duration: Seconds
 
     /**
      * Gets a list of the valid offsets during this transition. If this is gap, the list will be empty. If this is an
@@ -116,12 +119,12 @@ interface TimeZoneRules {
     /**
      * Gets the offset in effect at a certain number of milliseconds since the Unix epoch.
      */
-    fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds): UtcOffset
+    fun offsetAt(millisecondsSinceUnixEpoch: Milliseconds): UtcOffset
 
     /**
      * Gets the offset in effect at a certain number of seconds since the Unix epoch.
      */
-    fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset
+    fun offsetAt(secondsSinceUnixEpoch: Seconds, nanoOfSeconds: Nanoseconds): UtcOffset
 
     /**
      * Gets the offset in effect at a particular instant.
@@ -162,7 +165,7 @@ interface TimeZoneRules {
      * Gets the amount of daylight savings time in effect at a particular instant. This is the amount of time added to
      * the standard offset.
      */
-    fun daylightSavingsAt(instant: Instant): IntSeconds
+    fun daylightSavingsAt(instant: Instant): Seconds
 }
 
 /**
@@ -171,9 +174,9 @@ interface TimeZoneRules {
 internal class FixedTimeZoneRules(private val offset: UtcOffset) : TimeZoneRules {
     override val hasFixedOffset: Boolean get() = true
 
-    override fun offsetAt(millisecondsSinceUnixEpoch: LongMilliseconds) = offset
+    override fun offsetAt(millisecondsSinceUnixEpoch: Milliseconds) = offset
 
-    override fun offsetAt(secondsSinceUnixEpoch: LongSeconds, nanoOfSeconds: IntNanoseconds): UtcOffset {
+    override fun offsetAt(secondsSinceUnixEpoch: Seconds, nanoOfSeconds: Nanoseconds): UtcOffset {
         return offset
     }
 

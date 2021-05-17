@@ -25,7 +25,7 @@ private class DefaultTimePointProgressionBuilder<T : TimePoint<T>>(
 class TimePointSecondProgression<T : TimePoint<T>> private constructor(
     start: T,
     endInclusive: T,
-    val step: LongSeconds
+    val step: Seconds
 ) : TimePointProgressionBuilder<T>,
     Iterable<T> {
 
@@ -75,7 +75,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
         fun <T : TimePoint<T>> fromClosedRange(
             rangeStart: T,
             rangeEnd: T,
-            step: LongSeconds
+            step: Seconds
         ): TimePointSecondProgression<T> = TimePointSecondProgression(rangeStart, rangeEnd, step)
     }
 }
@@ -83,7 +83,7 @@ class TimePointSecondProgression<T : TimePoint<T>> private constructor(
 class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
     start: T,
     endInclusive: T,
-    val step: LongNanoseconds
+    val step: Nanoseconds
 ) : TimePointProgressionBuilder<T>,
     Iterable<T> {
 
@@ -133,7 +133,7 @@ class TimePointNanosecondProgression<T : TimePoint<T>> private constructor(
         fun <T : TimePoint<T>> fromClosedRange(
             rangeStart: T,
             rangeEnd: T,
-            step: LongNanoseconds
+            step: Nanoseconds
         ): TimePointNanosecondProgression<T> = TimePointNanosecondProgression(rangeStart, rangeEnd, step)
     }
 }
@@ -145,45 +145,32 @@ infix fun <T : TimePoint<T>> T.downTo(to: T): TimePointProgressionBuilder<T> {
     return DefaultTimePointProgressionBuilder(this, to)
 }
 
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: IntDays): TimePointSecondProgression<T> {
+infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: Days): TimePointSecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongDays()
-    val secondStep = (if (last > first) longStep else longStep.negateUnchecked()).inSecondsUnchecked
+    val secondStep = (if (last > first) step else -step).inSeconds
     return TimePointSecondProgression.fromClosedRange(first, last, secondStep)
 }
 
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: IntHours): TimePointSecondProgression<T> {
+infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: Hours): TimePointSecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongHours()
-    val secondStep = (if (last > first) longStep else longStep.negateUnchecked()).inSecondsUnchecked
+    val secondStep = (if (last > first) step else -step).inSeconds
     return TimePointSecondProgression.fromClosedRange(first, last, secondStep)
 }
 
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: IntMinutes): TimePointSecondProgression<T> {
+infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: Minutes): TimePointSecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongMinutes()
-    val secondStep = (if (last > first) longStep else longStep.negateUnchecked()).inSecondsUnchecked
+    val secondStep = (if (last > first) step else -step).inSeconds
     return TimePointSecondProgression.fromClosedRange(first, last, secondStep)
 }
 
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: IntSeconds): TimePointSecondProgression<T> {
+infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(step: Seconds): TimePointSecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongSeconds()
-    val secondStep = (if (last > first) longStep else longStep.negateUnchecked())
+    val secondStep = (if (last > first) step else -step)
     return TimePointSecondProgression.fromClosedRange(first, last, secondStep)
 }
 
 infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
-    step: IntMilliseconds
-): TimePointNanosecondProgression<T> {
-    require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongMilliseconds()
-    val nanoStep = (if (last > first) longStep else longStep.negateUnchecked()).inNanosecondsUnchecked
-    return TimePointNanosecondProgression.fromClosedRange(first, last, nanoStep)
-}
-
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
-    step: LongMilliseconds
+    step: Milliseconds
 ): TimePointNanosecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
     val nanoStep = (if (last > first) step else -step).inNanoseconds
@@ -191,16 +178,7 @@ infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
 }
 
 infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
-    step: IntMicroseconds
-): TimePointNanosecondProgression<T> {
-    require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongMicroseconds()
-    val nanoStep = (if (last > first) longStep else longStep.negateUnchecked()).inNanosecondsUnchecked
-    return TimePointNanosecondProgression.fromClosedRange(first, last, nanoStep)
-}
-
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
-    step: LongMicroseconds
+    step: Microseconds
 ): TimePointNanosecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
     val nanoStep = (if (last > first) step else -step).inNanoseconds
@@ -208,16 +186,7 @@ infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
 }
 
 infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
-    step: IntNanoseconds
-): TimePointNanosecondProgression<T> {
-    require(step.value > 0) { "step must be positive" }
-    val longStep = step.toLongNanoseconds()
-    val nanoStep = if (last > first) longStep else longStep.negateUnchecked()
-    return TimePointNanosecondProgression.fromClosedRange(first, last, nanoStep)
-}
-
-infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
-    step: LongNanoseconds
+    step: Nanoseconds
 ): TimePointNanosecondProgression<T> {
     require(step.value > 0) { "step must be positive" }
     val nanoStep = if (last > first) step else -step
@@ -227,7 +196,7 @@ infix fun <T : TimePoint<T>> TimePointProgressionBuilder<T>.step(
 /**
  * Assumes step is non-zero
  */
-private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, step: LongSeconds): T {
+private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, step: Seconds): T {
     return if ((step.value > 0 && start >= end) || (step.value < 0 && start <= end)) {
         end
     } else {
@@ -240,7 +209,7 @@ private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, s
 /**
  * Assumes step is non-zero
  */
-private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, step: LongNanoseconds): T {
+private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, step: Nanoseconds): T {
     return if ((step.value > 0 && start >= end) || (step.value < 0 && start <= end)) {
         end
     } else {

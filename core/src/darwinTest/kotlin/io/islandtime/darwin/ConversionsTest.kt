@@ -101,7 +101,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals(-14400, components.timeZone?.secondsFromGMT)
+        assertEquals(-14400, components.timeZone.secondsFromGMT)
 
         val componentsWithCalendar = offsetDateTime.toNSDateComponents(includeCalendar = true)
 
@@ -118,7 +118,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals(-14400, componentsWithCalendar.timeZone?.secondsFromGMT)
+        assertEquals(-14400, componentsWithCalendar.timeZone.secondsFromGMT)
     }
 
     @Test
@@ -139,7 +139,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals("America/New_York", components.timeZone?.name)
+        assertEquals("America/New_York", components.timeZone.name)
 
         val componentsWithCalendar = zonedDateTime.toNSDateComponents(includeCalendar = true)
 
@@ -156,7 +156,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals("America/New_York", componentsWithCalendar.timeZone?.name)
+        assertEquals("America/New_York", componentsWithCalendar.timeZone.name)
     }
 
     @Test
@@ -248,7 +248,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -86_400.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.days.toNSTimeInterval())
-            assertEquals(expected, value.toLong().days.toNSTimeInterval())
         }
     }
 
@@ -260,7 +259,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -3600.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.hours.toNSTimeInterval())
-            assertEquals(expected, value.toLong().hours.toNSTimeInterval())
         }
     }
 
@@ -272,7 +270,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -60.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.minutes.toNSTimeInterval())
-            assertEquals(expected, value.toLong().minutes.toNSTimeInterval())
         }
     }
 
@@ -284,7 +281,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -1.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.seconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().seconds.toNSTimeInterval())
         }
     }
 
@@ -296,7 +292,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -0.001
         ).forEach { (value, expected) ->
             assertEquals(expected, value.milliseconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().milliseconds.toNSTimeInterval())
         }
     }
 
@@ -308,7 +303,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -0.000001
         ).forEach { (value, expected) ->
             assertEquals(expected, value.microseconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().microseconds.toNSTimeInterval())
         }
     }
 
@@ -320,7 +314,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -0.000000001
         ).forEach { (value, expected) ->
             assertEquals(expected, value.nanoseconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().nanoseconds.toNSTimeInterval())
         }
     }
 

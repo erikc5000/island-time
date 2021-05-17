@@ -29,7 +29,7 @@ object NullableOffsetDateTimeParceler : Parceler<OffsetDateTime?> {
                     parcel.readByte().toInt(),
                     parcel.readInt()
                 ),
-                UtcOffset(parcel.readInt().seconds)
+                UtcOffset.fromTotalSeconds(parcel.readInt())
             )
         }
     }
@@ -49,5 +49,5 @@ internal fun Parcel.readOffsetDateTime(): OffsetDateTime {
 
 internal fun Parcel.writeOffsetDateTime(offsetDateTime: OffsetDateTime) {
     writeDateTime(offsetDateTime.dateTime)
-    writeInt(offsetDateTime.offset.totalSeconds.value)
+    writeInt(offsetDateTime.offset.totalSecondsValue)
 }

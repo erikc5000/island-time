@@ -52,7 +52,7 @@ class Date(
     val dayOfWeek: DayOfWeek
         get() {
             val zeroIndexedDayOfWeek = (dayOfUnixEpoch + 3) floorMod 7
-            return DayOfWeek.values()[zeroIndexedDayOfWeek.toInt()]
+            return DayOfWeek.values()[zeroIndexedDayOfWeek]
         }
 
     /**
@@ -78,7 +78,7 @@ class Date(
     /**
      * The number of days away from the Unix epoch (`1970-01-01T00:00Z`) that this date falls.
      */
-    inline val daysSinceUnixEpoch: LongDays get() = dayOfUnixEpoch.days
+    inline val daysSinceUnixEpoch: Days get() = dayOfUnixEpoch.days
 
     @Deprecated(
         "Use toYearMonth() instead.",
@@ -93,8 +93,9 @@ class Date(
         ReplaceWith("this.dayOfUnixEpoch"),
         DeprecationLevel.ERROR
     )
+    @Suppress("unused")
     val unixEpochDay: Long
-        get() = dayOfUnixEpoch
+        get() = deprecatedToError()
 
     /**
      * Returns this date with [period] added to it.
@@ -110,9 +111,7 @@ class Date(
         }
     }
 
-    operator fun plus(years: IntYears): Date = plus(years.toLongYears())
-
-    operator fun plus(years: LongYears): Date {
+    operator fun plus(years: Years): Date {
         return if (years.value == 0L) {
             this
         } else {
@@ -121,26 +120,21 @@ class Date(
         }
     }
 
-    operator fun plus(months: IntMonths): Date = plus(months.toLongMonths())
-
-    operator fun plus(months: LongMonths): Date {
+    operator fun plus(months: Months): Date {
         return if (months.value == 0L) {
             this
         } else {
             val newMonthsSinceYear0 = monthsSinceYear0 + months.value
             val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_PER_YEAR)
-            val newMonth = Month.values()[(newMonthsSinceYear0 floorMod MONTHS_PER_YEAR).toInt()]
+            val newMonth = Month.values()[newMonthsSinceYear0 floorMod MONTHS_PER_YEAR]
 
             Date(newYear, newMonth, dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)))
         }
     }
 
-    operator fun plus(weeks: IntWeeks): Date = plus(weeks.toLongWeeks().inDaysUnchecked)
-    operator fun plus(weeks: LongWeeks): Date = plus(weeks.inDays)
+    operator fun plus(weeks: Weeks): Date = plus(weeks.inDays)
 
-    operator fun plus(days: IntDays): Date = plus(days.toLongDays())
-
-    operator fun plus(days: LongDays): Date {
+    operator fun plus(days: Days): Date {
         return if (days.value == 0L) {
             this
         } else {
@@ -162,9 +156,7 @@ class Date(
         }
     }
 
-    operator fun minus(years: IntYears): Date = plus(years.toLongYears().negateUnchecked())
-
-    operator fun minus(years: LongYears): Date {
+    operator fun minus(years: Years): Date {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1.years
         } else {
@@ -172,9 +164,7 @@ class Date(
         }
     }
 
-    operator fun minus(months: IntMonths): Date = plus(months.toLongMonths().negateUnchecked())
-
-    operator fun minus(months: LongMonths): Date {
+    operator fun minus(months: Months): Date {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1.months
         } else {
@@ -182,9 +172,7 @@ class Date(
         }
     }
 
-    operator fun minus(weeks: IntWeeks): Date = plus(weeks.toLongWeeks().inDaysUnchecked.negateUnchecked())
-
-    operator fun minus(weeks: LongWeeks): Date {
+    operator fun minus(weeks: Weeks): Date {
         return if (weeks.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.weeks
         } else {
@@ -192,9 +180,7 @@ class Date(
         }
     }
 
-    operator fun minus(days: IntDays): Date = plus(days.toLongDays().negateUnchecked())
-
-    operator fun minus(days: LongDays): Date {
+    operator fun minus(days: Days): Date {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
         } else {
@@ -274,19 +260,19 @@ class Date(
         /**
          * The earliest supported [Date], which can be used as a "far past" sentinel.
          */
-        val MIN = Date(Year.MIN_VALUE, Month.JANUARY, 1)
+        val MIN: Date = Date(Year.MIN_VALUE, Month.JANUARY, 1)
 
         /**
          * The latest supported [Date], which can be used as a "far future" sentinel.
          */
-        val MAX = Date(Year.MAX_VALUE, Month.DECEMBER, 31)
+        val MAX: Date = Date(Year.MAX_VALUE, Month.DECEMBER, 31)
 
         /**
          * Creates a [Date] from a duration of days relative to the Unix epoch of 1970-01-01.
          * @param days the number of days relative to the Unix epoch
          * @throws DateTimeException if outside of the supported date range
          */
-        fun fromDaysSinceUnixEpoch(days: LongDays): Date = fromDayOfUnixEpoch(days.value)
+        fun fromDaysSinceUnixEpoch(days: Days): Date = fromDayOfUnixEpoch(days.value)
 
         /**
          * Creates a [Date] from the day of the Unix epoch.
@@ -308,7 +294,8 @@ class Date(
             ReplaceWith("Date.fromDayOfUnixEpoch(day)"),
             DeprecationLevel.ERROR
         )
-        fun fromUnixEpochDay(day: Long): Date = fromDayOfUnixEpoch(day)
+        @Suppress("UNUSED_PARAMETER", "unused")
+        fun fromUnixEpochDay(day: Long): Date = deprecatedToError()
     }
 }
 

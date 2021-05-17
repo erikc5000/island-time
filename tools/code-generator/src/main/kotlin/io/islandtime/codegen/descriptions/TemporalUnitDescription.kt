@@ -41,15 +41,16 @@ enum class TemporalUnitDescription(
         override val singularName: String = "Century"
     };
 
-    val intName: String get() = "Int$pluralName"
-    val longName: String get() = "Long$pluralName"
+    val deprecatedIntName: String get() = "Int$pluralName"
+    val deprecatedLongName: String get() = "Long$pluralName"
     open val singularName: String get() = pluralName.dropLast(1)
     val lowerSingularName: String get() = singularName.lowercase()
     val lowerPluralName: String get() = pluralName.lowercase()
     val valueName: String get() = "value"
     val inUnitPropertyName: String get() = "in$pluralName"
     val inUnitUncheckedPropertyName: String get() = "${inUnitPropertyName}Unchecked"
-    val inWholeUnitPropertyName: String get() = "in$pluralName"
+    val inWholeUnitPropertyName: String get() = "inWhole$pluralName"
+    val deprecatedInWholeUnitPropertyName: String get() = "in$pluralName"
 
     open val isoPeriodPrefix: String get() = if (isTimeBased) "PT" else "P"
     open val isoPeriodIsFractional: Boolean = false
@@ -85,11 +86,15 @@ data class TemporalUnitConversion(
     fun isNecessary() = operator != ConversionOperator.NONE
 
     @OptIn(ExperimentalStdlibApi::class)
-    val constantName: String
-        get() {
-            val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
-            return "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".uppercase()
-        }
+    val constantName: String by lazy(LazyThreadSafetyMode.NONE) {
+        val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
+        "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".uppercase()
+    }
+
+    val id: String by lazy(LazyThreadSafetyMode.NONE) {
+        val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
+        "${smallerUnit.lowerPluralName}Per${largerUnit.singularName}"
+    }
 
     val operator: ConversionOperator
         get() = when {

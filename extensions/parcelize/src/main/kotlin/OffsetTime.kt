@@ -13,7 +13,7 @@ object OffsetTimeParceler : Parceler<OffsetTime> {
             parcel.readByte().toInt(),
             parcel.readByte().toInt(),
             parcel.readInt(),
-            UtcOffset(parcel.readInt().seconds)
+            UtcOffset.fromTotalSeconds(parcel.readInt())
         )
     }
 
@@ -22,7 +22,7 @@ object OffsetTimeParceler : Parceler<OffsetTime> {
         parcel.writeByte(minute.toByte())
         parcel.writeByte(second.toByte())
         parcel.writeInt(nanosecond)
-        parcel.writeInt(offset.totalSeconds.value)
+        parcel.writeInt(offset.totalSecondsValue)
     }
 }
 
@@ -35,7 +35,7 @@ object NullableOffsetTimeParceler : Parceler<OffsetTime?> {
                 parcel.readByte().toInt(),
                 parcel.readByte().toInt(),
                 parcel.readInt(),
-                UtcOffset(parcel.readInt().seconds)
+                UtcOffset.fromTotalSeconds(parcel.readInt())
             )
         }
     }
@@ -48,7 +48,7 @@ object NullableOffsetTimeParceler : Parceler<OffsetTime?> {
             parcel.writeByte(minute.toByte())
             parcel.writeByte(second.toByte())
             parcel.writeInt(nanosecond)
-            parcel.writeInt(offset.totalSeconds.value)
+            parcel.writeInt(offset.totalSecondsValue)
         }
     }
 }

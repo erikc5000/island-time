@@ -14,8 +14,8 @@ import io.islandtime.`internal`.weekOfYearImpl
 import io.islandtime.calendar.WeekSettings
 import io.islandtime.calendar.weekSettings
 import io.islandtime.locale.Locale
-import io.islandtime.measures.IntDays
-import io.islandtime.measures.IntWeeks
+import io.islandtime.measures.Days
+import io.islandtime.measures.Weeks
 import io.islandtime.measures.days
 import io.islandtime.ranges.DateRange
 import io.islandtime.ranges.DateTimeInterval
@@ -182,19 +182,19 @@ public val Date.isLeapDay: Boolean
 /**
  * The length of this date's month in days.
  */
-public val Date.lengthOfMonth: IntDays
+public val Date.lengthOfMonth: Days
   get() = month.lengthIn(year)
 
 /**
  * The length of this date's year in days.
  */
-public val Date.lengthOfYear: IntDays
+public val Date.lengthOfYear: Days
   get() = lengthOfYear(year)
 
 /**
  * The length of the ISO week-based year that this date falls in, either 52 or 53 weeks.
  */
-public val Date.lengthOfWeekBasedYear: IntWeeks
+public val Date.lengthOfWeekBasedYear: Weeks
   get() = lengthOfWeekBasedYear(weekBasedYear)
 
 /**
@@ -391,19 +391,19 @@ public val DateTime.isInLeapDay: Boolean
 /**
  * The length of this date-time's month in days.
  */
-public val DateTime.lengthOfMonth: IntDays
+public val DateTime.lengthOfMonth: Days
   inline get() = date.lengthOfMonth
 
 /**
  * The length of this date-time's year in days.
  */
-public val DateTime.lengthOfYear: IntDays
+public val DateTime.lengthOfYear: Days
   inline get() = date.lengthOfYear
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
-public val DateTime.lengthOfWeekBasedYear: IntWeeks
+public val DateTime.lengthOfWeekBasedYear: Weeks
   inline get() = date.lengthOfWeekBasedYear
 
 /**
@@ -586,19 +586,19 @@ public val OffsetDateTime.isInLeapDay: Boolean
 /**
  * The length of this date-time's month in days.
  */
-public val OffsetDateTime.lengthOfMonth: IntDays
+public val OffsetDateTime.lengthOfMonth: Days
   inline get() = dateTime.lengthOfMonth
 
 /**
  * The length of this date-time's year in days.
  */
-public val OffsetDateTime.lengthOfYear: IntDays
+public val OffsetDateTime.lengthOfYear: Days
   inline get() = dateTime.lengthOfYear
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
-public val OffsetDateTime.lengthOfWeekBasedYear: IntWeeks
+public val OffsetDateTime.lengthOfWeekBasedYear: Weeks
   inline get() = dateTime.lengthOfWeekBasedYear
 
 /**
@@ -783,19 +783,19 @@ public val ZonedDateTime.isInLeapDay: Boolean
 /**
  * The length of this date-time's month in days.
  */
-public val ZonedDateTime.lengthOfMonth: IntDays
+public val ZonedDateTime.lengthOfMonth: Days
   inline get() = dateTime.lengthOfMonth
 
 /**
  * The length of this date-time's year in days.
  */
-public val ZonedDateTime.lengthOfYear: IntDays
+public val ZonedDateTime.lengthOfYear: Days
   inline get() = dateTime.lengthOfYear
 
 /**
  * The length of the ISO week-based year that this date-time falls in, either 52 or 53 weeks.
  */
-public val ZonedDateTime.lengthOfWeekBasedYear: IntWeeks
+public val ZonedDateTime.lengthOfWeekBasedYear: Weeks
   inline get() = dateTime.lengthOfWeekBasedYear
 
 /**

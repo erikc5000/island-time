@@ -21,119 +21,63 @@ class FixedClock(
         this.instant = instant
     }
 
-    operator fun plusAssign(days: LongDays) {
+    operator fun plusAssign(days: Days) {
         instant += days
     }
 
-    operator fun plusAssign(days: IntDays) {
-        instant += days
-    }
-
-    operator fun plusAssign(hours: LongHours) {
+    operator fun plusAssign(hours: Hours) {
         instant += hours
     }
 
-    operator fun plusAssign(hours: IntHours) {
-        instant += hours
-    }
-
-    operator fun plusAssign(minutes: LongMinutes) {
+    operator fun plusAssign(minutes: Minutes) {
         instant += minutes
     }
 
-    operator fun plusAssign(minutes: IntMinutes) {
-        instant += minutes
-    }
-
-    operator fun plusAssign(seconds: LongSeconds) {
+    operator fun plusAssign(seconds: Seconds) {
         instant += seconds
     }
 
-    operator fun plusAssign(seconds: IntSeconds) {
-        instant += seconds
-    }
-
-    operator fun plusAssign(milliseconds: LongMilliseconds) {
+    operator fun plusAssign(milliseconds: Milliseconds) {
         instant += milliseconds
     }
 
-    operator fun plusAssign(milliseconds: IntMilliseconds) {
-        instant += milliseconds
-    }
-
-    operator fun plusAssign(microseconds: LongMicroseconds) {
+    operator fun plusAssign(microseconds: Microseconds) {
         instant += microseconds
     }
 
-    operator fun plusAssign(microseconds: IntMicroseconds) {
-        instant += microseconds
-    }
-
-    operator fun plusAssign(nanoseconds: LongNanoseconds) {
+    operator fun plusAssign(nanoseconds: Nanoseconds) {
         instant += nanoseconds
     }
 
-    operator fun plusAssign(nanoseconds: IntNanoseconds) {
-        instant += nanoseconds
-    }
-
-    operator fun minusAssign(days: LongDays) {
+    operator fun minusAssign(days: Days) {
         instant -= days
     }
 
-    operator fun minusAssign(days: IntDays) {
-        instant -= days
-    }
-
-    operator fun minusAssign(hours: LongHours) {
+    operator fun minusAssign(hours: Hours) {
         instant -= hours
     }
 
-    operator fun minusAssign(hours: IntHours) {
-        instant -= hours
-    }
-
-    operator fun minusAssign(minutes: LongMinutes) {
+    operator fun minusAssign(minutes: Minutes) {
         instant -= minutes
     }
 
-    operator fun minusAssign(minutes: IntMinutes) {
-        instant -= minutes
-    }
-
-    operator fun minusAssign(seconds: LongSeconds) {
+    operator fun minusAssign(seconds: Seconds) {
         instant -= seconds
     }
 
-    operator fun minusAssign(seconds: IntSeconds) {
-        instant -= seconds
-    }
-
-    operator fun minusAssign(milliseconds: LongMilliseconds) {
+    operator fun minusAssign(milliseconds: Milliseconds) {
         instant -= milliseconds
     }
 
-    operator fun minusAssign(milliseconds: IntMilliseconds) {
-        instant -= milliseconds
-    }
-
-    operator fun minusAssign(microseconds: LongMicroseconds) {
+    operator fun minusAssign(microseconds: Microseconds) {
         instant -= microseconds
     }
 
-    operator fun minusAssign(microseconds: IntMicroseconds) {
-        instant -= microseconds
-    }
-
-    operator fun minusAssign(nanoseconds: LongNanoseconds) {
+    operator fun minusAssign(nanoseconds: Nanoseconds) {
         instant -= nanoseconds
     }
 
-    operator fun minusAssign(nanoseconds: IntNanoseconds) {
-        instant -= nanoseconds
-    }
-
-    override fun readMilliseconds(): LongMilliseconds {
+    override fun readMilliseconds(): Milliseconds {
         return instant.millisecondsSinceUnixEpoch
     }
 

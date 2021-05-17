@@ -3,6 +3,7 @@
 package io.islandtime
 
 import io.islandtime.base.TimePoint
+import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.ZonedDateTimeInterval
@@ -113,14 +114,11 @@ class ZonedDateTime private constructor(
     inline val instant: Instant
         get() = toInstant()
 
-    override val secondsSinceUnixEpoch: LongSeconds
-        get() = dateTime.secondsSinceUnixEpochAt(offset)
+    override val secondOfUnixEpoch: Long
+        get() = dateTime.secondOfUnixEpochAt(offset)
 
-    override val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
-        get() = dateTime.additionalNanosecondsSinceUnixEpoch
-
-    override val millisecondsSinceUnixEpoch: LongMilliseconds
-        get() = dateTime.millisecondsSinceUnixEpochAt(offset)
+    override val millisecondOfUnixEpoch: Long
+        get() = dateTime.millisecondOfUnixEpochAt(offset)
 
     override fun equals(other: Any?): Boolean {
         return this === other || (other is ZonedDateTime &&
@@ -155,38 +153,21 @@ class ZonedDateTime private constructor(
     operator fun plus(period: Period): ZonedDateTime = copy(dateTime = dateTime + period)
 
     operator fun plus(duration: Duration): ZonedDateTime = resolveInstant(dateTime + duration)
+    operator fun plus(years: Years): ZonedDateTime = copy(dateTime = dateTime + years)
+    operator fun plus(months: Months): ZonedDateTime = copy(dateTime = dateTime + months)
+    operator fun plus(weeks: Weeks): ZonedDateTime = copy(dateTime = dateTime + weeks)
+    operator fun plus(days: Days): ZonedDateTime = copy(dateTime = dateTime + days)
+    override operator fun plus(hours: Hours): ZonedDateTime = resolveInstant(dateTime + hours)
+    override operator fun plus(minutes: Minutes): ZonedDateTime = resolveInstant(dateTime + minutes)
+    override operator fun plus(seconds: Seconds): ZonedDateTime = resolveInstant(dateTime + seconds)
 
-    operator fun plus(years: IntYears): ZonedDateTime = copy(dateTime = dateTime + years)
-    operator fun plus(years: LongYears): ZonedDateTime = copy(dateTime = dateTime + years)
-    operator fun plus(months: IntMonths): ZonedDateTime = copy(dateTime = dateTime + months)
-    operator fun plus(months: LongMonths): ZonedDateTime = copy(dateTime = dateTime + months)
-    operator fun plus(weeks: IntWeeks): ZonedDateTime = copy(dateTime = dateTime + weeks)
-    operator fun plus(weeks: LongWeeks): ZonedDateTime = copy(dateTime = dateTime + weeks)
-    operator fun plus(days: IntDays): ZonedDateTime = copy(dateTime = dateTime + days)
-    operator fun plus(days: LongDays): ZonedDateTime = copy(dateTime = dateTime + days)
-    override operator fun plus(hours: IntHours): ZonedDateTime = resolveInstant(dateTime + hours)
-    override operator fun plus(hours: LongHours): ZonedDateTime = resolveInstant(dateTime + hours)
-    override operator fun plus(minutes: IntMinutes): ZonedDateTime = resolveInstant(dateTime + minutes)
-    override operator fun plus(minutes: LongMinutes): ZonedDateTime = resolveInstant(dateTime + minutes)
-    override operator fun plus(seconds: IntSeconds): ZonedDateTime = resolveInstant(dateTime + seconds)
-    override operator fun plus(seconds: LongSeconds): ZonedDateTime = resolveInstant(dateTime + seconds)
-
-    override operator fun plus(milliseconds: IntMilliseconds): ZonedDateTime =
+    override operator fun plus(milliseconds: Milliseconds): ZonedDateTime =
         resolveInstant(dateTime + milliseconds)
 
-    override operator fun plus(milliseconds: LongMilliseconds): ZonedDateTime =
-        resolveInstant(dateTime + milliseconds)
-
-    override operator fun plus(microseconds: IntMicroseconds): ZonedDateTime =
+    override operator fun plus(microseconds: Microseconds): ZonedDateTime =
         resolveInstant(dateTime + microseconds)
 
-    override operator fun plus(microseconds: LongMicroseconds): ZonedDateTime =
-        resolveInstant(dateTime + microseconds)
-
-    override operator fun plus(nanoseconds: IntNanoseconds): ZonedDateTime =
-        resolveInstant(dateTime + nanoseconds)
-
-    override operator fun plus(nanoseconds: LongNanoseconds): ZonedDateTime =
+    override operator fun plus(nanoseconds: Nanoseconds): ZonedDateTime =
         resolveInstant(dateTime + nanoseconds)
 
     /**
@@ -198,38 +179,21 @@ class ZonedDateTime private constructor(
     operator fun minus(period: Period): ZonedDateTime = copy(dateTime = dateTime - period)
 
     operator fun minus(duration: Duration): ZonedDateTime = resolveInstant(dateTime - duration)
+    operator fun minus(years: Years): ZonedDateTime = copy(dateTime = dateTime - years)
+    operator fun minus(months: Months): ZonedDateTime = copy(dateTime = dateTime - months)
+    operator fun minus(weeks: Weeks): ZonedDateTime = copy(dateTime = dateTime - weeks)
+    operator fun minus(days: Days): ZonedDateTime = copy(dateTime = dateTime - days)
+    override operator fun minus(hours: Hours): ZonedDateTime = resolveInstant(dateTime - hours)
+    override operator fun minus(minutes: Minutes): ZonedDateTime = resolveInstant(dateTime - minutes)
+    override operator fun minus(seconds: Seconds): ZonedDateTime = resolveInstant(dateTime - seconds)
 
-    operator fun minus(years: IntYears): ZonedDateTime = copy(dateTime = dateTime - years)
-    operator fun minus(years: LongYears): ZonedDateTime = copy(dateTime = dateTime - years)
-    operator fun minus(months: IntMonths): ZonedDateTime = copy(dateTime = dateTime - months)
-    operator fun minus(months: LongMonths): ZonedDateTime = copy(dateTime = dateTime - months)
-    operator fun minus(weeks: IntWeeks): ZonedDateTime = copy(dateTime = dateTime - weeks)
-    operator fun minus(weeks: LongWeeks): ZonedDateTime = copy(dateTime = dateTime - weeks)
-    operator fun minus(days: IntDays): ZonedDateTime = copy(dateTime = dateTime - days)
-    operator fun minus(days: LongDays): ZonedDateTime = copy(dateTime = dateTime - days)
-    override operator fun minus(hours: IntHours): ZonedDateTime = resolveInstant(dateTime - hours)
-    override operator fun minus(hours: LongHours): ZonedDateTime = resolveInstant(dateTime - hours)
-    override operator fun minus(minutes: IntMinutes): ZonedDateTime = resolveInstant(dateTime - minutes)
-    override operator fun minus(minutes: LongMinutes): ZonedDateTime = resolveInstant(dateTime - minutes)
-    override operator fun minus(seconds: IntSeconds): ZonedDateTime = resolveInstant(dateTime - seconds)
-    override operator fun minus(seconds: LongSeconds): ZonedDateTime = resolveInstant(dateTime - seconds)
-
-    override operator fun minus(milliseconds: IntMilliseconds): ZonedDateTime =
+    override operator fun minus(milliseconds: Milliseconds): ZonedDateTime =
         resolveInstant(dateTime - milliseconds)
 
-    override operator fun minus(milliseconds: LongMilliseconds): ZonedDateTime =
-        resolveInstant(dateTime - milliseconds)
-
-    override operator fun minus(microseconds: IntMicroseconds): ZonedDateTime =
+    override operator fun minus(microseconds: Microseconds): ZonedDateTime =
         resolveInstant(dateTime - microseconds)
 
-    override operator fun minus(microseconds: LongMicroseconds): ZonedDateTime =
-        resolveInstant(dateTime - microseconds)
-
-    override operator fun minus(nanoseconds: IntNanoseconds): ZonedDateTime =
-        resolveInstant(dateTime - nanoseconds)
-
-    override operator fun minus(nanoseconds: LongNanoseconds): ZonedDateTime =
+    override operator fun minus(nanoseconds: Nanoseconds): ZonedDateTime =
         resolveInstant(dateTime - nanoseconds)
 
     operator fun rangeTo(other: ZonedDateTime): ZonedDateTimeInterval =
@@ -468,7 +432,7 @@ class ZonedDateTime private constructor(
         /**
          * Creates a [ZonedDateTime] from a duration of milliseconds relative to the Unix epoch at [zone].
          */
-        fun fromMillisecondsSinceUnixEpoch(milliseconds: LongMilliseconds, zone: TimeZone): ZonedDateTime {
+        fun fromMillisecondsSinceUnixEpoch(milliseconds: Milliseconds, zone: TimeZone): ZonedDateTime {
             val offset = zone.rules.offsetAt(milliseconds)
             val dateTime = DateTime.fromMillisecondsSinceUnixEpoch(milliseconds, offset)
             return create(dateTime, offset, zone)
@@ -479,8 +443,8 @@ class ZonedDateTime private constructor(
          * with some number of additional nanoseconds added to it.
          */
         fun fromSecondsSinceUnixEpoch(
-            seconds: LongSeconds,
-            nanosecondAdjustment: IntNanoseconds = 0.nanoseconds,
+            seconds: Seconds,
+            nanosecondAdjustment: Nanoseconds = 0.nanoseconds,
             zone: TimeZone
         ): ZonedDateTime {
             val offset = zone.rules.offsetAt(seconds, nanosecondAdjustment)
@@ -507,18 +471,16 @@ class ZonedDateTime private constructor(
             ReplaceWith("ZonedDateTime.fromMillisecondOfUnixEpoch(millisecond, zone)"),
             DeprecationLevel.ERROR
         )
-        fun fromUnixEpochMillisecond(millisecond: Long, zone: TimeZone): ZonedDateTime {
-            return fromMillisecondOfUnixEpoch(millisecond, zone)
-        }
+        @Suppress("UNUSED_PARAMETER", "unused")
+        fun fromUnixEpochMillisecond(millisecond: Long, zone: TimeZone): ZonedDateTime = deprecatedToError()
 
         @Deprecated(
             "Use fromSecondOfUnixEpoch() instead.",
             ReplaceWith("ZonedDateTime.fromSecondOfUnixEpoch(second, nanoOfSecond, zone)"),
             DeprecationLevel.ERROR
         )
-        fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, zone: TimeZone): ZonedDateTime {
-            return fromSecondOfUnixEpoch(second, nanoOfSecond, zone)
-        }
+        @Suppress("UNUSED_PARAMETER", "unused")
+        fun fromUnixEpochSecond(second: Long, nanoOfSecond: Int, zone: TimeZone): ZonedDateTime = deprecatedToError()
 
         /**
          * Creates a [ZonedDateTime] with no additional validation.
@@ -674,9 +636,8 @@ internal fun StringBuilder.appendZonedDateTime(zonedDateTime: ZonedDateTime): St
     ),
     DeprecationLevel.ERROR
 )
-fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
-    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
-}
+@Suppress("UNUSED_PARAMETER", "unused")
+fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime = deprecatedToError()
 
 @Deprecated(
     "Use toZonedDateTime() instead.",
@@ -686,9 +647,8 @@ fun OffsetDateTime.similarLocalTimeAt(zone: TimeZone): ZonedDateTime {
     ),
     DeprecationLevel.ERROR
 )
-fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
-    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_LOCAL_TIME)
-}
+@Suppress("UNUSED_PARAMETER", "unused")
+fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime = deprecatedToError()
 
 @Deprecated(
     "Use toZonedDateTime() instead.",
@@ -698,9 +658,8 @@ fun OffsetDateTime.dateTimeAt(zone: TimeZone): ZonedDateTime {
     ),
     DeprecationLevel.ERROR
 )
-fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
-    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
-}
+@Suppress("UNUSED_PARAMETER", "unused")
+fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime = deprecatedToError()
 
 @Deprecated(
     "Use toZonedDateTime() instead.",
@@ -710,6 +669,5 @@ fun OffsetDateTime.sameInstantAt(zone: TimeZone): ZonedDateTime {
     ),
     DeprecationLevel.ERROR
 )
-fun OffsetDateTime.instantAt(zone: TimeZone): ZonedDateTime {
-    return toZonedDateTime(zone, OffsetConversionStrategy.PRESERVE_INSTANT)
-}
+@Suppress("UNUSED_PARAMETER", "unused")
+fun OffsetDateTime.instantAt(zone: TimeZone): ZonedDateTime = deprecatedToError()

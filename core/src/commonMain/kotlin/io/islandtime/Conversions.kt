@@ -32,7 +32,7 @@ fun ZonedDateTime.toOffsetDateTime(): OffsetDateTime = OffsetDateTime(dateTime, 
  * Converts this instant to the corresponding [Date] at [offset].
  */
 fun Instant.toDateAt(offset: UtcOffset): Date {
-    val adjustedSeconds = secondOfUnixEpoch + offset.totalSeconds.value
+    val adjustedSeconds = secondOfUnixEpoch + offset.totalSecondsValue
     val dayOfUnixEpoch = adjustedSeconds floorDiv SECONDS_PER_DAY
     return Date.fromDayOfUnixEpoch(dayOfUnixEpoch)
 }

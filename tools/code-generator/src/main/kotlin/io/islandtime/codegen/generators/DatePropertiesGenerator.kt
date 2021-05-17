@@ -57,7 +57,9 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
             }
 
             receiver(receiverClass.typeName)
-            getter { intervalOfWeekCode() }
+            getter {
+                code { intervalOfWeekCode() }
+            }
         }
 
         function(name = "week") {
@@ -98,13 +100,14 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
 
         if (receiverClass == Date) {
             getter {
-                using("impl", internal("weekOfMonthImpl"))
-                using("weekSettings", calendar("WeekSettings"))
-                "return %impl:T(%weekSettings:T.ISO)"
+                code {
+                    using("impl", internal("weekOfMonthImpl"))
+                    using("weekSettings", calendar("WeekSettings"))
+                    "return %impl:T(%weekSettings:T.ISO)"
+                }
             }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
@@ -166,13 +169,14 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
 
         if (receiverClass == Date) {
             getter {
-                using("impl", internal("weekOfYearImpl"))
-                using("weekSettings", calendar("WeekSettings"))
-                "return %impl:T(%weekSettings:T.ISO)"
+                code {
+                    using("impl", internal("weekOfYearImpl"))
+                    using("weekSettings", calendar("WeekSettings"))
+                    "return %impl:T(%weekSettings:T.ISO)"
+                }
             }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
@@ -247,13 +251,14 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
 
         if (receiverClass == Date) {
             getter {
-                using("impl", internal("weekBasedYearImpl"))
-                using("weekSettings", calendar("WeekSettings"))
-                "return %impl:T(%weekSettings:T.ISO)"
+                code {
+                    using("impl", internal("weekBasedYearImpl"))
+                    using("weekSettings", calendar("WeekSettings"))
+                    "return %impl:T(%weekSettings:T.ISO)"
+                }
             }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
@@ -322,13 +327,14 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
 
         if (receiverClass == Date) {
             getter {
-                using("impl", internal("weekOfWeekBasedYearImpl"))
-                using("weekSettings", calendar("WeekSettings"))
-                "return %impl:T(%weekSettings:T.ISO)"
+                code {
+                    using("impl", internal("weekOfWeekBasedYearImpl"))
+                    using("weekSettings", calendar("WeekSettings"))
+                    "return %impl:T(%weekSettings:T.ISO)"
+                }
             }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
@@ -388,10 +394,11 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         receiver(receiverClass.typeName)
 
         if (receiverClass == Date) {
-            getter { "return isLeapYear(year)" }
+            getter {
+                code { "return isLeapYear(year)" }
+            }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
@@ -409,38 +416,44 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
         receiver(receiverClass.typeName)
 
         if (receiverClass == Date) {
-            getter { "return month == Month.FEBRUARY && dayOfMonth == 29" }
+            getter {
+                code { "return month == Month.FEBRUARY && dayOfMonth == 29" }
+            }
         } else {
-            modifiers(KModifier.INLINE)
-            getter { "return date.isLeapDay" }
+            getter {
+                modifiers(KModifier.INLINE)
+                code { "return date.isLeapDay" }
+            }
         }
     }
 
-    property(name = "lengthOfMonth", returnType = measures("IntDays")) {
+    property(name = "lengthOfMonth", returnType = measures("Days")) {
         kdoc { "The length of this ${receiverClass.simpleName}'s month in days." }
         receiver(receiverClass.typeName)
 
         if (receiverClass == Date) {
-            getter { "return month.lengthIn(year)" }
+            getter {
+                code { "return month.lengthIn(year)" }
+            }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
-    property(name = "lengthOfYear", returnType = measures("IntDays")) {
+    property(name = "lengthOfYear", returnType = measures("Days")) {
         kdoc { "The length of this ${receiverClass.simpleName}'s year in days." }
         receiver(receiverClass.typeName)
 
         if (receiverClass == Date) {
-            getter { "return lengthOfYear(year)" }
+            getter {
+                code { "return lengthOfYear(year)" }
+            }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
-    property(name = "lengthOfWeekBasedYear", returnType = measures("IntWeeks")) {
+    property(name = "lengthOfWeekBasedYear", returnType = measures("Weeks")) {
         kdoc {
             """
                 The length of the ISO week-based year that this ${receiverClass.simpleName} falls in, either 52 or 53
@@ -452,39 +465,48 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
 
         if (receiverClass == Date) {
             getter {
-                using("impl", internal("lengthOfWeekBasedYear"))
-                "return %impl:T(weekBasedYear)"
+                code {
+                    using("impl", internal("lengthOfWeekBasedYear"))
+                    "return %impl:T(weekBasedYear)"
+                }
             }
         } else {
-            modifiers(KModifier.INLINE)
-            delegatesTo(receiverClass.datePropertyName)
+            delegatesTo(receiverClass.datePropertyName, KModifier.INLINE)
         }
     }
 
-    fun createPreviousNextFunctions(name: String, plusOrMinus: PlusOrMinusOperator) {
-        function(name = name) {
-            kdoc {
-                if (name == "next") {
-                    "The next ${receiverClass.simpleName} after this one that falls on [dayOfWeek]."
-                } else {
-                    "The last ${receiverClass.simpleName} before this one that falls on [dayOfWeek]."
-                }
+    buildPreviousNextFunctions("next", PlusOrMinusOperator.PLUS, receiverClass)
+    buildPreviousNextFunctions("previous", PlusOrMinusOperator.MINUS, receiverClass)
+}
+
+private fun FileBuilder.buildPreviousNextFunctions(
+    name: String,
+    plusOrMinus: PlusOrMinusOperator,
+    receiverClass: DateTimeDescription
+) {
+    function(name = name) {
+        kdoc {
+            if (name == "next") {
+                "The next ${receiverClass.simpleName} after this one that falls on [dayOfWeek]."
+            } else {
+                "The last ${receiverClass.simpleName} before this one that falls on [dayOfWeek]."
             }
-            receiver(receiverClass.typeName)
-            argument("dayOfWeek", base("DayOfWeek"))
-            returns(receiverClass.typeName)
+        }
+        receiver(receiverClass.typeName)
+        argument("dayOfWeek", base("DayOfWeek"))
+        returns(receiverClass.typeName)
 
-            if (receiverClass == Date) {
-                code {
-                    using("days", measures("days"))
+        if (receiverClass == Date) {
+            code {
+                using("days", measures("days"))
 
-                    val dayDiffCode = if (plusOrMinus == PlusOrMinusOperator.PLUS) {
-                        "this.dayOfWeek.ordinal - dayOfWeek.ordinal"
-                    } else {
-                        "dayOfWeek.ordinal - this.dayOfWeek.ordinal"
-                    }
+                val dayDiffCode = if (plusOrMinus == PlusOrMinusOperator.PLUS) {
+                    "this.dayOfWeek.ordinal - dayOfWeek.ordinal"
+                } else {
+                    "dayOfWeek.ordinal - this.dayOfWeek.ordinal"
+                }
 
-                    """
+                """
                         val dayDiff = $dayDiffCode
     
                         return if (dayDiff >= 0) {
@@ -493,31 +515,27 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
                             this ${plusOrMinus.uncheckedOperator} (-dayDiff).%days:T
                         }
                     """.trimIndent()
-                }
-            } else {
-                val propertyName = receiverClass.datePropertyName
-
-                code {
-                    "return copy($propertyName = $propertyName.$name(%dayOfWeek:N))"
-                }
             }
-        }
+        } else {
+            val propertyName = receiverClass.datePropertyName
 
-        function(name = "${name}OrSame") {
-            kdoc {
-                """
-                    The $name ${receiverClass.simpleName} that falls on [dayOfWeek], or this ${receiverClass.simpleName}
-                    if it falls on the same day.
-                """.trimIndent()
+            code {
+                "return copy($propertyName = $propertyName.$name(%dayOfWeek:N))"
             }
-
-            receiver(receiverClass.typeName)
-            argument("dayOfWeek", base("DayOfWeek"))
-            returns(receiverClass.typeName)
-            code { "return if (dayOfWeek == this.dayOfWeek) this else $name(dayOfWeek)" }
         }
     }
 
-    createPreviousNextFunctions("next", PlusOrMinusOperator.PLUS)
-    createPreviousNextFunctions("previous", PlusOrMinusOperator.MINUS)
+    function(name = "${name}OrSame") {
+        kdoc {
+            """
+                    The $name ${receiverClass.simpleName} that falls on [dayOfWeek], or this ${receiverClass.simpleName}
+                    if it falls on the same day.
+                """.trimIndent()
+        }
+
+        receiver(receiverClass.typeName)
+        argument("dayOfWeek", base("DayOfWeek"))
+        returns(receiverClass.typeName)
+        code { "return if (dayOfWeek == this.dayOfWeek) this else $name(dayOfWeek)" }
+    }
 }

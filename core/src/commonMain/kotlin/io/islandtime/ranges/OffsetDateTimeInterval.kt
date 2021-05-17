@@ -47,7 +47,7 @@ class OffsetDateTimeInterval(
      * The number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInYears: IntYears
+    val lengthInYears: Years
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endExclusive)
@@ -58,7 +58,7 @@ class OffsetDateTimeInterval(
      * The number of whole months in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMonths: IntMonths
+    val lengthInMonths: Months
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endExclusive)
@@ -69,7 +69,7 @@ class OffsetDateTimeInterval(
      * The number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInWeeks: LongWeeks
+    val lengthInWeeks: Weeks
         get() = when {
             isEmpty() -> 0L.weeks
             isBounded() -> weeksBetween(start, endExclusive)
@@ -180,7 +180,7 @@ fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
  * Gets the number of whole years between two date-times, adjusting the offset of [endExclusive] if necessary to match
  * the starting date-time.
  */
-fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears {
+fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Years {
     return yearsBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
@@ -188,7 +188,7 @@ fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntYears 
  * Gets the number of whole months between two date-times, adjusting the offset of [endExclusive] if necessary to match
  * the starting date-time.
  */
-fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonths {
+fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Months {
     return monthsBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
@@ -196,7 +196,7 @@ fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): IntMonth
  * Gets the number whole weeks between two date-times, adjusting the offset of [endExclusive] if necessary to match the
  * starting date-time.
  */
-fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongWeeks {
+fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Weeks {
     return weeksBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
@@ -204,7 +204,7 @@ fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongWeeks
  * Gets the number whole days between two date-times, adjusting the offset of [endExclusive] if necessary to match the
  * starting date-time.
  */
-fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): LongDays {
+fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Days {
     return daysBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 

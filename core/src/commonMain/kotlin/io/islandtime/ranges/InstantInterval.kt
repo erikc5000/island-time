@@ -2,6 +2,7 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.base.DateTimeField
+import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
@@ -122,11 +123,13 @@ infix fun Instant.until(to: Instant): InstantInterval = InstantInterval(this, to
     ReplaceWith("this.toInstantInterval()"),
     DeprecationLevel.ERROR
 )
-fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
+@Suppress("unused")
+fun OffsetDateTimeInterval.asInstantInterval(): InstantInterval = deprecatedToError()
 
 @Deprecated(
     "Use toInstantInterval() instead.",
     ReplaceWith("this.toInstantInterval()"),
     DeprecationLevel.ERROR
 )
-fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = toInstantInterval()
+@Suppress("unused")
+fun ZonedDateTimeInterval.asInstantInterval(): InstantInterval = deprecatedToError()

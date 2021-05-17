@@ -2,7 +2,10 @@ package io.islandtime
 
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.toZeroPaddedString
-import io.islandtime.measures.*
+import io.islandtime.measures.Days
+import io.islandtime.measures.Years
+import io.islandtime.measures.days
+import io.islandtime.measures.years
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 import kotlin.jvm.JvmInline
@@ -37,7 +40,7 @@ value class Year(val value: Int) : Comparable<Year> {
     /**
      * The length of the year in days.
      */
-    val length: IntDays get() = lengthOfYear(value)
+    val length: Days get() = lengthOfYear(value)
 
     /**
      * The last day of the year. This will be either `365` or `366` depending on whether this is a common or leap year.
@@ -65,21 +68,17 @@ value class Year(val value: Int) : Comparable<Year> {
      */
     val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
-    operator fun plus(years: LongYears): Year {
+    operator fun plus(years: Years): Year {
         return Year(value + years.value)
     }
 
-    operator fun plus(years: IntYears): Year = plus(years.toLongYears())
-
-    operator fun minus(years: LongYears): Year {
+    operator fun minus(years: Years): Year {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
         } else {
             plus(years.negateUnchecked())
         }
     }
-
-    operator fun minus(years: IntYears): Year = plus(years.toLongYears().negateUnchecked())
 
     operator fun contains(yearMonth: YearMonth): Boolean = yearMonth.year == value
     operator fun contains(date: Date): Boolean = date.year == value
@@ -169,11 +168,9 @@ internal fun isLeapYear(year: Int): Boolean {
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
 }
 
-internal fun lengthOfYear(year: Int): IntDays {
-    return if (isLeapYear(year)) 366.days else 365.days
-}
+internal fun lengthOfYear(year: Int): Days = lastDayOfYear(year).days
 
-internal fun lastDayOfYear(year: Int): Int = lengthOfYear(year).value
+internal fun lastDayOfYear(year: Int): Int = if (isLeapYear(year)) 366 else 365
 
 internal fun checkValidYear(year: Int): Int {
     if (!isValidYear(year)) {

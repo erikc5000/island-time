@@ -14,7 +14,7 @@ object DurationParceler : Parceler<Duration> {
 
     override fun Duration.write(parcel: Parcel, flags: Int) {
         parcel.writeLong(seconds.value)
-        parcel.writeInt(nanosecondAdjustment.value)
+        parcel.writeInt(nanosecondAdjustment.toInt())
     }
 }
 
@@ -32,7 +32,7 @@ object NullableDurationParceler : Parceler<Duration?> {
         } else {
             parcel.writeByte(NON_NULL_VALUE)
             parcel.writeLong(seconds.value)
-            parcel.writeInt(nanosecondAdjustment.value)
+            parcel.writeInt(nanosecondAdjustment.toInt())
         }
     }
 

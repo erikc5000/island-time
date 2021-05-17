@@ -51,7 +51,7 @@ class OffsetTime(
      * The number of nanoseconds since the start of the day, but normalized to a UTC offset of zero, allowing
      * [OffsetTime] objects with different offsets to be compared.
      */
-    val nanosecondsSinceStartOfUtcDay: LongNanoseconds
+    val nanosecondsSinceStartOfUtcDay: Nanoseconds
         get() = (time.nanosecondsSinceStartOfDay.value - offset.totalSeconds.inNanoseconds.value).nanoseconds
 
     /**
@@ -67,33 +67,21 @@ class OffsetTime(
         }
     }
 
-    operator fun plus(duration: Duration) = copy(time = time + duration)
-    operator fun plus(hours: LongHours) = copy(time = time + hours)
-    operator fun plus(hours: IntHours) = copy(time = time + hours)
-    operator fun plus(minutes: LongMinutes) = copy(time = time + minutes)
-    operator fun plus(minutes: IntMinutes) = copy(time = time + minutes)
-    operator fun plus(seconds: LongSeconds) = copy(time = time + seconds)
-    operator fun plus(seconds: IntSeconds) = copy(time = time + seconds)
-    operator fun plus(milliseconds: LongMilliseconds) = copy(time = time + milliseconds)
-    operator fun plus(milliseconds: IntMilliseconds) = copy(time = time + milliseconds)
-    operator fun plus(microseconds: LongMicroseconds) = copy(time = time + microseconds)
-    operator fun plus(microseconds: IntMicroseconds) = copy(time = time + microseconds)
-    operator fun plus(nanoseconds: LongNanoseconds) = copy(time = time + nanoseconds)
-    operator fun plus(nanoseconds: IntNanoseconds) = copy(time = time + nanoseconds)
+    operator fun plus(duration: Duration): OffsetTime = copy(time = time + duration)
+    operator fun plus(hours: Hours): OffsetTime = copy(time = time + hours)
+    operator fun plus(minutes: Minutes): OffsetTime = copy(time = time + minutes)
+    operator fun plus(seconds: Seconds): OffsetTime = copy(time = time + seconds)
+    operator fun plus(milliseconds: Milliseconds): OffsetTime = copy(time = time + milliseconds)
+    operator fun plus(microseconds: Microseconds): OffsetTime = copy(time = time + microseconds)
+    operator fun plus(nanoseconds: Nanoseconds): OffsetTime = copy(time = time + nanoseconds)
 
-    operator fun minus(duration: Duration) = copy(time = time - duration)
-    operator fun minus(hours: LongHours) = copy(time = time - hours)
-    operator fun minus(hours: IntHours) = copy(time = time - hours)
-    operator fun minus(minutes: LongMinutes) = copy(time = time - minutes)
-    operator fun minus(minutes: IntMinutes) = copy(time = time - minutes)
-    operator fun minus(seconds: LongSeconds) = copy(time = time - seconds)
-    operator fun minus(seconds: IntSeconds) = copy(time = time - seconds)
-    operator fun minus(milliseconds: LongMilliseconds) = copy(time = time - milliseconds)
-    operator fun minus(milliseconds: IntMilliseconds) = copy(time = time - milliseconds)
-    operator fun minus(microseconds: LongMicroseconds) = copy(time = time - microseconds)
-    operator fun minus(microseconds: IntMicroseconds) = copy(time = time - microseconds)
-    operator fun minus(nanoseconds: LongNanoseconds) = copy(time = time - nanoseconds)
-    operator fun minus(nanoseconds: IntNanoseconds) = copy(time = time - nanoseconds)
+    operator fun minus(duration: Duration): OffsetTime = copy(time = time - duration)
+    operator fun minus(hours: Hours): OffsetTime = copy(time = time - hours)
+    operator fun minus(minutes: Minutes): OffsetTime = copy(time = time - minutes)
+    operator fun minus(seconds: Seconds): OffsetTime = copy(time = time - seconds)
+    operator fun minus(milliseconds: Milliseconds): OffsetTime = copy(time = time - milliseconds)
+    operator fun minus(microseconds: Microseconds): OffsetTime = copy(time = time - microseconds)
+    operator fun minus(nanoseconds: Nanoseconds): OffsetTime = copy(time = time - nanoseconds)
 
     /**
      * Compares to another [OffsetTime] based on timeline order, ignoring offset differences.
@@ -127,7 +115,7 @@ class OffsetTime(
     fun copy(
         time: Time = this.time,
         offset: UtcOffset = this.offset
-    ) = OffsetTime(time, offset)
+    ): OffsetTime = OffsetTime(time, offset)
 
     /**
      * Returns a copy of this time with the values of any individual components replaced by the new values
@@ -140,29 +128,30 @@ class OffsetTime(
         second: Int = this.second,
         nanosecond: Int = this.nanosecond,
         offset: UtcOffset = this.offset
-    ) = OffsetTime(time.copy(hour, minute, second, nanosecond), offset)
+    ): OffsetTime = OffsetTime(time.copy(hour, minute, second, nanosecond), offset)
 
     companion object {
         /**
          * The smallest allowed [OffsetTime] -- `00:00+18:00`.
          */
-        val MIN = Time.MIN at UtcOffset.MAX
+        val MIN: OffsetTime = Time.MIN at UtcOffset.MAX
 
         /**
          * The largest allowed [OffsetTime] -- `23:59:59.999999999-18:00`.
          */
-        val MAX = Time.MAX at UtcOffset.MIN
+        val MAX: OffsetTime = Time.MAX at UtcOffset.MIN
 
         /**
          * Compares by UTC equivalent instant, then time. Using this `Comparator` guarantees a deterministic order when
          * sorting.
          */
-        val DEFAULT_SORT_ORDER = compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }.thenBy { it.time }
+        val DEFAULT_SORT_ORDER: Comparator<OffsetTime> =
+            compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }.thenBy { it.time }
 
         /**
          * Compares by timeline order only, ignoring any offset differences.
          */
-        val TIMELINE_ORDER = compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }
+        val TIMELINE_ORDER: Comparator<OffsetTime> = compareBy { it.nanosecondsSinceStartOfUtcDay }
     }
 }
 
