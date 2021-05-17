@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalContracts::class)
+
 package io.islandtime.measures
 
 import dev.erikchristensen.javamath2kmp.negateExact
@@ -312,7 +314,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components, assuming a 24-hour day length.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponentValues(
         action: (
             days: Long,
@@ -329,7 +330,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponentValues(
         action: (
             hours: Long,
@@ -345,7 +345,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponentValues(
         action: (
             minutes: Long,
@@ -360,7 +359,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponentValues(
         action: (
             seconds: Long,
@@ -374,7 +372,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components, assuming a 24-hour day length.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponents(
         action: (
             days: Days,
@@ -394,7 +391,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponents(
         action: (
             hours: Hours,
@@ -413,7 +409,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponents(
         action: (
             minutes: Minutes,
@@ -431,7 +426,6 @@ class Duration private constructor(
     /**
      * Breaks this duration down into individual unit components.
      */
-    @OptIn(ExperimentalContracts::class)
     inline fun <T> toComponents(
         action: (
             seconds: Seconds,
