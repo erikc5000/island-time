@@ -1,5 +1,6 @@
 package io.islandtime.base
 
+import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
 
 /**
@@ -10,62 +11,55 @@ import io.islandtime.measures.*
  */
 interface TimePoint<T> {
     /**
+     * The second of the Unix epoch.
+     */
+    val secondOfUnixEpoch: Long
+
+    /**
+     * The nanosecond of the second.
+     */
+    val nanosecond: Int
+
+    /**
+     * The millisecond of the Unix epoch.
+     */
+    val millisecondOfUnixEpoch: Long
+    
+    /**
      * The number of seconds since the Unix epoch of 1970-01-01T00:00Z.
      */
-    val secondsSinceUnixEpoch: LongSeconds
-
-    @Deprecated(
-        "Use additionalNanosecondsSinceUnixEpoch instead.",
-        ReplaceWith("this.additionalNanosecondsSinceUnixEpoch"),
-        DeprecationLevel.ERROR
-    )
-    val nanoOfSecondsSinceUnixEpoch: IntNanoseconds get() = additionalNanosecondsSinceUnixEpoch
+    val secondsSinceUnixEpoch: Seconds get() = secondOfUnixEpoch.seconds
 
     /**
      * The number of additional nanoseconds on top of [secondsSinceUnixEpoch].
      */
-    val additionalNanosecondsSinceUnixEpoch: IntNanoseconds
+    val additionalNanosecondsSinceUnixEpoch: Nanoseconds get() = nanosecond.nanoseconds
 
     /**
      * The number of milliseconds since the Unix epoch of 1970-01-01T00:00Z.
      */
-    val millisecondsSinceUnixEpoch: LongMilliseconds
+    val millisecondsSinceUnixEpoch: Milliseconds get() = millisecondOfUnixEpoch.milliseconds
 
     @Deprecated(
         "Use secondOfUnixEpoch instead.",
         ReplaceWith("this.secondOfUnixEpoch"),
         DeprecationLevel.ERROR
     )
-    val unixEpochSecond: Long get() = secondOfUnixEpoch
-
-    /**
-     * The second of the Unix epoch.
-     */
-    val secondOfUnixEpoch: Long get() = secondsSinceUnixEpoch.value
+    val unixEpochSecond: Long get() = deprecatedToError()
 
     @Deprecated(
         "Use nanosecond instead.",
         ReplaceWith("this.nanosecond"),
         DeprecationLevel.ERROR
     )
-    val unixEpochNanoOfSecond: Int get() = nanosecond
-
-    /**
-     * The nanosecond of the second.
-     */
-    val nanosecond: Int get() = additionalNanosecondsSinceUnixEpoch.value
+    val unixEpochNanoOfSecond: Int get() = deprecatedToError()
 
     @Deprecated(
         "Use millisecondOfUnixEpoch instead.",
         ReplaceWith("this.millisecondOfUnixEpoch"),
         DeprecationLevel.ERROR
     )
-    val unixEpochMillisecond: Long get() = millisecondOfUnixEpoch
-
-    /**
-     * The millisecond of the Unix epoch.
-     */
-    val millisecondOfUnixEpoch: Long get() = millisecondsSinceUnixEpoch.value
+    val unixEpochMillisecond: Long get() = deprecatedToError()
 
     /**
      * Checks if this time point represents the same instant as [other]. Unlike the equals operator, equality is
@@ -95,31 +89,19 @@ interface TimePoint<T> {
         }
     }
 
-    operator fun plus(hours: IntHours): T
-    operator fun plus(hours: LongHours): T
-    operator fun plus(minutes: IntMinutes): T
-    operator fun plus(minutes: LongMinutes): T
-    operator fun plus(seconds: IntSeconds): T
-    operator fun plus(seconds: LongSeconds): T
-    operator fun plus(milliseconds: IntMilliseconds): T
-    operator fun plus(milliseconds: LongMilliseconds): T
-    operator fun plus(microseconds: IntMicroseconds): T
-    operator fun plus(microseconds: LongMicroseconds): T
-    operator fun plus(nanoseconds: IntNanoseconds): T
-    operator fun plus(nanoseconds: LongNanoseconds): T
+    operator fun plus(hours: Hours): T
+    operator fun plus(minutes: Minutes): T
+    operator fun plus(seconds: Seconds): T
+    operator fun plus(milliseconds: Milliseconds): T
+    operator fun plus(microseconds: Microseconds): T
+    operator fun plus(nanoseconds: Nanoseconds): T
 
-    operator fun minus(hours: IntHours): T
-    operator fun minus(hours: LongHours): T
-    operator fun minus(minutes: IntMinutes): T
-    operator fun minus(minutes: LongMinutes): T
-    operator fun minus(seconds: IntSeconds): T
-    operator fun minus(seconds: LongSeconds): T
-    operator fun minus(milliseconds: IntMilliseconds): T
-    operator fun minus(milliseconds: LongMilliseconds): T
-    operator fun minus(microseconds: IntMicroseconds): T
-    operator fun minus(microseconds: LongMicroseconds): T
-    operator fun minus(nanoseconds: IntNanoseconds): T
-    operator fun minus(nanoseconds: LongNanoseconds): T
+    operator fun minus(hours: Hours): T
+    operator fun minus(minutes: Minutes): T
+    operator fun minus(seconds: Seconds): T
+    operator fun minus(milliseconds: Milliseconds): T
+    operator fun minus(microseconds: Microseconds): T
+    operator fun minus(nanoseconds: Nanoseconds): T
 
     companion object {
         /**

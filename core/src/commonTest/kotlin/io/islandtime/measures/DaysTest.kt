@@ -8,49 +8,21 @@ import kotlin.time.Duration as KotlinDuration
 
 class DaysTest {
     @Test
-    fun `IntDays can be compared to other IntDays`() {
+    fun `Days can be compared to other Days`() {
         assertTrue { 0.days < 1.days }
         assertTrue { 0.days == 0.days }
         assertTrue { 5.days > (-1).days }
     }
 
     @Test
-    fun `LongDays can be compared to other LongDays`() {
-        assertTrue { 0L.days < 1L.days }
-        assertTrue { 0L.days == 0L.days }
-        assertTrue { 5L.days > (-1L).days }
-    }
-
-    @Test
-    fun `toLongDays() converts IntDays to LongDays`() {
-        assertEquals(2L.days, 2.days.toLongDays())
-    }
-
-    @Test
-    fun `toIntDays() converts LongDays to IntDays`() {
-        assertEquals(2.days, 2L.days.toIntDays())
-    }
-
-    @Test
-    fun `IntDays_toString() converts zero days to 'P0D'`() {
+    fun `toString() converts zero days to 'P0D'`() {
         assertEquals("P0D", 0.days.toString())
     }
 
     @Test
-    fun `IntDays_toString() converts to ISO-8601 period representation`() {
+    fun `toString() converts to ISO-8601 period representation`() {
         assertEquals("P1D", 1.days.toString())
         assertEquals("-P1D", (-1).days.toString())
-    }
-
-    @Test
-    fun `LongDays_toString() converts zero days to 'P0D'`() {
-        assertEquals("P0D", 0L.days.toString())
-    }
-
-    @Test
-    fun `LongDays_toString() converts to ISO-8601 period representation`() {
-        assertEquals("P1D", 1L.days.toString())
-        assertEquals("-P1D", (-1L).days.toString())
     }
 
     @ExperimentalTime
@@ -65,9 +37,9 @@ class DaysTest {
     @ExperimentalTime
     @Test
     fun `conversion from Kotlin Duration`() {
-        assertEquals(0L.days, KotlinDuration.days(0).toIslandDays())
-        assertEquals(1L.days, KotlinDuration.days(1).toIslandDays())
-        assertEquals((-1L).days, KotlinDuration.days(-1L).toIslandDays())
+        assertEquals(0.days, KotlinDuration.days(0).toIslandDays())
+        assertEquals(1.days, KotlinDuration.days(1).toIslandDays())
+        assertEquals((-1).days, KotlinDuration.days(-1L).toIslandDays())
         assertEquals(Long.MIN_VALUE.days, KotlinDuration.days(Long.MIN_VALUE).toIslandDays())
     }
 }

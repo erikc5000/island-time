@@ -9,59 +9,43 @@ import kotlin.time.Duration as KotlinDuration
 
 class NanosecondsTest {
     @Test
-    fun `IntNanoseconds can be compared to other IntNanoseconds`() {
+    fun `Nanoseconds can be compared to other Nanoseconds`() {
         assertTrue { 0.nanoseconds < 1.nanoseconds }
         assertTrue { 0.nanoseconds == 0.nanoseconds }
         assertTrue { 5.nanoseconds > (-1).nanoseconds }
     }
 
     @Test
-    fun `LongNanoseconds can be compared to other LongNanoseconds`() {
-        assertTrue { 0L.nanoseconds < 1L.nanoseconds }
-        assertTrue { 0L.nanoseconds == 0L.nanoseconds }
-        assertTrue { 5L.nanoseconds > (-1L).nanoseconds }
-    }
-
-    @Test
     fun `absoluteValue returns the same value for 0 or positive values`() {
-        listOf(0, 1, Int.MAX_VALUE).forEach {
+        listOf(0, 1, Long.MAX_VALUE).forEach {
             assertEquals(it.nanoseconds, it.nanoseconds.absoluteValue)
-            assertEquals(it.toLong().nanoseconds, it.toLong().nanoseconds.absoluteValue)
         }
-
-        assertEquals(Long.MAX_VALUE.nanoseconds, Long.MAX_VALUE.nanoseconds.absoluteValue)
     }
 
     @Test
     fun `absoluteValue returns a positive value for negatives values`() {
         assertEquals(1.nanoseconds, (-1).nanoseconds.absoluteValue)
-        assertEquals(1L.nanoseconds, (-1L).nanoseconds.absoluteValue)
     }
 
     @Test
     fun `absoluteValue throws an exception when value is MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { Int.MIN_VALUE.nanoseconds.absoluteValue }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE.nanoseconds.absoluteValue }
     }
 
     @Test
     fun `unary minus negates the value`() {
         listOf(
-            0 to 0,
-            1 to -1,
-            -1 to 1,
-            Int.MAX_VALUE to -Int.MAX_VALUE
+            0L to 0L,
+            1L to -1L,
+            -1L to 1L,
+            Long.MAX_VALUE to -Long.MAX_VALUE
         ).forEach {
             assertEquals(it.second.nanoseconds, -it.first.nanoseconds)
-            assertEquals(it.second.toLong().nanoseconds, -it.first.toLong().nanoseconds)
         }
-
-        assertEquals((-Long.MAX_VALUE).nanoseconds, -Long.MAX_VALUE.nanoseconds)
     }
 
     @Test
     fun `unary minus throws an exception when value in MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { -Int.MIN_VALUE.nanoseconds }
         assertFailsWith<ArithmeticException> { -Long.MIN_VALUE.nanoseconds }
     }
 
@@ -81,33 +65,24 @@ class NanosecondsTest {
     @Test
     fun `division by a scalar value`() {
         assertEquals(3.nanoseconds, 9.nanoseconds / 3)
-        assertEquals(3L.nanoseconds, 9.nanoseconds / 3L)
-        assertEquals((-3L).nanoseconds, 9L.nanoseconds / -3)
-        assertEquals((-3L).nanoseconds, 9L.nanoseconds / -3L)
+        assertEquals(3.nanoseconds, 9.nanoseconds / 3L)
+        assertEquals((-3).nanoseconds, 9.nanoseconds / -3)
+        assertEquals((-3).nanoseconds, 9.nanoseconds / -3L)
     }
 
     @Test
     fun `dividing by -1 throws an exception when value is MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { Int.MIN_VALUE.nanoseconds / -1 }
         assertFailsWith<ArithmeticException> { Long.MIN_VALUE.nanoseconds / -1 }
-    }
-
-    @Test
-    fun `adding or subtracting IntNanoseconds forces lengthening to Long`() {
-        assertEquals(1L.nanoseconds, 0.nanoseconds + 1.nanoseconds)
-        assertEquals((-1L).nanoseconds, 0.nanoseconds - 1.nanoseconds)
     }
 
     @Test
     fun `rem operator works`() {
         assertEquals(1.nanoseconds, 5.nanoseconds % 2)
-        assertEquals(1L.nanoseconds, 5.nanoseconds % 2L)
-        assertEquals(1L.nanoseconds, 5L.nanoseconds % 2)
-        assertEquals(1L.nanoseconds, 5L.nanoseconds % 2L)
+        assertEquals(1.nanoseconds, 5.nanoseconds % 2L)
     }
 
     @Test
-    fun `inSeconds converts nanoseconds to seconds`() {
+    fun `inWholeSeconds converts Nanoseconds to Seconds`() {
         listOf(
             0 to 0,
             999_999_999 to 0,
@@ -115,13 +90,12 @@ class NanosecondsTest {
             1_000_000_000 to 1,
             -1_000_000_000 to -1
         ).forEach {
-            assertEquals(it.second.seconds, it.first.nanoseconds.inSeconds)
-            assertEquals(it.second.toLong().seconds, it.first.toLong().nanoseconds.inSeconds)
+            assertEquals(it.second.seconds, it.first.nanoseconds.inWholeSeconds)
         }
     }
 
     @Test
-    fun `inMicroseconds converts nanoseconds to Microseconds`() {
+    fun `inWholeMicroseconds converts Nanoseconds to Microseconds`() {
         listOf(
             0 to 0,
             999 to 0,
@@ -129,32 +103,28 @@ class NanosecondsTest {
             1_000 to 1,
             -1_000 to -1
         ).forEach {
-            assertEquals(it.second.microseconds, it.first.nanoseconds.inMicroseconds)
-            assertEquals(it.second.toLong().microseconds, it.first.toLong().nanoseconds.inMicroseconds)
+            assertEquals(it.second.microseconds, it.first.nanoseconds.inWholeMicroseconds)
         }
     }
 
     @Test
-    fun `toLong() and toLongNanoseconds() convert to Long`() {
-        listOf(0, -1, 1, Int.MIN_VALUE, Int.MAX_VALUE).forEach {
-            assertEquals(it.toLong(), it.nanoseconds.toLong())
-            assertEquals(it.toLong().nanoseconds, it.nanoseconds.toLongNanoseconds())
+    fun `toLong() converts to Long`() {
+        listOf(0, -1, 1, Long.MIN_VALUE, Long.MAX_VALUE).forEach {
+            assertEquals(it, it.nanoseconds.toLong())
         }
     }
 
     @Test
-    fun `toInt() and toIntNanoseconds() throw an exception if overflow occurs during conversion`() {
+    fun `toInt() throws an exception if overflow occurs during conversion`() {
         listOf(Int.MAX_VALUE + 1L, Int.MIN_VALUE - 1L).forEach {
             assertFailsWith<ArithmeticException> { it.nanoseconds.toInt() }
-            assertFailsWith<ArithmeticException> { it.nanoseconds.toIntNanoseconds() }
         }
     }
 
     @Test
-    fun `toInt() and toIntNanoseconds() convert to Int`() {
+    fun `toInt() converts to Int`() {
         listOf(0, -1, 1, Int.MAX_VALUE, Int.MIN_VALUE).forEach {
-            assertEquals(it.nanoseconds, it.toLong().nanoseconds.toIntNanoseconds())
-            assertEquals(it, it.toLong().nanoseconds.toInt())
+            assertEquals(it, it.nanoseconds.toInt())
         }
     }
 
@@ -170,10 +140,9 @@ class NanosecondsTest {
             -1_000_000_000 to "-PT1S",
             Int.MAX_VALUE to "PT2.147483647S",
             Int.MIN_VALUE + 1 to "-PT2.147483647S",
-            Int.MIN_VALUE to "-PT2.147483648S"
+            Int.MIN_VALUE to "-PT2.147483648S",
         ).forEach {
             assertEquals(it.second, it.first.nanoseconds.toString())
-            assertEquals(it.second, it.first.toLong().nanoseconds.toString())
         }
 
         listOf(
@@ -185,7 +154,7 @@ class NanosecondsTest {
     }
 
     @Test
-    fun `toComponents() with days, hours, minutes, seconds, milliseconds, and microseconds`() {
+    fun `toComponents() and toComponentValues() with days, hours, minutes, seconds, milliseconds, and microseconds`() {
         listOf(
             0 to listOf(0, 0, 0, 0, 0, 0, 0),
             1 to listOf(0, 0, 0, 0, 0, 0, 1),
@@ -202,21 +171,21 @@ class NanosecondsTest {
                     assertEquals(it.second[6].nanoseconds, nanoseconds)
                 }
 
-            it.first.toLong().nanoseconds
-                .toComponents { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds ->
-                    assertEquals(it.second[0].toLong().days, days)
-                    assertEquals(it.second[1].hours, hours)
-                    assertEquals(it.second[2].minutes, minutes)
-                    assertEquals(it.second[3].seconds, seconds)
-                    assertEquals(it.second[4].milliseconds, milliseconds)
-                    assertEquals(it.second[5].microseconds, microseconds)
-                    assertEquals(it.second[6].nanoseconds, nanoseconds)
+            it.first.nanoseconds
+                .toComponentValues { days, hours, minutes, seconds, milliseconds, microseconds, nanoseconds ->
+                    assertEquals(it.second[0].toLong(), days)
+                    assertEquals(it.second[1], hours)
+                    assertEquals(it.second[2], minutes)
+                    assertEquals(it.second[3], seconds)
+                    assertEquals(it.second[4], milliseconds)
+                    assertEquals(it.second[5], microseconds)
+                    assertEquals(it.second[6], nanoseconds)
                 }
         }
     }
 
     @Test
-    fun `toComponents() with microseconds`() {
+    fun `toComponents() and toComponentValues() with microseconds`() {
         listOf(
             0 to listOf(0, 0),
             1 to listOf(0, 1),
@@ -229,9 +198,9 @@ class NanosecondsTest {
                 assertEquals(it.second[1].nanoseconds, nanoseconds)
             }
 
-            it.first.toLong().nanoseconds.toComponents { microseconds, nanoseconds ->
-                assertEquals(it.second[0].toLong().microseconds, microseconds)
-                assertEquals(it.second[1].nanoseconds, nanoseconds)
+            it.first.nanoseconds.toComponentValues { microseconds, nanoseconds ->
+                assertEquals(it.second[0].toLong(), microseconds)
+                assertEquals(it.second[1], nanoseconds)
             }
         }
     }
@@ -241,19 +210,19 @@ class NanosecondsTest {
     fun `conversion to Kotlin Duration`() {
         assertEquals(KotlinDuration.nanoseconds(0), 0.nanoseconds.toKotlinDuration())
         assertEquals(KotlinDuration.nanoseconds(1), 1.nanoseconds.toKotlinDuration())
-        assertEquals(KotlinDuration.nanoseconds(-1), (-1L).nanoseconds.toKotlinDuration())
+        assertEquals(KotlinDuration.nanoseconds(-1), (-1).nanoseconds.toKotlinDuration())
         assertEquals(KotlinDuration.nanoseconds(Long.MIN_VALUE), Long.MIN_VALUE.nanoseconds.toKotlinDuration())
     }
 
     @ExperimentalTime
     @Test
     fun `conversion from Kotlin Duration`() {
-        assertEquals(0L.nanoseconds, KotlinDuration.nanoseconds(0).toIslandNanoseconds())
-        assertEquals(1L.nanoseconds, KotlinDuration.nanoseconds(1).toIslandNanoseconds())
-        assertEquals((-1L).nanoseconds, KotlinDuration.nanoseconds(-1L).toIslandNanoseconds())
+        assertEquals(0.nanoseconds, KotlinDuration.nanoseconds(0).toIslandNanoseconds())
+        assertEquals(1.nanoseconds, KotlinDuration.nanoseconds(1).toIslandNanoseconds())
+        assertEquals((-1).nanoseconds, KotlinDuration.nanoseconds(-1).toIslandNanoseconds())
 
         assertEquals(
-            Long.MIN_VALUE.nanoseconds.inMilliseconds.inNanoseconds,
+            Long.MIN_VALUE.nanoseconds.inWholeMilliseconds.inNanoseconds,
             KotlinDuration.nanoseconds(Long.MIN_VALUE).toIslandNanoseconds()
         )
     }

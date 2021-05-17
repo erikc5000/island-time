@@ -73,7 +73,7 @@ fun DateTime.toJavaLocalDateTime(): java.time.LocalDateTime {
 fun java.time.OffsetTime.toIslandOffsetTime(): OffsetTime {
     return OffsetTime(
         Time(hour, minute, second, nano),
-        UtcOffset(offset.totalSeconds.seconds)
+        UtcOffset.fromTotalSeconds(offset.totalSeconds)
     )
 }
 
@@ -83,7 +83,7 @@ fun java.time.OffsetTime.toIslandOffsetTime(): OffsetTime {
 fun OffsetTime.toJavaOffsetTime(): java.time.OffsetTime {
     return java.time.OffsetTime.of(
         java.time.LocalTime.of(hour, minute, second, nanosecond),
-        java.time.ZoneOffset.ofTotalSeconds(offset.totalSeconds.value)
+        java.time.ZoneOffset.ofTotalSeconds(offset.totalSecondsValue)
     )
 }
 
@@ -96,7 +96,7 @@ fun java.time.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
             Date(year, monthValue, dayOfMonth),
             Time(hour, minute, second, nano)
         ),
-        UtcOffset(offset.totalSeconds.seconds)
+        UtcOffset.fromTotalSeconds(offset.totalSeconds)
     )
 }
 
@@ -106,7 +106,7 @@ fun java.time.OffsetDateTime.toIslandOffsetDateTime(): OffsetDateTime {
 fun OffsetDateTime.toJavaOffsetDateTime(): java.time.OffsetDateTime {
     return java.time.OffsetDateTime.of(
         java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
-        java.time.ZoneOffset.ofTotalSeconds(offset.totalSeconds.value)
+        java.time.ZoneOffset.ofTotalSeconds(offset.totalSecondsValue)
     )
 }
 
@@ -120,7 +120,7 @@ fun java.time.ZonedDateTime.toIslandZonedDateTime(): ZonedDateTime {
             Time(hour, minute, second, nano)
         ),
         zone.toIslandTimeZone(),
-        UtcOffset(offset.totalSeconds.seconds)
+        UtcOffset.fromTotalSeconds(offset.totalSeconds)
     )
 }
 
@@ -131,7 +131,7 @@ fun ZonedDateTime.toJavaZonedDateTime(): java.time.ZonedDateTime {
     return java.time.ZonedDateTime.ofLocal(
         java.time.LocalDateTime.of(year, monthNumber, dayOfMonth, hour, minute, second, nanosecond),
         java.time.ZoneId.of(zone.id),
-        java.time.ZoneOffset.ofTotalSeconds(offset.totalSeconds.value)
+        java.time.ZoneOffset.ofTotalSeconds(offset.totalSecondsValue)
     )
 }
 
@@ -139,14 +139,14 @@ fun ZonedDateTime.toJavaZonedDateTime(): java.time.ZonedDateTime {
  * Converts this UTC offset to an equivalent Island Time [UtcOffset].
  */
 fun java.time.ZoneOffset.toIslandUtcOffset(): UtcOffset {
-    return UtcOffset(totalSeconds.seconds)
+    return UtcOffset.fromTotalSeconds(totalSeconds)
 }
 
 /**
  * Converts this UTC offset to an equivalent Java `ZoneOffset`.
  */
 fun UtcOffset.toJavaZoneOffset(): java.time.ZoneOffset {
-    return java.time.ZoneOffset.ofTotalSeconds(totalSeconds.value)
+    return java.time.ZoneOffset.ofTotalSeconds(totalSecondsValue)
 }
 
 /**
@@ -174,7 +174,7 @@ fun java.time.Duration.toIslandDuration(): Duration {
  * Converts this duration to an equivalent Java `Duration`.
  */
 fun Duration.toJavaDuration(): java.time.Duration {
-    return java.time.Duration.ofSeconds(seconds.value, nanosecondAdjustment.value.toLong())
+    return java.time.Duration.ofSeconds(seconds.value, nanosecondAdjustment.value)
 }
 
 /**
@@ -188,7 +188,7 @@ fun java.time.Period.toIslandPeriod(): Period {
  * Converts this period to an equivalent Java `Period`.
  */
 fun Period.toJavaPeriod(): java.time.Period {
-    return java.time.Period.of(years.value, months.value, days.value)
+    return java.time.Period.of(years.toInt(), months.toInt(), days.toInt())
 }
 
 /**
@@ -222,123 +222,63 @@ fun Year.toJavaYear(): java.time.Year {
 /**
  * Converts this duration to an equivalent Java `Period`.
  */
-fun IntCenturies.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+fun Centuries.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
 
 /**
  * Converts this duration to an equivalent Java `Period`.
  */
-fun LongCenturies.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+fun Decades.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
 
 /**
  * Converts this duration to an equivalent Java `Period`.
  */
-fun IntDecades.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+fun Years.toJavaPeriod(): java.time.Period = java.time.Period.ofYears(this.toInt())
 
 /**
  * Converts this duration to an equivalent Java `Period`.
  */
-fun LongDecades.toJavaPeriod(): java.time.Period = this.inYears.toJavaPeriod()
+fun Months.toJavaPeriod(): java.time.Period = java.time.Period.ofMonths(this.toInt())
 
 /**
  * Converts this duration to an equivalent Java `Period`.
  */
-fun IntYears.toJavaPeriod(): java.time.Period = java.time.Period.ofYears(value)
+fun Weeks.toJavaPeriod(): java.time.Period = java.time.Period.ofWeeks(this.toInt())
 
 /**
  * Converts this duration to an equivalent Java `Period`.
  */
-fun LongYears.toJavaPeriod(): java.time.Period = this.toIntYears().toJavaPeriod()
-
-/**
- * Converts this duration to an equivalent Java `Period`.
- */
-fun IntMonths.toJavaPeriod(): java.time.Period = java.time.Period.ofMonths(value)
-
-/**
- * Converts this duration to an equivalent Java `Period`.
- */
-fun LongMonths.toJavaPeriod(): java.time.Period = this.toIntMonths().toJavaPeriod()
-
-/**
- * Converts this duration to an equivalent Java `Period`.
- */
-fun IntWeeks.toJavaPeriod(): java.time.Period = java.time.Period.ofWeeks(value)
-
-/**
- * Converts this duration to an equivalent Java `Period`.
- */
-fun LongWeeks.toJavaPeriod(): java.time.Period = this.toIntWeeks().toJavaPeriod()
-
-/**
- * Converts this duration to an equivalent Java `Period`.
- */
-fun IntDays.toJavaPeriod(): java.time.Period = java.time.Period.ofDays(value)
-
-/**
- * Converts this duration to an equivalent Java `Period`.
- */
-fun LongDays.toJavaPeriod(): java.time.Period = this.toIntDays().toJavaPeriod()
+fun Days.toJavaPeriod(): java.time.Period = java.time.Period.ofDays(this.toInt())
 
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun IntDays.toJavaDuration(): java.time.Duration = java.time.Duration.ofDays(value.toLong())
+fun Days.toJavaDuration(): java.time.Duration = java.time.Duration.ofDays(value)
 
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun LongDays.toJavaDuration(): java.time.Duration = java.time.Duration.ofDays(value)
+fun Hours.toJavaDuration(): java.time.Duration = java.time.Duration.ofHours(value)
 
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun IntHours.toJavaDuration(): java.time.Duration = java.time.Duration.ofHours(value.toLong())
+fun Minutes.toJavaDuration(): java.time.Duration = java.time.Duration.ofMinutes(value)
 
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun LongHours.toJavaDuration(): java.time.Duration = java.time.Duration.ofHours(value)
+fun Seconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofSeconds(value)
 
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun IntMinutes.toJavaDuration(): java.time.Duration = java.time.Duration.ofMinutes(value.toLong())
+fun Milliseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofMillis(value)
 
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun LongMinutes.toJavaDuration(): java.time.Duration = java.time.Duration.ofMinutes(value)
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun IntSeconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofSeconds(value.toLong())
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun LongSeconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofSeconds(value)
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun IntMilliseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofMillis(value.toLong())
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun LongMilliseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofMillis(value)
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun IntMicroseconds.toJavaDuration(): java.time.Duration = this.toLongMicroseconds().toJavaDuration()
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun LongMicroseconds.toJavaDuration(): java.time.Duration {
-    val seconds = this.inSeconds
+fun Microseconds.toJavaDuration(): java.time.Duration {
+    val seconds = this.inWholeSeconds
     val nanoOfSeconds = (this % MICROSECONDS_PER_SECOND).inNanoseconds
     return java.time.Duration.ofSeconds(seconds.value, nanoOfSeconds.value)
 }
@@ -346,12 +286,7 @@ fun LongMicroseconds.toJavaDuration(): java.time.Duration {
 /**
  * Converts this duration to an equivalent Java `Duration`.
  */
-fun IntNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value.toLong())
-
-/**
- * Converts this duration to an equivalent Java `Duration`.
- */
-fun LongNanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value)
+fun Nanoseconds.toJavaDuration(): java.time.Duration = java.time.Duration.ofNanos(value)
 
 /**
  * Makes this clock compatible with Island Time's [Clock] interface.
@@ -369,5 +304,5 @@ private class WrappedJavaClock(private val clock: java.time.Clock) : Clock {
     override val zone: TimeZone get() = clock.zone.toIslandTimeZone()
     override fun readPlatformInstant(): PlatformInstant = clock.instant()
     override fun readInstant(): Instant = readPlatformInstant().toIslandInstant()
-    override fun readMilliseconds(): LongMilliseconds = clock.millis().milliseconds
+    override fun readMilliseconds(): Milliseconds = clock.millis().milliseconds
 }

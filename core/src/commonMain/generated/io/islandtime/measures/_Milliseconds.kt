@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("MillisecondsKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -18,13 +19,20 @@ import io.islandtime.`internal`.MILLISECONDS_PER_HOUR
 import io.islandtime.`internal`.MILLISECONDS_PER_MINUTE
 import io.islandtime.`internal`.MILLISECONDS_PER_SECOND
 import io.islandtime.`internal`.NANOSECONDS_PER_MILLISECOND
+import io.islandtime.`internal`.deprecatedToError
 import io.islandtime.`internal`.toZeroPaddedString
 import kotlin.Boolean
 import kotlin.Comparable
+import kotlin.Deprecated
+import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -33,416 +41,164 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Duration as KotlinDuration
 import kotlin.time.DurationUnit as KotlinDurationUnit
 
-/**
- * A number of milliseconds.
- */
+@Deprecated(
+  message = "Replace with Milliseconds.",
+  replaceWith = ReplaceWith("Milliseconds"),
+  level = DeprecationLevel.ERROR
+)
+public typealias IntMilliseconds = Milliseconds
+
+@Deprecated(
+  message = "Replace with Milliseconds.",
+  replaceWith = ReplaceWith("Milliseconds"),
+  level = DeprecationLevel.ERROR
+)
+public typealias LongMilliseconds = Milliseconds
+
 @JvmInline
-public value class IntMilliseconds(
-  /**
-   * The underlying value.
-   */
-  public val `value`: Int
-) : Comparable<IntMilliseconds> {
-  /**
-   * The absolute value of this duration.
-   * @throws ArithmeticException if overflow occurs
-   */
-  public val absoluteValue: IntMilliseconds
-    get() = IntMilliseconds(absExact(`value`))
-
-  /**
-   * Converts this duration to nanoseconds.
-   */
-  public val inNanoseconds: LongNanoseconds
-    get() = (`value`.toLong() * NANOSECONDS_PER_MILLISECOND).nanoseconds
-
-  /**
-   * Converts this duration to microseconds.
-   */
-  public val inMicroseconds: LongMicroseconds
-    get() = (`value`.toLong() * MICROSECONDS_PER_MILLISECOND).microseconds
-
-  /**
-   * Converts this duration to the number of whole seconds.
-   */
-  public val inSeconds: IntSeconds
-    get() = (`value` / MILLISECONDS_PER_SECOND).seconds
-
-  /**
-   * Converts this duration to the number of whole minutes.
-   */
-  public val inMinutes: IntMinutes
-    get() = (`value` / MILLISECONDS_PER_MINUTE).minutes
-
-  /**
-   * Converts this duration to the number of whole hours.
-   */
-  public val inHours: IntHours
-    get() = (`value` / MILLISECONDS_PER_HOUR).hours
-
-  /**
-   * Converts this duration to the number of whole days.
-   */
-  public val inDays: IntDays
-    get() = (`value` / MILLISECONDS_PER_DAY).days
-
-  /**
-   * Checks if this duration is zero.
-   */
-  public fun isZero(): Boolean = `value` == 0
-
-  /**
-   * Checks if this duration is negative.
-   */
-  public fun isNegative(): Boolean = `value` < 0
-
-  /**
-   * Checks if this duration is positive.
-   */
-  public fun isPositive(): Boolean = `value` > 0
-
-  public override fun compareTo(other: IntMilliseconds): Int = `value`.compareTo(other.`value`)
-
-  /**
-   * Converts this duration to an ISO-8601 time interval representation.
-   */
-  public override fun toString(): String {
-     return if (`value` == 0) {
-       "PT0S"
-     } else {
-       buildString {
-         val wholePart = (`value` / 1000).absoluteValue
-         val fractionalPart = (`value` % 1000).absoluteValue
-         if (`value` < 0) { append('-') }
-         append("PT")
-         append(wholePart)
-         if (fractionalPart > 0) {
-           append('.')
-           append(fractionalPart.toZeroPaddedString(3).dropLastWhile { it == '0' })
-         }
-         append('S')
-       }
-     }
-  }
-
-  /**
-   * Negates this duration.
-   * @throws ArithmeticException if overflow occurs
-   */
-  public operator fun unaryMinus(): IntMilliseconds = IntMilliseconds(`value`.negateExact())
-
-  /**
-   * Negates this duration without checking for overflow.
-   */
-  internal fun negateUnchecked(): IntMilliseconds = IntMilliseconds(-`value`)
-
-  /**
-   * Multiplies this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs
-   */
-  public operator fun times(scalar: Int): LongMilliseconds = this.toLongMilliseconds() * scalar
-
-  /**
-   * Multiplies this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs
-   */
-  public operator fun times(scalar: Long): LongMilliseconds = this.toLongMilliseconds() * scalar
-
-  /**
-   * Divides this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs or the scalar is zero
-   */
-  public operator fun div(scalar: Int): IntMilliseconds {
-     return if (scalar == -1) {
-       -this
-     } else {
-       IntMilliseconds(`value` / scalar)
-     }
-  }
-
-  /**
-   * Divides this duration by a scalar value.
-   * @throws ArithmeticException if the scalar is zero
-   */
-  public operator fun div(scalar: Long): LongMilliseconds = this.toLongMilliseconds() / scalar
-
-  public operator fun rem(scalar: Int): IntMilliseconds = IntMilliseconds(`value` % scalar)
-
-  public operator fun rem(scalar: Long): LongMilliseconds = this.toLongMilliseconds() % scalar
-
-  public operator fun plus(nanoseconds: IntNanoseconds): LongNanoseconds =
-      this.toLongMilliseconds().inNanoseconds + nanoseconds.toLongNanoseconds()
-
-  public operator fun minus(nanoseconds: IntNanoseconds): LongNanoseconds =
-      this.toLongMilliseconds().inNanoseconds - nanoseconds.toLongNanoseconds()
-
-  public operator fun plus(nanoseconds: LongNanoseconds): LongNanoseconds =
-      this.toLongMilliseconds().inNanoseconds + nanoseconds
-
-  public operator fun minus(nanoseconds: LongNanoseconds): LongNanoseconds =
-      this.toLongMilliseconds().inNanoseconds - nanoseconds
-
-  public operator fun plus(microseconds: IntMicroseconds): LongMicroseconds =
-      this.toLongMilliseconds().inMicroseconds + microseconds.toLongMicroseconds()
-
-  public operator fun minus(microseconds: IntMicroseconds): LongMicroseconds =
-      this.toLongMilliseconds().inMicroseconds - microseconds.toLongMicroseconds()
-
-  public operator fun plus(microseconds: LongMicroseconds): LongMicroseconds =
-      this.toLongMilliseconds().inMicroseconds + microseconds
-
-  public operator fun minus(microseconds: LongMicroseconds): LongMicroseconds =
-      this.toLongMilliseconds().inMicroseconds - microseconds
-
-  public operator fun plus(milliseconds: IntMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value`.toLong() plusExact milliseconds.value)
-
-  public operator fun minus(milliseconds: IntMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value`.toLong() minusExact milliseconds.value)
-
-  public operator fun plus(milliseconds: LongMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value`.toLong() plusExact milliseconds.value)
-
-  public operator fun minus(milliseconds: LongMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value`.toLong() minusExact milliseconds.value)
-
-  public operator fun plus(seconds: IntSeconds): LongMilliseconds = this.toLongMilliseconds() +
-      seconds.inMilliseconds
-
-  public operator fun minus(seconds: IntSeconds): LongMilliseconds = this.toLongMilliseconds() -
-      seconds.inMilliseconds
-
-  public operator fun plus(seconds: LongSeconds): LongMilliseconds = this.toLongMilliseconds() +
-      seconds.inMilliseconds
-
-  public operator fun minus(seconds: LongSeconds): LongMilliseconds = this.toLongMilliseconds() -
-      seconds.inMilliseconds
-
-  public operator fun plus(minutes: IntMinutes): LongMilliseconds = this.toLongMilliseconds() +
-      minutes.inMilliseconds
-
-  public operator fun minus(minutes: IntMinutes): LongMilliseconds = this.toLongMilliseconds() -
-      minutes.inMilliseconds
-
-  public operator fun plus(minutes: LongMinutes): LongMilliseconds = this.toLongMilliseconds() +
-      minutes.inMilliseconds
-
-  public operator fun minus(minutes: LongMinutes): LongMilliseconds = this.toLongMilliseconds() -
-      minutes.inMilliseconds
-
-  public operator fun plus(hours: IntHours): LongMilliseconds = this.toLongMilliseconds() +
-      hours.inMilliseconds
-
-  public operator fun minus(hours: IntHours): LongMilliseconds = this.toLongMilliseconds() -
-      hours.inMilliseconds
-
-  public operator fun plus(hours: LongHours): LongMilliseconds = this.toLongMilliseconds() +
-      hours.inMilliseconds
-
-  public operator fun minus(hours: LongHours): LongMilliseconds = this.toLongMilliseconds() -
-      hours.inMilliseconds
-
-  public operator fun plus(days: IntDays): LongMilliseconds = this.toLongMilliseconds() +
-      days.inMilliseconds
-
-  public operator fun minus(days: IntDays): LongMilliseconds = this.toLongMilliseconds() -
-      days.inMilliseconds
-
-  public operator fun plus(days: LongDays): LongMilliseconds = this.toLongMilliseconds() +
-      days.inMilliseconds
-
-  public operator fun minus(days: LongDays): LongMilliseconds = this.toLongMilliseconds() -
-      days.inMilliseconds
-
-  public inline fun <T> toComponents(action: (seconds: IntSeconds, milliseconds: IntMilliseconds) ->
-      T): T {
-    val seconds = (`value` / MILLISECONDS_PER_SECOND).seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).milliseconds
-    return action(seconds, milliseconds)
-  }
-
-  public inline fun <T> toComponents(action: (
-    minutes: IntMinutes,
-    seconds: IntSeconds,
-    milliseconds: IntMilliseconds
-  ) -> T): T {
-    val minutes = (`value` / MILLISECONDS_PER_MINUTE).minutes
-    val seconds = ((`value` % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).milliseconds
-    return action(minutes, seconds, milliseconds)
-  }
-
-  public inline fun <T> toComponents(action: (
-    hours: IntHours,
-    minutes: IntMinutes,
-    seconds: IntSeconds,
-    milliseconds: IntMilliseconds
-  ) -> T): T {
-    val hours = (`value` / MILLISECONDS_PER_HOUR).hours
-    val minutes = ((`value` % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).minutes
-    val seconds = ((`value` % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).milliseconds
-    return action(hours, minutes, seconds, milliseconds)
-  }
-
-  public inline fun <T> toComponents(action: (
-    days: IntDays,
-    hours: IntHours,
-    minutes: IntMinutes,
-    seconds: IntSeconds,
-    milliseconds: IntMilliseconds
-  ) -> T): T {
-    val days = (`value` / MILLISECONDS_PER_DAY).days
-    val hours = ((`value` % MILLISECONDS_PER_DAY) / MILLISECONDS_PER_HOUR).hours
-    val minutes = ((`value` % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).minutes
-    val seconds = ((`value` % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).milliseconds
-    return action(days, hours, minutes, seconds, milliseconds)
-  }
-
-  /**
-   * Converts this duration to a [kotlin.time.Duration].
-   */
-  @ExperimentalTime
-  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.milliseconds(`value`)
-
-  /**
-   * Converts this duration to [LongMilliseconds].
-   */
-  public fun toLongMilliseconds(): LongMilliseconds = LongMilliseconds(`value`.toLong())
-
-  /**
-   * Converts this duration to a `Long` value.
-   */
-  public fun toLong(): Long = `value`.toLong()
-
-  public companion object {
-    /**
-     * The smallest supported value.
-     */
-    public val MIN: IntMilliseconds = IntMilliseconds(Int.MIN_VALUE)
-
-    /**
-     * The largest supported value.
-     */
-    public val MAX: IntMilliseconds = IntMilliseconds(Int.MAX_VALUE)
-  }
-}
-
-/**
- * Converts this value to a duration of milliseconds.
- */
-public val Int.milliseconds: IntMilliseconds
-  get() = IntMilliseconds(this)
-
-/**
- * Multiplies this value by a duration of milliseconds.
- * @throws ArithmeticException if overflow occurs
- */
-public operator fun Int.times(milliseconds: IntMilliseconds): LongMilliseconds = milliseconds * this
-
-/**
- * Multiplies this value by a duration of milliseconds.
- * @throws ArithmeticException if overflow occurs
- */
-public operator fun Long.times(milliseconds: IntMilliseconds): LongMilliseconds = milliseconds *
-    this
-
-/**
- * A number of milliseconds.
- */
-@JvmInline
-public value class LongMilliseconds(
+public value class Milliseconds(
   /**
    * The underlying value.
    */
   public val `value`: Long
-) : Comparable<LongMilliseconds> {
+) : Comparable<Milliseconds> {
   /**
-   * The absolute value of this duration.
-   * @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
    */
-  public val absoluteValue: LongMilliseconds
-    get() = LongMilliseconds(absExact(`value`))
+  public val absoluteValue: Milliseconds
+    get() = Milliseconds(absExact(value))
 
   /**
-   * Converts this duration to nanoseconds.
-   * @throws ArithmeticException if overflow occurs
+   * Converts this duration to nanoseconds. @throws ArithmeticException if overflow occurs
    */
-  public val inNanoseconds: LongNanoseconds
-    get() = (`value` timesExact NANOSECONDS_PER_MILLISECOND).nanoseconds
+  public val inNanoseconds: Nanoseconds
+    get() = Nanoseconds(value timesExact NANOSECONDS_PER_MILLISECOND)
 
   /**
    * Converts this duration to nanoseconds without checking for overflow.
    */
-  internal val inNanosecondsUnchecked: LongNanoseconds
-    get() = (`value` * NANOSECONDS_PER_MILLISECOND).nanoseconds
+  internal val inNanosecondsUnchecked: Nanoseconds
+    get() = Nanoseconds(value * NANOSECONDS_PER_MILLISECOND)
 
   /**
-   * Converts this duration to microseconds.
-   * @throws ArithmeticException if overflow occurs
+   * Converts this duration to microseconds. @throws ArithmeticException if overflow occurs
    */
-  public val inMicroseconds: LongMicroseconds
-    get() = (`value` timesExact MICROSECONDS_PER_MILLISECOND).microseconds
+  public val inMicroseconds: Microseconds
+    get() = Microseconds(value timesExact MICROSECONDS_PER_MILLISECOND)
 
   /**
    * Converts this duration to microseconds without checking for overflow.
    */
-  internal val inMicrosecondsUnchecked: LongMicroseconds
-    get() = (`value` * MICROSECONDS_PER_MILLISECOND).microseconds
+  internal val inMicrosecondsUnchecked: Microseconds
+    get() = Microseconds(value * MICROSECONDS_PER_MILLISECOND)
 
   /**
    * Converts this duration to the number of whole seconds.
    */
-  public val inSeconds: LongSeconds
-    get() = (`value` / MILLISECONDS_PER_SECOND).seconds
+  public val inWholeSeconds: Seconds
+    get() = Seconds(value / MILLISECONDS_PER_SECOND)
+
+  @Deprecated(
+    message = "Use inWholeSeconds instead.",
+    replaceWith = ReplaceWith("this.inWholeSeconds"),
+    level = DeprecationLevel.ERROR
+  )
+  public val inSeconds: Seconds
+    get() = deprecatedToError()
 
   /**
    * Converts this duration to the number of whole minutes.
    */
-  public val inMinutes: LongMinutes
-    get() = (`value` / MILLISECONDS_PER_MINUTE).minutes
+  public val inWholeMinutes: Minutes
+    get() = Minutes(value / MILLISECONDS_PER_MINUTE)
+
+  @Deprecated(
+    message = "Use inWholeMinutes instead.",
+    replaceWith = ReplaceWith("this.inWholeMinutes"),
+    level = DeprecationLevel.ERROR
+  )
+  public val inMinutes: Minutes
+    get() = deprecatedToError()
 
   /**
    * Converts this duration to the number of whole hours.
    */
-  public val inHours: LongHours
-    get() = (`value` / MILLISECONDS_PER_HOUR).hours
+  public val inWholeHours: Hours
+    get() = Hours(value / MILLISECONDS_PER_HOUR)
+
+  @Deprecated(
+    message = "Use inWholeHours instead.",
+    replaceWith = ReplaceWith("this.inWholeHours"),
+    level = DeprecationLevel.ERROR
+  )
+  public val inHours: Hours
+    get() = deprecatedToError()
 
   /**
    * Converts this duration to the number of whole days.
    */
-  public val inDays: LongDays
-    get() = (`value` / MILLISECONDS_PER_DAY).days
+  public val inWholeDays: Days
+    get() = Days(value / MILLISECONDS_PER_DAY)
+
+  @Deprecated(
+    message = "Use inWholeDays instead.",
+    replaceWith = ReplaceWith("this.inWholeDays"),
+    level = DeprecationLevel.ERROR
+  )
+  public val inDays: Days
+    get() = deprecatedToError()
+
+  public constructor(`value`: Int) : this(value.toLong())
 
   /**
    * Checks if this duration is zero.
    */
-  public fun isZero(): Boolean = `value` == 0L
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this == 0L.milliseconds"),
+    level = DeprecationLevel.ERROR
+  )
+  public fun isZero(): Boolean = value == 0L
 
   /**
    * Checks if this duration is negative.
    */
-  public fun isNegative(): Boolean = `value` < 0L
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this < 0L.milliseconds"),
+    level = DeprecationLevel.ERROR
+  )
+  public fun isNegative(): Boolean = value < 0L
 
   /**
    * Checks if this duration is positive.
    */
-  public fun isPositive(): Boolean = `value` > 0L
+  @Deprecated(
+    message = "Replace with direct comparison.",
+    replaceWith = ReplaceWith("this > 0L.milliseconds"),
+    level = DeprecationLevel.ERROR
+  )
+  public fun isPositive(): Boolean = value > 0L
 
-  public override fun compareTo(other: LongMilliseconds): Int = `value`.compareTo(other.`value`)
+  public override fun compareTo(other: Milliseconds): Int = value.compareTo(other.value)
+
+  /**
+   * Converts this duration to a [kotlin.time.Duration].
+   */
+  @ExperimentalTime
+  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.milliseconds(value)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
   public override fun toString(): String {
-     return if (`value` == 0L) {
+     return if (value == 0L) {
        "PT0S"
      } else {
        buildString {
-         val wholePart = (`value` / 1000).absoluteValue
-         val fractionalPart = ((`value` % 1000).toInt()).absoluteValue
-         if (`value` < 0) { append('-') }
+         val wholePart = (value / 1000).absoluteValue
+         val fractionalPart = (value % 1000).toInt().absoluteValue
+         if (value < 0) { append('-') }
          append("PT")
          append(wholePart)
          if (fractionalPart > 0) {
@@ -455,237 +211,267 @@ public value class LongMilliseconds(
   }
 
   /**
-   * Negates this duration.
-   * @throws ArithmeticException if overflow occurs
+   * Negates this duration. @throws ArithmeticException if overflow occurs
    */
-  public operator fun unaryMinus(): LongMilliseconds = LongMilliseconds(`value`.negateExact())
+  public operator fun unaryMinus(): Milliseconds = Milliseconds(value.negateExact())
 
   /**
    * Negates this duration without checking for overflow.
    */
-  internal fun negateUnchecked(): LongMilliseconds = LongMilliseconds(-`value`)
+  internal fun negateUnchecked(): Milliseconds = Milliseconds(-value)
+
+  public operator fun plus(nanoseconds: Nanoseconds): Nanoseconds = this.inNanoseconds + nanoseconds
+
+  public operator fun minus(nanoseconds: Nanoseconds): Nanoseconds = this.inNanoseconds -
+      nanoseconds
+
+  public operator fun plus(microseconds: Microseconds): Microseconds = this.inMicroseconds +
+      microseconds
+
+  public operator fun minus(microseconds: Microseconds): Microseconds = this.inMicroseconds -
+      microseconds
+
+  public operator fun plus(milliseconds: Milliseconds): Milliseconds = Milliseconds(value plusExact
+      milliseconds.value)
+
+  public operator fun minus(milliseconds: Milliseconds): Milliseconds =
+      Milliseconds(value minusExact milliseconds.value)
+
+  public operator fun plus(seconds: Seconds): Milliseconds = this + seconds.inMilliseconds
+
+  public operator fun minus(seconds: Seconds): Milliseconds = this - seconds.inMilliseconds
+
+  public operator fun plus(minutes: Minutes): Milliseconds = this + minutes.inMilliseconds
+
+  public operator fun minus(minutes: Minutes): Milliseconds = this - minutes.inMilliseconds
+
+  public operator fun plus(hours: Hours): Milliseconds = this + hours.inMilliseconds
+
+  public operator fun minus(hours: Hours): Milliseconds = this - hours.inMilliseconds
+
+  public operator fun plus(days: Days): Milliseconds = this + days.inMilliseconds
+
+  public operator fun minus(days: Days): Milliseconds = this - days.inMilliseconds
 
   /**
-   * Multiplies this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
    */
-  public operator fun times(scalar: Int): LongMilliseconds = LongMilliseconds(`value` timesExact
-      scalar)
+  public operator fun times(scalar: Int): Milliseconds = Milliseconds(value timesExact scalar)
 
   /**
-   * Multiplies this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs
+   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
+   * or the scalar is zero
    */
-  public operator fun times(scalar: Long): LongMilliseconds = LongMilliseconds(`value` timesExact
-      scalar)
-
-  /**
-   * Divides this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs or the scalar is zero
-   */
-  public operator fun div(scalar: Int): LongMilliseconds {
+  public operator fun div(scalar: Int): Milliseconds {
      return if (scalar == -1) {
        -this
      } else {
-       LongMilliseconds(`value` / scalar)
+       Milliseconds(value / scalar)
      }
   }
 
   /**
-   * Divides this duration by a scalar value.
-   * @throws ArithmeticException if overflow occurs or the scalar is zero
+   * Returns the remainder of this duration divided by a scalar value.
    */
-  public operator fun div(scalar: Long): LongMilliseconds {
+  public operator fun rem(scalar: Int): Milliseconds = Milliseconds(value % scalar)
+
+  /**
+   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   */
+  public operator fun times(scalar: Long): Milliseconds = Milliseconds(value timesExact scalar)
+
+  /**
+   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
+   * or the scalar is zero
+   */
+  public operator fun div(scalar: Long): Milliseconds {
      return if (scalar == -1L) {
        -this
      } else {
-       LongMilliseconds(`value` / scalar)
+       Milliseconds(value / scalar)
      }
   }
 
-  public operator fun rem(scalar: Int): LongMilliseconds = LongMilliseconds(`value` % scalar)
+  /**
+   * Returns the remainder of this duration divided by a scalar value.
+   */
+  public operator fun rem(scalar: Long): Milliseconds = Milliseconds(value % scalar)
 
-  public operator fun rem(scalar: Long): LongMilliseconds = LongMilliseconds(`value` % scalar)
-
-  public operator fun plus(nanoseconds: IntNanoseconds): LongNanoseconds = this.inNanoseconds +
-      nanoseconds
-
-  public operator fun minus(nanoseconds: IntNanoseconds): LongNanoseconds = this.inNanoseconds -
-      nanoseconds
-
-  public operator fun plus(nanoseconds: LongNanoseconds): LongNanoseconds = this.inNanoseconds +
-      nanoseconds
-
-  public operator fun minus(nanoseconds: LongNanoseconds): LongNanoseconds = this.inNanoseconds -
-      nanoseconds
-
-  public operator fun plus(microseconds: IntMicroseconds): LongMicroseconds = this.inMicroseconds +
-      microseconds
-
-  public operator fun minus(microseconds: IntMicroseconds): LongMicroseconds = this.inMicroseconds -
-      microseconds
-
-  public operator fun plus(microseconds: LongMicroseconds): LongMicroseconds = this.inMicroseconds +
-      microseconds
-
-  public operator fun minus(microseconds: LongMicroseconds): LongMicroseconds =
-      this.inMicroseconds - microseconds
-
-  public operator fun plus(milliseconds: IntMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value` plusExact milliseconds.value)
-
-  public operator fun minus(milliseconds: IntMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value` minusExact milliseconds.value)
-
-  public operator fun plus(milliseconds: LongMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value` plusExact milliseconds.value)
-
-  public operator fun minus(milliseconds: LongMilliseconds): LongMilliseconds =
-      LongMilliseconds(`value` minusExact milliseconds.value)
-
-  public operator fun plus(seconds: IntSeconds): LongMilliseconds = this + seconds.inMilliseconds
-
-  public operator fun minus(seconds: IntSeconds): LongMilliseconds = this - seconds.inMilliseconds
-
-  public operator fun plus(seconds: LongSeconds): LongMilliseconds = this + seconds.inMilliseconds
-
-  public operator fun minus(seconds: LongSeconds): LongMilliseconds = this - seconds.inMilliseconds
-
-  public operator fun plus(minutes: IntMinutes): LongMilliseconds = this + minutes.inMilliseconds
-
-  public operator fun minus(minutes: IntMinutes): LongMilliseconds = this - minutes.inMilliseconds
-
-  public operator fun plus(minutes: LongMinutes): LongMilliseconds = this + minutes.inMilliseconds
-
-  public operator fun minus(minutes: LongMinutes): LongMilliseconds = this - minutes.inMilliseconds
-
-  public operator fun plus(hours: IntHours): LongMilliseconds = this + hours.inMilliseconds
-
-  public operator fun minus(hours: IntHours): LongMilliseconds = this - hours.inMilliseconds
-
-  public operator fun plus(hours: LongHours): LongMilliseconds = this + hours.inMilliseconds
-
-  public operator fun minus(hours: LongHours): LongMilliseconds = this - hours.inMilliseconds
-
-  public operator fun plus(days: IntDays): LongMilliseconds = this + days.inMilliseconds
-
-  public operator fun minus(days: IntDays): LongMilliseconds = this - days.inMilliseconds
-
-  public operator fun plus(days: LongDays): LongMilliseconds = this + days.inMilliseconds
-
-  public operator fun minus(days: LongDays): LongMilliseconds = this - days.inMilliseconds
-
-  public inline fun <T> toComponents(action: (seconds: LongSeconds,
-      milliseconds: IntMilliseconds) -> T): T {
-    val seconds = (`value` / MILLISECONDS_PER_SECOND).seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).toInt().milliseconds
+  public inline fun <T> toComponentValues(action: (seconds: Long, milliseconds: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+    val seconds = (value / MILLISECONDS_PER_SECOND)
+    val milliseconds = (value % MILLISECONDS_PER_SECOND).toInt()
     return action(seconds, milliseconds)
   }
 
-  public inline fun <T> toComponents(action: (
-    minutes: LongMinutes,
-    seconds: IntSeconds,
-    milliseconds: IntMilliseconds
+  public inline fun <T> toComponents(action: (seconds: Seconds, milliseconds: Milliseconds) -> T):
+      T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+     return toComponentValues { seconds, milliseconds ->
+         action(Seconds(seconds), Milliseconds(milliseconds))
+     }
+  }
+
+  public inline fun <T> toComponentValues(action: (
+    minutes: Long,
+    seconds: Int,
+    milliseconds: Int
   ) -> T): T {
-    val minutes = (`value` / MILLISECONDS_PER_MINUTE).minutes
-    val seconds = ((`value` % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toInt().seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).toInt().milliseconds
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+    val minutes = (value / MILLISECONDS_PER_MINUTE)
+    val seconds = ((value % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toInt()
+    val milliseconds = (value % MILLISECONDS_PER_SECOND).toInt()
     return action(minutes, seconds, milliseconds)
   }
 
   public inline fun <T> toComponents(action: (
-    hours: LongHours,
-    minutes: IntMinutes,
-    seconds: IntSeconds,
-    milliseconds: IntMilliseconds
+    minutes: Minutes,
+    seconds: Seconds,
+    milliseconds: Milliseconds
   ) -> T): T {
-    val hours = (`value` / MILLISECONDS_PER_HOUR).hours
-    val minutes = ((`value` % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).toInt().minutes
-    val seconds = ((`value` % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toInt().seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).toInt().milliseconds
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+     return toComponentValues { minutes, seconds, milliseconds ->
+         action(Minutes(minutes), Seconds(seconds), Milliseconds(milliseconds))
+     }
+  }
+
+  public inline fun <T> toComponentValues(action: (
+    hours: Long,
+    minutes: Int,
+    seconds: Int,
+    milliseconds: Int
+  ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+    val hours = (value / MILLISECONDS_PER_HOUR)
+    val minutes = ((value % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).toInt()
+    val seconds = ((value % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toInt()
+    val milliseconds = (value % MILLISECONDS_PER_SECOND).toInt()
     return action(hours, minutes, seconds, milliseconds)
   }
 
   public inline fun <T> toComponents(action: (
-    days: LongDays,
-    hours: IntHours,
-    minutes: IntMinutes,
-    seconds: IntSeconds,
-    milliseconds: IntMilliseconds
+    hours: Hours,
+    minutes: Minutes,
+    seconds: Seconds,
+    milliseconds: Milliseconds
   ) -> T): T {
-    val days = (`value` / MILLISECONDS_PER_DAY).days
-    val hours = ((`value` % MILLISECONDS_PER_DAY) / MILLISECONDS_PER_HOUR).toInt().hours
-    val minutes = ((`value` % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).toInt().minutes
-    val seconds = ((`value` % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toInt().seconds
-    val milliseconds = (`value` % MILLISECONDS_PER_SECOND).toInt().milliseconds
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+     return toComponentValues { hours, minutes, seconds, milliseconds ->
+         action(Hours(hours), Minutes(minutes), Seconds(seconds), Milliseconds(milliseconds))
+     }
+  }
+
+  public inline fun <T> toComponentValues(action: (
+    days: Long,
+    hours: Int,
+    minutes: Int,
+    seconds: Int,
+    milliseconds: Int
+  ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+    val days = (value / MILLISECONDS_PER_DAY)
+    val hours = ((value % MILLISECONDS_PER_DAY) / MILLISECONDS_PER_HOUR).toInt()
+    val minutes = ((value % MILLISECONDS_PER_HOUR) / MILLISECONDS_PER_MINUTE).toInt()
+    val seconds = ((value % MILLISECONDS_PER_MINUTE) / MILLISECONDS_PER_SECOND).toInt()
+    val milliseconds = (value % MILLISECONDS_PER_SECOND).toInt()
     return action(days, hours, minutes, seconds, milliseconds)
   }
 
-  /**
-   * Converts this duration to a [kotlin.time.Duration].
-   */
-  @ExperimentalTime
-  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.milliseconds(`value`)
+  public inline fun <T> toComponents(action: (
+    days: Days,
+    hours: Hours,
+    minutes: Minutes,
+    seconds: Seconds,
+    milliseconds: Milliseconds
+  ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
+     return toComponentValues { days, hours, minutes, seconds, milliseconds ->
+         action(Days(days), Hours(hours), Minutes(minutes), Seconds(seconds),
+        Milliseconds(milliseconds))
+     }
+  }
 
   /**
-   * Converts this duration to [IntMilliseconds].
-   * @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
    */
-  public fun toIntMilliseconds(): IntMilliseconds = IntMilliseconds(`value`.toIntExact())
-
-  /**
-   * Converts this duration to [IntMilliseconds] without checking for overflow.
-   */
-  @PublishedApi
-  internal fun toIntMillisecondsUnchecked(): IntMilliseconds = IntMilliseconds(`value`.toInt())
-
-  /**
-   * Converts this duration to an `Int` value.
-   * @throws ArithmeticException if overflow occurs
-   */
-  public fun toInt(): Int = `value`.toIntExact()
+  public fun toInt(): Int = value.toIntExact()
 
   /**
    * Converts this duration to an `Int` value without checking for overflow.
    */
-  internal fun toIntUnchecked(): Int = `value`.toInt()
+  internal fun toIntUnchecked(): Int = value.toInt()
+
+  /**
+   * Converts this duration to [IntMilliseconds]. @throws ArithmeticException if overflow occurs
+   */
+  @Deprecated(
+    message = "The 'Int' class no longer exists.",
+    replaceWith = ReplaceWith("this"),
+    level = DeprecationLevel.ERROR
+  )
+  public fun toIntMilliseconds(): Milliseconds = this
+
+  /**
+   * Converts this duration to [IntMilliseconds] without checking for overflow.
+   */
+  @Deprecated(
+    message = "The 'Int' class no longer exists.",
+    replaceWith = ReplaceWith("this"),
+    level = DeprecationLevel.ERROR
+  )
+  @PublishedApi
+  internal fun toIntMillisecondsUnchecked(): Milliseconds = this
+
+  /**
+   * Converts this duration to a `Long` value.
+   */
+  public fun toLong(): Long = value
+
+  /**
+   * Converts this duration to a `Double` value.
+   */
+  public fun toDouble(): Double = value.toDouble()
 
   public companion object {
     /**
      * The smallest supported value.
      */
-    public val MIN: LongMilliseconds = LongMilliseconds(Long.MIN_VALUE)
+    public val MIN: Milliseconds = Milliseconds(Long.MIN_VALUE)
 
     /**
      * The largest supported value.
      */
-    public val MAX: LongMilliseconds = LongMilliseconds(Long.MAX_VALUE)
+    public val MAX: Milliseconds = Milliseconds(Long.MAX_VALUE)
   }
 }
 
 /**
  * Converts this value to a duration of milliseconds.
  */
-public val Long.milliseconds: LongMilliseconds
-  get() = LongMilliseconds(this)
+public val Int.milliseconds: Milliseconds
+  get() = Milliseconds(this)
 
 /**
- * Multiplies this value by a duration of milliseconds.
- * @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of milliseconds. @throws ArithmeticException if overflow
+ * occurs
  */
-public operator fun Int.times(milliseconds: LongMilliseconds): LongMilliseconds = milliseconds *
-    this
+public operator fun Int.times(milliseconds: Milliseconds): Milliseconds = milliseconds * this
 
 /**
- * Multiplies this value by a duration of milliseconds.
- * @throws ArithmeticException if overflow occurs
+ * Converts this value to a duration of milliseconds.
  */
-public operator fun Long.times(milliseconds: LongMilliseconds): LongMilliseconds = milliseconds *
-    this
+public val Long.milliseconds: Milliseconds
+  get() = Milliseconds(this)
 
 /**
- * Converts this duration to Island Time [LongMilliseconds].
+ * Multiplies this value by a duration of milliseconds. @throws ArithmeticException if overflow
+ * occurs
+ */
+public operator fun Long.times(milliseconds: Milliseconds): Milliseconds = milliseconds * this
+
+/**
+ * Converts this duration to Island Time [Milliseconds].
  */
 @ExperimentalTime
-public fun KotlinDuration.toIslandMilliseconds(): LongMilliseconds =
-    LongMilliseconds(this.toLong(KotlinDurationUnit.MILLISECONDS))
+public fun KotlinDuration.toIslandMilliseconds(): Milliseconds =
+    Milliseconds(this.toLong(KotlinDurationUnit.MILLISECONDS))

@@ -251,8 +251,8 @@ class PeriodTest {
 
     @Test
     fun `normalized() throws an exception when overflow occurs`() {
-        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.years, Int.MAX_VALUE.months).normalized() }
-        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months).normalized() }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MAX_VALUE.years, Long.MAX_VALUE.months).normalized() }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.months).normalized() }
     }
 
     @Test
@@ -263,12 +263,12 @@ class PeriodTest {
     @Test
     fun `unary minus throws an exception when overflow occurs`() {
         listOf(
-            periodOf(Int.MIN_VALUE.years),
-            periodOf(Int.MIN_VALUE.months),
-            periodOf(Int.MIN_VALUE.days),
-            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months),
-            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.days),
-            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months, Int.MIN_VALUE.days)
+            periodOf(Long.MIN_VALUE.years),
+            periodOf(Long.MIN_VALUE.months),
+            periodOf(Long.MIN_VALUE.days),
+            periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.months),
+            periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.days),
+            periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.months, Long.MIN_VALUE.days)
         ).forEach {
             assertFailsWith<ArithmeticException> { -it }
         }
@@ -356,34 +356,34 @@ class PeriodTest {
     
     @Test
     fun `adding or subtracting years causes an exception on overflow`() {
-        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.years) + 1.years }
-        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.years) - 1.years }
-        assertFailsWith<ArithmeticException> { periodOf(1.years) + Int.MAX_VALUE.years }
-        assertFailsWith<ArithmeticException> { periodOf((-1).years) + Int.MIN_VALUE.years }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MAX_VALUE.years) + 1.years }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MIN_VALUE.years) - 1.years }
+        assertFailsWith<ArithmeticException> { periodOf(1.years) + Long.MAX_VALUE.years }
+        assertFailsWith<ArithmeticException> { periodOf((-1).years) + Long.MIN_VALUE.years }
     }
 
     @Test
     fun `adding or subtracting months causes an exception on overflow`() {
-        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.months) + 1.months }
-        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.months) - 1.months }
-        assertFailsWith<ArithmeticException> { periodOf(1.months) + Int.MAX_VALUE.months }
-        assertFailsWith<ArithmeticException> { periodOf((-1).months) + Int.MIN_VALUE.months }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MAX_VALUE.months) + 1.months }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MIN_VALUE.months) - 1.months }
+        assertFailsWith<ArithmeticException> { periodOf(1.months) + Long.MAX_VALUE.months }
+        assertFailsWith<ArithmeticException> { periodOf((-1).months) + Long.MIN_VALUE.months }
     }
 
     @Test
     fun `adding or subtracting weeks causes an exception on overflow`() {
-        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.days) + 1.weeks }
-        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.days) - 1.weeks }
-        assertFailsWith<ArithmeticException> { periodOf(1.days) + Int.MAX_VALUE.weeks }
-        assertFailsWith<ArithmeticException> { periodOf((-1).days) + Int.MIN_VALUE.weeks }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MAX_VALUE.days) + 1.weeks }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MIN_VALUE.days) - 1.weeks }
+        assertFailsWith<ArithmeticException> { periodOf(1.days) + Long.MAX_VALUE.weeks }
+        assertFailsWith<ArithmeticException> { periodOf((-1).days) + Long.MIN_VALUE.weeks }
     }
 
     @Test
     fun `adding or subtracting days causes an exception on overflow`() {
-        assertFailsWith<ArithmeticException> { periodOf(Int.MAX_VALUE.days) + 1.days }
-        assertFailsWith<ArithmeticException> { periodOf(Int.MIN_VALUE.days) - 1.days }
-        assertFailsWith<ArithmeticException> { periodOf(1.days) + Int.MAX_VALUE.days }
-        assertFailsWith<ArithmeticException> { periodOf((-1).days) + Int.MIN_VALUE.days }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MAX_VALUE.days) + 1.days }
+        assertFailsWith<ArithmeticException> { periodOf(Long.MIN_VALUE.days) - 1.days }
+        assertFailsWith<ArithmeticException> { periodOf(1.days) + Long.MAX_VALUE.days }
+        assertFailsWith<ArithmeticException> { periodOf((-1).days) + Long.MIN_VALUE.days }
     }
 
     @Test
@@ -407,18 +407,18 @@ class PeriodTest {
     @Test
     fun `multiplication causes an exception when overflow occurs`() {
         listOf(
-            periodOf(Int.MIN_VALUE.years),
-            periodOf(Int.MIN_VALUE.months),
-            periodOf(Int.MIN_VALUE.days),
-            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months),
-            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.days),
-            periodOf(Int.MIN_VALUE.years, Int.MIN_VALUE.months, Int.MIN_VALUE.days)
+            periodOf(Long.MIN_VALUE.years),
+            periodOf(Long.MIN_VALUE.months),
+            periodOf(Long.MIN_VALUE.days),
+            periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.months),
+            periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.days),
+            periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.months, Long.MIN_VALUE.days)
         ).forEach {
             assertFailsWith<ArithmeticException> { it * -1 }
         }
 
-        assertFailsWith<ArithmeticException> { periodOf(1.weeks) * Int.MAX_VALUE }
-        assertFailsWith<ArithmeticException> { Int.MAX_VALUE * periodOf(2.days) }
+        assertFailsWith<ArithmeticException> { periodOf(1.weeks) * Long.MAX_VALUE }
+        assertFailsWith<ArithmeticException> { Long.MAX_VALUE * periodOf(2.days) }
     }
 
     @Test

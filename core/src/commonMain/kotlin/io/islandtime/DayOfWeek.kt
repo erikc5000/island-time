@@ -6,8 +6,7 @@ import io.islandtime.format.DateTimeTextProvider
 import io.islandtime.format.TextStyle
 import io.islandtime.internal.DAYS_PER_WEEK
 import io.islandtime.locale.Locale
-import io.islandtime.measures.IntDays
-import io.islandtime.measures.LongDays
+import io.islandtime.measures.Days
 import io.islandtime.measures.days
 
 /**
@@ -72,22 +71,12 @@ enum class DayOfWeek {
     /**
      * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
      */
-    operator fun plus(days: IntDays): DayOfWeek = plus(days.value % DAYS_PER_WEEK)
-
-    /**
-     * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
-     */
-    operator fun plus(days: LongDays): DayOfWeek = plus((days.value % DAYS_PER_WEEK).toInt())
+    operator fun plus(days: Days): DayOfWeek = plus((days.value % DAYS_PER_WEEK).toInt())
 
     /**
      * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
      */
-    operator fun minus(days: IntDays): DayOfWeek = plus(-(days.value % DAYS_PER_WEEK))
-
-    /**
-     * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
-     */
-    operator fun minus(days: LongDays): DayOfWeek = plus(-(days.value % DAYS_PER_WEEK).toInt())
+    operator fun minus(days: Days): DayOfWeek = plus(-(days.value % DAYS_PER_WEEK).toInt())
 
     private fun plus(daysToAdd: Int): DayOfWeek {
         return values()[(ordinal + (daysToAdd + DAYS_PER_WEEK)) % DAYS_PER_WEEK]

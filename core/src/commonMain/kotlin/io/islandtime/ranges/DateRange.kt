@@ -28,7 +28,7 @@ class DateRange(
 
     override val first: Date get() = start
     override val last: Date get() = endInclusive
-    override val step: IntDays get() = 1.days
+    override val step: Days get() = 1.days
 
     override fun isEmpty(): Boolean {
         return start > endInclusive || endInclusive == Date.MIN || start == Date.MAX
@@ -70,7 +70,7 @@ class DateRange(
      * The number of whole years in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInYears: IntYears
+    val lengthInYears: Years
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endInclusive + 1.days)
@@ -81,7 +81,7 @@ class DateRange(
      * The number of whole months in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInMonths: IntMonths
+    val lengthInMonths: Months
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endInclusive + 1.days)
@@ -92,9 +92,9 @@ class DateRange(
      * The number of whole weeks in this range.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInWeeks: LongWeeks
+    val lengthInWeeks: Weeks
         get() = when {
-            isEmpty() -> 0L.weeks
+            isEmpty() -> 0.weeks
             isBounded() -> weeksBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
@@ -104,9 +104,9 @@ class DateRange(
      * will be one day.
      * @throws UnsupportedOperationException if the range isn't bounded
      */
-    val lengthInDays: LongDays
+    val lengthInDays: Days
         get() = when {
-            isEmpty() -> 0L.days
+            isEmpty() -> 0.days
             isBounded() -> daysBetween(start, endInclusive + 1.days)
             else -> throwUnboundedIntervalException()
         }
@@ -179,29 +179,29 @@ fun String.toDateRange(
 /**
  * Creates a [DateRange] containing all of the days from this date up to, but not including [to].
  */
-infix fun Date.until(to: Date): DateRange = DateRange(this, to - 1L.days)
+infix fun Date.until(to: Date): DateRange = DateRange(this, to - 1.days)
 
 /**
  * Gets the [Period] between two dates.
  */
 fun periodBetween(start: Date, endExclusive: Date): Period {
     var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
-    val dayDiff = (endExclusive.dayOfMonth - start.dayOfMonth).days
+    val dayDiff = endExclusive.dayOfMonth - start.dayOfMonth
 
     val days = when {
-        totalMonths > 0 && dayDiff.value < 0 -> {
+        totalMonths > 0 && dayDiff < 0 -> {
             totalMonths--
             val testDate = start + totalMonths.months
-            daysBetween(testDate, endExclusive).toIntDaysUnchecked()
+            daysBetween(testDate, endExclusive)
         }
-        totalMonths < 0 && dayDiff.value > 0 -> {
+        totalMonths < 0 && dayDiff > 0 -> {
             totalMonths++
-            (dayDiff.value - endExclusive.lengthOfMonth.value).days
+            (dayDiff - endExclusive.lengthOfMonth.value).days
         }
-        else -> dayDiff
+        else -> dayDiff.days
     }
-    val years = (totalMonths / MONTHS_PER_YEAR).toInt().years
-    val months = (totalMonths % MONTHS_PER_YEAR).toInt().months
+    val years = (totalMonths / MONTHS_PER_YEAR).years
+    val months = (totalMonths % MONTHS_PER_YEAR).months
 
     return periodOf(years, months, days)
 }
@@ -209,29 +209,29 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
 /**
  * Gets the number of whole years between two dates.
  */
-fun yearsBetween(start: Date, endExclusive: Date): IntYears {
-    return monthsBetween(start, endExclusive).inYears
+fun yearsBetween(start: Date, endExclusive: Date): Years {
+    return monthsBetween(start, endExclusive).inWholeYears
 }
 
 /**
  * Gets the number of whole months between two dates.
  */
-fun monthsBetween(start: Date, endExclusive: Date): IntMonths {
+fun monthsBetween(start: Date, endExclusive: Date): Months {
     val startDays = start.monthsSinceYear0 * 32L + start.dayOfMonth
     val endDays = endExclusive.monthsSinceYear0 * 32L + endExclusive.dayOfMonth
-    return ((endDays - startDays) / 32).toInt().months
+    return ((endDays - startDays) / 32).months
 }
 
 /**
  * Gets the number of whole weeks between two dates.
  */
-fun weeksBetween(start: Date, endExclusive: Date): LongWeeks {
-    return daysBetween(start, endExclusive).inWeeks
+fun weeksBetween(start: Date, endExclusive: Date): Weeks {
+    return daysBetween(start, endExclusive).inWholeWeeks
 }
 
 /**
  * Gets the number of days between two dates.
  */
-fun daysBetween(start: Date, endExclusive: Date): LongDays {
+fun daysBetween(start: Date, endExclusive: Date): Days {
     return endExclusive.daysSinceUnixEpoch - start.daysSinceUnixEpoch
 }

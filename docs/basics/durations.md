@@ -4,22 +4,19 @@ In Island Time, durations are fully type-safe. The use of durations in terms of 
 
 ## Single Unit Durations
 
-Island Time provides [value classes](https://kotlinlang.org/docs/reference/inline-classes.html) representing each individual duration unit, backed by either a `Long` or `Int` &mdash; such as `IntYears`, `IntHours`, or `LongNanoseconds`. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
+Island Time provides [value classes](https://kotlinlang.org/docs/reference/inline-classes.html) representing each individual duration unit backed by a `Long` value &mdash; such as `Years`, `Hours`, or `Nanoseconds`. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:
 
 ```kotlin
 // The minimum necessary unit granularity is preserved when
 // combining different units
-val totalSeconds: IntSeconds = 5.hours + 30.minutes + 1.seconds
-
-// Math with Int values on sub-second units forces a lengthing
-// to Long due to overflow potential
-val nanoseconds: LongNanoseconds = 5.seconds + 1.nanoseconds
+val totalSeconds: Seconds = 5.hours + 30.minutes + 1.seconds
+val nanoseconds: Nanoseconds = totalSeconds + 1.nanoseconds
 ```
 
 A quantity in one unit can be broken down into parts in terms of "bigger" units using the `toComponents()` method.
 
 ```kotlin
-61.minutes.toComponents { hours: IntHours, minutes: IntMinutes ->
+61.minutes.toComponents { hours: Hours, minutes: Minutes ->
    println(hours) // PT1H
    println(minutes) // PT1M
 }
@@ -28,7 +25,7 @@ A quantity in one unit can be broken down into parts in terms of "bigger" units 
 Or converted to another unit.
 
 ```kotlin
-val hours: IntHours = 60.minutes.inHours
+val hours: Hours = 60.minutes.inWholeHours
 ```
 
 You can also get the duration between two date-times in terms of any given unit, using functions like `hoursBetween()` or `daysBetween()`.

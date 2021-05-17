@@ -17,8 +17,8 @@ internal actual fun createSystemClock(zone: TimeZone): SystemClock {
     return object : SystemClock() {
         override val zone: TimeZone = zone
 
-        override fun readMilliseconds(): LongMilliseconds {
-            return readSystemTime { seconds, microseconds -> seconds + microseconds.inMilliseconds }
+        override fun readMilliseconds(): Milliseconds {
+            return readSystemTime { seconds, microseconds -> seconds + microseconds.inWholeMilliseconds }
         }
 
         override fun readInstant(): Instant {
@@ -29,7 +29,7 @@ internal actual fun createSystemClock(zone: TimeZone): SystemClock {
     }
 }
 
-private inline fun <T> readSystemTime(action: (seconds: LongSeconds, microseconds: IntMicroseconds) -> T): T {
+private inline fun <T> readSystemTime(action: (seconds: Seconds, microseconds: Microseconds) -> T): T {
     return memScoped {
         val posixTime = alloc<timeval>()
         gettimeofday(posixTime.ptr, null)

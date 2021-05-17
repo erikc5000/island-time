@@ -52,12 +52,12 @@ class MonthTest : AbstractIslandTimeTest() {
 
     @Test
     fun `first day in common year`() {
-        assertEquals(60, Month.MARCH.firstDayOfCommonYear)
+        assertEquals(60, Month.MARCH.firstDayOfYearInCommonYear)
     }
 
     @Test
     fun `first day in leap year`() {
-        assertEquals(61, Month.MARCH.firstDayOfLeapYear)
+        assertEquals(61, Month.MARCH.firstDayOfYearInLeapYear)
     }
 
     @Test

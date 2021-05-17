@@ -3,7 +3,6 @@ package io.islandtime.ranges
 import io.islandtime.*
 import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
-import io.islandtime.measures.internal.minusWithOverflow
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.*
 
@@ -84,7 +83,7 @@ class DateTimeInterval(
      * The number of whole years in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInYears: IntYears
+    val lengthInYears: Years
         get() = when {
             isEmpty() -> 0.years
             isBounded() -> yearsBetween(start, endExclusive)
@@ -95,7 +94,7 @@ class DateTimeInterval(
      * The number of whole months in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMonths: IntMonths
+    val lengthInMonths: Months
         get() = when {
             isEmpty() -> 0.months
             isBounded() -> monthsBetween(start, endExclusive)
@@ -106,7 +105,7 @@ class DateTimeInterval(
      * The number of whole weeks in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInWeeks: LongWeeks
+    val lengthInWeeks: Weeks
         get() = when {
             isEmpty() -> 0L.weeks
             isBounded() -> weeksBetween(start, endExclusive)
@@ -117,7 +116,7 @@ class DateTimeInterval(
      * The number of whole days in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInDays: LongDays
+    val lengthInDays: Days
         get() = when {
             isEmpty() -> 0L.days
             isBounded() -> daysBetween(start, endExclusive)
@@ -128,7 +127,7 @@ class DateTimeInterval(
      * The number of whole hours in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInHours: LongHours
+    val lengthInHours: Hours
         get() = when {
             isEmpty() -> 0L.hours
             isBounded() -> hoursBetween(start, endExclusive)
@@ -139,7 +138,7 @@ class DateTimeInterval(
      * The number of whole minutes in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMinutes: LongMinutes
+    val lengthInMinutes: Minutes
         get() = when {
             isEmpty() -> 0L.minutes
             isBounded() -> minutesBetween(start, endExclusive)
@@ -150,7 +149,7 @@ class DateTimeInterval(
      * The number of whole seconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInSeconds: LongSeconds
+    val lengthInSeconds: Seconds
         get() = when {
             isEmpty() -> 0L.seconds
             isBounded() -> secondsBetween(start, endExclusive)
@@ -161,7 +160,7 @@ class DateTimeInterval(
      * The number of whole milliseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMilliseconds: LongMilliseconds
+    val lengthInMilliseconds: Milliseconds
         get() = when {
             isEmpty() -> 0L.milliseconds
             isBounded() -> millisecondsBetween(start, endExclusive)
@@ -172,7 +171,7 @@ class DateTimeInterval(
      * The number of whole microseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInMicroseconds: LongMicroseconds
+    val lengthInMicroseconds: Microseconds
         get() = when {
             isEmpty() -> 0L.microseconds
             isBounded() -> microsecondsBetween(start, endExclusive)
@@ -183,7 +182,7 @@ class DateTimeInterval(
      * The number of nanoseconds in this interval.
      * @throws UnsupportedOperationException if the interval isn't bounded
      */
-    val lengthInNanoseconds: LongNanoseconds
+    val lengthInNanoseconds: Nanoseconds
         get() = when {
             isEmpty() -> 0L.nanoseconds
             isBounded() -> nanosecondsBetween(start, endExclusive)
@@ -283,29 +282,29 @@ fun periodBetween(start: DateTime, endExclusive: DateTime): Period {
 /**
  * Gets the number of whole years between two date-times, assuming they're in the same time zone.
  */
-fun yearsBetween(start: DateTime, endExclusive: DateTime): IntYears {
+fun yearsBetween(start: DateTime, endExclusive: DateTime): Years {
     return yearsBetween(start.date, adjustedEndDate(start, endExclusive))
 }
 
 /**
  * Gets the number of whole months between two date-times, assuming they're in the same time zone.
  */
-fun monthsBetween(start: DateTime, endExclusive: DateTime): IntMonths {
+fun monthsBetween(start: DateTime, endExclusive: DateTime): Months {
     return monthsBetween(start.date, adjustedEndDate(start, endExclusive))
 }
 
 /**
  * Gets the number whole weeks between two date-times, assuming they're in the same time zone.
  */
-fun weeksBetween(start: DateTime, endExclusive: DateTime): LongWeeks {
-    return daysBetween(start, endExclusive).inWeeks
+fun weeksBetween(start: DateTime, endExclusive: DateTime): Weeks {
+    return daysBetween(start, endExclusive).inWholeWeeks
 }
 
 /**
  * Gets the number whole days between two date-times, assuming they're in the same time zone.
  */
-fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
-    return secondsBetween(start, endExclusive).inDays
+fun daysBetween(start: DateTime, endExclusive: DateTime): Days {
+    return secondsBetween(start, endExclusive).inWholeDays
 }
 
 /**
@@ -314,13 +313,9 @@ fun daysBetween(start: DateTime, endExclusive: DateTime): LongDays {
  * when working with [DateTime] directly.
  */
 fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
-    val secondDiff =
-        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO) - start.secondsSinceUnixEpochAt(UtcOffset.ZERO)
-
-    val nanoDiff =
-        endExclusive.additionalNanosecondsSinceUnixEpoch minusWithOverflow start.additionalNanosecondsSinceUnixEpoch
-
-    return durationOf(secondDiff, nanoDiff)
+    val secondDiff = endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO) - start.secondOfUnixEpochAt(UtcOffset.ZERO)
+    val nanoDiff = endExclusive.nanosecond - start.nanosecond
+    return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
 }
 
 /**
@@ -328,8 +323,8 @@ fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
  * appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken
  * into account when working with [DateTime] directly.
  */
-fun hoursBetween(start: DateTime, endExclusive: DateTime): LongHours {
-    return secondsBetween(start, endExclusive).inHours
+fun hoursBetween(start: DateTime, endExclusive: DateTime): Hours {
+    return secondsBetween(start, endExclusive).inWholeHours
 }
 
 /**
@@ -337,8 +332,8 @@ fun hoursBetween(start: DateTime, endExclusive: DateTime): LongHours {
  * more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be
  * taken into account when working with [DateTime] directly.
  */
-fun minutesBetween(start: DateTime, endExclusive: DateTime): LongMinutes {
-    return secondsBetween(start, endExclusive).inMinutes
+fun minutesBetween(start: DateTime, endExclusive: DateTime): Minutes {
+    return secondsBetween(start, endExclusive).inWholeMinutes
 }
 
 /**
@@ -348,12 +343,12 @@ fun minutesBetween(start: DateTime, endExclusive: DateTime): LongMinutes {
  *
  * @throws ArithmeticException if the result overflows
  */
-fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
+fun secondsBetween(start: DateTime, endExclusive: DateTime): Seconds {
     return secondsBetween(
-        start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpochAt(UtcOffset.ZERO),
+        start.nanosecond,
+        endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO),
+        endExclusive.nanosecond
     )
 }
 
@@ -364,12 +359,12 @@ fun secondsBetween(start: DateTime, endExclusive: DateTime): LongSeconds {
  *
  * @throws ArithmeticException if the result overflows
  */
-fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMilliseconds {
+fun millisecondsBetween(start: DateTime, endExclusive: DateTime): Milliseconds {
     return millisecondsBetween(
-        start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpochAt(UtcOffset.ZERO),
+        start.nanosecond,
+        endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO),
+        endExclusive.nanosecond
     )
 }
 
@@ -380,12 +375,12 @@ fun millisecondsBetween(start: DateTime, endExclusive: DateTime): LongMillisecon
  *
  *  @throws ArithmeticException if the result overflows
  */
-fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicroseconds {
+fun microsecondsBetween(start: DateTime, endExclusive: DateTime): Microseconds {
     return microsecondsBetween(
-        start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpochAt(UtcOffset.ZERO),
+        start.nanosecond,
+        endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO),
+        endExclusive.nanosecond
     )
 }
 
@@ -396,12 +391,12 @@ fun microsecondsBetween(start: DateTime, endExclusive: DateTime): LongMicrosecon
  *
  * @throws ArithmeticException if the result overflows
  */
-fun nanosecondsBetween(start: DateTime, endExclusive: DateTime): LongNanoseconds {
+fun nanosecondsBetween(start: DateTime, endExclusive: DateTime): Nanoseconds {
     return nanosecondsBetween(
-        start.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        start.additionalNanosecondsSinceUnixEpoch,
-        endExclusive.secondsSinceUnixEpochAt(UtcOffset.ZERO),
-        endExclusive.additionalNanosecondsSinceUnixEpoch
+        start.secondOfUnixEpochAt(UtcOffset.ZERO),
+        start.nanosecond,
+        endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO),
+        endExclusive.nanosecond
     )
 }
 

@@ -43,27 +43,27 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `IntHours_asUtcOffset() creates a UtcOffset from a duration of hours`() {
+    fun `Hours_asUtcOffset() creates a UtcOffset from a duration of hours`() {
         assertEquals((-3600).seconds, (-1).hours.asUtcOffset().totalSeconds)
     }
 
     @Test
-    fun `IntHours_asUtcOffset() throws an exception on overflow`() {
-        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.hours.asUtcOffset() }
+    fun `Hours_asUtcOffset() throws an exception on overflow`() {
+        assertFailsWith<DateTimeException> { Int.MAX_VALUE.hours.asUtcOffset() }
     }
 
     @Test
-    fun `IntMinutes_asUtcOffset() creates a UtcOffset from a duration of minutes`() {
+    fun `Minutes_asUtcOffset() creates a UtcOffset from a duration of minutes`() {
         assertEquals((-12_000).seconds, (-200).minutes.asUtcOffset().totalSeconds)
     }
 
     @Test
-    fun `IntMinutes_asUtcOffset() throws an exception on overflow`() {
-        assertFailsWith<ArithmeticException> { Int.MAX_VALUE.minutes.asUtcOffset() }
+    fun `Minutes_asUtcOffset() throws an exception on overflow`() {
+        assertFailsWith<DateTimeException> { Int.MAX_VALUE.minutes.asUtcOffset() }
     }
 
     @Test
-    fun `IntSeconds_asUtcOffset() creates a UtcOffset from a duration of seconds`() {
+    fun `Seconds_asUtcOffset() creates a UtcOffset from a duration of seconds`() {
         assertEquals(1.seconds, 1.seconds.asUtcOffset().totalSeconds)
     }
 

@@ -5,61 +5,51 @@ import io.islandtime.Time
 import io.islandtime.measures.*
 import io.islandtime.startOfDay
 
-internal fun checkRoundingIncrement(increment: IntHours) {
+internal fun checkRoundingIncrement(increment: Hours) {
     require(increment.value in 1..HOURS_PER_DAY) {
         "The increment must be greater than zero and no more than 24 hours"
     }
 
-    require(HOURS_PER_DAY % increment.value == 0) {
+    require(HOURS_PER_DAY % increment.value == 0L) {
         "The increment must multiply evenly into a 24-hour day"
     }
 }
 
-internal fun checkRoundingIncrement(increment: IntMinutes) {
+internal fun checkRoundingIncrement(increment: Minutes) {
     require(increment.value in 1..MINUTES_PER_HOUR) {
         "The increment must be greater than zero and no more than an hour"
     }
 
-    require(MINUTES_PER_HOUR % increment.value == 0) {
+    require(MINUTES_PER_HOUR % increment.value == 0L) {
         "The increment must multiply evenly into an hour"
     }
 }
 
-internal fun checkRoundingIncrement(increment: IntSeconds) {
+internal fun checkRoundingIncrement(increment: Seconds) {
     require(increment.value in 1..SECONDS_PER_MINUTE) {
         "The increment must be greater than zero and no more than a minute"
     }
 
-    require(SECONDS_PER_MINUTE % increment.value == 0) {
+    require(SECONDS_PER_MINUTE % increment.value == 0L) {
         "The increment must multiply evenly into a minute"
     }
 }
 
-internal fun checkRoundingIncrement(increment: IntMilliseconds) {
+internal fun checkRoundingIncrement(increment: Milliseconds) {
     checkFractionalSecondRoundingIncrement(increment.value, MILLISECONDS_PER_SECOND)
 }
 
-internal fun checkRoundingIncrement(increment: IntMicroseconds) {
+internal fun checkRoundingIncrement(increment: Microseconds) {
     checkFractionalSecondRoundingIncrement(increment.value, MICROSECONDS_PER_SECOND)
 }
 
-internal fun checkRoundingIncrement(increment: IntNanoseconds) {
+internal fun checkRoundingIncrement(increment: Nanoseconds) {
     checkFractionalSecondRoundingIncrement(increment.value, NANOSECONDS_PER_SECOND)
 }
 
-internal fun checkRoundingIncrement(increment: LongNanoseconds) {
-    require(increment.value in 1..NANOSECONDS_PER_SECOND) {
-        "The increment must be greater than zero and no more than a second"
-    }
-
-    require(NANOSECONDS_PER_SECOND % increment.value == 0L) {
-        "The increment must multiply evenly into a second"
-    }
-}
-
-private fun checkFractionalSecondRoundingIncrement(value: Int, maxValue: Int) {
+private fun checkFractionalSecondRoundingIncrement(value: Long, maxValue: Int) {
     require(value in 1..maxValue) { "The increment must be greater than zero and no more than a second" }
-    require(maxValue % value == 0) { "The increment must multiply evenly into a second" }
+    require(maxValue % value == 0L) { "The increment must multiply evenly into a second" }
 }
 
 internal fun Time.nextWholeHour(): Time = nextWholeHourOrNull() ?: Time.MIDNIGHT

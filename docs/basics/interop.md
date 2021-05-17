@@ -42,7 +42,7 @@ You can find the full set of conversions in the [io.islandtime.jvm](../api/core/
 
 ## Apple Foundation Classes
 
-We can map between some of the Island Time types and the date-time types provided in Apple's [Foundation API](https://developer.apple.com/documentation/foundation/dates_and_times?language=objc), such as `NSDate`, `NSDateComponents`, and `NSTimeZone`. Keep in mind that `NSDate` and `NSTimeInterval` are based around floating-point numbers, so conversion may result in lost precision.
+We can map between some Island Time types and the date-time types provided in Apple's [Foundation API](https://developer.apple.com/documentation/foundation/dates_and_times?language=objc), such as `NSDate`, `NSDateComponents`, and `NSTimeZone`. Keep in mind that `NSDate` and `NSTimeInterval` are based around floating-point numbers, so conversion may result in lost precision.
 
 ```kotlin
 // NSDate is a timestamp, just like Instant
@@ -64,7 +64,7 @@ The full set of conversions can be found in the [io.islandtime.darwin](../api/co
 
 ## kotlin.time
 
-The Kotlin Standard Library has an experimental [`Duration`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/) type of its own, which you can convert to and from Island Time durations. Kotlin's `Duration` is based on a floating-point number, so keep in mind that conversion may result in lost precision.
+The Kotlin Standard Library has an experimental [`Duration`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/) type of its own, which you can convert to and from Island Time durations.
 
 ```kotlin
 import kotlin.time.seconds as kotlinSeconds
@@ -73,5 +73,5 @@ import kotlin.time.seconds as kotlinSeconds
 val kotlinDuration: kotlin.time.Duration = 30.minutes.toKotlinDuration()
 
 // Convert from Kotlin Duration to Island Time Duration
-val islandDuration: Duration = 30.kotlinSeconds.toIslandDuration() 
+val islandDuration: Duration = kotlin.time.Duration.seconds(30).toIslandDuration() 
 ```

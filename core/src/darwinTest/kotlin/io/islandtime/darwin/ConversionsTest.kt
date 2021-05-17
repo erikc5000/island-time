@@ -248,7 +248,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -86_400.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.days.toNSTimeInterval())
-            assertEquals(expected, value.toLong().days.toNSTimeInterval())
         }
     }
 
@@ -260,7 +259,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -3600.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.hours.toNSTimeInterval())
-            assertEquals(expected, value.toLong().hours.toNSTimeInterval())
         }
     }
 
@@ -272,7 +270,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -60.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.minutes.toNSTimeInterval())
-            assertEquals(expected, value.toLong().minutes.toNSTimeInterval())
         }
     }
 
@@ -284,7 +281,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -1.0
         ).forEach { (value, expected) ->
             assertEquals(expected, value.seconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().seconds.toNSTimeInterval())
         }
     }
 
@@ -296,7 +292,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -0.001
         ).forEach { (value, expected) ->
             assertEquals(expected, value.milliseconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().milliseconds.toNSTimeInterval())
         }
     }
 
@@ -308,7 +303,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -0.000001
         ).forEach { (value, expected) ->
             assertEquals(expected, value.microseconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().microseconds.toNSTimeInterval())
         }
     }
 
@@ -320,7 +314,6 @@ class ConversionsTest : AbstractIslandTimeTest() {
             -1 to -0.000000001
         ).forEach { (value, expected) ->
             assertEquals(expected, value.nanoseconds.toNSTimeInterval())
-            assertEquals(expected, value.toLong().nanoseconds.toNSTimeInterval())
         }
     }
 

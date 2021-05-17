@@ -241,6 +241,7 @@ fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(
     replaceWith = ReplaceWith("this.toIslandUtcOffsetAt()"),
     level = DeprecationLevel.ERROR
 )
+@Suppress("unused")
 fun NSTimeZone.toIslandUtcOffset(): UtcOffset = throw UnsupportedOperationException("Should not be called")
 
 /**
@@ -278,89 +279,48 @@ fun TimeZone.toNSTimeZoneOrNull(): NSTimeZone? {
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
 fun Duration.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
-    seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
+    seconds.toDouble() + nanoseconds.toDouble() / NANOSECONDS_PER_SECOND
 }
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun IntDays.toNSTimeInterval(): NSTimeInterval = this.toLongDays().inSecondsUnchecked.value.toDouble()
+fun Days.toNSTimeInterval(): NSTimeInterval = this.inSeconds.toDouble()
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun LongDays.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
+fun Hours.toNSTimeInterval(): NSTimeInterval = this.inSeconds.toDouble()
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun IntHours.toNSTimeInterval(): NSTimeInterval = this.toLongHours().inSecondsUnchecked.value.toDouble()
+fun Minutes.toNSTimeInterval(): NSTimeInterval = this.inSeconds.toDouble()
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun LongHours.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
+fun Seconds.toNSTimeInterval(): NSTimeInterval = this.toDouble()
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun IntMinutes.toNSTimeInterval(): NSTimeInterval = this.toLongMinutes().inSecondsUnchecked.value.toDouble()
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun LongMinutes.toNSTimeInterval(): NSTimeInterval = this.inSeconds.value.toDouble()
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun IntSeconds.toNSTimeInterval(): NSTimeInterval = value.toDouble()
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun LongSeconds.toNSTimeInterval(): NSTimeInterval = value.toDouble()
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun IntMilliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
-    seconds.value.toDouble() + milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
+fun Milliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
+    seconds.toDouble() + milliseconds.toDouble() / MILLISECONDS_PER_SECOND
 }
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun LongMilliseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, milliseconds ->
-    seconds.value.toDouble() + milliseconds.value.toDouble() / MILLISECONDS_PER_SECOND
+fun Microseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
+    seconds.toDouble() + microseconds.toDouble() / MICROSECONDS_PER_SECOND
 }
 
 /**
  * Converts this duration to an equivalent `NSTimeInterval`.
  */
-fun IntMicroseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
-    seconds.value.toDouble() + microseconds.value.toDouble() / MICROSECONDS_PER_SECOND
-}
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun LongMicroseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, microseconds ->
-    seconds.value.toDouble() + microseconds.value.toDouble() / MICROSECONDS_PER_SECOND
-}
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun IntNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
-    seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
-}
-
-/**
- * Converts this duration to an equivalent `NSTimeInterval`.
- */
-fun LongNanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
-    seconds.value.toDouble() + nanoseconds.value.toDouble() / NANOSECONDS_PER_SECOND
+fun Nanoseconds.toNSTimeInterval(): NSTimeInterval = toComponents { seconds, nanoseconds ->
+    seconds.toDouble() + nanoseconds.toDouble() / NANOSECONDS_PER_SECOND
 }
 
 /**

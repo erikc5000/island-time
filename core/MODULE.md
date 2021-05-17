@@ -36,7 +36,7 @@ Platform-independent locale.
 
 # Package io.islandtime.measures
 
-Classes related to the measurement of time, including `Duration`, `Period`, and more specific units, such as `IntHours` or `LongYears`.
+Classes related to the measurement of time, including `Duration`, `Period`, and more specific units, such as `Hours` or `Years`.
 
 # Package io.islandtime.parser
 

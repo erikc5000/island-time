@@ -57,15 +57,20 @@ publishing {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.7"
+}
+
 afterEvaluate {
     tasks.withType<JacocoReport>().configureEach {
         classDirectories.setFrom(
-            fileTree("${buildDir}/classes/kotlin/jvm/") {
-                exclude("**/*Test*.*")
-            }
+            fileTree("${buildDir}/classes/kotlin/jvm/") { exclude("**/*Test*.*") }
         )
 
-        sourceDirectories.setFrom(kotlin.sourceSets["commonMain"].kotlin.sourceDirectories)
+        sourceDirectories.setFrom(
+            listOf("commonMain", "jvmMain").flatMap { kotlin.sourceSets[it].kotlin.sourceDirectories }
+        )
+
         executionData.setFrom("${buildDir}/jacoco/jvmTest.exec")
     }
 }

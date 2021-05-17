@@ -21,8 +21,8 @@ class RoundDownTest {
                 0.hours,
                 25.hours,
                 48.hours,
-                Int.MIN_VALUE.hours,
-                Int.MAX_VALUE.hours
+                Long.MIN_VALUE.hours,
+                Long.MAX_VALUE.hours
             )
         )
     }
@@ -58,8 +58,8 @@ class RoundDownTest {
                 (-1).minutes,
                 0.minutes,
                 61.minutes,
-                Int.MIN_VALUE.minutes,
-                Int.MAX_VALUE.minutes
+                Long.MIN_VALUE.minutes,
+                Long.MAX_VALUE.minutes
             )
         )
     }
@@ -105,8 +105,8 @@ class RoundDownTest {
                 (-1).seconds,
                 0.seconds,
                 61.seconds,
-                Int.MIN_VALUE.seconds,
-                Int.MAX_VALUE.seconds
+                Long.MIN_VALUE.seconds,
+                Long.MAX_VALUE.seconds
             )
         )
     }
@@ -133,9 +133,9 @@ class RoundDownTest {
             listOf(
                 (-1).milliseconds,
                 0.milliseconds,
-                (1.seconds + 1.milliseconds).toIntMilliseconds(),
-                Int.MIN_VALUE.milliseconds,
-                Int.MAX_VALUE.milliseconds
+                (1.seconds + 1.milliseconds),
+                Long.MIN_VALUE.milliseconds,
+                Long.MAX_VALUE.milliseconds
             )
         )
     }
@@ -192,8 +192,8 @@ class RoundDownTest {
                 (-1).microseconds,
                 0.microseconds,
                 1_000_001.microseconds,
-                Int.MIN_VALUE.microseconds,
-                Int.MAX_VALUE.microseconds
+                Long.MIN_VALUE.microseconds,
+                Long.MAX_VALUE.microseconds
             )
         )
     }
@@ -227,8 +227,8 @@ class RoundDownTest {
                 (-1).nanoseconds,
                 0.nanoseconds,
                 1_000_000_001.nanoseconds,
-                Int.MIN_VALUE.nanoseconds,
-                Int.MAX_VALUE.nanoseconds
+                Long.MIN_VALUE.nanoseconds,
+                Long.MAX_VALUE.nanoseconds
             )
         )
     }
@@ -319,7 +319,7 @@ class RoundDownTest {
     }
 
     @JvmName("testExceptionHours")
-    private fun testException(invalidIncrements: List<IntHours>) {
+    private fun testException(invalidIncrements: List<Hours>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedDownToNearest(it)
@@ -343,7 +343,7 @@ class RoundDownTest {
     }
 
     @JvmName("testExceptionMinutes")
-    private fun testException(invalidIncrements: List<IntMinutes>) {
+    private fun testException(invalidIncrements: List<Minutes>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedDownToNearest(it)
@@ -367,7 +367,7 @@ class RoundDownTest {
     }
 
     @JvmName("testExceptionSeconds")
-    private fun testException(invalidIncrements: List<IntSeconds>) {
+    private fun testException(invalidIncrements: List<Seconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedDownToNearest(it)
@@ -391,7 +391,7 @@ class RoundDownTest {
     }
 
     @JvmName("testExceptionMilliseconds")
-    private fun testException(invalidIncrements: List<IntMilliseconds>) {
+    private fun testException(invalidIncrements: List<Milliseconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedDownToNearest(it)
@@ -415,7 +415,7 @@ class RoundDownTest {
     }
 
     @JvmName("testExceptionMicroseconds")
-    private fun testException(invalidIncrements: List<IntMicroseconds>) {
+    private fun testException(invalidIncrements: List<Microseconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedDownToNearest(it)
@@ -439,7 +439,7 @@ class RoundDownTest {
     }
 
     @JvmName("testExceptionNanoseconds")
-    private fun testException(invalidIncrements: List<IntNanoseconds>) {
+    private fun testException(invalidIncrements: List<Nanoseconds>) {
         invalidIncrements.forEach {
             assertFailsWith<IllegalArgumentException>("Failed at '$it'") {
                 Time.MIDNIGHT.roundedDownToNearest(it)
@@ -506,7 +506,7 @@ class RoundDownTest {
             }
     }
 
-    private fun testRoundedDownToNearest(increment: IntHours, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedDownToNearest(increment: Hours, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedDownToNearest(increment))
@@ -526,7 +526,7 @@ class RoundDownTest {
             }
     }
 
-    private fun testRoundedDownToNearest(increment: IntMinutes, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedDownToNearest(increment: Minutes, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedDownToNearest(increment))
@@ -546,7 +546,7 @@ class RoundDownTest {
             }
     }
 
-    private fun testRoundedDownToNearest(increment: IntSeconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedDownToNearest(increment: Seconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedDownToNearest(increment))
@@ -566,7 +566,7 @@ class RoundDownTest {
             }
     }
 
-    private fun testRoundedDownToNearest(increment: IntMilliseconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedDownToNearest(increment: Milliseconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedDownToNearest(increment))
@@ -586,7 +586,7 @@ class RoundDownTest {
             }
     }
 
-    private fun testRoundedDownToNearest(increment: IntMicroseconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedDownToNearest(increment: Microseconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedDownToNearest(increment))
@@ -606,7 +606,7 @@ class RoundDownTest {
             }
     }
 
-    private fun testRoundedDownToNearest(increment: IntNanoseconds, vararg dateTimeValues: Pair<String, String>) {
+    private fun testRoundedDownToNearest(increment: Nanoseconds, vararg dateTimeValues: Pair<String, String>) {
         dateTimeValues.map { (input, output) -> input.toDateTime() to output.toDateTime() }
             .forEach { (inDateTime, outDateTime) ->
                 assertEquals(outDateTime, inDateTime.roundedDownToNearest(increment))
