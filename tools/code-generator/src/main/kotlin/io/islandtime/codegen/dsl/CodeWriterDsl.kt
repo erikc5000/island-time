@@ -25,6 +25,14 @@ class FileBuilder(
         imports.forEach { (className, `as`) -> aliasedImport(className, `as`) }
     }
 
+    fun annotation(annotation: KClass<*>, block: AnnotationBuilder.() -> Unit = {}) {
+        annotation(annotation.asClassName(), block)
+    }
+
+    fun annotation(annotation: ClassName, block: AnnotationBuilder.() -> Unit = {}) {
+        builder.addAnnotation(AnnotationBuilder(annotation).apply(block).build())
+    }
+
     fun property(name: String, returnType: KClass<*>, block: PropertyBuilder.() -> Unit) {
         property(name, returnType.asTypeName(), block)
     }
@@ -263,8 +271,8 @@ class TypeAliasBuilder(name: String, type: TypeName) {
 class AnnotationBuilder(type: ClassName) {
     private val builder = AnnotationSpec.builder(type)
 
-    fun member(block: CodeBlockBuilder.() -> Unit) {
-        builder.addMember(CodeBlockBuilder().apply(block).build())
+    fun <T> member(block: CodeBlockBuilder.() -> T) {
+        builder.addMember(CodeBlockBuilder(insertLineSeparators = false).apply(block).build())
     }
 
     fun build(): AnnotationSpec = builder.build()

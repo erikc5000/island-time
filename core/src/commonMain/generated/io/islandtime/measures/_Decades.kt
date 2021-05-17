@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("DecadesKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -22,8 +23,12 @@ import kotlin.Deprecated
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -215,12 +220,14 @@ public value class Decades(
   public operator fun rem(scalar: Long): Decades = Decades(value % scalar)
 
   public inline fun <T> toComponentValues(action: (centuries: Long, decades: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val centuries = (value / DECADES_PER_CENTURY)
     val decades = (value % DECADES_PER_CENTURY).toInt()
     return action(centuries, decades)
   }
 
   public inline fun <T> toComponents(action: (centuries: Centuries, decades: Decades) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { centuries, decades ->
          action(Centuries(centuries), Decades(decades))
      }

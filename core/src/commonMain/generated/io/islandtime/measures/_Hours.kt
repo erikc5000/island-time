@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("HoursKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -25,8 +26,12 @@ import kotlin.Deprecated
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -280,12 +285,14 @@ public value class Hours(
   public operator fun rem(scalar: Long): Hours = Hours(value % scalar)
 
   public inline fun <T> toComponentValues(action: (days: Long, hours: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / HOURS_PER_DAY)
     val hours = (value % HOURS_PER_DAY).toInt()
     return action(days, hours)
   }
 
   public inline fun <T> toComponents(action: (days: Days, hours: Hours) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours ->
          action(Days(days), Hours(hours))
      }

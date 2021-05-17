@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("MonthsKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -22,8 +23,12 @@ import kotlin.Deprecated
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -219,12 +224,14 @@ public value class Months(
   public operator fun rem(scalar: Long): Months = Months(value % scalar)
 
   public inline fun <T> toComponentValues(action: (years: Long, months: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val years = (value / MONTHS_PER_YEAR)
     val months = (value % MONTHS_PER_YEAR).toInt()
     return action(years, months)
   }
 
   public inline fun <T> toComponents(action: (years: Years, months: Months) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { years, months ->
          action(Years(years), Months(months))
      }
@@ -235,6 +242,7 @@ public value class Months(
     years: Int,
     months: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val decades = (value / MONTHS_PER_DECADE)
     val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt()
     val months = (value % MONTHS_PER_YEAR).toInt()
@@ -246,6 +254,7 @@ public value class Months(
     years: Years,
     months: Months
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { decades, years, months ->
          action(Decades(decades), Years(years), Months(months))
      }
@@ -257,6 +266,7 @@ public value class Months(
     years: Int,
     months: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val centuries = (value / MONTHS_PER_CENTURY)
     val decades = ((value % MONTHS_PER_CENTURY) / MONTHS_PER_DECADE).toInt()
     val years = ((value % MONTHS_PER_DECADE) / MONTHS_PER_YEAR).toInt()
@@ -270,6 +280,7 @@ public value class Months(
     years: Years,
     months: Months
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { centuries, decades, years, months ->
          action(Centuries(centuries), Decades(decades), Years(years), Months(months))
      }

@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("MinutesKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -25,8 +26,12 @@ import kotlin.Deprecated
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -282,12 +287,14 @@ public value class Minutes(
   public operator fun rem(scalar: Long): Minutes = Minutes(value % scalar)
 
   public inline fun <T> toComponentValues(action: (hours: Long, minutes: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val hours = (value / MINUTES_PER_HOUR)
     val minutes = (value % MINUTES_PER_HOUR).toInt()
     return action(hours, minutes)
   }
 
   public inline fun <T> toComponents(action: (hours: Hours, minutes: Minutes) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { hours, minutes ->
          action(Hours(hours), Minutes(minutes))
      }
@@ -298,6 +305,7 @@ public value class Minutes(
     hours: Int,
     minutes: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / MINUTES_PER_DAY)
     val hours = ((value % MINUTES_PER_DAY) / MINUTES_PER_HOUR).toInt()
     val minutes = (value % MINUTES_PER_HOUR).toInt()
@@ -309,6 +317,7 @@ public value class Minutes(
     hours: Hours,
     minutes: Minutes
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes ->
          action(Days(days), Hours(hours), Minutes(minutes))
      }

@@ -11,7 +11,6 @@ import io.islandtime.codegen.dsl.*
 import io.islandtime.codegen.internal
 import io.islandtime.codegen.javamath2kmp
 import io.islandtime.codegen.measures
-import io.islandtime.codegen.util.zero
 import kotlin.reflect.KClass
 
 object TemporalUnitGenerator : Generator {
@@ -40,6 +39,10 @@ enum class PlusOrMinusOperator(
 private val KOTLIN_DURATION_CLASS_NAME = ClassName("kotlin.time", "Duration")
 private val KOTLIN_DURATION_UNIT_CLASS_NAME = ClassName("kotlin.time", "DurationUnit")
 private val EXPERIMENTAL_TIME_CLASS_NAME = ClassName("kotlin.time", "ExperimentalTime")
+private val KOTLIN_CONTRACT_CLASS_NAME = ClassName("kotlin.contracts", "contract")
+private val KOTLIN_INVOCATION_KIND_CLASS_NAME = ClassName("kotlin.contracts", "InvocationKind")
+private val OPT_IN_CLASS_NAME = ClassName("kotlin", "OptIn")
+private val EXPERIMENTAL_CONTRACTS_CLASS_NAME = ClassName("kotlin.contracts", "ExperimentalContracts")
 
 private fun KClass<*>.literalValueString(value: Long) = when (this) {
     Int::class -> "$value"
@@ -57,6 +60,13 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
     fileName = "_${description.pluralName}",
     jvmName = "${description.pluralName}Kt"
 ) {
+    annotation(OPT_IN_CLASS_NAME) {
+        member {
+            using("experimentalContracts", EXPERIMENTAL_CONTRACTS_CLASS_NAME)
+            "%experimentalContracts:T::class"
+        }
+    }
+
     if (description.isTimeBased) {
         aliasedImports(
             KOTLIN_DURATION_CLASS_NAME to "KotlinDuration",
@@ -588,6 +598,8 @@ private fun ClassBuilder.buildToComponentValuesFunctions(thisUnit: TemporalUnitD
                 returns(typeVariable)
 
                 code {
+                    exactlyOnceContractCode("action")
+
                     for (currentUnit in allComponentUnits) {
                         val conversionString = when (currentUnit) {
                             biggestUnit -> buildString {
@@ -637,6 +649,8 @@ private fun ClassBuilder.buildToComponentValuesFunctions(thisUnit: TemporalUnitD
                 returns(typeVariable)
 
                 code {
+                    exactlyOnceContractCode("action")
+
                     val allVariableNames = allComponentUnits.joinToString(separator = ", ") { it.lowerPluralName }
                     val allConvertedVariables = allComponentUnits.joinToString(separator = ", ") {
                         "${it.pluralName}(${it.lowerPluralName})"
@@ -650,6 +664,14 @@ private fun ClassBuilder.buildToComponentValuesFunctions(thisUnit: TemporalUnitD
                 }
             }
         }
+}
+
+private fun CodeBlockBuilder.exactlyOnceContractCode(parameter: String) {
+    using(
+        "contract" to ClassName("kotlin.contracts", "contract"),
+        "invocationKind" to ClassName("kotlin.contracts", "InvocationKind")
+    )
+    +"%contract:T { callsInPlace($parameter, %invocationKind:T.EXACTLY_ONCE) }"
 }
 
 fun FileBuilder.buildPrimitiveConstructorProperty(primitive: KClass<*>, description: TemporalUnitDescription) {
