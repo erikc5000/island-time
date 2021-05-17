@@ -1,5 +1,6 @@
 @file:JvmMultifileClass
 @file:JvmName("DateTimesKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime
 
@@ -9,6 +10,9 @@ import io.islandtime.internal.lastWeekOfWeekBasedYear
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
 import io.islandtime.measures.weeks
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
@@ -16,6 +20,7 @@ import kotlin.jvm.JvmName
  * Converts this date to an ISO week date representation.
  */
 inline fun <T> Date.toWeekDate(action: (year: Int, week: Int, day: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     return action(weekBasedYear, weekOfWeekBasedYear, dayOfWeek.number)
 }
 
@@ -23,6 +28,7 @@ inline fun <T> Date.toWeekDate(action: (year: Int, week: Int, day: Int) -> T): T
  * Converts this date to a week date representation using the week definition in [settings].
  */
 inline fun <T> Date.toWeekDate(settings: WeekSettings, action: (year: Int, week: Int, day: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     return action(weekBasedYear(settings), weekOfWeekBasedYear(settings), dayOfWeek.number(settings))
 }
 
@@ -33,6 +39,7 @@ inline fun <T> Date.toWeekDate(settings: WeekSettings, action: (year: Int, week:
  * To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 inline fun <T> Date.toWeekDate(locale: Locale, action: (year: Int, week: Int, day: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     return toWeekDate(locale.weekSettings, action)
 }
 
