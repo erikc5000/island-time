@@ -49,7 +49,7 @@ public fun DateRange.randomOrNull(): Date? = randomOrNullImpl(Random)
  *
  * @see DateRange.random
  */
-public fun DateRange.randomOrNull(random: Random): Date? = randomImpl(random)
+public fun DateRange.randomOrNull(random: Random): Date? = randomOrNullImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator.
@@ -83,7 +83,7 @@ public fun DateTimeInterval.randomOrNull(): DateTime? = randomOrNullImpl(Random)
  *
  * @see DateTimeInterval.random
  */
-public fun DateTimeInterval.randomOrNull(random: Random): DateTime? = randomImpl(random)
+public fun DateTimeInterval.randomOrNull(random: Random): DateTime? = randomOrNullImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator. The offset
@@ -119,7 +119,8 @@ public fun OffsetDateTimeInterval.randomOrNull(): OffsetDateTime? = randomOrNull
  *
  * @see OffsetDateTimeInterval.random
  */
-public fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? = randomImpl(random)
+public fun OffsetDateTimeInterval.randomOrNull(random: Random): OffsetDateTime? =
+    randomOrNullImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator. The zone of
@@ -155,7 +156,8 @@ public fun ZonedDateTimeInterval.randomOrNull(): ZonedDateTime? = randomOrNullIm
  *
  * @see ZonedDateTimeInterval.random
  */
-public fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? = randomImpl(random)
+public fun ZonedDateTimeInterval.randomOrNull(random: Random): ZonedDateTime? =
+    randomOrNullImpl(random)
 
 /**
  * Returns a random date within this interval using the default random number generator.
@@ -189,4 +191,4 @@ public fun InstantInterval.randomOrNull(): Instant? = randomOrNullImpl(Random)
  *
  * @see InstantInterval.random
  */
-public fun InstantInterval.randomOrNull(random: Random): Instant? = randomImpl(random)
+public fun InstantInterval.randomOrNull(random: Random): Instant? = randomOrNullImpl(random)

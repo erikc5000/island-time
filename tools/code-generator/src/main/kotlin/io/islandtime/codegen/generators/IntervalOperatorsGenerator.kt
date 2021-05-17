@@ -101,7 +101,7 @@ private fun FileBuilder.buildOperatorsForClass(receiverClass: IntervalDescriptio
         returns(receiverClass.elementDescription.typeName.copy(nullable = true))
 
         code {
-            using("impl", rangesInternal("randomImpl"))
+            using("impl", rangesInternal("randomOrNullImpl"))
             "return %impl:T(%random:N)"
         }
     }

@@ -6,6 +6,7 @@ import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.test.AbstractIslandTimeTest
+import kotlin.random.Random
 import kotlin.test.*
 
 class DateRangeTest : AbstractIslandTimeTest() {
@@ -186,11 +187,13 @@ class DateRangeTest : AbstractIslandTimeTest() {
     @Test
     fun `random() throws an exception when the range is empty`() {
         assertFailsWith<NoSuchElementException> { DateRange.EMPTY.random() }
+        assertFailsWith<NoSuchElementException> { DateRange.EMPTY.random(Random) }
     }
 
     @Test
     fun `random() throws an exception when the range is not bounded`() {
         assertFailsWith<UnsupportedOperationException> { DateRange.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { DateRange.UNBOUNDED.random(Random) }
 
         assertFailsWith<UnsupportedOperationException> {
             DateRange(start = Date(2020, Month.APRIL, 1)).random()
@@ -204,11 +207,13 @@ class DateRangeTest : AbstractIslandTimeTest() {
     @Test
     fun `randomOrNull() returns null when the range is empty`() {
         assertNull(DateRange.EMPTY.randomOrNull())
+        assertNull(DateRange.EMPTY.randomOrNull(Random))
     }
 
     @Test
     fun `randomOrNull() returns null when the range is not bounded`() {
         assertNull(DateRange.UNBOUNDED.randomOrNull())
+        assertNull(DateRange.UNBOUNDED.randomOrNull(Random))
         assertNull(DateRange(start = Date(2020, Month.APRIL, 1)).randomOrNull())
         assertNull(DateRange(endInclusive = Date(2020, Month.APRIL, 1)).randomOrNull())
     }
@@ -217,6 +222,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
     fun `randomOrNull() returns a date within range`() {
         val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.FEBRUARY, 20)
         assertTrue { range.randomOrNull()!! in range }
+        assertTrue { range.randomOrNull(Random)!! in range }
     }
 
     @Test

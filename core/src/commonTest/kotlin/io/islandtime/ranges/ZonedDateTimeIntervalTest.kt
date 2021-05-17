@@ -4,6 +4,7 @@ import io.islandtime.*
 import io.islandtime.Time.Companion.MIDNIGHT
 import io.islandtime.measures.*
 import io.islandtime.test.AbstractIslandTimeTest
+import kotlin.random.Random
 import kotlin.test.*
 
 class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
@@ -110,12 +111,14 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `random() throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { ZonedDateTimeInterval.EMPTY.random() }
+        assertFailsWith<NoSuchElementException> { ZonedDateTimeInterval.EMPTY.random(Random) }
     }
 
     @Test
     fun `random() throws an exception when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random() }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random(Random) }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval(start = dateTime).random() }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval(endExclusive = dateTime).random() }
     }
@@ -123,12 +126,14 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `randomOrNull() returns null when the interval is empty`() {
         assertNull(ZonedDateTimeInterval.EMPTY.randomOrNull())
+        assertNull(ZonedDateTimeInterval.EMPTY.randomOrNull(Random))
     }
 
     @Test
     fun `randomOrNull() returns null when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
         assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull(Random))
         assertNull(ZonedDateTimeInterval(start = dateTime).randomOrNull())
         assertNull(ZonedDateTimeInterval(endExclusive = dateTime).randomOrNull())
     }

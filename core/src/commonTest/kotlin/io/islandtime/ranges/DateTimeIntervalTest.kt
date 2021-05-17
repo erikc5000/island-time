@@ -7,6 +7,7 @@ import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
 import io.islandtime.parser.groupedDateTimeParser
 import io.islandtime.test.AbstractIslandTimeTest
+import kotlin.random.Random
 import kotlin.test.*
 
 class DateTimeIntervalTest : AbstractIslandTimeTest() {
@@ -125,12 +126,14 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     @Test
     fun `randomOrNull() returns null when the interval is empty`() {
         assertNull(DateTimeInterval.EMPTY.randomOrNull())
+        assertNull(DateTimeInterval.EMPTY.randomOrNull(Random))
     }
 
     @Test
     fun `randomOrNull() returns null when the interval is not bounded`() {
         val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
         assertNull(DateTimeInterval.UNBOUNDED.randomOrNull())
+        assertNull(DateTimeInterval.UNBOUNDED.randomOrNull(Random))
         assertNull(DateTimeInterval(start = dateTime).randomOrNull())
         assertNull(DateTimeInterval(endExclusive = dateTime).randomOrNull())
     }
@@ -144,7 +147,9 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
         ).forEach { start ->
             val interval = start until start + 1.nanoseconds
             assertEquals(start, interval.random())
+            assertEquals(start, interval.random(Random))
             assertEquals(start, interval.randomOrNull())
+            assertEquals(start, interval.randomOrNull(Random))
         }
 
         listOf(
@@ -160,7 +165,9 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
             ).forEach { end ->
                 val interval = start until end
                 assertTrue { interval.random() in interval }
+                assertTrue { interval.random(Random) in interval }
                 assertTrue { interval.randomOrNull()!! in interval }
+                assertTrue { interval.randomOrNull(Random)!! in interval }
             }
         }
     }
