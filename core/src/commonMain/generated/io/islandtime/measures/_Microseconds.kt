@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("MicrosecondsKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -26,8 +27,12 @@ import kotlin.Deprecated
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -295,6 +300,7 @@ public value class Microseconds(
   public operator fun rem(scalar: Long): Microseconds = Microseconds(value % scalar)
 
   public inline fun <T> toComponentValues(action: (milliseconds: Long, microseconds: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val milliseconds = (value / MICROSECONDS_PER_MILLISECOND)
     val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt()
     return action(milliseconds, microseconds)
@@ -302,6 +308,7 @@ public value class Microseconds(
 
   public inline fun <T> toComponents(action: (milliseconds: Milliseconds,
       microseconds: Microseconds) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { milliseconds, microseconds ->
          action(Milliseconds(milliseconds), Microseconds(microseconds))
      }
@@ -312,6 +319,7 @@ public value class Microseconds(
     milliseconds: Int,
     microseconds: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val seconds = (value / MICROSECONDS_PER_SECOND)
     val milliseconds = ((value % MICROSECONDS_PER_SECOND) / MICROSECONDS_PER_MILLISECOND).toInt()
     val microseconds = (value % MICROSECONDS_PER_MILLISECOND).toInt()
@@ -323,6 +331,7 @@ public value class Microseconds(
     milliseconds: Milliseconds,
     microseconds: Microseconds
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { seconds, milliseconds, microseconds ->
          action(Seconds(seconds), Milliseconds(milliseconds), Microseconds(microseconds))
      }
@@ -334,6 +343,7 @@ public value class Microseconds(
     milliseconds: Int,
     microseconds: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val minutes = (value / MICROSECONDS_PER_MINUTE)
     val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).toInt()
     val milliseconds = ((value % MICROSECONDS_PER_SECOND) / MICROSECONDS_PER_MILLISECOND).toInt()
@@ -347,6 +357,7 @@ public value class Microseconds(
     milliseconds: Milliseconds,
     microseconds: Microseconds
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { minutes, seconds, milliseconds, microseconds ->
          action(Minutes(minutes), Seconds(seconds), Milliseconds(milliseconds),
         Microseconds(microseconds))
@@ -360,6 +371,7 @@ public value class Microseconds(
     milliseconds: Int,
     microseconds: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val hours = (value / MICROSECONDS_PER_HOUR)
     val minutes = ((value % MICROSECONDS_PER_HOUR) / MICROSECONDS_PER_MINUTE).toInt()
     val seconds = ((value % MICROSECONDS_PER_MINUTE) / MICROSECONDS_PER_SECOND).toInt()
@@ -375,6 +387,7 @@ public value class Microseconds(
     milliseconds: Milliseconds,
     microseconds: Microseconds
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { hours, minutes, seconds, milliseconds, microseconds ->
          action(Hours(hours), Minutes(minutes), Seconds(seconds), Milliseconds(milliseconds),
         Microseconds(microseconds))
@@ -389,6 +402,7 @@ public value class Microseconds(
     milliseconds: Int,
     microseconds: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / MICROSECONDS_PER_DAY)
     val hours = ((value % MICROSECONDS_PER_DAY) / MICROSECONDS_PER_HOUR).toInt()
     val minutes = ((value % MICROSECONDS_PER_HOUR) / MICROSECONDS_PER_MINUTE).toInt()
@@ -406,6 +420,7 @@ public value class Microseconds(
     milliseconds: Milliseconds,
     microseconds: Microseconds
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes, seconds, milliseconds, microseconds ->
          action(Days(days), Hours(hours), Minutes(minutes), Seconds(seconds),
         Milliseconds(milliseconds), Microseconds(microseconds))

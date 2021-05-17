@@ -3,6 +3,7 @@
 //
 @file:JvmMultifileClass
 @file:JvmName("SecondsKt")
+@file:OptIn(ExperimentalContracts::class)
 
 package io.islandtime.measures
 
@@ -25,8 +26,12 @@ import kotlin.Deprecated
 import kotlin.Double
 import kotlin.Int
 import kotlin.Long
+import kotlin.OptIn
 import kotlin.PublishedApi
 import kotlin.String
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -284,12 +289,14 @@ public value class Seconds(
   public operator fun rem(scalar: Long): Seconds = Seconds(value % scalar)
 
   public inline fun <T> toComponentValues(action: (minutes: Long, seconds: Int) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val minutes = (value / SECONDS_PER_MINUTE)
     val seconds = (value % SECONDS_PER_MINUTE).toInt()
     return action(minutes, seconds)
   }
 
   public inline fun <T> toComponents(action: (minutes: Minutes, seconds: Seconds) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { minutes, seconds ->
          action(Minutes(minutes), Seconds(seconds))
      }
@@ -300,6 +307,7 @@ public value class Seconds(
     minutes: Int,
     seconds: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val hours = (value / SECONDS_PER_HOUR)
     val minutes = ((value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).toInt()
     val seconds = (value % SECONDS_PER_MINUTE).toInt()
@@ -311,6 +319,7 @@ public value class Seconds(
     minutes: Minutes,
     seconds: Seconds
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { hours, minutes, seconds ->
          action(Hours(hours), Minutes(minutes), Seconds(seconds))
      }
@@ -322,6 +331,7 @@ public value class Seconds(
     minutes: Int,
     seconds: Int
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / SECONDS_PER_DAY)
     val hours = ((value % SECONDS_PER_DAY) / SECONDS_PER_HOUR).toInt()
     val minutes = ((value % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE).toInt()
@@ -335,6 +345,7 @@ public value class Seconds(
     minutes: Minutes,
     seconds: Seconds
   ) -> T): T {
+    contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes, seconds ->
          action(Days(days), Hours(hours), Minutes(minutes), Seconds(seconds))
      }
