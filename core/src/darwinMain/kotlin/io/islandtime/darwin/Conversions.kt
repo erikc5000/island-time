@@ -146,7 +146,7 @@ fun NSDateComponents.toIslandOffsetDateTime() = toIslandOffsetDateTimeOrNull()
  * absent.
  */
 fun NSDateComponents.toIslandOffsetDateTimeOrNull(): OffsetDateTime? {
-    return timeZone.let {
+    return timeZone?.let {
         val dateTime = toIslandDateTime()
         OffsetDateTime(dateTime, it.toIslandTimeZone().rules.offsetAt(dateTime))
     }
@@ -164,7 +164,7 @@ fun NSDateComponents.toIslandZonedDateTime() = toIslandZonedDateTimeOrNull()
  * absent.
  */
 fun NSDateComponents.toIslandZonedDateTimeOrNull(): ZonedDateTime? {
-    return timeZone.let { ZonedDateTime(toIslandDateTime(), it.toIslandTimeZone()) }
+    return timeZone?.let { ZonedDateTime(toIslandDateTime(), it.toIslandTimeZone()) }
 }
 
 /**
@@ -241,6 +241,7 @@ fun UtcOffset.toNSTimeZone(): NSTimeZone = NSTimeZone.timeZoneForSecondsFromGMT(
     replaceWith = ReplaceWith("this.toIslandUtcOffsetAt()"),
     level = DeprecationLevel.ERROR
 )
+@Suppress("unused")
 fun NSTimeZone.toIslandUtcOffset(): UtcOffset = throw UnsupportedOperationException("Should not be called")
 
 /**

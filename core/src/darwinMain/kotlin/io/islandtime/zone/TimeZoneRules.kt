@@ -93,7 +93,7 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     }
 
     override fun daylightSavingsAt(instant: Instant): Seconds {
-        return timeZone.daylightSavingTimeOffsetForDate(instant.toNSDate()).seconds
+        return timeZone.daylightSavingTimeOffsetForDate(instant.toNSDate()).toInt().seconds
     }
 
     override val hasFixedOffset: Boolean

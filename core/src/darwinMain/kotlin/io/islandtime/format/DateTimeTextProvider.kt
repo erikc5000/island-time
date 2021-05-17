@@ -127,7 +127,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
                 TextStyle.SHORT_STANDALONE -> shortStandaloneWeekdaySymbols
                 TextStyle.NARROW -> veryShortWeekdaySymbols
                 TextStyle.NARROW_STANDALONE -> veryShortStandaloneWeekdaySymbols
-            }
+            } as List<String>
         }
     }
 
@@ -141,7 +141,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
                 TextStyle.SHORT_STANDALONE -> shortStandaloneMonthSymbols
                 TextStyle.NARROW -> veryShortMonthSymbols
                 TextStyle.NARROW_STANDALONE -> veryShortStandaloneMonthSymbols
-            }
+            } as List<String>
         }
     }
 
@@ -159,7 +159,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
                 when (style) {
                     TextStyle.FULL, TextStyle.FULL_STANDALONE -> longEraSymbols
                     else -> eraSymbols
-                }
+                } as List<String>
             }
         }
     }
@@ -167,6 +167,6 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private inline fun <T> withCalendarIn(locale: Locale, block: NSCalendar.() -> T): T? {
         return NSCalendar.calendarWithIdentifier(NSCalendarIdentifierISO8601)?.also {
             it.locale = locale
-        }.block()
+        }?.block()
     }
 }

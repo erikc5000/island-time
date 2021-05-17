@@ -101,7 +101,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals(-14400, components.timeZone.secondsFromGMT)
+        assertEquals(-14400, components.timeZone?.secondsFromGMT)
 
         val componentsWithCalendar = offsetDateTime.toNSDateComponents(includeCalendar = true)
 
@@ -118,7 +118,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals(-14400, componentsWithCalendar.timeZone.secondsFromGMT)
+        assertEquals(-14400, componentsWithCalendar.timeZone?.secondsFromGMT)
     }
 
     @Test
@@ -139,7 +139,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals("America/New_York", components.timeZone.name)
+        assertEquals("America/New_York", components.timeZone?.name)
 
         val componentsWithCalendar = zonedDateTime.toNSDateComponents(includeCalendar = true)
 
@@ -156,7 +156,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
             nanosecond = 0
         )
 
-        assertEquals("America/New_York", componentsWithCalendar.timeZone.name)
+        assertEquals("America/New_York", componentsWithCalendar.timeZone?.name)
     }
 
     @Test
