@@ -133,6 +133,19 @@ class YearMonth(
      */
     fun copy(year: Int = this.year, monthNumber: Int): YearMonth = YearMonth(year, monthNumber)
 
+    /**
+     * Returns this year-month with [centuries] added to it.
+     */
+    operator fun plus(centuries: Centuries): YearMonth = plus(centuries.inYears)
+
+    /**
+     * Returns this year-month with [decades] added to it.
+     */
+    operator fun plus(decades: Decades): YearMonth = plus(decades.inYears)
+
+    /**
+     * Returns this year-month with [years] added to it.
+     */
     operator fun plus(years: Years): YearMonth {
         return if (years.value == 0L) {
             this
@@ -142,6 +155,9 @@ class YearMonth(
         }
     }
 
+    /**
+     * Returns this year-month with [months] added to it.
+     */
     operator fun plus(months: Months): YearMonth {
         return if (months.value == 0L) {
             this
@@ -153,6 +169,19 @@ class YearMonth(
         }
     }
 
+    /**
+     * Returns this year-month with [centuries] subtracted from it.
+     */
+    operator fun minus(centuries: Centuries): YearMonth = minus(centuries.inYears)
+
+    /**
+     * Returns this year-month with [decades] subtracted from it.
+     */
+    operator fun minus(decades: Decades): YearMonth = minus(decades.inYears)
+
+    /**
+     * Returns this year-month with [years] subtracted from it.
+     */
     operator fun minus(years: Years): YearMonth {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
@@ -161,6 +190,9 @@ class YearMonth(
         }
     }
 
+    /**
+     * Returns this year-month with [months] subtracted from it.
+     */
     operator fun minus(months: Months): YearMonth {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1L.months
@@ -169,6 +201,9 @@ class YearMonth(
         }
     }
 
+    /**
+     * Checks if this year contains the specified date.
+     */
     operator fun contains(date: Date): Boolean = date.year == year && date.month == month
 
     companion object {

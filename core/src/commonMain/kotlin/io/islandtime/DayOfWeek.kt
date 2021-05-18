@@ -69,12 +69,13 @@ enum class DayOfWeek {
     }
 
     /**
-     * Adds days to this day of the week, wrapping when the beginning or end of the week is reached.
+     * Returns this day of the week with [days] added to it, wrapping when the beginning or end of the week is reached.
      */
     operator fun plus(days: Days): DayOfWeek = plus((days.value % DAYS_PER_WEEK).toInt())
 
     /**
-     * Subtracts days from this day of the week, wrapping when the beginning or end of the week is reached.
+     * Returns this day of the week with [days] subtracted from it, wrapping when the beginning or end of the week is
+     * reached.
      */
     operator fun minus(days: Days): DayOfWeek = plus(-(days.value % DAYS_PER_WEEK).toInt())
 

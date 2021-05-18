@@ -1,12 +1,14 @@
 package io.islandtime
 
-import io.islandtime.ranges.DateRange
+import io.islandtime.measures.centuries
 import io.islandtime.measures.days
+import io.islandtime.measures.decades
 import io.islandtime.measures.years
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.dateTimeParser
 import io.islandtime.parser.monthNumber
 import io.islandtime.parser.year
+import io.islandtime.ranges.DateRange
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -105,9 +107,7 @@ class YearTest : AbstractIslandTimeTest() {
     @Test
     fun `adding or subtracting zero years has no effect`() {
         assertEquals(Year(2009), Year(2009) + 0.years)
-        assertEquals(Year(2009), Year(2009) + 0L.years)
         assertEquals(Year(2009), Year(2009) - 0.years)
-        assertEquals(Year(2009), Year(2009) - 0L.years)
     }
 
     @Test
@@ -129,11 +129,9 @@ class YearTest : AbstractIslandTimeTest() {
     fun `throws an exception when adding years puts the year outside the supported range`() {
         listOf(
             { Year.MAX + 1.years },
-            { Year.MAX + 1L.years },
             { Year.MAX + Int.MAX_VALUE.years },
             { Year.MAX + Long.MAX_VALUE.years },
             { Year.MIN + (-1).years },
-            { Year.MIN + (-1L).years },
             { Year.MIN + Int.MIN_VALUE.years },
             { Year.MIN + Long.MIN_VALUE.years }
         ).forEach {
@@ -160,15 +158,145 @@ class YearTest : AbstractIslandTimeTest() {
     fun `throws an exception when subtracting years puts the year outside the supported range`() {
         listOf(
             { Year.MAX - (-1).years },
-            { Year.MAX - (-1L).years },
             { Year.MAX - Int.MIN_VALUE.years },
             { Year.MAX - Long.MIN_VALUE.years },
             { Year.MIN - 1.years },
-            { Year.MIN - 1L.years },
             { Year.MIN - Int.MAX_VALUE.years },
             { Year.MIN - Long.MAX_VALUE.years }
         ).forEach {
             assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `adding or subtracting zero decades has no effect`() {
+        assertEquals(Year(2009), Year(2009) + 0.decades)
+        assertEquals(Year(2009), Year(2009) - 0.decades)
+    }
+
+    @Test
+    fun `add positive decades`() {
+        assertEquals(Year(1979), Year(1969) + 1.decades)
+    }
+
+    @Test
+    fun `add negative decades`() {
+        assertEquals(Year(-8), Year(2) + (-1).decades)
+    }
+
+    @Test
+    fun `throws an exception when adding decades puts the year outside the supported range`() {
+        listOf(
+            { Year.MAX + 1.decades },
+            { Year.MIN + (-1).decades },
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when adding decades causes overflow`() {
+        listOf(
+            { Year.MAX + Long.MAX_VALUE.decades },
+            { Year.MIN + Long.MIN_VALUE.decades }
+        ).forEach {
+            assertFailsWith<ArithmeticException> { it() }
+        }
+    }
+
+    @Test
+    fun `subtract positive decades`() {
+        assertEquals(Year(2000), Year(2010) - 1.decades)
+    }
+
+    @Test
+    fun `subtract negative decades`() {
+        assertEquals(Year(1979), Year(1969) - (-1).decades)
+    }
+
+    @Test
+    fun `throws an exception when subtracting decades puts the year outside the supported range`() {
+        listOf(
+            { Year.MAX - (-1).decades },
+            { Year.MIN - 1.decades },
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when subtracting decades causes overflow`() {
+        listOf(
+            { Year.MAX - Long.MIN_VALUE.decades },
+            { Year.MIN - Long.MAX_VALUE.decades }
+        ).forEach {
+            assertFailsWith<ArithmeticException> { it() }
+        }
+    }
+
+    @Test
+    fun `adding or subtracting zero centuries has no effect`() {
+        assertEquals(Year(2009), Year(2009) + 0.centuries)
+        assertEquals(Year(2009), Year(2009) - 0.centuries)
+    }
+
+    @Test
+    fun `add positive centuries`() {
+        assertEquals(Year(2069), Year(1969) + 1.centuries)
+    }
+
+    @Test
+    fun `add negative centuries`() {
+        assertEquals(Year(-98), Year(2) + (-1).centuries)
+    }
+
+    @Test
+    fun `throws an exception when adding centuries puts the year outside the supported range`() {
+        listOf(
+            { Year.MAX + 1.centuries },
+            { Year.MIN + (-1).centuries },
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when adding centuries causes overflow`() {
+        listOf(
+            { Year.MAX + Long.MAX_VALUE.centuries },
+            { Year.MIN + Long.MIN_VALUE.centuries }
+        ).forEach {
+            assertFailsWith<ArithmeticException> { it() }
+        }
+    }
+
+    @Test
+    fun `subtract positive centuries`() {
+        assertEquals(Year(1910), Year(2010) - 1.centuries)
+    }
+
+    @Test
+    fun `subtract negative centuries`() {
+        assertEquals(Year(2069), Year(1969) - (-1).centuries)
+    }
+
+    @Test
+    fun `throws an exception when subtracting centuries puts the year outside the supported range`() {
+        listOf(
+            { Year.MAX - (-1).centuries },
+            { Year.MIN - 1.centuries },
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when subtracting centuries causes overflow`() {
+        listOf(
+            { Year.MAX - Long.MIN_VALUE.centuries },
+            { Year.MIN - Long.MAX_VALUE.centuries }
+        ).forEach {
+            assertFailsWith<ArithmeticException> { it() }
         }
     }
 

@@ -138,6 +138,31 @@ class DateTime(
         return duration.toComponents { seconds, nanoseconds -> this + seconds + nanoseconds }
     }
 
+    /**
+     * Returns this date-tme with [centuries] added to it.
+     */
+    operator fun plus(centuries: Centuries): DateTime {
+        return if (centuries.value == 0L) {
+            this
+        } else {
+            copy(date = date + centuries)
+        }
+    }
+
+    /**
+     * Returns this date-time with [decades] added to it.
+     */
+    operator fun plus(decades: Decades): DateTime {
+        return if (decades.value == 0L) {
+            this
+        } else {
+            copy(date = date + decades)
+        }
+    }
+
+    /**
+     * Returns this date-time with [years] added to it.
+     */
     operator fun plus(years: Years): DateTime {
         return if (years.value == 0L) {
             this
@@ -146,6 +171,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [months] added to it.
+     */
     operator fun plus(months: Months): DateTime {
         return if (months.value == 0L) {
             this
@@ -154,6 +182,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [weeks] added to it.
+     */
     operator fun plus(weeks: Weeks): DateTime {
         return if (weeks.value == 0L) {
             this
@@ -162,6 +193,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [days] added to it.
+     */
     operator fun plus(days: Days): DateTime {
         return if (days.value == 0L) {
             this
@@ -170,6 +204,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [hours] added to it.
+     */
     operator fun plus(hours: Hours): DateTime {
         return if (hours.value == 0L) {
             this
@@ -186,6 +223,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [minutes] added to it.
+     */
     operator fun plus(minutes: Minutes): DateTime {
         return if (minutes.value == 0L) {
             this
@@ -211,6 +251,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [seconds] added to it.
+     */
     operator fun plus(seconds: Seconds): DateTime {
         return if (seconds.value == 0L) {
             this
@@ -234,6 +277,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [milliseconds] added to it.
+     */
     operator fun plus(milliseconds: Milliseconds): DateTime {
         return if (milliseconds.value == 0L) {
             this
@@ -242,6 +288,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [microseconds] added to it.
+     */
     operator fun plus(microseconds: Microseconds): DateTime {
         return if (microseconds.value == 0L) {
             this
@@ -250,6 +299,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [nanoseconds] added to it.
+     */
     operator fun plus(nanoseconds: Nanoseconds): DateTime {
         return if (nanoseconds.value == 0L) {
             this
@@ -287,6 +339,31 @@ class DateTime(
         return this - duration.seconds - duration.nanosecondAdjustment
     }
 
+    /**
+     * Returns this date-time with [centuries] subtracted from it.
+     */
+    operator fun minus(centuries: Centuries): DateTime {
+        return if (centuries.value == 0L) {
+            this
+        } else {
+            copy(date = date - centuries)
+        }
+    }
+
+    /**
+     * Returns this date-time with [decades] subtracted from it.
+     */
+    operator fun minus(decades: Decades): DateTime {
+        return if (decades.value == 0L) {
+            this
+        } else {
+            copy(date = date - decades)
+        }
+    }
+
+    /**
+     * Returns this date-time with [years] subtracted from it.
+     */
     operator fun minus(years: Years): DateTime {
         return if (years.value == 0L) {
             this
@@ -295,6 +372,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [months] subtracted from it.
+     */
     operator fun minus(months: Months): DateTime {
         return if (months.value == 0L) {
             this
@@ -303,6 +383,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [weeks] subtracted from it.
+     */
     operator fun minus(weeks: Weeks): DateTime {
         return if (weeks.value == 0L) {
             this
@@ -311,6 +394,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [days] subtracted from it.
+     */
     operator fun minus(days: Days): DateTime {
         return if (days.value == 0L) {
             this
@@ -319,6 +405,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [hours] subtracted from it.
+     */
     operator fun minus(hours: Hours): DateTime {
         return if (hours.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.hours + 1.hours
@@ -327,6 +416,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [minutes] subtracted from it.
+     */
     operator fun minus(minutes: Minutes): DateTime {
         return if (minutes.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.minutes + 1.minutes
@@ -335,6 +427,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [seconds] subtracted from it.
+     */
     operator fun minus(seconds: Seconds): DateTime {
         return if (seconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.seconds + 1.seconds
@@ -343,6 +438,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [milliseconds] subtracted from it.
+     */
     operator fun minus(milliseconds: Milliseconds): DateTime {
         return if (milliseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.milliseconds + 1.milliseconds
@@ -351,6 +449,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [microseconds] subtracted from it.
+     */
     operator fun minus(microseconds: Microseconds): DateTime {
         return if (microseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.microseconds + 1.microseconds
@@ -359,6 +460,9 @@ class DateTime(
         }
     }
 
+    /**
+     * Returns this date-time with [nanoseconds] subtracted from it.
+     */
     operator fun minus(nanoseconds: Nanoseconds): DateTime {
         return if (nanoseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.nanoseconds + 1.nanoseconds

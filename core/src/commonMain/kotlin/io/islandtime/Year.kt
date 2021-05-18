@@ -2,10 +2,7 @@ package io.islandtime
 
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.toZeroPaddedString
-import io.islandtime.measures.Days
-import io.islandtime.measures.Years
-import io.islandtime.measures.days
-import io.islandtime.measures.years
+import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
 import kotlin.jvm.JvmInline
@@ -68,10 +65,34 @@ value class Year(val value: Int) : Comparable<Year> {
      */
     val endDate: Date get() = Date(value, Month.DECEMBER, 31)
 
-    operator fun plus(years: Years): Year {
-        return Year(value + years.value)
-    }
+    /**
+     * Returns this year with [centuries] added to it.
+     */
+    operator fun plus(centuries: Centuries): Year = plus(centuries.inYears)
 
+    /**
+     * Returns this year with [decades] added to it.
+     */
+    operator fun plus(decades: Decades): Year = plus(decades.inYears)
+
+    /**
+     * Returns this year with [years] added to it.
+     */
+    operator fun plus(years: Years): Year = Year(value + years.value)
+
+    /**
+     * Returns this year with [centuries] subtracted from it.
+     */
+    operator fun minus(centuries: Centuries): Year = minus(centuries.inYears)
+
+    /**
+     * Returns this year with [decades] subtracted from it.
+     */
+    operator fun minus(decades: Decades): Year = minus(decades.inYears)
+
+    /**
+     * Returns this year with [years] subtracted from it.
+     */
     operator fun minus(years: Years): Year {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1L.years
@@ -80,7 +101,14 @@ value class Year(val value: Int) : Comparable<Year> {
         }
     }
 
+    /**
+     * Checks if this year contains the specified year-month.
+     */
     operator fun contains(yearMonth: YearMonth): Boolean = yearMonth.year == value
+
+    /**
+     * Checks if this year contains the specified date.
+     */
     operator fun contains(date: Date): Boolean = date.year == value
 
     override fun compareTo(other: Year): Int = value - other.value

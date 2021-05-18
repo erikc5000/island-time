@@ -1,8 +1,8 @@
 package io.islandtime
 
-import io.islandtime.ranges.DateRange
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
+import io.islandtime.ranges.DateRange
 import io.islandtime.test.AbstractIslandTimeTest
 import kotlin.test.*
 
@@ -142,9 +142,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     fun `throws an exception when adding months puts the YearMonth out of range`() {
         listOf(
             { YearMonth.MAX + 1.months },
-            { YearMonth.MAX + 1L.months },
             { YearMonth.MIN + (-1).months },
-            { YearMonth.MIN + (-1L).months },
             { YearMonth(999_992_000, Month.JANUARY) + 8000.years.inMonths },
             { YearMonth(-999_998_000, Month.DECEMBER) + (-2000).years.inMonths },
             { YearMonth(999_992_000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).months },
@@ -192,9 +190,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     fun `throws an exception when subtracting months puts the YearMonth out of range`() {
         listOf(
             { YearMonth.MIN - 1.months },
-            { YearMonth.MIN - 1L.months },
             { YearMonth.MAX - (-1).months },
-            { YearMonth.MAX - (-1L).months },
             { YearMonth(-999_998_000, Month.JANUARY) - 2000.years.inMonths },
             { YearMonth(999_992_000, Month.DECEMBER) - (-8000).years.inMonths },
             { YearMonth(-999_000_000, Month.DECEMBER) - (Int.MAX_VALUE + 1L).months },
@@ -210,11 +206,6 @@ class YearMonthTest : AbstractIslandTimeTest() {
         assertEquals(
             YearMonth(2010, Month.APRIL),
             YearMonth(2010, Month.APRIL) + 0.years
-        )
-
-        assertEquals(
-            YearMonth(2010, Month.APRIL),
-            YearMonth(2010, Month.APRIL) + 0L.years
         )
     }
 
@@ -248,9 +239,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     fun `throws an exception when adding years puts the YearMonth out of range`() {
         listOf(
             { YearMonth.MAX + 1.years },
-            { YearMonth.MAX + 1L.years },
             { YearMonth.MIN + (-1).years },
-            { YearMonth.MIN + (-1L).years },
             { YearMonth(999_992_000, Month.JANUARY) + 8000.years },
             { YearMonth(-999_998_000, Month.DECEMBER) + (-2000).years },
             { YearMonth(999_992_000, Month.DECEMBER) + (Int.MAX_VALUE + 1L).years },
@@ -298,9 +287,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     fun `throws an exception when subtracting years puts the YearMonth out of range`() {
         listOf(
             { YearMonth.MIN - 1.years },
-            { YearMonth.MIN - 1L.years },
             { YearMonth.MAX - (-1).years },
-            { YearMonth.MAX - (-1L).years },
             { YearMonth(-999_998_000, Month.JANUARY) - 2000.years },
             { YearMonth(999_992_000, Month.DECEMBER) - (-8000).years },
             { YearMonth(1, Month.DECEMBER) - (Int.MAX_VALUE + 1L).years },
@@ -309,6 +296,162 @@ class YearMonthTest : AbstractIslandTimeTest() {
         ).forEach {
             assertFailsWith<DateTimeException> { it() }
         }
+    }
+
+    @Test
+    fun `adding zero decades doesn't change the YearMonth`() {
+        assertEquals(
+            YearMonth(2010, Month.APRIL),
+            YearMonth(2010, Month.APRIL) + 0.decades
+        )
+    }
+
+    @Test
+    fun `adds positive decades`() {
+        assertEquals(
+            YearMonth(2020, Month.APRIL),
+            YearMonth(2010, Month.APRIL) + 1.decades
+        )
+    }
+
+    @Test
+    fun `adds negative decades`() {
+        assertEquals(
+            YearMonth(2000, Month.APRIL),
+            YearMonth(2010, Month.APRIL) + (-1).decades
+        )
+    }
+
+    @Test
+    fun `throws an exception when adding decades puts the YearMonth out of range`() {
+        listOf(
+            { YearMonth.MAX + 1.decades },
+            { YearMonth.MIN + (-1).decades }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when adding decades causes overflow`() {
+        assertFailsWith<ArithmeticException> { YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.decades }
+    }
+
+    @Test
+    fun `subtracting zero decades doesn't change the YearMonth`() {
+        assertEquals(
+            YearMonth(2012, Month.APRIL),
+            YearMonth(2012, Month.APRIL) - 0.decades
+        )
+    }
+
+    @Test
+    fun `subtracts positive decades`() {
+        assertEquals(
+            YearMonth(2000, Month.APRIL),
+            YearMonth(2010, Month.APRIL) - 1.decades
+        )
+    }
+
+    @Test
+    fun `subtracts negative decades`() {
+        assertEquals(
+            YearMonth(2020, Month.APRIL),
+            YearMonth(2010, Month.APRIL) - (-1).decades
+        )
+    }
+
+    @Test
+    fun `throws an exception when subtracting decades puts the YearMonth out of range`() {
+        listOf(
+            { YearMonth.MIN - 1.decades },
+            { YearMonth.MAX - (-1).decades }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when subtracting decades causes overflow`() {
+        assertFailsWith<ArithmeticException> { YearMonth(9999, Month.DECEMBER) - Long.MAX_VALUE.decades }
+    }
+
+    @Test
+    fun `adding zero centuries doesn't change the YearMonth`() {
+        assertEquals(
+            YearMonth(2010, Month.APRIL),
+            YearMonth(2010, Month.APRIL) + 0.centuries
+        )
+    }
+
+    @Test
+    fun `adds positive centuries`() {
+        assertEquals(
+            YearMonth(2110, Month.APRIL),
+            YearMonth(2010, Month.APRIL) + 1.centuries
+        )
+    }
+
+    @Test
+    fun `adds negative centuries`() {
+        assertEquals(
+            YearMonth(1910, Month.APRIL),
+            YearMonth(2010, Month.APRIL) + (-1).centuries
+        )
+    }
+
+    @Test
+    fun `throws an exception when adding centuries puts the YearMonth out of range`() {
+        listOf(
+            { YearMonth.MAX + 1.centuries },
+            { YearMonth.MIN + (-1).centuries }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when adding centuries causes overflow`() {
+        assertFailsWith<ArithmeticException> { YearMonth(9999, Month.DECEMBER) + Long.MAX_VALUE.centuries }
+    }
+
+    @Test
+    fun `subtracting zero centuries doesn't change the YearMonth`() {
+        assertEquals(
+            YearMonth(2012, Month.APRIL),
+            YearMonth(2012, Month.APRIL) - 0.centuries
+        )
+    }
+
+    @Test
+    fun `subtracts positive centuries`() {
+        assertEquals(
+            YearMonth(1910, Month.APRIL),
+            YearMonth(2010, Month.APRIL) - 1.centuries
+        )
+    }
+
+    @Test
+    fun `subtracts negative centuries`() {
+        assertEquals(
+            YearMonth(2110, Month.APRIL),
+            YearMonth(2010, Month.APRIL) - (-1).centuries
+        )
+    }
+
+    @Test
+    fun `throws an exception when subtracting centuries puts the YearMonth out of range`() {
+        listOf(
+            { YearMonth.MIN - 1.centuries },
+            { YearMonth.MAX - (-1).centuries }
+        ).forEach {
+            assertFailsWith<DateTimeException> { it() }
+        }
+    }
+
+    @Test
+    fun `throws an exception when subtracting centuries causes overflow`() {
+        assertFailsWith<ArithmeticException> { YearMonth(9999, Month.DECEMBER) - Long.MAX_VALUE.centuries }
     }
 
     @Test

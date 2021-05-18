@@ -153,46 +153,140 @@ class ZonedDateTime private constructor(
     operator fun plus(period: Period): ZonedDateTime = copy(dateTime = dateTime + period)
 
     operator fun plus(duration: Duration): ZonedDateTime = resolveInstant(dateTime + duration)
+
+    /**
+     * Returns this date-tme with [centuries] added to it.
+     */
+    operator fun plus(centuries: Centuries): ZonedDateTime = copy(dateTime = dateTime + centuries)
+
+    /**
+     * Returns this date-time with [decades] added to it.
+     */
+    operator fun plus(decades: Decades): ZonedDateTime = copy(dateTime = dateTime + decades)
+
+    /**
+     * Returns this date-time with [years] added to it.
+     */
     operator fun plus(years: Years): ZonedDateTime = copy(dateTime = dateTime + years)
+
+    /**
+     * Returns this date-time with [months] added to it.
+     */
     operator fun plus(months: Months): ZonedDateTime = copy(dateTime = dateTime + months)
+
+    /**
+     * Returns this date-time with [weeks] added to it.
+     */
     operator fun plus(weeks: Weeks): ZonedDateTime = copy(dateTime = dateTime + weeks)
+
+    /**
+     * Returns this date-time with [days] added to it.
+     */
     operator fun plus(days: Days): ZonedDateTime = copy(dateTime = dateTime + days)
+
+    /**
+     * Returns this date-time with [hours] added to it.
+     */
     override operator fun plus(hours: Hours): ZonedDateTime = resolveInstant(dateTime + hours)
+
+    /**
+     * Returns this date-time with [minutes] added to it.
+     */
     override operator fun plus(minutes: Minutes): ZonedDateTime = resolveInstant(dateTime + minutes)
+
+    /**
+     * Returns this date-time with [seconds] added to it.
+     */
     override operator fun plus(seconds: Seconds): ZonedDateTime = resolveInstant(dateTime + seconds)
 
+    /**
+     * Returns this date-time with [milliseconds] added to it.
+     */
     override operator fun plus(milliseconds: Milliseconds): ZonedDateTime =
         resolveInstant(dateTime + milliseconds)
 
+    /**
+     * Returns this date-time with [microseconds] added to it.
+     */
     override operator fun plus(microseconds: Microseconds): ZonedDateTime =
         resolveInstant(dateTime + microseconds)
 
+    /**
+     * Returns this date-time with [nanoseconds] added to it.
+     */
     override operator fun plus(nanoseconds: Nanoseconds): ZonedDateTime =
         resolveInstant(dateTime + nanoseconds)
 
     /**
      * Returns this date-time with [period] subtracted from it.
      *
-     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range.
+     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
+     * will be coerced into the valid range.
      */
     operator fun minus(period: Period): ZonedDateTime = copy(dateTime = dateTime - period)
 
     operator fun minus(duration: Duration): ZonedDateTime = resolveInstant(dateTime - duration)
+
+    /**
+     * Returns this date-time with [centuries] subtracted from it.
+     */
+    operator fun minus(centuries: Centuries): ZonedDateTime = copy(dateTime = dateTime - centuries)
+
+    /**
+     * Returns this date-time with [decades] subtracted from it.
+     */
+    operator fun minus(decades: Decades): ZonedDateTime = copy(dateTime = dateTime - decades)
+
+    /**
+     * Returns this date-time with [years] subtracted from it.
+     */
     operator fun minus(years: Years): ZonedDateTime = copy(dateTime = dateTime - years)
+
+    /**
+     * Returns this date-time with [months] subtracted from it.
+     */
     operator fun minus(months: Months): ZonedDateTime = copy(dateTime = dateTime - months)
+
+    /**
+     * Returns this date-time with [weeks] subtracted from it.
+     */
     operator fun minus(weeks: Weeks): ZonedDateTime = copy(dateTime = dateTime - weeks)
+
+    /**
+     * Returns this date-time with [days] subtracted from it.
+     */
     operator fun minus(days: Days): ZonedDateTime = copy(dateTime = dateTime - days)
+
+    /**
+     * Returns this date-time with [hours] subtracted from it.
+     */
     override operator fun minus(hours: Hours): ZonedDateTime = resolveInstant(dateTime - hours)
+
+    /**
+     * Returns this date-time with [minutes] subtracted from it.
+     */
     override operator fun minus(minutes: Minutes): ZonedDateTime = resolveInstant(dateTime - minutes)
+
+    /**
+     * Returns this date-time with [seconds] subtracted from it.
+     */
     override operator fun minus(seconds: Seconds): ZonedDateTime = resolveInstant(dateTime - seconds)
 
+    /**
+     * Returns this date-time with [milliseconds] subtracted from it.
+     */
     override operator fun minus(milliseconds: Milliseconds): ZonedDateTime =
         resolveInstant(dateTime - milliseconds)
 
+    /**
+     * Returns this date-time with [microseconds] subtracted from it.
+     */
     override operator fun minus(microseconds: Microseconds): ZonedDateTime =
         resolveInstant(dateTime - microseconds)
 
+    /**
+     * Returns this date-time with [nanoseconds] subtracted from it.
+     */
     override operator fun minus(nanoseconds: Nanoseconds): ZonedDateTime =
         resolveInstant(dateTime - nanoseconds)
 

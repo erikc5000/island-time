@@ -301,6 +301,8 @@ class DateTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when addition puts the date-time out of range`() {
         listOf(
+            { DateTime.MIN + (-1).centuries },
+            { DateTime.MIN + (-1).decades },
             { DateTime.MIN + (-1).years },
             { DateTime.MIN + (-1).months },
             { DateTime.MIN + (-1).weeks },
@@ -311,6 +313,8 @@ class DateTimeTest : AbstractIslandTimeTest() {
             { DateTime.MIN + (-1).milliseconds },
             { DateTime.MIN + (-1).microseconds },
             { DateTime.MIN + (-1).nanoseconds },
+            { DateTime.MAX + 1.centuries },
+            { DateTime.MAX + 1.decades },
             { DateTime.MAX + 1.years },
             { DateTime.MAX + 1.months },
             { DateTime.MAX + 1.weeks },
@@ -335,6 +339,8 @@ class DateTimeTest : AbstractIslandTimeTest() {
     @Test
     fun `throws an exception when subtraction puts the date-time out of range`() {
         listOf(
+            { DateTime.MIN - 1.centuries },
+            { DateTime.MIN - 1.decades },
             { DateTime.MIN - 1.years },
             { DateTime.MIN - 1.months },
             { DateTime.MIN - 1.weeks },
@@ -345,6 +351,8 @@ class DateTimeTest : AbstractIslandTimeTest() {
             { DateTime.MIN - 1.milliseconds },
             { DateTime.MIN - 1.microseconds },
             { DateTime.MIN - 1.nanoseconds },
+            { DateTime.MAX - (-1).centuries },
+            { DateTime.MAX - (-1).decades },
             { DateTime.MAX - (-1).years },
             { DateTime.MAX - (-1).months },
             { DateTime.MAX - (-1).weeks },
@@ -367,17 +375,104 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adding or subtracting zero years has no effect`() {
+    fun `adding or subtracting zero centuries has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.centuries)
+        assertEquals(date, date - 0.centuries)
+    }
+
+    @Test
+    fun `add positive centuries`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
 
-        listOf(
-            { date + 0.years },
-            { date + 0L.years },
-            { date - 0.years },
-            { date - 0L.years }
-        ).forEach {
-            assertEquals(date, it())
-        }
+        assertEquals(
+            Date(2469, Month.DECEMBER, 1) at Time.NOON,
+            date + 5.centuries
+        )
+    }
+
+    @Test
+    fun `add negative centuries`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1469, Month.DECEMBER, 1) at Time.NOON,
+            date + (-5).centuries
+        )
+    }
+
+    @Test
+    fun `subtract positive centuries`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1469, Month.DECEMBER, 1) at Time.NOON,
+            date - 5.centuries
+        )
+    }
+
+    @Test
+    fun `subtract negative centuries`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(2469, Month.DECEMBER, 1) at Time.NOON,
+            date - (-5).centuries
+        )
+    }
+
+    @Test
+    fun `adding or subtracting zero decades has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.decades)
+        assertEquals(date, date - 0.decades)
+    }
+
+    @Test
+    fun `add positive decades`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(2019, Month.DECEMBER, 1) at Time.NOON,
+            date + 5.decades
+        )
+    }
+
+    @Test
+    fun `add negative decades`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1919, Month.DECEMBER, 1) at Time.NOON,
+            date + (-5).decades
+        )
+    }
+
+    @Test
+    fun `subtract positive decades`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(1919, Month.DECEMBER, 1) at Time.NOON,
+            date - 5.decades
+        )
+    }
+
+    @Test
+    fun `subtract negative decades`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+
+        assertEquals(
+            Date(2019, Month.DECEMBER, 1) at Time.NOON,
+            date - (-5).decades
+        )
+    }
+
+    @Test
+    fun `adding or subtracting zero years has no effect`() {
+        val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
+        assertEquals(date, date + 0.years)
+        assertEquals(date, date - 0.years)
     }
 
     @Test
@@ -387,11 +482,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1974, Month.DECEMBER, 1) at Time.NOON,
             date + 5.years
-        )
-
-        assertEquals(
-            Date(1974, Month.DECEMBER, 1) at Time.NOON,
-            date + 5L.years
         )
     }
 
@@ -403,11 +493,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1964, Month.DECEMBER, 1) at Time.NOON,
             date + (-5).years
         )
-
-        assertEquals(
-            Date(1964, Month.DECEMBER, 1) at Time.NOON,
-            date + (-5L).years
-        )
     }
 
     @Test
@@ -417,11 +502,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1964, Month.DECEMBER, 1) at Time.NOON,
             date - 5.years
-        )
-
-        assertEquals(
-            Date(1964, Month.DECEMBER, 1) at Time.NOON,
-            date - 5L.years
         )
     }
 
@@ -433,20 +513,13 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1974, Month.DECEMBER, 1) at Time.NOON,
             date - (-5).years
         )
-
-        assertEquals(
-            Date(1974, Month.DECEMBER, 1) at Time.NOON,
-            date - (-5L).years
-        )
     }
 
     @Test
     fun `adding or subtracting zero months has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.months)
-        assertEquals(date, date + 0L.months)
         assertEquals(date, date - 0.months)
-        assertEquals(date, date - 0L.months)
     }
 
     @Test
@@ -456,11 +529,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.MAY, 1) at Time.NOON,
             date + 5.months
-        )
-
-        assertEquals(
-            Date(1970, Month.MAY, 1) at Time.NOON,
-            date + 5L.months
         )
     }
 
@@ -472,11 +540,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1969, Month.JULY, 1) at Time.NOON,
             date + (-5).months
         )
-
-        assertEquals(
-            Date(1969, Month.JULY, 1) at Time.NOON,
-            date + (-5L).months
-        )
     }
 
     @Test
@@ -486,11 +549,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1969, Month.JULY, 1) at Time.NOON,
             date - 5.months
-        )
-
-        assertEquals(
-            Date(1969, Month.JULY, 1) at Time.NOON,
-            date - 5L.months
         )
     }
 
@@ -502,20 +560,13 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1970, Month.MAY, 1) at Time.NOON,
             date - (-5).months
         )
-
-        assertEquals(
-            Date(1970, Month.MAY, 1) at Time.NOON,
-            date - (-5L).months
-        )
     }
 
     @Test
     fun `adding or subtracting zero weeks has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.weeks)
-        assertEquals(date, date + 0L.weeks)
         assertEquals(date, date - 0.weeks)
-        assertEquals(date, date - 0L.weeks)
     }
 
     @Test
@@ -525,11 +576,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.JANUARY, 5) at Time.NOON,
             date + 5.weeks
-        )
-
-        assertEquals(
-            Date(1970, Month.JANUARY, 5) at Time.NOON,
-            date + 5L.weeks
         )
     }
 
@@ -541,11 +587,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1969, Month.OCTOBER, 27) at Time.NOON,
             date + (-5).weeks
         )
-
-        assertEquals(
-            Date(1969, Month.OCTOBER, 27) at Time.NOON,
-            date + (-5L).weeks
-        )
     }
 
     @Test
@@ -555,11 +596,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1969, Month.OCTOBER, 27) at Time.NOON,
             date - 5.weeks
-        )
-
-        assertEquals(
-            Date(1969, Month.OCTOBER, 27) at Time.NOON,
-            date - 5L.weeks
         )
     }
 
@@ -571,20 +607,13 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1970, Month.JANUARY, 5) at Time.NOON,
             date - (-5).weeks
         )
-
-        assertEquals(
-            Date(1970, Month.JANUARY, 5) at Time.NOON,
-            date - (-5L).weeks
-        )
     }
 
     @Test
     fun `adding or subtracting zero days has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.days)
-        assertEquals(date, date + 0L.days)
         assertEquals(date, date - 0.days)
-        assertEquals(date, date - 0L.days)
     }
 
     @Test
@@ -594,11 +623,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1969, Month.DECEMBER, 6) at Time.NOON,
             date + 5.days
-        )
-
-        assertEquals(
-            Date(1969, Month.DECEMBER, 6) at Time.NOON,
-            date + 5L.days
         )
     }
 
@@ -610,11 +634,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1969, Month.NOVEMBER, 26) at Time.NOON,
             date + (-5).days
         )
-
-        assertEquals(
-            Date(1969, Month.NOVEMBER, 26) at Time.NOON,
-            date + (-5L).days
-        )
     }
 
     @Test
@@ -624,11 +643,6 @@ class DateTimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1969, Month.NOVEMBER, 26) at Time.NOON,
             date - 5.days
-        )
-
-        assertEquals(
-            Date(1969, Month.NOVEMBER, 26) at Time.NOON,
-            date - 5L.days
         )
     }
 
@@ -640,20 +654,13 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(1969, Month.DECEMBER, 6) at Time.NOON,
             date - (-5).days
         )
-
-        assertEquals(
-            Date(1969, Month.DECEMBER, 6) at Time.NOON,
-            date - (-5L).days
-        )
     }
 
     @Test
     fun `adding or subtracting zero hours has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.hours)
-        assertEquals(date, date + 0L.hours)
         assertEquals(date, date - 0.hours)
-        assertEquals(date, date - 0L.hours)
     }
 
     @Test
@@ -683,9 +690,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `adding or subtracting zero minutes has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.minutes)
-        assertEquals(date, date + 0L.minutes)
         assertEquals(date, date - 0.minutes)
-        assertEquals(date, date - 0L.minutes)
     }
 
     @Test
@@ -722,9 +727,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `adding or subtracting zero seconds has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.seconds)
-        assertEquals(date, date + 0L.seconds)
         assertEquals(date, date - 0.seconds)
-        assertEquals(date, date - 0L.seconds)
     }
 
     @Test
@@ -766,9 +769,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `adding or subtracting zero milliseconds has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.milliseconds)
-        assertEquals(date, date + 0L.milliseconds)
         assertEquals(date, date - 0.milliseconds)
-        assertEquals(date, date - 0L.milliseconds)
     }
 
     @Test
@@ -804,9 +805,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `adding or subtracting zero microseconds has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.microseconds)
-        assertEquals(date, date + 0L.microseconds)
         assertEquals(date, date - 0.microseconds)
-        assertEquals(date, date - 0L.microseconds)
     }
 
     @Test
@@ -842,9 +841,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     fun `adding or subtracting zero nanoseconds has no effect`() {
         val date = Date(1969, Month.DECEMBER, 1) at Time.NOON
         assertEquals(date, date + 0.nanoseconds)
-        assertEquals(date, date + 0L.nanoseconds)
         assertEquals(date, date - 0.nanoseconds)
-        assertEquals(date, date - 0L.nanoseconds)
     }
 
     @Test

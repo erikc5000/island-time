@@ -68,19 +68,67 @@ class OffsetTime(
     }
 
     operator fun plus(duration: Duration): OffsetTime = copy(time = time + duration)
+
+    /**
+     * Returns this time with [hours] added to it.
+     */
     operator fun plus(hours: Hours): OffsetTime = copy(time = time + hours)
+
+    /**
+     * Returns this time with [minutes] added to it.
+     */
     operator fun plus(minutes: Minutes): OffsetTime = copy(time = time + minutes)
+
+    /**
+     * Returns this time with [seconds] added to it.
+     */
     operator fun plus(seconds: Seconds): OffsetTime = copy(time = time + seconds)
+
+    /**
+     * Returns this time with [milliseconds] added to it.
+     */
     operator fun plus(milliseconds: Milliseconds): OffsetTime = copy(time = time + milliseconds)
+
+    /**
+     * Returns this time with [microseconds] added to it.
+     */
     operator fun plus(microseconds: Microseconds): OffsetTime = copy(time = time + microseconds)
+
+    /**
+     * Returns this time with [nanoseconds] added to it.
+     */
     operator fun plus(nanoseconds: Nanoseconds): OffsetTime = copy(time = time + nanoseconds)
 
     operator fun minus(duration: Duration): OffsetTime = copy(time = time - duration)
+
+    /**
+     * Returns this time with [hours] subtracted from it.
+     */
     operator fun minus(hours: Hours): OffsetTime = copy(time = time - hours)
+
+    /**
+     * Returns this time with [minutes] subtracted from it.
+     */
     operator fun minus(minutes: Minutes): OffsetTime = copy(time = time - minutes)
+
+    /**
+     * Returns this time with [seconds] subtracted from it.
+     */
     operator fun minus(seconds: Seconds): OffsetTime = copy(time = time - seconds)
+
+    /**
+     * Returns this time with [milliseconds] subtracted from it.
+     */
     operator fun minus(milliseconds: Milliseconds): OffsetTime = copy(time = time - milliseconds)
+
+    /**
+     * Returns this time with [microseconds] subtracted from it.
+     */
     operator fun minus(microseconds: Microseconds): OffsetTime = copy(time = time - microseconds)
+
+    /**
+     * Returns this time with [nanoseconds] subtracted from it.
+     */
     operator fun minus(nanoseconds: Nanoseconds): OffsetTime = copy(time = time - nanoseconds)
 
     /**

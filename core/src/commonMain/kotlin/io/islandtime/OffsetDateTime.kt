@@ -166,7 +166,7 @@ class OffsetDateTime(
         get() = dateTime.millisecondOfUnixEpochAt(offset)
 
     /**
-     * Changes the offset of this [OffsetDateTime], adjusting the date and time components such that the instant
+     * Returns this date-time with a new UTC offset, adjusting the date and time components such that the instant
      * represented by it remains the same.
      */
     fun adjustedTo(newOffset: UtcOffset): OffsetDateTime {
@@ -188,36 +188,134 @@ class OffsetDateTime(
 
     operator fun plus(duration: Duration): OffsetDateTime = copy(dateTime = dateTime + duration)
 
+    /**
+     * Returns this date-tme with [centuries] added to it.
+     */
+    operator fun plus(centuries: Centuries): OffsetDateTime = copy(dateTime = dateTime + centuries)
+
+    /**
+     * Returns this date-time with [decades] added to it.
+     */
+    operator fun plus(decades: Decades): OffsetDateTime = copy(dateTime = dateTime + decades)
+
+    /**
+     * Returns this date-time with [years] added to it.
+     */
     operator fun plus(years: Years): OffsetDateTime = copy(dateTime = dateTime + years)
+
+    /**
+     * Returns this date-time with [months] added to it.
+     */
     operator fun plus(months: Months): OffsetDateTime = copy(dateTime = dateTime + months)
+
+    /**
+     * Returns this date-time with [weeks] added to it.
+     */
     operator fun plus(weeks: Weeks): OffsetDateTime = copy(dateTime = dateTime + weeks)
+
+    /**
+     * Returns this date-time with [days] added to it.
+     */
     operator fun plus(days: Days): OffsetDateTime = copy(dateTime = dateTime + days)
+
+    /**
+     * Returns this date-time with [hours] added to it.
+     */
     override operator fun plus(hours: Hours): OffsetDateTime = copy(dateTime = dateTime + hours)
+
+    /**
+     * Returns this date-time with [minutes] added to it.
+     */
     override operator fun plus(minutes: Minutes): OffsetDateTime = copy(dateTime = dateTime + minutes)
+
+    /**
+     * Returns this date-time with [seconds] added to it.
+     */
     override operator fun plus(seconds: Seconds): OffsetDateTime = copy(dateTime = dateTime + seconds)
+
+    /**
+     * Returns this date-time with [milliseconds] added to it.
+     */
     override operator fun plus(milliseconds: Milliseconds): OffsetDateTime = copy(dateTime = dateTime + milliseconds)
+
+    /**
+     * Returns this date-time with [microseconds] added to it.
+     */
     override operator fun plus(microseconds: Microseconds): OffsetDateTime = copy(dateTime = dateTime + microseconds)
+
+    /**
+     * Returns this date-time with [nanoseconds] added to it.
+     */
     override operator fun plus(nanoseconds: Nanoseconds): OffsetDateTime = copy(dateTime = dateTime + nanoseconds)
 
     /**
      * Returns this date-time with [period] subtracted from it.
      *
-     * Years are added first, then months, then days. If the day exceeds the maximum month length at any step, it will
-     * be coerced into the valid range.
+     * Years are subtracted first, then months, then days. If the day exceeds the maximum month length at any step, it
+     * will be coerced into the valid range.
      */
     operator fun minus(period: Period): OffsetDateTime = copy(dateTime = dateTime - period)
 
     operator fun minus(duration: Duration): OffsetDateTime = copy(dateTime = dateTime - duration)
 
+    /**
+     * Returns this date-time with [centuries] subtracted from it.
+     */
+    operator fun minus(centuries: Centuries): OffsetDateTime = copy(dateTime = dateTime - centuries)
+
+    /**
+     * Returns this date-time with [decades] subtracted from it.
+     */
+    operator fun minus(decades: Decades): OffsetDateTime = copy(dateTime = dateTime - decades)
+
+    /**
+     * Returns this date-time with [years] subtracted from it.
+     */
     operator fun minus(years: Years): OffsetDateTime = copy(dateTime = dateTime - years)
+
+    /**
+     * Returns this date-time with [months] subtracted from it.
+     */
     operator fun minus(months: Months): OffsetDateTime = copy(dateTime = dateTime - months)
+
+    /**
+     * Returns this date-time with [weeks] subtracted from it.
+     */
     operator fun minus(weeks: Weeks): OffsetDateTime = copy(dateTime = dateTime - weeks)
+
+    /**
+     * Returns this date-time with [days] subtracted from it.
+     */
     operator fun minus(days: Days): OffsetDateTime = copy(dateTime = dateTime - days)
+
+    /**
+     * Returns this date-time with [hours] subtracted from it.
+     */
     override operator fun minus(hours: Hours): OffsetDateTime = copy(dateTime = dateTime - hours)
+
+    /**
+     * Returns this date-time with [minutes] subtracted from it.
+     */
     override operator fun minus(minutes: Minutes): OffsetDateTime = copy(dateTime = dateTime - minutes)
+
+    /**
+     * Returns this date-time with [seconds] subtracted from it.
+     */
     override operator fun minus(seconds: Seconds): OffsetDateTime = copy(dateTime = dateTime - seconds)
+
+    /**
+     * Returns this date-time with [milliseconds] subtracted from it.
+     */
     override operator fun minus(milliseconds: Milliseconds): OffsetDateTime = copy(dateTime = dateTime - milliseconds)
+
+    /**
+     * Returns this date-time with [microseconds] subtracted from it.
+     */
     override operator fun minus(microseconds: Microseconds): OffsetDateTime = copy(dateTime = dateTime - microseconds)
+
+    /**
+     * Returns this date-time with [nanoseconds] subtracted from it.
+     */
     override operator fun minus(nanoseconds: Nanoseconds): OffsetDateTime = copy(dateTime = dateTime - nanoseconds)
 
     operator fun rangeTo(other: OffsetDateTime): OffsetDateTimeInterval =
