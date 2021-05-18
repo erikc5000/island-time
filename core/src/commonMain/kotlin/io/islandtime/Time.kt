@@ -78,6 +78,9 @@ class Time(
         return this + duration.seconds + duration.nanosecondAdjustment
     }
 
+    /**
+     * Returns this time with [hours] added to it.
+     */
     operator fun plus(hours: Hours): Time {
         val wrappedHours = (hours % HOURS_PER_DAY).toInt()
 
@@ -89,6 +92,9 @@ class Time(
         }
     }
 
+    /**
+     * Returns this time with [minutes] added to it.
+     */
     operator fun plus(minutes: Minutes): Time {
         return if (minutes.value == 0L) {
             this
@@ -107,6 +113,9 @@ class Time(
         }
     }
 
+    /**
+     * Returns this time with [seconds] added to it.
+     */
     operator fun plus(seconds: Seconds): Time {
         return if (seconds.value == 0L) {
             this
@@ -123,14 +132,23 @@ class Time(
         }
     }
 
+    /**
+     * Returns this time with [milliseconds] added to it.
+     */
     operator fun plus(milliseconds: Milliseconds): Time {
         return plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanosecondsUnchecked)
     }
 
+    /**
+     * Returns this time with [microseconds] added to it.
+     */
     operator fun plus(microseconds: Microseconds): Time {
         return plusWrapped((microseconds % MICROSECONDS_PER_DAY).inNanosecondsUnchecked)
     }
 
+    /**
+     * Returns this time with [nanoseconds] added to it.
+     */
     operator fun plus(nanoseconds: Nanoseconds): Time = plusWrapped(nanoseconds % NANOSECONDS_PER_DAY)
 
     private fun plusWrapped(wrappedNanos: Nanoseconds): Time {
@@ -146,18 +164,38 @@ class Time(
         return this - duration.seconds - duration.nanosecondAdjustment
     }
 
+    /**
+     * Returns this time with [hours] subtracted from it.
+     */
     operator fun minus(hours: Hours): Time = plus((hours % HOURS_PER_DAY).negateUnchecked())
+
+    /**
+     * Returns this time with [minutes] subtracted from it.
+     */
     operator fun minus(minutes: Minutes): Time = plus((minutes % MINUTES_PER_DAY).negateUnchecked())
+
+    /**
+     * Returns this time with [seconds] subtracted from it.
+     */
     operator fun minus(seconds: Seconds): Time = plus((seconds % SECONDS_PER_DAY).negateUnchecked())
 
+    /**
+     * Returns this time with [milliseconds] subtracted from it.
+     */
     operator fun minus(milliseconds: Milliseconds): Time {
         return plusWrapped((milliseconds % MILLISECONDS_PER_DAY).inNanosecondsUnchecked.negateUnchecked())
     }
 
+    /**
+     * Returns this time with [microseconds] subtracted from it.
+     */
     operator fun minus(microseconds: Microseconds): Time {
         return plusWrapped((microseconds % MICROSECONDS_PER_DAY).inNanosecondsUnchecked.negateUnchecked())
     }
 
+    /**
+     * Returns this time with [nanoseconds] subtracted from it.
+     */
     operator fun minus(nanoseconds: Nanoseconds): Time {
         return plusWrapped((nanoseconds % NANOSECONDS_PER_DAY).negateUnchecked())
     }

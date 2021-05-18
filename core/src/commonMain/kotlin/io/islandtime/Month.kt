@@ -30,7 +30,7 @@ enum class Month {
     val number: Int get() = ordinal + 1
 
     /**
-     * Returns the last day of the month in a common year.
+     * The last day of the month in a common year.
      */
     val lastDayInCommonYear: Int
         get() = when (this) {
@@ -40,7 +40,7 @@ enum class Month {
         }
 
     /**
-     * Returns the last day of the month in a leap year.
+     * The last day of the month in a leap year.
      */
     val lastDayInLeapYear: Int
         get() = when (this) {
@@ -86,7 +86,7 @@ enum class Month {
     val lengthInCommonYear: Days get() = lastDayInCommonYear.days
 
     /**
-     * The number of days in the month in a leap month.
+     * The number of days in the month in a leap year.
      */
     val lengthInLeapYear: Days get() = lastDayInLeapYear.days
 
@@ -119,7 +119,7 @@ enum class Month {
     }
 
     /**
-     * Returns the last day of the month in a particular year.
+     * Returns the last day of the month in [year].
      */
     fun lastDayIn(year: Int): Int = when (this) {
         FEBRUARY -> if (isLeapYear(year)) 29 else 28
@@ -127,7 +127,7 @@ enum class Month {
     }
 
     /**
-     * Returns the number of days in the month for a particular year.
+     * Returns the number of days in the month in [year].
      * @param year retrieve the length of the month within this year
      * @return the number of days in the month
      */
@@ -167,12 +167,12 @@ enum class Month {
     fun dayRangeIn(year: Int): IntRange = 1..lastDayIn(year)
 
     /**
-     * Adds months to this month, wrapping when the beginning or end of the year is reached.
+     * Returns this month with [months] added to it, wrapping when the beginning or end of the year is reached.
      */
     operator fun plus(months: Months): Month = plus((months.value % 12).toInt())
 
     /**
-     * Subtracts months from this month, wrapping when the beginning or end of the year is reached.
+     * Returns this month with [months] subtracted from it, wrapping when the beginning or end of the year is reached.
      */
     operator fun minus(months: Months): Month = plus(-(months.value % 12).toInt())
 

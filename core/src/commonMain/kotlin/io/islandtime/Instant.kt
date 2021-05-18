@@ -46,25 +46,49 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with a number of 24-hour [days] added to it.
+     */
     operator fun plus(days: Days): Instant = plus(days.inSeconds.toLong(), 0)
+
+    /**
+     * Returns this instant with [hours] added to it.
+     */
     override operator fun plus(hours: Hours): Instant = plus(hours.inSeconds.toLong(), 0)
+
+    /**
+     * Returns this instant with [minutes] added to it.
+     */
     override operator fun plus(minutes: Minutes): Instant = plus(minutes.inSeconds.toLong(), 0)
+
+    /**
+     * Returns this instant with [seconds] added to it.
+     */
     override operator fun plus(seconds: Seconds): Instant = plus(seconds.toLong(), 0)
 
+    /**
+     * Returns this instant with [milliseconds] added to it.
+     */
     override operator fun plus(milliseconds: Milliseconds): Instant {
         return plus(
             milliseconds.inWholeSeconds.toLong(),
-            (milliseconds.value % MILLISECONDS_PER_SECOND).toInt() * NANOSECONDS_PER_MILLISECOND
+            (milliseconds % MILLISECONDS_PER_SECOND).toIntUnchecked() * NANOSECONDS_PER_MILLISECOND
         )
     }
 
+    /**
+     * Returns this instant with [microseconds] added to it.
+     */
     override operator fun plus(microseconds: Microseconds): Instant {
         return plus(
             microseconds.inWholeSeconds.toLong(),
-            (microseconds.value % MICROSECONDS_PER_SECOND).toInt() * NANOSECONDS_PER_MICROSECOND
+            (microseconds % MICROSECONDS_PER_SECOND).toIntUnchecked() * NANOSECONDS_PER_MICROSECOND
         )
     }
 
+    /**
+     * Returns this instant with [nanoseconds] added to it.
+     */
     override operator fun plus(nanoseconds: Nanoseconds): Instant {
         return plus(
             nanoseconds.inWholeSeconds.toLong(),
@@ -80,6 +104,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with a number of 24-hour [days] subtracted from it.
+     */
     operator fun minus(days: Days): Instant {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
@@ -88,6 +115,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with [hours] subtracted from it.
+     */
     override operator fun minus(hours: Hours): Instant {
         return if (hours.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.hours + 1.hours
@@ -96,6 +126,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with [minutes] subtracted from it.
+     */
     override operator fun minus(minutes: Minutes): Instant {
         return if (minutes.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.minutes + 1.minutes
@@ -104,6 +137,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with [seconds] subtracted from it.
+     */
     override operator fun minus(seconds: Seconds): Instant {
         return if (seconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.seconds + 1.seconds
@@ -112,6 +148,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with [milliseconds] subtracted from it.
+     */
     override operator fun minus(milliseconds: Milliseconds): Instant {
         return if (milliseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.milliseconds + 1.milliseconds
@@ -120,6 +159,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with [microseconds] subtracted from it.
+     */
     override operator fun minus(microseconds: Microseconds): Instant {
         return if (microseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.microseconds + 1.microseconds
@@ -128,6 +170,9 @@ class Instant private constructor(
         }
     }
 
+    /**
+     * Returns this instant with [nanoseconds] subtracted from it.
+     */
     override operator fun minus(nanoseconds: Nanoseconds): Instant {
         return if (nanoseconds.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.nanoseconds + 1.nanoseconds

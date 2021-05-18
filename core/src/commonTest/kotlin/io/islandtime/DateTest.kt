@@ -3,7 +3,10 @@ package io.islandtime
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.test.AbstractIslandTimeTest
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
 
 class DateTest : AbstractIslandTimeTest() {
     @Test
@@ -177,7 +180,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `add zero days`() {
         val date = Date(2019, Month.JANUARY, 1)
         assertEquals(date, date + 0.days)
-        assertEquals(date, date + 0L.days)
     }
 
     @Test
@@ -195,11 +197,6 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1970, Month.MARCH, 1),
             Date(1969, Month.MARCH, 1) + 365.days
-        )
-
-        assertEquals(
-            Date(1970, Month.MARCH, 1),
-            Date(1969, Month.MARCH, 1) + 365L.days
         )
     }
 
@@ -225,7 +222,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `subtract zero days`() {
         val date = Date(2019, Month.JANUARY, 1)
         assertEquals(date, date - 0.days)
-        assertEquals(date, date - 0L.days)
     }
 
     @Test
@@ -302,11 +298,6 @@ class DateTest : AbstractIslandTimeTest() {
             Date(1930, Month.JANUARY, 28),
             Date(1930, Month.JANUARY, 28) + 0.weeks
         )
-
-        assertEquals(
-            Date(2030, Month.JANUARY, 28),
-            Date(2030, Month.JANUARY, 28) + 0L.weeks
-        )
     }
 
     @Test
@@ -314,11 +305,6 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(1930, Month.JANUARY, 28),
             Date(1930, Month.JANUARY, 28) - 0.weeks
-        )
-
-        assertEquals(
-            Date(2030, Month.JANUARY, 28),
-            Date(2030, Month.JANUARY, 28) - 0L.weeks
         )
     }
 
@@ -346,11 +332,6 @@ class DateTest : AbstractIslandTimeTest() {
             Date(2019, Month.FEBRUARY, 4),
             Date(2019, Month.JANUARY, 28) + 1.weeks
         )
-
-        assertEquals(
-            Date(2019, Month.FEBRUARY, 4),
-            Date(2019, Month.JANUARY, 28) + 1L.weeks
-        )
     }
 
     @Test
@@ -358,11 +339,6 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(2019, Month.JANUARY, 21),
             Date(2019, Month.JANUARY, 28) + (-1).weeks
-        )
-
-        assertEquals(
-            Date(2019, Month.JANUARY, 21),
-            Date(2019, Month.JANUARY, 28) + (-1L).weeks
         )
     }
 
@@ -372,11 +348,6 @@ class DateTest : AbstractIslandTimeTest() {
             Date(2019, Month.JANUARY, 21),
             Date(2019, Month.JANUARY, 28) - 1.weeks
         )
-
-        assertEquals(
-            Date(2019, Month.JANUARY, 21),
-            Date(2019, Month.JANUARY, 28) - 1L.weeks
-        )
     }
 
     @Test
@@ -384,11 +355,6 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(2019, Month.FEBRUARY, 4),
             Date(2019, Month.JANUARY, 28) - (-1).weeks
-        )
-
-        assertEquals(
-            Date(2019, Month.FEBRUARY, 4),
-            Date(2019, Month.JANUARY, 28) - (-1L).weeks
         )
     }
 
@@ -410,7 +376,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `add zero months`() {
         val date = Date(2019, Month.JANUARY, 28)
         assertEquals(date, date + 0.months)
-        assertEquals(date, date + 0L.months)
     }
 
     @Test
@@ -463,7 +428,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `subtract zero months`() {
         val date = Date(2019, Month.JANUARY, 28)
         assertEquals(date, date - 0.months)
-        assertEquals(date, date - 0L.months)
     }
 
     @Test
@@ -520,7 +484,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `add zero years`() {
         val date = Date(2019, Month.JANUARY, 28)
         assertEquals(date, date + 0.years)
-        assertEquals(date, date + 0L.years)
     }
 
     @Test
@@ -563,7 +526,6 @@ class DateTest : AbstractIslandTimeTest() {
     fun `subtract zero years`() {
         val date = Date(2019, Month.JANUARY, 28)
         assertEquals(date, date - 0.years)
-        assertEquals(date, date - 0L.years)
     }
 
     @Test
@@ -599,6 +561,122 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(2024, Month.FEBRUARY, 29),
             Date(2020, Month.FEBRUARY, 29) - (-4).years
+        )
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting decades puts the date out of range`() {
+        assertFailsWith<DateTimeException> { Date.MAX + 1.decades }
+        assertFailsWith<DateTimeException> { Date.MIN - 1.decades }
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting decades causes overflow`() {
+        assertFailsWith<ArithmeticException> { Date(9999, Month.JANUARY, 28) + Long.MAX_VALUE.decades }
+        assertFailsWith<ArithmeticException> { Date(1, Month.JANUARY, 28) + Long.MIN_VALUE.decades }
+        assertFailsWith<ArithmeticException> { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.decades }
+        assertFailsWith<ArithmeticException> { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.decades }
+    }
+
+    @Test
+    fun `add zero decades`() {
+        val date = Date(2019, Month.JANUARY, 28)
+        assertEquals(date, date + 0.decades)
+    }
+
+    @Test
+    fun `add positive decades`() {
+        assertEquals(
+            Date(2030, Month.FEBRUARY, 28),
+            Date(2020, Month.FEBRUARY, 29) + 1.decades
+        )
+    }
+
+    @Test
+    fun `add negative decades`() {
+        assertEquals(
+            Date(2009, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) + (-1).decades
+        )
+    }
+
+    @Test
+    fun `subtract zero decades`() {
+        val date = Date(2019, Month.JANUARY, 28)
+        assertEquals(date, date - 0.decades)
+    }
+
+    @Test
+    fun `subtract positive decades`() {
+        assertEquals(
+            Date(2009, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) - 1.decades
+        )
+    }
+
+    @Test
+    fun `subtract negative decades`() {
+        assertEquals(
+            Date(2029, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) - (-1).decades
+        )
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting centuries puts the date out of range`() {
+        assertFailsWith<DateTimeException> { Date.MAX + 1.centuries }
+        assertFailsWith<DateTimeException> { Date.MIN - 1.centuries }
+    }
+
+    @Test
+    fun `throws an exception when adding or subtracting centuries causes overflow`() {
+        assertFailsWith<ArithmeticException> { Date(9999, Month.JANUARY, 28) + Long.MAX_VALUE.centuries }
+        assertFailsWith<ArithmeticException> { Date(1, Month.JANUARY, 28) + Long.MIN_VALUE.centuries }
+        assertFailsWith<ArithmeticException> { Date(9999, Month.JANUARY, 28) - Long.MAX_VALUE.centuries }
+        assertFailsWith<ArithmeticException> { Date(1, Month.JANUARY, 28) - Long.MIN_VALUE.centuries }
+    }
+
+    @Test
+    fun `add zero centuries`() {
+        val date = Date(2019, Month.JANUARY, 28)
+        assertEquals(date, date + 0.centuries)
+    }
+
+    @Test
+    fun `add positive centuries`() {
+        assertEquals(
+            Date(2119, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) + 1.centuries
+        )
+    }
+
+    @Test
+    fun `add negative centuries`() {
+        assertEquals(
+            Date(1919, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) + (-1).centuries
+        )
+    }
+
+    @Test
+    fun `subtract zero centuries`() {
+        val date = Date(2019, Month.JANUARY, 28)
+        assertEquals(date, date - 0.centuries)
+    }
+
+    @Test
+    fun `subtract positive centuries`() {
+        assertEquals(
+            Date(1919, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) - 1.centuries
+        )
+    }
+
+    @Test
+    fun `subtract negative centuries`() {
+        assertEquals(
+            Date(2119, Month.JANUARY, 31),
+            Date(2019, Month.JANUARY, 31) - (-1).centuries
         )
     }
 

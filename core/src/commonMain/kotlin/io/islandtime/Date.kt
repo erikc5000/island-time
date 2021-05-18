@@ -111,6 +111,19 @@ class Date(
         }
     }
 
+    /**
+     * Returns this date with [centuries] added to it.
+     */
+    operator fun plus(centuries: Centuries): Date = plus(centuries.inYears)
+
+    /**
+     * Returns this date with [decades] added to it.
+     */
+    operator fun plus(decades: Decades): Date = plus(decades.inYears)
+
+    /**
+     * Returns this date with [years] added to it.
+     */
     operator fun plus(years: Years): Date {
         return if (years.value == 0L) {
             this
@@ -120,6 +133,9 @@ class Date(
         }
     }
 
+    /**
+     * Returns this date with [months] added to it.
+     */
     operator fun plus(months: Months): Date {
         return if (months.value == 0L) {
             this
@@ -132,8 +148,14 @@ class Date(
         }
     }
 
+    /**
+     * Returns this date with [weeks] added to it.
+     */
     operator fun plus(weeks: Weeks): Date = plus(weeks.inDays)
 
+    /**
+     * Returns this date with [days] added to it.
+     */
     operator fun plus(days: Days): Date {
         return if (days.value == 0L) {
             this
@@ -156,6 +178,19 @@ class Date(
         }
     }
 
+    /**
+     * Returns this date with [centuries] subtracted from it.
+     */
+    operator fun minus(centuries: Centuries): Date = minus(centuries.inYears)
+
+    /**
+     * Returns this date with [decades] subtracted from it.
+     */
+    operator fun minus(decades: Decades): Date = minus(decades.inYears)
+
+    /**
+     * Returns this date with [years] subtracted from it.
+     */
     operator fun minus(years: Years): Date {
         return if (years.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.years + 1.years
@@ -164,6 +199,9 @@ class Date(
         }
     }
 
+    /**
+     * Returns this date with [months] subtracted from it.
+     */
     operator fun minus(months: Months): Date {
         return if (months.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.months + 1.months
@@ -172,14 +210,14 @@ class Date(
         }
     }
 
-    operator fun minus(weeks: Weeks): Date {
-        return if (weeks.value == Long.MIN_VALUE) {
-            this + Long.MAX_VALUE.days + 1.weeks
-        } else {
-            plus(weeks.negateUnchecked())
-        }
-    }
+    /**
+     * Returns this date with [weeks] subtracted from it.
+     */
+    operator fun minus(weeks: Weeks): Date = minus(weeks.inDays)
 
+    /**
+     * Returns this date with [days] subtracted from it.
+     */
     operator fun minus(days: Days): Date {
         return if (days.value == Long.MIN_VALUE) {
             this + Long.MAX_VALUE.days + 1.days
