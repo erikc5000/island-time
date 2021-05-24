@@ -6,7 +6,8 @@ import java.io.File
 
 private const val OUTPUT_PATH = "../../core/src/commonMain/generated"
 
-private const val BASE_PACKAGE_NAME = "io.islandtime"
+private const val ROOT_PACKAGE_NAME = "io.islandtime"
+private const val BASE_PACKAGE_NAME = "io.islandtime.base"
 private const val CALENDAR_PACKAGE_NAME = "io.islandtime.calendar"
 private const val INTERNAL_PACKAGE_NAME = "io.islandtime.internal"
 private const val LOCALE_PACKAGE_NAME = "io.islandtime.locale"
@@ -14,6 +15,7 @@ private const val MEASURES_PACKAGE_NAME = "io.islandtime.measures"
 private const val RANGES_PACKAGE_NAME = "io.islandtime.ranges"
 private const val RANGES_INTERNAL_PACKAGE_NAME = "io.islandtime.ranges.internal"
 
+fun root(name: String) = ClassName(ROOT_PACKAGE_NAME, name)
 fun base(name: String) = ClassName(BASE_PACKAGE_NAME, name)
 fun calendar(name: String) = ClassName(CALENDAR_PACKAGE_NAME, name)
 fun internal(name: String) = ClassName(INTERNAL_PACKAGE_NAME, name)
@@ -29,7 +31,8 @@ private val generators = arrayOf(
     ConstantsGenerator,
     DatePropertiesGenerator,
     DateConversionsGenerator,
-    IntervalOperatorsGenerator
+    IntervalOperatorsGenerator,
+    IntervalPropertiesGenerator
 )
 
 fun main() {

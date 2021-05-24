@@ -58,7 +58,7 @@ enum class TemporalUnitDescription(
     open val isoPeriodUnitConversion: TemporalUnitConversion get() = TemporalUnitConversion(this, this)
     val isoPeriodZeroString: String get() = "${isoPeriodPrefix}0$isoPeriodUnit"
     open val forceLongInOperators: Boolean = false
-    val isDayBased get() = this >= DAYS
+    val isDateBased get() = this >= DAYS
     val isTimeBased get() = this <= DAYS
 }
 
@@ -79,7 +79,7 @@ data class TemporalUnitConversion(
     fun isSupportedAndNecessary() = isSupported() && isNecessary()
 
     fun isSupported(): Boolean {
-        return ((fromUnit.isDayBased && toUnit.isDayBased) || (fromUnit.isTimeBased && toUnit.isTimeBased)) &&
+        return ((fromUnit.isDateBased && toUnit.isDateBased) || (fromUnit.isTimeBased && toUnit.isTimeBased)) &&
             constantValue > 0L
     }
 

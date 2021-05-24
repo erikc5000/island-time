@@ -66,62 +66,16 @@ class DateRange(
         }
     }
 
-    /**
-     * The number of whole years in this range.
-     * @throws UnsupportedOperationException if the range isn't bounded
-     */
-    val lengthInYears: Years
-        get() = when {
-            isEmpty() -> 0.years
-            isBounded() -> yearsBetween(start, endInclusive + 1.days)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole months in this range.
-     * @throws UnsupportedOperationException if the range isn't bounded
-     */
-    val lengthInMonths: Months
-        get() = when {
-            isEmpty() -> 0.months
-            isBounded() -> monthsBetween(start, endInclusive + 1.days)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole weeks in this range.
-     * @throws UnsupportedOperationException if the range isn't bounded
-     */
-    val lengthInWeeks: Weeks
-        get() = when {
-            isEmpty() -> 0.weeks
-            isBounded() -> weeksBetween(start, endInclusive + 1.days)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of days in this range. As a range is inclusive, if the start and end date are the same, the result
-     * will be one day.
-     * @throws UnsupportedOperationException if the range isn't bounded
-     */
-    val lengthInDays: Days
-        get() = when {
-            isEmpty() -> 0.days
-            isBounded() -> daysBetween(start, endInclusive + 1.days)
-            else -> throwUnboundedIntervalException()
-        }
-
-
     companion object {
         /**
          * An empty range.
          */
-        val EMPTY = DateRange(Date.fromDayOfUnixEpoch(1L), Date.fromDayOfUnixEpoch(0L))
+        val EMPTY: DateRange = DateRange(Date.fromDayOfUnixEpoch(1L), Date.fromDayOfUnixEpoch(0L))
 
         /**
          * An unbounded (ie. infinite) range of dates.
          */
-        val UNBOUNDED = DateRange(Date.MIN, Date.MAX)
+        val UNBOUNDED: DateRange = DateRange(Date.MIN, Date.MAX)
     }
 }
 
@@ -192,7 +146,7 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
         totalMonths > 0 && dayDiff < 0 -> {
             totalMonths--
             val testDate = start + totalMonths.months
-            daysBetween(testDate, endExclusive)
+            Days.between(testDate, endExclusive)
         }
         totalMonths < 0 && dayDiff > 0 -> {
             totalMonths++
@@ -206,32 +160,46 @@ fun periodBetween(start: Date, endExclusive: Date): Period {
     return periodOf(years, months, days)
 }
 
-/**
- * Gets the number of whole years between two dates.
- */
-fun yearsBetween(start: Date, endExclusive: Date): Years {
-    return monthsBetween(start, endExclusive).inWholeYears
-}
+@Deprecated(
+    message = "Replace with Years.between()",
+    replaceWith = ReplaceWith(
+        "Years.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Years"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun yearsBetween(start: Date, endExclusive: Date): Years = Years.between(start, endExclusive)
 
-/**
- * Gets the number of whole months between two dates.
- */
-fun monthsBetween(start: Date, endExclusive: Date): Months {
-    val startDays = start.monthsSinceYear0 * 32L + start.dayOfMonth
-    val endDays = endExclusive.monthsSinceYear0 * 32L + endExclusive.dayOfMonth
-    return ((endDays - startDays) / 32).months
-}
+@Deprecated(
+    message = "Replace with Months.between()",
+    replaceWith = ReplaceWith(
+        "Months.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Months"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun monthsBetween(start: Date, endExclusive: Date): Months = Months.between(start, endExclusive)
 
-/**
- * Gets the number of whole weeks between two dates.
- */
-fun weeksBetween(start: Date, endExclusive: Date): Weeks {
-    return daysBetween(start, endExclusive).inWholeWeeks
-}
+@Deprecated(
+    message = "Replace with Weeks.between()",
+    replaceWith = ReplaceWith(
+        "Weeks.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Weeks"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun weeksBetween(start: Date, endExclusive: Date): Weeks = Weeks.between(start, endExclusive)
 
-/**
- * Gets the number of days between two dates.
- */
-fun daysBetween(start: Date, endExclusive: Date): Days {
-    return endExclusive.daysSinceUnixEpoch - start.daysSinceUnixEpoch
-}
+@Deprecated(
+    message = "Replace with Days.between()",
+    replaceWith = ReplaceWith(
+        "Days.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Days"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun daysBetween(start: Date, endExclusive: Date): Days = Days.between(start, endExclusive)

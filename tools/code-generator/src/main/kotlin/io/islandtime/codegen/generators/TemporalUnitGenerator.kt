@@ -10,7 +10,6 @@ import io.islandtime.codegen.descriptions.per
 import io.islandtime.codegen.dsl.*
 import io.islandtime.codegen.internal
 import io.islandtime.codegen.javamath2kmp
-import io.islandtime.codegen.measures
 import kotlin.reflect.KClass
 
 object TemporalUnitGenerator : Generator {
@@ -49,9 +48,6 @@ private fun KClass<*>.literalValueString(value: Long) = when (this) {
     Long::class -> "${value}L"
     else -> throw IllegalStateException("Unsupported primitive type")
 }
-
-private val TemporalUnitDescription.className get() = measures(pluralName)
-private val TemporalUnitDescription.nextBiggest get() = TemporalUnitDescription.values()[this.ordinal + 1]
 
 private val TemporalUnitConversion.propertyClassName get() = internal(constantName)
 
@@ -674,7 +670,7 @@ private fun CodeBlockBuilder.exactlyOnceContractCode(parameter: String) {
     +"%contract:T { callsInPlace($parameter, %invocationKind:T.EXACTLY_ONCE) }"
 }
 
-fun FileBuilder.buildPrimitiveConstructorProperty(primitive: KClass<*>, description: TemporalUnitDescription) {
+private fun FileBuilder.buildPrimitiveConstructorProperty(primitive: KClass<*>, description: TemporalUnitDescription) {
     property(description.lowerPluralName, description.className) {
         kdoc { "Converts this value to a duration of ${description.lowerPluralName}." }
         receiver(primitive)
@@ -684,7 +680,7 @@ fun FileBuilder.buildPrimitiveConstructorProperty(primitive: KClass<*>, descript
     }
 }
 
-fun FileBuilder.buildTimesExtensionFunction(scalarPrimitive: KClass<*>, description: TemporalUnitDescription) {
+private fun FileBuilder.buildTimesExtensionFunction(scalarPrimitive: KClass<*>, description: TemporalUnitDescription) {
     function("times") {
         kdoc {
             """

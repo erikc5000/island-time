@@ -1,8 +1,10 @@
 package io.islandtime.ranges
 
 import io.islandtime.base.TimePoint
+import io.islandtime.between
+import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
-import io.islandtime.ranges.internal.*
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval of time points.
@@ -42,83 +44,6 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
             else -> throwUnboundedIntervalException()
         }
     }
-
-    /**
-     * The number of 24-hour days in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    open val lengthInDays: Days
-        get() = when {
-            isEmpty() -> 0L.days
-            isBounded() -> daysBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole hours in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInHours: Hours
-        get() = when {
-            isEmpty() -> 0L.hours
-            isBounded() -> hoursBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole minutes in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInMinutes: Minutes
-        get() = when {
-            isEmpty() -> 0L.minutes
-            isBounded() -> minutesBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole seconds in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInSeconds: Seconds
-        get() = when {
-            isEmpty() -> 0L.seconds
-            isBounded() -> secondsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole milliseconds in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInMilliseconds: Milliseconds
-        get() = when {
-            isEmpty() -> 0L.milliseconds
-            isBounded() -> millisecondsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole microseconds in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInMicroseconds: Microseconds
-        get() = when {
-            isEmpty() -> 0L.microseconds
-            isBounded() -> microsecondsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole nanoseconds in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInNanoseconds: Nanoseconds
-        get() = when {
-            isEmpty() -> 0L.nanoseconds
-            isBounded() -> nanosecondsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
 }
 
 /**
@@ -139,75 +64,80 @@ fun durationBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Duration {
     return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
 }
 
-/**
- * Gets the number of 24-hour days between two time points.
- */
-fun daysBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Days {
-    return secondsBetween(start, endExclusive).inWholeDays
-}
+@Deprecated(
+    message = "Replace with Days.between() or Hours.between().inWholeDays as appropriate",
+    replaceWith = ReplaceWith(""),
+    level = DeprecationLevel.ERROR
+)
+@Suppress("UNUSED_PARAMETER", "unused")
+fun daysBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Days = deprecatedToError()
 
-/**
- * Gets the number of whole hours between two time points.
- */
-fun hoursBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Hours {
-    return secondsBetween(start, endExclusive).inWholeHours
-}
+@Deprecated(
+    message = "Replace with Hours.between()",
+    replaceWith = ReplaceWith(
+        "Hours.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Hours"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun hoursBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Hours = Hours.between(start, endExclusive)
 
-/**
- * Gets the number of whole minutes between two time points.
- */
-fun minutesBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Minutes {
-    return secondsBetween(start, endExclusive).inWholeMinutes
-}
+@Deprecated(
+    message = "Replace with Minutes.between()",
+    replaceWith = ReplaceWith(
+        "Minutes.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Minutes"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun minutesBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Minutes =
+    Minutes.between(start, endExclusive)
 
-/**
- * Gets the number of whole seconds between two time points.
- * @throws ArithmeticException if the result overflows
- */
-fun secondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Seconds {
-    return secondsBetween(
-        start.secondOfUnixEpoch,
-        start.nanosecond,
-        endExclusive.secondOfUnixEpoch,
-        endExclusive.nanosecond
-    )
-}
+@Deprecated(
+    message = "Replace with Seconds.between()",
+    replaceWith = ReplaceWith(
+        "Seconds.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Seconds"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun secondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Seconds = Seconds.between(start, endExclusive)
 
-/**
- * Gets the number of whole milliseconds between two time points.
- * @throws ArithmeticException if the result overflows
- */
-fun millisecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Milliseconds {
-    return millisecondsBetween(
-        start.secondOfUnixEpoch,
-        start.nanosecond,
-        endExclusive.secondOfUnixEpoch,
-        endExclusive.nanosecond
-    )
-}
+@Deprecated(
+    message = "Replace with Milliseconds.between()",
+    replaceWith = ReplaceWith(
+        "Milliseconds.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Milliseconds"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun millisecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Milliseconds =
+    Milliseconds.between(start, endExclusive)
 
-/**
- * Gets the number of whole microseconds between two time points.
- *  @throws ArithmeticException if the result overflows
- */
-fun microsecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Microseconds {
-    return microsecondsBetween(
-        start.secondOfUnixEpoch,
-        start.nanosecond,
-        endExclusive.secondOfUnixEpoch,
-        endExclusive.nanosecond
-    )
-}
+@Deprecated(
+    message = "Replace with Microseconds.between()",
+    replaceWith = ReplaceWith(
+        "Microseconds.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Microseconds"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun microsecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Microseconds =
+    Microseconds.between(start, endExclusive)
 
-/**
- * Gets the number of nanoseconds between two time points.
- * @throws ArithmeticException if the result overflows
- */
-fun nanosecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Nanoseconds {
-    return nanosecondsBetween(
-        start.secondOfUnixEpoch,
-        start.nanosecond,
-        endExclusive.secondOfUnixEpoch,
-        endExclusive.nanosecond
-    )
-}
+@Deprecated(
+    message = "Replace with Nanoseconds.between()",
+    replaceWith = ReplaceWith(
+        "Nanoseconds.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Nanoseconds"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun nanosecondsBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Nanoseconds =
+    Nanoseconds.between(start, endExclusive)

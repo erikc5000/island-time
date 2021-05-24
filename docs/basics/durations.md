@@ -28,10 +28,10 @@ Or converted to another unit.
 val hours: Hours = 60.minutes.inWholeHours
 ```
 
-You can also get the duration between two date-times in terms of any given unit, using functions like `hoursBetween()` or `daysBetween()`.
+You can also get the duration between two date-times in terms of any given unit, using companion methods such as `Hours.between()` or `Days.between()`.
 
 ```kotlin
-val hours = hoursBetween(firstDateTime, secondDateTime)
+val hours = Hours.between(firstDateTime, secondDateTime)
 val absHours = hours.absoluteValue // hours may be negative
 ```
 
@@ -55,7 +55,7 @@ The methods and operators available to `Duration` are mostly the same as those o
 
 ```kotlin
 val duration: Duration = durationBetween(firstDateTime, secondDateTime)
-val minutes: LongMinutes = duration.inMinutes
+val minutes: Minutes = duration.inMinutes
 ```
 
 ## `Period`

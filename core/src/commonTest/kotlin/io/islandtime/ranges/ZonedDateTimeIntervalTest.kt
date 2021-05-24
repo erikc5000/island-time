@@ -150,20 +150,26 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthIn properties return zero when the range is empty`() {
+        assertEquals(0.centuries, ZonedDateTimeInterval.EMPTY.lengthInCenturies)
+        assertEquals(0.decades, ZonedDateTimeInterval.EMPTY.lengthInDecades)
         assertEquals(0.years, ZonedDateTimeInterval.EMPTY.lengthInYears)
         assertEquals(0.months, ZonedDateTimeInterval.EMPTY.lengthInMonths)
-        assertEquals(0L.weeks, ZonedDateTimeInterval.EMPTY.lengthInWeeks)
-        assertEquals(0L.days, ZonedDateTimeInterval.EMPTY.lengthInDays)
-        assertEquals(0L.hours, ZonedDateTimeInterval.EMPTY.lengthInHours)
-        assertEquals(0L.minutes, ZonedDateTimeInterval.EMPTY.lengthInMinutes)
-        assertEquals(0L.seconds, ZonedDateTimeInterval.EMPTY.lengthInSeconds)
-        assertEquals(0L.milliseconds, ZonedDateTimeInterval.EMPTY.lengthInMilliseconds)
-        assertEquals(0L.microseconds, ZonedDateTimeInterval.EMPTY.lengthInMicroseconds)
-        assertEquals(0L.nanoseconds, ZonedDateTimeInterval.EMPTY.lengthInNanoseconds)
+        assertEquals(0.weeks, ZonedDateTimeInterval.EMPTY.lengthInWeeks)
+        assertEquals(0.days, ZonedDateTimeInterval.EMPTY.lengthInDays)
+        assertEquals(0.hours, ZonedDateTimeInterval.EMPTY.lengthInHours)
+        assertEquals(0.minutes, ZonedDateTimeInterval.EMPTY.lengthInMinutes)
+        assertEquals(0.seconds, ZonedDateTimeInterval.EMPTY.lengthInSeconds)
+        assertEquals(0.milliseconds, ZonedDateTimeInterval.EMPTY.lengthInMilliseconds)
+        assertEquals(0.microseconds, ZonedDateTimeInterval.EMPTY.lengthInMicroseconds)
+        assertEquals(0.nanoseconds, ZonedDateTimeInterval.EMPTY.lengthInNanoseconds)
     }
 
     @Test
     fun `lengthIn properties throw an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInCenturies }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInDecades }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInYears }
+        assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInMonths }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInWeeks }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInDays }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.lengthInHours }
@@ -244,13 +250,31 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `lengthInCenturies property`() {
+        val zone = nyZone
+        val then = Date(2019, 3, 10).startOfDayAt(zone)
+        val now = Date(2119, 3, 10).startOfDayAt(zone)
+
+        assertEquals(1.centuries, (then until now).lengthInCenturies)
+        assertEquals(0.centuries, (then until now - 1.nanoseconds).lengthInCenturies)
+    }
+
+    @Test
+    fun `lengthInDecades property`() {
+        val zone = nyZone
+        val then = Date(2019, 3, 10).startOfDayAt(zone)
+        val now = Date(2029, 3, 10).startOfDayAt(zone)
+
+        assertEquals(1.decades, (then until now).lengthInDecades)
+        assertEquals(0.decades, (then until now - 1.nanoseconds).lengthInDecades)
+    }
+
+    @Test
     fun `lengthInYears property`() {
         val zone = nyZone
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2020, 3, 10).startOfDayAt(zone)
 
-        assertEquals(1.years, yearsBetween(then, now))
-        assertEquals(0.years, yearsBetween(then, now - 1.nanoseconds))
         assertEquals(1.years, (then until now).lengthInYears)
         assertEquals(0.years, (then until now - 1.nanoseconds).lengthInYears)
     }
@@ -261,8 +285,6 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 4, 10).startOfDayAt(zone)
 
-        assertEquals(1.months, monthsBetween(then, now))
-        assertEquals(0.months, monthsBetween(then, now - 1.nanoseconds))
         assertEquals(1.months, (then until now).lengthInMonths)
         assertEquals(0.months, (then until now - 1.nanoseconds).lengthInMonths)
     }
@@ -273,10 +295,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 17).startOfDayAt(zone)
 
-        assertEquals(1L.weeks, weeksBetween(then, now))
-        assertEquals(0L.weeks, weeksBetween(then, now - 1.nanoseconds))
-        assertEquals(1L.weeks, (then until now).lengthInWeeks)
-        assertEquals(0L.weeks, (then until now - 1.nanoseconds).lengthInWeeks)
+        assertEquals(1.weeks, (then until now).lengthInWeeks)
+        assertEquals(0.weeks, (then until now - 1.nanoseconds).lengthInWeeks)
     }
 
     @Test
@@ -285,10 +305,8 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 11).startOfDayAt(zone)
 
-        assertEquals(1L.days, daysBetween(then, now))
-        assertEquals(0L.days, daysBetween(then, now - 1.nanoseconds))
-        assertEquals(1L.days, (then until now).lengthInDays)
-        assertEquals(0L.days, (then until now - 1.nanoseconds).lengthInDays)
+        assertEquals(1.days, (then until now).lengthInDays)
+        assertEquals(0.days, (then until now - 1.nanoseconds).lengthInDays)
     }
 
     @Test
@@ -297,9 +315,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10).startOfDayAt(zone)
         val now = Date(2019, 3, 10) at Time(5, 0) at zone
 
-        assertEquals(4L.hours, hoursBetween(then, now))
-        assertEquals(3L.hours, hoursBetween(then, now - 1.nanoseconds))
-        assertEquals(4L.hours, (then until now).lengthInHours)
-        assertEquals(3L.hours, (then until now - 1.nanoseconds).lengthInHours)
+        assertEquals(4.hours, (then until now).lengthInHours)
+        assertEquals(3.hours, (then until now - 1.nanoseconds).lengthInHours)
     }
 }
