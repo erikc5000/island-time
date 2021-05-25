@@ -1,65 +1,74 @@
 package io.islandtime.codegen.descriptions
 
 import com.squareup.kotlinpoet.TypeName
-import io.islandtime.codegen.base
+import io.islandtime.codegen.root
 
 enum class DateTimeDescription(
     val typeName: TypeName,
     val simpleName: String,
     val smallestUnit: TemporalUnitDescription,
     val interval: IntervalDescription? = null,
-    val isDateBased: Boolean = false
+    val isDateBased: Boolean = false,
+    val isTimeBased: Boolean = false,
+    val isTimePoint: Boolean = false
 ) {
     Year(
-        typeName = base("Year"),
+        typeName = root("Year"),
         simpleName = "year",
         smallestUnit = TemporalUnitDescription.YEARS,
         isDateBased = true
     ),
     YearMonth(
-        typeName = base("YearMonth"),
+        typeName = root("YearMonth"),
         simpleName = "year-month",
         smallestUnit = TemporalUnitDescription.MONTHS,
         isDateBased = true
     ),
     Date(
-        typeName = base("Date"),
+        typeName = root("Date"),
         simpleName = "date",
         smallestUnit = TemporalUnitDescription.DAYS,
         interval = IntervalDescription.DateRange,
         isDateBased = true
     ),
     DateTime(
-        typeName = base("DateTime"),
+        typeName = root("DateTime"),
         simpleName = "date-time",
         smallestUnit = TemporalUnitDescription.NANOSECONDS,
         interval = IntervalDescription.DateTimeInterval,
-        isDateBased = true
+        isDateBased = true,
+        isTimeBased = true
     ) {
         override val datePropertyName: String get() = "date"
     },
     OffsetDateTime(
-        typeName = base("OffsetDateTime"),
+        typeName = root("OffsetDateTime"),
         simpleName = "date-time",
         smallestUnit = TemporalUnitDescription.NANOSECONDS,
         interval = IntervalDescription.OffsetDateTimeInterval,
-        isDateBased = true
+        isDateBased = true,
+        isTimeBased = true,
+        isTimePoint = true
     ) {
         override val datePropertyName: String get() = "dateTime"
     },
     ZonedDateTime(
-        typeName = base("ZonedDateTime"),
+        typeName = root("ZonedDateTime"),
         simpleName = "date-time",
         smallestUnit = TemporalUnitDescription.NANOSECONDS,
         interval = IntervalDescription.ZonedDateTimeInterval,
-        isDateBased = true
+        isDateBased = true,
+        isTimeBased = true,
+        isTimePoint = true
     ) {
         override val datePropertyName: String get() = "dateTime"
     },
     Instant(
-        typeName = base("Instant"),
+        typeName = root("Instant"),
         simpleName = "instant",
-        smallestUnit = TemporalUnitDescription.NANOSECONDS
+        smallestUnit = TemporalUnitDescription.NANOSECONDS,
+        isTimeBased = true,
+        isTimePoint = true
     );
 
     open val datePropertyName: String get() = throw NotImplementedError()

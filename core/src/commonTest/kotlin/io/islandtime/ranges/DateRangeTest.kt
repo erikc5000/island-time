@@ -232,52 +232,51 @@ class DateRangeTest : AbstractIslandTimeTest() {
             Date(2019, Month.JUNE, 1)..Date.MAX,
             Date.MIN..Date(2019, Month.JUNE, 1)
         ).forEach {
-            assertFailsWith<UnsupportedOperationException> { it.asPeriod() }
-            assertFailsWith<UnsupportedOperationException> { it.lengthInDays }
-            assertFailsWith<UnsupportedOperationException> { it.lengthInMonths }
+            assertFailsWith<UnsupportedOperationException> { it.toPeriod() }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInCenturies }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInDecades }
             assertFailsWith<UnsupportedOperationException> { it.lengthInYears }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInMonths }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInWeeks }
+            assertFailsWith<UnsupportedOperationException> { it.lengthInDays }
         }
     }
 
     @Test
-    fun `lengthInDays property returns 0 when range is empty`() {
-        assertEquals(0L.days, DateRange.EMPTY.lengthInDays)
+    fun `length properties return 0 when the range is empty`() {
+        assertEquals(Period.ZERO, DateRange.EMPTY.toPeriod())
+        assertEquals(0.centuries, DateRange.EMPTY.lengthInCenturies)
+        assertEquals(0.decades, DateRange.EMPTY.lengthInDecades)
+        assertEquals(0.years, DateRange.EMPTY.lengthInYears)
+        assertEquals(0.months, DateRange.EMPTY.lengthInMonths)
+        assertEquals(0.weeks, DateRange.EMPTY.lengthInWeeks)
+        assertEquals(0.days, DateRange.EMPTY.lengthInDays)
     }
 
     @Test
     fun `lengthInDays property returns 1 when the start and end date are the same`() {
         val date = Date(2019, Month.JUNE, 1)
-        assertEquals(1L.days, (date..date).lengthInDays)
+        assertEquals(1.days, (date..date).lengthInDays)
     }
 
     @Test
-    fun `lengthInDays property returns the expected number of days in a non-empty range`() {
+    fun `lengthInDays property returns expected length when bounded`() {
         val start = Date(2018, Month.FEBRUARY, 1)
         val end = Date(2018, Month.FEBRUARY, 28)
-        assertEquals(28L.days, (start..end).lengthInDays)
+        assertEquals(28.days, (start..end).lengthInDays)
     }
 
     @Test
-    fun `lengthInWeeks property returns 0 when range is empty`() {
-        assertEquals(0L.weeks, DateRange.EMPTY.lengthInWeeks)
-    }
-
-    @Test
-    fun `lengthInWeeks property returns the expected number of weeks in a non-empty range`() {
+    fun `lengthInWeeks property returns expected length when bounded`() {
         val range1 = Date(2018, Month.FEBRUARY, 1)..Date(2018, Month.FEBRUARY, 28)
-        assertEquals(4L.weeks, range1.lengthInWeeks)
+        assertEquals(4.weeks, range1.lengthInWeeks)
 
         val range2 = Date(2018, Month.FEBRUARY, 1)..Date(2018, Month.FEBRUARY, 27)
-        assertEquals(3L.weeks, range2.lengthInWeeks)
+        assertEquals(3.weeks, range2.lengthInWeeks)
     }
 
     @Test
-    fun `lengthInMonths property returns 0 when range is empty`() {
-        assertEquals(0.months, DateRange.EMPTY.lengthInMonths)
-    }
-
-    @Test
-    fun `lengthInMonths property returns the expected number of months in a non-empty range`() {
+    fun `lengthInMonths property returns expected length when bounded`() {
         val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 18)
         assertEquals(0.months, range1.lengthInMonths)
 
@@ -286,12 +285,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthInYears property returns 0 when range is empty`() {
-        assertEquals(0.years, DateRange.EMPTY.lengthInYears)
-    }
-
-    @Test
-    fun `lengthInYears property returns the expected number of years in a non-empty range`() {
+    fun `lengthInYears property returns expected length when bounded`() {
         val range1 = Date(2018, Month.FEBRUARY, 20)..Date(2019, Month.FEBRUARY, 18)
         assertEquals(0.years, range1.lengthInYears)
 
@@ -300,220 +294,35 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asPeriod() returns a period of zero when range is empty`() {
-        assertEquals(Period.ZERO, DateRange.EMPTY.asPeriod())
+    fun `lengthInDecades property returns expected length when bounded`() {
+        val start = Date(2019, Month.JULY, 15)
+        val end1 = Date(2029, Month.JULY, 14)
+        val end2 = Date(2029, Month.JULY, 15)
+
+        assertEquals(0.decades, (start until end1).lengthInDecades)
+        assertEquals(1.decades, (start until end2).lengthInDecades)
     }
 
     @Test
-    fun `asPeriod() returns a period of 1 day when the start and end date are equal`() {
+    fun `lengthInCenturies property returns expected length when bounded`() {
+        val start = Date(2019, Month.JULY, 15)
+        val end1 = Date(2119, Month.JULY, 14)
+        val end2 = Date(2119, Month.JULY, 15)
+
+        assertEquals(0.centuries, (start until end1).lengthInCenturies)
+        assertEquals(1.centuries, (start until end2).lengthInCenturies)
+    }
+
+    @Test
+    fun `toPeriod() returns a period of 1 day when the start and end date are equal`() {
         val date = Date(2019, Month.JUNE, 1)
-        assertEquals(periodOf(1.days), (date..date).asPeriod())
+        assertEquals(periodOf(1.days), (date..date).toPeriod())
     }
 
     @Test
-    fun `asPeriod() returns the expected period for non-empty ranges`() {
+    fun `toPeriod() returns the expected period for non-empty ranges`() {
         val start = Date(2018, Month.FEBRUARY, 20)
         val end = Date(2019, Month.MARCH, 20)
-        assertEquals(periodOf(1.years, 1.months, 1.days), (start..end).asPeriod())
-    }
-
-    @Test
-    fun `periodBetween() returns a zeroed period when the start and end dates are the same`() {
-        assertEquals(
-            Period.ZERO,
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
-        )
-    }
-
-    @Test
-    fun `periodBetween() returns the period between two dates in positive progression`() {
-        assertEquals(
-            periodOf(1.months, 2.days),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
-        )
-
-        assertEquals(
-            periodOf(1.months, 8.days),
-            periodBetween(Date(2019, Month.MAY, 25), Date(2019, Month.JULY, 3))
-        )
-
-        assertEquals(
-            periodOf(2.years, 29.days),
-            periodBetween(Date(2018, Month.JANUARY, 31), Date(2020, Month.FEBRUARY, 29))
-        )
-    }
-
-    @Test
-    fun `periodBetween() returns the period between two dates in negative progression`() {
-        assertEquals(
-            periodOf((-28).days),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 3))
-        )
-
-        assertEquals(
-            periodOf((-1).months),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 1))
-        )
-
-        assertEquals(
-            periodOf((-1).years, (-10).months, (-21).days),
-            periodBetween(Date(2019, Month.MAY, 25), Date(2017, Month.JULY, 4))
-        )
-    }
-
-    @Test
-    fun `daysBetween() returns zero days when the start and end date are the same`() {
-        assertEquals(
-            0L.days,
-            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
-        )
-
-        assertEquals(
-            0L.days,
-            daysBetween(Date(1969, Month.MAY, 1), Date(1969, Month.MAY, 1))
-        )
-    }
-
-    @Test
-    fun `daysBetween() returns the number of days between two dates in positive progression`() {
-        assertEquals(
-            33L.days,
-            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
-        )
-
-        assertEquals(
-            33L.days,
-            daysBetween(Date(1969, Month.MAY, 1), Date(1969, Month.JUNE, 3))
-        )
-    }
-
-    @Test
-    fun `daysBetween() returns the number of days between two dates in negative progression`() {
-        assertEquals(
-            (-16L).days,
-            daysBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 15))
-        )
-
-        assertEquals(
-            (-16L).days,
-            daysBetween(Date(1969, Month.MAY, 1), Date(1969, Month.APRIL, 15))
-        )
-
-        assertEquals(
-            (-20L).days,
-            daysBetween(Date(1970, Month.JANUARY, 4), Date(1969, Month.DECEMBER, 15))
-        )
-    }
-
-    @Test
-    fun `weeksBetween() returns zero when the start and end date are the same`() {
-        assertEquals(
-            0L.weeks,
-            weeksBetween(Date(2019, Month.AUGUST, 23), Date(2019, Month.AUGUST, 23))
-        )
-    }
-
-    @Test
-    fun `weeksBetween() returns the number of weeks between two dates in positive progression`() {
-        assertEquals(
-            4L.weeks,
-            weeksBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
-        )
-
-        assertEquals(
-            5L.weeks,
-            weeksBetween(Date(1969, Month.MAY, 1), Date(1969, Month.JUNE, 5))
-        )
-    }
-
-    @Test
-    fun `weeksBetween() returns the number of weeks between two dates in negative progression`() {
-        assertEquals(
-            (-4L).weeks,
-            weeksBetween(Date(2019, Month.JUNE, 3), Date(2019, Month.MAY, 1))
-        )
-
-        assertEquals(
-            (-5L).weeks,
-            weeksBetween(Date(1969, Month.JUNE, 5), Date(1969, Month.MAY, 1))
-        )
-    }
-
-    @Test
-    fun `monthsBetween() returns zero when the start and end date are the same`() {
-        assertEquals(
-            0.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `monthsBetween() returns the months between two dates in positive progression`() {
-        assertEquals(
-            0.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.AUGUST, 14))
-        )
-
-        assertEquals(
-            1.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.AUGUST, 15))
-        )
-
-        assertEquals(
-            13.months,
-            monthsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.AUGUST, 15))
-        )
-    }
-
-    @Test
-    fun `monthsBetween() returns the months between two dates in negative progression`() {
-        assertEquals(
-            0.months,
-            monthsBetween(Date(2019, Month.AUGUST, 14), Date(2019, Month.JULY, 15))
-        )
-
-        assertEquals(
-            (-1).months,
-            monthsBetween(Date(2019, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
-        )
-
-        assertEquals(
-            (-13).months,
-            monthsBetween(Date(2020, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `yearsBetween() returns zero when the start and end date are the same`() {
-        assertEquals(
-            0.years,
-            yearsBetween(Date(2019, Month.JULY, 15), Date(2019, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `yearsBetween() returns the years between two dates in positive progression`() {
-        assertEquals(
-            0.years,
-            yearsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.JULY, 14))
-        )
-
-        assertEquals(
-            1.years,
-            yearsBetween(Date(2019, Month.JULY, 15), Date(2020, Month.JULY, 15))
-        )
-    }
-
-    @Test
-    fun `yearsBetween() returns the years between two dates in negative progression`() {
-        assertEquals(
-            0.years,
-            yearsBetween(Date(2020, Month.JULY, 15), Date(2019, Month.JULY, 16))
-        )
-
-        assertEquals(
-            (-1).years,
-            yearsBetween(Date(2020, Month.AUGUST, 15), Date(2019, Month.JULY, 15))
-        )
+        assertEquals(periodOf(1.years, 1.months, 1.days), (start..end).toPeriod())
     }
 }

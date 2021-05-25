@@ -173,14 +173,14 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asDuration() returns a zeroed out duration when the range is empty`() {
-        assertEquals(Duration.ZERO, DateTimeInterval.EMPTY.asDuration())
+    fun `toDuration() returns a zeroed out duration when the range is empty`() {
+        assertEquals(Duration.ZERO, DateTimeInterval.EMPTY.toDuration())
     }
 
     @Test
-    fun `asDuration() throws an exception when the range is unbounded`() {
+    fun `toDuration() throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
-            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).asDuration()
+            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).toDuration()
         }
     }
 
@@ -188,24 +188,19 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     fun `duration is correct when bounded`() {
         assertEquals(
             10.minutes.asDuration(),
-            ("2019-10-11T09:15".toDateTime() until "2019-10-11T09:25".toDateTime()).asDuration()
-        )
-
-        assertEquals(
-            10.minutes.asDuration(),
-            durationBetween("2019-10-11T09:15".toDateTime(), "2019-10-11T09:25".toDateTime())
+            ("2019-10-11T09:15".toDateTime() until "2019-10-11T09:25".toDateTime()).toDuration()
         )
     }
 
     @Test
-    fun `asPeriod() returns a zeroed out period when the range is empty`() {
-        assertEquals(Period.ZERO, DateTimeInterval.EMPTY.asPeriod())
+    fun `toPeriod() returns a zeroed out period when the range is empty`() {
+        assertEquals(Period.ZERO, DateTimeInterval.EMPTY.toPeriod())
     }
 
     @Test
-    fun `asPeriod() throws an exception when the range is unbounded`() {
+    fun `toPeriod() throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
-            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).asPeriod()
+            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).toPeriod()
         }
     }
 
@@ -213,31 +208,30 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     fun `period is correct when bounded`() {
         assertEquals(
             periodOf(1.years, 1.months, 1.days),
-            ("2018-09-10T09:15".toDateTime() until "2019-10-11T09:15".toDateTime()).asPeriod()
-        )
-
-        assertEquals(
-            periodOf(1.years, 1.months, 1.days),
-            periodBetween("2018-09-10T09:15".toDateTime(), "2019-10-11T09:15".toDateTime())
+            ("2018-09-10T09:15".toDateTime() until "2019-10-11T09:15".toDateTime()).toPeriod()
         )
     }
 
     @Test
     fun `lengthIn properties return zero when the range is empty`() {
+        assertEquals(0.centuries, DateTimeInterval.EMPTY.lengthInCenturies)
+        assertEquals(0.decades, DateTimeInterval.EMPTY.lengthInDecades)
         assertEquals(0.years, DateTimeInterval.EMPTY.lengthInYears)
         assertEquals(0.months, DateTimeInterval.EMPTY.lengthInMonths)
-        assertEquals(0L.weeks, DateTimeInterval.EMPTY.lengthInWeeks)
-        assertEquals(0L.days, DateTimeInterval.EMPTY.lengthInDays)
-        assertEquals(0L.hours, DateTimeInterval.EMPTY.lengthInHours)
-        assertEquals(0L.minutes, DateTimeInterval.EMPTY.lengthInMinutes)
-        assertEquals(0L.seconds, DateTimeInterval.EMPTY.lengthInSeconds)
-        assertEquals(0L.milliseconds, DateTimeInterval.EMPTY.lengthInMilliseconds)
-        assertEquals(0L.microseconds, DateTimeInterval.EMPTY.lengthInMicroseconds)
-        assertEquals(0L.nanoseconds, DateTimeInterval.EMPTY.lengthInNanoseconds)
+        assertEquals(0.weeks, DateTimeInterval.EMPTY.lengthInWeeks)
+        assertEquals(0.days, DateTimeInterval.EMPTY.lengthInDays)
+        assertEquals(0.hours, DateTimeInterval.EMPTY.lengthInHours)
+        assertEquals(0.minutes, DateTimeInterval.EMPTY.lengthInMinutes)
+        assertEquals(0.seconds, DateTimeInterval.EMPTY.lengthInSeconds)
+        assertEquals(0.milliseconds, DateTimeInterval.EMPTY.lengthInMilliseconds)
+        assertEquals(0.microseconds, DateTimeInterval.EMPTY.lengthInMicroseconds)
+        assertEquals(0.nanoseconds, DateTimeInterval.EMPTY.lengthInNanoseconds)
     }
 
     @Test
     fun `lengthIn properties throw an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.lengthInCenturies }
+        assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.lengthInDecades }
         assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.lengthInYears }
         assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.lengthInMonths }
         assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.lengthInWeeks }
@@ -251,125 +245,118 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `years between two date-times`() {
+    fun `lengthInCenturies returns expected length when bounded`() {
+        val start = DateTime(2019, Month.MARCH, 1, 13, 0)
+        val end1 = DateTime(2119, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2119, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1.centuries, (start until end1).lengthInCenturies)
+        assertEquals(0.centuries, (start until end2).lengthInCenturies)
+    }
+
+    @Test
+    fun `lengthInDecades returns expected length when bounded`() {
+        val start = DateTime(2019, Month.MARCH, 1, 13, 0)
+        val end1 = DateTime(2029, Month.MARCH, 1, 13, 0)
+        val end2 = DateTime(2029, Month.MARCH, 1, 12, 59, 59, 999_999_999)
+
+        assertEquals(1.decades, (start until end1).lengthInDecades)
+        assertEquals(0.decades, (start until end2).lengthInDecades)
+    }
+
+    @Test
+    fun `lengthInYears returns expected length when bounded`() {
         val start = DateTime(2019, Month.MARCH, 1, 13, 0)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
         assertEquals(1.years, (start until end1).lengthInYears)
-        assertEquals(1.years, yearsBetween(start, end1))
-
         assertEquals(0.years, (start until end2).lengthInYears)
-        assertEquals(0.years, yearsBetween(start, end2))
     }
 
     @Test
-    fun `months between two date-times`() {
+    fun `lengthInMonths returns expected length when bounded`() {
         val start = DateTime(2020, Month.FEBRUARY, 1, 13, 0)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
         assertEquals(1.months, (start until end1).lengthInMonths)
-        assertEquals(1.months, monthsBetween(start, end1))
-
         assertEquals(0.months, (start until end2).lengthInMonths)
-        assertEquals(0.months, monthsBetween(start, end2))
     }
 
     @Test
-    fun `weeks between two date-times`() {
+    fun `lengthInWeeks returns expected length when bounded`() {
         val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0)
         val end1 = DateTime(2020, Month.MARCH, 7, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 7, 12, 59, 59, 999_999_999)
 
-        assertEquals(1L.weeks, (start until end1).lengthInWeeks)
-        assertEquals(1L.weeks, weeksBetween(start, end1))
-
-        assertEquals(0L.weeks, (start until end2).lengthInWeeks)
-        assertEquals(0L.weeks, weeksBetween(start, end2))
+        assertEquals(1.weeks, (start until end1).lengthInWeeks)
+        assertEquals(0.weeks, (start until end2).lengthInWeeks)
     }
 
     @Test
-    fun `days between two date-times`() {
+    fun `lengthInDays returns expected length when bounded`() {
         val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
-        assertEquals(1L.days, (start until end1).lengthInDays)
-        assertEquals(1L.days, daysBetween(start, end1))
-
-        assertEquals(0L.days, (start until end2).lengthInDays)
-        assertEquals(0L.days, daysBetween(start, end2))
+        assertEquals(1.days, (start until end1).lengthInDays)
+        assertEquals(0.days, (start until end2).lengthInDays)
     }
 
     @Test
-    fun `hours between two date-times`() {
+    fun `lengthInHours returns expected length when bounded`() {
         val start = DateTime(2020, Month.MARCH, 1, 12, 0)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
         assertEquals(1L.hours, (start until end1).lengthInHours)
-        assertEquals(1L.hours, hoursBetween(start, end1))
-
         assertEquals(0L.hours, (start until end2).lengthInHours)
-        assertEquals(0L.hours, hoursBetween(start, end2))
     }
 
     @Test
-    fun `minutes between two date-times`() {
+    fun `lengthInMinutes returns expected length when bounded`() {
         val start = DateTime(2020, Month.MARCH, 1, 12, 59)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
         assertEquals(1L.minutes, (start until end1).lengthInMinutes)
-        assertEquals(1L.minutes, minutesBetween(start, end1))
-
         assertEquals(0L.minutes, (start until end2).lengthInMinutes)
-        assertEquals(0L.minutes, minutesBetween(start, end2))
     }
 
     @Test
-    fun `seconds between two date-times`() {
+    fun `lengthInSeconds returns expected length when bounded`() {
         val start = DateTime(2020, Month.MARCH, 1, 12, 59, 59)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
-        assertEquals(1L.seconds, (start until end1).lengthInSeconds)
-        assertEquals(1L.seconds, secondsBetween(start, end1))
-
-        assertEquals(0L.seconds, (start until end2).lengthInSeconds)
-        assertEquals(0L.seconds, secondsBetween(start, end2))
+        assertEquals(1.seconds, (start until end1).lengthInSeconds)
+        assertEquals(0.seconds, (start until end2).lengthInSeconds)
     }
 
     @Test
-    fun `milliseconds between two date-times`() {
+    fun `lengthInMilliseconds returns expected length when bounded`() {
         val start = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_000_000)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
-        assertEquals(1L.milliseconds, (start until end1).lengthInMilliseconds)
-        assertEquals(1L.milliseconds, millisecondsBetween(start, end1))
-
-        assertEquals(0L.milliseconds, (start until end2).lengthInMilliseconds)
-        assertEquals(0L.milliseconds, millisecondsBetween(start, end2))
+        assertEquals(1.milliseconds, (start until end1).lengthInMilliseconds)
+        assertEquals(0.milliseconds, (start until end2).lengthInMilliseconds)
     }
 
     @Test
-    fun `microseconds between two date-times`() {
+    fun `lengthInMicroseconds returns expected length when bounded`() {
         val start = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_000)
         val end1 = DateTime(2020, Month.MARCH, 1, 13, 0)
         val end2 = DateTime(2020, Month.MARCH, 1, 12, 59, 59, 999_999_999)
 
-        assertEquals(1L.microseconds, (start until end1).lengthInMicroseconds)
-        assertEquals(1L.microseconds, microsecondsBetween(start, end1))
-
-        assertEquals(0L.microseconds, (start until end2).lengthInMicroseconds)
-        assertEquals(0L.microseconds, microsecondsBetween(start, end2))
+        assertEquals(1.microseconds, (start until end1).lengthInMicroseconds)
+        assertEquals(0.microseconds, (start until end2).lengthInMicroseconds)
     }
 
     @Test
     fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end date-times are the same`() {
-        val dateTime = Date(2019, Month.MARCH, 10) at MIDNIGHT
+        val dateTime = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
         assertEquals(1L.nanoseconds, (dateTime..dateTime).lengthInNanoseconds)
     }
 

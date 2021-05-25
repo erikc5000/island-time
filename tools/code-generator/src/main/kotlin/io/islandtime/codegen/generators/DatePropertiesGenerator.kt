@@ -27,7 +27,7 @@ private fun buildDatePropertiesFile() = file(
 private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescription) {
     receiverClass.interval?.let { intervalClass ->
         fun CodeBlockBuilder.intervalOfWeekCode(vararg startOfWeekArgs: String): String {
-            using("startOfWeek", base("startOfWeek"))
+            using("startOfWeek", root("startOfWeek"))
             using("days", measures("days"))
 
             return buildString {
@@ -493,7 +493,7 @@ private fun FileBuilder.buildPreviousNextFunctions(
             }
         }
         receiver(receiverClass.typeName)
-        argument("dayOfWeek", base("DayOfWeek"))
+        argument("dayOfWeek", root("DayOfWeek"))
         returns(receiverClass.typeName)
 
         if (receiverClass == Date) {
@@ -534,7 +534,7 @@ private fun FileBuilder.buildPreviousNextFunctions(
         }
 
         receiver(receiverClass.typeName)
-        argument("dayOfWeek", base("DayOfWeek"))
+        argument("dayOfWeek", root("DayOfWeek"))
         returns(receiverClass.typeName)
         code { "return if (dayOfWeek == this.dayOfWeek) this else $name(dayOfWeek)" }
     }

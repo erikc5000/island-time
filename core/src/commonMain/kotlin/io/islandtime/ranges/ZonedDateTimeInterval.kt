@@ -7,7 +7,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval of zoned date-times based on timeline order.
@@ -33,67 +32,18 @@ class ZonedDateTimeInterval(
         appendFunction = StringBuilder::appendZonedDateTime
     )
 
-    /**
-     * Converts this interval into a [Period] of the same length.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asPeriod(): Period {
-        return when {
-            isEmpty() -> Period.ZERO
-            isBounded() -> periodBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
-
-    /**
-     * The number of whole years in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInYears: Years
-        get() = when {
-            isEmpty() -> 0.years
-            isBounded() -> yearsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole months is this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInMonths: Months
-        get() = when {
-            isEmpty() -> 0.months
-            isBounded() -> monthsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole weeks in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInWeeks: Weeks
-        get() = when {
-            isEmpty() -> 0.weeks
-            isBounded() -> weeksBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole days in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    override val lengthInDays: Days
-        get() = when {
-            isEmpty() -> 0.days
-            isBounded() -> daysBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
+    @Deprecated(
+        message = "Replace with toPeriod()",
+        replaceWith = ReplaceWith("this.toPeriod()", "io.islandtime.ranges.toPeriod"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asPeriod(): Period = toPeriod()
 
     companion object {
         /**
          * An empty interval.
          */
-        val EMPTY = ZonedDateTimeInterval(
+        val EMPTY: ZonedDateTimeInterval = ZonedDateTimeInterval(
             Instant.UNIX_EPOCH at TimeZone.UTC,
             Instant.UNIX_EPOCH at TimeZone.UTC
         )
@@ -101,7 +51,7 @@ class ZonedDateTimeInterval(
         /**
          * An unbounded (ie. infinite) interval.
          */
-        val UNBOUNDED = ZonedDateTimeInterval(
+        val UNBOUNDED: ZonedDateTimeInterval = ZonedDateTimeInterval(
             DateTime.MIN at TimeZone.UTC,
             DateTime.MAX at TimeZone.UTC
         )
@@ -190,42 +140,57 @@ infix fun ZonedDateTime.until(to: ZonedDateTime): ZonedDateTimeInterval = ZonedD
 @Suppress("UNUSED_PARAMETER", "unused")
 fun DateRange.toZonedDateTimeInterval(zone: TimeZone): ZonedDateTimeInterval = deprecatedToError()
 
-/**
- * Gets the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the
- * starting date-time.
- */
-fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period {
-    return periodBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
+@Deprecated(
+    message = "Replace with Period.between()",
+    replaceWith = ReplaceWith(
+        "Period.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Period"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period = Period.between(start, endExclusive)
 
-/**
- * Gets the number of whole years between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
- * to match the starting date-time.
- */
-fun yearsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Years {
-    return yearsBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
+@Deprecated(
+    message = "Replace with Years.between()",
+    replaceWith = ReplaceWith(
+        "Years.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Years"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun yearsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Years = Years.between(start, endExclusive)
 
-/**
- * Gets the number of whole months between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
- * to match the starting date-time.
- */
-fun monthsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Months {
-    return monthsBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
+@Deprecated(
+    message = "Replace with Months.between()",
+    replaceWith = ReplaceWith(
+        "Months.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Months"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun monthsBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Months = Months.between(start, endExclusive)
 
-/**
- * Gets the number of whole weeks between two zoned date-times, adjusting the time zone of [endExclusive] if necessary
- * to match the starting date-time.
- */
-fun weeksBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Weeks {
-    return weeksBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
+@Deprecated(
+    message = "Replace with Weeks.between()",
+    replaceWith = ReplaceWith(
+        "Weeks.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Weeks"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun weeksBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Weeks = Weeks.between(start, endExclusive)
 
-/**
- * Gets the number of whole days between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to
- * match the starting date-time.
- */
-fun daysBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Days {
-    return daysBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
+@Deprecated(
+    message = "Replace with Days.between()",
+    replaceWith = ReplaceWith(
+        "Days.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Days"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun daysBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Days = Days.between(start, endExclusive)

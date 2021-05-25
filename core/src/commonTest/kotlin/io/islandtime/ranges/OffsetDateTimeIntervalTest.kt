@@ -151,14 +151,14 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asPeriod() returns a zeroed out period when the range is empty`() {
-        assertEquals(Period.ZERO, OffsetDateTimeInterval.EMPTY.asPeriod())
+    fun `toPeriod() returns a zeroed out period when the range is empty`() {
+        assertEquals(Period.ZERO, OffsetDateTimeInterval.EMPTY.toPeriod())
     }
 
     @Test
-    fun `asPeriod() throws an exception when the range is unbounded`() {
+    fun `toPeriod() throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
-            OffsetDateTimeInterval(endExclusive = "2018-09-10T09:15-06:00".toOffsetDateTime()).asPeriod()
+            OffsetDateTimeInterval(endExclusive = "2018-09-10T09:15-06:00".toOffsetDateTime()).toPeriod()
         }
     }
 
@@ -166,34 +166,30 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     fun `period is correct when bounded`() {
         assertEquals(
             periodOf(1.years, 1.months, 1.days),
-            ("2018-09-10T09:15-06:00".toOffsetDateTime() until "2019-10-11T09:15-07:00".toOffsetDateTime()).asPeriod()
-        )
-
-        assertEquals(
-            periodOf(1.years, 1.months, 1.days),
-            periodBetween(
-                "2018-09-10T09:15-06:00".toOffsetDateTime(),
-                "2019-10-11T09:15-07:00".toOffsetDateTime()
-            )
+            ("2018-09-10T09:15-06:00".toOffsetDateTime() until "2019-10-11T09:15-07:00".toOffsetDateTime()).toPeriod()
         )
     }
 
     @Test
     fun `lengthIn properties return zero when the range is empty`() {
+        assertEquals(0.centuries, OffsetDateTimeInterval.EMPTY.lengthInCenturies)
+        assertEquals(0.decades, OffsetDateTimeInterval.EMPTY.lengthInDecades)
         assertEquals(0.years, OffsetDateTimeInterval.EMPTY.lengthInYears)
         assertEquals(0.months, OffsetDateTimeInterval.EMPTY.lengthInMonths)
-        assertEquals(0L.weeks, OffsetDateTimeInterval.EMPTY.lengthInWeeks)
-        assertEquals(0L.days, OffsetDateTimeInterval.EMPTY.lengthInDays)
-        assertEquals(0L.hours, OffsetDateTimeInterval.EMPTY.lengthInHours)
-        assertEquals(0L.minutes, OffsetDateTimeInterval.EMPTY.lengthInMinutes)
-        assertEquals(0L.seconds, OffsetDateTimeInterval.EMPTY.lengthInSeconds)
-        assertEquals(0L.milliseconds, OffsetDateTimeInterval.EMPTY.lengthInMilliseconds)
-        assertEquals(0L.microseconds, OffsetDateTimeInterval.EMPTY.lengthInMicroseconds)
-        assertEquals(0L.nanoseconds, OffsetDateTimeInterval.EMPTY.lengthInNanoseconds)
+        assertEquals(0.weeks, OffsetDateTimeInterval.EMPTY.lengthInWeeks)
+        assertEquals(0.days, OffsetDateTimeInterval.EMPTY.lengthInDays)
+        assertEquals(0.hours, OffsetDateTimeInterval.EMPTY.lengthInHours)
+        assertEquals(0.minutes, OffsetDateTimeInterval.EMPTY.lengthInMinutes)
+        assertEquals(0.seconds, OffsetDateTimeInterval.EMPTY.lengthInSeconds)
+        assertEquals(0.milliseconds, OffsetDateTimeInterval.EMPTY.lengthInMilliseconds)
+        assertEquals(0.microseconds, OffsetDateTimeInterval.EMPTY.lengthInMicroseconds)
+        assertEquals(0.nanoseconds, OffsetDateTimeInterval.EMPTY.lengthInNanoseconds)
     }
 
     @Test
     fun `lengthIn properties throw an exception when the interval is unbounded`() {
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInCenturies }
+        assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInDecades }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInYears }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInMonths }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.lengthInWeeks }
@@ -207,7 +203,35 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `years between two date-times`() {
+    fun `lengthInCenturies property returns expected length when bounded`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2019, Month.MARCH, 1, 13, 0) at offset1
+        val end1 = DateTime(2119, Month.MARCH, 1, 14, 0) at offset2
+        val end2 = Date(2119, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1.centuries, (start until end1).lengthInCenturies)
+        assertEquals(0.centuries, (start until end2).lengthInCenturies)
+    }
+
+    @Test
+    fun `lengthInDecades property returns expected length when bounded`() {
+        val offset1 = UtcOffset(1.hours)
+        val offset2 = UtcOffset(2.hours)
+        val start = DateTime(2019, Month.MARCH, 1, 13, 0) at offset1
+        val end1 = DateTime(2029, Month.MARCH, 1, 14, 0) at offset2
+        val end2 = Date(2029, Month.MARCH, 1) at
+            Time(13, 59, 59, 999_999_999) at
+            offset2
+
+        assertEquals(1.decades, (start until end1).lengthInDecades)
+        assertEquals(0.decades, (start until end2).lengthInDecades)
+    }
+
+    @Test
+    fun `lengthInYears property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2019, Month.MARCH, 1, 13, 0) at offset1
@@ -217,14 +241,11 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             offset2
 
         assertEquals(1.years, (start until end1).lengthInYears)
-        assertEquals(1.years, yearsBetween(start, end1))
-
         assertEquals(0.years, (start until end2).lengthInYears)
-        assertEquals(0.years, yearsBetween(start, end2))
     }
 
     @Test
-    fun `months between two date-times`() {
+    fun `lengthInMonths property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2020, Month.FEBRUARY, 1, 13, 0) at offset1
@@ -234,14 +255,11 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             offset2
 
         assertEquals(1.months, (start until end1).lengthInMonths)
-        assertEquals(1.months, monthsBetween(start, end1))
-
         assertEquals(0.months, (start until end2).lengthInMonths)
-        assertEquals(0.months, monthsBetween(start, end2))
     }
 
     @Test
-    fun `weeks between two date-times`() {
+    fun `lengthInWeeks property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0) at offset1
@@ -250,15 +268,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(13, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.weeks, (start until end1).lengthInWeeks)
-        assertEquals(1L.weeks, weeksBetween(start, end1))
-
-        assertEquals(0L.weeks, (start until end2).lengthInWeeks)
-        assertEquals(0L.weeks, weeksBetween(start, end2))
+        assertEquals(1.weeks, (start until end1).lengthInWeeks)
+        assertEquals(0.weeks, (start until end2).lengthInWeeks)
     }
 
     @Test
-    fun `days between two date-times`() {
+    fun `lengthInDays property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2020, Month.FEBRUARY, 29, 13, 0) at offset1
@@ -267,15 +282,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(13, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.days, (start until end1).lengthInDays)
-        assertEquals(1L.days, daysBetween(start, end1))
-
-        assertEquals(0L.days, (start until end2).lengthInDays)
-        assertEquals(0L.days, daysBetween(start, end2))
+        assertEquals(1.days, (start until end1).lengthInDays)
+        assertEquals(0.days, (start until end2).lengthInDays)
     }
 
     @Test
-    fun `hours between two date-times`() {
+    fun `lengthInHours property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2020, Month.MARCH, 1, 13, 0) at offset1
@@ -284,15 +296,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(14, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.hours, (start until end1).lengthInHours)
-        assertEquals(1L.hours, hoursBetween(start, end1))
-
-        assertEquals(0L.hours, (start until end2).lengthInHours)
-        assertEquals(0L.hours, hoursBetween(start, end2))
+        assertEquals(1.hours, (start until end1).lengthInHours)
+        assertEquals(0.hours, (start until end2).lengthInHours)
     }
 
     @Test
-    fun `minutes between two date-times`() {
+    fun `lengthInMinutes property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2020, Month.MARCH, 1, 13, 59) at offset1
@@ -301,15 +310,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(14, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.minutes, (start until end1).lengthInMinutes)
-        assertEquals(1L.minutes, minutesBetween(start, end1))
-
-        assertEquals(0L.minutes, (start until end2).lengthInMinutes)
-        assertEquals(0L.minutes, minutesBetween(start, end2))
+        assertEquals(1.minutes, (start until end1).lengthInMinutes)
+        assertEquals(0.minutes, (start until end2).lengthInMinutes)
     }
 
     @Test
-    fun `seconds between two date-times`() {
+    fun `lengthInSeconds property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = DateTime(2020, Month.MARCH, 1, 13, 59, 59) at offset1
@@ -318,15 +324,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(14, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.seconds, (start until end1).lengthInSeconds)
-        assertEquals(1L.seconds, secondsBetween(start, end1))
-
-        assertEquals(0L.seconds, (start until end2).lengthInSeconds)
-        assertEquals(0L.seconds, secondsBetween(start, end2))
+        assertEquals(1.seconds, (start until end1).lengthInSeconds)
+        assertEquals(0.seconds, (start until end2).lengthInSeconds)
     }
 
     @Test
-    fun `milliseconds between two date-times`() {
+    fun `lengthInMilliseconds property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = Date(2020, Month.MARCH, 1) at
@@ -337,15 +340,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(14, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.milliseconds, (start until end1).lengthInMilliseconds)
-        assertEquals(1L.milliseconds, millisecondsBetween(start, end1))
-
-        assertEquals(0L.milliseconds, (start until end2).lengthInMilliseconds)
-        assertEquals(0L.milliseconds, millisecondsBetween(start, end2))
+        assertEquals(1.milliseconds, (start until end1).lengthInMilliseconds)
+        assertEquals(0.milliseconds, (start until end2).lengthInMilliseconds)
     }
 
     @Test
-    fun `microseconds between two date-times`() {
+    fun `lengthInMicroseconds property returns expected length when bounded`() {
         val offset1 = UtcOffset(1.hours)
         val offset2 = UtcOffset(2.hours)
         val start = Date(2020, Month.MARCH, 1) at
@@ -356,11 +356,8 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
             Time(14, 59, 59, 999_999_999) at
             offset2
 
-        assertEquals(1L.microseconds, (start until end1).lengthInMicroseconds)
-        assertEquals(1L.microseconds, microsecondsBetween(start, end1))
-
-        assertEquals(0L.microseconds, (start until end2).lengthInMicroseconds)
-        assertEquals(0L.microseconds, microsecondsBetween(start, end2))
+        assertEquals(1.microseconds, (start until end1).lengthInMicroseconds)
+        assertEquals(0.microseconds, (start until end2).lengthInMicroseconds)
     }
 
     @Test

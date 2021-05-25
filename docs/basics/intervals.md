@@ -37,10 +37,10 @@ Additional operations are also supported, such as `random()` and the ability to 
 val randomDate = (today..today + 1.months).random()
 
 // Get the total number of days
-val totalDays: LongDays = (today until today + 6.months).lengthInDays
+val totalDays: Days = (today until today + 6.months).lengthInDays
 
 // Get the Period represented by the range
-val period: Period = (today..today + 1.months).asPeriod()
+val period: Period = (today..today + 1.months).toPeriod()
 ```
 
 ## Time Intervals

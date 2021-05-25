@@ -6,7 +6,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval between two offset date-times based on timeline order.
@@ -31,50 +30,12 @@ class OffsetDateTimeInterval(
         appendFunction = StringBuilder::appendOffsetDateTime
     )
 
-    /**
-     * Converts this interval into a [Period] of the same length.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asPeriod(): Period {
-        return when {
-            isEmpty() -> Period.ZERO
-            isBounded() -> periodBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
-
-    /**
-     * The number of whole years in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInYears: Years
-        get() = when {
-            isEmpty() -> 0.years
-            isBounded() -> yearsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole months in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInMonths: Months
-        get() = when {
-            isEmpty() -> 0.months
-            isBounded() -> monthsBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-
-    /**
-     * The number of whole weeks in this interval.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    val lengthInWeeks: Weeks
-        get() = when {
-            isEmpty() -> 0L.weeks
-            isBounded() -> weeksBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
+    @Deprecated(
+        message = "Replace with toPeriod()",
+        replaceWith = ReplaceWith("this.toPeriod()", "io.islandtime.ranges.toPeriod"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asPeriod(): Period = toPeriod()
 
     companion object {
         /**
@@ -168,47 +129,57 @@ fun String.toOffsetDateTimeInterval(
  */
 infix fun OffsetDateTime.until(to: OffsetDateTime): OffsetDateTimeInterval = OffsetDateTimeInterval(this, to)
 
-/**
- * Gets the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the starting
- * date-time.
- */
-fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
-    return periodBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
-}
+@Deprecated(
+    message = "Replace with Period.between()",
+    replaceWith = ReplaceWith(
+        "Period.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Period"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period = Period.between(start, endExclusive)
 
-/**
- * Gets the number of whole years between two date-times, adjusting the offset of [endExclusive] if necessary to match
- * the starting date-time.
- */
-fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Years {
-    return yearsBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
-}
+@Deprecated(
+    message = "Replace with Years.between()",
+    replaceWith = ReplaceWith(
+        "Years.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Years"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun yearsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Years = Years.between(start, endExclusive)
 
-/**
- * Gets the number of whole months between two date-times, adjusting the offset of [endExclusive] if necessary to match
- * the starting date-time.
- */
-fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Months {
-    return monthsBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
-}
+@Deprecated(
+    message = "Replace with Months.between()",
+    replaceWith = ReplaceWith(
+        "Months.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Months"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun monthsBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Months = Months.between(start, endExclusive)
 
-/**
- * Gets the number whole weeks between two date-times, adjusting the offset of [endExclusive] if necessary to match the
- * starting date-time.
- */
-fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Weeks {
-    return weeksBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
-}
+@Deprecated(
+    message = "Replace with Weeks.between()",
+    replaceWith = ReplaceWith(
+        "Weeks.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Weeks"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Weeks = Weeks.between(start, endExclusive)
 
-/**
- * Gets the number whole days between two date-times, adjusting the offset of [endExclusive] if necessary to match the
- * starting date-time.
- */
-fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Days {
-    return daysBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
-}
-
-private fun adjustedEndDateTime(start: OffsetDateTime, endExclusive: OffsetDateTime): DateTime {
-    val offsetDelta = start.offset.totalSeconds - endExclusive.offset.totalSeconds
-    return endExclusive.dateTime + offsetDelta
-}
+@Deprecated(
+    message = "Replace with Days.between()",
+    replaceWith = ReplaceWith(
+        "Days.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Days"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Days = Days.between(start, endExclusive)

@@ -45,4 +45,8 @@ enum class IntervalDescription(
     };
 
     abstract val elementDescription: DateTimeDescription
+
+    val isDateBased: Boolean get() = elementDescription.isDateBased
+    val isTimeBased: Boolean get() = elementDescription.isTimeBased
+    val isTimePointInterval: Boolean get() = elementDescription.isTimePoint
 }

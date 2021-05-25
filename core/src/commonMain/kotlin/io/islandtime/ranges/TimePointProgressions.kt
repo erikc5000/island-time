@@ -1,6 +1,7 @@
 package io.islandtime.ranges
 
 import io.islandtime.base.TimePoint
+import io.islandtime.between
 import io.islandtime.measures.*
 
 /**
@@ -200,7 +201,7 @@ private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, s
     return if ((step.value > 0 && start >= end) || (step.value < 0 && start <= end)) {
         end
     } else {
-        val secondsBetween = secondsBetween(start, end)
+        val secondsBetween = Seconds.between(start, end)
         val steppedSeconds = secondsBetween - (secondsBetween % step.value)
         start + steppedSeconds
     }
@@ -213,7 +214,7 @@ private fun <T : TimePoint<T>> getLastTimePointInProgression(start: T, end: T, s
     return if ((step.value > 0 && start >= end) || (step.value < 0 && start <= end)) {
         end
     } else {
-        val nanosecondsBetween = nanosecondsBetween(start, end)
+        val nanosecondsBetween = Nanoseconds.between(start, end)
         val steppedNanoseconds = nanosecondsBetween - (nanosecondsBetween % step.value)
         start + steppedNanoseconds
     }

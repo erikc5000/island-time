@@ -5,7 +5,10 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.base.TimePoint
+import io.islandtime.measures.Duration
+import io.islandtime.measures.Period
 import io.islandtime.measures.days
+import io.islandtime.ranges.internal.throwUnboundedIntervalException
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 
@@ -148,21 +151,84 @@ fun ZonedDateTimeInterval.toInstantInterval(): InstantInterval {
     return (this as TimePointInterval<*>).toInstantInterval()
 }
 
-private inline fun <T> Interval<T>.toDateRange(toDateTime: T.() -> DateTime): DateRange {
-    return when {
-        isEmpty() -> DateRange.EMPTY
-        isUnbounded() -> DateRange.UNBOUNDED
-        else -> {
-            val endDateTime = toDateTime(endExclusive)
+/**
+ * Converts this interval to the [Duration] between the start and end date-time, which are assumed to be in the same
+ * time zone. In general, it's more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight
+ * savings rules won't be taken into account when working with [DateTime] directly.
+ *
+ * @throws UnsupportedOperationException if the interval isn't bounded
+ */
+fun DateTimeInterval.toDuration(): Duration = when {
+    isEmpty() -> Duration.ZERO
+    isBounded() -> Duration.between(start, endExclusive)
+    else -> throwUnboundedIntervalException()
+}
 
-            val endDate = if (endDateTime.time == Time.MIDNIGHT) {
-                endDateTime.date - 1.days
-            } else {
-                endDateTime.date
-            }
+/**
+ * Converts this range into a [Period] of the same length. As a range is inclusive, if the start and end date are the
+ * same, the resulting period will contain one day.
+ *
+ * @throws UnsupportedOperationException if the range isn't bounded
+ */
+fun DateRange.toPeriod(): Period = when {
+    isEmpty() -> Period.ZERO
+    isBounded() -> Period.between(start, endInclusive + 1.days)
+    else -> throwUnboundedIntervalException()
+}
 
-            toDateTime(start).date..endDate
+/**
+ * Converts this interval into a [Period] of the same length.
+ * @throws UnsupportedOperationException if the interval isn't bounded
+ */
+fun DateTimeInterval.toPeriod(): Period = when {
+    isEmpty() -> Period.ZERO
+    isBounded() -> Period.between(start, endExclusive)
+    else -> throwUnboundedIntervalException()
+}
+
+/**
+ * Converts this interval into a [Period] of the same length.
+ * @throws UnsupportedOperationException if the interval isn't bounded
+ */
+fun OffsetDateTimeInterval.toPeriod(): Period = when {
+    isEmpty() -> Period.ZERO
+    isBounded() -> Period.between(start, endExclusive)
+    else -> throwUnboundedIntervalException()
+}
+
+/**
+ * Converts this interval into a [Period] of the same length.
+ * @throws UnsupportedOperationException if the interval isn't bounded
+ */
+fun ZonedDateTimeInterval.toPeriod(): Period = when {
+    isEmpty() -> Period.ZERO
+    isBounded() -> Period.between(start, endExclusive)
+    else -> throwUnboundedIntervalException()
+}
+
+/**
+ * Converts this interval into a [Duration] of the same length.
+ * @throws UnsupportedOperationException if the interval isn't bounded
+ */
+fun TimePointInterval<*>.toDuration(): Duration = when {
+    isEmpty() -> Duration.ZERO
+    isBounded() -> Duration.between(start, endExclusive)
+    else -> throwUnboundedIntervalException()
+}
+
+private inline fun <T> Interval<T>.toDateRange(toDateTime: T.() -> DateTime): DateRange = when {
+    isEmpty() -> DateRange.EMPTY
+    isUnbounded() -> DateRange.UNBOUNDED
+    else -> {
+        val endDateTime = toDateTime(endExclusive)
+
+        val endDate = if (endDateTime.time == Time.MIDNIGHT) {
+            endDateTime.date - 1.days
+        } else {
+            endDateTime.date
         }
+
+        toDateTime(start).date..endDate
     }
 }
 
