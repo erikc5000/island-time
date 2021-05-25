@@ -155,6 +155,12 @@ class ZonedDateTime private constructor(
     operator fun plus(duration: Duration): ZonedDateTime = resolveInstant(dateTime + duration)
 
     /**
+     * Returns this date-time with [duration] added to it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun plus(duration: kotlin.time.Duration): ZonedDateTime = resolveInstant(dateTime + duration)
+
+    /**
      * Returns this date-tme with [centuries] added to it.
      */
     operator fun plus(centuries: Centuries): ZonedDateTime = copy(dateTime = dateTime + centuries)
@@ -226,6 +232,12 @@ class ZonedDateTime private constructor(
     operator fun minus(period: Period): ZonedDateTime = copy(dateTime = dateTime - period)
 
     operator fun minus(duration: Duration): ZonedDateTime = resolveInstant(dateTime - duration)
+
+    /**
+     * Returns this date-time with [duration] subtracted from it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun minus(duration: kotlin.time.Duration): ZonedDateTime = resolveInstant(dateTime - duration)
 
     /**
      * Returns this date-time with [centuries] subtracted from it.

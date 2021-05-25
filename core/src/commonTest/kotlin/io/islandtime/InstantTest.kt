@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package io.islandtime
 
 import io.islandtime.measures.*
@@ -7,6 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
+import kotlin.time.ExperimentalTime
 
 class InstantTest : AbstractIslandTimeTest() {
     @Test
@@ -198,6 +201,48 @@ class InstantTest : AbstractIslandTimeTest() {
         assertEquals(
             Instant((-1L).seconds, 999_999_999.nanoseconds),
             Instant(0L.seconds, 0.nanoseconds) - 1L.nanoseconds
+        )
+    }
+
+    @Test
+    fun `adding a kotlin duration of zero doesn't affect the instant`() {
+        val instant = Instant(0.seconds, 1.nanoseconds)
+        assertEquals(instant, instant + kotlin.time.Duration.ZERO)
+    }
+
+    @Test
+    fun `throws an exception when adding an infinite kotlin duration`() {
+        assertFailsWith<IllegalArgumentException> { Instant.UNIX_EPOCH + kotlin.time.Duration.INFINITE }
+    }
+
+    @Test
+    fun `add a kotlin duration`() {
+        assertEquals(
+            Instant(1.hours.inSeconds, 2.nanoseconds),
+            Instant(0.seconds, 1.nanoseconds) +
+                (kotlin.time.Duration.hours(1) +
+                    kotlin.time.Duration.nanoseconds(1))
+        )
+    }
+
+    @Test
+    fun `subtracting a kotlin duration of zero doesn't affect the instant`() {
+        val instant = Instant(0.seconds, 1.nanoseconds)
+        assertEquals(instant, instant - kotlin.time.Duration.ZERO)
+    }
+
+    @Test
+    fun `throws an exception when subtracting an infinite kotlin duration`() {
+        assertFailsWith<IllegalArgumentException> { Instant.UNIX_EPOCH - kotlin.time.Duration.INFINITE }
+    }
+
+    @Test
+    fun `subtract a kotlin duration`() {
+        assertEquals(
+            Instant((-1).hours.inSeconds, 0.nanoseconds),
+            Instant(0.seconds, 1.nanoseconds) -
+                (kotlin.time.Duration.hours(1) +
+                    kotlin.time.Duration.nanoseconds(1))
         )
     }
 

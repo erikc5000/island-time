@@ -70,6 +70,12 @@ class OffsetTime(
     operator fun plus(duration: Duration): OffsetTime = copy(time = time + duration)
 
     /**
+     * Returns this time with [duration] added to it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun plus(duration: kotlin.time.Duration): OffsetTime = copy(time = time + duration)
+
+    /**
      * Returns this time with [hours] added to it.
      */
     operator fun plus(hours: Hours): OffsetTime = copy(time = time + hours)
@@ -100,6 +106,12 @@ class OffsetTime(
     operator fun plus(nanoseconds: Nanoseconds): OffsetTime = copy(time = time + nanoseconds)
 
     operator fun minus(duration: Duration): OffsetTime = copy(time = time - duration)
+
+    /**
+     * Returns this time with [duration] subtracted from it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun minus(duration: kotlin.time.Duration): OffsetTime = copy(time = time - duration)
 
     /**
      * Returns this time with [hours] subtracted from it.

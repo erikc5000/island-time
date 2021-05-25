@@ -139,6 +139,15 @@ class DateTime(
     }
 
     /**
+     * Returns this date-time with [duration] added to it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun plus(duration: kotlin.time.Duration): DateTime {
+        require(duration.isFinite()) { "The duration must be finite" }
+        return duration.toComponents { seconds, nanoseconds -> this + Seconds(seconds) + Nanoseconds(nanoseconds) }
+    }
+
+    /**
      * Returns this date-tme with [centuries] added to it.
      */
     operator fun plus(centuries: Centuries): DateTime {
@@ -337,6 +346,15 @@ class DateTime(
 
     operator fun minus(duration: Duration): DateTime {
         return this - duration.seconds - duration.nanosecondAdjustment
+    }
+
+    /**
+     * Returns this date-time with [duration] subtracted from it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun minus(duration: kotlin.time.Duration): DateTime {
+        require(duration.isFinite()) { "The duration must be finite" }
+        return duration.toComponents { seconds, nanoseconds -> this - Seconds(seconds) - Nanoseconds(nanoseconds) }
     }
 
     /**

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package io.islandtime
 
 import io.islandtime.measures.*
@@ -9,6 +11,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
+import kotlin.time.ExperimentalTime
 
 class DateTimeTest : AbstractIslandTimeTest() {
     @Test
@@ -295,6 +298,48 @@ class DateTimeTest : AbstractIslandTimeTest() {
             Date(2010, Month.JULY, 4) at Time(18, 0),
             (Date(2010, Month.JULY, 5) at Time(1, 0, 0, 1)) -
                 durationOf(7.hours + 1.nanoseconds)
+        )
+    }
+
+    @Test
+    fun `adding a kotlin duration of zero doesn't affect the time`() {
+        val dateTime = Date(2010, Month.JULY, 4) at Time(18, 0)
+        assertEquals(dateTime, dateTime + kotlin.time.Duration.ZERO)
+    }
+
+    @Test
+    fun `throws an exception when adding an infinite kotlin duration`() {
+        val dateTime = Date(2010, Month.JULY, 4) at Time(18, 0)
+        assertFailsWith<IllegalArgumentException> { dateTime + kotlin.time.Duration.INFINITE }
+    }
+
+    @Test
+    fun `add a kotlin duration`() {
+        assertEquals(
+            Date(2010, Month.JULY, 4) at Time(18, 0),
+            (Date(2010, Month.JULY, 3) at Time.MAX) +
+                (kotlin.time.Duration.hours(18) + kotlin.time.Duration.nanoseconds(1))
+        )
+    }
+
+    @Test
+    fun `subtracting a kotlin duration of zero doesn't affect the time`() {
+        val dateTime = Date(2010, Month.JULY, 4) at Time(18, 0)
+        assertEquals(dateTime, dateTime - kotlin.time.Duration.ZERO)
+    }
+
+    @Test
+    fun `throws an exception when subtracting an infinite kotlin duration`() {
+        val dateTime = Date(2010, Month.JULY, 4) at Time(18, 0)
+        assertFailsWith<IllegalArgumentException> { dateTime - kotlin.time.Duration.INFINITE }
+    }
+
+    @Test
+    fun `subtract a kotlin duration`() {
+        assertEquals(
+            Date(2010, Month.JULY, 4) at Time(18, 0),
+            (Date(2010, Month.JULY, 5) at Time(1, 0, 0, 1)) -
+                (kotlin.time.Duration.hours(7) + kotlin.time.Duration.nanoseconds(1))
         )
     }
 
