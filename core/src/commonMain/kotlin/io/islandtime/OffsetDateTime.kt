@@ -189,6 +189,12 @@ class OffsetDateTime(
     operator fun plus(duration: Duration): OffsetDateTime = copy(dateTime = dateTime + duration)
 
     /**
+     * Returns this date-time with [duration] added to it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun plus(duration: kotlin.time.Duration): OffsetDateTime = copy(dateTime = dateTime + duration)
+
+    /**
      * Returns this date-tme with [centuries] added to it.
      */
     operator fun plus(centuries: Centuries): OffsetDateTime = copy(dateTime = dateTime + centuries)
@@ -257,6 +263,12 @@ class OffsetDateTime(
     operator fun minus(period: Period): OffsetDateTime = copy(dateTime = dateTime - period)
 
     operator fun minus(duration: Duration): OffsetDateTime = copy(dateTime = dateTime - duration)
+
+    /**
+     * Returns this date-time with [duration] subtracted from it.
+     */
+    @kotlin.time.ExperimentalTime
+    operator fun minus(duration: kotlin.time.Duration): OffsetDateTime = copy(dateTime = dateTime - duration)
 
     /**
      * Returns this date-time with [centuries] subtracted from it.
