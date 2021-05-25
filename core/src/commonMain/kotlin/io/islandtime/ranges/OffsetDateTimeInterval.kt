@@ -6,7 +6,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval between two offset date-times based on timeline order.
@@ -31,17 +30,12 @@ class OffsetDateTimeInterval(
         appendFunction = StringBuilder::appendOffsetDateTime
     )
 
-    /**
-     * Converts this interval into a [Period] of the same length.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asPeriod(): Period {
-        return when {
-            isEmpty() -> Period.ZERO
-            isBounded() -> periodBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
+    @Deprecated(
+        message = "Replace with toPeriod()",
+        replaceWith = ReplaceWith("this.toPeriod()", "io.islandtime.ranges.toPeriod"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asPeriod(): Period = toPeriod()
 
     companion object {
         /**
@@ -135,13 +129,16 @@ fun String.toOffsetDateTimeInterval(
  */
 infix fun OffsetDateTime.until(to: OffsetDateTime): OffsetDateTimeInterval = OffsetDateTimeInterval(this, to)
 
-/**
- * Gets the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the starting
- * date-time.
- */
-fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
-    return periodBetween(start.dateTime, adjustedEndDateTime(start, endExclusive))
-}
+@Deprecated(
+    message = "Replace with Period.between()",
+    replaceWith = ReplaceWith(
+        "Period.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Period"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun periodBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Period = Period.between(start, endExclusive)
 
 @Deprecated(
     message = "Replace with Years.between()",
@@ -186,8 +183,3 @@ fun weeksBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Weeks = W
     level = DeprecationLevel.WARNING
 )
 fun daysBetween(start: OffsetDateTime, endExclusive: OffsetDateTime): Days = Days.between(start, endExclusive)
-
-private fun adjustedEndDateTime(start: OffsetDateTime, endExclusive: OffsetDateTime): DateTime {
-    val offsetDelta = start.offset.totalSeconds - endExclusive.offset.totalSeconds
-    return endExclusive.dateTime + offsetDelta
-}

@@ -7,7 +7,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval of zoned date-times based on timeline order.
@@ -33,17 +32,12 @@ class ZonedDateTimeInterval(
         appendFunction = StringBuilder::appendZonedDateTime
     )
 
-    /**
-     * Converts this interval into a [Period] of the same length.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asPeriod(): Period {
-        return when {
-            isEmpty() -> Period.ZERO
-            isBounded() -> periodBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
+    @Deprecated(
+        message = "Replace with toPeriod()",
+        replaceWith = ReplaceWith("this.toPeriod()", "io.islandtime.ranges.toPeriod"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asPeriod(): Period = toPeriod()
 
     companion object {
         /**
@@ -146,13 +140,16 @@ infix fun ZonedDateTime.until(to: ZonedDateTime): ZonedDateTimeInterval = ZonedD
 @Suppress("UNUSED_PARAMETER", "unused")
 fun DateRange.toZonedDateTimeInterval(zone: TimeZone): ZonedDateTimeInterval = deprecatedToError()
 
-/**
- * Gets the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match the
- * starting date-time.
- */
-fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period {
-    return periodBetween(start.dateTime, endExclusive.adjustedTo(start.zone).dateTime)
-}
+@Deprecated(
+    message = "Replace with Period.between()",
+    replaceWith = ReplaceWith(
+        "Period.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Period"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun periodBetween(start: ZonedDateTime, endExclusive: ZonedDateTime): Period = Period.between(start, endExclusive)
 
 @Deprecated(
     message = "Replace with Years.between()",

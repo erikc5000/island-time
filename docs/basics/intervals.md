@@ -40,7 +40,7 @@ val randomDate = (today..today + 1.months).random()
 val totalDays: Days = (today until today + 6.months).lengthInDays
 
 // Get the Period represented by the range
-val period: Period = (today..today + 1.months).asPeriod()
+val period: Period = (today..today + 1.months).toPeriod()
 ```
 
 ## Time Intervals

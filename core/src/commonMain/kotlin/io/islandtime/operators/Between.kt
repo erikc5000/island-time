@@ -5,6 +5,7 @@
 package io.islandtime
 
 import io.islandtime.base.TimePoint
+import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
@@ -393,6 +394,74 @@ fun Nanoseconds.Companion.between(start: TimePoint<*>, endExclusive: TimePoint<*
         endExclusive.secondOfUnixEpoch,
         endExclusive.nanosecond
     )
+}
+
+/**
+ * Returns the [Duration] between two date-times, which are assumed to be at the same UTC offset. In general, it's more
+ * appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken
+ * into account when working with [DateTime] directly.
+ */
+fun Duration.Companion.between(start: DateTime, endExclusive: DateTime): Duration {
+    val secondDiff = endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO) - start.secondOfUnixEpochAt(UtcOffset.ZERO)
+    val nanoDiff = endExclusive.nanosecond - start.nanosecond
+    return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
+}
+
+/**
+ * Returns the [Duration] between two time points.
+ */
+fun Duration.Companion.between(start: TimePoint<*>, endExclusive: TimePoint<*>): Duration {
+    val secondDiff = endExclusive.secondOfUnixEpoch - start.secondOfUnixEpoch
+    val nanoDiff = endExclusive.nanosecond - start.nanosecond
+    return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
+}
+
+/**
+ * Returns the [Period] between two dates.
+ */
+fun Period.Companion.between(start: Date, endExclusive: Date): Period {
+    var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
+    val dayDiff = endExclusive.dayOfMonth - start.dayOfMonth
+
+    val days = when {
+        totalMonths > 0 && dayDiff < 0 -> {
+            totalMonths--
+            val testDate = start + totalMonths.months
+            Days.between(testDate, endExclusive)
+        }
+        totalMonths < 0 && dayDiff > 0 -> {
+            totalMonths++
+            (dayDiff - endExclusive.lengthOfMonth.value).days
+        }
+        else -> dayDiff.days
+    }
+    val years = (totalMonths / MONTHS_PER_YEAR).years
+    val months = (totalMonths % MONTHS_PER_YEAR).months
+
+    return periodOf(years, months, days)
+}
+
+/**
+ * Returns the [Period] between two date-times, which are assumed to be in the same time zone.
+ */
+fun Period.Companion.between(start: DateTime, endExclusive: DateTime): Period {
+    return Period.between(start.date, adjustedEndDate(start, endExclusive))
+}
+
+/**
+ * Returns the [Period] between two date-times, adjusting the offset of [endExclusive] if necessary to match the
+ * starting date-time.
+ */
+fun Period.Companion.between(start: OffsetDateTime, endExclusive: OffsetDateTime): Period {
+    return Period.between(start.dateTime, adjustedEndDateTime(start, endExclusive))
+}
+
+/**
+ * Returns the [Period] between two zoned date-times, adjusting the time zone of [endExclusive] if necessary to match
+ * the starting date-time.
+ */
+fun Period.Companion.between(start: ZonedDateTime, endExclusive: ZonedDateTime): Period {
+    return Period.between(start.dateTime, adjustedEndDateTime(start, endExclusive))
 }
 
 private inline val YearMonth.monthsSinceYear0: Long get() = year * 12L + month.ordinal

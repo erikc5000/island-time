@@ -314,6 +314,73 @@ class BetweenTest : AbstractIslandTimeTest() {
     }
 
     @Test
+    fun `duration between instants`() {
+        assertEquals(
+            0.milliseconds.asDuration(),
+            Duration.between(Instant(1L.milliseconds), Instant(1L.milliseconds))
+        )
+
+        assertEquals(
+            1.milliseconds.asDuration(),
+            Duration.between(Instant.UNIX_EPOCH, Instant(1L.milliseconds))
+        )
+
+        assertEquals(
+            (-1).milliseconds.asDuration(),
+            Duration.between(Instant(1L.milliseconds), Instant.UNIX_EPOCH)
+        )
+
+        assertEquals(
+            (-3).milliseconds.asDuration(),
+            Duration.between(Instant(1L.milliseconds), Instant((-2L).milliseconds))
+        )
+    }
+
+    @Test
+    fun `returns a zeroed period when the start and end dates are the same`() {
+        assertEquals(
+            Period.ZERO,
+            Period.between(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
+        )
+    }
+
+    @Test
+    fun `period between dates in positive progression`() {
+        assertEquals(
+            periodOf(1.months, 2.days),
+            Period.between(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
+        )
+
+        assertEquals(
+            periodOf(1.months, 8.days),
+            Period.between(Date(2019, Month.MAY, 25), Date(2019, Month.JULY, 3))
+        )
+
+        assertEquals(
+            periodOf(2.years, 29.days),
+            Period.between(Date(2018, Month.JANUARY, 31), Date(2020, Month.FEBRUARY, 29))
+        )
+    }
+
+    @Test
+    fun `period between dates in negative progression`() {
+        assertEquals(
+            periodOf((-28).days),
+            Period.between(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 3))
+        )
+
+        assertEquals(
+            periodOf((-1).months),
+            Period.between(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 1))
+        )
+
+        assertEquals(
+            periodOf((-1).years, (-10).months, (-21).days),
+            Period.between(Date(2019, Month.MAY, 25), Date(2017, Month.JULY, 4))
+        )
+    }
+
+    @Test
     fun `centuries betwen years`() {
         assertEquals(0.centuries, Centuries.between(Year(2000), Year(2099)))
         assertEquals(1.centuries, Centuries.between(Year(2000), Year(2100)))

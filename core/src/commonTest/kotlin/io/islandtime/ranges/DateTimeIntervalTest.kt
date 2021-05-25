@@ -173,14 +173,14 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asDuration() returns a zeroed out duration when the range is empty`() {
-        assertEquals(Duration.ZERO, DateTimeInterval.EMPTY.asDuration())
+    fun `toDuration() returns a zeroed out duration when the range is empty`() {
+        assertEquals(Duration.ZERO, DateTimeInterval.EMPTY.toDuration())
     }
 
     @Test
-    fun `asDuration() throws an exception when the range is unbounded`() {
+    fun `toDuration() throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
-            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).asDuration()
+            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).toDuration()
         }
     }
 
@@ -188,24 +188,19 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     fun `duration is correct when bounded`() {
         assertEquals(
             10.minutes.asDuration(),
-            ("2019-10-11T09:15".toDateTime() until "2019-10-11T09:25".toDateTime()).asDuration()
-        )
-
-        assertEquals(
-            10.minutes.asDuration(),
-            durationBetween("2019-10-11T09:15".toDateTime(), "2019-10-11T09:25".toDateTime())
+            ("2019-10-11T09:15".toDateTime() until "2019-10-11T09:25".toDateTime()).toDuration()
         )
     }
 
     @Test
-    fun `asPeriod() returns a zeroed out period when the range is empty`() {
-        assertEquals(Period.ZERO, DateTimeInterval.EMPTY.asPeriod())
+    fun `toPeriod() returns a zeroed out period when the range is empty`() {
+        assertEquals(Period.ZERO, DateTimeInterval.EMPTY.toPeriod())
     }
 
     @Test
-    fun `asPeriod() throws an exception when the range is unbounded`() {
+    fun `toPeriod() throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
-            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).asPeriod()
+            DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).toPeriod()
         }
     }
 
@@ -213,12 +208,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     fun `period is correct when bounded`() {
         assertEquals(
             periodOf(1.years, 1.months, 1.days),
-            ("2018-09-10T09:15".toDateTime() until "2019-10-11T09:15".toDateTime()).asPeriod()
-        )
-
-        assertEquals(
-            periodOf(1.years, 1.months, 1.days),
-            periodBetween("2018-09-10T09:15".toDateTime(), "2019-10-11T09:15".toDateTime())
+            ("2018-09-10T09:15".toDateTime() until "2019-10-11T09:15".toDateTime()).toPeriod()
         )
     }
 

@@ -54,7 +54,7 @@ val duration: Duration = durationOf(5.seconds, 100.nanoseconds)
 The methods and operators available to `Duration` are mostly the same as those on the single unit durations.
 
 ```kotlin
-val duration: Duration = durationBetween(firstDateTime, secondDateTime)
+val duration: Duration = Duration.between(firstDateTime, secondDateTime)
 val minutes: Minutes = duration.inMinutes
 ```
 
@@ -78,7 +78,7 @@ val invertedPeriod = -period // (-5).years, (-13).months, (-10).days
 val (years, months, days) = period
 
 // We can also get the period between two dates
-val periodBetweenDates = periodBetween(date1, date2)
+val periodBetweenDates = Period.between(date1, date2)
 ```
 
 ## ISO Representation

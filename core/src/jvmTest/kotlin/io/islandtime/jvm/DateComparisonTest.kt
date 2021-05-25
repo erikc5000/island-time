@@ -1,14 +1,10 @@
 package io.islandtime.jvm
 
 import com.google.common.truth.Truth.assertThat
-import io.islandtime.Date
-import io.islandtime.isInLeapYear
-import io.islandtime.lengthOfMonth
-import io.islandtime.lengthOfYear
-import io.islandtime.ranges.periodBetween
+import io.islandtime.*
+import io.islandtime.measures.Period
 import org.junit.Test
 import java.time.LocalDate
-import java.time.Period
 
 class DateComparisonTest {
     private val javaDates = listOf(
@@ -50,8 +46,8 @@ class DateComparisonTest {
         val islandEndDate = javaEndDate.toIslandDate()
 
         javaDates.compareWithIsland { javaDate, islandDate ->
-            val javaPeriod = Period.between(javaDate, javaEndDate)
-            val islandPeriod = periodBetween(islandDate, islandEndDate)
+            val javaPeriod = java.time.Period.between(javaDate, javaEndDate)
+            val islandPeriod = Period.between(islandDate, islandEndDate)
 
             assertThat(javaPeriod.days).isEqualTo(islandPeriod.days.value)
             assertThat(javaPeriod.months).isEqualTo(islandPeriod.months.value)

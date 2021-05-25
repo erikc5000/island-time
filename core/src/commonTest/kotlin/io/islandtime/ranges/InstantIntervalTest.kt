@@ -227,27 +227,4 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
         val instant = Instant(2L.days.inSeconds)
         assertEquals(1L.nanoseconds, (instant..instant).lengthInNanoseconds)
     }
-
-    @Test
-    fun `durationBetween() returns the duration between two instants`() {
-        assertEquals(
-            0.milliseconds.asDuration(),
-            durationBetween(Instant(1L.milliseconds), Instant(1L.milliseconds))
-        )
-
-        assertEquals(
-            1.milliseconds.asDuration(),
-            durationBetween(Instant.UNIX_EPOCH, Instant(1L.milliseconds))
-        )
-
-        assertEquals(
-            (-1).milliseconds.asDuration(),
-            durationBetween(Instant(1L.milliseconds), Instant.UNIX_EPOCH)
-        )
-
-        assertEquals(
-            (-3).milliseconds.asDuration(),
-            durationBetween(Instant(1L.milliseconds), Instant((-2L).milliseconds))
-        )
-    }
 }

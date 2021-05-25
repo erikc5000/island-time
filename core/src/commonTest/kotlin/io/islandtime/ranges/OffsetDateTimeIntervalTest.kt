@@ -151,14 +151,14 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asPeriod() returns a zeroed out period when the range is empty`() {
-        assertEquals(Period.ZERO, OffsetDateTimeInterval.EMPTY.asPeriod())
+    fun `toPeriod() returns a zeroed out period when the range is empty`() {
+        assertEquals(Period.ZERO, OffsetDateTimeInterval.EMPTY.toPeriod())
     }
 
     @Test
-    fun `asPeriod() throws an exception when the range is unbounded`() {
+    fun `toPeriod() throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
-            OffsetDateTimeInterval(endExclusive = "2018-09-10T09:15-06:00".toOffsetDateTime()).asPeriod()
+            OffsetDateTimeInterval(endExclusive = "2018-09-10T09:15-06:00".toOffsetDateTime()).toPeriod()
         }
     }
 
@@ -166,15 +166,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     fun `period is correct when bounded`() {
         assertEquals(
             periodOf(1.years, 1.months, 1.days),
-            ("2018-09-10T09:15-06:00".toOffsetDateTime() until "2019-10-11T09:15-07:00".toOffsetDateTime()).asPeriod()
-        )
-
-        assertEquals(
-            periodOf(1.years, 1.months, 1.days),
-            periodBetween(
-                "2018-09-10T09:15-06:00".toOffsetDateTime(),
-                "2019-10-11T09:15-07:00".toOffsetDateTime()
-            )
+            ("2018-09-10T09:15-06:00".toOffsetDateTime() until "2019-10-11T09:15-07:00".toOffsetDateTime()).toPeriod()
         )
     }
 

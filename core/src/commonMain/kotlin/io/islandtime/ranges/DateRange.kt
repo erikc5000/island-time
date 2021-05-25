@@ -2,11 +2,9 @@ package io.islandtime.ranges
 
 import io.islandtime.*
 import io.islandtime.base.DateTimeField
-import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * An inclusive range of dates.
@@ -53,18 +51,12 @@ class DateRange(
         return if (isEmpty()) -1 else (31 * start.hashCode() + endInclusive.hashCode())
     }
 
-    /**
-     * Converts this range into a [Period] of the same length. As a range is inclusive, if the start and end date are
-     * the same, the resulting period will contain one day.
-     * @throws UnsupportedOperationException if the range isn't bounded
-     */
-    fun asPeriod(): Period {
-        return when {
-            isEmpty() -> Period.ZERO
-            isBounded() -> periodBetween(start, endInclusive + 1.days)
-            else -> throwUnboundedIntervalException()
-        }
-    }
+    @Deprecated(
+        message = "Replace with toPeriod()",
+        replaceWith = ReplaceWith("this.toPeriod()", "io.islandtime.ranges.toPeriod"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asPeriod(): Period = toPeriod()
 
     companion object {
         /**
@@ -135,30 +127,16 @@ fun String.toDateRange(
  */
 infix fun Date.until(to: Date): DateRange = DateRange(this, to - 1.days)
 
-/**
- * Gets the [Period] between two dates.
- */
-fun periodBetween(start: Date, endExclusive: Date): Period {
-    var totalMonths = endExclusive.monthsSinceYear0 - start.monthsSinceYear0
-    val dayDiff = endExclusive.dayOfMonth - start.dayOfMonth
-
-    val days = when {
-        totalMonths > 0 && dayDiff < 0 -> {
-            totalMonths--
-            val testDate = start + totalMonths.months
-            Days.between(testDate, endExclusive)
-        }
-        totalMonths < 0 && dayDiff > 0 -> {
-            totalMonths++
-            (dayDiff - endExclusive.lengthOfMonth.value).days
-        }
-        else -> dayDiff.days
-    }
-    val years = (totalMonths / MONTHS_PER_YEAR).years
-    val months = (totalMonths % MONTHS_PER_YEAR).months
-
-    return periodOf(years, months, days)
-}
+@Deprecated(
+    message = "Replace with Period.between()",
+    replaceWith = ReplaceWith(
+        "Period.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Period"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun periodBetween(start: Date, endExclusive: Date): Period = Period.between(start, endExclusive)
 
 @Deprecated(
     message = "Replace with Years.between()",

@@ -2,7 +2,6 @@ package io.islandtime.ranges
 
 import io.islandtime.Date
 import io.islandtime.Month
-import io.islandtime.between
 import io.islandtime.measures.*
 import io.islandtime.parser.DateTimeParseException
 import io.islandtime.parser.DateTimeParsers
@@ -233,7 +232,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
             Date(2019, Month.JUNE, 1)..Date.MAX,
             Date.MIN..Date(2019, Month.JUNE, 1)
         ).forEach {
-            assertFailsWith<UnsupportedOperationException> { it.asPeriod() }
+            assertFailsWith<UnsupportedOperationException> { it.toPeriod() }
             assertFailsWith<UnsupportedOperationException> { it.lengthInCenturies }
             assertFailsWith<UnsupportedOperationException> { it.lengthInDecades }
             assertFailsWith<UnsupportedOperationException> { it.lengthInYears }
@@ -245,7 +244,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
 
     @Test
     fun `length properties return 0 when the range is empty`() {
-        assertEquals(Period.ZERO, DateRange.EMPTY.asPeriod())
+        assertEquals(Period.ZERO, DateRange.EMPTY.toPeriod())
         assertEquals(0.centuries, DateRange.EMPTY.lengthInCenturies)
         assertEquals(0.decades, DateRange.EMPTY.lengthInDecades)
         assertEquals(0.years, DateRange.EMPTY.lengthInYears)
@@ -315,59 +314,15 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `asPeriod() returns a period of 1 day when the start and end date are equal`() {
+    fun `toPeriod() returns a period of 1 day when the start and end date are equal`() {
         val date = Date(2019, Month.JUNE, 1)
-        assertEquals(periodOf(1.days), (date..date).asPeriod())
+        assertEquals(periodOf(1.days), (date..date).toPeriod())
     }
 
     @Test
-    fun `asPeriod() returns the expected period for non-empty ranges`() {
+    fun `toPeriod() returns the expected period for non-empty ranges`() {
         val start = Date(2018, Month.FEBRUARY, 20)
         val end = Date(2019, Month.MARCH, 20)
-        assertEquals(periodOf(1.years, 1.months, 1.days), (start..end).asPeriod())
-    }
-
-    @Test
-    fun `periodBetween() returns a zeroed period when the start and end dates are the same`() {
-        assertEquals(
-            Period.ZERO,
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.MAY, 1))
-        )
-    }
-
-    @Test
-    fun `periodBetween() returns the period between two dates in positive progression`() {
-        assertEquals(
-            periodOf(1.months, 2.days),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.JUNE, 3))
-        )
-
-        assertEquals(
-            periodOf(1.months, 8.days),
-            periodBetween(Date(2019, Month.MAY, 25), Date(2019, Month.JULY, 3))
-        )
-
-        assertEquals(
-            periodOf(2.years, 29.days),
-            periodBetween(Date(2018, Month.JANUARY, 31), Date(2020, Month.FEBRUARY, 29))
-        )
-    }
-
-    @Test
-    fun `periodBetween() returns the period between two dates in negative progression`() {
-        assertEquals(
-            periodOf((-28).days),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 3))
-        )
-
-        assertEquals(
-            periodOf((-1).months),
-            periodBetween(Date(2019, Month.MAY, 1), Date(2019, Month.APRIL, 1))
-        )
-
-        assertEquals(
-            periodOf((-1).years, (-10).months, (-21).days),
-            periodBetween(Date(2019, Month.MAY, 25), Date(2017, Month.JULY, 4))
-        )
+        assertEquals(periodOf(1.years, 1.months, 1.days), (start..end).toPeriod())
     }
 }

@@ -192,12 +192,12 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10) at Time(1, 0) at zone
         val now = Date(2019, 4, 10) at Time(1, 0) at zone
 
-        assertEquals(periodOf(1.months), periodBetween(then, now))
-        assertEquals(periodOf((-1).months), periodBetween(now, then))
-        assertEquals(periodOf(30.days), periodBetween(then, now - 1.nanoseconds))
-        assertEquals(periodOf((-30).days), periodBetween(now, then + 1.nanoseconds))
-        assertEquals(periodOf(1.months), (then until now).asPeriod())
-        assertEquals(periodOf(30.days), (then until now - 1.nanoseconds).asPeriod())
+        assertEquals(periodOf(1.months), Period.between(then, now))
+        assertEquals(periodOf((-1).months), Period.between(now, then))
+        assertEquals(periodOf(30.days), Period.between(then, now - 1.nanoseconds))
+        assertEquals(periodOf((-30).days), Period.between(now, then + 1.nanoseconds))
+        assertEquals(periodOf(1.months), (then until now).toPeriod())
+        assertEquals(periodOf(30.days), (then until now - 1.nanoseconds).toPeriod())
     }
 
     @Test
@@ -206,12 +206,12 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10) at Time(1, 0) at zone
         val now = Date(2019, 3, 11) at Time(1, 0) at zone
 
-        assertEquals(periodOf(1.days), periodBetween(then, now))
-        assertEquals(periodOf((-1).days), periodBetween(now, then))
-        assertEquals(Period.ZERO, periodBetween(then, now - 1.nanoseconds))
-        assertEquals(Period.ZERO, periodBetween(now, then + 1.nanoseconds))
-        assertEquals(periodOf(1.days), (then until now).asPeriod())
-        assertEquals(Period.ZERO, (then until now - 1.nanoseconds).asPeriod())
+        assertEquals(periodOf(1.days), Period.between(then, now))
+        assertEquals(periodOf((-1).days), Period.between(now, then))
+        assertEquals(Period.ZERO, Period.between(then, now - 1.nanoseconds))
+        assertEquals(Period.ZERO, Period.between(now, then + 1.nanoseconds))
+        assertEquals(periodOf(1.days), (then until now).toPeriod())
+        assertEquals(Period.ZERO, (then until now - 1.nanoseconds).toPeriod())
     }
 
     @Test
@@ -220,10 +220,10 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 3, 10) at Time(1, 0) at zone
         val now = Date(2019, 3, 11) at Time(1, 0) at zone
 
-        assertEquals(durationOf(23.hours), durationBetween(then, now))
-        assertEquals(durationOf((-23).hours), durationBetween(now, then))
-        assertEquals(durationOf(23.hours), (then until now).asDuration())
-        assertEquals(durationOf(23.hours.inSeconds, 1.nanoseconds), (then..now).asDuration())
+        assertEquals(durationOf(23.hours), Duration.between(then, now))
+        assertEquals(durationOf((-23).hours), Duration.between(now, then))
+        assertEquals(durationOf(23.hours), (then until now).toDuration())
+        assertEquals(durationOf(23.hours.inSeconds, 1.nanoseconds), (then..now).toDuration())
     }
 
     @Test
@@ -232,10 +232,10 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 11, 3) at Time(1, 0) at zone
         val now = Date(2019, 11, 4) at Time(1, 0) at zone
 
-        assertEquals(periodOf(1.days), periodBetween(then, now))
-        assertEquals(Period.ZERO, periodBetween(then, now - 1.nanoseconds))
-        assertEquals(periodOf(1.days), (then until now).asPeriod())
-        assertEquals(Period.ZERO, (then until now - 1.nanoseconds).asPeriod())
+        assertEquals(periodOf(1.days), Period.between(then, now))
+        assertEquals(Period.ZERO, Period.between(then, now - 1.nanoseconds))
+        assertEquals(periodOf(1.days), (then until now).toPeriod())
+        assertEquals(Period.ZERO, (then until now - 1.nanoseconds).toPeriod())
     }
 
     @Test
@@ -244,9 +244,9 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
         val then = Date(2019, 11, 3) at Time(1, 0) at zone
         val now = Date(2019, 11, 4) at Time(1, 0) at zone
 
-        assertEquals(durationOf(25.hours), durationBetween(then, now))
-        assertEquals(durationOf(25.hours), (then until now).asDuration())
-        assertEquals(durationOf(25.hours.inSeconds, 1.nanoseconds), (then..now).asDuration())
+        assertEquals(durationOf(25.hours), Duration.between(then, now))
+        assertEquals(durationOf(25.hours), (then until now).toDuration())
+        assertEquals(durationOf(25.hours.inSeconds, 1.nanoseconds), (then..now).toDuration())
     }
 
     @Test

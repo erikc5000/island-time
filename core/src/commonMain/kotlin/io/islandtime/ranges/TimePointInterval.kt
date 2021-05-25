@@ -4,7 +4,6 @@ import io.islandtime.base.TimePoint
 import io.islandtime.between
 import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * A half-open interval of time points.
@@ -33,17 +32,12 @@ abstract class TimePointInterval<T : TimePoint<T>> internal constructor(
 
     override fun isEmpty(): Boolean = start >= endExclusive
 
-    /**
-     * Converts this interval into a [Duration] of the same length.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asDuration(): Duration {
-        return when {
-            isEmpty() -> Duration.ZERO
-            isBounded() -> durationBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
+    @Deprecated(
+        message = "Replace with toDuration()",
+        replaceWith = ReplaceWith("this.toDuration()", "io.islandtime.ranges.toDuration"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asDuration(): Duration = toDuration()
 }
 
 /**
@@ -55,14 +49,16 @@ operator fun <T : TimePoint<T>> TimePointInterval<T>.contains(value: TimePoint<*
         (value < endExclusive || hasUnboundedEnd())
 }
 
-/**
- * Gets the [Duration] between two time points.
- */
-fun durationBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Duration {
-    val secondDiff = endExclusive.secondOfUnixEpoch - start.secondOfUnixEpoch
-    val nanoDiff = endExclusive.nanosecond - start.nanosecond
-    return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
-}
+@Deprecated(
+    message = "Replace with Duration.between()",
+    replaceWith = ReplaceWith(
+        "Duration.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Duration"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun durationBetween(start: TimePoint<*>, endExclusive: TimePoint<*>): Duration = Duration.between(start, endExclusive)
 
 @Deprecated(
     message = "Replace with Days.between() or Hours.between().inWholeDays as appropriate",

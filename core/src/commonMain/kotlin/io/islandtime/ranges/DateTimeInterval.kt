@@ -6,7 +6,6 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.ranges.internal.throwUnboundedIntervalException
 
 /**
  * An interval between two date-times, assumed to be at the same offset from UTC.
@@ -54,32 +53,19 @@ class DateTimeInterval(
         appendFunction = StringBuilder::appendDateTime
     )
 
-    /**
-     * Converts this interval to the [Duration] between the start and end date-time, assuming they're in the same time
-     * zone. In general, it's more appropriate to calculate duration using [Instant] or [ZonedDateTime] as any daylight
-     * savings rules won't be taken into account when working with [DateTime] directly.
-     *
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asDuration(): Duration {
-        return when {
-            isEmpty() -> Duration.ZERO
-            isBounded() -> durationBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
+    @Deprecated(
+        message = "Replace with toDuration()",
+        replaceWith = ReplaceWith("this.toDuration()", "io.islandtime.ranges.toDuration"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asDuration(): Duration = toDuration()
 
-    /**
-     * Converts this interval into a [Period] of the same length.
-     * @throws UnsupportedOperationException if the interval isn't bounded
-     */
-    fun asPeriod(): Period {
-        return when {
-            isEmpty() -> Period.ZERO
-            isBounded() -> periodBetween(start, endExclusive)
-            else -> throwUnboundedIntervalException()
-        }
-    }
+    @Deprecated(
+        message = "Replace with toPeriod()",
+        replaceWith = ReplaceWith("this.toPeriod()", "io.islandtime.ranges.toPeriod"),
+        level = DeprecationLevel.WARNING
+    )
+    fun asPeriod(): Period = toPeriod()
 
     companion object {
         /**
@@ -164,12 +150,16 @@ fun String.toDateTimeInterval(
  */
 infix fun DateTime.until(to: DateTime): DateTimeInterval = DateTimeInterval(this, to)
 
-/**
- * Gets the [Period] between two date-times, assuming they're in the same time zone.
- */
-fun periodBetween(start: DateTime, endExclusive: DateTime): Period {
-    return periodBetween(start.date, adjustedEndDate(start, endExclusive))
-}
+@Deprecated(
+    message = "Replace with Period.between()",
+    replaceWith = ReplaceWith(
+        "Period.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Period"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun periodBetween(start: DateTime, endExclusive: DateTime): Period = Period.between(start, endExclusive)
 
 @Deprecated(
     message = "Replace with Years.between()",
@@ -216,16 +206,16 @@ fun weeksBetween(start: DateTime, endExclusive: DateTime): Weeks = Weeks.between
 )
 fun daysBetween(start: DateTime, endExclusive: DateTime): Days = Days.between(start, endExclusive)
 
-/**
- * Gets the [Duration] between two date-times, assuming they have the same UTC offset. In general, it's more appropriate
- * to calculate duration using [Instant] or [ZonedDateTime] as any daylight savings rules won't be taken into account
- * when working with [DateTime] directly.
- */
-fun durationBetween(start: DateTime, endExclusive: DateTime): Duration {
-    val secondDiff = endExclusive.secondOfUnixEpochAt(UtcOffset.ZERO) - start.secondOfUnixEpochAt(UtcOffset.ZERO)
-    val nanoDiff = endExclusive.nanosecond - start.nanosecond
-    return durationOf(secondDiff.seconds, nanoDiff.nanoseconds)
-}
+@Deprecated(
+    message = "Replace with Duration.between()",
+    replaceWith = ReplaceWith(
+        "Duration.between(start, endExclusive)",
+        "io.islandtime.between",
+        "io.islandtime.measures.Duration"
+    ),
+    level = DeprecationLevel.WARNING
+)
+fun durationBetween(start: DateTime, endExclusive: DateTime): Duration = Duration.between(start, endExclusive)
 
 @Deprecated(
     message = "Replace with Hours.between()",
@@ -294,11 +284,3 @@ fun microsecondsBetween(start: DateTime, endExclusive: DateTime): Microseconds =
     level = DeprecationLevel.WARNING
 )
 fun nanosecondsBetween(start: DateTime, endExclusive: DateTime): Nanoseconds = Nanoseconds.between(start, endExclusive)
-
-internal fun adjustedEndDate(start: DateTime, endExclusive: DateTime): Date {
-    return when {
-        endExclusive.date > start.date && endExclusive.time < start.time -> endExclusive.date - 1.days
-        endExclusive.date < start.date && endExclusive.time > start.time -> endExclusive.date + 1.days
-        else -> endExclusive.date
-    }
-}

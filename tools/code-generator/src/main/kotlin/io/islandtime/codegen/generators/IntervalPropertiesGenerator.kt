@@ -99,10 +99,3 @@ private fun FileBuilder.buildLengthProperty(
         }
     }
 }
-
-private val IntervalDescription.additionalOperatorKdocs: String
-    get() = when (this) {
-        OffsetDateTimeInterval -> "The offset of the start date-time will be used."
-        ZonedDateTimeInterval -> "The zone of the start date-time will be used."
-        else -> ""
-    }
