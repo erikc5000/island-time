@@ -7,12 +7,15 @@ import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.ZonedDateTimeInterval
+import io.islandtime.serialization.ZonedDateTimeSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A date and time of day in a particular region.
  *
  * `ZonedDateTime` takes time zone rules into account when performing calendrical calculations.
  */
+@Serializable(with = ZonedDateTimeSerializer::class)
 class ZonedDateTime private constructor(
     /** The local date and time of day. */
     val dateTime: DateTime,

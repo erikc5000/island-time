@@ -1,6 +1,7 @@
 plugins {
     `multiplatform-library`
     id("kotlinx-atomicfu")
+    kotlin("plugin.serialization") version Versions.kotlin
 }
 
 kotlin {
@@ -19,6 +20,8 @@ kotlin {
             dependencies {
                 implementation(Libs.javamath2kmp)
                 implementation(Libs.atomicfu)
+
+                compileOnly(Libs.Serialization.core)
             }
         }
 
@@ -35,6 +38,12 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(Libs.googleTruth)
+            }
+        }
+
+        val darwinMain by getting {
+            dependencies {
+                api(Libs.Serialization.core)
             }
         }
     }

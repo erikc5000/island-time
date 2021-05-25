@@ -12,6 +12,8 @@ import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.InstantInterval
+import io.islandtime.serialization.InstantSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A platform-specific representation of an instant in time.
@@ -21,6 +23,7 @@ expect class PlatformInstant
 /**
  * An instant in time with nanosecond-precision.
  */
+@Serializable(with = InstantSerializer::class)
 class Instant private constructor(
     override val secondOfUnixEpoch: Long,
     override val nanosecond: Int

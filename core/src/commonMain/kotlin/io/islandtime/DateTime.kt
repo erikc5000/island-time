@@ -6,6 +6,8 @@ import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateTimeInterval
+import io.islandtime.serialization.DateTimeSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A date and time of day in an ambiguous region.
@@ -14,6 +16,7 @@ import io.islandtime.ranges.DateTimeInterval
  * @param date the date
  * @param time the time
  */
+@Serializable(with = DateTimeSerializer::class)
 class DateTime(
     /** The date. */
     val date: Date,

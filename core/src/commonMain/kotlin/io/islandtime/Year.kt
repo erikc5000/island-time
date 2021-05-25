@@ -5,8 +5,10 @@ import io.islandtime.internal.toZeroPaddedString
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
+import io.islandtime.serialization.YearSerializer
 import kotlin.jvm.JvmInline
 import kotlin.math.absoluteValue
+import kotlinx.serialization.Serializable
 
 /**
  * A year as defined by ISO-8601.
@@ -15,6 +17,7 @@ import kotlin.math.absoluteValue
  * @throws DateTimeException if the year is invalid
  * @property value The year value.
  */
+@Serializable(with = YearSerializer::class)
 @JvmInline
 value class Year(val value: Int) : Comparable<Year> {
 

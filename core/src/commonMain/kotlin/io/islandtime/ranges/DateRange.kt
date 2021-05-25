@@ -5,12 +5,15 @@ import io.islandtime.base.DateTimeField
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.serialization.DateRangeSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * An inclusive range of dates.
  *
  * [Date.MIN] and [Date.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
+@Serializable(with = DateRangeSerializer::class)
 class DateRange(
     override val start: Date = Date.MIN,
     override val endInclusive: Date = Date.MAX

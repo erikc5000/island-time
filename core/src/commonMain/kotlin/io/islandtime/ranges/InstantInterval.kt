@@ -6,12 +6,15 @@ import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.serialization.InstantIntervalSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A half-open interval between two instants.
  *
  * [Instant.MIN] and [Instant.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
+@Serializable(with = InstantIntervalSerializer::class)
 class InstantInterval(
     start: Instant = Instant.MIN,
     endExclusive: Instant = Instant.MAX

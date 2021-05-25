@@ -4,6 +4,8 @@ import dev.erikchristensen.javamath2kmp.timesExact
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.parser.*
+import io.islandtime.serialization.PeriodSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A date-based period of time, such as "2 years, 5 months, 16 days". Unlike [Duration], which uses exact increments,
@@ -13,6 +15,7 @@ import io.islandtime.parser.*
  * @property months The number of months in this period.
  * @property days The number of days in this period.
  */
+@Serializable(with = PeriodSerializer::class)
 class Period private constructor(
     val years: Years = 0.years,
     val months: Months = 0.months,

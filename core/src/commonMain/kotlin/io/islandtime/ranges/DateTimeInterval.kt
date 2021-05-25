@@ -6,12 +6,15 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.serialization.DateTimeIntervalSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * An interval between two date-times, assumed to be at the same offset from UTC.
  *
  * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
+@Serializable(with = DateTimeIntervalSerializer::class)
 class DateTimeInterval(
     override val start: DateTime = UNBOUNDED.start,
     override val endExclusive: DateTime = UNBOUNDED.endExclusive
