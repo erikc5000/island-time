@@ -20,9 +20,6 @@ Add the following dependency to your project's Gradle script:
     }
     ```
 
-!!! note
-    Island Time publishes Gradle Module Metadata for all multiplatform artifacts. The listed "common" artifacts may be used in the dependency block of any target, common or platform-specific.
-
 ## Serializing to JSON
 
 For example purposes, let's assume we have a data structure describing an event that we'd like to serialize.
