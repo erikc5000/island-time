@@ -145,8 +145,8 @@ class OffsetTime(
 
     /**
      * Compares to another [OffsetTime] based on timeline order, ignoring offset differences.
-     * @see DEFAULT_SORT_ORDER
-     * @see TIMELINE_ORDER
+     * @see DefaultSortOrder
+     * @see TimelineOrder
      */
     operator fun compareTo(other: OffsetTime): Int {
         return nanosecondsSinceStartOfUtcDay.compareTo(other.nanosecondsSinceStartOfUtcDay)
@@ -202,16 +202,30 @@ class OffsetTime(
         val MAX: OffsetTime = Time.MAX at UtcOffset.MIN
 
         /**
-         * Compares by UTC equivalent instant, then time. Using this `Comparator` guarantees a deterministic order when
-         * sorting.
+         * A [Comparator] that compares by UTC equivalent instant, then time. Using this `Comparator` guarantees a
+         * deterministic order when sorting.
          */
-        val DEFAULT_SORT_ORDER: Comparator<OffsetTime> =
+        val DefaultSortOrder: Comparator<OffsetTime> =
             compareBy<OffsetTime> { it.nanosecondsSinceStartOfUtcDay }.thenBy { it.time }
 
         /**
-         * Compares by timeline order only, ignoring any offset differences.
+         * A [Comparator] that compares by timeline order only, ignoring any offset differences.
          */
-        val TIMELINE_ORDER: Comparator<OffsetTime> = compareBy { it.nanosecondsSinceStartOfUtcDay }
+        val TimelineOrder: Comparator<OffsetTime> = compareBy { it.nanosecondsSinceStartOfUtcDay }
+
+        @Deprecated(
+            message = "Replace with DefaultSortOrder",
+            replaceWith = ReplaceWith("this.DefaultSortOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val DEFAULT_SORT_ORDER: Comparator<OffsetTime> get() = DefaultSortOrder
+
+        @Deprecated(
+            message = "Replace with TimelineOrder",
+            replaceWith = ReplaceWith("this.TimelineOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val TIMELINE_ORDER: Comparator<OffsetTime> get() = TimelineOrder
     }
 }
 

@@ -419,14 +419,28 @@ class OffsetDateTime(
          * A [Comparator] that compares by instant, then date-time. Using this `Comparator` guarantees a deterministic
          * order when sorting.
          */
-        val DEFAULT_SORT_ORDER: Comparator<OffsetDateTime> = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
+        val DefaultSortOrder: Comparator<OffsetDateTime> = compareBy<OffsetDateTime> { it.secondOfUnixEpoch }
             .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
 
         /**
          * A [Comparator] that compares by timeline order only, ignoring any offset differences.
          */
-        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimePoint.TIMELINE_ORDER
+        val TimelineOrder: Comparator<TimePoint<*>> get() = TimePoint.TimelineOrder
+
+        @Deprecated(
+            message = "Replace with DefaultSortOrder",
+            replaceWith = ReplaceWith("this.DefaultSortOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val DEFAULT_SORT_ORDER: Comparator<OffsetDateTime> get() = DefaultSortOrder
+
+        @Deprecated(
+            message = "Replace with TimelineOrder",
+            replaceWith = ReplaceWith("this.TimelineOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimelineOrder
 
         /**
          * Creates an [OffsetDateTime] from a duration of milliseconds relative to the Unix epoch at [offset].

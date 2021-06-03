@@ -107,7 +107,14 @@ interface TimePoint<T> {
         /**
          * A [Comparator] that compares by timeline order.
          */
-        val TIMELINE_ORDER: Comparator<TimePoint<*>> =
+        val TimelineOrder: Comparator<TimePoint<*>> =
             compareBy<TimePoint<*>> { it.secondOfUnixEpoch }.thenBy { it.nanosecond }
+
+        @Deprecated(
+            message = "Replace with TimelineOrder",
+            replaceWith = ReplaceWith("this.TimelineOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimelineOrder
     }
 }

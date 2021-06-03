@@ -28,39 +28,39 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `TIMELINE_ORDER compares based on instant only`() {
+    fun `TimelineOrder compares based on instant only`() {
         assertTrue {
-            OffsetTime.TIMELINE_ORDER.compare(
+            OffsetTime.TimelineOrder.compare(
                 Time.MIN at UtcOffset.ZERO,
                 Time(0, 0, 0, 1) at UtcOffset.ZERO
             ) < 0
         }
         assertTrue {
-            OffsetTime.TIMELINE_ORDER.compare(
+            OffsetTime.TimelineOrder.compare(
                 Time.MAX at UtcOffset.MIN,
                 Time(23, 59, 59) at UtcOffset.MIN
             ) > 0
         }
         assertTrue {
-            OffsetTime.TIMELINE_ORDER.compare(
+            OffsetTime.TimelineOrder.compare(
                 Time(1, 0) at UtcOffset((-1).hours),
                 Time(2, 0) at UtcOffset.ZERO
             ) == 0
         }
         assertTrue {
-            OffsetTime.TIMELINE_ORDER.compare(
+            OffsetTime.TimelineOrder.compare(
                 Time(1, 0, 0, 1) at UtcOffset((-1).hours),
                 Time(2, 0) at UtcOffset.ZERO
             ) > 0
         }
         assertTrue {
-            OffsetTime.TIMELINE_ORDER.compare(
+            OffsetTime.TimelineOrder.compare(
                 Time(2, 0) at UtcOffset(1.hours),
                 Time(3, 0) at UtcOffset.ZERO
             ) < 0
         }
         assertTrue {
-            OffsetTime.TIMELINE_ORDER.compare(
+            OffsetTime.TimelineOrder.compare(
                 Time(1, 0) at UtcOffset((-1).hours),
                 Time(0, 0) at UtcOffset.ZERO
             ) > 0
@@ -68,23 +68,23 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DEFAULT_SORT_ORDER compares based on instant, then time when there are differing offsets`() {
+    fun `DefaultSortOrder compares based on instant, then time when there are differing offsets`() {
         assertTrue {
-            OffsetTime.DEFAULT_SORT_ORDER.compare(
+            OffsetTime.DefaultSortOrder.compare(
                 Time(1, 0, 0, 1) at UtcOffset((-1).hours),
                 Time(2, 0) at UtcOffset.ZERO
             ) > 0
         }
 
         assertTrue {
-            OffsetTime.DEFAULT_SORT_ORDER.compare(
+            OffsetTime.DefaultSortOrder.compare(
                 Time(2, 0) at UtcOffset(1.hours),
                 Time(3, 0) at UtcOffset.ZERO
             ) < 0
         }
 
         assertTrue {
-            OffsetTime.DEFAULT_SORT_ORDER.compare(
+            OffsetTime.DefaultSortOrder.compare(
                 Time(1, 0) at UtcOffset((-1).hours),
                 Time(0, 0) at UtcOffset.ZERO
             ) > 0
