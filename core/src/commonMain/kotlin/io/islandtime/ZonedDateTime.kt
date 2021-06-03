@@ -485,7 +485,7 @@ class ZonedDateTime private constructor(
          * A [Comparator] that compares by instant, then date-time, then time zone. Using this `Comparator` guarantees a
          * deterministic order when sorting.
          */
-        val DEFAULT_SORT_ORDER: Comparator<ZonedDateTime> = compareBy<ZonedDateTime> { it.secondOfUnixEpoch }
+        val DefaultSortOrder: Comparator<ZonedDateTime> = compareBy<ZonedDateTime> { it.secondOfUnixEpoch }
             .thenBy { it.nanosecond }
             .thenBy { it.dateTime }
             .thenBy { it.zone }
@@ -493,7 +493,21 @@ class ZonedDateTime private constructor(
         /**
          * A [Comparator] that compares by timeline order only, ignoring any offset or time zone differences.
          */
-        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimePoint.TIMELINE_ORDER
+        val TimelineOrder: Comparator<TimePoint<*>> get() = TimePoint.TimelineOrder
+
+        @Deprecated(
+            message = "Replace with DefaultSortOrder",
+            replaceWith = ReplaceWith("this.DefaultSortOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val DEFAULT_SORT_ORDER: Comparator<ZonedDateTime> get() = DefaultSortOrder
+
+        @Deprecated(
+            message = "Replace with TimelineOrder",
+            replaceWith = ReplaceWith("this.TimelineOrder"),
+            level = DeprecationLevel.WARNING
+        )
+        val TIMELINE_ORDER: Comparator<TimePoint<*>> get() = TimelineOrder
 
         /**
          * Creates a [ZonedDateTime] from a local date and time, optionally using a preferred offset. If the local date
