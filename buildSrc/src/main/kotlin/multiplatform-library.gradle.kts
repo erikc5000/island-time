@@ -57,10 +57,6 @@ publishing {
     }
 }
 
-jacoco {
-    toolVersion = "0.8.7"
-}
-
 afterEvaluate {
     tasks.withType<JacocoReport>().configureEach {
         classDirectories.setFrom(
