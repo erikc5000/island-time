@@ -6,7 +6,7 @@ plugins {
 }
 
 dependencies {
-    implementation("com.squareup:kotlinpoet:1.8.0")
+    implementation("com.squareup:kotlinpoet:1.9.0")
 }
 
 application {
