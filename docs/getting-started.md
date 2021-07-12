@@ -73,7 +73,7 @@ You'll need to turn on [core library desugaring](https://developer.android.com/s
     }
 
     dependencies {
-        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     }
     ```
 
