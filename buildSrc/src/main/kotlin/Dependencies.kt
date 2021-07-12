@@ -4,7 +4,7 @@ object Versions {
     const val atomicfu = "0.16.2"
     const val androidxTest = "1.4.0"
     const val googleTruth = "1.1"
-    const val androidDesugarJdkLibs = "1.1.1"
+    const val androidDesugarJdkLibs = "1.1.5"
     const val javamath2kmp = "0.4.0"
 }
 
