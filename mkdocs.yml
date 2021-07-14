@@ -26,8 +26,8 @@ nav:
       - 'extensions/parcelize.md'
   - 'API':
       - 'core': 'api/core/index.md'
-      - 'parcelize-extensions': 'api/parcelize-extensions/index.md'
-      - 'serialization-extensions': 'api/serialization-extensions/index.md'
+      - 'parcelize-extensions': 'api/extensions/parcelize/index.md'
+      - 'serialization-extensions': 'api/extensions/serialization/index.md'
 
 theme:
   name: material

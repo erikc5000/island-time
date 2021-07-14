@@ -37,7 +37,7 @@ val absHours = hours.absoluteValue // hours may be negative
 
 ## `Duration`
 
-The [`Duration`](../api/core/io.islandtime.measures/-duration/index.md) class can be used to represent time-based durations that are potentially very large at nanosecond precision. In most cases, it's probably unnecessary and single unit durations will be perfectly satisfactory, but you can be assured that overflow won't happen when expressing any duration that fits within the supported time scale.
+The [`Duration`](../api/core/core/io.islandtime.measures/-duration/index.md) class can be used to represent time-based durations that are potentially very large at nanosecond precision. In most cases, it's probably unnecessary and single unit durations will be perfectly satisfactory, but you can be assured that overflow won't happen when expressing any duration that fits within the supported time scale.
 
 A single unit duration can be converted to a `Duration` like so:
 
@@ -60,7 +60,7 @@ val minutes: Minutes = duration.inMinutes
 
 ## `Period`
 
-A [`Period`](../api/core/io.islandtime.measures/-period/index.md) is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of the things that you can do with it.
+A [`Period`](../api/core/core/io.islandtime.measures/-period/index.md) is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of the things that you can do with it.
 
 ```kotlin
 val period: Period = periodOf(5.years, 13.months, 10.days)

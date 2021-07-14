@@ -1,7 +1,9 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
 
 plugins {
     id("org.jetbrains.dokka")
@@ -11,12 +13,10 @@ plugins {
 
 val isReleaseBuild get() = !version.toString().endsWith("SNAPSHOT")
 
-tasks.register<DokkaTask>("dokkaMkdocs") {
+tasks.register<DokkaTaskPartial>("dokkaMkdocsPartial") {
     dependencies {
         plugins("io.islandtime.gradle:mkdocs-dokka-plugin")
     }
-
-    outputDirectory.set(file("$rootDir/docs/api"))
 }
 
 val javadocJar by tasks.registering(Jar::class) {
@@ -117,5 +117,19 @@ tasks.withType(AbstractTestTask::class).configureEach {
         events = setOf(TestLogEvent.FAILED)
         exceptionFormat = TestExceptionFormat.FULL
         showStackTraces = true
+    }
+}
+
+tasks.withType<AbstractDokkaLeafTask>().configureEach {
+    val pomArtifactId: String? by project
+    val pomMppArtifactId: String? by project
+    (pomArtifactId ?: pomMppArtifactId)?.let { moduleName.set(it) }
+
+    dokkaSourceSets {
+        configureEach {
+            includes.from(project.file("MODULE.md"))
+            skipEmptyPackages.set(true)
+            skipDeprecated.set(true)
+        }
     }
 }
