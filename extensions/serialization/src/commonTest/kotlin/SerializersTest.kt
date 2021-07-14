@@ -74,7 +74,7 @@ class SerializersTest {
     )
 
     @Test
-    fun `serialize and unserialize to json`() {
+    fun `serialize and deserialize to json`() {
         val json = Json { prettyPrint = true }
         val text = json.encodeToString(TestData.serializer(), testData)
 

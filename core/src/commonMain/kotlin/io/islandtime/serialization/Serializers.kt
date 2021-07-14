@@ -15,7 +15,7 @@ import kotlinx.serialization.encoding.Encoder
 
 object YearSerializer : KSerializer<Year> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.YearSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.YearSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Year) {
         encoder.encodeString(value.toString())
@@ -28,7 +28,7 @@ object YearSerializer : KSerializer<Year> {
 
 object YearMonthSerializer : KSerializer<YearMonth> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.YearMonthSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.YearMonthSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: YearMonth) {
         encoder.encodeString(value.toString())
@@ -41,7 +41,7 @@ object YearMonthSerializer : KSerializer<YearMonth> {
 
 object DateSerializer : KSerializer<Date> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.DateSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.DateSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Date) {
         encoder.encodeString(value.toString())
@@ -54,7 +54,7 @@ object DateSerializer : KSerializer<Date> {
 
 object TimeSerializer : KSerializer<Time> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.TimeSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.TimeSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Time) {
         encoder.encodeString(value.toString())
@@ -67,7 +67,7 @@ object TimeSerializer : KSerializer<Time> {
 
 object DateTimeSerializer : KSerializer<DateTime> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.DateTimeSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.DateTimeSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: DateTime) {
         encoder.encodeString(value.toString())
@@ -79,8 +79,10 @@ object DateTimeSerializer : KSerializer<DateTime> {
 }
 
 object OffsetDateTimeSerializer : KSerializer<OffsetDateTime> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.OffsetDateTimeSerializer", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "io.islandtime.serialization.OffsetDateTimeSerializer",
+        PrimitiveKind.STRING
+    )
 
     override fun serialize(encoder: Encoder, value: OffsetDateTime) {
         encoder.encodeString(value.toString())
@@ -93,7 +95,7 @@ object OffsetDateTimeSerializer : KSerializer<OffsetDateTime> {
 
 object OffsetTimeSerializer : KSerializer<OffsetTime> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.OffsetTimeSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.OffsetTimeSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: OffsetTime) {
         encoder.encodeString(value.toString())
@@ -106,7 +108,7 @@ object OffsetTimeSerializer : KSerializer<OffsetTime> {
 
 object ZonedDateTimeSerializer : KSerializer<ZonedDateTime> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.ZonedDateTimeSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.ZonedDateTimeSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ZonedDateTime) {
         encoder.encodeString(value.toString())
@@ -119,7 +121,7 @@ object ZonedDateTimeSerializer : KSerializer<ZonedDateTime> {
 
 object InstantSerializer : KSerializer<Instant> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.InstantSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.InstantSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Instant) {
         encoder.encodeString(value.toString())
@@ -132,7 +134,7 @@ object InstantSerializer : KSerializer<Instant> {
 
 object UtcOffsetSerializer : KSerializer<UtcOffset> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.UtcOffsetSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.UtcOffsetSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: UtcOffset) {
         encoder.encodeString(value.toString())
@@ -145,7 +147,7 @@ object UtcOffsetSerializer : KSerializer<UtcOffset> {
 
 object TimeZoneSerializer : KSerializer<TimeZone> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.TimeZoneSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.TimeZoneSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: TimeZone) {
         encoder.encodeString(value.toString())
@@ -158,7 +160,7 @@ object TimeZoneSerializer : KSerializer<TimeZone> {
 
 object DateRangeSerializer : KSerializer<DateRange> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.DateRangeSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.DateRangeSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: DateRange) {
         encoder.encodeString(value.toString())
@@ -170,8 +172,10 @@ object DateRangeSerializer : KSerializer<DateRange> {
 }
 
 object DateTimeIntervalSerializer : KSerializer<DateTimeInterval> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.DateTimeIntervalSerializer", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "io.islandtime.serialization.DateTimeIntervalSerializer",
+        PrimitiveKind.STRING
+    )
 
     override fun serialize(encoder: Encoder, value: DateTimeInterval) {
         encoder.encodeString(value.toString())
@@ -183,8 +187,10 @@ object DateTimeIntervalSerializer : KSerializer<DateTimeInterval> {
 }
 
 object InstantIntervalSerializer : KSerializer<InstantInterval> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.InstantIntervalSerializer", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "io.islandtime.serialization.InstantIntervalSerializer",
+        PrimitiveKind.STRING
+    )
 
     override fun serialize(encoder: Encoder, value: InstantInterval) {
         encoder.encodeString(value.toString())
@@ -196,8 +202,10 @@ object InstantIntervalSerializer : KSerializer<InstantInterval> {
 }
 
 object OffsetDateTimeIntervalSerializer : KSerializer<OffsetDateTimeInterval> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.OffsetDateTimeIntervalSerializer", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "io.islandtime.serialization.OffsetDateTimeIntervalSerializer",
+        PrimitiveKind.STRING
+    )
 
     override fun serialize(encoder: Encoder, value: OffsetDateTimeInterval) {
         encoder.encodeString(value.toString())
@@ -209,8 +217,10 @@ object OffsetDateTimeIntervalSerializer : KSerializer<OffsetDateTimeInterval> {
 }
 
 object ZonedDateTimeIntervalSerializer : KSerializer<ZonedDateTimeInterval> {
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.ZonedDateTimeIntervalSerializer", PrimitiveKind.STRING)
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
+        "io.islandtime.serialization.ZonedDateTimeIntervalSerializer",
+        PrimitiveKind.STRING
+    )
 
     override fun serialize(encoder: Encoder, value: ZonedDateTimeInterval) {
         encoder.encodeString(value.toString())
@@ -223,7 +233,7 @@ object ZonedDateTimeIntervalSerializer : KSerializer<ZonedDateTimeInterval> {
 
 object DurationSerializer : KSerializer<Duration> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.DurationSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.DurationSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Duration) {
         encoder.encodeString(value.toString())
@@ -236,7 +246,7 @@ object DurationSerializer : KSerializer<Duration> {
 
 object PeriodSerializer : KSerializer<Period> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("io.islandtime.PeriodSerializer", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("io.islandtime.serialization.PeriodSerializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: Period) {
         encoder.encodeString(value.toString())
