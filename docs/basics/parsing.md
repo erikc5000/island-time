@@ -2,7 +2,7 @@
 
 ## Predefined Parsers
 
-Out of the box, Island Time can parse the most common ISO-8601 formats for dates, times, durations, and time intervals. The set of included parsers can be found in [`DateTimeParsers`](../api/core/io.islandtime.parser/-date-time-parsers/index.md).
+Out of the box, Island Time can parse the most common ISO-8601 formats for dates, times, durations, and time intervals. The set of included parsers can be found in [`DateTimeParsers`](../api/core/core/io.islandtime.parser/-date-time-parsers/index.md).
 
 The table below illustrates how the parsers for the various ISO formats are organized within `DateTimeParsers`, using the calendar date format as an example:
 

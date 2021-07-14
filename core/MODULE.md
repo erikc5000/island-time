@@ -1,6 +1,6 @@
 # Module core
 
-The core set of date, time, duration, and interval types, supporting the ISO calendar system..
+The core set of date, time, duration, and interval types, supporting the ISO calendar system.
 
 # Package io.islandtime
 
