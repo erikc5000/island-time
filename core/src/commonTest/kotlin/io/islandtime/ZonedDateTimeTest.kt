@@ -211,23 +211,23 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DEFAULT_SORT_ORDER compares based on instant, then date and time, and then zone`() {
+    fun `DefaultSortOrder compares based on instant, then date and time, and then zone`() {
         assertTrue {
-            ZonedDateTime.DEFAULT_SORT_ORDER.compare(
+            ZonedDateTime.DefaultSortOrder.compare(
                 Date(1969, 365) at Time(23, 0) at TimeZone("America/Chicago"),
                 Date(1970, 1) at Time(0, 0) at nyZone
             ) < 0
         }
 
         assertTrue {
-            ZonedDateTime.DEFAULT_SORT_ORDER.compare(
+            ZonedDateTime.DefaultSortOrder.compare(
                 Date(1970, 1) at Time(0, 0) at TimeZone("Etc/GMT+5"),
                 Date(1970, 1) at Time(0, 0) at nyZone
             ) > 0
         }
 
         assertTrue {
-            ZonedDateTime.DEFAULT_SORT_ORDER.compare(
+            ZonedDateTime.DefaultSortOrder.compare(
                 Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5"),
                 Date(1969, 365) at Time(23, 0) at TimeZone("Etc/GMT+5")
             ) == 0
@@ -235,9 +235,9 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `TIMELINE_ORDER compare based on instant only`() {
+    fun `TimelineOrder compares based on instant only`() {
         assertTrue {
-            ZonedDateTime.TIMELINE_ORDER.compare(
+            ZonedDateTime.TimelineOrder.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
             ) == 0

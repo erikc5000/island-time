@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.21"
     application
 }
 
 dependencies {
-    implementation("com.squareup:kotlinpoet:1.8.0")
+    implementation("com.squareup:kotlinpoet:1.9.0")
 }
 
 application {

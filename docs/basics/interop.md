@@ -8,17 +8,17 @@ Island Time's classes map very closely to those in [java.time](https://docs.orac
 
 | java.time | Island Time | Description |
 | --- | --- | --- |
-| `LocalDate` | [`Date`](../api/core/io.islandtime/-date/index.md) | A date in arbitrary region |
-| `LocalTime` | [`Time`](../api/core/io.islandtime/-time/index.md) | A time of day in arbitrary region |
-| `LocalDateTime` | [`DateTime`](../api/core/io.islandtime/-date-time/index.md) | A combined date and time of day in arbitrary region |
-| `Instant` | [`Instant`](../api/core/io.islandtime/-instant/index.md) | An instant in time, represented by the number of seconds/nanoseconds relative to the Unix epoch (`1970-01-01T00:00Z`) |
-| `OffsetTime` | [`OffsetTime`](../api/core/io.islandtime/-offset-time/index.md) | A time of day with UTC offset |
-| `OffsetDateTime` | [`OffsetDateTime`](../api/core/io.islandtime/-offset-date-time/index.md) | A date and time of day with fixed UTC offset |
-| `ZonedDateTime` | [`ZonedDateTime`](../api/core/io.islandtime/-zoned-date-time/index.md) | A date and time of day in a particular time zone region |
-| `ZoneOffset` | [`UtcOffset`](../api/core/io.islandtime/-utc-offset/index.md) | An offset from UTC |
-| `ZoneId` | [`TimeZone`](../api/core/io.islandtime/-time-zone/index.md) | An IANA time zone database region ID or fixed offset from UTC |
-| `Duration` | [`Duration`](../api/core/io.islandtime.measures/-duration/index.md) | A (potentially large) duration of time |
-| `Period` | [`Period`](../api/core/io.islandtime.measures/-period/index.md) | A date-based period of time |
+| `LocalDate` | [`Date`](../api/core/core/io.islandtime/-date/index.md) | A date in arbitrary region |
+| `LocalTime` | [`Time`](../api/core/core/io.islandtime/-time/index.md) | A time of day in arbitrary region |
+| `LocalDateTime` | [`DateTime`](../api/core/core/io.islandtime/-date-time/index.md) | A combined date and time of day in arbitrary region |
+| `Instant` | [`Instant`](../api/core/core/io.islandtime/-instant/index.md) | An instant in time, represented by the number of seconds/nanoseconds relative to the Unix epoch (`1970-01-01T00:00Z`) |
+| `OffsetTime` | [`OffsetTime`](../api/core/core/io.islandtime/-offset-time/index.md) | A time of day with UTC offset |
+| `OffsetDateTime` | [`OffsetDateTime`](../api/core/core/io.islandtime/-offset-date-time/index.md) | A date and time of day with fixed UTC offset |
+| `ZonedDateTime` | [`ZonedDateTime`](../api/core/core/io.islandtime/-zoned-date-time/index.md) | A date and time of day in a particular time zone region |
+| `ZoneOffset` | [`UtcOffset`](../api/core/core/io.islandtime/-utc-offset/index.md) | An offset from UTC |
+| `ZoneId` | [`TimeZone`](../api/core/core/io.islandtime/-time-zone/index.md) | An IANA time zone database region ID or fixed offset from UTC |
+| `Duration` | [`Duration`](../api/core/core/io.islandtime.measures/-duration/index.md) | A (potentially large) duration of time |
+| `Period` | [`Period`](../api/core/core/io.islandtime.measures/-period/index.md) | A date-based period of time |
 
 To convert between an Island Time `Date` and Java `LocalDate`, you can do something like this:
 
@@ -38,7 +38,7 @@ The pattern above can be applied for the majority of the date-time and duration 
 val javaDuration: java.time.Duration = 30.minutes.toJavaDuration()
 ```
 
-You can find the full set of conversions in the [io.islandtime.jvm](../api/core/io.islandtime.jvm/index.md) package.
+You can find the full set of conversions in the [io.islandtime.jvm](../api/core/core/io.islandtime.jvm/index.md) package.
 
 ## Apple Foundation Classes
 
@@ -60,7 +60,7 @@ val zonedDateTimeAgain = nsDateComponents.toIslandZonedDateTimeOrNull()
 val nsTimeInterval = 5.minutes.toNSTimeInterval()
 ```
 
-The full set of conversions can be found in the [io.islandtime.darwin](../api/core/io.islandtime.darwin/index.md) package.
+The full set of conversions can be found in the [io.islandtime.darwin](../api/core/core/io.islandtime.darwin/index.md) package.
 
 ## kotlin.time
 

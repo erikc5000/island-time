@@ -133,16 +133,16 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DEFAULT_SORT_ORDER compares based on instant, then date and time when there are differing offsets`() {
+    fun `DefaultSortOrder compares based on instant, then date and time when there are differing offsets`() {
         assertTrue {
-            OffsetDateTime.DEFAULT_SORT_ORDER.compare(
+            OffsetDateTime.DefaultSortOrder.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
             ) < 0
         }
 
         assertTrue {
-            OffsetDateTime.DEFAULT_SORT_ORDER.compare(
+            OffsetDateTime.DefaultSortOrder.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours)
             ) == 0
@@ -150,9 +150,9 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `TIMELINE_ORDER compares based on instant only`() {
+    fun `TimelineOrder compares based on instant only`() {
         assertTrue {
-            OffsetDateTime.TIMELINE_ORDER.compare(
+            OffsetDateTime.TimelineOrder.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
             ) == 0

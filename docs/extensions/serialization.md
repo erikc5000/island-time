@@ -20,9 +20,6 @@ Add the following dependency to your project's Gradle script:
     }
     ```
 
-!!! note
-    Island Time publishes Gradle Module Metadata for all multiplatform artifacts. The listed "common" artifacts may be used in the dependency block of any target, common or platform-specific.
-
 ## Serializing to JSON
 
 For example purposes, let's assume we have a data structure describing an event that we'd like to serialize.
@@ -36,7 +33,7 @@ data class EventDto(
 )
 ```
 
-By using the `@Serializable` annotation, we instruct the Kotlin Serialization plugin to generate a serializer for the `EventDto` class. Island Time's [DateRange](../api/core/io.islandtime.ranges/-date-range/index.md) and [Instant](../api/core/io.islandtime/-instant/index.md) classes are not serializable out of the box, so we explicitly specify the serializers provided by Island Time.
+By using the `@Serializable` annotation, we instruct the Kotlin Serialization plugin to generate a serializer for the `EventDto` class. Island Time's [DateRange](../api/core/core/io.islandtime.ranges/-date-range/index.md) and [Instant](../api/core/core/io.islandtime/-instant/index.md) classes are not serializable out of the box, so we explicitly specify the serializers provided by Island Time.
 
 Now, we can serialize the `EventDto` class to JSON with the following code:
 

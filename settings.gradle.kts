@@ -22,6 +22,6 @@ includeBuild("tools/code-generator")
 
 includeBuild("tools/mkdocs-dokka-plugin") {
     dependencySubstitution {
-        substitute(module("io.islandtime.gradle:mkdocs-dokka-plugin")).with(project(":"))
+        substitute(module("io.islandtime.gradle:mkdocs-dokka-plugin")).using(project(":"))
     }
 }

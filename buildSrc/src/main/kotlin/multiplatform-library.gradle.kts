@@ -4,16 +4,19 @@ plugins {
     jacoco
 }
 
-val ideaActive get() = System.getProperty("idea.active") == "true"
-
 kotlin {
     jvm()
 
-    val darwinTargets = if (ideaActive) {
-        listOf(iosX64("darwin"))
-    } else {
-        listOf(iosArm64(), iosX64(), macosX64(), watchosArm64(), watchosX86(), watchosX64(), tvosArm64(), tvosX64())
-    }
+    val darwinTargets = listOf(
+        iosArm64(),
+        iosX64(),
+        macosX64(),
+        watchosArm64(),
+        watchosX86(),
+        watchosX64(),
+        tvosArm64(),
+        tvosX64()
+    )
 
     sourceSets {
         all {
@@ -23,22 +26,20 @@ kotlin {
             }
         }
 
-        if (!ideaActive) {
-            val commonMain by getting
-            val commonTest by getting
+        val commonMain by getting
+        val commonTest by getting
 
-            val darwinMain by creating {
-                dependsOn(commonMain)
-            }
+        val darwinMain by creating {
+            dependsOn(commonMain)
+        }
 
-            val darwinTest by creating {
-                dependsOn(commonTest)
-            }
+        val darwinTest by creating {
+            dependsOn(commonTest)
+        }
 
-            configure(darwinTargets) {
-                compilations["main"].defaultSourceSet.dependsOn(darwinMain)
-                compilations["test"].defaultSourceSet.dependsOn(darwinTest)
-            }
+        configure(darwinTargets) {
+            compilations["main"].defaultSourceSet.dependsOn(darwinMain)
+            compilations["test"].defaultSourceSet.dependsOn(darwinTest)
         }
     }
 }
@@ -55,10 +56,6 @@ publishing {
             }
         }
     }
-}
-
-jacoco {
-    toolVersion = "0.8.7"
 }
 
 afterEvaluate {
