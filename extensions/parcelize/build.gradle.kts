@@ -24,11 +24,11 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring(Libs.androidDesugarJdkLibs)
+    coreLibraryDesugaring(libs.androidDesugarJdkLibs)
 
     implementation(project(":core"))
 
-    androidTestImplementation(Libs.AndroidxTest.runner)
-    androidTestImplementation(Libs.googleTruth)
-    androidTestUtil(Libs.AndroidxTest.orchestrator)
+    androidTestImplementation(libs.androidxTestRunner)
+    androidTestImplementation(libs.truth)
+    androidTestUtil(libs.androidxTestOrchestrator)
 }

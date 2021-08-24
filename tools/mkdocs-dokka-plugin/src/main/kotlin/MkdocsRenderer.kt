@@ -405,7 +405,7 @@ class MkdocsRenderer(
             val cssStyle = when (it.platform) {
                 Platform.common -> "source-set-common"
                 Platform.native -> "source-set-darwin"
-                Platform.jvm -> if (it.name.toLowerCase(Locale.ROOT).contains("android")) {
+                Platform.jvm -> if (it.name.lowercase().contains("android")) {
                     "source-set-android"
                 } else {
                     "source-set-jvm"

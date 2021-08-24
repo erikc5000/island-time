@@ -1,6 +1,6 @@
 plugins {
     `multiplatform-library`
-    kotlin("plugin.serialization") version Versions.kotlin
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -8,14 +8,14 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":core"))
-                implementation(Libs.Serialization.core)
+                implementation(libs.serializationCore)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(Libs.Serialization.json)
+                implementation(libs.kotlinTest)
+                implementation(libs.serializationJson)
             }
         }
     }
