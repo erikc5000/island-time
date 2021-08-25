@@ -15,7 +15,7 @@ internal class WorkerConfined<T : Any>(
     }
 }
 
-internal inline class ConfinedValueRef<T : Any>(private val value: StableRef<T>) {
+internal value class ConfinedValueRef<T : Any>(private val value: StableRef<T>) {
     fun get() = value.get()
 
     companion object {
