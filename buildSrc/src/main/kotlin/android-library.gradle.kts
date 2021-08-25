@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
 
     defaultConfig {
-        minSdkVersion(21)
+        minSdk = 21
     }
 
     compileOptions {
@@ -18,6 +18,10 @@ android {
 
     buildFeatures {
         buildConfig = false
+    }
+
+    publishing {
+        singleVariant("release")
     }
 }
 

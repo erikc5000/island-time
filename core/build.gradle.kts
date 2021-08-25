@@ -17,14 +17,13 @@ kotlin {
             kotlin.srcDirs("src/commonMain/generated")
 
             dependencies {
-                implementation(Libs.javamath2kmp)
-                implementation(Libs.atomicfu)
+                implementation(libs.javamath2kmp)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlinTest)
             }
         }
 
@@ -34,7 +33,7 @@ kotlin {
 
         val jvmTest by getting {
             dependencies {
-                implementation(Libs.googleTruth)
+                implementation(libs.truth)
             }
         }
     }
