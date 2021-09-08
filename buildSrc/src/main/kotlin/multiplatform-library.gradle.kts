@@ -10,12 +10,16 @@ kotlin {
     val darwinTargets = listOf(
         iosArm64(),
         iosX64(),
+        iosSimulatorArm64(),
         macosX64(),
+        macosArm64(),
         watchosArm64(),
+        watchosSimulatorArm64(),
         watchosX86(),
         watchosX64(),
         tvosArm64(),
-        tvosX64()
+        tvosX64(),
+        tvosSimulatorArm64()
     )
 
     sourceSets {
