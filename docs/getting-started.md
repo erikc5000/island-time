@@ -6,10 +6,10 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 
 - JVM
 - Android
-- iOS ARM64/x64
-- macOS x64
-- watchOS ARM64/x86/x64
-- tvOS ARM64/x64
+- iOS ARM64/x64/Simulator ARM64
+- macOS x64/ARM64
+- watchOS ARM64/x86/x64/Simulator ARM64
+- tvOS ARM64/x64/Simulator ARM64
 
 ## Version Requirements
 
