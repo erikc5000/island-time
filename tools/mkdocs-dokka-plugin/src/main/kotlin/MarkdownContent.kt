@@ -34,7 +34,7 @@ class MarkdownContent : Appendable {
         append(content)
     }
 
-    fun appendNewLine(): Unit = with(stringBuilder) {
+    fun appendLineBreak(): Unit = with(stringBuilder) {
         append('\n')
     }
 

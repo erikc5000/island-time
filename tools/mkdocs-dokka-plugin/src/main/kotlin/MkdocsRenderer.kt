@@ -47,7 +47,7 @@ class MkdocsRenderer(
         buildParagraph()
         append("#".repeat(level) + " ")
         content()
-        appendNewLine()
+        appendLineBreak()
     }
 
     override fun MarkdownContent.buildLink(address: String, content: MarkdownContent.() -> Unit) {
@@ -104,14 +104,14 @@ class MkdocsRenderer(
         } else buildText(node.children, pageContext, sourceSetRestriction)
     }
 
-    override fun MarkdownContent.buildNewLine() {
+    override fun MarkdownContent.buildLineBreak() {
         append("\\")
-        appendNewLine()
+        appendLineBreak()
     }
 
     private fun MarkdownContent.buildParagraph() {
-        appendNewLine()
-        appendNewLine()
+        appendLineBreak()
+        appendLineBreak()
     }
 
     override fun MarkdownContent.buildPlatformDependent(
@@ -137,7 +137,7 @@ class MkdocsRenderer(
             distinct.filter { it.key.isNotBlank() }.forEach { (text, platforms) ->
                 buildSourceSetTags(platforms.toSet())
                 append(text)
-                appendNewLine()
+                appendLineBreak()
             }
         }
     }
@@ -154,18 +154,18 @@ class MkdocsRenderer(
         pageContext: ContentPage,
         sourceSetRestriction: Set<DisplaySourceSet>?
     ) {
-        appendNewLine()
+        appendLineBreak()
         if (node.dci.kind == ContentKind.Sample || node.dci.kind == ContentKind.Parameters) {
             node.sourceSets.forEach { sourcesetData ->
                 append(sourcesetData.name)
-                appendNewLine()
+                appendLineBreak()
                 buildTable(
                     node.copy(
                         children = node.children.filter { it.sourceSets.contains(sourcesetData) },
                         dci = node.dci.copy(kind = ContentKind.Main)
                     ), pageContext, sourceSetRestriction
                 )
-                appendNewLine()
+                appendLineBreak()
             }
         } else {
             val size = node.header.firstOrNull()?.children?.size ?: node.children.firstOrNull()?.children?.size ?: 0
@@ -183,11 +183,11 @@ class MkdocsRenderer(
                 append("| ".repeat(size))
             }
             append("|")
-            appendNewLine()
+            appendLineBreak()
 
             append("|---".repeat(size))
             append("|")
-            appendNewLine()
+            appendLineBreak()
 
             node.children.forEach { row ->
                 row.children.forEach { cell ->
@@ -203,7 +203,7 @@ class MkdocsRenderer(
                     append(" ")
                 }
                 append("|")
-                appendNewLine()
+                appendLineBreak()
             }
         }
     }
@@ -265,9 +265,9 @@ class MkdocsRenderer(
 
             buildSourceSetTags(sourceSets)
             instance.before?.let {
-//                buildNewLine()
+//                buildLineBreak()
 //                append("Brief description")
-                appendNewLine()
+                appendLineBreak()
                 buildContentNode(
                     it,
                     pageContext,
@@ -275,7 +275,7 @@ class MkdocsRenderer(
                 ) // It's workaround to render content only once
             }
 
-//            buildNewLine()
+//            buildLineBreak()
 //            append("Content")
             entry.groupBy {
                 buildMarkdownContent {
@@ -289,10 +289,10 @@ class MkdocsRenderer(
                 .values.forEach { innerEntry ->
                     val (innerInstance, innerSourceSets) = innerEntry.getInstanceAndSourceSets()
 
-                    appendNewLine()
+                    appendLineBreak()
                     if (sourceSets.size > 1) {
                         buildSourceSetTags(innerSourceSets)
-//                        buildNewLine()
+//                        buildLineBreak()
                     }
                     innerInstance.divergent.build(
                         this@buildDivergent,
@@ -302,9 +302,9 @@ class MkdocsRenderer(
                 }
 
             instance.after?.let {
-                appendNewLine()
+                appendLineBreak()
 //                append("More info")
-//                buildNewLine()
+//                buildLineBreak()
                 buildContentNode(
                     it,
                     pageContext,
@@ -318,7 +318,7 @@ class MkdocsRenderer(
 
     override fun MarkdownContent.buildCodeBlock(code: ContentCodeBlock, pageContext: ContentPage) {
         append("```kotlin")
-        buildNewLine()
+        buildLineBreak()
         code.children.forEach { it.build(this, pageContext) }
         append("```")
     }
