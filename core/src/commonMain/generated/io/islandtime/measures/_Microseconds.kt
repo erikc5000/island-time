@@ -38,8 +38,8 @@ import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
 import kotlin.time.ExperimentalTime
-import kotlin.time.Duration as KotlinDuration
 import kotlin.time.DurationUnit as KotlinDurationUnit
+import kotlin.time.Duration as KotlinDuration
 
 @Deprecated(
   message = "Replace with Microseconds.",
