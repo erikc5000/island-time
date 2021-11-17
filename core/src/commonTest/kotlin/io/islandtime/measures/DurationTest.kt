@@ -3,8 +3,8 @@ package io.islandtime.measures
 import io.islandtime.measures.TimeUnit.*
 import io.islandtime.parser.DateTimeParseException
 import kotlin.test.*
-import kotlin.time.ExperimentalTime
-import kotlin.time.Duration as KotlinDuration
+import kotlin.time.Duration.Companion.seconds as kotlinSeconds
+import kotlin.time.Duration.Companion.nanoseconds as kotlinNanoseconds
 
 class DurationTest {
     @Test
@@ -542,26 +542,24 @@ class DurationTest {
         )
     }
 
-    @ExperimentalTime
     @Test
     fun `conversion to Kotlin Duration`() {
         assertEquals(
-            KotlinDuration.seconds(1.000_000_100),
+            1.kotlinSeconds + 100.kotlinNanoseconds,
             durationOf(1.seconds, 100.nanoseconds).toKotlinDuration()
         )
 
         assertEquals(
-            KotlinDuration.seconds(-1.000_000_100),
+            (-1).kotlinSeconds + (-100).kotlinNanoseconds,
             durationOf((-1).seconds, (-100).nanoseconds).toKotlinDuration()
         )
     }
 
-    @ExperimentalTime
     @Test
     fun `conversion from Kotlin Duration`() {
         assertEquals(
             durationOf(5.seconds, 1.nanoseconds),
-            (KotlinDuration.seconds(5) + KotlinDuration.nanoseconds(1)).toIslandDuration()
+            (5.kotlinSeconds + 1.kotlinNanoseconds).toIslandDuration()
         )
     }
 }

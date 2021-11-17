@@ -21,8 +21,18 @@ class FileBuilder(
         builder.addAliasedImport(className, `as`)
     }
 
+    fun aliasedImport(memberName: MemberName, `as`: String) {
+        builder.addAliasedImport(memberName, `as`)
+    }
+
+    @JvmName("aliasedClassImports")
     fun aliasedImports(vararg imports: Pair<ClassName, String>) {
         imports.forEach { (className, `as`) -> aliasedImport(className, `as`) }
+    }
+
+    @JvmName("aliasedMemberImports")
+    fun aliasedImports(vararg imports: Pair<MemberName, String>) {
+        imports.forEach { (memberName, `as`) -> aliasedImport(memberName, `as`) }
     }
 
     fun annotation(annotation: KClass<*>, block: AnnotationBuilder.() -> Unit = {}) {

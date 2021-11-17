@@ -49,7 +49,6 @@ class Instant private constructor(
     /**
      * Returns this instant with [duration] added to it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun plus(duration: kotlin.time.Duration): Instant {
         require(duration.isFinite()) { "The duration must be finite" }
         return duration.toComponents { seconds, nanoseconds -> plus(seconds, nanoseconds) }
@@ -116,7 +115,6 @@ class Instant private constructor(
     /**
      * Returns this instant with [duration] subtracted from it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun minus(duration: kotlin.time.Duration): Instant {
         require(duration.isFinite()) { "The duration must be finite" }
         return duration.toComponents { seconds, nanoseconds -> plus(-seconds, -nanoseconds) }

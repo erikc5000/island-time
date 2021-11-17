@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTime::class)
-
 package io.islandtime
 
 import io.islandtime.measures.*
@@ -9,7 +7,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.hours as kotlinHours
+import kotlin.time.Duration.Companion.nanoseconds as kotlinNanoseconds
 
 class InstantTest : AbstractIslandTimeTest() {
     @Test
@@ -219,9 +218,7 @@ class InstantTest : AbstractIslandTimeTest() {
     fun `add a kotlin duration`() {
         assertEquals(
             Instant(1.hours.inSeconds, 2.nanoseconds),
-            Instant(0.seconds, 1.nanoseconds) +
-                (kotlin.time.Duration.hours(1) +
-                    kotlin.time.Duration.nanoseconds(1))
+            Instant(0.seconds, 1.nanoseconds) + (1.kotlinHours + 1.kotlinNanoseconds)
         )
     }
 
@@ -240,9 +237,7 @@ class InstantTest : AbstractIslandTimeTest() {
     fun `subtract a kotlin duration`() {
         assertEquals(
             Instant((-1).hours.inSeconds, 0.nanoseconds),
-            Instant(0.seconds, 1.nanoseconds) -
-                (kotlin.time.Duration.hours(1) +
-                    kotlin.time.Duration.nanoseconds(1))
+            Instant(0.seconds, 1.nanoseconds) - (1.kotlinHours + 1.kotlinNanoseconds)
         )
     }
 

@@ -4,8 +4,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.time.ExperimentalTime
-import kotlin.time.Duration as KotlinDuration
+import kotlin.time.Duration.Companion.nanoseconds as kotlinNanoseconds
 
 class NanosecondsTest {
     @Test
@@ -205,25 +204,23 @@ class NanosecondsTest {
         }
     }
 
-    @ExperimentalTime
     @Test
     fun `conversion to Kotlin Duration`() {
-        assertEquals(KotlinDuration.nanoseconds(0), 0.nanoseconds.toKotlinDuration())
-        assertEquals(KotlinDuration.nanoseconds(1), 1.nanoseconds.toKotlinDuration())
-        assertEquals(KotlinDuration.nanoseconds(-1), (-1).nanoseconds.toKotlinDuration())
-        assertEquals(KotlinDuration.nanoseconds(Long.MIN_VALUE), Long.MIN_VALUE.nanoseconds.toKotlinDuration())
+        assertEquals(0.kotlinNanoseconds, 0.nanoseconds.toKotlinDuration())
+        assertEquals(1.kotlinNanoseconds, 1.nanoseconds.toKotlinDuration())
+        assertEquals((-1).kotlinNanoseconds, (-1).nanoseconds.toKotlinDuration())
+        assertEquals(Long.MIN_VALUE.kotlinNanoseconds, Long.MIN_VALUE.nanoseconds.toKotlinDuration())
     }
 
-    @ExperimentalTime
     @Test
     fun `conversion from Kotlin Duration`() {
-        assertEquals(0.nanoseconds, KotlinDuration.nanoseconds(0).toIslandNanoseconds())
-        assertEquals(1.nanoseconds, KotlinDuration.nanoseconds(1).toIslandNanoseconds())
-        assertEquals((-1).nanoseconds, KotlinDuration.nanoseconds(-1).toIslandNanoseconds())
+        assertEquals(0.nanoseconds, 0.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals(1.nanoseconds, 1.kotlinNanoseconds.toIslandNanoseconds())
+        assertEquals((-1).nanoseconds, (-1).kotlinNanoseconds.toIslandNanoseconds())
 
         assertEquals(
             Long.MIN_VALUE.nanoseconds.inWholeMilliseconds.inNanoseconds,
-            KotlinDuration.nanoseconds(Long.MIN_VALUE).toIslandNanoseconds()
+            Long.MIN_VALUE.kotlinNanoseconds.toIslandNanoseconds()
         )
     }
 }

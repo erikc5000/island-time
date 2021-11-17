@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTime::class)
-
 package io.islandtime
 
 import io.islandtime.internal.NANOSECONDS_PER_DAY
@@ -11,7 +9,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.days as kotlinDays
+import kotlin.time.Duration.Companion.hours as kotlinHours
+import kotlin.time.Duration.Companion.nanoseconds as kotlinNanoseconds
 
 class TimeTest : AbstractIslandTimeTest() {
     @Test
@@ -199,9 +199,7 @@ class TimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Time(0, 0, 0, 2),
             Time(23, 0, 0, 1) +
-                (kotlin.time.Duration.days(2) +
-                    kotlin.time.Duration.hours(1) +
-                    kotlin.time.Duration.nanoseconds(1))
+                (2.kotlinDays + 1.kotlinHours + 1.kotlinNanoseconds)
         )
     }
 
@@ -222,9 +220,7 @@ class TimeTest : AbstractIslandTimeTest() {
         assertEquals(
             Time(22, 0, 0, 0),
             Time(23, 0, 0, 1) -
-                (kotlin.time.Duration.days(2) +
-                    kotlin.time.Duration.hours(1) +
-                    kotlin.time.Duration.nanoseconds(1))
+                (2.kotlinDays + 1.kotlinHours + 1.kotlinNanoseconds)
         )
     }
 

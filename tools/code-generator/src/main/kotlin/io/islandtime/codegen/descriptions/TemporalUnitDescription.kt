@@ -1,6 +1,5 @@
 package io.islandtime.codegen.descriptions
 
-@OptIn(ExperimentalStdlibApi::class)
 enum class TemporalUnitDescription(
     val pluralName: String,
     val conversionFactor: Int,
@@ -85,7 +84,6 @@ data class TemporalUnitConversion(
 
     fun isNecessary() = operator != ConversionOperator.NONE
 
-    @OptIn(ExperimentalStdlibApi::class)
     val constantName: String by lazy(LazyThreadSafetyMode.NONE) {
         val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
         "${smallerUnit.pluralName}_PER_${largerUnit.singularName}".uppercase()
@@ -113,15 +111,6 @@ data class TemporalUnitConversion(
 
     val valueFitsInInt: Boolean
         get() = constantValue in Int.MIN_VALUE..Int.MAX_VALUE
-
-    fun requiresSafeMultiplicationForInt(): Boolean {
-        return try {
-            Math.multiplyExact(Int.MIN_VALUE.toLong(), constantValue)
-            false
-        } catch (e: ArithmeticException) {
-            true
-        }
-    }
 
     private fun orderedFromSmallerToLargerUnit() = if (fromUnit <= toUnit) {
         fromUnit to toUnit
