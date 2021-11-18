@@ -99,7 +99,6 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     override val hasFixedOffset: Boolean
         get() = timeZone.nextDaylightSavingTimeTransitionAfterDate(NSDate.distantPast) == null
 
-    @OptIn(ExperimentalStdlibApi::class)
     private fun findTransitionsIn(year: Int): List<TimeZoneOffsetTransition> {
         val startDateComponents = NSDateComponents().also {
             it.year = (year - 1).convert()

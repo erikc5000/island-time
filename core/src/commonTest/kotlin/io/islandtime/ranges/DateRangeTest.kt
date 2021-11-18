@@ -11,7 +11,7 @@ import kotlin.test.*
 
 class DateRangeTest : AbstractIslandTimeTest() {
     @Test
-    fun `contains() returns true for dates within range`() {
+    fun `contains returns true for dates within range`() {
         val startDate = Date(2018, Month.DECEMBER, 25)
         val endDate = Date(2019, Month.JANUARY, 12)
 
@@ -21,7 +21,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns false for out of range dates`() {
+    fun `contains returns false for out of range dates`() {
         val startDate = Date(2018, Month.DECEMBER, 25)
         val endDate = Date(2019, Month.JANUARY, 12)
 
@@ -36,7 +36,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns false for null dates`() {
+    fun `contains returns false for null dates`() {
         val startDate = Date(2018, Month.DECEMBER, 25)
         val endDate = Date(2019, Month.JANUARY, 12)
 
@@ -44,12 +44,12 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `isEmpty() returns true when the start is greater than the end`() {
+    fun `isEmpty returns true when the start is greater than the end`() {
         assertTrue { (Date(2018, 45)..Date(2018, 44)).isEmpty() }
     }
 
     @Test
-    fun `isEmpty() returns true when the end is negative infinity or start is positive infinity`() {
+    fun `isEmpty returns true when the end is negative infinity or start is positive infinity`() {
         listOf(
             Date.MIN..Date.MIN,
             Date.MAX..Date.MAX
@@ -79,7 +79,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 time interval representation`() {
+    fun `toString returns an ISO-8601 time interval representation`() {
         assertEquals(
             "1969-12-03/1970-02-03",
             (Date(1969, 12, 3)..Date(1970, 2, 3)).toString()
@@ -112,12 +112,12 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateRange() returns an empty range when the string is empty`() {
+    fun `String_toDateRange returns an empty range when the string is empty`() {
         assertEquals(DateRange.EMPTY, "".toDateRange())
     }
 
     @Test
-    fun `String_toDateRange() parses ISO-8601 time interval strings with dates in extended format`() {
+    fun `String_toDateRange parses ISO-8601 time interval strings with dates in extended format`() {
         assertEquals(DateRange.UNBOUNDED, "../..".toDateRange())
 
         assertEquals(
@@ -178,20 +178,20 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a date within range`() {
+    fun `random returns a date within range`() {
         val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.MARCH, 25)
         val randomDate = range.random()
         assertTrue { randomDate in range }
     }
 
     @Test
-    fun `random() throws an exception when the range is empty`() {
+    fun `random throws an exception when the range is empty`() {
         assertFailsWith<NoSuchElementException> { DateRange.EMPTY.random() }
         assertFailsWith<NoSuchElementException> { DateRange.EMPTY.random(Random) }
     }
 
     @Test
-    fun `random() throws an exception when the range is not bounded`() {
+    fun `random throws an exception when the range is not bounded`() {
         assertFailsWith<UnsupportedOperationException> { DateRange.UNBOUNDED.random() }
         assertFailsWith<UnsupportedOperationException> { DateRange.UNBOUNDED.random(Random) }
 
@@ -205,13 +205,13 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the range is empty`() {
+    fun `randomOrNull returns null when the range is empty`() {
         assertNull(DateRange.EMPTY.randomOrNull())
         assertNull(DateRange.EMPTY.randomOrNull(Random))
     }
 
     @Test
-    fun `randomOrNull() returns null when the range is not bounded`() {
+    fun `randomOrNull returns null when the range is not bounded`() {
         assertNull(DateRange.UNBOUNDED.randomOrNull())
         assertNull(DateRange.UNBOUNDED.randomOrNull(Random))
         assertNull(DateRange(start = Date(2020, Month.APRIL, 1)).randomOrNull())
@@ -219,7 +219,7 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns a date within range`() {
+    fun `randomOrNull returns a date within range`() {
         val range = Date(2018, Month.FEBRUARY, 20)..Date(2018, Month.FEBRUARY, 20)
         assertTrue { range.randomOrNull()!! in range }
         assertTrue { range.randomOrNull(Random)!! in range }
@@ -314,13 +314,13 @@ class DateRangeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toPeriod() returns a period of 1 day when the start and end date are equal`() {
+    fun `toPeriod returns a period of 1 day when the start and end date are equal`() {
         val date = Date(2019, Month.JUNE, 1)
         assertEquals(periodOf(1.days), (date..date).toPeriod())
     }
 
     @Test
-    fun `toPeriod() returns the expected period for non-empty ranges`() {
+    fun `toPeriod returns the expected period for non-empty ranges`() {
         val start = Date(2018, Month.FEBRUARY, 20)
         val end = Date(2019, Month.MARCH, 20)
         assertEquals(periodOf(1.years, 1.months, 1.days), (start..end).toPeriod())

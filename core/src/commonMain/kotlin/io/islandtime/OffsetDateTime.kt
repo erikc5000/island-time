@@ -191,7 +191,6 @@ class OffsetDateTime(
     /**
      * Returns this date-time with [duration] added to it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun plus(duration: kotlin.time.Duration): OffsetDateTime = copy(dateTime = dateTime + duration)
 
     /**
@@ -267,7 +266,6 @@ class OffsetDateTime(
     /**
      * Returns this date-time with [duration] subtracted from it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun minus(duration: kotlin.time.Duration): OffsetDateTime = copy(dateTime = dateTime - duration)
 
     /**

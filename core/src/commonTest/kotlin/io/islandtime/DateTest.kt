@@ -43,7 +43,7 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() creates a new Date, replacing any combination of values`() {
+    fun `copy creates a new Date replacing any combination of values`() {
         assertEquals(
             Date(2017, Month.NOVEMBER, 19),
             Date(2018, Month.NOVEMBER, 19).copy(year = 2017)
@@ -143,7 +143,7 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adding a period first adds years, then months, then days`() {
+    fun `adding a period adds years then months then days`() {
         assertEquals(
             Date(2017, Month.MARCH, 29),
             Date(2016, Month.FEBRUARY, 29) + periodOf(1.years, 1.months, 1.days)
@@ -164,7 +164,7 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `subtracting a period first subtracts years, then months, then days`() {
+    fun `subtracting a period subtracts years then months then days`() {
         assertEquals(
             Date(2017, Month.MARCH, 29),
             Date(2016, Month.FEBRUARY, 29) - periodOf((-1).years, (-1).months, (-1).days)
@@ -690,18 +690,18 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended calendar date`() {
+    fun `toString returns an ISO-8601 extended calendar date`() {
         assertEquals("2019-08-01", Date(2019, Month.AUGUST, 1).toString())
         assertEquals("0001-10-10", Date(1, Month.OCTOBER, 10).toString())
     }
 
     @Test
-    fun `String_toDate() throws an exception when given an empty string`() {
+    fun `String_toDate throws an exception when given an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toDate() }
     }
 
     @Test
-    fun `String_toDate() throws an exception when the format is not an ISO-8601 extended date`() {
+    fun `String_toDate throws an exception when the format is not an ISO-8601 extended date`() {
         listOf(
             "1",
             "--",
@@ -720,27 +720,27 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDate() throws an exception when unexpected characters exist before a valid string`() {
+    fun `String_toDate throws an exception when unexpected characters exist before a valid string`() {
         assertFailsWith<DateTimeParseException> { " 2010-02-20".toDate() }
         assertFailsWith<DateTimeParseException> { "T2010-10-20".toDate() }
     }
 
     @Test
-    fun `String_toDate() throws an exception when unexpected characters exist after a valid string`() {
+    fun `String_toDate throws an exception when unexpected characters exist after a valid string`() {
         assertFailsWith<DateTimeParseException> { "2010-2-20 ".toDate() }
         assertFailsWith<DateTimeParseException> { "2010-10-200".toDate() }
         assertFailsWith<DateTimeParseException> { "2010-10-20T".toDate() }
     }
 
     @Test
-    fun `String_toDate() throws an exception when the parser cannot supply the required fields`() {
+    fun `String_toDate throws an exception when the parser cannot supply the required fields`() {
         assertFailsWith<DateTimeParseException> { "05:06".toDate(DateTimeParsers.Iso.TIME) }
         assertFailsWith<DateTimeParseException> { "2010".toDate(DateTimeParsers.Iso.YEAR) }
         assertFailsWith<DateTimeParseException> { "2010-05".toDate(DateTimeParsers.Iso.YEAR_MONTH) }
     }
 
     @Test
-    fun `String_toDate() throws an exception when fields overflow`() {
+    fun `String_toDate throws an exception when fields overflow`() {
         val customParser = dateTimeParser {
             year()
             +' '
@@ -753,7 +753,7 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDate() parses valid ISO-8601 extended date strings by default`() {
+    fun `String_toDate parses valid ISO-8601 extended date strings by default`() {
         listOf(
             "2000-02-29" to Date(2000, Month.FEBRUARY, 29),
             "+999999999-12-31" to Date(999_999_999, Month.DECEMBER, 31),
@@ -764,7 +764,7 @@ class DateTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDate() parses valid strings with explicit parser`() {
+    fun `String_toDate parses valid strings with explicit parser`() {
         listOf(
             "2000-02-29",
             "20000229",

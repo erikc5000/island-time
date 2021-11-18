@@ -108,7 +108,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `equality is based on date, time, and offset`() {
+    fun `equality is based on date time and offset`() {
         assertFalse {
             Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours) ==
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
@@ -120,7 +120,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `compareTo() compares based on instant only`() {
+    fun `compareTo compares based on instant only`() {
         assertTrue {
             (Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours))
                 .compareTo(Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO) == 0
@@ -133,7 +133,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DefaultSortOrder compares based on instant, then date and time when there are differing offsets`() {
+    fun `DefaultSortOrder compares based on instant then date and time when there are differing offsets`() {
         assertTrue {
             OffsetDateTime.DefaultSortOrder.compare(
                 Date(1969, 365) at Time(23, 0) at UtcOffset((-1).hours),
@@ -165,7 +165,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() can be used to replace individual date or time components`() {
+    fun `copy can be used to replace individual date or time components`() {
         assertEquals(
             (Date(2019, Month.FEBRUARY, 1) at Time.NOON at UtcOffset.ZERO),
             (Date(2019, Month.JANUARY, 1) at Time.NOON at UtcOffset.ZERO).copy(dayOfYear = 32)
@@ -192,7 +192,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adjustedTo() changes the offset while preserving the instant represented by it`() {
+    fun `adjustedTo changes the offset while preserving the instant represented by it`() {
         assertEquals(
             DateTime(2000, Month.APRIL, 4, 7, 0) at UtcOffset.MIN,
             DateTime(2000, Month.APRIL, 5, 1, 0).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MIN)
@@ -204,7 +204,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns ISO-8601 extended representation of the date, time, and offset`() {
+    fun `toString returns ISO-8601 extended representation of the date + time + offset`() {
         assertEquals(
             "2018-05-05T12:00Z",
             OffsetDateTime(
@@ -231,18 +231,18 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetDateTime() throws an exception when the string is empty`() {
+    fun `String_toOffsetDateTime throws an exception when the string is empty`() {
         assertFailsWith<DateTimeParseException> { "".toOffsetDateTime() }
     }
 
     @Test
-    fun `String_toOffsetDateTime() throws an exception when format is unexpected`() {
+    fun `String_toOffsetDateTime throws an exception when format is unexpected`() {
         assertFailsWith<DateTimeParseException> { "20191205 12:00+00".toOffsetDateTime() }
         assertFailsWith<DateTimeParseException> { "2019-12-05T1200+00".toOffsetDateTime() }
     }
 
     @Test
-    fun `String_toOffsetDateTime() throws an exception when fields are out of range`() {
+    fun `String_toOffsetDateTime throws an exception when fields are out of range`() {
         assertFailsWith<DateTimeException> { "2000-01-01T24:00+01:00".toOffsetDateTime() }
         assertFailsWith<DateTimeException> { "2000-01-01T08:60-01:00".toOffsetDateTime() }
         assertFailsWith<DateTimeException> { "2000-13-01T08:59-01:00".toOffsetDateTime() }
@@ -250,7 +250,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetDateTime() parses valid ISO-8601 calendar date time strings in extended format by default`() {
+    fun `String_toOffsetDateTime parses valid ISO-8601 calendar date time strings in extended format by default`() {
         assertEquals(
             OffsetDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
@@ -269,7 +269,7 @@ class OffsetDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetDateTime() parses valid ISO-8601 strings with explicit parser`() {
+    fun `String_toOffsetDateTime parses valid ISO-8601 strings with explicit parser`() {
         assertEquals(
             OffsetDateTime(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),

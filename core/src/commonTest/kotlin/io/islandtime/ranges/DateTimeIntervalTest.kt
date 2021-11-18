@@ -62,7 +62,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within bounded range`() {
+    fun `contains returns true for dates within bounded range`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT
 
@@ -72,7 +72,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded end`() {
+    fun `contains returns true for dates within range with unbounded end`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
         val end = DateTime.MAX
 
@@ -81,7 +81,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded start`() {
+    fun `contains returns true for dates within range with unbounded start`() {
         val start = DateTime.MIN
         val end = Date(2019, Month.MARCH, 10) at MIDNIGHT
 
@@ -90,7 +90,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns false for out of range dates`() {
+    fun `contains returns false for out of range dates`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT
 
@@ -111,12 +111,12 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is empty`() {
+    fun `random throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { DateTimeInterval.EMPTY.random() }
     }
 
     @Test
-    fun `random() throws an exception when the interval is not bounded`() {
+    fun `random throws an exception when the interval is not bounded`() {
         val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
         assertFailsWith<UnsupportedOperationException> { DateTimeInterval.UNBOUNDED.random() }
         assertFailsWith<UnsupportedOperationException> { DateTimeInterval(start = dateTime).random() }
@@ -124,13 +124,13 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is empty`() {
+    fun `randomOrNull returns null when the interval is empty`() {
         assertNull(DateTimeInterval.EMPTY.randomOrNull())
         assertNull(DateTimeInterval.EMPTY.randomOrNull(Random))
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is not bounded`() {
+    fun `randomOrNull returns null when the interval is not bounded`() {
         val dateTime = DateTime(2019, Month.MARCH, 1, 13, 0)
         assertNull(DateTimeInterval.UNBOUNDED.randomOrNull())
         assertNull(DateTimeInterval.UNBOUNDED.randomOrNull(Random))
@@ -139,7 +139,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() and randomOrNull() return a date-time within the interval`() {
+    fun `random and randomOrNull return a date-time within the interval`() {
         listOf(
             Date(2019, Month.NOVEMBER, 1) at MIDNIGHT,
             Date(2019, Month.NOVEMBER, 1) at Time(0, 0, 0, 1),
@@ -173,12 +173,12 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toDuration() returns a zeroed out duration when the range is empty`() {
+    fun `toDuration returns a zeroed out duration when the range is empty`() {
         assertEquals(Duration.ZERO, DateTimeInterval.EMPTY.toDuration())
     }
 
     @Test
-    fun `toDuration() throws an exception when the range is unbounded`() {
+    fun `toDuration throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
             DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).toDuration()
         }
@@ -193,12 +193,12 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toPeriod() returns a zeroed out period when the range is empty`() {
+    fun `toPeriod returns a zeroed out period when the range is empty`() {
         assertEquals(Period.ZERO, DateTimeInterval.EMPTY.toPeriod())
     }
 
     @Test
-    fun `toPeriod() throws an exception when the range is unbounded`() {
+    fun `toPeriod throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
             DateTimeInterval(endExclusive = "2018-09-10T09:15".toDateTime()).toPeriod()
         }
@@ -356,12 +356,12 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
 
     @Test
     fun `lengthInNanoseconds returns 1 in an inclusive interval where the start and end date-times are the same`() {
-        val dateTime = Date(2019, Month.MARCH, 10) at Time.MIDNIGHT
+        val dateTime = Date(2019, Month.MARCH, 10) at MIDNIGHT
         assertEquals(1L.nanoseconds, (dateTime..dateTime).lengthInNanoseconds)
     }
 
     @Test
-    fun `toString() returns an ISO-8601 time interval representation`() {
+    fun `toString returns an ISO-8601 time interval representation`() {
         assertEquals(
             "2000-12-31T00:00/2001-01-02T00:00",
             (DateTime(2000, 12, 31, 0, 0) until
@@ -395,18 +395,18 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateTimeInterval() converts an empty string to an empty interval`() {
+    fun `String_toDateTimeInterval converts an empty string to an empty interval`() {
         assertEquals(DateTimeInterval.EMPTY, "".toDateTimeInterval())
     }
 
     @Test
-    fun `String_toDateTimeInterval() throws an exception when the format is invalid`() {
+    fun `String_toDateTimeInterval throws an exception when the format is invalid`() {
         assertFailsWith<DateTimeParseException> { "2000-01-01/2000-01-01".toDateTimeInterval() }
         assertFailsWith<DateTimeParseException> { "2000-01-01T00:00/20000101T01".toDateTimeInterval() }
     }
 
     @Test
-    fun `String_toDateTimeInterval() parses ISO-8601 time interval strings in extended format by default`() {
+    fun `String_toDateTimeInterval parses ISO-8601 time interval strings in extended format by default`() {
         assertEquals(
             DateTime(1969, 12, 31, 0, 0) until
                 DateTime(1970, 1, 2, 0, 0),
@@ -428,7 +428,7 @@ class DateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateTimeInterval() throws an exception when required properties are missing`() {
+    fun `String_toDateTimeInterval throws an exception when required properties are missing`() {
         val customParser = groupedDateTimeParser {
             group {
                 optional {

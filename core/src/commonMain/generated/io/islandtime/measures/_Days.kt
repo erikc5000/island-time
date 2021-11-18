@@ -37,7 +37,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.days as kotlinDays
 import kotlin.time.DurationUnit as KotlinDurationUnit
 import kotlin.time.Duration as KotlinDuration
 
@@ -191,8 +191,7 @@ public value class Days(
   /**
    * Converts this duration to a [kotlin.time.Duration].
    */
-  @ExperimentalTime
-  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.days(value)
+  public fun toKotlinDuration(): KotlinDuration = value.kotlinDays
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
@@ -394,5 +393,4 @@ public operator fun Long.times(days: Days): Days = days * this
 /**
  * Converts this duration to Island Time [Days].
  */
-@ExperimentalTime
 public fun KotlinDuration.toIslandDays(): Days = Days(this.toLong(KotlinDurationUnit.DAYS))

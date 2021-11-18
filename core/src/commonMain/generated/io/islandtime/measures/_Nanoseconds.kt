@@ -37,7 +37,7 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.nanoseconds as kotlinNanoseconds
 import kotlin.time.DurationUnit as KotlinDurationUnit
 import kotlin.time.Duration as KotlinDuration
 
@@ -189,8 +189,7 @@ public value class Nanoseconds(
   /**
    * Converts this duration to a [kotlin.time.Duration].
    */
-  @ExperimentalTime
-  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.nanoseconds(value)
+  public fun toKotlinDuration(): KotlinDuration = value.kotlinNanoseconds
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
@@ -548,6 +547,5 @@ public operator fun Long.times(nanoseconds: Nanoseconds): Nanoseconds = nanoseco
 /**
  * Converts this duration to Island Time [Nanoseconds].
  */
-@ExperimentalTime
 public fun KotlinDuration.toIslandNanoseconds(): Nanoseconds =
     Nanoseconds(this.toLong(KotlinDurationUnit.NANOSECONDS))

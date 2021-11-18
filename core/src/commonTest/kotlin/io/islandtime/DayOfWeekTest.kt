@@ -16,21 +16,21 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     private val ar_EG = "ar-EG".toLocale()
 
     @Test
-    fun `Int_toDayOfWeek() throws an exception when the number is out of range`() {
+    fun `Int_toDayOfWeek throws an exception when the number is out of range`() {
         assertFailsWith<DateTimeException> { 0.toDayOfWeek() }
         assertFailsWith<DateTimeException> { 8.toDayOfWeek() }
         assertFailsWith<DateTimeException> { (-1).toDayOfWeek() }
     }
 
     @Test
-    fun `Int_toDayOfWeek() returns the correct day`() {
+    fun `Int_toDayOfWeek returns the correct day`() {
         assertEquals(DayOfWeek.MONDAY, 1.toDayOfWeek())
         assertEquals(DayOfWeek.WEDNESDAY, 3.toDayOfWeek())
         assertEquals(DayOfWeek.SUNDAY, 7.toDayOfWeek())
     }
 
     @Test
-    fun `Int_toDayOfWeek() with settings`() {
+    fun `Int_toDayOfWeek with settings`() {
         assertEquals(DayOfWeek.SUNDAY, 1.toDayOfWeek(WeekSettings.SUNDAY_START))
         assertEquals(DayOfWeek.MONDAY, 2.toDayOfWeek(WeekSettings.SUNDAY_START))
         assertEquals(DayOfWeek.SATURDAY, 7.toDayOfWeek(WeekSettings.SUNDAY_START))
@@ -47,7 +47,7 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `number() matches week settings`() {
+    fun `number matches week settings`() {
         assertEquals(1, DayOfWeek.SUNDAY.number(WeekSettings.SUNDAY_START))
         assertEquals(7, DayOfWeek.SATURDAY.number(WeekSettings.SUNDAY_START))
 
@@ -60,7 +60,7 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `number() matches locale`() {
+    fun `number matches locale`() {
         assertEquals(1, DayOfWeek.SUNDAY.number(en_US))
         assertEquals(7, DayOfWeek.SATURDAY.number(en_US))
 
@@ -72,7 +72,7 @@ class DayOfWeekTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `localizedName() and displayName() get localized text from the provider`() {
+    fun `localizedName and displayName get localized text from the provider`() {
         assertEquals("Wednesday", DayOfWeek.WEDNESDAY.localizedName(TextStyle.FULL_STANDALONE, en_US))
         assertEquals("Wed", DayOfWeek.WEDNESDAY.displayName(TextStyle.SHORT_STANDALONE, en_US))
     }

@@ -49,11 +49,11 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     @Test
     fun `Date_lengthOfYear returns the length in days of a date's year`() {
         assertEquals(366.days, Date(2020, FEBRUARY, 29).lengthOfYear)
-        assertEquals(365.days, Date(2010, Month.MAY, 20).lengthOfYear)
+        assertEquals(365.days, Date(2010, MAY, 20).lengthOfYear)
     }
 
     @Test
-    fun `Date_week() with ISO start`() {
+    fun `Date_week with ISO start`() {
         val date = Date(2020, MARCH, 6)
         val expected = Date(2020, MARCH, 2)..Date(2020, MARCH, 8)
 
@@ -62,7 +62,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_week() with Sunday start`() {
+    fun `Date_week with Sunday start`() {
         val date = Date(2020, MARCH, 6)
         val expected = Date(2020, MARCH, 1)..Date(2020, MARCH, 7)
 
@@ -71,7 +71,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_week() with ISO start`() {
+    fun `DateTime_week with ISO start`() {
         val dateTime = DateTime(2020, MARCH, 6, 13, 30)
         val start = Date(2020, MARCH, 2) at MIDNIGHT
         val end = Date(2020, MARCH, 8) at Time.MAX
@@ -81,7 +81,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_week() with Sunday start`() {
+    fun `DateTime_week with Sunday start`() {
         val dateTime = DateTime(2020, MARCH, 6, 13, 30)
         val start = Date(2020, MARCH, 1) at MIDNIGHT
         val end = Date(2020, MARCH, 7) at Time.MAX
@@ -91,7 +91,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_week() with ISO start`() {
+    fun `OffsetDateTime_week with ISO start`() {
         // Note: DST transition occurs at 2AM on March 8
         val offsetDateTime = DateTime(2020, MARCH, 6, 13, 30) at UtcOffset((-5).hours)
         val start = Date(2020, MARCH, 2) at MIDNIGHT at UtcOffset((-5).hours)
@@ -102,7 +102,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_week() with Sunday start`() {
+    fun `OffsetDateTime_week with Sunday start`() {
         val offsetDateTime = DateTime(2020, MARCH, 6, 13, 30) at UtcOffset((-5).hours)
         val start = Date(2020, MARCH, 1) at MIDNIGHT at UtcOffset((-5).hours)
         val end = Date(2020, MARCH, 7) at Time.MAX at UtcOffset((-5).hours)
@@ -112,7 +112,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_week() with ISO start`() {
+    fun `ZonedDateTime_week with ISO start`() {
         // Note: DST transition occurs at 2AM on March 8
         val zonedDateTime = DateTime(2020, MARCH, 6, 13, 30) at nyZone
         val start = Date(2020, MARCH, 2) at MIDNIGHT at nyZone
@@ -123,7 +123,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_week() with Sunday start`() {
+    fun `ZonedDateTime_week with Sunday start`() {
         val zonedDateTime = DateTime(2020, MARCH, 6, 13, 30) at nyZone
         val start = Date(2020, MARCH, 1) at MIDNIGHT at nyZone
         val end = Date(2020, MARCH, 7) at Time.MAX at nyZone
@@ -146,7 +146,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_weekOfMonth() with Sunday start`() {
+    fun `Date_weekOfMonth with Sunday start`() {
         listOf(
             Date(2008, 12, 27) to 4,
             Date(2008, 12, 28) to 5,
@@ -162,7 +162,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_weekOfMonth() with custom week definition`() {
+    fun `Date_weekOfMonth with custom week definition`() {
         listOf(
             Date(2008, 12, 28) to 4,
             Date(2008, 12, 29) to 5,
@@ -193,7 +193,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_weekOfYear() with Sunday start`() {
+    fun `Date_weekOfYear with Sunday start`() {
         listOf(
             Date(2008, 12, 27) to 52,
             Date(2008, 12, 28) to 53,
@@ -208,7 +208,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_weekOfYear() with custom week definition`() {
+    fun `Date_weekOfYear with custom week definition`() {
         listOf(
             Date(2008, 12, 28) to 52,
             Date(2008, 12, 29) to 53,
@@ -274,7 +274,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_next() returns the next date with a particular day of week`() {
+    fun `Date_next returns the next date with a particular day of week`() {
         assertEquals(
             Date(2019, OCTOBER, 11),
             Date(2019, OCTOBER, 10).next(FRIDAY)
@@ -297,7 +297,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_nextOrSame() returns the next date with a particular day of week or this one if it's the same`() {
+    fun `Date_nextOrSame returns the next date with a particular day of week or this one if it's the same`() {
         assertEquals(
             Date(2019, OCTOBER, 11),
             Date(2019, OCTOBER, 10).nextOrSame(FRIDAY)
@@ -320,7 +320,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_previous() returns the last date with a particular day of week`() {
+    fun `Date_previous returns the last date with a particular day of week`() {
         assertEquals(
             Date(2019, OCTOBER, 9),
             Date(2019, OCTOBER, 10).previous(WEDNESDAY)
@@ -343,7 +343,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_previousOrSame() returns the last date with a particular day of week or this one if it's the same`() {
+    fun `Date_previousOrSame returns the last date with a particular day of week or this one if it's the same`() {
         assertEquals(
             Date(2019, OCTOBER, 9),
             Date(2019, OCTOBER, 10).previousOrSame(WEDNESDAY)
@@ -366,7 +366,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_next() returns the next date-time with a particular day of week`() {
+    fun `DateTime_next returns the next date-time with a particular day of week`() {
         assertEquals(
             DateTime(2019, OCTOBER, 17, 1, 1, 1, 1),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -375,7 +375,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_nextOrSame() returns the next date-time with a particular day of week or the same`() {
+    fun `DateTime_nextOrSame returns the next date-time with a particular day of week or the same`() {
         assertEquals(
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -384,7 +384,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_previous() returns the last date-time with a particular day of week`() {
+    fun `DateTime_previous returns the last date-time with a particular day of week`() {
         assertEquals(
             DateTime(2019, OCTOBER, 3, 1, 1, 1, 1),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -393,7 +393,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_previousOrSame() returns the last date-time with a particular day of week or the same`() {
+    fun `DateTime_previousOrSame returns the last date-time with a particular day of week or the same`() {
         assertEquals(
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -402,7 +402,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_next() returns the next date-time with a particular day of week`() {
+    fun `OffsetDateTime_next returns the next date-time with a particular day of week`() {
         assertEquals(
             DateTime(2019, OCTOBER, 17, 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset()),
@@ -413,7 +413,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_nextOrSame() returns the next date-time with a particular day of week or the same`() {
+    fun `OffsetDateTime_nextOrSame returns the next date-time with a particular day of week or the same`() {
         assertEquals(
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset()),
@@ -424,7 +424,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_previous() returns the last date-time with a particular day of week`() {
+    fun `OffsetDateTime_previous returns the last date-time with a particular day of week`() {
         assertEquals(
             DateTime(2019, OCTOBER, 3, 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset()),
@@ -435,7 +435,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_previousOrSame() returns the last date-time with a particular day of week or the same`() {
+    fun `OffsetDateTime_previousOrSame returns the last date-time with a particular day of week or the same`() {
         assertEquals(
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
                 .at(1.hours.asUtcOffset()),
@@ -446,7 +446,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_next() returns the next date-time with a particular day of week`() {
+    fun `ZonedDateTime_next returns the next date-time with a particular day of week`() {
         assertEquals(
             DateTime(2019, OCTOBER, 17, 1, 1, 1, 1).at(nyZone),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -456,7 +456,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_nextOrSame() returns the next date-time with a particular day of week or the same`() {
+    fun `ZonedDateTime_nextOrSame returns the next date-time with a particular day of week or the same`() {
         assertEquals(
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1).at(nyZone),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -466,7 +466,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_previous() returns the last date-time with a particular day of week`() {
+    fun `ZonedDateTime_previous returns the last date-time with a particular day of week`() {
         assertEquals(
             DateTime(2019, OCTOBER, 3, 1, 1, 1, 1).at(nyZone),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)
@@ -476,7 +476,7 @@ class DatePropertiesTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_previousOrSame() returns the last date-time with a particular day of week or the same`() {
+    fun `ZonedDateTime_previousOrSame returns the last date-time with a particular day of week or the same`() {
         assertEquals(
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1).at(nyZone),
             DateTime(2019, OCTOBER, 10, 1, 1, 1, 1)

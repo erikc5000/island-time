@@ -45,7 +45,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within bounded range`() {
+    fun `contains returns true for dates within bounded range`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at UtcOffset((-4).hours)
 
@@ -56,7 +56,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded end`() {
+    fun `contains returns true for dates within range with unbounded end`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
         val end = DateTime.MAX at UtcOffset((-4).hours)
 
@@ -67,7 +67,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded start`() {
+    fun `contains returns true for dates within range with unbounded start`() {
         val start = DateTime.MIN at UtcOffset((-4).hours)
         val end = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-4).hours)
 
@@ -79,7 +79,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns false for out of range dates`() {
+    fun `contains returns false for out of range dates`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at UtcOffset((-5).hours)
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at UtcOffset((-4).hours)
 
@@ -101,7 +101,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a date-time within the interval`() {
+    fun `random returns a date-time within the interval`() {
         val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         val end = Date(2019, Month.NOVEMBER, 20) at MIDNIGHT at UtcOffset((-5).hours)
         val interval = start until end
@@ -111,13 +111,13 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is empty`() {
+    fun `random throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { OffsetDateTimeInterval.EMPTY.random() }
         assertFailsWith<NoSuchElementException> { OffsetDateTimeInterval.EMPTY.random(Random) }
     }
 
     @Test
-    fun `random() throws an exception when the interval is not bounded`() {
+    fun `random throws an exception when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.random() }
         assertFailsWith<UnsupportedOperationException> { OffsetDateTimeInterval.UNBOUNDED.random(Random) }
@@ -126,13 +126,13 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is empty`() {
+    fun `randomOrNull returns null when the interval is empty`() {
         assertNull(OffsetDateTimeInterval.EMPTY.randomOrNull())
         assertNull(OffsetDateTimeInterval.EMPTY.randomOrNull(Random))
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is not bounded`() {
+    fun `randomOrNull returns null when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         assertNull(OffsetDateTimeInterval.UNBOUNDED.randomOrNull())
         assertNull(OffsetDateTimeInterval.UNBOUNDED.randomOrNull(Random))
@@ -141,7 +141,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns a date-time within the interval`() {
+    fun `randomOrNull returns a date-time within the interval`() {
         val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at UtcOffset((-4).hours)
         val end = (start + 1.nanoseconds).adjustedTo(UtcOffset((-5).hours))
         val interval = start until end
@@ -151,12 +151,12 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toPeriod() returns a zeroed out period when the range is empty`() {
+    fun `toPeriod returns a zeroed out period when the range is empty`() {
         assertEquals(Period.ZERO, OffsetDateTimeInterval.EMPTY.toPeriod())
     }
 
     @Test
-    fun `toPeriod() throws an exception when the range is unbounded`() {
+    fun `toPeriod throws an exception when the range is unbounded`() {
         assertFailsWith<UnsupportedOperationException> {
             OffsetDateTimeInterval(endExclusive = "2018-09-10T09:15-06:00".toOffsetDateTime()).toPeriod()
         }
@@ -367,7 +367,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 time interval representation`() {
+    fun `toString returns an ISO-8601 time interval representation`() {
         val offset = UtcOffset((-5).hours)
         val start = Date(2000, 12, 31) at MIDNIGHT at offset
         val end = Date(2001, 1, 2) at MIDNIGHT at offset
@@ -404,19 +404,19 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetDateTimeInterval() converts an empty string to an empty interval`() {
+    fun `String_toOffsetDateTimeInterval converts an empty string to an empty interval`() {
         assertEquals(OffsetDateTimeInterval.EMPTY, "".toOffsetDateTimeInterval())
     }
 
     @Test
-    fun `String_toOffsetDateTimeInterval() throws an exception when the format is invalid`() {
+    fun `String_toOffsetDateTimeInterval throws an exception when the format is invalid`() {
         assertFailsWith<DateTimeParseException> { "2000-01-01/2000-01-01".toOffsetDateTimeInterval() }
         assertFailsWith<DateTimeParseException> { "2000-01-01T00:00/2000-01-01T01:00".toOffsetDateTimeInterval() }
         assertFailsWith<DateTimeParseException> { "2000-01-01T00:00+04/20000101T01-01".toOffsetDateTimeInterval() }
     }
 
     @Test
-    fun `String_toOffsetDateTimeInterval() parses ISO-8601 time interval strings in extended format by default`() {
+    fun `String_toOffsetDateTimeInterval parses ISO-8601 time interval strings in extended format by default`() {
         val offset = UtcOffset((-5).hours)
         val start = Date(1969, 12, 31) at MIDNIGHT at offset
         val end = Date(1970, 1, 2) at MIDNIGHT at offset
@@ -437,7 +437,7 @@ class OffsetDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetDateTimeInterval() throws an exception when required properties are missing`() {
+    fun `String_toOffsetDateTimeInterval throws an exception when required properties are missing`() {
         val customParser = groupedDateTimeParser {
             group {
                 optional {

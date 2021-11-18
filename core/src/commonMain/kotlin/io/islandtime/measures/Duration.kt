@@ -440,7 +440,6 @@ class Duration private constructor(
      * Converts this duration to a [kotlin.time.Duration]. Since Kotlin's `Duration` type is based on a floating-point
      * number, precision may be lost.
      */
-    @kotlin.time.ExperimentalTime
     fun toKotlinDuration(): kotlin.time.Duration {
         return seconds.toKotlinDuration() + nanosecondAdjustment.toKotlinDuration()
     }
@@ -584,7 +583,7 @@ fun durationOf(nanoseconds: Nanoseconds): Duration {
 }
 
 /**
- * Returns the absolute value of [duration].
+ * Returns the absolute value of a [duration].
  */
 fun abs(duration: Duration) = duration.absoluteValue
 
@@ -599,7 +598,6 @@ fun Nanoseconds.asDuration(): Duration = durationOf(this)
 /**
  * Converts this duration to an equivalent Island Time [Duration].
  */
-@kotlin.time.ExperimentalTime
 fun kotlin.time.Duration.toIslandDuration(): Duration {
     return toComponents { seconds, nanoseconds -> durationOf(seconds.seconds, nanoseconds.nanoseconds) }
 }
