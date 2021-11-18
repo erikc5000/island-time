@@ -1,7 +1,13 @@
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
+    `base-convention`
     id("org.jetbrains.dokka")
+    alias(libs.plugins.kover)
+}
+
+repositories {
+    mavenCentral()
 }
 
 buildscript {
