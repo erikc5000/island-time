@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
     id("published-library")
-    jacoco
 }
 
 kotlin {
@@ -59,19 +58,5 @@ publishing {
                 "${pomMppArtifactId}-$name"
             }
         }
-    }
-}
-
-afterEvaluate {
-    tasks.withType<JacocoReport>().configureEach {
-        classDirectories.setFrom(
-            fileTree("${buildDir}/classes/kotlin/jvm/") { exclude("**/*Test*.*") }
-        )
-
-        sourceDirectories.setFrom(
-            listOf("commonMain", "jvmMain").flatMap { kotlin.sourceSets[it].kotlin.sourceDirectories }
-        )
-
-        executionData.setFrom("${buildDir}/jacoco/jvmTest.exec")
     }
 }
