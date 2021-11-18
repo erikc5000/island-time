@@ -14,7 +14,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `periodOf() constructs periods of years`() {
+    fun `periodOf constructs periods of years`() {
         val period = periodOf(10.years)
 
         assertEquals(10.years, period.years)
@@ -23,7 +23,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `periodOf() constructs periods of months`() {
+    fun `periodOf constructs periods of months`() {
         val period = periodOf(15.months)
 
         assertEquals(0.years, period.years)
@@ -32,7 +32,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `periodOf() constructs periods of weeks with equivalent days`() {
+    fun `periodOf constructs periods of weeks with equivalent days`() {
         val period = periodOf((-1).weeks)
 
         assertEquals(0.years, period.years)
@@ -41,7 +41,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `periodOf() constructs periods of days`() {
+    fun `periodOf constructs periods of days`() {
         val period = periodOf(100.days)
 
         assertEquals(0.years, period.years)
@@ -50,7 +50,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts years to a period with similar years`() {
+    fun `asPeriod converts years to a period with similar years`() {
         val period = 3.years.asPeriod()
 
         assertEquals(3.years, period.years)
@@ -59,7 +59,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts months to a period with similar months`() {
+    fun `asPeriod converts months to a period with similar months`() {
         val period = (1.years + 3.months).asPeriod()
 
         assertEquals(0.years, period.years)
@@ -68,7 +68,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts weeks to a period with similar days`() {
+    fun `asPeriod converts weeks to a period with similar days`() {
         val period1 = 1.weeks.asPeriod()
         assertEquals(0.years, period1.years)
         assertEquals(0.months, period1.months)
@@ -81,7 +81,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `asPeriod() converts days to a period with similar days`() {
+    fun `asPeriod converts days to a period with similar days`() {
         val period = 10.days.asPeriod()
 
         assertEquals(0.years, period.years)
@@ -116,12 +116,12 @@ class PeriodTest {
     }
 
     @Test
-    fun `toString() returns 'P0D' when the period is zero`() {
+    fun `toString returns 'P0D' when the period is zero`() {
         assertEquals("P0D", Period.ZERO.toString())
     }
 
     @Test
-    fun `toString() returns a valid ISO8601 period representation of non-zero periods`() {
+    fun `toString returns a valid ISO8601 period representation of non-zero periods`() {
         listOf(
             periodOf(1.years) to "P1Y",
             periodOf((-1).years) to "P-1Y",
@@ -143,17 +143,17 @@ class PeriodTest {
     }
 
     @Test
-    fun `String_toPeriod() throws an exception when string is empty`() {
+    fun `String_toPeriod throws an exception when string is empty`() {
         assertFailsWith<DateTimeParseException> { "".toPeriod() }
     }
 
     @Test
-    fun `String_toPeriod() parses zero ISO-8601 period strings`() {
+    fun `String_toPeriod parses zero ISO-8601 period strings`() {
         assertEquals(Period.ZERO, "P0D".toPeriod())
     }
 
     @Test
-    fun `String_toPeriod() parses valid ISO-8601 period strings`() {
+    fun `String_toPeriod parses valid ISO-8601 period strings`() {
         listOf(
             "P1Y13M6D" to periodOf(1.years, 13.months, 6.days),
             "P-1M10D" to periodOf((-1).months, 10.days),
@@ -166,7 +166,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `String_toPeriod() throws an exception when the string contains duration components`() {
+    fun `String_toPeriod throws an exception when the string contains duration components`() {
         listOf(
             "PT0S",
             "P1DT1H",
@@ -188,24 +188,24 @@ class PeriodTest {
     }
 
     @Test
-    fun `isZero() returns true for zeroed-out periods`() {
+    fun `isZero returns true for zeroed-out periods`() {
         assertTrue { Period.ZERO.isZero() }
     }
 
     @Test
-    fun `isZero() returns false for non-zero periods`() {
+    fun `isZero returns false for non-zero periods`() {
         assertFalse { periodOf(1.days).isZero() }
     }
 
     @Test
-    fun `isNegative() returns true if any component is less than zero`() {
+    fun `isNegative returns true if any component is less than zero`() {
         assertTrue { periodOf((-1).years, 1.months, 1.days).isNegative() }
         assertTrue { periodOf(1.years, (-1).months, 1.days).isNegative() }
         assertTrue { periodOf(1.years, 1.months, (-1).days).isNegative() }
     }
 
     @Test
-    fun `isNegative() returns false if all components are zero or more`() {
+    fun `isNegative returns false if all components are zero or more`() {
         listOf(
             periodOf(1.years, 0.months, 0.days),
             periodOf(0.years, 1.months, 0.days),
@@ -217,22 +217,22 @@ class PeriodTest {
     }
 
     @Test
-    fun `copy() replaces years value`() {
+    fun `copy replaces years value`() {
         assertEquals(periodOf((-1).years, 12.months), periodOf(1.years, 12.months).copy(years = (-1).years))
     }
 
     @Test
-    fun `copy() replaces months value`() {
+    fun `copy replaces months value`() {
         assertEquals(periodOf(1.years, 12.months), periodOf(1.years, 3.months).copy(months = 12.months))
     }
 
     @Test
-    fun `copy() replaces days value`() {
+    fun `copy replaces days value`() {
         assertEquals(Period.ZERO, periodOf(10.days).copy(days = 0.days))
     }
 
     @Test
-    fun `normalized() converts months into whole years where possible`() {
+    fun `normalized converts months into whole years where possible`() {
         assertEquals(
             periodOf(1.years, 11.months, 20.days),
             periodOf(1.years, 11.months, 20.days).normalized()
@@ -250,7 +250,7 @@ class PeriodTest {
     }
 
     @Test
-    fun `normalized() throws an exception when overflow occurs`() {
+    fun `normalized throws an exception when overflow occurs`() {
         assertFailsWith<ArithmeticException> { periodOf(Long.MAX_VALUE.years, Long.MAX_VALUE.months).normalized() }
         assertFailsWith<ArithmeticException> { periodOf(Long.MIN_VALUE.years, Long.MIN_VALUE.months).normalized() }
     }

@@ -97,7 +97,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_startOfWeek() returns the date at the start of the week in locale`() {
+    fun `Date_startOfWeek returns the date at the start of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -122,7 +122,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_startOfWeek() returns the date-time at the start of the week in locale`() {
+    fun `DateTime_startOfWeek returns the date-time at the start of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -152,7 +152,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_startOfWeek() returns the date-time at the start of the week in locale`() {
+    fun `OffsetDateTime_startOfWeek returns the date-time at the start of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -186,7 +186,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_startOfWeek() returns the date-time at the start of the week in locale`() {
+    fun `ZonedDateTime_startOfWeek returns the date-time at the start of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -293,7 +293,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_endOfWeek() returns the date at the end of the week in locale`() {
+    fun `Date_endOfWeek returns the date at the end of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -318,7 +318,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_endOfWeek() returns the date-time at the end of the week in locale`() {
+    fun `DateTime_endOfWeek returns the date-time at the end of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -348,7 +348,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_endOfWeek() returns the date-time at the end of the week in locale`() {
+    fun `OffsetDateTime_endOfWeek returns the date-time at the end of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(
@@ -382,7 +382,7 @@ class StartEndTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_endOfWeek() returns the date-time at the end of the week in locale`() {
+    fun `ZonedDateTime_endOfWeek returns the date-time at the end of the week in locale`() {
         val sundayFirstLocale = "en-US".toLocale()
 
         assertEquals(

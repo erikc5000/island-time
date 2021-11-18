@@ -22,7 +22,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `when constructed from a DateTime that falls in an overlap, the earlier offset is used by default`() {
+    fun `when constructed from a DateTime that falls in an overlap the earlier offset is used by default`() {
         val actual = ZonedDateTime(
             DateTime(2019, 11, 3, 1, 0),
             nyZone
@@ -34,7 +34,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `when constructed from a DateTime that falls in an overlap, a preferred offset may be provided`() {
+    fun `when constructed from a DateTime that falls in an overlap a preferred offset may be provided`() {
         val actual = ZonedDateTime.fromLocal(
             DateTime(2019, 11, 3, 1, 0),
             nyZone,
@@ -47,7 +47,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `when constructed from a DateTime that falls in an overlap, an invalid preferred offset is ignored`() {
+    fun `when constructed from a DateTime that falls in an overlap an invalid preferred offset is ignored`() {
         val actual = ZonedDateTime.fromLocal(
             DateTime(2019, 11, 3, 1, 0),
             nyZone,
@@ -60,7 +60,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `when constructed from a DateTime that doesn't fall in an overlap, the preferred offset is ignored`() {
+    fun `when constructed from a DateTime that doesn't fall in an overlap the preferred offset is ignored`() {
         val actual = ZonedDateTime.fromLocal(
             DateTime(2019, 11, 3, 2, 0),
             nyZone,
@@ -73,7 +73,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `when constructed from a DateTime that falls during a gap, the DateTime is adjusted by the gap's length`() {
+    fun `when constructed from a DateTime that falls during a gap the DateTime is adjusted by the gap's length`() {
         val actual = ZonedDateTime(
             DateTime(2019, 3, 10, 2, 30),
             nyZone
@@ -171,7 +171,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `equality is based on date-time, time zone, and offset`() {
+    fun `equality is based on date-time + time zone + offset`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 0),
@@ -211,7 +211,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DefaultSortOrder compares based on instant, then date and time, and then zone`() {
+    fun `DefaultSortOrder compares based on instant then date and time and then zone`() {
         assertTrue {
             ZonedDateTime.DefaultSortOrder.compare(
                 Date(1969, 365) at Time(23, 0) at TimeZone("America/Chicago"),
@@ -245,7 +245,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `compareTo() compares based on instant only`() {
+    fun `compareTo compares based on instant only`() {
         assertTrue {
             Date(1969, 365) at Time(22, 0) at UtcOffset((-1).hours) <
                 Date(1970, 1) at Time(0, 0) at UtcOffset.ZERO
@@ -266,7 +266,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() ignores changes to the offset if it isn't valid for the time zone`() {
+    fun `copy ignores changes to the offset if it isn't valid for the time zone`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(2019, 3, 3, 7, 0),
@@ -285,7 +285,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() adjusts components forward when rendered invalid due to gaps`() {
+    fun `copy adjusts components forward when rendered invalid due to gaps`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(2019, 3, 10, 3, 3),
@@ -300,7 +300,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() replaces components directly with new values when it's possible to do so`() {
+    fun `copy replaces components directly with new values when it's possible to do so`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(2018, 3, 10, 3, 0),
@@ -315,7 +315,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `withEarlierOffsetAtOverlap() returns the same DateTime with the earlier offset when there's a DST overlap`() {
+    fun `withEarlierOffsetAtOverlap returns the same DateTime with the earlier offset when there's a DST overlap`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
@@ -331,7 +331,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `withEarlierOffsetAtOverlap() returns the same ZonedDateTime when there's no overlap`() {
+    fun `withEarlierOffsetAtOverlap returns the same ZonedDateTime when there's no overlap`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
@@ -345,7 +345,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `withLaterOffsetAtOverlap() returns the same DateTime with the later offset when there's a DST overlap`() {
+    fun `withLaterOffsetAtOverlap returns the same DateTime with the later offset when there's a DST overlap`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(2019, 11, 3, 1, 30),
@@ -361,7 +361,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `withLaterOffsetAtOverlap() returns the same ZonedDateTime when there's no overlap`() {
+    fun `withLaterOffsetAtOverlap returns the same ZonedDateTime when there's no overlap`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 3, 2, 30),
@@ -375,7 +375,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `withFixedOffsetZone() returns the same ZonedDateTime if it already has a fixed zone`() {
+    fun `withFixedOffsetZone returns the same ZonedDateTime if it already has a fixed zone`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 4, 8, 30),
@@ -389,7 +389,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `withFixedOffsetZone() returns a ZonedDateTime with a fixed offset zone when region-based`() {
+    fun `withFixedOffsetZone returns a ZonedDateTime with a fixed offset zone when region-based`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 11, 4, 8, 30),
@@ -403,7 +403,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adjustedTo() converts to a different time zone while preserving the instant during overlap`() {
+    fun `adjustedTo converts to a different time zone while preserving the instant during overlap`() {
         // New York in overlap, Denver not in overlap
         assertEquals(
             ZonedDateTime.create(
@@ -448,7 +448,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adjustedTo() converts to a different time zone while preserving the instant during gaps`() {
+    fun `adjustedTo converts to a different time zone while preserving the instant during gaps`() {
         // New York in DST, Denver not yet
         assertEquals(
             ZonedDateTime.create(
@@ -483,7 +483,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adding a period first adds years, then months, then days`() {
+    fun `adding a period adds years then months then days`() {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) +
@@ -504,7 +504,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `subtracting a period first subtracts years, then months, then days`() {
+    fun `subtracting a period subtracts years then months then days`() {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0) at nyZone,
             (DateTime(2016, Month.FEBRUARY, 29, 9, 0) at nyZone) -
@@ -519,7 +519,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended offset date-time along with a non-standard region ID`() {
+    fun `toString returns an ISO-8601 extended offset date-time along with a non-standard region ID`() {
         assertEquals(
             "2019-11-03T01:30Z[Etc/UTC]",
             ZonedDateTime(
@@ -539,12 +539,12 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toZonedDateTime() throws an exception when the string is empty`() {
+    fun `String_toZonedDateTime throws an exception when the string is empty`() {
         assertFailsWith<DateTimeParseException> { "".toZonedDateTime() }
     }
 
     @Test
-    fun `String_toZonedDateTime() throws an exception when the format is unexpected`() {
+    fun `String_toZonedDateTime throws an exception when the format is unexpected`() {
         listOf(
             "2019-12-05T12:00+01:00[America/New_York ]",
             "2019-12-05T12:00+01:00America/New_York",
@@ -562,7 +562,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toZonedDateTime() throws an exception when fields are out of range`() {
+    fun `String_toZonedDateTime throws an exception when fields are out of range`() {
         listOf(
             "2000-01-01T24:00Z[Etc/Utc]",
             "2000-01-01T08:60-01:00[GMT+1]",
@@ -574,7 +574,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toZonedDateTime() throws an exception if the parsed zone isn't valid`() {
+    fun `String_toZonedDateTime throws an exception if the parsed zone isn't valid`() {
         listOf(
             "2000-01-01T23:00+01:00[America/Boston]",
             "2000-01-01T23:00+01:00[Etc/GMT-20]"
@@ -584,7 +584,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toZonedDateTime() parses ISO-8601 calendar date time strings in extended format by default`() {
+    fun `String_toZonedDateTime parses ISO-8601 calendar date time strings in extended format by default`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),
@@ -614,7 +614,7 @@ class ZonedDateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toZonedDateTime() parses valid ISO-8601 strings with explicit parser`() {
+    fun `String_toZonedDateTime parses valid ISO-8601 strings with explicit parser`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(Date(2019, Month.MAY, 5), Time.NOON),

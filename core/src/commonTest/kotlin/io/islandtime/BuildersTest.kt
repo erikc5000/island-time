@@ -22,7 +22,7 @@ class BuildersTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Year_atMonth() creates a YearMonth`() {
+    fun `Year_atMonth creates a YearMonth`() {
         assertEquals(
             YearMonth(2018, Month.APRIL),
             Year(2018).atMonth(4)
@@ -40,7 +40,7 @@ class BuildersTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `YearMonth_atDay() creates a Date`() {
+    fun `YearMonth_atDay creates a Date`() {
         assertEquals(
             Date(2018, Month.MAY, 30),
             YearMonth(2018, Month.MAY).atDay(30)
@@ -144,7 +144,7 @@ class BuildersTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_startOfDayAt() returns the ZonedDateTime at the start of the day in a time zone`() {
+    fun `Date_startOfDayAt returns the ZonedDateTime at the start of the day in a time zone`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 5, 20, 0, 0),
@@ -157,7 +157,7 @@ class BuildersTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_endOfDayAt() returns the ZonedDateTime at the end of the day in a time zone`() {
+    fun `Date_endOfDayAt returns the ZonedDateTime at the end of the day in a time zone`() {
         assertEquals(
             ZonedDateTime(
                 DateTime(2019, 5, 20, 23, 59, 59, 999_999_999),

@@ -107,28 +107,28 @@ class NanosecondsTest {
     }
 
     @Test
-    fun `toLong() converts to Long`() {
+    fun `toLong converts to Long`() {
         listOf(0, -1, 1, Long.MIN_VALUE, Long.MAX_VALUE).forEach {
             assertEquals(it, it.nanoseconds.toLong())
         }
     }
 
     @Test
-    fun `toInt() throws an exception if overflow occurs during conversion`() {
+    fun `toInt throws an exception if overflow occurs during conversion`() {
         listOf(Int.MAX_VALUE + 1L, Int.MIN_VALUE - 1L).forEach {
             assertFailsWith<ArithmeticException> { it.nanoseconds.toInt() }
         }
     }
 
     @Test
-    fun `toInt() converts to Int`() {
+    fun `toInt converts to Int`() {
         listOf(0, -1, 1, Int.MAX_VALUE, Int.MIN_VALUE).forEach {
             assertEquals(it, it.nanoseconds.toInt())
         }
     }
 
     @Test
-    fun `toString() returns an ISO duration string`() {
+    fun `toString returns an ISO duration string`() {
         listOf(
             0 to "PT0S",
             1 to "PT0.000000001S",
@@ -153,7 +153,7 @@ class NanosecondsTest {
     }
 
     @Test
-    fun `toComponents() and toComponentValues() with days, hours, minutes, seconds, milliseconds, and microseconds`() {
+    fun `toComponents and toComponentValues with days + hours + minutes + seconds + milliseconds + microseconds`() {
         listOf(
             0 to listOf(0, 0, 0, 0, 0, 0, 0),
             1 to listOf(0, 0, 0, 0, 0, 0, 1),
@@ -184,7 +184,7 @@ class NanosecondsTest {
     }
 
     @Test
-    fun `toComponents() and toComponentValues() with microseconds`() {
+    fun `toComponents and toComponentValues with microseconds`() {
         listOf(
             0 to listOf(0, 0),
             1 to listOf(0, 1),

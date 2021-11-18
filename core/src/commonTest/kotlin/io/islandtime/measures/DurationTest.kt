@@ -15,21 +15,21 @@ class DurationTest {
     }
 
     @Test
-    fun `durationOf() creates durations with positive hours`() {
+    fun `durationOf creates durations with positive hours`() {
         val duration = durationOf(1.hours)
         assertEquals(3600L.seconds, duration.seconds)
         assertEquals(0.nanoseconds, duration.nanosecondAdjustment)
     }
 
     @Test
-    fun `durationOf() creates durations with negative hours`() {
+    fun `durationOf creates durations with negative hours`() {
         val duration = durationOf((-1).hours)
         assertEquals((-3600L).seconds, duration.seconds)
         assertEquals(0.nanoseconds, duration.nanosecondAdjustment)
     }
 
     @Test
-    fun `durationOf() creates durations with positive nanoseconds`() {
+    fun `durationOf creates durations with positive nanoseconds`() {
         val duration1 = durationOf(5.nanoseconds)
         assertEquals(0L.seconds, duration1.seconds)
         assertEquals(5.nanoseconds, duration1.nanosecondAdjustment)
@@ -40,7 +40,7 @@ class DurationTest {
     }
 
     @Test
-    fun `durationOf() creates durations with negative nanoseconds`() {
+    fun `durationOf creates durations with negative nanoseconds`() {
         val duration1 = durationOf((-5).nanoseconds)
         assertEquals(0L.seconds, duration1.seconds)
         assertEquals((-5).nanoseconds, duration1.nanosecondAdjustment)
@@ -51,7 +51,7 @@ class DurationTest {
     }
 
     @Test
-    fun `durationOf() creates durations from seconds and nanoseconds components`() {
+    fun `durationOf creates durations from seconds and nanoseconds components`() {
         val duration1 = durationOf(1.seconds, (-5).nanoseconds)
         assertEquals(0L.seconds, duration1.seconds)
         assertEquals(999_999_995.nanoseconds, duration1.nanosecondAdjustment)
@@ -66,29 +66,29 @@ class DurationTest {
     }
 
     @Test
-    fun `isZero() returns true for duration of no length`() {
+    fun `isZero returns true for duration of no length`() {
         assertTrue { Duration.ZERO.isZero() }
     }
 
     @Test
-    fun `isZero() returns false for non-zero durations`() {
+    fun `isZero returns false for non-zero durations`() {
         assertFalse { durationOf(1.seconds).isZero() }
         assertFalse { durationOf((-1).seconds).isZero() }
         assertFalse { durationOf(1.nanoseconds).isZero() }
     }
 
     @Test
-    fun `isNegative() returns true if seconds is negative`() {
+    fun `isNegative returns true if seconds is negative`() {
         assertTrue { durationOf((-1).seconds).isNegative() }
     }
 
     @Test
-    fun `isNegative() returns true if nanosecondAdjustment is negative`() {
+    fun `isNegative returns true if nanosecondAdjustment is negative`() {
         assertTrue { durationOf((-1).nanoseconds).isNegative() }
     }
 
     @Test
-    fun `isNegative() returns false if greater or equal to zero`() {
+    fun `isNegative returns false if greater or equal to zero`() {
         assertFalse { Duration.ZERO.isNegative() }
         assertFalse { 1.seconds.asDuration().isNegative() }
         assertFalse { 1.nanoseconds.asDuration().isNegative() }
@@ -311,7 +311,7 @@ class DurationTest {
     }
 
     @Test
-    fun `toComponents() executes function with expected arguments`() {
+    fun `toComponents executes function with expected arguments`() {
         durationOf(5.hours + 30.minutes + 30.seconds + 500.milliseconds)
             .toComponents { hours, minutes, seconds, nanoseconds ->
                 assertEquals(5L.hours, hours)
@@ -331,7 +331,7 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedTo(DAYS) truncates the precision to 24-hour days`() {
+    fun `truncatedTo_DAYS truncates the precision to 24-hour days`() {
         assertEquals(
             1.days.asDuration(),
             durationOf(1.days + 1.hours + 1.nanoseconds).truncatedTo(DAYS)
@@ -351,7 +351,7 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedTo(HOURS) truncates the precision to hours`() {
+    fun `truncatedTo_HOURS truncates the precision to hours`() {
         assertEquals(
             1.hours.asDuration(),
             durationOf(1.hours + 1.minutes + 1.nanoseconds).truncatedTo(HOURS)
@@ -371,7 +371,7 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedTo(MINUTES) truncates the precision to minutes`() {
+    fun `truncatedTo_MINUTES truncates the precision to minutes`() {
         assertEquals(
             1.minutes.asDuration(),
             durationOf(1.minutes + 1.seconds + 1.nanoseconds).truncatedTo(MINUTES)
@@ -391,7 +391,7 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedTo(SECONDS) truncates the precision to seconds`() {
+    fun `truncatedTo_SECONDS truncates the precision to seconds`() {
         assertEquals(
             1.seconds.asDuration(),
             durationOf(1.seconds + 1.nanoseconds).truncatedTo(SECONDS)
@@ -411,7 +411,7 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedTo(MILLISECONDS) truncates the precision to milliseconds`() {
+    fun `truncatedTo_MILLISECONDS truncates the precision to milliseconds`() {
         assertEquals(
             1.milliseconds.asDuration(),
             durationOf(1.milliseconds + 1.nanoseconds).truncatedTo(MILLISECONDS)
@@ -431,7 +431,7 @@ class DurationTest {
     }
 
     @Test
-    fun `truncatedTo(MICROSECONDS) truncates the precision to microseconds`() {
+    fun `truncatedTo_MICROSECONDS truncates the precision to microseconds`() {
         assertEquals(
             1.microseconds.asDuration(),
             durationOf(1.microseconds + 1.nanoseconds).truncatedTo(MICROSECONDS)
@@ -457,18 +457,18 @@ class DurationTest {
     }
 
     @Test
-    fun `abs() returns the absolute value of a duration`() {
+    fun `abs returns the absolute value of a duration`() {
         assertEquals(durationOf(30.seconds), abs(30.seconds.asDuration()))
         assertEquals(durationOf(30.seconds), abs((-30).seconds.asDuration()))
     }
 
     @Test
-    fun `toString() converts zero durations to 'PT0S'`() {
+    fun `toString converts zero durations to 'PT0S'`() {
         assertEquals("PT0S", Duration.ZERO.toString())
     }
 
     @Test
-    fun `toString() converts positive durations to ISO-8601 duration representation`() {
+    fun `toString converts positive durations to ISO-8601 duration representation`() {
         assertEquals(
             "PT25H30M30.5S",
             durationOf(1.days + 1.hours + 30.minutes + 30.seconds + 500.milliseconds).toString()
@@ -481,7 +481,7 @@ class DurationTest {
     }
 
     @Test
-    fun `toString() converts negative durations to ISO-8601 duration representation`() {
+    fun `toString converts negative durations to ISO-8601 duration representation`() {
         assertEquals(
             "PT-25H-30M-30.5S",
             durationOf((-1).days - 1.hours - 30.minutes - 30.seconds - 500.milliseconds).toString()
@@ -494,12 +494,12 @@ class DurationTest {
     }
 
     @Test
-    fun `String_toDuration() throws an exception when string is empty`() {
+    fun `String_toDuration throws an exception when string is empty`() {
         assertFailsWith<DateTimeParseException> { "".toDuration() }
     }
 
     @Test
-    fun `String_toDuration() throws an exception when string is invalid`() {
+    fun `String_toDuration throws an exception when string is invalid`() {
         assertFailsWith<DateTimeParseException> { "P4Y".toDuration() }
         assertFailsWith<DateTimeParseException> { "P4M".toDuration() }
         assertFailsWith<DateTimeParseException> { "PT4H ".toDuration() }
@@ -509,13 +509,13 @@ class DurationTest {
     }
 
     @Test
-    fun `String_toDuration() parses durations of zero`() {
+    fun `String_toDuration parses durations of zero`() {
         assertEquals(Duration.ZERO, "P0D".toDuration())
         assertEquals(Duration.ZERO, "PT0S".toDuration())
     }
 
     @Test
-    fun `String_toDuration() converts ISO-8601 period strings to a Duration`() {
+    fun `String_toDuration converts ISO-8601 period strings to a Duration`() {
         assertEquals(
             durationOf(1.seconds),
             "PT1S".toDuration()

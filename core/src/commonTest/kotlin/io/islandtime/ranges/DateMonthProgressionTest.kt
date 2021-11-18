@@ -112,7 +112,7 @@ class DateMonthProgressionTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `reversed() creates a reserved progression`() {
+    fun `reversed creates a reserved progression`() {
         val start = Date(2018, Month.JANUARY, 31)
         val end = Date(2018, Month.APRIL, 30)
         val progression = (start..end step 1.months).reversed()

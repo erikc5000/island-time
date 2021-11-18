@@ -13,7 +13,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     private val time1234 = Time(1, 2, 3, 4) at UtcOffset.MAX
 
     @Test
-    fun `compareTo() compares based on instant only`() {
+    fun `compareTo compares based on instant only`() {
         assertTrue { Time.MIN at UtcOffset.ZERO < Time(0, 0, 0, 1) at UtcOffset.ZERO }
         assertTrue { Time.MAX at UtcOffset.MIN > Time(23, 59, 59) at UtcOffset.MIN }
         assertTrue {
@@ -68,7 +68,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DefaultSortOrder compares based on instant, then time when there are differing offsets`() {
+    fun `DefaultSortOrder compares based on instant then time when there are differing offsets`() {
         assertTrue {
             OffsetTime.DefaultSortOrder.compare(
                 Time(1, 0, 0, 1) at UtcOffset((-1).hours),
@@ -106,7 +106,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() can be used to replace individual time components`() {
+    fun `copy can be used to replace individual time components`() {
         assertEquals(
             (Time(5, 2, 3, 4) at UtcOffset.MAX),
             time1234.copy(hour = 5)
@@ -126,7 +126,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() can be used to replace the whole time`() {
+    fun `copy can be used to replace the whole time`() {
         val newTime = Time(2, 3, 4, 5)
 
         assertEquals(
@@ -136,7 +136,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() can be used to change the offset without adjusting the local time`() {
+    fun `copy can be used to change the offset without adjusting the local time`() {
         assertEquals(
             Time(5, 0) at UtcOffset(1.hours),
             (Time(5, 0) at UtcOffset.ZERO).copy(offset = UtcOffset(1.hours))
@@ -144,7 +144,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended time with offset`() {
+    fun `toString returns an ISO-8601 extended time with offset`() {
         assertEquals(
             "05:00Z",
             Time(5, 0).at(UtcOffset.ZERO).toString()
@@ -166,24 +166,24 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetTime() throws an exception when the string is empty`() {
+    fun `String_toOffsetTime throws an exception when the string is empty`() {
         assertFailsWith<DateTimeParseException> { "".toOffsetTime() }
     }
 
     @Test
-    fun `String_toOffsetTime() throws an exception when format is unexpected`() {
+    fun `String_toOffsetTime throws an exception when format is unexpected`() {
         assertFailsWith<DateTimeParseException> { "0800+01".toOffsetTime() }
         assertFailsWith<DateTimeParseException> { "8-01".toOffsetTime() }
     }
 
     @Test
-    fun `String_toOffsetTime() throws an exception when time is out of range`() {
+    fun `String_toOffsetTime throws an exception when time is out of range`() {
         assertFailsWith<DateTimeException> { "24:00+01:00".toOffsetTime() }
         assertFailsWith<DateTimeException> { "08:60-01:00".toOffsetTime() }
     }
 
     @Test
-    fun `String_toOffsetTime() parses valid ISO-8601 extended time and offset strings by default`() {
+    fun `String_toOffsetTime parses valid ISO-8601 extended time and offset strings by default`() {
         assertEquals(
             Time(23, 1, 1, 1) at UtcOffset(1.hours),
             "23:01:01.000000001+01".toOffsetTime()
@@ -195,7 +195,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toOffsetTime() parses valid ISO-8601 basic time and offset strings with explicit parser`() {
+    fun `String_toOffsetTime parses valid ISO-8601 basic time and offset strings with explicit parser`() {
         assertEquals(
             Time(23, 1, 1, 1) at UtcOffset(1.hours),
             "230101.000000001+01".toOffsetTime(DateTimeParsers.Iso.Basic.OFFSET_TIME)
@@ -207,7 +207,7 @@ class OffsetTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adjustedTo() changes the offset while preserving the instant represented by it`() {
+    fun `adjustedTo changes the offset while preserving the instant represented by it`() {
         assertEquals(
             Time(7, 0) at UtcOffset.MIN,
             Time(1, 0).at(UtcOffset.ZERO).adjustedTo(UtcOffset.MIN)

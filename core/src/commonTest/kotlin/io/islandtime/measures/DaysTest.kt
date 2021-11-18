@@ -14,12 +14,12 @@ class DaysTest {
     }
 
     @Test
-    fun `toString() converts zero days to 'P0D'`() {
+    fun `toString converts zero days to 'P0D'`() {
         assertEquals("P0D", 0.days.toString())
     }
 
     @Test
-    fun `toString() converts to ISO-8601 period representation`() {
+    fun `toString converts to ISO-8601 period representation`() {
         assertEquals("P1D", 1.days.toString())
         assertEquals("-P1D", (-1).days.toString())
     }

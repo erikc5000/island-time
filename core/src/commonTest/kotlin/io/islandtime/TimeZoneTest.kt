@@ -64,19 +64,19 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `can be created from a region id, regardless of validity`() {
+    fun `can be created from a region id regardless of validity`() {
         listOf("Etc/UTC", "America/New_York", "America/Boston").forEach {
             assertEquals(TimeZone.Region(it), TimeZone(it))
         }
     }
 
     @Test
-    fun `validated() throws an exception if a region-based time zone has an invalid ID`() {
+    fun `validated throws an exception if a region-based time zone has an invalid ID`() {
         assertFailsWith<TimeZoneRulesException> { TimeZone("America/Boston").validated() }
     }
 
     @Test
-    fun `validated() does nothing if the time zone is valid`() {
+    fun `validated does nothing if the time zone is valid`() {
         listOf(
             "America/New_York",
             "+18:00",
@@ -88,7 +88,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `localizedName() and displayName() get localized text from the provider`() {
+    fun `localizedName and displayName get localized text from the provider`() {
         assertEquals(
             "Greenwich Mean Time",
             TimeZone("Europe/London").localizedName(TimeZoneTextStyle.STANDARD, "en-GB".toLocale())
@@ -100,7 +100,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `displayName() returns the ID on a fixed offset zone`() {
+    fun `displayName returns the ID on a fixed offset zone`() {
         assertEquals(
             "+01:00",
             TimeZone("+01:00").displayName(TimeZoneTextStyle.STANDARD, "en-GB".toLocale())
@@ -108,7 +108,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `displayName() returns the ID on an invalid zone`() {
+    fun `displayName returns the ID on an invalid zone`() {
         assertEquals(
             "America/Buffalo",
             TimeZone("America/Buffalo").displayName(TimeZoneTextStyle.STANDARD, "en-US".toLocale())
@@ -116,7 +116,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `normalized() turns a fixed region-based zone into a fixed offset zone`() {
+    fun `normalized turns a fixed region-based zone into a fixed offset zone`() {
         mapOf(
             "Etc/UTC" to UtcOffset.ZERO,
             "Etc/GMT+6" to UtcOffset((-6).hours),
@@ -127,7 +127,7 @@ class TimeZoneTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `normalized() doesn't touch a fixed region-based zone`() {
+    fun `normalized doesn't touch a fixed region-based zone`() {
         listOf(
             "+00:00",
             "-05:00",

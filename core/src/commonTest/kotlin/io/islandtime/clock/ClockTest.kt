@@ -19,7 +19,7 @@ class ClockTest {
     }
 
     @Test
-    fun `SystemClock() without zone`() {
+    fun `SystemClock without zone`() {
         val clock = SystemClock()
 
         assertTrue { clock.readMilliseconds() > 0L.milliseconds }
@@ -28,7 +28,7 @@ class ClockTest {
     }
 
     @Test
-    fun `SystemClock() with zone`() {
+    fun `SystemClock with zone`() {
         val clock = SystemClock(TimeZone("America/Denver"))
 
         assertTrue { clock.readMilliseconds() > 0L.milliseconds }

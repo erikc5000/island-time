@@ -40,7 +40,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within bounded range`() {
+    fun `contains returns true for dates within bounded range`() {
         val start = Instant((-2L).days.inSeconds)
         val end = Instant(2L.days.inSeconds)
 
@@ -51,7 +51,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded end`() {
+    fun `contains returns true for dates within range with unbounded end`() {
         val start = Instant((-2L).days.inSeconds)
         val end = Instant.MAX
 
@@ -62,7 +62,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns false for out of range dates`() {
+    fun `contains returns false for out of range dates`() {
         val start = Instant((-2L).days.inSeconds)
         val end = Instant(2L.days.inSeconds)
 
@@ -90,7 +90,7 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 time interval representation`() {
+    fun `toString returns an ISO-8601 time interval representation`() {
         assertEquals(
             "1969-12-31T00:00Z/1970-01-02T00:00Z",
             (Instant((-1L).days.inSeconds) until Instant(1L.days.inSeconds)).toString()
@@ -128,18 +128,18 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstantInterval() converts an empty string to an empty interval`() {
+    fun `String_toInstantInterval converts an empty string to an empty interval`() {
         assertEquals(InstantInterval.EMPTY, "".toInstantInterval())
     }
 
     @Test
-    fun `String_toInstantInterval() throws an exception when the format is invalid`() {
+    fun `String_toInstantInterval throws an exception when the format is invalid`() {
         assertFailsWith<DateTimeParseException> { "1970-01-01/1970-01-01".toInstantInterval() }
         assertFailsWith<DateTimeParseException> { "1970-01-01T00:00Z/19700101T00Z".toInstantInterval() }
     }
 
     @Test
-    fun `String_toInstantInterval() parses ISO-8601 time interval strings in extended format by default`() {
+    fun `String_toInstantInterval parses ISO-8601 time interval strings in extended format by default`() {
         assertEquals(
             Instant((-1L).days.inSeconds) until Instant(1L.days.inSeconds),
             "1969-12-31T00:00Z/1970-01-02T00:00Z".toInstantInterval()
@@ -160,44 +160,44 @@ class InstantIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns an instant within range`() {
+    fun `random returns an instant within range`() {
         val range = Instant((-2L).days.inSeconds)..Instant(2L.days.inSeconds)
         val randomInstant = range.random()
         assertTrue { randomInstant in range }
     }
 
     @Test
-    fun `random() returns a instant within the interval`() {
+    fun `random returns a instant within the interval`() {
         val interval = Instant((-2L).days.inSeconds) until Instant(2L.days.inSeconds)
         assertTrue { interval.random() in interval }
     }
 
     @Test
-    fun `random() throws an exception when the interval is empty`() {
+    fun `random throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { InstantInterval.EMPTY.random() }
     }
 
     @Test
-    fun `random() throws an exception when the interval is not bounded`() {
+    fun `random throws an exception when the interval is not bounded`() {
         assertFailsWith<UnsupportedOperationException> { InstantInterval.UNBOUNDED.random() }
         assertFailsWith<UnsupportedOperationException> { InstantInterval(start = Instant.UNIX_EPOCH).random() }
         assertFailsWith<UnsupportedOperationException> { InstantInterval(endExclusive = Instant.UNIX_EPOCH).random() }
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is empty`() {
+    fun `randomOrNull returns null when the interval is empty`() {
         assertNull(InstantInterval.EMPTY.randomOrNull())
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is not bounded`() {
+    fun `randomOrNull returns null when the interval is not bounded`() {
         assertNull(InstantInterval.UNBOUNDED.randomOrNull())
         assertNull(InstantInterval(start = Instant.UNIX_EPOCH).randomOrNull())
         assertNull(InstantInterval(endExclusive = Instant.UNIX_EPOCH).randomOrNull())
     }
 
     @Test
-    fun `randomOrNull() returns a date within the interval`() {
+    fun `randomOrNull returns a date within the interval`() {
         val interval = Instant((2L).days.inSeconds)..Instant(2L.days.inSeconds)
         assertTrue { interval.randomOrNull()!! in interval }
     }

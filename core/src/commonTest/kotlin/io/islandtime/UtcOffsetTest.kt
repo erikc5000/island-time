@@ -8,7 +8,7 @@ import kotlin.test.*
 
 class UtcOffsetTest : AbstractIslandTimeTest() {
     @Test
-    fun `UtcOffset() requires all values to have the same sign`() {
+    fun `UtcOffset requires all values to have the same sign`() {
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes) }
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, (-30).minutes, 5.seconds) }
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, 30.minutes, (-5).seconds) }
@@ -20,7 +20,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `UtcOffset() requires each component to be valid individually`() {
+    fun `UtcOffset requires each component to be valid individually`() {
         assertFailsWith<DateTimeException> { UtcOffset(19.hours) }
         assertFailsWith<DateTimeException> { UtcOffset(2.hours, 60.minutes) }
         assertFailsWith<DateTimeException> { UtcOffset((-2).hours, (-60).minutes) }
@@ -29,7 +29,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `UtcOffset() creates an offset with the sum of all components`() {
+    fun `UtcOffset creates an offset with the sum of all components`() {
         assertEquals(3_600.seconds, UtcOffset(1.hours).totalSeconds)
         assertEquals(3_660.seconds, UtcOffset(1.hours, 1.minutes).totalSeconds)
         assertEquals((-3_660).seconds, UtcOffset((-1).hours, (-1).minutes).totalSeconds)
@@ -43,32 +43,32 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Hours_asUtcOffset() creates a UtcOffset from a duration of hours`() {
+    fun `Hours_asUtcOffset creates a UtcOffset from a duration of hours`() {
         assertEquals((-3600).seconds, (-1).hours.asUtcOffset().totalSeconds)
     }
 
     @Test
-    fun `Hours_asUtcOffset() throws an exception on overflow`() {
+    fun `Hours_asUtcOffset throws an exception on overflow`() {
         assertFailsWith<DateTimeException> { Int.MAX_VALUE.hours.asUtcOffset() }
     }
 
     @Test
-    fun `Minutes_asUtcOffset() creates a UtcOffset from a duration of minutes`() {
+    fun `Minutes_asUtcOffset creates a UtcOffset from a duration of minutes`() {
         assertEquals((-12_000).seconds, (-200).minutes.asUtcOffset().totalSeconds)
     }
 
     @Test
-    fun `Minutes_asUtcOffset() throws an exception on overflow`() {
+    fun `Minutes_asUtcOffset throws an exception on overflow`() {
         assertFailsWith<DateTimeException> { Int.MAX_VALUE.minutes.asUtcOffset() }
     }
 
     @Test
-    fun `Seconds_asUtcOffset() creates a UtcOffset from a duration of seconds`() {
+    fun `Seconds_asUtcOffset creates a UtcOffset from a duration of seconds`() {
         assertEquals(1.seconds, 1.seconds.asUtcOffset().totalSeconds)
     }
 
     @Test
-    fun `isZero() returns true only when the offset is zero`() {
+    fun `isZero returns true only when the offset is zero`() {
         assertTrue { UtcOffset(0.seconds).isZero() }
         assertFalse { UtcOffset((-1).seconds).isZero() }
     }
@@ -92,7 +92,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toComponents() breaks an offset down into hours, minutes, and seconds`() {
+    fun `toComponents breaks an offset down into hours + minutes + seconds`() {
         UtcOffset((-1).hours, (-30).minutes).toComponents { hours, minutes, seconds ->
             assertEquals((-1).hours, hours)
             assertEquals((-30).minutes, minutes)
@@ -101,7 +101,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toComponents() breaks a time offset down into sign, hours, minutes, and seconds`() {
+    fun `toComponents breaks a time offset down into sign + hours + minutes + seconds`() {
         UtcOffset((-1).hours, (-30).minutes).toComponents { sign, hours, minutes, seconds ->
             assertEquals(-1, sign)
             assertEquals(1.hours, hours)
@@ -111,12 +111,12 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns 'Z' when the offset is zero`() {
+    fun `toString returns 'Z' when the offset is zero`() {
         assertEquals("Z", UtcOffset.ZERO.toString())
     }
 
     @Test
-    fun `toString() returns an ISO-8601 time offset string for non-zero offsets`() {
+    fun `toString returns an ISO-8601 time offset string for non-zero offsets`() {
         assertEquals("+02:00", UtcOffset(2.hours).toString())
         assertEquals("-02:00", UtcOffset((-2).hours).toString())
         assertEquals("+02:30", UtcOffset(2.hours, 30.minutes).toString())
@@ -124,12 +124,12 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toUtcOffset() throws an exception with empty strings`() {
+    fun `String_toUtcOffset throws an exception with empty strings`() {
         assertFailsWith<DateTimeParseException> { "".toUtcOffset() }
     }
 
     @Test
-    fun `String_toUtcOffset() throws an exception with invalid ISO-8601 offsets`() {
+    fun `String_toUtcOffset throws an exception with invalid ISO-8601 offsets`() {
         assertFailsWith<DateTimeParseException> { "01:00".toUtcOffset() }
         assertFailsWith<DateTimeParseException> { "--01:00".toUtcOffset() }
         assertFailsWith<DateTimeParseException> { "+1:00".toUtcOffset() }
@@ -137,17 +137,17 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toUtcOffset() throws an exception when the parser can't supplied all required fields`() {
+    fun `String_toUtcOffset throws an exception when the parser can't supplied all required fields`() {
         assertFailsWith<DateTimeParseException> { "04".toUtcOffset(DateTimeParsers.Iso.TIME) }
     }
 
     @Test
-    fun `String_toUtcOffset() parses zero offsets indicated by 'Z'`() {
+    fun `String_toUtcOffset parses zero offsets indicated by 'Z'`() {
         assertEquals(UtcOffset.ZERO, "Z".toUtcOffset())
     }
 
     @Test
-    fun `String_toUtcOffset() parses valid ISO-8601 extended time offset strings`() {
+    fun `String_toUtcOffset parses valid ISO-8601 extended time offset strings`() {
         assertEquals(
             UtcOffset(1.hours),
             "+01".toUtcOffset()
@@ -170,7 +170,7 @@ class UtcOffsetTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toUtcOffset() parses valid ISO-8601 basic time offsets with explicit parser`() {
+    fun `String_toUtcOffset parses valid ISO-8601 basic time offsets with explicit parser`() {
         assertEquals(
             UtcOffset(1.hours),
             "+01".toUtcOffset(DateTimeParsers.Iso.UTC_OFFSET)

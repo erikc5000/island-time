@@ -100,7 +100,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() returns a new DateTime replacing the desired values`() {
+    fun `copy returns a new DateTime replacing the desired values`() {
         assertEquals(
             DateTime(2018, Month.MAY, 8, 12, 0),
             DateTime(2018, Month.MAY, 4, 18, 0).copy(hour = 12, dayOfMonth = 8)
@@ -133,7 +133,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `secondsSinceUnixEpochAt() returns the number of seconds since the unix epoch`() {
+    fun `secondsSinceUnixEpochAt returns the number of seconds since the unix epoch`() {
         assertEquals(
             1L.seconds,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 1))
@@ -160,7 +160,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `millisecondsSinceUnixEpochAt() returns the number of milliseconds since the unix epoch`() {
+    fun `millisecondsSinceUnixEpochAt returns the number of milliseconds since the unix epoch`() {
         assertEquals(
             1L.milliseconds,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_999_999))
@@ -193,7 +193,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `millisecondOfUnixEpochAt() returns the millisecond of the unix epoch`() {
+    fun `millisecondOfUnixEpochAt returns the millisecond of the unix epoch`() {
         assertEquals(
             1L,
             (Date(1970, Month.JANUARY, 1) at Time(1, 0, 0, 1_999_999))
@@ -234,7 +234,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `adding a period first adds years, then months, then days`() {
+    fun `adding a period adds years then months then days`() {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0),
             DateTime(2016, Month.FEBRUARY, 29, 9, 0) +
@@ -257,7 +257,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `subtracting a period first subtracts years, then months, then days`() {
+    fun `subtracting a period subtracts years then months then days`() {
         assertEquals(
             DateTime(2017, Month.MARCH, 29, 9, 0),
             DateTime(2016, Month.FEBRUARY, 29, 9, 0) -
@@ -916,7 +916,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended calendar date time`() {
+    fun `toString returns an ISO-8601 extended calendar date time`() {
         assertEquals(
             "2019-08-01T00:01",
             DateTime(2019, Month.AUGUST, 1, 0, 1).toString()
@@ -928,25 +928,25 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateTime() throws an exception when the format is mixed basic and extended`() {
+    fun `String_toDateTime throws an exception when the format is mixed basic and extended`() {
         assertFailsWith<DateTimeParseException> { "20000101 00:23".toDateTime() }
         assertFailsWith<DateTimeParseException> { "2002-02-01T0023".toDateTime() }
     }
 
     @Test
-    fun `String_toDateTime() throws an exception when given an empty string`() {
+    fun `String_toDateTime throws an exception when given an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toDateTime() }
     }
 
     @Test
-    fun `String_toDateTime() throws an exception when the parser can't supply required fields`() {
+    fun `String_toDateTime throws an exception when the parser can't supply required fields`() {
         assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.UTC_OFFSET) }
         assertFailsWith<DateTimeParseException> { "08:00".toDateTime(DateTimeParsers.Iso.TIME) }
         assertFailsWith<DateTimeParseException> { "2009-10-08".toDateTime(DateTimeParsers.Iso.DATE) }
     }
 
     @Test
-    fun `String_toDateTime() parses valid ISO-8601 extended calendar date strings by default`() {
+    fun `String_toDateTime parses valid ISO-8601 extended calendar date strings by default`() {
         assertEquals(
             DateTime(2019, Month.MARCH, 23, 2, 30),
             "2019-03-23T02:30".toDateTime()
@@ -959,7 +959,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateTime() parses valid ISO-8601 basic calendar date strings`() {
+    fun `String_toDateTime parses valid ISO-8601 basic calendar date strings`() {
         assertEquals(
             DateTime(2019, Month.MARCH, 23, 2, 30),
             "20190323T0230".toDateTime(DateTimeParsers.Iso.Basic.DATE_TIME)
@@ -967,7 +967,7 @@ class DateTimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toDateTime() parses valid ISO-8601 ordinal date strings with custom parser`() {
+    fun `String_toDateTime parses valid ISO-8601 ordinal date strings with custom parser`() {
         val parser = dateTimeParser {
             anyOf({
                 childParser(DateTimeParsers.Iso.Basic.DATE)

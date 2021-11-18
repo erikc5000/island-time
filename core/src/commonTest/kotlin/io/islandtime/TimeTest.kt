@@ -39,19 +39,19 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Time_fromSecondOfDay() throws an exception when the second value is invalid`() {
+    fun `Time_fromSecondOfDay throws an exception when the second value is invalid`() {
         assertFailsWith<DateTimeException> { Time.fromSecondOfDay(-1) }
         assertFailsWith<DateTimeException> { Time.fromSecondOfDay(SECONDS_PER_DAY) }
     }
 
     @Test
-    fun `Time_fromSecondOfDay() throws an exception when the nanosecond value is invalid`() {
+    fun `Time_fromSecondOfDay throws an exception when the nanosecond value is invalid`() {
         assertFailsWith<DateTimeException> { Time.fromSecondOfDay(0, -1) }
         assertFailsWith<DateTimeException> { Time.fromSecondOfDay(0, 1_000_000_000) }
     }
 
     @Test
-    fun `Time_fromSecondOfDay() creates a Time from a second of the day value`() {
+    fun `Time_fromSecondOfDay creates a Time from a second of the day value`() {
         assertEquals(
             Time(1, 1, 1, 1),
             Time.fromSecondOfDay(3661, 1)
@@ -59,13 +59,13 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Time_fromNanosecondOfDay() throws an exception when the nanosecond value is invalid`() {
+    fun `Time_fromNanosecondOfDay throws an exception when the nanosecond value is invalid`() {
         assertFailsWith<DateTimeException> { Time.fromNanosecondOfDay(-1L) }
         assertFailsWith<DateTimeException> { Time.fromNanosecondOfDay(NANOSECONDS_PER_DAY) }
     }
 
     @Test
-    fun `Time_fromNanosecondOfDay() creates a Time from a nanosecond of the day value`() {
+    fun `Time_fromNanosecondOfDay creates a Time from a nanosecond of the day value`() {
         assertEquals(
             Time(0, 0, 1, 1),
             Time.fromNanosecondOfDay(1_000_000_001L)
@@ -105,27 +105,27 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended time with minute precision`() {
+    fun `toString returns an ISO-8601 extended time with minute precision`() {
         assertEquals("00:00", Time(0, 0, 0, 0).toString())
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended time with second precision`() {
+    fun `toString returns an ISO-8601 extended time with second precision`() {
         assertEquals("01:01:01", Time(1, 1, 1, 0).toString())
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended time with millisecond precision`() {
+    fun `toString returns an ISO-8601 extended time with millisecond precision`() {
         assertEquals("01:01:01.100", Time(1, 1, 1, 100_000_000).toString())
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended time with microsecond precision`() {
+    fun `toString returns an ISO-8601 extended time with microsecond precision`() {
         assertEquals("23:59:59.000990", Time(23, 59, 59, 990_000).toString())
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended time with nanosecond precision`() {
+    fun `toString returns an ISO-8601 extended time with nanosecond precision`() {
         assertEquals(
             "23:59:59.000000900",
             Time(23, 59, 59, 900).toString()
@@ -142,7 +142,7 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() returns a Time with altered values`() {
+    fun `copy returns a Time with altered values`() {
         assertEquals(Time(3, 30), Time(9, 30).copy(hour = 3))
         assertEquals(Time(9, 1), Time(9, 30).copy(minute = 1))
         assertEquals(Time(9, 30, 3), Time(9, 30).copy(second = 3))
@@ -467,18 +467,18 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toTime() throws an exception when given an empty string`() {
+    fun `String_toTime throws an exception when given an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toTime() }
         assertFailsWith<DateTimeParseException> { "".toTime(DateTimeParsers.Iso.TIME) }
     }
 
     @Test
-    fun `String_toTime() throws an exception when the parser can't supply all required fields`() {
+    fun `String_toTime throws an exception when the parser can't supply all required fields`() {
         assertFailsWith<DateTimeParseException> { "14".toTime(dateTimeParser { minuteOfHour(2) }) }
     }
 
     @Test
-    fun `String_toTime() throws an exception if parsed values cause overflow`() {
+    fun `String_toTime throws an exception if parsed values cause overflow`() {
         val parser = dateTimeParser {
             hourOfDay()
             +':'
@@ -493,7 +493,7 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toTime() parses valid ISO-8601 extended time strings by default`() {
+    fun `String_toTime parses valid ISO-8601 extended time strings by default`() {
         assertEquals(Time(2, 0), "02".toTime())
         assertEquals(Time(23, 0), "23:00".toTime())
         assertEquals(Time(23, 30, 5), "23:30:05".toTime())
@@ -501,7 +501,7 @@ class TimeTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toTime() parses valid strings with explicit parser`() {
+    fun `String_toTime parses valid strings with explicit parser`() {
         assertEquals(Time(2, 0), "02".toTime(DateTimeParsers.Iso.Basic.TIME))
         assertEquals(Time(23, 0), "2300".toTime(DateTimeParsers.Iso.Basic.TIME))
         assertEquals(Time(23, 30, 5), "233005".toTime(DateTimeParsers.Iso.Basic.TIME))
