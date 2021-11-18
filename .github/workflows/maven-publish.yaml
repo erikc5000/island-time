@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  macos-build:
-    runs-on: macos-latest
+  build:
+    runs-on: macos-11
     steps:
       - name: Checkout
         uses: actions/checkout@v2
