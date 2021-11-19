@@ -2,7 +2,8 @@ package io.islandtime.clock.internal
 
 import io.islandtime.*
 import io.islandtime.clock.Clock
-import io.islandtime.internal.*
+import io.islandtime.internal.toOffsetTimeAt
+import io.islandtime.internal.toTimeAt
 
 internal actual fun Date.Companion.nowImpl(clock: Clock): Date {
     return with(clock) { readInstant().toDateAt(zone) }

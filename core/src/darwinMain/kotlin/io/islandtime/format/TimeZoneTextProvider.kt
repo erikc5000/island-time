@@ -2,7 +2,10 @@ package io.islandtime.format
 
 import io.islandtime.TimeZone
 import io.islandtime.locale.Locale
-import platform.Foundation.*
+import platform.Foundation.NSTimeZone
+import platform.Foundation.NSTimeZoneNameStyle
+import platform.Foundation.localizedName
+import platform.Foundation.timeZoneWithName
 
 actual object PlatformTimeZoneTextProvider : TimeZoneTextProvider {
     override fun timeZoneTextFor(zone: TimeZone, style: TimeZoneTextStyle, locale: Locale): String? {
