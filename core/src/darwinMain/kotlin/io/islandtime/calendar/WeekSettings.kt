@@ -1,8 +1,11 @@
+@file:OptIn(UnsafeNumber::class)
+
 package io.islandtime.calendar
 
 import io.islandtime.DayOfWeek
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
+import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarIdentifierGregorian
