@@ -6,10 +6,6 @@ plugins {
     alias(libs.plugins.kover)
 }
 
-repositories {
-    mavenCentral()
-}
-
 buildscript {
     dependencies {
         classpath(libs.atomicfuGradle)
