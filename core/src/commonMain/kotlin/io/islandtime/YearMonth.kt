@@ -9,7 +9,7 @@ import io.islandtime.internal.appendZeroPadded
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
-import io.islandtime.serialization.YearMonthSerializer
+import io.islandtime.serialization.YearMonthIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
  * @param month the month of the year
  * @throws DateTimeException if the year is outside the supported range
  */
-@Serializable(with = YearMonthSerializer::class)
+@Serializable(with = YearMonthIsoSerializer::class)
 class YearMonth(
     /** The year. */
     val year: Int,

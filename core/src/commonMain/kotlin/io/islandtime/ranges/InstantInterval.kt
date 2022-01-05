@@ -6,7 +6,7 @@ import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.nanoseconds
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.serialization.InstantIntervalSerializer
+import io.islandtime.serialization.InstantIntervalIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  *
  * [Instant.MIN] and [Instant.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
  */
-@Serializable(with = InstantIntervalSerializer::class)
+@Serializable(with = InstantIntervalIsoSerializer::class)
 class InstantInterval(
     start: Instant = Instant.MIN,
     endExclusive: Instant = Instant.MAX

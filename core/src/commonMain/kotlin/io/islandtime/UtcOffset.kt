@@ -9,7 +9,7 @@ import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.serialization.UtcOffsetSerializer
+import io.islandtime.serialization.UtcOffsetIsoSerializer
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -26,7 +26,7 @@ import kotlinx.serialization.Serializable
  * @throws DateTimeException if the offset is outside the supported range
  * @property totalSecondsValue The number of seconds relative to UTC.
  */
-@Serializable(with = UtcOffsetSerializer::class)
+@Serializable(with = UtcOffsetIsoSerializer::class)
 @JvmInline
 value class UtcOffset @PublishedApi internal constructor(val totalSecondsValue: Int) : Comparable<UtcOffset> {
     /**

@@ -12,7 +12,7 @@ import io.islandtime.parser.DateTimeParseResult
 import io.islandtime.parser.DateTimeParser
 import io.islandtime.parser.DateTimeParserSettings
 import io.islandtime.parser.DateTimeParsers
-import io.islandtime.serialization.DurationSerializer
+import io.islandtime.serialization.DurationIsoSerializer
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -27,7 +27,7 @@ import kotlinx.serialization.Serializable
  * is capable of representing fixed, nanosecond-precision durations that span the entire supported time scale, making it
  * more suitable for these use cases.
  */
-@Serializable(with = DurationSerializer::class)
+@Serializable(with = DurationIsoSerializer::class)
 class Duration private constructor(
     @PublishedApi internal val secondValue: Long,
     @PublishedApi internal val nanosecondValue: Int = 0

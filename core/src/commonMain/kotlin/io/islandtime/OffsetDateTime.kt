@@ -5,7 +5,7 @@ import io.islandtime.internal.deprecatedToError
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.OffsetDateTimeInterval
-import io.islandtime.serialization.OffsetDateTimeSerializer
+import io.islandtime.serialization.OffsetDateTimeIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -20,7 +20,7 @@ import kotlinx.serialization.Serializable
  * @param offset the offset from UTC
  * @throws DateTimeException if the offset is invalid
  */
-@Serializable(with = OffsetDateTimeSerializer::class)
+@Serializable(with = OffsetDateTimeIsoSerializer::class)
 class OffsetDateTime(
     /** The local date and time of day. */
     val dateTime: DateTime,

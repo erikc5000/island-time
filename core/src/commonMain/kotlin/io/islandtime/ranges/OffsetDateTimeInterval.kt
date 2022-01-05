@@ -6,7 +6,7 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
-import io.islandtime.serialization.OffsetDateTimeIntervalSerializer
+import io.islandtime.serialization.OffsetDateTimeIntervalIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end. An
  * [OffsetDateTime] with either as the date-time component will be treated accordingly, regardless of the offset.
  */
-@Serializable(with = OffsetDateTimeIntervalSerializer::class)
+@Serializable(with = OffsetDateTimeIntervalIsoSerializer::class)
 class OffsetDateTimeInterval(
     start: OffsetDateTime = UNBOUNDED.start,
     endExclusive: OffsetDateTime = UNBOUNDED.endExclusive

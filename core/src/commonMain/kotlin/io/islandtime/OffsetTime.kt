@@ -2,7 +2,7 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.*
-import io.islandtime.serialization.OffsetTimeSerializer
+import io.islandtime.serialization.OffsetTimeIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @constructor Creates an [OffsetTime] by combining a [Time] and [UtcOffset].
  * @throws DateTimeException if the offset is invalid
  */
-@Serializable(with = OffsetTimeSerializer::class)
+@Serializable(with = OffsetTimeIsoSerializer::class)
 class OffsetTime(
     /** The time of day. */
     val time: Time,

@@ -1,6 +1,6 @@
 # Serialization
 
-Island Time includes built-in support for [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization). By default, dates, times, durations, and intervals are serialized as ISO-compatible strings, which work well with JSON.
+Island Time includes built-in support for [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization). By default, dates, times, durations, and intervals are serialized as ISO-compatible strings.
 
 ## Serializing to JSON
 

@@ -4,7 +4,7 @@ import dev.erikchristensen.javamath2kmp.timesExact
 import io.islandtime.base.DateTimeField
 import io.islandtime.internal.MONTHS_PER_YEAR
 import io.islandtime.parser.*
-import io.islandtime.serialization.PeriodSerializer
+import io.islandtime.serialization.PeriodIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  * @property months The number of months in this period.
  * @property days The number of days in this period.
  */
-@Serializable(with = PeriodSerializer::class)
+@Serializable(with = PeriodIsoSerializer::class)
 class Period private constructor(
     val years: Years = 0.years,
     val months: Months = 0.months,

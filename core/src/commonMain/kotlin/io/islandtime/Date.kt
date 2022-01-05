@@ -10,7 +10,7 @@ import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateRange
-import io.islandtime.serialization.DateSerializer
+import io.islandtime.serialization.DateIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
  * @param day the day of the month
  * @throws DateTimeException if the year or day is invalid
  */
-@Serializable(with = DateSerializer::class)
+@Serializable(with = DateIsoSerializer::class)
 class Date(
     /** The year. */
     val year: Int,

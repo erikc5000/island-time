@@ -6,7 +6,7 @@ import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.DateTimeInterval
-import io.islandtime.serialization.DateTimeSerializer
+import io.islandtime.serialization.DateTimeIsoSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
  * @param date the date
  * @param time the time
  */
-@Serializable(with = DateTimeSerializer::class)
+@Serializable(with = DateTimeIsoSerializer::class)
 class DateTime(
     /** The date. */
     val date: Date,
