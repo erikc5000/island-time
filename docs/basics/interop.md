@@ -64,7 +64,7 @@ The full set of conversions can be found in the [io.islandtime.darwin](../api/co
 
 ## kotlin.time
 
-The Kotlin Standard Library has an experimental [`Duration`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/) type of its own, which you can convert to and from Island Time durations.
+As of Kotlin 1.6.0, a [`Duration`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/) type has been stabilized as part of the standard library. It isn't an exact replacement for Island Time's `Duration`, but you can easily convert between the two types (with possible loss of precision for larger durations).
 
 ```kotlin
 import kotlin.time.seconds as kotlinSeconds
@@ -73,5 +73,11 @@ import kotlin.time.seconds as kotlinSeconds
 val kotlinDuration: kotlin.time.Duration = 30.minutes.toKotlinDuration()
 
 // Convert from Kotlin Duration to Island Time Duration
-val islandDuration: Duration = kotlin.time.Duration.seconds(30).toIslandDuration() 
+val islandDuration: Duration = 30.kotlinSeconds.toIslandDuration()
+```
+
+Kotlin's `Duration` type can also be used directly with Island Time classes, such as `Instant` or `ZonedDateTime`.
+
+```kotlin
+val untilInstant = Instant.now() + 10.kotlinSeconds
 ```

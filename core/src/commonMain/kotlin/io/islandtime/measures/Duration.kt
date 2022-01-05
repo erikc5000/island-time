@@ -437,8 +437,8 @@ class Duration private constructor(
     }
 
     /**
-     * Converts this duration to a [kotlin.time.Duration]. Since Kotlin's `Duration` type is based on a floating-point
-     * number, precision may be lost.
+     * Converts this duration to a [kotlin.time.Duration]. Since Kotlin's `Duration` type can only represent longer
+     * durations to the millisecond, precision may be lost.
      */
     fun toKotlinDuration(): kotlin.time.Duration {
         return seconds.toKotlinDuration() + nanosecondAdjustment.toKotlinDuration()
