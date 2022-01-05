@@ -2,12 +2,15 @@ package io.islandtime
 
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.serialization.OffsetTimeIsoSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A time of day with an offset from UTC.
  * @constructor Creates an [OffsetTime] by combining a [Time] and [UtcOffset].
  * @throws DateTimeException if the offset is invalid
  */
+@Serializable(with = OffsetTimeIsoSerializer::class)
 class OffsetTime(
     /** The time of day. */
     val time: Time,

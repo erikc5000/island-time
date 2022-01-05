@@ -5,6 +5,8 @@ import io.islandtime.base.DateTimeField
 import io.islandtime.internal.*
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.serialization.TimeIsoSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A time of day in an ambiguous region.
@@ -16,6 +18,7 @@ import io.islandtime.parser.*
  * @param nanosecond the nanosecond of the second
  * @throws DateTimeException if the time is invalid
  */
+@Serializable(with = TimeIsoSerializer::class)
 class Time(
     /** The hour of the day. */
     val hour: Int,

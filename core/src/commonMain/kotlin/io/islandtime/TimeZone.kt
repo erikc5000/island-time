@@ -9,14 +9,17 @@ import io.islandtime.locale.Locale
 import io.islandtime.measures.nanoseconds
 import io.islandtime.measures.seconds
 import io.islandtime.parser.*
+import io.islandtime.serialization.TimeZoneSerializer
 import io.islandtime.zone.FixedTimeZoneRules
 import io.islandtime.zone.TimeZoneRules
 import io.islandtime.zone.TimeZoneRulesException
 import io.islandtime.zone.TimeZoneRulesProvider
+import kotlinx.serialization.Serializable
 
 /**
  * A time zone.
  */
+@Serializable(with = TimeZoneSerializer::class)
 sealed class TimeZone : Comparable<TimeZone> {
 
     /**

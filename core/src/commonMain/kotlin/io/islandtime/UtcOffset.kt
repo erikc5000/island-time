@@ -9,12 +9,14 @@ import io.islandtime.internal.SECONDS_PER_MINUTE
 import io.islandtime.internal.appendZeroPadded
 import io.islandtime.measures.*
 import io.islandtime.parser.*
+import io.islandtime.serialization.UtcOffsetIsoSerializer
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import kotlin.jvm.JvmInline
 import kotlin.math.absoluteValue
 import kotlin.math.sign
+import kotlinx.serialization.Serializable
 
 /**
  * The time shift between a local time and UTC.
@@ -24,6 +26,7 @@ import kotlin.math.sign
  * @throws DateTimeException if the offset is outside the supported range
  * @property totalSecondsValue The number of seconds relative to UTC.
  */
+@Serializable(with = UtcOffsetIsoSerializer::class)
 @JvmInline
 value class UtcOffset @PublishedApi internal constructor(val totalSecondsValue: Int) : Comparable<UtcOffset> {
     /**

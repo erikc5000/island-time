@@ -7,6 +7,8 @@ import io.islandtime.measures.*
 import io.islandtime.parser.*
 import io.islandtime.ranges.internal.MAX_INCLUSIVE_END_DATE_TIME
 import io.islandtime.ranges.internal.buildIsoString
+import io.islandtime.serialization.ZonedDateTimeIntervalIsoSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * A half-open interval of zoned date-times based on timeline order.
@@ -15,6 +17,7 @@ import io.islandtime.ranges.internal.buildIsoString
  * [ZonedDateTime] with either as the date-time component will be treated accordingly, regardless of the offset or
  * time zone.
  */
+@Serializable(with = ZonedDateTimeIntervalIsoSerializer::class)
 class ZonedDateTimeInterval(
     start: ZonedDateTime = UNBOUNDED.start,
     endExclusive: ZonedDateTime = UNBOUNDED.endExclusive

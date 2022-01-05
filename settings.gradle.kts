@@ -17,7 +17,7 @@ dependencyResolutionManagement {
 include(
     ":core",
     ":extensions:parcelize",
-    ":extensions:serialization"
+    ":integration-test:serialization"
 )
 
 includeBuild("tools/code-generator")

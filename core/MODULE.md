@@ -46,6 +46,10 @@ Parsing of dates, times, durations, and intervals from textual representations.
 
 Date ranges, time intervals, and the ability to iterate over them and perform various operations.
 
+# Package io.islandtime.serialization
+
+Serializers for use with Kotlin Serialization.
+
 # Package io.islandtime.zone
 
 Provides time zone database access.

@@ -49,7 +49,7 @@ Add the following dependency to your project's Gradle script:
     }
     ```
 
-Extensions are also available for [serialization](extensions/serialization.md) and the [`@Parcelize`](extensions/parcelize.md) feature on Android.
+Extensions are also available for the [`@Parcelize`](extensions/parcelize.md) feature on Android.
 
 ### Android
 
