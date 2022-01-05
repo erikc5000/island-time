@@ -1,7 +1,7 @@
 plugins {
     `multiplatform-library`
     id("kotlinx-atomicfu")
-    alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -19,7 +19,7 @@ kotlin {
 
             dependencies {
                 implementation(libs.javamath2kmp)
-                compileOnly(libs.serialization.core)
+                compileOnly(libs.serializationCore)
             }
         }
 
@@ -41,7 +41,7 @@ kotlin {
 
         val darwinMain by getting {
             dependencies {
-                api(libs.serialization.core)
+                api(libs.serializationCore)
             }
         }
     }
