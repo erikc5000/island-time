@@ -1,6 +1,6 @@
 plugins {
     kotlin("multiplatform")
-    id("published-library")
+    id("base-convention")
 }
 
 kotlin {
@@ -43,20 +43,6 @@ kotlin {
         configure(darwinTargets) {
             compilations["main"].defaultSourceSet.dependsOn(darwinMain)
             compilations["test"].defaultSourceSet.dependsOn(darwinTest)
-        }
-    }
-}
-
-publishing {
-    val pomMppArtifactId: String? by project
-
-    publications.withType<MavenPublication>().configureEach {
-        if (pomMppArtifactId != null) {
-            artifactId = if (name == "kotlinMultiplatform") {
-                pomMppArtifactId
-            } else {
-                "${pomMppArtifactId}-$name"
-            }
         }
     }
 }

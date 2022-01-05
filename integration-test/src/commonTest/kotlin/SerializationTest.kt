@@ -31,7 +31,7 @@ data class TestData(
     val zonedDateTimeInterval: ZonedDateTimeInterval
 )
 
-class SerializersTest {
+class SerializationTest {
     private val testData = TestData(
         date = Date(2018, Month.FEBRUARY, 21),
         time = Time(1, 2, 3, 4),

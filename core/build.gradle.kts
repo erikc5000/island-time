@@ -1,5 +1,5 @@
 plugins {
-    `multiplatform-library`
+    `published-mpp-library`
     id("kotlinx-atomicfu")
     alias(libs.plugins.serialization)
 }

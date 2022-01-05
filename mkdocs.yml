@@ -5,7 +5,7 @@ repo_url: https://github.com/erikc5000/island-time
 site_description: 'Island Time - A Kotlin Multiplatform library for working with dates and times'
 site_author: 'Erik Christensen'
 remote_branch: gh-pages
-copyright: 'Copyright &copy; 2020-2021 Erik Christensen'
+copyright: 'Copyright &copy; 2020-2022 Erik Christensen'
 
 nav:
   - index.md
@@ -18,16 +18,15 @@ nav:
       - 'basics/interop.md'
       - 'basics/formatting.md'
       - 'basics/parsing.md'
+      - 'basics/serialization.md'
       - 'basics/clocks.md'
   - 'Advanced Topics':
       - 'advanced/custom-providers.md'
   - 'Extensions':
-      - 'extensions/serialization.md'
       - 'extensions/parcelize.md'
   - 'API':
       - 'core': 'api/core/index.md'
       - 'parcelize-extensions': 'api/extensions/parcelize/index.md'
-      - 'serialization-extensions': 'api/extensions/serialization/index.md'
 
 theme:
   name: material

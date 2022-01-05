@@ -1,5 +1,5 @@
 plugins {
-    `multiplatform-library`
+    `mpp-library`
     alias(libs.plugins.serialization)
 }
 

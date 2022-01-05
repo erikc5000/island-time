@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("published-library")
+    id("base-convention")
 }
 
 android {
@@ -18,25 +18,5 @@ android {
 
     buildFeatures {
         buildConfig = false
-    }
-
-    publishing {
-        singleVariant("release")
-    }
-}
-
-afterEvaluate {
-    val androidSourcesJar by tasks.registering(Jar::class) {
-        archiveClassifier.set("sources")
-        from(android.sourceSets["main"].java.srcDirs)
-    }
-
-    publishing {
-        publications {
-            create<MavenPublication>("releaseAar") {
-                artifact(androidSourcesJar.get())
-                from(components["release"])
-            }
-        }
     }
 }

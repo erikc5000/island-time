@@ -3,7 +3,6 @@ import org.jetbrains.dokka.gradle.DokkaTaskPartial
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
 
 plugins {
-    id("base-convention")
     id("org.jetbrains.dokka")
     `maven-publish`
     signing
