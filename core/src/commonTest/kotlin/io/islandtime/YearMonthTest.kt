@@ -72,7 +72,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() can be used to replace the year or month component`() {
+    fun `copy can be used to replace the year or month component`() {
         assertEquals(
             YearMonth(1999, Month.DECEMBER),
             YearMonth(2000, Month.DECEMBER).copy(year = 1999)
@@ -90,7 +90,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `copy() throws an exception if the new year is invalid`() {
+    fun `copy throws an exception if the new year is invalid`() {
         assertFailsWith<DateTimeException> {
             YearMonth(2010, Month.DECEMBER).copy(year = -1_000_000_000)
         }
@@ -466,7 +466,7 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns an ISO-8601 year month representation`() {
+    fun `toString returns an ISO-8601 year month representation`() {
         listOf(
             YearMonth(2000, Month.FEBRUARY) to "2000-02",
             YearMonth(9999, Month.DECEMBER) to "9999-12",
@@ -484,12 +484,12 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYearMonth() throws an exception when parsing an empty string`() {
+    fun `String_toYearMonth throws an exception when parsing an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toYearMonth() }
     }
 
     @Test
-    fun `String_toYearMonth() throws an exception when parsing an invalid ISO-8601 extended string`() {
+    fun `String_toYearMonth throws an exception when parsing an invalid ISO-8601 extended string`() {
         listOf(
             "2012-05-01",
             "201205",
@@ -504,21 +504,21 @@ class YearMonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYearMonth() throws an exception when the year is out of range`() {
+    fun `String_toYearMonth throws an exception when the year is out of range`() {
         listOf("+1000000000-01", "-1000000000-12").forEach {
             assertFailsWith<DateTimeException> { it.toYearMonth() }
         }
     }
 
     @Test
-    fun `String_toYearMonth() throws an exception when the month is out of range`() {
+    fun `String_toYearMonth throws an exception when the month is out of range`() {
         listOf("0001-13", "0001-00").forEach {
             assertFailsWith<DateTimeException> { it.toYearMonth() }
         }
     }
 
     @Test
-    fun `String_toYearMonth() parses ISO-8601 year months by default`() {
+    fun `String_toYearMonth parses ISO-8601 year months by default`() {
         listOf(
             "2012-05" to YearMonth(2012, Month.MAY),
             "9999-12" to YearMonth(9999, Month.DECEMBER),

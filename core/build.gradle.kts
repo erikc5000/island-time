@@ -1,7 +1,7 @@
 plugins {
     `multiplatform-library`
     id("kotlinx-atomicfu")
-    kotlin("plugin.serialization") version Versions.kotlin
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -18,16 +18,14 @@ kotlin {
             kotlin.srcDirs("src/commonMain/generated")
 
             dependencies {
-                implementation(Libs.javamath2kmp)
-                implementation(Libs.atomicfu)
-
-                compileOnly(Libs.Serialization.core)
+                implementation(libs.javamath2kmp)
+                compileOnly(libs.serialization.core)
             }
         }
 
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlinTest)
             }
         }
 
@@ -37,13 +35,13 @@ kotlin {
 
         val jvmTest by getting {
             dependencies {
-                implementation(Libs.googleTruth)
+                implementation(libs.truth)
             }
         }
 
         val darwinMain by getting {
             dependencies {
-                api(Libs.Serialization.core)
+                api(libs.serialization.core)
             }
         }
     }

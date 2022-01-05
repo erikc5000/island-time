@@ -37,11 +37,16 @@ enum class PlusOrMinusOperator(
 
 private val KOTLIN_DURATION_CLASS_NAME = ClassName("kotlin.time", "Duration")
 private val KOTLIN_DURATION_UNIT_CLASS_NAME = ClassName("kotlin.time", "DurationUnit")
-private val EXPERIMENTAL_TIME_CLASS_NAME = ClassName("kotlin.time", "ExperimentalTime")
 private val KOTLIN_CONTRACT_CLASS_NAME = ClassName("kotlin.contracts", "contract")
 private val KOTLIN_INVOCATION_KIND_CLASS_NAME = ClassName("kotlin.contracts", "InvocationKind")
 private val OPT_IN_CLASS_NAME = ClassName("kotlin", "OptIn")
 private val EXPERIMENTAL_CONTRACTS_CLASS_NAME = ClassName("kotlin.contracts", "ExperimentalContracts")
+
+private val TemporalUnitDescription.kotlinDurationUnitPropertyClassName
+    get() = MemberName(
+        enclosingClassName = ClassName("kotlin.time", "Duration", "Companion"),
+        simpleName = lowerPluralName,
+    )
 
 private fun KClass<*>.literalValueString(value: Long) = when (this) {
     Int::class -> "$value"
@@ -68,6 +73,7 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
             KOTLIN_DURATION_CLASS_NAME to "KotlinDuration",
             KOTLIN_DURATION_UNIT_CLASS_NAME to "KotlinDurationUnit"
         )
+        aliasedImport(description.kotlinDurationUnitPropertyClassName, "kotlin${description.pluralName}")
     }
 
     typeAlias(description.deprecatedIntName, description.className) {
@@ -167,12 +173,11 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
         if (description.isTimeBased) {
             function("toKotlinDuration") {
                 kdoc { "Converts this duration to a [${KOTLIN_DURATION_CLASS_NAME.canonicalName}]." }
-                annotation(EXPERIMENTAL_TIME_CLASS_NAME)
                 returns(KOTLIN_DURATION_CLASS_NAME)
 
                 code {
-                    using("kotlinDuration", KOTLIN_DURATION_CLASS_NAME)
-                    "return %kotlinDuration:T.${description.lowerPluralName}(${description.valueName})"
+                    using("kotlinDurationUnitProperty", description.kotlinDurationUnitPropertyClassName)
+                    "return ${description.valueName}.%kotlinDurationUnitProperty:M"
                 }
             }
         }
@@ -306,7 +311,6 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
     if (description.isTimeBased) {
         function("toIsland${description.pluralName}") {
             kdoc { "Converts this duration to Island Time [${description.pluralName}]." }
-            annotation(EXPERIMENTAL_TIME_CLASS_NAME)
             receiver(KOTLIN_DURATION_CLASS_NAME)
             returns(description.className)
             code {
@@ -664,8 +668,8 @@ private fun ClassBuilder.buildToComponentValuesFunctions(thisUnit: TemporalUnitD
 
 private fun CodeBlockBuilder.exactlyOnceContractCode(parameter: String) {
     using(
-        "contract" to ClassName("kotlin.contracts", "contract"),
-        "invocationKind" to ClassName("kotlin.contracts", "InvocationKind")
+        "contract" to KOTLIN_CONTRACT_CLASS_NAME,
+        "invocationKind" to KOTLIN_INVOCATION_KIND_CLASS_NAME
     )
     +"%contract:T { callsInPlace($parameter, %invocationKind:T.EXACTLY_ONCE) }"
 }

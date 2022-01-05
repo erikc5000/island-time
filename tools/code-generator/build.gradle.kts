@@ -1,16 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.21"
+    alias(libs.plugins.kotlinJvm)
     application
 }
 
 dependencies {
-    implementation("com.squareup:kotlinpoet:1.9.0")
+    implementation(libs.kotlinpoet)
 }
 
 application {
     mainClass.set("io.islandtime.codegen.MainKt")
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
 tasks.withType<KotlinCompile>().configureEach {

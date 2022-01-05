@@ -317,7 +317,7 @@ class YearTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `toString() returns the year with a minimum of 4 digits as required by ISO-8601`() {
+    fun `toString returns the year with a minimum of 4 digits as required by ISO-8601`() {
         listOf(
             2008 to "2008",
             1 to "0001",
@@ -335,12 +335,12 @@ class YearTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYear() throws an exception when the string is empty`() {
+    fun `String_toYear throws an exception when the string is empty`() {
         assertFailsWith<DateTimeParseException> { "".toYear() }
     }
 
     @Test
-    fun `String_toYear() throws an exception when parsing an improperly formatted string`() {
+    fun `String_toYear throws an exception when parsing an improperly formatted string`() {
         listOf(
             "1",
             "01",
@@ -362,7 +362,7 @@ class YearTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYear() throws an exception when the year is outside the supported range`() {
+    fun `String_toYear throws an exception when the year is outside the supported range`() {
         val customParser = dateTimeParser { year() }
 
         listOf(
@@ -376,7 +376,7 @@ class YearTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYear() converts an ISO-8601 year string to a Year`() {
+    fun `String_toYear converts an ISO-8601 year string to a Year`() {
         listOf(
             "2010" to 2010,
             "0001" to 1,
@@ -398,7 +398,7 @@ class YearTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toYear() throws an exception when the parser fails to supply the YEAR field`() {
+    fun `String_toYear throws an exception when the parser fails to supply the YEAR field`() {
         val customParser = dateTimeParser { monthNumber(2) }
         assertFailsWith<DateTimeParseException> { "12".toYear(customParser) }
     }

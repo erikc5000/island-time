@@ -43,7 +43,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within bounded range`() {
+    fun `contains returns true for dates within bounded range`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at nyZone
 
@@ -54,7 +54,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded end`() {
+    fun `contains returns true for dates within range with unbounded end`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
         val end = DateTime.MAX at nyZone
 
@@ -65,7 +65,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns true for dates within range with unbounded start`() {
+    fun `contains returns true for dates within range with unbounded start`() {
         val start = DateTime.MIN at nyZone
         val end = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
 
@@ -77,7 +77,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `contains() returns false for out of range dates`() {
+    fun `contains returns false for out of range dates`() {
         val start = Date(2019, Month.MARCH, 10) at MIDNIGHT at nyZone
         val end = Date(2019, Month.MARCH, 12) at MIDNIGHT at nyZone
 
@@ -99,7 +99,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() returns a date-time within the interval`() {
+    fun `random returns a date-time within the interval`() {
         val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
         val end = Date(2019, Month.NOVEMBER, 2) at MIDNIGHT at nyZone
         val interval = start until end
@@ -109,13 +109,13 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `random() throws an exception when the interval is empty`() {
+    fun `random throws an exception when the interval is empty`() {
         assertFailsWith<NoSuchElementException> { ZonedDateTimeInterval.EMPTY.random() }
         assertFailsWith<NoSuchElementException> { ZonedDateTimeInterval.EMPTY.random(Random) }
     }
 
     @Test
-    fun `random() throws an exception when the interval is not bounded`() {
+    fun `random throws an exception when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random() }
         assertFailsWith<UnsupportedOperationException> { ZonedDateTimeInterval.UNBOUNDED.random(Random) }
@@ -124,13 +124,13 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is empty`() {
+    fun `randomOrNull returns null when the interval is empty`() {
         assertNull(ZonedDateTimeInterval.EMPTY.randomOrNull())
         assertNull(ZonedDateTimeInterval.EMPTY.randomOrNull(Random))
     }
 
     @Test
-    fun `randomOrNull() returns null when the interval is not bounded`() {
+    fun `randomOrNull returns null when the interval is not bounded`() {
         val dateTime = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
         assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull())
         assertNull(ZonedDateTimeInterval.UNBOUNDED.randomOrNull(Random))
@@ -139,7 +139,7 @@ class ZonedDateTimeIntervalTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `randomOrNull() returns a date-time within the interval`() {
+    fun `randomOrNull returns a date-time within the interval`() {
         val start = Date(2019, Month.NOVEMBER, 1) at MIDNIGHT at nyZone
         val end = (start + 1.nanoseconds).adjustedTo(TimeZone("Europe/London"))
         val interval = start until end

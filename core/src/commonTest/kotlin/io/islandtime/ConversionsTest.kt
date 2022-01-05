@@ -11,23 +11,23 @@ class ConversionsTest : AbstractIslandTimeTest() {
     private val denverZone = TimeZone("America/Denver")
 
     @Test
-    fun `YearMonth_toYear() converts to Year`() {
+    fun `YearMonth_toYear converts to Year`() {
         assertEquals(Year(2018), YearMonth(2018, Month.JULY).toYear())
     }
 
     @Test
-    fun `Date_toYear() converts to Year`() {
+    fun `Date_toYear converts to Year`() {
         assertEquals(Year(2018), Date(2018, Month.JULY, 4).toYear())
     }
 
     @Test
-    fun `DateTime_toYear() converts to Year`() {
+    fun `DateTime_toYear converts to Year`() {
         val dateTime = Date(2019, 3, 3) at Time(7, 0)
         assertEquals(Year(2019), dateTime.toYear())
     }
 
     @Test
-    fun `OffsetDateTime_toYear() converts to Year`() {
+    fun `OffsetDateTime_toYear converts to Year`() {
         val offsetDateTime =
             Date(2019, 3, 3) at Time(7, 0) at (-7).hours.asUtcOffset()
 
@@ -35,24 +35,24 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_toYear() converts to Year`() {
+    fun `ZonedDateTime_toYear converts to Year`() {
         val zonedDateTime = DateTime(2019, 3, 3, 7, 0) at denverZone
         assertEquals(Year(2019), zonedDateTime.toYear())
     }
 
     @Test
-    fun `Date_toYearMonth() converts to YearMonth`() {
+    fun `Date_toYearMonth converts to YearMonth`() {
         assertEquals(YearMonth(2018, Month.JULY), Date(2018, Month.JULY, 4).toYearMonth())
     }
 
     @Test
-    fun `DateTime_toYearMonth() converts to YearMonth`() {
+    fun `DateTime_toYearMonth converts to YearMonth`() {
         val dateTime = Date(2019, 3, 3) at Time(7, 0)
         assertEquals(YearMonth(2019, 3), dateTime.toYearMonth())
     }
 
     @Test
-    fun `OffsetDateTime_toYearMonth() converts to YearMonth`() {
+    fun `OffsetDateTime_toYearMonth converts to YearMonth`() {
         val offsetDateTime =
             Date(2019, 3, 3) at Time(7, 0) at (-7).hours.asUtcOffset()
 
@@ -60,13 +60,13 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_toYearMonth() converts to YearMonth`() {
+    fun `ZonedDateTime_toYearMonth converts to YearMonth`() {
         val zonedDateTime = DateTime(2019, 3, 3, 7, 0) at denverZone
         assertEquals(YearMonth(2019, 3), zonedDateTime.toYearMonth())
     }
 
     @Test
-    fun `Instant_toDateAt() converts an instant to a Date at a UTC offset`() {
+    fun `Instant_toDateAt converts an instant to a Date at a UTC offset`() {
         assertEquals(Date(1970, Month.JANUARY, 1), Instant.UNIX_EPOCH.toDateAt(UtcOffset.ZERO))
 
         assertEquals(
@@ -81,7 +81,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Instant_toDateAt() converts an instant to a Date at a time zone`() {
+    fun `Instant_toDateAt converts an instant to a Date at a time zone`() {
         val zone = TimeZone("America/New_York")
 
         assertEquals(Date(1970, Month.JANUARY, 1), Instant(5L.hours.inSeconds).toDateAt(zone))
@@ -93,7 +93,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Instant_toDateTimeAt() converts to DateTime at zone`() {
+    fun `Instant_toDateTimeAt converts to DateTime at zone`() {
         val instant = "1980-09-10T14:30Z".toInstant()
 
         assertEquals(
@@ -103,7 +103,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_toOffsetTime() converts to OffsetTime`() {
+    fun `OffsetDateTime_toOffsetTime converts to OffsetTime`() {
         val offsetDateTime =
             DateTime(2019, 3, 3, 7, 0) at (-7).hours.asUtcOffset()
 
@@ -111,13 +111,13 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_toOffsetTime() converts to OffsetTime`() {
+    fun `ZonedDateTime_toOffsetTime converts to OffsetTime`() {
         val zonedDateTime = DateTime(2019, 3, 3, 7, 0) at denverZone
         assertEquals(OffsetTime(Time(7, 0), UtcOffset((-7).hours)), zonedDateTime.toOffsetTime())
     }
 
     @Test
-    fun `ZonedDateTime_toOffsetDateTime() converts to OffsetDateTime`() {
+    fun `ZonedDateTime_toOffsetDateTime converts to OffsetDateTime`() {
         assertEquals(
             "1970-01-01T00:00Z".toOffsetDateTime(),
             "1970-01-01T00:00Z".toZonedDateTime().toOffsetDateTime()
@@ -130,7 +130,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_toZonedDateTime() converts to ZonedDateTime preserving local time`() {
+    fun `OffsetDateTime_toZonedDateTime converts to ZonedDateTime preserving local time`() {
         val offsetDateTime =
             Date(2019, 3, 3) at Time(1, 0) at UtcOffset((-5).hours)
 
@@ -150,7 +150,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_toZonedDateTime() converts to ZonedDateTime preserving instant`() {
+    fun `OffsetDateTime_toZonedDateTime converts to ZonedDateTime preserving instant`() {
         val offsetDateTime =
             Date(2019, 3, 3) at Time(1, 0) at UtcOffset((-5).hours)
 
@@ -170,7 +170,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_asZonedDateTime() converts to a ZonedDateTime with fixed offset zone`() {
+    fun `OffsetDateTime_asZonedDateTime converts to a ZonedDateTime with fixed offset zone`() {
         assertEquals(
             ZonedDateTime.create(
                 DateTime(1970, 1, 1, 0, 0, 0, 0),
@@ -191,7 +191,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_toInstant() returns an equivalent Instant`() {
+    fun `OffsetDateTime_toInstant returns an equivalent Instant`() {
         assertEquals(
             "1970-01-01T00:00Z".toInstant(),
             "1970-01-01T00:00Z".toOffsetDateTime().toInstant()
@@ -204,7 +204,7 @@ class ConversionsTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_toInstant() returns an equivalent Instant`() {
+    fun `ZonedDateTime_toInstant returns an equivalent Instant`() {
         assertEquals(
             "1970-01-01T00:00Z".toInstant(),
             "1970-01-01T00:00Z".toZonedDateTime().toInstant()

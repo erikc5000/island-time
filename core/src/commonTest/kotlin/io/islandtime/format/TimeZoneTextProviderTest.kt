@@ -14,7 +14,7 @@ class TimeZoneTextProviderTest : AbstractIslandTimeTest() {
     private val de_DE = "de-DE".toLocale()
 
     @Test
-    fun `timeZoneTextFor() returns null when given a fixed offset time zone`() {
+    fun `timeZoneTextFor returns null when given a fixed offset time zone`() {
         listOf(
             TimeZone.FixedOffset("-04:00"),
             TimeZone.FixedOffset("+00:00"),
@@ -28,7 +28,7 @@ class TimeZoneTextProviderTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `timeZoneTextFor() returns a localized string when available`() {
+    fun `timeZoneTextFor returns a localized string when available`() {
         val zone = TimeZone("America/New_York")
 
         assertEquals(
@@ -50,7 +50,7 @@ class TimeZoneTextProviderTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `timeZoneTextFor() returns null when the zone is invalid`() {
+    fun `timeZoneTextFor returns null when the zone is invalid`() {
         val zone = TimeZone("America/Boston")
         assertFalse { zone.isValid }
 

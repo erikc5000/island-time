@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalTime::class)
-
 package io.islandtime
 
 import io.islandtime.measures.*
@@ -9,7 +7,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.time.ExperimentalTime
+import kotlin.time.Duration.Companion.hours as kotlinHours
+import kotlin.time.Duration.Companion.nanoseconds as kotlinNanoseconds
 
 class InstantTest : AbstractIslandTimeTest() {
     @Test
@@ -219,9 +218,7 @@ class InstantTest : AbstractIslandTimeTest() {
     fun `add a kotlin duration`() {
         assertEquals(
             Instant(1.hours.inSeconds, 2.nanoseconds),
-            Instant(0.seconds, 1.nanoseconds) +
-                (kotlin.time.Duration.hours(1) +
-                    kotlin.time.Duration.nanoseconds(1))
+            Instant(0.seconds, 1.nanoseconds) + (1.kotlinHours + 1.kotlinNanoseconds)
         )
     }
 
@@ -240,14 +237,12 @@ class InstantTest : AbstractIslandTimeTest() {
     fun `subtract a kotlin duration`() {
         assertEquals(
             Instant((-1).hours.inSeconds, 0.nanoseconds),
-            Instant(0.seconds, 1.nanoseconds) -
-                (kotlin.time.Duration.hours(1) +
-                    kotlin.time.Duration.nanoseconds(1))
+            Instant(0.seconds, 1.nanoseconds) - (1.kotlinHours + 1.kotlinNanoseconds)
         )
     }
 
     @Test
-    fun `toString() returns an ISO-8601 extended date-time with UTC offset`() {
+    fun `toString returns an ISO-8601 extended date-time with UTC offset`() {
         assertEquals(
             "1970-01-01T00:00Z",
             Instant.UNIX_EPOCH.toString()
@@ -280,13 +275,13 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() throws an exception when parsing an empty string`() {
+    fun `String_toInstant throws an exception when parsing an empty string`() {
         assertFailsWith<DateTimeParseException> { "".toInstant() }
         assertFailsWith<DateTimeParseException> { "".toInstant(DateTimeParsers.Iso.INSTANT) }
     }
 
     @Test
-    fun `String_toInstant() throws an exception when the format is unexpected`() {
+    fun `String_toInstant throws an exception when the format is unexpected`() {
         listOf(
             "20191205 0304",
             "2019-12-05T03:04",
@@ -297,7 +292,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() throws an exception when fields are out of range`() {
+    fun `String_toInstant throws an exception when fields are out of range`() {
         listOf(
             "2000-01-01T24:00Z",
             "2000-01-01T08:60Z",
@@ -311,7 +306,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() parses ISO-8601 calendar date time strings in extended format by default`() {
+    fun `String_toInstant parses ISO-8601 calendar date time strings in extended format by default`() {
         assertEquals(
             Instant.fromMillisecondOfUnixEpoch(0L),
             "1970-01-01T00:00Z".toInstant()
@@ -334,7 +329,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() parses ISO-8601 calendar date time strings in basic format with explicit parser`() {
+    fun `String_toInstant parses ISO-8601 calendar date time strings in basic format with explicit parser`() {
         assertEquals(
             Instant.fromMillisecondOfUnixEpoch(0L),
             "19700101 0000Z".toInstant(DateTimeParsers.Iso.INSTANT)
@@ -347,7 +342,7 @@ class InstantTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `String_toInstant() throws an exception when required fields are missing`() {
+    fun `String_toInstant throws an exception when required fields are missing`() {
         val parser1 = dateTimeParser {
             monthNumber(2)
             +'-'

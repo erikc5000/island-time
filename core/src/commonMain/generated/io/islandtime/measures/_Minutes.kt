@@ -36,9 +36,9 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.ExperimentalTime
-import kotlin.time.Duration as KotlinDuration
+import kotlin.time.Duration.Companion.minutes as kotlinMinutes
 import kotlin.time.DurationUnit as KotlinDurationUnit
+import kotlin.time.Duration as KotlinDuration
 
 @Deprecated(
   message = "Replace with Minutes.",
@@ -180,8 +180,7 @@ public value class Minutes(
   /**
    * Converts this duration to a [kotlin.time.Duration].
    */
-  @ExperimentalTime
-  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.minutes(value)
+  public fun toKotlinDuration(): KotlinDuration = value.kotlinMinutes
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
@@ -402,6 +401,5 @@ public operator fun Long.times(minutes: Minutes): Minutes = minutes * this
 /**
  * Converts this duration to Island Time [Minutes].
  */
-@ExperimentalTime
 public fun KotlinDuration.toIslandMinutes(): Minutes =
     Minutes(this.toLong(KotlinDurationUnit.MINUTES))

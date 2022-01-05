@@ -37,9 +37,9 @@ import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.math.absoluteValue
-import kotlin.time.ExperimentalTime
-import kotlin.time.Duration as KotlinDuration
+import kotlin.time.Duration.Companion.milliseconds as kotlinMilliseconds
 import kotlin.time.DurationUnit as KotlinDurationUnit
+import kotlin.time.Duration as KotlinDuration
 
 @Deprecated(
   message = "Replace with Milliseconds.",
@@ -185,8 +185,7 @@ public value class Milliseconds(
   /**
    * Converts this duration to a [kotlin.time.Duration].
    */
-  @ExperimentalTime
-  public fun toKotlinDuration(): KotlinDuration = KotlinDuration.milliseconds(value)
+  public fun toKotlinDuration(): KotlinDuration = value.kotlinMilliseconds
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
@@ -472,6 +471,5 @@ public operator fun Long.times(milliseconds: Milliseconds): Milliseconds = milli
 /**
  * Converts this duration to Island Time [Milliseconds].
  */
-@ExperimentalTime
 public fun KotlinDuration.toIslandMilliseconds(): Milliseconds =
     Milliseconds(this.toLong(KotlinDurationUnit.MILLISECONDS))

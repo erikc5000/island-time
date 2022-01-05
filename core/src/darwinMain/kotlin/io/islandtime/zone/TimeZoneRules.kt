@@ -1,3 +1,5 @@
+@file:OptIn(UnsafeNumber::class)
+
 package io.islandtime.zone
 
 import io.islandtime.*
@@ -7,7 +9,11 @@ import io.islandtime.darwin.toNSDateComponents
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
 import io.islandtime.internal.confine
-import io.islandtime.measures.*
+import io.islandtime.measures.Milliseconds
+import io.islandtime.measures.Nanoseconds
+import io.islandtime.measures.Seconds
+import io.islandtime.measures.seconds
+import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.*
 import kotlin.native.concurrent.Worker
@@ -99,7 +105,6 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     override val hasFixedOffset: Boolean
         get() = timeZone.nextDaylightSavingTimeTransitionAfterDate(NSDate.distantPast) == null
 
-    @OptIn(ExperimentalStdlibApi::class)
     private fun findTransitionsIn(year: Int): List<TimeZoneOffsetTransition> {
         val startDateComponents = NSDateComponents().also {
             it.year = (year - 1).convert()

@@ -17,7 +17,7 @@ class MinutesTest {
     }
 
     @Test
-    fun `toComponents() breaks the minutes up into days, hours, and minutes`() {
+    fun `toComponents breaks the minutes up into days + hours + minutes`() {
         (1.days + 1.hours + 1.minutes).toComponents { days, hours, minutes ->
             assertEquals(1.days, days)
             assertEquals(1.hours, hours)
@@ -26,7 +26,7 @@ class MinutesTest {
     }
 
     @Test
-    fun `toComponentValues() breaks the minutes up into days, hours, and minutes`() {
+    fun `toComponentValues breaks the minutes up into days + hours + minutes`() {
         (1.days + 1.hours + 1.minutes).toComponentValues { days, hours, minutes ->
             assertEquals(1L, days)
             assertEquals(1, hours)
@@ -35,7 +35,7 @@ class MinutesTest {
     }
 
     @Test
-    fun `toComponents() breaks the minutes up into hours, and minutes`() {
+    fun `toComponents breaks the minutes up into hours + minutes`() {
         (1.days + 1.hours + 1.minutes).toComponents { hours, minutes ->
             assertEquals(25.hours, hours)
             assertEquals(1.minutes, minutes)
@@ -43,7 +43,7 @@ class MinutesTest {
     }
 
     @Test
-    fun `toComponentValues() breaks the minutes up into hours, and minutes`() {
+    fun `toComponentValues breaks the minutes up into hours + minutes`() {
         (1.days + 1.hours + 1.minutes).toComponentValues { hours, minutes ->
             assertEquals(25L, hours)
             assertEquals(1, minutes)
@@ -51,12 +51,12 @@ class MinutesTest {
     }
 
     @Test
-    fun `Minutes_toString() converts zero minutes to 'PT0M'`() {
+    fun `Minutes_toString converts zero minutes to 'PT0M'`() {
         assertEquals("PT0M", 0.minutes.toString())
     }
 
     @Test
-    fun `Minutes_toString() converts to ISO-8601 period representation`() {
+    fun `Minutes_toString converts to ISO-8601 period representation`() {
         assertEquals("PT1M", 1.minutes.toString())
         assertEquals("-PT1M", (-1).minutes.toString())
     }

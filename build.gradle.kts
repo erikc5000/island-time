@@ -1,13 +1,21 @@
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 plugins {
+    `base-convention`
     id("org.jetbrains.dokka")
+    alias(libs.plugins.kover)
+}
+
+buildscript {
+    dependencies {
+        classpath(libs.atomicfuGradle)
+    }
 }
 
 tasks.register<DokkaMultiModuleTask>("dokkaMkdocsMultiModule") {
     dependencies {
         plugins("io.islandtime.gradle:mkdocs-dokka-plugin")
-        plugins("org.jetbrains.dokka:gfm-template-processing-plugin:1.5.0")
+        plugins(libs.dokkaGfmTemplateProcessing)
     }
 
     addSubprojectChildTasks("dokkaMkdocsPartial")

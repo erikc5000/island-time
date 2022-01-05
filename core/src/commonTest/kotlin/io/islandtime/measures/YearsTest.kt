@@ -1,6 +1,5 @@
 package io.islandtime.measures
 
-import kotlin.math.absoluteValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -13,7 +12,7 @@ class YearsTest {
         assertTrue { 0.years == 0.years }
         assertTrue { 5.years > (-1).years }
     }
-    
+
     @Test
     fun `absoluteValue returns the same value for 0 or positive values`() {
         listOf(0, 1, Long.MAX_VALUE).forEach {
@@ -66,7 +65,7 @@ class YearsTest {
 
     @Test
     fun `dividing by -1 throws an exception when value is MIN_VALUE`() {
-        assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years / -1  }
+        assertFailsWith<ArithmeticException> { Long.MIN_VALUE.years / -1 }
     }
 
     @Test
@@ -142,28 +141,28 @@ class YearsTest {
     }
 
     @Test
-    fun `toLong() converts to Long`() {
+    fun `toLong converts to Long`() {
         listOf(0, -1, 1, Long.MIN_VALUE, Long.MAX_VALUE).forEach {
             assertEquals(it, it.years.toLong())
         }
     }
 
     @Test
-    fun `toInt() throws an exception if overflow occurs during conversion`() {
+    fun `toInt throws an exception if overflow occurs during conversion`() {
         listOf(Int.MAX_VALUE + 1L, Int.MIN_VALUE - 1L).forEach {
             assertFailsWith<ArithmeticException> { it.years.toInt() }
         }
     }
 
     @Test
-    fun `toInt() converts to Int`() {
+    fun `toInt converts to Int`() {
         listOf(0, -1, 1, Int.MAX_VALUE, Int.MIN_VALUE).forEach {
             assertEquals(it, it.years.toInt())
         }
     }
 
     @Test
-    fun `toString() returns an ISO duration string`() {
+    fun `toString returns an ISO duration string`() {
         listOf(
             0L to "P0Y",
             1L to "P1Y",
@@ -176,7 +175,7 @@ class YearsTest {
     }
 
     @Test
-    fun `toComponents() and toComponentValues() with centuries and decades`() {
+    fun `toComponents and toComponentValues with centuries and decades`() {
         listOf(
             0 to listOf(0, 0, 0),
             1 to listOf(0, 0, 1),
@@ -201,7 +200,7 @@ class YearsTest {
     }
 
     @Test
-    fun `toComponents() and toComponentValues() with decades`() {
+    fun `toComponents and toComponentValues with decades`() {
         listOf(
             0 to listOf(0, 0),
             1 to listOf(0, 1),

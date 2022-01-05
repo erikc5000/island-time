@@ -26,7 +26,7 @@ class GroupedDateTimeParserTest {
     }
 
     @Test
-    fun `number of results matches the number of groups defined, even when empty`() {
+    fun `number of results matches the number of groups defined even when empty`() {
         val result1 = groupedDateTimeParser { group {} }.parse("")
         assertEquals(1, result1.size)
         assertTrue { result1[0].isEmpty() }
@@ -41,7 +41,7 @@ class GroupedDateTimeParserTest {
     }
 
     @Test
-    fun `number of results matches the number of groups defined, ignoring literals`() {
+    fun `number of results matches the number of groups defined ignoring literals`() {
         val result1 = groupedDateTimeParser {
             +' '
             group {}
@@ -143,7 +143,7 @@ class GroupedDateTimeParserTest {
     }
 
     @Test
-    fun `anyOf() enables reuse of existing grouped parsers`() {
+    fun `anyOf enables reuse of existing grouped parsers`() {
         val existingParser = groupedDateTimeParser {
             group {
                 wholeNumber(2) { associateWith(DateTimeField.MONTH_OF_YEAR) }
@@ -186,7 +186,7 @@ class GroupedDateTimeParserTest {
     }
 
     @Test
-    fun `anyOf() uses the the results of the first custom grouped parser to succeed`() {
+    fun `anyOf uses the the results of the first custom grouped parser to succeed`() {
         val parser = groupedDateTimeParser {
             anyOf({
                 group {

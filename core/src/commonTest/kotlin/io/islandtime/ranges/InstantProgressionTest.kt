@@ -36,7 +36,7 @@ class InstantProgressionTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `reversed() turns a positive progression into a negative one`() {
+    fun `reversed turns a positive progression into a negative one`() {
         val start = Instant((-2L).days.inSeconds)
         val end = Instant(1L.days.inSeconds)
         val progression = start..end step 2.days

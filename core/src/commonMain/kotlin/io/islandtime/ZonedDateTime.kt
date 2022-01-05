@@ -160,7 +160,6 @@ class ZonedDateTime private constructor(
     /**
      * Returns this date-time with [duration] added to it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun plus(duration: kotlin.time.Duration): ZonedDateTime = resolveInstant(dateTime + duration)
 
     /**
@@ -239,7 +238,6 @@ class ZonedDateTime private constructor(
     /**
      * Returns this date-time with [duration] subtracted from it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun minus(duration: kotlin.time.Duration): ZonedDateTime = resolveInstant(dateTime - duration)
 
     /**

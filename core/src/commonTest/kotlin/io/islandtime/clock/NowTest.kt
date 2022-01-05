@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 
 class NowTest : AbstractIslandTimeTest() {
     @Test
-    fun `Year_now()`() {
+    fun Year_now() {
         val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(Year(1969), Year.now(clock))
 
@@ -19,7 +19,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `YearMonth_now()`() {
+    fun YearMonth_now() {
         val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(YearMonth(1969, Month.DECEMBER), YearMonth.now(clock))
 
@@ -28,7 +28,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_now() in UTC`() {
+    fun `Date_now in UTC`() {
         val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(Date(1969, Month.DECEMBER, 31), Date.now(clock))
 
@@ -37,13 +37,13 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Date_now() with offset`() {
+    fun `Date_now with offset`() {
         val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(Date(1969, Month.DECEMBER, 30), Date.now(clock))
     }
 
     @Test
-    fun `DateTime_now() in UTC`() {
+    fun `DateTime_now in UTC`() {
         val clock = FixedClock(Instant((-1L).milliseconds), TimeZone.UTC)
         assertEquals(
             DateTime(1969, Month.DECEMBER, 31, 23, 59, 59, 999_000_000),
@@ -64,7 +64,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `DateTime_now() with offset`() {
+    fun `DateTime_now with offset`() {
         val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(
             DateTime(1969, Month.DECEMBER, 30, 23, 0),
@@ -73,7 +73,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Time_now() in UTC`() {
+    fun `Time_now in UTC`() {
         val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone.UTC)
         assertEquals(Time(0, 0), Time.now(clock))
 
@@ -91,7 +91,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `Time_now() with offset`() {
+    fun `Time_now with offset`() {
         val clock1 = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+4"))
         assertEquals(Time(20, 0), Time.now(clock1))
 
@@ -100,7 +100,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetTime_now()`() {
+    fun OffsetTime_now() {
         val clock1 = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+4"))
         assertEquals(OffsetTime(Time(20, 0), (-4).hours.asUtcOffset()), OffsetTime.now(clock1))
 
@@ -109,7 +109,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `OffsetDateTime_now()`() {
+    fun OffsetDateTime_now() {
         val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(
             OffsetDateTime(
@@ -130,7 +130,7 @@ class NowTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `ZonedDateTime_now()`() {
+    fun ZonedDateTime_now() {
         val clock = FixedClock(Instant((-1L).days.inSeconds), TimeZone("Etc/GMT+1"))
         assertEquals(
             ZonedDateTime(

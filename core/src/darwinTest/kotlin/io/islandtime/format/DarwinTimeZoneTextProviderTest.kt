@@ -11,7 +11,7 @@ class DarwinTimeZoneTextProviderTest : AbstractIslandTimeTest() {
     private val en_US = "en-US".toLocale()
 
     @Test
-    fun `timeZoneTextFor() returns a localized string for generic styles`() {
+    fun `timeZoneTextFor returns a localized string for generic styles`() {
         val zone = TimeZone("America/New_York")
 
         assertEquals(

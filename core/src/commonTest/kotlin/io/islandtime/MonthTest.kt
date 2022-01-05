@@ -11,13 +11,13 @@ import kotlin.test.assertFailsWith
 
 class MonthTest : AbstractIslandTimeTest() {
     @Test
-    fun `Int_toMonth() throws an exception when the value isn't a valid ISO month number`() {
+    fun `Int_toMonth throws an exception when the value isn't a valid ISO month number`() {
         assertFailsWith<DateTimeException> { 0.toMonth() }
         assertFailsWith<DateTimeException> { 13.toMonth() }
     }
 
     @Test
-    fun `Int_toMonth() gets a Month from an ISO month number when it's in range`() {
+    fun `Int_toMonth gets a Month from an ISO month number when it's in range`() {
         assertEquals(Month.JANUARY, 1.toMonth())
         assertEquals(Month.APRIL, 4.toMonth())
         assertEquals(Month.DECEMBER, 12.toMonth())
@@ -44,7 +44,7 @@ class MonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lengthIn() works correctly`() {
+    fun `lengthIn works correctly`() {
         assertEquals(31.days, Month.JANUARY.lengthIn(2019))
         assertEquals(28.days, Month.FEBRUARY.lengthIn(2019))
         assertEquals(29.days, Month.FEBRUARY.lengthIn(2020))
@@ -61,7 +61,7 @@ class MonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `firstDayOfYearIn() returns the first day of yera for the month`() {
+    fun `firstDayOfYearIn returns the first day of yera for the month`() {
         assertEquals(1, Month.JANUARY.firstDayOfYearIn(1950))
         assertEquals(1, Month.JANUARY.firstDayOfYearIn(2000))
         assertEquals(244, Month.SEPTEMBER.firstDayOfYearIn(2001))
@@ -69,7 +69,7 @@ class MonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `lastDayOfYearIn() returns the last day of year for the month`() {
+    fun `lastDayOfYearIn returns the last day of year for the month`() {
         assertEquals(59, Month.FEBRUARY.lastDayOfYearIn(2019))
         assertEquals(60, Month.FEBRUARY.lastDayOfYearIn(2020))
         assertEquals(365, Month.DECEMBER.lastDayOfYearIn(2019))
@@ -77,21 +77,21 @@ class MonthTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `localizedName() and displayName() get localized text from the provider`() {
+    fun `localizedName and displayName get localized text from the provider`() {
         @Suppress("LocalVariableName") val en_US = "en-US".toLocale()
         assertEquals("April", Month.APRIL.localizedName(TextStyle.FULL_STANDALONE, en_US))
         assertEquals("Jun", Month.JUNE.displayName(TextStyle.SHORT_STANDALONE, en_US))
     }
 
     @Test
-    fun `dayRangeIn() returns an appropriate range in leap years`() {
+    fun `dayRangeIn returns an appropriate range in leap years`() {
         val range = Month.FEBRUARY.dayRangeIn(2020)
         assertEquals(1, range.first)
         assertEquals(29, range.last)
     }
 
     @Test
-    fun `dayRangeIn() returns an appropriate range in common years`() {
+    fun `dayRangeIn returns an appropriate range in common years`() {
         val range = Month.FEBRUARY.dayRangeIn(2019)
         assertEquals(1, range.first)
         assertEquals(28, range.last)

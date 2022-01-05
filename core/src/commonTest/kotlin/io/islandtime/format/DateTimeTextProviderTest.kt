@@ -13,7 +13,7 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     private val pl_PL = "pl-PL".toLocale()
 
     @Test
-    fun `textFor() throws an exception when value is out of range`() {
+    fun `textFor throws an exception when value is out of range`() {
         assertFailsWith<DateTimeException> {
             DateTimeTextProvider.textFor(DateTimeField.MONTH_OF_YEAR, 0L, TextStyle.FULL, en_US)
         }
@@ -41,18 +41,18 @@ class DateTimeTextProviderTest : AbstractIslandTimeTest() {
     }
 
     @Test
-    fun `textFor() returns null when the field has no text representation`() {
+    fun `textFor returns null when the field has no text representation`() {
         assertNull(DateTimeTextProvider.textFor(DateTimeField.DAY_OF_MONTH, 1L, TextStyle.FULL, en_US))
         assertNull(DateTimeTextProvider.textFor(DateTimeField.YEAR, 2010L, TextStyle.FULL, en_US))
     }
 
     @Test
-    fun `parsableTextFor() returns an empty list when no styles are specified`() {
+    fun `parsableTextFor returns an empty list when no styles are specified`() {
         assertTrue { DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_WEEK, emptySet(), en_US).isEmpty() }
     }
 
     @Test
-    fun `parsableTextFor() returns an empty list when the field has no text representation`() {
+    fun `parsableTextFor returns an empty list when the field has no text representation`() {
         assertTrue {
             DateTimeTextProvider.parsableTextFor(DateTimeField.DAY_OF_MONTH, TextStyle.FULL, en_US).isEmpty()
         }

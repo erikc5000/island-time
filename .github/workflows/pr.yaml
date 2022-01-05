@@ -7,8 +7,8 @@ on:
       - '*.md'
 
 jobs:
-  macos-build:
-    runs-on: macOS-latest
+  build:
+    runs-on: macos-11
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -16,11 +16,19 @@ jobs:
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
+      - name: Configure Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
       - name: Cache Gradle
         uses: actions/cache@v2
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/libs.versions.toml') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -28,7 +36,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.konan
-          key: ${{ runner.os }}-konan-${{ hashFiles('buildSrc/build.gradle.kts') }}
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/libs.versions.toml') }}
           restore-keys: |
             ${{ runner.os }}-konan-
 

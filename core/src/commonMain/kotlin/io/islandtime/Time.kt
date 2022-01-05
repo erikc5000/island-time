@@ -84,7 +84,6 @@ class Time(
     /**
      * Returns this time with [duration] added to it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun plus(duration: kotlin.time.Duration): Time {
         require(duration.isFinite()) { "The duration must be finite" }
         return duration.toComponents { seconds, nanoseconds -> this + Seconds(seconds) + Nanoseconds(nanoseconds) }
@@ -179,7 +178,6 @@ class Time(
     /**
      * Returns this time with [duration] subtracted from it.
      */
-    @kotlin.time.ExperimentalTime
     operator fun minus(duration: kotlin.time.Duration): Time {
         require(duration.isFinite()) { "The duration must be finite" }
         return duration.toComponents { seconds, nanoseconds -> this - Seconds(seconds) - Nanoseconds(nanoseconds) }

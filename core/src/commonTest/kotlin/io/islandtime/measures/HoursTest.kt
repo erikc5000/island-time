@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class HoursTest {
     @Test
-    fun `toComponents() breaks the hours up into days and hours`() {
+    fun `toComponents breaks the hours up into days and hours`() {
         36.hours.toComponents { days, hours ->
             assertEquals(1.days, days)
             assertEquals(12.hours, hours)
@@ -13,7 +13,7 @@ class HoursTest {
     }
 
     @Test
-    fun `toComponentValues() breaks the hours up into days and hours`() {
+    fun `toComponentValues breaks the hours up into days and hours`() {
         36.hours.toComponentValues { days, hours ->
             assertEquals(1L, days)
             assertEquals(12, hours)
@@ -21,12 +21,12 @@ class HoursTest {
     }
 
     @Test
-    fun `toString() converts zero hours to 'PT0H'`() {
+    fun `toString converts zero hours to 'PT0H'`() {
         assertEquals("PT0H", 0.hours.toString())
     }
 
     @Test
-    fun `toString() converts to ISO-8601 period representation`() {
+    fun `toString converts to ISO-8601 period representation`() {
         assertEquals("PT1H", 1.hours.toString())
         assertEquals("-PT1H", (-1).hours.toString())
     }

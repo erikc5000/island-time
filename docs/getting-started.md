@@ -6,10 +6,10 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 
 - JVM
 - Android
-- iOS ARM64/x64
-- macOS x64
-- watchOS ARM64/x86/x64
-- tvOS ARM64/x64
+- iOS ARM64/x64/Simulator ARM64
+- macOS x64/ARM64
+- watchOS ARM64/x86/x64/Simulator ARM64
+- tvOS ARM64/x64/Simulator ARM64
 
 ## Version Requirements
 
@@ -19,7 +19,7 @@ As a [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.
 | 0.2.x | 1.3.7x |
 | 0.3.x/0.4.x | 1.4.x | Island Time 0.4.0 is built/published with Kotlin 1.4.20. While binary compatible with earlier versions, if you're using [HMPP](https://kotlinlang.org/docs/reference/mpp-share-on-platforms.html#share-code-on-similar-platforms) in your project, you'll need to update to at least 1.4.20 due to publishing changes. See the Kotlin 1.4.20 [release notes](https://blog.jetbrains.com/kotlin/2020/11/kotlin-1-4-20-released/) for details. |
 | 0.5.x | 1.4.3x | Island Time 0.5.0 uses the [new inline class name mangling](https://kotlinlang.org/docs/whatsnew1430.html#improved-inline-classes) introduced in Kotlin 1.4.30, requiring that you use at least that version. |
-| 0.6.x | 1.5.x |
+| 0.6.x | 1.5+ |
 
 ### JVM
 

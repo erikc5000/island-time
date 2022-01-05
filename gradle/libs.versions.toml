@@ -1,0 +1,41 @@
+[versions]
+kotlin = "1.6.10"
+dokka = "1.6.10"
+serialization = "1.3.2"
+atomicfu = "0.17.0"
+javamath2kmp = "0.4.4"
+kotlinpoet = "1.10.2"
+kover = "0.4.4"
+truth = "1.1.3"
+androidGradle = "7.1.0-beta05"
+androidDesugarJdkLibs = "1.1.5"
+androidxTest = "1.4.0"
+
+[plugins]
+atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+
+[libraries]
+androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
+androidDesugarJdkLibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
+androidxTestRunner = { module = "androidx.test:runner", version.ref = "androidxTest" }
+androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxTest" }
+atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+atomicfuGradle = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "atomicfu" }
+dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+dokkaCore = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
+dokkaBase = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
+dokkaGfm = { module = "org.jetbrains.dokka:gfm-plugin", version.ref = "dokka" }
+dokkaGfmTemplateProcessing = { module = "org.jetbrains.dokka:gfm-template-processing-plugin", version.ref = "dokka" }
+javamath2kmp = { module = "dev.erikchristensen.javamath2kmp:javamath2kmp", version.ref = "javamath2kmp" }
+kotlinGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
+serializationCore = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+serializationJson = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+serializationGradle = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }

@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
     id("published-library")
-    jacoco
 }
 
 kotlin {
@@ -10,18 +9,22 @@ kotlin {
     val darwinTargets = listOf(
         iosArm64(),
         iosX64(),
+        iosSimulatorArm64(),
         macosX64(),
+        macosArm64(),
         watchosArm64(),
+        watchosSimulatorArm64(),
         watchosX86(),
         watchosX64(),
         tvosArm64(),
-        tvosX64()
+        tvosX64(),
+        tvosSimulatorArm64()
     )
 
     sourceSets {
         all {
             languageSettings.apply {
-                useExperimentalAnnotation("kotlin.RequiresOptIn")
+                optIn("kotlin.RequiresOptIn")
                 progressiveMode = true
             }
         }
@@ -55,19 +58,5 @@ publishing {
                 "${pomMppArtifactId}-$name"
             }
         }
-    }
-}
-
-afterEvaluate {
-    tasks.withType<JacocoReport>().configureEach {
-        classDirectories.setFrom(
-            fileTree("${buildDir}/classes/kotlin/jvm/") { exclude("**/*Test*.*") }
-        )
-
-        sourceDirectories.setFrom(
-            listOf("commonMain", "jvmMain").flatMap { kotlin.sourceSets[it].kotlin.sourceDirectories }
-        )
-
-        executionData.setFrom("${buildDir}/jacoco/jvmTest.exec")
     }
 }
