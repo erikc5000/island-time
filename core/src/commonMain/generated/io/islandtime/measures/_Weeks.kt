@@ -32,14 +32,14 @@ import kotlin.math.absoluteValue
 @Deprecated(
   message = "Replace with Weeks.",
   replaceWith = ReplaceWith("Weeks"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntWeeks = Weeks
 
 @Deprecated(
   message = "Replace with Weeks.",
   replaceWith = ReplaceWith("Weeks"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongWeeks = Weeks
 
@@ -48,7 +48,7 @@ public value class Weeks(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Weeks> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -76,7 +76,7 @@ public value class Weeks(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.weeks"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -86,7 +86,7 @@ public value class Weeks(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.weeks"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -96,7 +96,7 @@ public value class Weeks(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.weeks"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -196,7 +196,7 @@ public value class Weeks(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntWeeks(): Weeks = this
 
@@ -206,7 +206,7 @@ public value class Weeks(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntWeeksUnchecked(): Weeks = this

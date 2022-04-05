@@ -44,14 +44,14 @@ import kotlin.time.Duration as KotlinDuration
 @Deprecated(
   message = "Replace with Milliseconds.",
   replaceWith = ReplaceWith("Milliseconds"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntMilliseconds = Milliseconds
 
 @Deprecated(
   message = "Replace with Milliseconds.",
   replaceWith = ReplaceWith("Milliseconds"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongMilliseconds = Milliseconds
 
@@ -60,7 +60,7 @@ public value class Milliseconds(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Milliseconds> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -101,7 +101,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Use inWholeSeconds instead.",
     replaceWith = ReplaceWith("this.inWholeSeconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inSeconds: Seconds
     get() = deprecatedToError()
@@ -115,7 +115,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Use inWholeMinutes instead.",
     replaceWith = ReplaceWith("this.inWholeMinutes"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inMinutes: Minutes
     get() = deprecatedToError()
@@ -129,7 +129,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Use inWholeHours instead.",
     replaceWith = ReplaceWith("this.inWholeHours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inHours: Hours
     get() = deprecatedToError()
@@ -143,7 +143,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Use inWholeDays instead.",
     replaceWith = ReplaceWith("this.inWholeDays"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDays: Days
     get() = deprecatedToError()
@@ -156,7 +156,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.milliseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -166,7 +166,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.milliseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -176,7 +176,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.milliseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -314,7 +314,7 @@ public value class Milliseconds(
   public inline fun <T> toComponentValues(action: (
     minutes: Long,
     seconds: Int,
-    milliseconds: Int
+    milliseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val minutes = (value / MILLISECONDS_PER_MINUTE)
@@ -326,7 +326,7 @@ public value class Milliseconds(
   public inline fun <T> toComponents(action: (
     minutes: Minutes,
     seconds: Seconds,
-    milliseconds: Milliseconds
+    milliseconds: Milliseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { minutes, seconds, milliseconds ->
@@ -338,7 +338,7 @@ public value class Milliseconds(
     hours: Long,
     minutes: Int,
     seconds: Int,
-    milliseconds: Int
+    milliseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val hours = (value / MILLISECONDS_PER_HOUR)
@@ -352,7 +352,7 @@ public value class Milliseconds(
     hours: Hours,
     minutes: Minutes,
     seconds: Seconds,
-    milliseconds: Milliseconds
+    milliseconds: Milliseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { hours, minutes, seconds, milliseconds ->
@@ -365,7 +365,7 @@ public value class Milliseconds(
     hours: Int,
     minutes: Int,
     seconds: Int,
-    milliseconds: Int
+    milliseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / MILLISECONDS_PER_DAY)
@@ -381,7 +381,7 @@ public value class Milliseconds(
     hours: Hours,
     minutes: Minutes,
     seconds: Seconds,
-    milliseconds: Milliseconds
+    milliseconds: Milliseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes, seconds, milliseconds ->
@@ -406,7 +406,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntMilliseconds(): Milliseconds = this
 
@@ -416,7 +416,7 @@ public value class Milliseconds(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntMillisecondsUnchecked(): Milliseconds = this

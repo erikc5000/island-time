@@ -44,14 +44,14 @@ import kotlin.time.Duration as KotlinDuration
 @Deprecated(
   message = "Replace with Nanoseconds.",
   replaceWith = ReplaceWith("Nanoseconds"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntNanoseconds = Nanoseconds
 
 @Deprecated(
   message = "Replace with Nanoseconds.",
   replaceWith = ReplaceWith("Nanoseconds"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongNanoseconds = Nanoseconds
 
@@ -60,7 +60,7 @@ public value class Nanoseconds(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Nanoseconds> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -77,7 +77,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Use inWholeMicroseconds instead.",
     replaceWith = ReplaceWith("this.inWholeMicroseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inMicroseconds: Microseconds
     get() = deprecatedToError()
@@ -91,7 +91,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Use inWholeMilliseconds instead.",
     replaceWith = ReplaceWith("this.inWholeMilliseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inMilliseconds: Milliseconds
     get() = deprecatedToError()
@@ -105,7 +105,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Use inWholeSeconds instead.",
     replaceWith = ReplaceWith("this.inWholeSeconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inSeconds: Seconds
     get() = deprecatedToError()
@@ -119,7 +119,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Use inWholeMinutes instead.",
     replaceWith = ReplaceWith("this.inWholeMinutes"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inMinutes: Minutes
     get() = deprecatedToError()
@@ -133,7 +133,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Use inWholeHours instead.",
     replaceWith = ReplaceWith("this.inWholeHours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inHours: Hours
     get() = deprecatedToError()
@@ -147,7 +147,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Use inWholeDays instead.",
     replaceWith = ReplaceWith("this.inWholeDays"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDays: Days
     get() = deprecatedToError()
@@ -160,7 +160,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.nanoseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -170,7 +170,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.nanoseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -180,7 +180,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.nanoseconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -319,7 +319,7 @@ public value class Nanoseconds(
   public inline fun <T> toComponentValues(action: (
     milliseconds: Long,
     microseconds: Int,
-    nanoseconds: Int
+    nanoseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val milliseconds = (value / NANOSECONDS_PER_MILLISECOND)
@@ -331,7 +331,7 @@ public value class Nanoseconds(
   public inline fun <T> toComponents(action: (
     milliseconds: Milliseconds,
     microseconds: Microseconds,
-    nanoseconds: Nanoseconds
+    nanoseconds: Nanoseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { milliseconds, microseconds, nanoseconds ->
@@ -343,7 +343,7 @@ public value class Nanoseconds(
     seconds: Long,
     milliseconds: Int,
     microseconds: Int,
-    nanoseconds: Int
+    nanoseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val seconds = (value / NANOSECONDS_PER_SECOND)
@@ -357,7 +357,7 @@ public value class Nanoseconds(
     seconds: Seconds,
     milliseconds: Milliseconds,
     microseconds: Microseconds,
-    nanoseconds: Nanoseconds
+    nanoseconds: Nanoseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { seconds, milliseconds, microseconds, nanoseconds ->
@@ -371,7 +371,7 @@ public value class Nanoseconds(
     seconds: Int,
     milliseconds: Int,
     microseconds: Int,
-    nanoseconds: Int
+    nanoseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val minutes = (value / NANOSECONDS_PER_MINUTE)
@@ -387,7 +387,7 @@ public value class Nanoseconds(
     seconds: Seconds,
     milliseconds: Milliseconds,
     microseconds: Microseconds,
-    nanoseconds: Nanoseconds
+    nanoseconds: Nanoseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { minutes, seconds, milliseconds, microseconds, nanoseconds ->
@@ -402,7 +402,7 @@ public value class Nanoseconds(
     seconds: Int,
     milliseconds: Int,
     microseconds: Int,
-    nanoseconds: Int
+    nanoseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val hours = (value / NANOSECONDS_PER_HOUR)
@@ -420,7 +420,7 @@ public value class Nanoseconds(
     seconds: Seconds,
     milliseconds: Milliseconds,
     microseconds: Microseconds,
-    nanoseconds: Nanoseconds
+    nanoseconds: Nanoseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { hours, minutes, seconds, milliseconds, microseconds, nanoseconds ->
@@ -436,7 +436,7 @@ public value class Nanoseconds(
     seconds: Int,
     milliseconds: Int,
     microseconds: Int,
-    nanoseconds: Int
+    nanoseconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / NANOSECONDS_PER_DAY)
@@ -456,7 +456,7 @@ public value class Nanoseconds(
     seconds: Seconds,
     milliseconds: Milliseconds,
     microseconds: Microseconds,
-    nanoseconds: Nanoseconds
+    nanoseconds: Nanoseconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes, seconds, milliseconds, microseconds,
@@ -482,7 +482,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntNanoseconds(): Nanoseconds = this
 
@@ -492,7 +492,7 @@ public value class Nanoseconds(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntNanosecondsUnchecked(): Nanoseconds = this

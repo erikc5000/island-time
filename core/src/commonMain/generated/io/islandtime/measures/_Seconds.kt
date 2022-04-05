@@ -43,14 +43,14 @@ import kotlin.time.Duration as KotlinDuration
 @Deprecated(
   message = "Replace with Seconds.",
   replaceWith = ReplaceWith("Seconds"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntSeconds = Seconds
 
 @Deprecated(
   message = "Replace with Seconds.",
   replaceWith = ReplaceWith("Seconds"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongSeconds = Seconds
 
@@ -59,7 +59,7 @@ public value class Seconds(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Seconds> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -112,7 +112,7 @@ public value class Seconds(
   @Deprecated(
     message = "Use inWholeMinutes instead.",
     replaceWith = ReplaceWith("this.inWholeMinutes"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inMinutes: Minutes
     get() = deprecatedToError()
@@ -126,7 +126,7 @@ public value class Seconds(
   @Deprecated(
     message = "Use inWholeHours instead.",
     replaceWith = ReplaceWith("this.inWholeHours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inHours: Hours
     get() = deprecatedToError()
@@ -140,7 +140,7 @@ public value class Seconds(
   @Deprecated(
     message = "Use inWholeDays instead.",
     replaceWith = ReplaceWith("this.inWholeDays"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDays: Days
     get() = deprecatedToError()
@@ -153,7 +153,7 @@ public value class Seconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.seconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -163,7 +163,7 @@ public value class Seconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.seconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -173,7 +173,7 @@ public value class Seconds(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.seconds"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -304,7 +304,7 @@ public value class Seconds(
   public inline fun <T> toComponentValues(action: (
     hours: Long,
     minutes: Int,
-    seconds: Int
+    seconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val hours = (value / SECONDS_PER_HOUR)
@@ -316,7 +316,7 @@ public value class Seconds(
   public inline fun <T> toComponents(action: (
     hours: Hours,
     minutes: Minutes,
-    seconds: Seconds
+    seconds: Seconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { hours, minutes, seconds ->
@@ -328,7 +328,7 @@ public value class Seconds(
     days: Long,
     hours: Int,
     minutes: Int,
-    seconds: Int
+    seconds: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / SECONDS_PER_DAY)
@@ -342,7 +342,7 @@ public value class Seconds(
     days: Days,
     hours: Hours,
     minutes: Minutes,
-    seconds: Seconds
+    seconds: Seconds,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes, seconds ->
@@ -366,7 +366,7 @@ public value class Seconds(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntSeconds(): Seconds = this
 
@@ -376,7 +376,7 @@ public value class Seconds(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntSecondsUnchecked(): Seconds = this

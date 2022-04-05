@@ -44,14 +44,14 @@ import kotlin.time.Duration as KotlinDuration
 @Deprecated(
   message = "Replace with Days.",
   replaceWith = ReplaceWith("Days"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntDays = Days
 
 @Deprecated(
   message = "Replace with Days.",
   replaceWith = ReplaceWith("Days"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongDays = Days
 
@@ -60,7 +60,7 @@ public value class Days(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Days> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -149,7 +149,7 @@ public value class Days(
   @Deprecated(
     message = "Use inWholeWeeks instead.",
     replaceWith = ReplaceWith("this.inWholeWeeks"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inWeeks: Weeks
     get() = deprecatedToError()
@@ -162,7 +162,7 @@ public value class Days(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.days"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -172,7 +172,7 @@ public value class Days(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.days"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -182,7 +182,7 @@ public value class Days(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.days"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -330,7 +330,7 @@ public value class Days(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntDays(): Days = this
 
@@ -340,7 +340,7 @@ public value class Days(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntDaysUnchecked(): Days = this

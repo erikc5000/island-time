@@ -43,14 +43,14 @@ import kotlin.time.Duration as KotlinDuration
 @Deprecated(
   message = "Replace with Minutes.",
   replaceWith = ReplaceWith("Minutes"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntMinutes = Minutes
 
 @Deprecated(
   message = "Replace with Minutes.",
   replaceWith = ReplaceWith("Minutes"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongMinutes = Minutes
 
@@ -59,7 +59,7 @@ public value class Minutes(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Minutes> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -124,7 +124,7 @@ public value class Minutes(
   @Deprecated(
     message = "Use inWholeHours instead.",
     replaceWith = ReplaceWith("this.inWholeHours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inHours: Hours
     get() = deprecatedToError()
@@ -138,7 +138,7 @@ public value class Minutes(
   @Deprecated(
     message = "Use inWholeDays instead.",
     replaceWith = ReplaceWith("this.inWholeDays"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDays: Days
     get() = deprecatedToError()
@@ -151,7 +151,7 @@ public value class Minutes(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.minutes"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -161,7 +161,7 @@ public value class Minutes(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.minutes"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -171,7 +171,7 @@ public value class Minutes(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.minutes"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -302,7 +302,7 @@ public value class Minutes(
   public inline fun <T> toComponentValues(action: (
     days: Long,
     hours: Int,
-    minutes: Int
+    minutes: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val days = (value / MINUTES_PER_DAY)
@@ -314,7 +314,7 @@ public value class Minutes(
   public inline fun <T> toComponents(action: (
     days: Days,
     hours: Hours,
-    minutes: Minutes
+    minutes: Minutes,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { days, hours, minutes ->
@@ -338,7 +338,7 @@ public value class Minutes(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntMinutes(): Minutes = this
 
@@ -348,7 +348,7 @@ public value class Minutes(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntMinutesUnchecked(): Minutes = this
