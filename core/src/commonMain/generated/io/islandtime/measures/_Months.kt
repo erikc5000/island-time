@@ -37,14 +37,14 @@ import kotlin.math.absoluteValue
 @Deprecated(
   message = "Replace with Months.",
   replaceWith = ReplaceWith("Months"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntMonths = Months
 
 @Deprecated(
   message = "Replace with Months.",
   replaceWith = ReplaceWith("Months"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongMonths = Months
 
@@ -53,7 +53,7 @@ public value class Months(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Months> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -70,7 +70,7 @@ public value class Months(
   @Deprecated(
     message = "Use inWholeYears instead.",
     replaceWith = ReplaceWith("this.inWholeYears"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inYears: Years
     get() = deprecatedToError()
@@ -84,7 +84,7 @@ public value class Months(
   @Deprecated(
     message = "Use inWholeDecades instead.",
     replaceWith = ReplaceWith("this.inWholeDecades"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDecades: Decades
     get() = deprecatedToError()
@@ -98,7 +98,7 @@ public value class Months(
   @Deprecated(
     message = "Use inWholeCenturies instead.",
     replaceWith = ReplaceWith("this.inWholeCenturies"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inCenturies: Centuries
     get() = deprecatedToError()
@@ -111,7 +111,7 @@ public value class Months(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.months"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -121,7 +121,7 @@ public value class Months(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.months"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -131,7 +131,7 @@ public value class Months(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.months"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -240,7 +240,7 @@ public value class Months(
   public inline fun <T> toComponentValues(action: (
     decades: Long,
     years: Int,
-    months: Int
+    months: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val decades = (value / MONTHS_PER_DECADE)
@@ -252,7 +252,7 @@ public value class Months(
   public inline fun <T> toComponents(action: (
     decades: Decades,
     years: Years,
-    months: Months
+    months: Months,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { decades, years, months ->
@@ -264,7 +264,7 @@ public value class Months(
     centuries: Long,
     decades: Int,
     years: Int,
-    months: Int
+    months: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val centuries = (value / MONTHS_PER_CENTURY)
@@ -278,7 +278,7 @@ public value class Months(
     centuries: Centuries,
     decades: Decades,
     years: Years,
-    months: Months
+    months: Months,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { centuries, decades, years, months ->
@@ -302,7 +302,7 @@ public value class Months(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntMonths(): Months = this
 
@@ -312,7 +312,7 @@ public value class Months(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntMonthsUnchecked(): Months = this

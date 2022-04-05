@@ -37,14 +37,14 @@ import kotlin.math.absoluteValue
 @Deprecated(
   message = "Replace with Years.",
   replaceWith = ReplaceWith("Years"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntYears = Years
 
 @Deprecated(
   message = "Replace with Years.",
   replaceWith = ReplaceWith("Years"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongYears = Years
 
@@ -53,7 +53,7 @@ public value class Years(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Years> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -82,7 +82,7 @@ public value class Years(
   @Deprecated(
     message = "Use inWholeDecades instead.",
     replaceWith = ReplaceWith("this.inWholeDecades"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDecades: Decades
     get() = deprecatedToError()
@@ -96,7 +96,7 @@ public value class Years(
   @Deprecated(
     message = "Use inWholeCenturies instead.",
     replaceWith = ReplaceWith("this.inWholeCenturies"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inCenturies: Centuries
     get() = deprecatedToError()
@@ -109,7 +109,7 @@ public value class Years(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.years"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -119,7 +119,7 @@ public value class Years(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.years"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -129,7 +129,7 @@ public value class Years(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.years"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -238,7 +238,7 @@ public value class Years(
   public inline fun <T> toComponentValues(action: (
     centuries: Long,
     decades: Int,
-    years: Int
+    years: Int,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
     val centuries = (value / YEARS_PER_CENTURY)
@@ -250,7 +250,7 @@ public value class Years(
   public inline fun <T> toComponents(action: (
     centuries: Centuries,
     decades: Decades,
-    years: Years
+    years: Years,
   ) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
      return toComponentValues { centuries, decades, years ->
@@ -274,7 +274,7 @@ public value class Years(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntYears(): Years = this
 
@@ -284,7 +284,7 @@ public value class Years(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntYearsUnchecked(): Years = this

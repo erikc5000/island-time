@@ -34,14 +34,14 @@ import kotlin.math.absoluteValue
 @Deprecated(
   message = "Replace with Centuries.",
   replaceWith = ReplaceWith("Centuries"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntCenturies = Centuries
 
 @Deprecated(
   message = "Replace with Centuries.",
   replaceWith = ReplaceWith("Centuries"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongCenturies = Centuries
 
@@ -50,7 +50,7 @@ public value class Centuries(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Centuries> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -102,7 +102,7 @@ public value class Centuries(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.centuries"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -112,7 +112,7 @@ public value class Centuries(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.centuries"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -122,7 +122,7 @@ public value class Centuries(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.centuries"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -232,7 +232,7 @@ public value class Centuries(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntCenturies(): Centuries = this
 
@@ -242,7 +242,7 @@ public value class Centuries(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntCenturiesUnchecked(): Centuries = this

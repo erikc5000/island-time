@@ -37,14 +37,14 @@ import kotlin.math.absoluteValue
 @Deprecated(
   message = "Replace with Decades.",
   replaceWith = ReplaceWith("Decades"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntDecades = Decades
 
 @Deprecated(
   message = "Replace with Decades.",
   replaceWith = ReplaceWith("Decades"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongDecades = Decades
 
@@ -53,7 +53,7 @@ public value class Decades(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Decades> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -94,7 +94,7 @@ public value class Decades(
   @Deprecated(
     message = "Use inWholeCenturies instead.",
     replaceWith = ReplaceWith("this.inWholeCenturies"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inCenturies: Centuries
     get() = deprecatedToError()
@@ -107,7 +107,7 @@ public value class Decades(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.decades"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -117,7 +117,7 @@ public value class Decades(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.decades"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -127,7 +127,7 @@ public value class Decades(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.decades"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -249,7 +249,7 @@ public value class Decades(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntDecades(): Decades = this
 
@@ -259,7 +259,7 @@ public value class Decades(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntDecadesUnchecked(): Decades = this

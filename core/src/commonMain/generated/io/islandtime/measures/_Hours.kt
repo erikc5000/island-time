@@ -43,14 +43,14 @@ import kotlin.time.Duration as KotlinDuration
 @Deprecated(
   message = "Replace with Hours.",
   replaceWith = ReplaceWith("Hours"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias IntHours = Hours
 
 @Deprecated(
   message = "Replace with Hours.",
   replaceWith = ReplaceWith("Hours"),
-  level = DeprecationLevel.ERROR
+  level = DeprecationLevel.ERROR,
 )
 public typealias LongHours = Hours
 
@@ -59,7 +59,7 @@ public value class Hours(
   /**
    * The underlying value.
    */
-  public val `value`: Long
+  public val `value`: Long,
 ) : Comparable<Hours> {
   /**
    * The absolute value of this duration. @throws ArithmeticException if overflow occurs
@@ -136,7 +136,7 @@ public value class Hours(
   @Deprecated(
     message = "Use inWholeDays instead.",
     replaceWith = ReplaceWith("this.inWholeDays"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public val inDays: Days
     get() = deprecatedToError()
@@ -149,7 +149,7 @@ public value class Hours(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this == 0L.hours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isZero(): Boolean = value == 0L
 
@@ -159,7 +159,7 @@ public value class Hours(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this < 0L.hours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isNegative(): Boolean = value < 0L
 
@@ -169,7 +169,7 @@ public value class Hours(
   @Deprecated(
     message = "Replace with direct comparison.",
     replaceWith = ReplaceWith("this > 0L.hours"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun isPositive(): Boolean = value > 0L
 
@@ -313,7 +313,7 @@ public value class Hours(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   public fun toIntHours(): Hours = this
 
@@ -323,7 +323,7 @@ public value class Hours(
   @Deprecated(
     message = "The 'Int' class no longer exists.",
     replaceWith = ReplaceWith("this"),
-    level = DeprecationLevel.ERROR
+    level = DeprecationLevel.ERROR,
   )
   @PublishedApi
   internal fun toIntHoursUnchecked(): Hours = this
