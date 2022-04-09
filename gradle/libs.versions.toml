@@ -9,7 +9,8 @@ kover = "0.5.0"
 truth = "1.1.3"
 androidGradle = "7.1.3"
 androidDesugarJdkLibs = "1.1.5"
-androidxTest = "1.4.0"
+androidxTestOrchestrator = "1.4.1"
+androidxTestRunner = "1.4.0"
 
 [plugins]
 atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
@@ -22,8 +23,8 @@ serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref 
 [libraries]
 androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
 androidDesugarJdkLibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
-androidxTestRunner = { module = "androidx.test:runner", version.ref = "androidxTest" }
-androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxTest" }
+androidxTestRunner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
+androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxTestOrchestrator" }
 atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 atomicfuGradle = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "atomicfu" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
