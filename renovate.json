@@ -1,5 +1,7 @@
 {
   "extends": [
     "config:base", ":disableDependencyDashboard"
-  ]
+  ],
+  "commitMessageAction": "Bump",
+  "commitMessageTopic": "{{depName}}"
 }
