@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 /**
  * An inclusive range of dates.
  *
- * [Date.MIN] and [Date.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
+ * [Date.MIN] and [Date.MAX] are used as sentinels to indicate an unbounded (i.e. infinite) start or end.
  */
 @Serializable(with = DateRangeIsoSerializer::class)
 class DateRange(
@@ -68,7 +68,7 @@ class DateRange(
         val EMPTY: DateRange = DateRange(Date.fromDayOfUnixEpoch(1L), Date.fromDayOfUnixEpoch(0L))
 
         /**
-         * An unbounded (ie. infinite) range of dates.
+         * An unbounded (i.e. infinite) range of dates.
          */
         val UNBOUNDED: DateRange = DateRange(Date.MIN, Date.MAX)
     }
@@ -126,7 +126,7 @@ fun String.toDateRange(
 }
 
 /**
- * Creates a [DateRange] containing all of the days from this date up to, but not including [to].
+ * Creates a [DateRange] containing all the days from this date up to, but not including [to].
  */
 infix fun Date.until(to: Date): DateRange = DateRange(this, to - 1.days)
 

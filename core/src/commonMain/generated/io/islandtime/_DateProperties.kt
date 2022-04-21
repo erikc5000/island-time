@@ -46,9 +46,8 @@ public fun Date.week(settings: WeekSettings): DateRange =
  * The range defining the week that this date falls within. The first day of the week will be the
  * default associated with the provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun Date.week(locale: Locale): DateRange = startOfWeek(locale).let { it..it + 6.days }
 
@@ -67,9 +66,8 @@ public fun Date.weekOfMonth(settings: WeekSettings): Int = weekOfMonthImpl(setti
  * The week of the month, from 0-6, calculated using the default week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun Date.weekOfMonth(locale: Locale): Int = weekOfMonthImpl(locale.weekSettings)
 
@@ -100,9 +98,8 @@ public fun Date.weekOfYear(settings: WeekSettings): Int = weekOfYearImpl(setting
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -131,9 +128,8 @@ public fun Date.weekBasedYear(settings: WeekSettings): Int = weekBasedYearImpl(s
  * This value differs from the regular ISO year when the week number falls in the preceding or
  * following year.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -158,9 +154,8 @@ public fun Date.weekOfWeekBasedYear(settings: WeekSettings): Int = weekOfWeekBas
  * The week number of the week-based year, calculated using the week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekBasedYear
  */
@@ -254,9 +249,8 @@ public fun DateTime.week(settings: WeekSettings): DateTimeInterval =
  * The interval defining the week that this date-time falls within. The first day of the week will
  * be the default associated with the provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun DateTime.week(locale: Locale): DateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
@@ -276,9 +270,8 @@ public fun DateTime.weekOfMonth(settings: WeekSettings): Int = date.weekOfMonth(
  * The week of the month, from 0-6, calculated using the default week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun DateTime.weekOfMonth(locale: Locale): Int = date.weekOfMonth(locale)
 
@@ -309,9 +302,8 @@ public fun DateTime.weekOfYear(settings: WeekSettings): Int = date.weekOfYear(se
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -340,9 +332,8 @@ public fun DateTime.weekBasedYear(settings: WeekSettings): Int = date.weekBasedY
  * This value differs from the regular ISO year when the week number falls in the preceding or
  * following year.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -368,9 +359,8 @@ public fun DateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
  * The week number of the week-based year, calculated using the week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekBasedYear
  */
@@ -447,9 +437,8 @@ public fun OffsetDateTime.week(settings: WeekSettings): OffsetDateTimeInterval =
  * The interval defining the week that this date-time falls within. The first day of the week will
  * be the default associated with the provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun OffsetDateTime.week(locale: Locale): OffsetDateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
@@ -469,9 +458,8 @@ public fun OffsetDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.we
  * The week of the month, from 0-6, calculated using the default week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun OffsetDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
 
@@ -502,9 +490,8 @@ public fun OffsetDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.wee
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -534,9 +521,8 @@ public fun OffsetDateTime.weekBasedYear(settings: WeekSettings): Int =
  * This value differs from the regular ISO year when the week number falls in the preceding or
  * following year.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -562,9 +548,8 @@ public fun OffsetDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
  * The week number of the week-based year, calculated using the week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekBasedYear
  */
@@ -644,9 +629,8 @@ public fun ZonedDateTime.week(settings: WeekSettings): ZonedDateTimeInterval =
  * The interval defining the week that this date-time falls within. The first day of the week will
  * be the default associated with the provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun ZonedDateTime.week(locale: Locale): ZonedDateTimeInterval =
     startOfWeek(locale).let { it until it + 7.days }
@@ -666,9 +650,8 @@ public fun ZonedDateTime.weekOfMonth(settings: WeekSettings): Int = dateTime.wee
  * The week of the month, from 0-6, calculated using the default week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 public fun ZonedDateTime.weekOfMonth(locale: Locale): Int = dateTime.weekOfMonth(locale)
 
@@ -699,9 +682,8 @@ public fun ZonedDateTime.weekOfYear(settings: WeekSettings): Int = dateTime.week
  *
  * To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -731,9 +713,8 @@ public fun ZonedDateTime.weekBasedYear(settings: WeekSettings): Int =
  * This value differs from the regular ISO year when the week number falls in the preceding or
  * following year.
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekOfWeekBasedYear
  */
@@ -759,9 +740,8 @@ public fun ZonedDateTime.weekOfWeekBasedYear(settings: WeekSettings): Int =
  * The week number of the week-based year, calculated using the week definition associated with the
  * provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale
- * on some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault]
- * instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on
+ * some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  *
  * @see weekBasedYear
  */

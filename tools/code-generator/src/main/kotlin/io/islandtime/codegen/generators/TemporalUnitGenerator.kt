@@ -112,6 +112,7 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
             kdoc {
                 """
                     The absolute value of this duration.
+                    
                     @throws ArithmeticException if overflow occurs
                 """.trimIndent()
             }
@@ -200,6 +201,7 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
             kdoc {
                 """
                     Negates this duration.
+                    
                     @throws ArithmeticException if overflow occurs
                 """.trimIndent()
             }
@@ -233,6 +235,7 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
             kdoc {
                 """
                     Converts this duration to an `Int` value.
+                    
                     @throws ArithmeticException if overflow occurs
                 """.trimIndent()
             }
@@ -254,6 +257,7 @@ private fun buildTemporalUnitFile(description: TemporalUnitDescription) = file(
             kdoc {
                 """
                     Converts this duration to [${description.deprecatedIntName}].
+                    
                     @throws ArithmeticException if overflow occurs
                 """.trimIndent()
             }
@@ -433,6 +437,7 @@ private fun ClassBuilder.buildTimesFunction(scalarPrimitive: KClass<*>, descript
         kdoc {
             """
             Multiplies this duration by a scalar value.
+            
             @throws ArithmeticException if overflow occurs
         """.trimIndent()
         }
@@ -453,6 +458,7 @@ private fun ClassBuilder.buildDivFunction(scalarPrimitive: KClass<*>, descriptio
         kdoc {
             """
                 Returns this duration divided by a scalar value.
+                
                 @throws ArithmeticException if overflow occurs or the scalar is zero
             """.trimIndent()
         }
@@ -537,6 +543,7 @@ private fun ClassBuilder.buildInSmallerUnitConversionProperties(
         kdoc {
             """
                 Converts this duration to ${conversion.toUnit.lowerPluralName}.
+                
                 @throws ArithmeticException if overflow occurs
             """.trimIndent()
         }
@@ -689,6 +696,7 @@ private fun FileBuilder.buildTimesExtensionFunction(scalarPrimitive: KClass<*>, 
         kdoc {
             """
                 Multiplies this value by a duration of ${description.lowerPluralName}.
+                
                 @throws ArithmeticException if overflow occurs
             """.trimIndent()
         }

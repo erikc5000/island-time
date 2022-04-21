@@ -63,7 +63,9 @@ public value class Nanoseconds(
   public val `value`: Long,
 ) : Comparable<Nanoseconds> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Nanoseconds
     get() = Nanoseconds(absExact(value))
@@ -214,7 +216,9 @@ public value class Nanoseconds(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Nanoseconds = Nanoseconds(value.negateExact())
 
@@ -258,13 +262,16 @@ public value class Nanoseconds(
   public operator fun minus(days: Days): Nanoseconds = this - days.inNanoseconds
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Nanoseconds = Nanoseconds(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Nanoseconds {
      return if (scalar == -1) {
@@ -280,13 +287,16 @@ public value class Nanoseconds(
   public operator fun rem(scalar: Int): Nanoseconds = Nanoseconds(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Nanoseconds = Nanoseconds(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Nanoseconds {
      return if (scalar == -1L) {
@@ -467,7 +477,9 @@ public value class Nanoseconds(
   }
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -477,7 +489,9 @@ public value class Nanoseconds(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntNanoseconds]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntNanoseconds].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -527,8 +541,9 @@ public val Int.nanoseconds: Nanoseconds
   get() = Nanoseconds(this)
 
 /**
- * Multiplies this value by a duration of nanoseconds. @throws ArithmeticException if overflow
- * occurs
+ * Multiplies this value by a duration of nanoseconds.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(nanoseconds: Nanoseconds): Nanoseconds = nanoseconds * this
 
@@ -539,8 +554,9 @@ public val Long.nanoseconds: Nanoseconds
   get() = Nanoseconds(this)
 
 /**
- * Multiplies this value by a duration of nanoseconds. @throws ArithmeticException if overflow
- * occurs
+ * Multiplies this value by a duration of nanoseconds.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(nanoseconds: Nanoseconds): Nanoseconds = nanoseconds * this
 

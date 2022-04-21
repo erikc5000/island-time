@@ -19,7 +19,7 @@ interface DateTimeTextProvider {
      * @param style the style of the text
      * @param locale the locale
      * @return the localized text or `null` if unavailable
-     * @throws DateTimeException if the value if out of range for the specified field
+     * @throws DateTimeException if the value is out of range for the specified field
      */
     fun textFor(field: DateTimeField, value: Long, style: TextStyle, locale: Locale): String? {
         return when (field) {

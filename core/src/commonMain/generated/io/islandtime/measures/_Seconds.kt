@@ -62,13 +62,17 @@ public value class Seconds(
   public val `value`: Long,
 ) : Comparable<Seconds> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Seconds
     get() = Seconds(absExact(value))
 
   /**
-   * Converts this duration to nanoseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to nanoseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inNanoseconds: Nanoseconds
     get() = Nanoseconds(value timesExact NANOSECONDS_PER_SECOND)
@@ -80,7 +84,9 @@ public value class Seconds(
     get() = Nanoseconds(value * NANOSECONDS_PER_SECOND)
 
   /**
-   * Converts this duration to microseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to microseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMicroseconds: Microseconds
     get() = Microseconds(value timesExact MICROSECONDS_PER_SECOND)
@@ -92,7 +98,9 @@ public value class Seconds(
     get() = Microseconds(value * MICROSECONDS_PER_SECOND)
 
   /**
-   * Converts this duration to milliseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to milliseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMilliseconds: Milliseconds
     get() = Milliseconds(value timesExact MILLISECONDS_PER_SECOND)
@@ -201,7 +209,9 @@ public value class Seconds(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Seconds = Seconds(value.negateExact())
 
@@ -244,13 +254,16 @@ public value class Seconds(
   public operator fun minus(days: Days): Seconds = this - days.inSeconds
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Seconds = Seconds(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Seconds {
      return if (scalar == -1) {
@@ -266,13 +279,16 @@ public value class Seconds(
   public operator fun rem(scalar: Int): Seconds = Seconds(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Seconds = Seconds(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Seconds {
      return if (scalar == -1L) {
@@ -351,7 +367,9 @@ public value class Seconds(
   }
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -361,7 +379,9 @@ public value class Seconds(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntSeconds]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntSeconds].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -411,7 +431,9 @@ public val Int.seconds: Seconds
   get() = Seconds(this)
 
 /**
- * Multiplies this value by a duration of seconds. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of seconds.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(seconds: Seconds): Seconds = seconds * this
 
@@ -422,7 +444,9 @@ public val Long.seconds: Seconds
   get() = Seconds(this)
 
 /**
- * Multiplies this value by a duration of seconds. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of seconds.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(seconds: Seconds): Seconds = seconds * this
 

@@ -134,8 +134,8 @@ enum class Month {
     fun lengthIn(year: Int): Days = lastDayIn(year).days
 
     /**
-     * Returns the day of the year that this month's first days falls on. This may vary depending on whether or not the
-     * year is a leap year. For example, the first day of [MARCH] will be either 60th or 61st day of the year.
+     * Returns the day of the year that this month's first days falls on. This may vary depending on whether the year is
+     * a leap year. For example, the first day of [MARCH] will be either 60th or 61st day of the year.
      * @param year retrieve the day of year number within this year
      * @return the first day of year number
      */
@@ -144,8 +144,8 @@ enum class Month {
     }
 
     /**
-     * Returns the day of the year that this month's last day falls on. This may vary depending on whether or not the
-     * year is a leap year. For example, the last of [FEBRUARY] will be either 59th or 60th day of the year.
+     * Returns the day of the year that this month's last day falls on. This may vary depending on whether the year is
+     * a leap year. For example, the last of [FEBRUARY] will be either 59th or 60th day of the year.
      * @param year retrieve the day of year number within this year
      * @return the last day of year number
      */

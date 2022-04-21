@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 /**
  * A half-open interval between two offset date-times based on timeline order.
  *
- * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end. An
+ * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (i.e. infinite) start or end. An
  * [OffsetDateTime] with either as the date-time component will be treated accordingly, regardless of the offset.
  */
 @Serializable(with = OffsetDateTimeIntervalIsoSerializer::class)

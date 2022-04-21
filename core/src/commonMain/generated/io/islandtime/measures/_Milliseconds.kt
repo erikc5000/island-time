@@ -63,13 +63,17 @@ public value class Milliseconds(
   public val `value`: Long,
 ) : Comparable<Milliseconds> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Milliseconds
     get() = Milliseconds(absExact(value))
 
   /**
-   * Converts this duration to nanoseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to nanoseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inNanoseconds: Nanoseconds
     get() = Nanoseconds(value timesExact NANOSECONDS_PER_MILLISECOND)
@@ -81,7 +85,9 @@ public value class Milliseconds(
     get() = Nanoseconds(value * NANOSECONDS_PER_MILLISECOND)
 
   /**
-   * Converts this duration to microseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to microseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMicroseconds: Microseconds
     get() = Microseconds(value timesExact MICROSECONDS_PER_MILLISECOND)
@@ -210,7 +216,9 @@ public value class Milliseconds(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Milliseconds = Milliseconds(value.negateExact())
 
@@ -253,13 +261,16 @@ public value class Milliseconds(
   public operator fun minus(days: Days): Milliseconds = this - days.inMilliseconds
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Milliseconds = Milliseconds(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Milliseconds {
      return if (scalar == -1) {
@@ -275,13 +286,16 @@ public value class Milliseconds(
   public operator fun rem(scalar: Int): Milliseconds = Milliseconds(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Milliseconds = Milliseconds(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Milliseconds {
      return if (scalar == -1L) {
@@ -391,7 +405,9 @@ public value class Milliseconds(
   }
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -401,7 +417,9 @@ public value class Milliseconds(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntMilliseconds]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntMilliseconds].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -451,8 +469,9 @@ public val Int.milliseconds: Milliseconds
   get() = Milliseconds(this)
 
 /**
- * Multiplies this value by a duration of milliseconds. @throws ArithmeticException if overflow
- * occurs
+ * Multiplies this value by a duration of milliseconds.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(milliseconds: Milliseconds): Milliseconds = milliseconds * this
 
@@ -463,8 +482,9 @@ public val Long.milliseconds: Milliseconds
   get() = Milliseconds(this)
 
 /**
- * Multiplies this value by a duration of milliseconds. @throws ArithmeticException if overflow
- * occurs
+ * Multiplies this value by a duration of milliseconds.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(milliseconds: Milliseconds): Milliseconds = milliseconds * this
 

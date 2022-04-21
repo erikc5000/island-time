@@ -35,8 +35,8 @@ inline fun <T> Date.toWeekDate(settings: WeekSettings, action: (year: Int, week:
 /**
  * Converts this date to a week date representation using the week definition associated with the provided [locale].
  *
- * Keep in mind that that the system's calendar settings may differ from that of the default locale on some platforms.
- * To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+ * Keep in mind that the system's calendar settings may differ from that of the default locale on some platforms. To
+ * respect the system calendar settings, use [WeekSettings.systemDefault] instead.
  */
 inline fun <T> Date.toWeekDate(locale: Locale, action: (year: Int, week: Int, day: Int) -> T): T {
     contract { callsInPlace(action, InvocationKind.EXACTLY_ONCE) }
