@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 /**
  * An interval between two date-times, assumed to be at the same offset from UTC.
  *
- * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
+ * [DateTime.MIN] and [DateTime.MAX] are used as sentinels to indicate an unbounded (i.e. infinite) start or end.
  */
 @Serializable(with = DateTimeIntervalIsoSerializer::class)
 class DateTimeInterval(

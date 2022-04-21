@@ -56,13 +56,17 @@ public value class Decades(
   public val `value`: Long,
 ) : Comparable<Decades> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Decades
     get() = Decades(absExact(value))
 
   /**
-   * Converts this duration to months. @throws ArithmeticException if overflow occurs
+   * Converts this duration to months.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMonths: Months
     get() = Months(value timesExact MONTHS_PER_DECADE)
@@ -74,7 +78,9 @@ public value class Decades(
     get() = Months(value * MONTHS_PER_DECADE)
 
   /**
-   * Converts this duration to years. @throws ArithmeticException if overflow occurs
+   * Converts this duration to years.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inYears: Years
     get() = Years(value timesExact YEARS_PER_DECADE)
@@ -150,7 +156,9 @@ public value class Decades(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Decades = Decades(value.negateExact())
 
@@ -176,13 +184,16 @@ public value class Decades(
   public operator fun minus(centuries: Centuries): Decades = this - centuries.inDecades
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Decades = Decades(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Decades {
      return if (scalar == -1) {
@@ -198,13 +209,16 @@ public value class Decades(
   public operator fun rem(scalar: Int): Decades = Decades(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Decades = Decades(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Decades {
      return if (scalar == -1L) {
@@ -234,7 +248,9 @@ public value class Decades(
   }
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -244,7 +260,9 @@ public value class Decades(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntDecades]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntDecades].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -294,7 +312,9 @@ public val Int.decades: Decades
   get() = Decades(this)
 
 /**
- * Multiplies this value by a duration of decades. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of decades.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(decades: Decades): Decades = decades * this
 
@@ -305,6 +325,8 @@ public val Long.decades: Decades
   get() = Decades(this)
 
 /**
- * Multiplies this value by a duration of decades. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of decades.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(decades: Decades): Decades = decades * this

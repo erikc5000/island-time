@@ -56,13 +56,17 @@ public value class Years(
   public val `value`: Long,
 ) : Comparable<Years> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Years
     get() = Years(absExact(value))
 
   /**
-   * Converts this duration to months. @throws ArithmeticException if overflow occurs
+   * Converts this duration to months.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMonths: Months
     get() = Months(value timesExact MONTHS_PER_YEAR)
@@ -152,7 +156,9 @@ public value class Years(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Years = Years(value.negateExact())
 
@@ -178,13 +184,16 @@ public value class Years(
   public operator fun minus(centuries: Centuries): Years = this - centuries.inYears
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Years = Years(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Years {
      return if (scalar == -1) {
@@ -200,13 +209,16 @@ public value class Years(
   public operator fun rem(scalar: Int): Years = Years(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Years = Years(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Years {
      return if (scalar == -1L) {
@@ -259,7 +271,9 @@ public value class Years(
   }
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -269,7 +283,9 @@ public value class Years(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntYears]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntYears].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -319,7 +335,9 @@ public val Int.years: Years
   get() = Years(this)
 
 /**
- * Multiplies this value by a duration of years. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of years.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(years: Years): Years = years * this
 
@@ -330,6 +348,8 @@ public val Long.years: Years
   get() = Years(this)
 
 /**
- * Multiplies this value by a duration of years. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of years.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(years: Years): Years = years * this

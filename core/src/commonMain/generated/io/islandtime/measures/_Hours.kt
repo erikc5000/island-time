@@ -62,13 +62,17 @@ public value class Hours(
   public val `value`: Long,
 ) : Comparable<Hours> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Hours
     get() = Hours(absExact(value))
 
   /**
-   * Converts this duration to nanoseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to nanoseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inNanoseconds: Nanoseconds
     get() = Nanoseconds(value timesExact NANOSECONDS_PER_HOUR)
@@ -80,7 +84,9 @@ public value class Hours(
     get() = Nanoseconds(value * NANOSECONDS_PER_HOUR)
 
   /**
-   * Converts this duration to microseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to microseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMicroseconds: Microseconds
     get() = Microseconds(value timesExact MICROSECONDS_PER_HOUR)
@@ -92,7 +98,9 @@ public value class Hours(
     get() = Microseconds(value * MICROSECONDS_PER_HOUR)
 
   /**
-   * Converts this duration to milliseconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to milliseconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMilliseconds: Milliseconds
     get() = Milliseconds(value timesExact MILLISECONDS_PER_HOUR)
@@ -104,7 +112,9 @@ public value class Hours(
     get() = Milliseconds(value * MILLISECONDS_PER_HOUR)
 
   /**
-   * Converts this duration to seconds. @throws ArithmeticException if overflow occurs
+   * Converts this duration to seconds.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inSeconds: Seconds
     get() = Seconds(value timesExact SECONDS_PER_HOUR)
@@ -116,7 +126,9 @@ public value class Hours(
     get() = Seconds(value * SECONDS_PER_HOUR)
 
   /**
-   * Converts this duration to minutes. @throws ArithmeticException if overflow occurs
+   * Converts this duration to minutes.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMinutes: Minutes
     get() = Minutes(value timesExact MINUTES_PER_HOUR)
@@ -197,7 +209,9 @@ public value class Hours(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Hours = Hours(value.negateExact())
 
@@ -240,13 +254,16 @@ public value class Hours(
   public operator fun minus(days: Days): Hours = this - days.inHours
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Hours = Hours(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Hours {
      return if (scalar == -1) {
@@ -262,13 +279,16 @@ public value class Hours(
   public operator fun rem(scalar: Int): Hours = Hours(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Hours = Hours(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Hours {
      return if (scalar == -1L) {
@@ -298,7 +318,9 @@ public value class Hours(
   }
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -308,7 +330,9 @@ public value class Hours(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntHours]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntHours].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -358,7 +382,9 @@ public val Int.hours: Hours
   get() = Hours(this)
 
 /**
- * Multiplies this value by a duration of hours. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of hours.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(hours: Hours): Hours = hours * this
 
@@ -369,7 +395,9 @@ public val Long.hours: Hours
   get() = Hours(this)
 
 /**
- * Multiplies this value by a duration of hours. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of hours.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(hours: Hours): Hours = hours * this
 

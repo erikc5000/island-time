@@ -51,13 +51,17 @@ public value class Weeks(
   public val `value`: Long,
 ) : Comparable<Weeks> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Weeks
     get() = Weeks(absExact(value))
 
   /**
-   * Converts this duration to days. @throws ArithmeticException if overflow occurs
+   * Converts this duration to days.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inDays: Days
     get() = Days(value timesExact DAYS_PER_WEEK)
@@ -119,7 +123,9 @@ public value class Weeks(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Weeks = Weeks(value.negateExact())
 
@@ -137,13 +143,16 @@ public value class Weeks(
   public operator fun minus(weeks: Weeks): Weeks = Weeks(value minusExact weeks.value)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Weeks = Weeks(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Weeks {
      return if (scalar == -1) {
@@ -159,13 +168,16 @@ public value class Weeks(
   public operator fun rem(scalar: Int): Weeks = Weeks(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Weeks = Weeks(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Weeks {
      return if (scalar == -1L) {
@@ -181,7 +193,9 @@ public value class Weeks(
   public operator fun rem(scalar: Long): Weeks = Weeks(value % scalar)
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -191,7 +205,9 @@ public value class Weeks(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntWeeks]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntWeeks].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -241,7 +257,9 @@ public val Int.weeks: Weeks
   get() = Weeks(this)
 
 /**
- * Multiplies this value by a duration of weeks. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of weeks.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(weeks: Weeks): Weeks = weeks * this
 
@@ -252,6 +270,8 @@ public val Long.weeks: Weeks
   get() = Weeks(this)
 
 /**
- * Multiplies this value by a duration of weeks. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of weeks.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(weeks: Weeks): Weeks = weeks * this

@@ -82,8 +82,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
                     The ${intervalClass.simpleName} defining the week that this ${receiverClass.simpleName} falls
                     within. The first day of the week will be the default associated with the provided [locale].
 
-                    Keep in mind that that the system's calendar settings may differ from that of the default locale on
-                    some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                    Keep in mind that the system's calendar settings may differ from that of the default locale on some
+                    platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
                 """.trimIndent()
             }
 
@@ -133,8 +133,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
                 The week of the month, from 0-6, calculated using the default week definition associated with the
                 provided [locale].
                 
-                Keep in mind that that the system's calendar settings may differ from that of the default locale on
-                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                Keep in mind that the system's calendar settings may differ from that of the default locale on some
+                platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
             """.trimIndent()
         }
 
@@ -214,8 +214,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
 
                 To obtain the week number of the week-based year, use [weekOfWeekBasedYear] instead.
                 
-                Keep in mind that that the system's calendar settings may differ from that of the default locale on
-                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                Keep in mind that the system's calendar settings may differ from that of the default locale on some
+                platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
                 
                 @see weekOfWeekBasedYear
             """.trimIndent()
@@ -292,8 +292,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
                 The week-based year, calculated using the week definition associated with the provided [locale]. This
                 value differs from the regular ISO year when the week number falls in the preceding or following year.
                 
-                Keep in mind that that the system's calendar settings may differ from that of the default locale on
-                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                Keep in mind that the system's calendar settings may differ from that of the default locale on some
+                platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
                 
                 @see weekOfWeekBasedYear
             """.trimIndent()
@@ -367,8 +367,8 @@ private fun FileBuilder.buildDatePropertiesForClass(receiverClass: DateTimeDescr
                 The week number of the week-based year, calculated using the week definition associated with the
                 provided [locale].
                 
-                Keep in mind that that the system's calendar settings may differ from that of the default locale on
-                some platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
+                Keep in mind that the system's calendar settings may differ from that of the default locale on some
+                platforms. To respect the system calendar settings, use [WeekSettings.systemDefault] instead.
                 
                 @see weekBasedYear
             """.trimIndent()

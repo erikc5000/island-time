@@ -290,7 +290,7 @@ class Time(
          * Creates a [Time] from the second of the day and optionally, the number of nanoseconds within that second.
          *
          * @param secondOfDay the second of the day
-         * @param nanosecond the nanosecond of the second, from 0 - 999,999,999
+         * @param nanosecond the nanosecond of the second, from 0 to 999,999,999
          * @return a new [Time]
          * @throws DateTimeException if the time is invalid
          */

@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
 /**
  * A half-open interval between two instants.
  *
- * [Instant.MIN] and [Instant.MAX] are used as sentinels to indicate an unbounded (ie. infinite) start or end.
+ * [Instant.MIN] and [Instant.MAX] are used as sentinels to indicate an unbounded (i.e. infinite) start or end.
  */
 @Serializable(with = InstantIntervalIsoSerializer::class)
 class InstantInterval(

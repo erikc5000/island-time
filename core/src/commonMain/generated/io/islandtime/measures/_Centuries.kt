@@ -53,13 +53,17 @@ public value class Centuries(
   public val `value`: Long,
 ) : Comparable<Centuries> {
   /**
-   * The absolute value of this duration. @throws ArithmeticException if overflow occurs
+   * The absolute value of this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val absoluteValue: Centuries
     get() = Centuries(absExact(value))
 
   /**
-   * Converts this duration to months. @throws ArithmeticException if overflow occurs
+   * Converts this duration to months.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inMonths: Months
     get() = Months(value timesExact MONTHS_PER_CENTURY)
@@ -71,7 +75,9 @@ public value class Centuries(
     get() = Months(value * MONTHS_PER_CENTURY)
 
   /**
-   * Converts this duration to years. @throws ArithmeticException if overflow occurs
+   * Converts this duration to years.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inYears: Years
     get() = Years(value timesExact YEARS_PER_CENTURY)
@@ -83,7 +89,9 @@ public value class Centuries(
     get() = Years(value * YEARS_PER_CENTURY)
 
   /**
-   * Converts this duration to decades. @throws ArithmeticException if overflow occurs
+   * Converts this duration to decades.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public val inDecades: Decades
     get() = Decades(value timesExact DECADES_PER_CENTURY)
@@ -145,7 +153,9 @@ public value class Centuries(
   }
 
   /**
-   * Negates this duration. @throws ArithmeticException if overflow occurs
+   * Negates this duration.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun unaryMinus(): Centuries = Centuries(value.negateExact())
 
@@ -173,13 +183,16 @@ public value class Centuries(
       centuries.value)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Int): Centuries = Centuries(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Int): Centuries {
      return if (scalar == -1) {
@@ -195,13 +208,16 @@ public value class Centuries(
   public operator fun rem(scalar: Int): Centuries = Centuries(value % scalar)
 
   /**
-   * Multiplies this duration by a scalar value. @throws ArithmeticException if overflow occurs
+   * Multiplies this duration by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public operator fun times(scalar: Long): Centuries = Centuries(value timesExact scalar)
 
   /**
-   * Returns this duration divided by a scalar value. @throws ArithmeticException if overflow occurs
-   * or the scalar is zero
+   * Returns this duration divided by a scalar value.
+   *
+   * @throws ArithmeticException if overflow occurs or the scalar is zero
    */
   public operator fun div(scalar: Long): Centuries {
      return if (scalar == -1L) {
@@ -217,7 +233,9 @@ public value class Centuries(
   public operator fun rem(scalar: Long): Centuries = Centuries(value % scalar)
 
   /**
-   * Converts this duration to an `Int` value. @throws ArithmeticException if overflow occurs
+   * Converts this duration to an `Int` value.
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   public fun toInt(): Int = value.toIntExact()
 
@@ -227,7 +245,9 @@ public value class Centuries(
   internal fun toIntUnchecked(): Int = value.toInt()
 
   /**
-   * Converts this duration to [IntCenturies]. @throws ArithmeticException if overflow occurs
+   * Converts this duration to [IntCenturies].
+   *
+   * @throws ArithmeticException if overflow occurs
    */
   @Deprecated(
     message = "The 'Int' class no longer exists.",
@@ -277,7 +297,9 @@ public val Int.centuries: Centuries
   get() = Centuries(this)
 
 /**
- * Multiplies this value by a duration of centuries. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of centuries.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Int.times(centuries: Centuries): Centuries = centuries * this
 
@@ -288,6 +310,8 @@ public val Long.centuries: Centuries
   get() = Centuries(this)
 
 /**
- * Multiplies this value by a duration of centuries. @throws ArithmeticException if overflow occurs
+ * Multiplies this value by a duration of centuries.
+ *
+ * @throws ArithmeticException if overflow occurs
  */
 public operator fun Long.times(centuries: Centuries): Centuries = centuries * this

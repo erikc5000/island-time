@@ -311,14 +311,14 @@ class Date(
         /**
          * Creates a [Date] from a duration of days relative to the Unix epoch of 1970-01-01.
          * @param days the number of days relative to the Unix epoch
-         * @throws DateTimeException if outside of the supported date range
+         * @throws DateTimeException if outside the supported date range
          */
         fun fromDaysSinceUnixEpoch(days: Days): Date = fromDayOfUnixEpoch(days.value)
 
         /**
          * Creates a [Date] from the day of the Unix epoch.
          * @param day the day of the Unix epoch
-         * @throws DateTimeException if outside of the supported date range
+         * @throws DateTimeException if outside the supported date range
          */
         fun fromDayOfUnixEpoch(day: Long): Date {
             if (day !in -365243219162L..365241780471L) {
@@ -439,7 +439,7 @@ internal inline fun <T> withComponentizedDayOfUnixEpoch(
 ): T {
     var zeroDay = day + DAYS_FROM_0000_TO_1970
     // find the march-based year
-    zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four year cycle
+    zeroDay -= 60  // adjust to 0000-03-01 so leap day is at end of four-year cycle
     var adjust: Long = 0
     if (zeroDay < 0) {
         // adjust negative years to positive for calculation
