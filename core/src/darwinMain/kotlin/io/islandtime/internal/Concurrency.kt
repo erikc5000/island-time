@@ -3,8 +3,6 @@ package io.islandtime.internal
 import kotlinx.cinterop.StableRef
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
-import kotlin.native.concurrent.ensureNeverFrozen
-import kotlin.native.concurrent.freeze
 
 internal class WorkerConfined<T : Any>(
     private val worker: Worker,
@@ -20,7 +18,7 @@ internal value class ConfinedValueRef<T : Any>(private val value: StableRef<T>) 
 
     companion object {
         fun <T : Any> create(value: T): ConfinedValueRef<T> {
-            return ConfinedValueRef(StableRef.create(value.apply { ensureNeverFrozen() }))
+            return ConfinedValueRef(StableRef.create(value))
         }
     }
 }
@@ -43,13 +41,12 @@ private inline fun <T> runOn(worker: Worker, crossinline block: () -> T): T {
 private fun <T> Worker.executeImmediately(block: () -> T): T {
     return execute(
         TransferMode.SAFE,
-        { block.freeze() },
-        {
-            try {
-                Result.success(it())
-            } catch (e: Throwable) {
-                Result.failure(e)
-            }.freeze()
+        block
+    ) {
+        try {
+            Result.success(it())
+        } catch (e: Throwable) {
+            Result.failure(e)
         }
-    ).result.getOrThrow()
+    }.result.getOrThrow()
 }

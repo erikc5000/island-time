@@ -8,7 +8,6 @@ import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarIdentifierISO8601
 import kotlin.native.concurrent.Worker
 
-@SharedImmutable
 private val worker = Worker.start(errorReporting = false)
 
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
