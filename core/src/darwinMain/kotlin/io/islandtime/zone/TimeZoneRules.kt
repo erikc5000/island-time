@@ -18,7 +18,6 @@ import kotlinx.cinterop.convert
 import platform.Foundation.*
 import kotlin.native.concurrent.Worker
 
-@SharedImmutable
 private val worker = Worker.start(errorReporting = false)
 
 /**
