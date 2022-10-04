@@ -41,7 +41,7 @@ private inline fun <T> runOn(worker: Worker, crossinline block: () -> T): T {
 private fun <T> Worker.executeImmediately(block: () -> T): T {
     return execute(
         TransferMode.SAFE,
-        block
+        { block }
     ) {
         try {
             Result.success(it())
