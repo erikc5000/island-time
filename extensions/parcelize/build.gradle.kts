@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+    namespace = "io.islandtime.parcelize"
+
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
     }
