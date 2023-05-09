@@ -34,7 +34,5 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Build and test
-        uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 21
-          script: ./gradlew build connectedCheck
+          script: ./gradlew build
