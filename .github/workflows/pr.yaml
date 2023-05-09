@@ -34,5 +34,4 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Build and test
-        with:
-          script: ./gradlew build
+        run: ./gradlew build
