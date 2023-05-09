@@ -24,6 +24,14 @@ jobs:
       - name: Configure Gradle
         uses: gradle/gradle-build-action@v2
 
+      - name: Cache Konan
+        uses: actions/cache@v3
+        with:
+          path: ~/.konan
+          key: ${{ runner.os }}-konan-${{ hashFiles('**/libs.versions.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-konan-
+
       - name: Publish
         env:
           ORG_GRADLE_PROJECT_repositoryUsername: ${{ secrets.ORG_GRADLE_PROJECT_repositoryUsername }}
