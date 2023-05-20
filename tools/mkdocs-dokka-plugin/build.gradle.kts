@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     alias(libs.plugins.kotlinJvm)
 }
@@ -8,10 +6,4 @@ dependencies {
     compileOnly(libs.dokkaCore)
     implementation(libs.dokkaBase)
     implementation(libs.dokkaGfm)
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
