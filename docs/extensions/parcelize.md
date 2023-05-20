@@ -4,17 +4,17 @@ The `parcelize-extensions` artifact provides a set of parcelers for use with the
 
 ## Gradle Setup
 
-=== "Groovy"
-    ```groovy
-    dependencies {
-        implementation "io.islandtime:parcelize-extensions:{{ versions.islandtime }}"
-    }
-    ```
-
 === "Kotlin"
     ```kotlin
     dependencies {
         implementation("io.islandtime:parcelize-extensions:{{ versions.islandtime }}")
+    }
+    ```
+
+=== "Groovy"
+    ```groovy
+    dependencies {
+        implementation "io.islandtime:parcelize-extensions:{{ versions.islandtime }}"
     }
     ```
 

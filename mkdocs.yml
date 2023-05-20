@@ -5,7 +5,7 @@ repo_url: https://github.com/erikc5000/island-time
 site_description: 'Island Time - A Kotlin Multiplatform library for working with dates and times'
 site_author: 'Erik Christensen'
 remote_branch: gh-pages
-copyright: 'Copyright &copy; 2020-2022 Erik Christensen'
+copyright: 'Copyright &copy; 2020-2023 Erik Christensen'
 
 nav:
   - index.md
@@ -36,6 +36,9 @@ theme:
   logo: 'assets/images/logo.svg'
   favicon: 'assets/images/logo.svg'
   custom_dir: 'docs/assets/theme/'
+  features:
+    - navigation.instant
+    - content.tabs.link
 
 markdown_extensions:
   - toc:
@@ -45,13 +48,13 @@ markdown_extensions:
   - attr_list
   - meta
   - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.tilde
   - pymdownx.inlinehilite
 
 plugins:
-  - search:
-      prebuild_index: true
+  - search
   - macros
 
 extra_css:
