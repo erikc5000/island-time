@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/erikc5000/island-time/workflows/Publish/badge.svg)](https://github.com/erikc5000/island-time/actions?query=workflow%3APublish) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core)
+[![Build Status](https://github.com/erikc5000/island-time/actions/workflows/maven-publish.yaml/badge.svg?event=push)](https://github.com/erikc5000/island-time/actions/workflows/maven-publish.yaml?query=workflow%3APublish) [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.islandtime/core)
 
 # Island Time
 
