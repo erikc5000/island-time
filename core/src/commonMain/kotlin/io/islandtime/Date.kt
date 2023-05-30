@@ -294,7 +294,7 @@ class Date(
      */
     fun copy(
         year: Int = this.year,
-        dayOfYear: Int = this.dayOfYear
+        dayOfYear: Int
     ): Date = Date(year, dayOfYear)
 
     companion object {
