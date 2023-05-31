@@ -186,7 +186,7 @@ public value class Nanoseconds(
   )
   public fun isPositive(): Boolean = value > 0L
 
-  public override fun compareTo(other: Nanoseconds): Int = value.compareTo(other.value)
+  override fun compareTo(other: Nanoseconds): Int = value.compareTo(other.value)
 
   /**
    * Converts this duration to a [kotlin.time.Duration].
@@ -196,7 +196,7 @@ public value class Nanoseconds(
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  public override fun toString(): String {
+  override fun toString(): String {
      return if (value == 0L) {
        "PT0S"
      } else {
