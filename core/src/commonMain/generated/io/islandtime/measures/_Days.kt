@@ -200,7 +200,7 @@ public value class Days(
   )
   public fun isPositive(): Boolean = value > 0L
 
-  public override fun compareTo(other: Days): Int = value.compareTo(other.value)
+  override fun compareTo(other: Days): Int = value.compareTo(other.value)
 
   /**
    * Converts this duration to a [kotlin.time.Duration].
@@ -210,7 +210,7 @@ public value class Days(
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  public override fun toString(): String {
+  override fun toString(): String {
      return when (value) {
        0L -> "P0D"
        Long.MIN_VALUE -> "-P9223372036854775808D"

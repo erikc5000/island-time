@@ -40,6 +40,7 @@ class DateTest : AbstractIslandTimeTest() {
     fun `dates can be constructed from year and day of year`() {
         assertEquals(Date(2019, Month.DECEMBER, 1), Date(2019, 335))
         assertEquals(Date(2020, Month.DECEMBER, 1), Date(2020, 336))
+        assertEquals(Date(20200, Month.MARCH, 15), Date(20200, 74))
     }
 
     @Test
@@ -47,6 +48,11 @@ class DateTest : AbstractIslandTimeTest() {
         assertEquals(
             Date(2017, Month.NOVEMBER, 19),
             Date(2018, Month.NOVEMBER, 19).copy(year = 2017)
+        )
+
+        assertEquals(
+            Date(20200, Month.MARCH, 15),
+            Date(2020, Month.MARCH, 15).copy(year = 20200)
         )
 
         assertEquals(

@@ -137,12 +137,12 @@ public value class Months(
   )
   public fun isPositive(): Boolean = value > 0L
 
-  public override fun compareTo(other: Months): Int = value.compareTo(other.value)
+  override fun compareTo(other: Months): Int = value.compareTo(other.value)
 
   /**
    * Converts this duration to an ISO-8601 time interval representation.
    */
-  public override fun toString(): String {
+  override fun toString(): String {
      return when (value) {
        0L -> "P0M"
        Long.MIN_VALUE -> "-P9223372036854775808M"

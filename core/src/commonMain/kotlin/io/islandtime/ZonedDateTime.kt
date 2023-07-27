@@ -351,7 +351,7 @@ class ZonedDateTime private constructor(
      */
     fun copy(
         year: Int = this.year,
-        dayOfYear: Int = this.dayOfYear,
+        dayOfYear: Int,
         hour: Int = this.hour,
         minute: Int = this.minute,
         second: Int = this.second,
