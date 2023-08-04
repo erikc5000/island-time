@@ -1,4 +1,4 @@
-@file:OptIn(UnsafeNumber::class)
+@file:OptIn(UnsafeNumber::class, ExperimentalForeignApi::class)
 
 package io.islandtime.darwin
 
@@ -12,6 +12,7 @@ import io.islandtime.ranges.InstantInterval
 import io.islandtime.ranges.TimePointInterval
 import io.islandtime.ranges.until
 import io.islandtime.zone.TimeZoneRulesException
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.*

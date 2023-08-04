@@ -1,6 +1,10 @@
+@file:OptIn(ObsoleteWorkersApi::class, ExperimentalForeignApi::class)
+
 package io.islandtime.internal
 
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.StableRef
+import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.TransferMode
 import kotlin.native.concurrent.Worker
 

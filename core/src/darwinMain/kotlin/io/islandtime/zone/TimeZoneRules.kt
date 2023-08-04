@@ -1,4 +1,4 @@
-@file:OptIn(UnsafeNumber::class)
+@file:OptIn(UnsafeNumber::class, ObsoleteWorkersApi::class, ExperimentalForeignApi::class)
 
 package io.islandtime.zone
 
@@ -13,9 +13,11 @@ import io.islandtime.measures.Milliseconds
 import io.islandtime.measures.Nanoseconds
 import io.islandtime.measures.Seconds
 import io.islandtime.measures.seconds
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.*
+import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.Worker
 
 private val worker = Worker.start(errorReporting = false)

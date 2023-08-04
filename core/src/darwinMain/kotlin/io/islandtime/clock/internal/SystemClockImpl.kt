@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalForeignApi::class)
+
 package io.islandtime.clock.internal
 
 import io.islandtime.Instant

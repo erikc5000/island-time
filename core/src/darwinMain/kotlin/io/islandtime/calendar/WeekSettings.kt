@@ -1,10 +1,11 @@
-@file:OptIn(UnsafeNumber::class)
+@file:OptIn(UnsafeNumber::class, ExperimentalForeignApi::class)
 
 package io.islandtime.calendar
 
 import io.islandtime.DayOfWeek
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.NSCalendar
@@ -15,6 +16,7 @@ actual val Locale.weekSettings: WeekSettings
         .also { it.locale = this }
         .run { WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek.convert()) }
 
+@OptIn(UnsafeNumber::class)
 internal actual fun systemDefaultWeekSettings(): WeekSettings {
     return with(NSCalendar.currentCalendar) { WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek.convert()) }
 }

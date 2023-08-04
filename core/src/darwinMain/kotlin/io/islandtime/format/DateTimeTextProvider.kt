@@ -1,3 +1,5 @@
+@file:OptIn(ObsoleteWorkersApi::class)
+
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
@@ -6,6 +8,7 @@ import io.islandtime.internal.confine
 import io.islandtime.locale.Locale
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarIdentifierISO8601
+import kotlin.native.concurrent.ObsoleteWorkersApi
 import kotlin.native.concurrent.Worker
 
 private val worker = Worker.start(errorReporting = false)
