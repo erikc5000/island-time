@@ -16,7 +16,6 @@ actual val Locale.weekSettings: WeekSettings
         .also { it.locale = this }
         .run { WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek.convert()) }
 
-@OptIn(UnsafeNumber::class)
 internal actual fun systemDefaultWeekSettings(): WeekSettings {
     return with(NSCalendar.currentCalendar) { WeekSettings(firstDayOfWeek, minimumDaysInFirstWeek.convert()) }
 }
@@ -24,7 +23,6 @@ internal actual fun systemDefaultWeekSettings(): WeekSettings {
 internal actual val Locale.firstDayOfWeek: DayOfWeek
     get() = NSCalendar(NSCalendarIdentifierGregorian).also { it.locale = this }.firstDayOfWeek
 
-@OptIn(ExperimentalUnsignedTypes::class)
 internal val NSCalendar.firstDayOfWeek: DayOfWeek
     get() {
         val sundayIndexedWeekNumber = firstWeekday.toInt()

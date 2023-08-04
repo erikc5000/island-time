@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalForeignApi::class)
-
 package io.islandtime.clock.internal
 
 import io.islandtime.Instant
@@ -28,7 +26,7 @@ internal actual fun createSystemClock(zone: TimeZone): SystemClock {
     }
 }
 
-@OptIn(UnsafeNumber::class)
+@OptIn(UnsafeNumber::class, ExperimentalForeignApi::class)
 private inline fun <T> readSystemTime(action: (seconds: Seconds, microseconds: Microseconds) -> T): T {
     return memScoped {
         val posixTime = alloc<timeval>()
