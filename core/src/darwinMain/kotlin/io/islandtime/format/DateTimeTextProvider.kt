@@ -1,21 +1,16 @@
-@file:OptIn(ObsoleteWorkersApi::class)
-
 package io.islandtime.format
 
 import io.islandtime.DateTimeException
 import io.islandtime.base.DateTimeField
-import io.islandtime.internal.confine
 import io.islandtime.locale.Locale
 import platform.Foundation.NSCalendar
 import platform.Foundation.NSCalendarIdentifierISO8601
-import kotlin.native.concurrent.ObsoleteWorkersApi
-import kotlin.native.concurrent.Worker
+import kotlin.native.concurrent.ThreadLocal
 
-private val worker = Worker.start(errorReporting = false)
-
+@ThreadLocal
 actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
     private val narrowEraTextSymbols = listOf("B", "A")
-    private val parsableText = worker.confine { hashMapOf<ParsableTextKey, ParsableTextList>() }
+    private val parsableText = hashMapOf<ParsableTextKey, ParsableTextList>()
 
     private val descendingTextComparator =
         compareByDescending<Pair<String, Long>> { it.first.length }.thenBy { it.second }
@@ -33,24 +28,22 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
 
         val key = ParsableTextKey(field, styles, locale)
 
-        return parsableText.use {
-            it.getOrPut(key) {
-                val valueMap = hashMapOf<String, MutableSet<Long>>()
+        return parsableText.getOrPut(key) {
+            val valueMap = hashMapOf<String, MutableSet<Long>>()
 
-                styles.forEach { style ->
-                    allTextFor(field, style, locale)?.forEachIndexed { index, symbol ->
-                        valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(field, index)
-                    }
+            styles.forEach { style ->
+                allTextFor(field, style, locale)?.forEachIndexed { index, symbol ->
+                    valueMap.getOrPut(symbol) { mutableSetOf() } += valueForArrayIndex(field, index)
                 }
-
-                valueMap.mapNotNull {
-                    if (it.value.size == 1) {
-                        it.key to it.value.first()
-                    } else {
-                        null
-                    }
-                }.sortedWith(descendingTextComparator)
             }
+
+            valueMap.mapNotNull {
+                if (it.value.size == 1) {
+                    it.key to it.value.first()
+                } else {
+                    null
+                }
+            }.sortedWith(descendingTextComparator)
         }
     }
 
@@ -97,6 +90,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
             DateTimeField.DAY_OF_WEEK,
             DateTimeField.AM_PM_OF_DAY,
             DateTimeField.ERA -> true
+
             else -> false
         }
     }
