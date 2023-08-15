@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalForeignApi::class, UnsafeNumber::class)
+
 package io.islandtime.darwin
 
 import io.islandtime.*
@@ -5,6 +7,8 @@ import io.islandtime.measures.*
 import io.islandtime.ranges.InstantInterval
 import io.islandtime.ranges.until
 import io.islandtime.test.AbstractIslandTimeTest
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.*
 import kotlin.test.*

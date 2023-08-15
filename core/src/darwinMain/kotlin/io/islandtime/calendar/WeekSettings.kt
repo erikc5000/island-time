@@ -1,10 +1,11 @@
-@file:OptIn(UnsafeNumber::class)
+@file:OptIn(UnsafeNumber::class, ExperimentalForeignApi::class)
 
 package io.islandtime.calendar
 
 import io.islandtime.DayOfWeek
 import io.islandtime.locale.Locale
 import io.islandtime.measures.days
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.NSCalendar
@@ -22,7 +23,6 @@ internal actual fun systemDefaultWeekSettings(): WeekSettings {
 internal actual val Locale.firstDayOfWeek: DayOfWeek
     get() = NSCalendar(NSCalendarIdentifierGregorian).also { it.locale = this }.firstDayOfWeek
 
-@OptIn(ExperimentalUnsignedTypes::class)
 internal val NSCalendar.firstDayOfWeek: DayOfWeek
     get() {
         val sundayIndexedWeekNumber = firstWeekday.toInt()

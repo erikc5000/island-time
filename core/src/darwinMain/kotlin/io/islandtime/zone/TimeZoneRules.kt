@@ -1,4 +1,4 @@
-@file:OptIn(UnsafeNumber::class)
+@file:OptIn(UnsafeNumber::class, ExperimentalForeignApi::class)
 
 package io.islandtime.zone
 
@@ -8,23 +8,22 @@ import io.islandtime.darwin.toNSDate
 import io.islandtime.darwin.toNSDateComponents
 import io.islandtime.internal.MILLISECONDS_PER_SECOND
 import io.islandtime.internal.NANOSECONDS_PER_SECOND
-import io.islandtime.internal.confine
 import io.islandtime.measures.Milliseconds
 import io.islandtime.measures.Nanoseconds
 import io.islandtime.measures.Seconds
 import io.islandtime.measures.seconds
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.UnsafeNumber
 import kotlinx.cinterop.convert
 import platform.Foundation.*
-import kotlin.native.concurrent.Worker
-
-private val worker = Worker.start(errorReporting = false)
+import kotlin.native.concurrent.ThreadLocal
 
 /**
  * A time zone rules provider that draws from the database included on Darwin platforms.
  */
+@ThreadLocal
 actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
-    private val timeZoneRules = worker.confine { hashMapOf<String, TimeZoneRules>() }
+    private val timeZoneRules = hashMapOf<String, TimeZoneRules>()
 
     @Suppress("UNCHECKED_CAST")
     private val cachedRegionIds = (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
@@ -37,13 +36,11 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     }
 
     override fun rulesFor(regionId: String): TimeZoneRules {
-        return timeZoneRules.use {
-            it.getOrPut(regionId) {
-                DarwinTimeZoneRules(
-                    NSTimeZone.timeZoneWithName(regionId)
-                        ?: throw TimeZoneRulesException("No time zone exists with region ID '$regionId'")
-                )
-            }
+        return timeZoneRules.getOrPut(regionId) {
+            DarwinTimeZoneRules(
+                NSTimeZone.timeZoneWithName(regionId)
+                    ?: throw TimeZoneRulesException("No time zone exists with region ID '$regionId'")
+            )
         }
     }
 }
@@ -51,7 +48,7 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
 private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     private val calendar = NSCalendar(NSCalendarIdentifierISO8601).also { it.timeZone = timeZone }
     private val timeZone: NSTimeZone get() = calendar.timeZone
-    private val transitionsInYear = worker.confine { hashMapOf<Int, List<TimeZoneOffsetTransition>>() }
+    private val transitionsInYear = hashMapOf<Int, List<TimeZoneOffsetTransition>>()
 
     override fun offsetAt(dateTime: DateTime): UtcOffset {
         val date = checkNotNull(dateTime.toNSDateOrNull(calendar)) { "Failed to convert '$dateTime' to an NSDate" }
@@ -76,7 +73,7 @@ private class DarwinTimeZoneRules(timeZone: NSTimeZone) : TimeZoneRules {
     }
 
     override fun transitionAt(dateTime: DateTime): TimeZoneOffsetTransition? {
-        return transitionsInYear.use { map ->
+        return transitionsInYear.let { map ->
             map.getOrPut(dateTime.year) {
                 findTransitionsIn(dateTime.year)
             }.singleOrNull {
