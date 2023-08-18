@@ -55,7 +55,7 @@ class Date(
     val dayOfWeek: DayOfWeek
         get() {
             val zeroIndexedDayOfWeek = (dayOfUnixEpoch + 3) floorMod 7
-            return DayOfWeek.values()[zeroIndexedDayOfWeek]
+            return DayOfWeek.entries[zeroIndexedDayOfWeek]
         }
 
     /**
@@ -145,7 +145,7 @@ class Date(
         } else {
             val newMonthsSinceYear0 = monthsSinceYear0 + months.value
             val newYear = checkValidYear(newMonthsSinceYear0 floorDiv MONTHS_PER_YEAR)
-            val newMonth = Month.values()[newMonthsSinceYear0 floorMod MONTHS_PER_YEAR]
+            val newMonth = Month.entries[newMonthsSinceYear0 floorMod MONTHS_PER_YEAR]
 
             Date(newYear, newMonth, dayOfMonth.coerceAtMost(newMonth.lastDayIn(newYear)))
         }

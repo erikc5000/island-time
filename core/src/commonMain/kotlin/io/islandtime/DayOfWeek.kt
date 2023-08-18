@@ -80,7 +80,7 @@ enum class DayOfWeek {
     operator fun minus(days: Days): DayOfWeek = plus(-(days.value % DAYS_PER_WEEK).toInt())
 
     private fun plus(daysToAdd: Int): DayOfWeek {
-        return values()[(ordinal + (daysToAdd + DAYS_PER_WEEK)) % DAYS_PER_WEEK]
+        return entries[(ordinal + (daysToAdd + DAYS_PER_WEEK)) % DAYS_PER_WEEK]
     }
 
     companion object {
@@ -95,7 +95,7 @@ enum class DayOfWeek {
  * The ISO week starts on Monday (1) and ends on Sunday (7).
  */
 fun Int.toDayOfWeek(): DayOfWeek {
-    return DayOfWeek.values()[checkValidDayOfWeek(this) - 1]
+    return DayOfWeek.entries[checkValidDayOfWeek(this) - 1]
 }
 
 /**
