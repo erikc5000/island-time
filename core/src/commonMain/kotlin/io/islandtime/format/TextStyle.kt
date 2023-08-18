@@ -21,12 +21,12 @@ enum class TextStyle {
     /**
      * Convert to a standalone style, if normal.
      */
-    fun asStandalone(): TextStyle = values()[ordinal or 1]
+    fun asStandalone(): TextStyle = entries[ordinal or 1]
 
     /**
      * Convert to a normal style, if standalone.
      */
-    fun asNormal(): TextStyle = values()[ordinal and 1.inv()]
+    fun asNormal(): TextStyle = entries[ordinal and 1.inv()]
 }
 
 /**

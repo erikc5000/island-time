@@ -176,7 +176,7 @@ enum class Month {
      */
     operator fun minus(months: Months): Month = plus(-(months.value % 12).toInt())
 
-    private fun plus(monthsToAdd: Int): Month = values()[(ordinal + (monthsToAdd + 12)) % 12]
+    private fun plus(monthsToAdd: Int): Month = entries[(ordinal + (monthsToAdd + 12)) % 12]
 
     companion object {
         inline val MIN: Month get() = JANUARY
@@ -192,5 +192,5 @@ fun Int.toMonth(): Month {
         throw DateTimeException("'$this' is not a valid month of the year")
     }
 
-    return Month.values()[this - 1]
+    return Month.entries[this - 1]
 }
