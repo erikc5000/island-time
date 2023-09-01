@@ -32,6 +32,7 @@ dokkaCore = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
 dokkaBase = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
 dokkaGfm = { module = "org.jetbrains.dokka:gfm-plugin", version.ref = "dokka" }
 dokkaGfmTemplateProcessing = { module = "org.jetbrains.dokka:gfm-template-processing-plugin", version.ref = "dokka" }
+dokkaAnalysisKotlinApi = { module = "org.jetbrains.dokka:analysis-kotlin-api", version.ref = "dokka" }
 javamath2kmp = { module = "dev.erikchristensen.javamath2kmp:javamath2kmp", version.ref = "javamath2kmp" }
 kotlinGradle = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

@@ -31,14 +31,17 @@ class MkdocsRenderer(
                 inlineCodeBlock { childrenCallback() }
                 buildParagraph()
             }
+
             node.hasStyle(TextStyle.Block) -> {
                 childrenCallback()
                 buildParagraph()
             }
+
             node.hasStyle(TextStyle.Paragraph) -> {
                 childrenCallback()
                 buildParagraph()
             }
+
             else -> childrenCallback()
         }
     }
@@ -377,6 +380,7 @@ class MkdocsRenderer(
                     },
                     ""
                 )
+
                 is RenderingStrategy.PageLocationResolvableWrite -> outputWriter.write(
                     path,
                     strategy.contentToResolve { pageToLocate, context ->
@@ -384,8 +388,10 @@ class MkdocsRenderer(
                     },
                     ""
                 )
+
                 RenderingStrategy.DoNothing -> Unit
             }
+
             else -> throw AssertionError(
                 "Page ${page.name} cannot be rendered by renderer as it is not renderer specific nor contains content"
             )
@@ -403,13 +409,19 @@ class MkdocsRenderer(
     private fun MarkdownContent.buildSourceSetTags(sourceSets: Set<DisplaySourceSet>) {
         val tags = sourceSets.joinToString(separator = " ") {
             val cssStyle = when (it.platform) {
-                Platform.common -> "source-set-common"
+                Platform.common -> if (it.name.lowercase().contains("darwin")) {
+                    "source-set-darwin"
+                } else {
+                    "source-set-common"
+                }
+
                 Platform.native -> "source-set-darwin"
                 Platform.jvm -> if (it.name.lowercase().contains("android")) {
                     "source-set-android"
                 } else {
                     "source-set-jvm"
                 }
+
                 else -> ""
             }
 
