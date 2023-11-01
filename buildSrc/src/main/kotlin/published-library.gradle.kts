@@ -19,7 +19,7 @@ tasks.register<DokkaTaskPartial>("dokkaMkdocsPartial") {
 val javadocJar by tasks.registering(Jar::class) {
     val dokkaHtml = tasks.named<DokkaTask>("dokkaHtml")
     dependsOn(dokkaHtml)
-    archiveClassifier.set("javadoc")
+    archiveClassifier = "javadoc"
     from(dokkaHtml.get().outputDirectory)
 }
 
@@ -73,26 +73,26 @@ publishing {
         }
 
         pom {
-            name.set(pomName)
-            description.set(pomDescription)
-            url.set(pomUrl)
+            name = pomName
+            description = pomDescription
+            url = pomUrl
             licenses {
                 license {
-                    name.set(pomLicenseName)
-                    url.set(pomLicenseUrl)
-                    distribution.set(pomLicenseDist)
+                    name = pomLicenseName
+                    url = pomLicenseUrl
+                    distribution = pomLicenseDist
                 }
             }
             developers {
                 developer {
-                    id.set(pomDeveloperId)
-                    name.set(pomDeveloperName)
+                    id = pomDeveloperId
+                    name = pomDeveloperName
 
                 }
             }
             scm {
-                connection.set(pomScmConnection)
-                url.set(pomScmUrl)
+                connection = pomScmConnection
+                url = pomScmUrl
             }
         }
     }
@@ -106,8 +106,8 @@ tasks.withType<AbstractDokkaLeafTask>().configureEach {
     dokkaSourceSets {
         configureEach {
             includes.from(project.file("MODULE.md"))
-            skipEmptyPackages.set(true)
-            skipDeprecated.set(true)
+            skipEmptyPackages = true
+            skipDeprecated = true
         }
     }
 }

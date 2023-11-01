@@ -10,11 +10,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    sourceSets {
-        getByName("main").java.srcDirs("src/main/kotlin")
-        getByName("androidTest").java.srcDirs("src/androidTest/kotlin")
-    }
-
     defaultConfig {
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

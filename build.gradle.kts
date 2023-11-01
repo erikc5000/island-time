@@ -25,7 +25,7 @@ tasks.register<DokkaMultiModuleTask>("dokkaMkdocsMultiModule") {
     // This is deprecated, but doesn't seem to have a replacement yet
     @Suppress("DEPRECATION")
     addSubprojectChildTasks("dokkaMkdocsPartial")
-    outputDirectory.set(file("$rootDir/docs/api"))
+    outputDirectory = file("$rootDir/docs/api")
 }
 
 tasks.register("codegen") {
