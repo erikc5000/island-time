@@ -386,11 +386,11 @@ private fun CodeBlockBuilder.buildWholeToStringCodeBlock(description: TemporalUn
 }
 
 fun ClassBuilder.buildPlusAndMinusOperatorFunctions(description: TemporalUnitDescription) =
-    TemporalUnitDescription.values()
+    TemporalUnitDescription.entries
         .map { description per it }
         .filter { it.isSupported() }
         .forEach { conversion ->
-            PlusOrMinusOperator.values().forEach { operator ->
+            PlusOrMinusOperator.entries.forEach { operator ->
                 buildPlusOrMinusOperatorFunction(conversion, operator, description)
             }
         }
@@ -490,7 +490,7 @@ private fun ClassBuilder.buildRemFunction(scalarPrimitive: KClass<*>, descriptio
 }
 
 private fun ClassBuilder.buildUnitConversionProperties(description: TemporalUnitDescription) {
-    TemporalUnitDescription.values()
+    TemporalUnitDescription.entries
         .map { otherUnit -> description per otherUnit }
         .filter { conversion -> conversion.isSupportedAndNecessary() }
         .forEach { conversion ->
@@ -577,10 +577,10 @@ private fun ClassBuilder.buildInSmallerUnitConversionProperties(
 }
 
 private fun ClassBuilder.buildToComponentValuesFunctions(thisUnit: TemporalUnitDescription) {
-    TemporalUnitDescription.values()
+    TemporalUnitDescription.entries
         .filter { it > thisUnit && thisUnit.per(it).isSupported() }
         .map { biggestUnit ->
-            val allComponentUnits = TemporalUnitDescription.values()
+            val allComponentUnits = TemporalUnitDescription.entries
                 .filter { it in thisUnit..biggestUnit }
                 .sortedDescending()
 

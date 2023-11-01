@@ -18,8 +18,8 @@ private fun buildDateConversionsFile() = file(
     fileName = "_Conversions",
     jvmName = "DateTimesKt"
 ) {
-    DateTimeDescription.values().forEach { receiverClass ->
-        DateTimeDescription.values()
+    DateTimeDescription.entries.forEach { receiverClass ->
+        DateTimeDescription.entries
             .filter { otherClass -> receiverClass.convertsDirectlyTo(otherClass) }
             .forEach { otherClass -> buildConversionFunction(from = receiverClass, to = otherClass) }
     }

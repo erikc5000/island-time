@@ -20,9 +20,9 @@ private fun buildConstantsFile() = file(
     fileName = "_Constants",
     jvmName = "ConstantsKt"
 ) {
-    TemporalUnitDescription.values()
+    TemporalUnitDescription.entries
         .flatMap { firstUnit ->
-            TemporalUnitDescription.values()
+            TemporalUnitDescription.entries
                 .filter { secondUnit -> secondUnit > firstUnit }
                 .map { secondUnit -> firstUnit per secondUnit }
                 .filter { conversion -> conversion.isSupportedAndNecessary() }

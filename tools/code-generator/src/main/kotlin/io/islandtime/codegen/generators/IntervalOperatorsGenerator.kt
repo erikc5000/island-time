@@ -19,7 +19,7 @@ private fun buildOperatorsFile() = file(
     fileName = "_Operators",
     jvmName = "RangesKt"
 ) {
-    IntervalDescription.values().forEach { buildOperatorsForClass(it) }
+    IntervalDescription.entries.forEach { buildOperatorsForClass(it) }
 }
 
 private fun FileBuilder.buildOperatorsForClass(receiverClass: IntervalDescription) {

@@ -19,7 +19,7 @@ private fun buildDatePropertiesFile() = file(
     fileName = "_DateProperties",
     jvmName = "DateTimesKt"
 ) {
-    DateTimeDescription.values()
+    DateTimeDescription.entries
         .filter { it.isDateBased && it.smallestUnit <= DAYS }
         .forEach { buildDatePropertiesForClass(it) }
 }
