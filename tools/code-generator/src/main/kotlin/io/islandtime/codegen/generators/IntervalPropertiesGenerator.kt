@@ -20,12 +20,12 @@ private fun buildPropertiesFile() = file(
     fileName = "_Properties",
     jvmName = "RangesKt"
 ) {
-    IntervalDescription.values().forEach { buildPropertiesForClass(it) }
+    IntervalDescription.entries.forEach { buildPropertiesForClass(it) }
     buildPropertiesForTimePoint()
 }
 
 private fun FileBuilder.buildPropertiesForClass(receiverClass: IntervalDescription) {
-    TemporalUnitDescription.values()
+    TemporalUnitDescription.entries
         .filter { unit ->
             unit >= receiverClass.elementDescription.smallestUnit &&
                 ((unit.isDateBased && receiverClass.isDateBased) || !receiverClass.isTimePointInterval)
@@ -48,7 +48,7 @@ private fun FileBuilder.buildPropertiesForClass(receiverClass: IntervalDescripti
 }
 
 private fun FileBuilder.buildPropertiesForTimePoint() {
-    TemporalUnitDescription.values()
+    TemporalUnitDescription.entries
         .filter { it.isTimeBased && !it.isDateBased }
         .forEach { unit ->
             buildLengthProperty(

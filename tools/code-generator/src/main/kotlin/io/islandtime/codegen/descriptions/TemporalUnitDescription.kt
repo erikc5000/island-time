@@ -105,7 +105,7 @@ data class TemporalUnitConversion(
         val (smallerUnit, largerUnit) = orderedFromSmallerToLargerUnit()
 
         (smallerUnit.ordinal until largerUnit.ordinal)
-            .map { TemporalUnitDescription.values()[it].conversionFactor.toLong() }
+            .map { TemporalUnitDescription.entries[it].conversionFactor.toLong() }
             .fold(1L) { total, factor -> Math.multiplyExact(total, factor) }
     }
 
