@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.9.21"
+kotlin = "1.9.22"
 dokka = "1.9.10"
 serialization = "1.6.2"
 atomicfu = "0.23.1"
