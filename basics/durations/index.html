@@ -1,0 +1,995 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Island Time - A Kotlin Multiplatform library for working with dates and times">
+      
+      
+        <meta name="author" content="Erik Christensen">
+      
+      
+        <link rel="canonical" href="https://islandtime.io/basics/durations/">
+      
+      
+        <link rel="prev" href="../dates-and-times/">
+      
+      
+        <link rel="next" href="../intervals/">
+      
+      
+      <link rel="icon" href="../../assets/images/logo.svg">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>Durations - Island Time</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#durations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Island Time" class="md-header__button md-logo" aria-label="Island Time" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Island Time
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Durations
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/erikc5000/island-time" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Island Time" class="md-nav__button md-logo" aria-label="Island Time" data-md-component="logo">
+      
+  <img src="../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Island Time
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/erikc5000/island-time" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    The Basics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            The Basics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dates-and-times/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dates and Times
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Durations
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Durations
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#single-unit-durations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Unit Durations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Duration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#period" class="md-nav__link">
+    <span class="md-ellipsis">
+      Period
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iso-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ISO Representation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intervals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ranges and Intervals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interoperating with Platform Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../formatting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../parsing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parsing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../serialization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serialization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../clocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced Topics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced Topics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../advanced/custom-providers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Providers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Extensions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Extensions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extensions/parcelize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parcelize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    core
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/extensions/parcelize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    parcelize-extensions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#single-unit-durations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Unit Durations
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#duration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Duration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#period" class="md-nav__link">
+    <span class="md-ellipsis">
+      Period
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iso-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      ISO Representation
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="durations">Durations<a class="headerlink" href="#durations" title="Permalink">&para;</a></h1>
+<p>In Island Time, durations are fully type-safe. The use of durations in terms of a single unit is encouraged where possible. Date-based periods in terms of multiple units and long time-based durations are also available.</p>
+<h2 id="single-unit-durations">Single Unit Durations<a class="headerlink" href="#single-unit-durations" title="Permalink">&para;</a></h2>
+<p>Island Time provides <a href="https://kotlinlang.org/docs/reference/inline-classes.html">value classes</a> representing each individual duration unit backed by a <code>Long</code> value &mdash; such as <code>Years</code>, <code>Hours</code>, or <code>Nanoseconds</code>. This allows the precision of each quantity to be maintained, avoids ambiguitity regarding the meaning of a day (ie. conceptual vs. 24 hours), and is quite efficient as well. When adding or subtracting quantities in mixed units, precision is increased automatically as needed. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// The minimum necessary unit granularity is preserved when</span>
+<span class="c1">// combining different units</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">totalSeconds</span><span class="p">:</span><span class="w"> </span><span class="n">Seconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5.</span><span class="n">hours</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">30.</span><span class="n">minutes</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1.</span><span class="n">seconds</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">nanoseconds</span><span class="p">:</span><span class="w"> </span><span class="n">Nanoseconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">totalSeconds</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1.</span><span class="n">nanoseconds</span>
+</code></pre></div>
+<p>A quantity in one unit can be broken down into parts in terms of "bigger" units using the <code>toComponents()</code> method.</p>
+<div class="highlight"><pre><span></span><code><span class="m">61.</span><span class="n">minutes</span><span class="p">.</span><span class="na">toComponents</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">hours</span><span class="p">:</span><span class="w"> </span><span class="n">Hours</span><span class="p">,</span><span class="w"> </span><span class="n">minutes</span><span class="p">:</span><span class="w"> </span><span class="n">Minutes</span><span class="w"> </span><span class="o">-&gt;</span>
+<span class="w">   </span><span class="n">println</span><span class="p">(</span><span class="n">hours</span><span class="p">)</span><span class="w"> </span><span class="c1">// PT1H</span>
+<span class="w">   </span><span class="n">println</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span><span class="w"> </span><span class="c1">// PT1M</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Or converted to another unit.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">hours</span><span class="p">:</span><span class="w"> </span><span class="n">Hours</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">60.</span><span class="n">minutes</span><span class="p">.</span><span class="na">inWholeHours</span>
+</code></pre></div>
+<p>You can also get the duration between two date-times in terms of any given unit, using companion methods such as <code>Hours.between()</code> or <code>Days.between()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">hours</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hours</span><span class="p">.</span><span class="na">between</span><span class="p">(</span><span class="n">firstDateTime</span><span class="p">,</span><span class="w"> </span><span class="n">secondDateTime</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">absHours</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hours</span><span class="p">.</span><span class="na">absoluteValue</span><span class="w"> </span><span class="c1">// hours may be negative</span>
+</code></pre></div>
+<h2 id="duration"><code>Duration</code><a class="headerlink" href="#duration" title="Permalink">&para;</a></h2>
+<p>The <a href="../../api/core/core/io.islandtime.measures/-duration/"><code>Duration</code></a> class can be used to represent time-based durations that are potentially very large at nanosecond precision. In most cases, it's probably unnecessary and single unit durations will be perfectly satisfactory, but you can be assured that overflow won't happen when expressing any duration that fits within the supported time scale.</p>
+<p>A single unit duration can be converted to a <code>Duration</code> like so:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">duration</span><span class="p">:</span><span class="w"> </span><span class="n">Duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5.</span><span class="n">seconds</span><span class="p">.</span><span class="na">asDuration</span><span class="p">()</span>
+</code></pre></div>
+<p>To construct a <code>Duration</code> from seconds and nanoseconds in a single step, you can use <code>durationOf()</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">duration</span><span class="p">:</span><span class="w"> </span><span class="n">Duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">durationOf</span><span class="p">(</span><span class="m">5.</span><span class="n">seconds</span><span class="p">,</span><span class="w"> </span><span class="m">100.</span><span class="n">nanoseconds</span><span class="p">)</span>
+</code></pre></div>
+<p>The methods and operators available to <code>Duration</code> are mostly the same as those on the single unit durations.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">duration</span><span class="p">:</span><span class="w"> </span><span class="n">Duration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Duration</span><span class="p">.</span><span class="na">between</span><span class="p">(</span><span class="n">firstDateTime</span><span class="p">,</span><span class="w"> </span><span class="n">secondDateTime</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">minutes</span><span class="p">:</span><span class="w"> </span><span class="n">Minutes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">duration</span><span class="p">.</span><span class="na">inMinutes</span>
+</code></pre></div>
+<h2 id="period"><code>Period</code><a class="headerlink" href="#period" title="Permalink">&para;</a></h2>
+<p>A <a href="../../api/core/core/io.islandtime.measures/-period/"><code>Period</code></a> is a date-based measurement of time consisting of a number of years, months, and days. The code below shows some of the things that you can do with it.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">period</span><span class="p">:</span><span class="w"> </span><span class="n">Period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">periodOf</span><span class="p">(</span><span class="m">5.</span><span class="n">years</span><span class="p">,</span><span class="w"> </span><span class="m">13.</span><span class="n">months</span><span class="p">,</span><span class="w"> </span><span class="m">10.</span><span class="n">days</span><span class="p">)</span>
+
+<span class="c1">// Convert months to years where appropriate</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">normalizedPeriod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">period</span><span class="p">.</span><span class="na">normalized</span><span class="p">()</span><span class="w"> </span><span class="c1">// 6.years, 1.months, 10.days</span>
+
+<span class="c1">// Units can be added or subtracted</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">modifiedPeriod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">period</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1.</span><span class="n">years</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">15.</span><span class="n">days</span><span class="w"> </span><span class="c1">// 5.years, 1.months, (-5).days</span>
+
+<span class="c1">// Or inverted</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">invertedPeriod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="n">period</span><span class="w"> </span><span class="c1">// (-5).years, (-13).months, (-10).days</span>
+
+<span class="c1">// The period can also be destructured</span>
+<span class="kd">val</span><span class="w"> </span><span class="p">(</span><span class="nv">years</span><span class="p">,</span><span class="w"> </span><span class="nv">months</span><span class="p">,</span><span class="w"> </span><span class="nv">days</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">period</span>
+
+<span class="c1">// We can also get the period between two dates</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">periodBetweenDates</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Period</span><span class="p">.</span><span class="na">between</span><span class="p">(</span><span class="n">date1</span><span class="p">,</span><span class="w"> </span><span class="n">date2</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="iso-representation">ISO Representation<a class="headerlink" href="#iso-representation" title="Permalink">&para;</a></h2>
+<p>Similar to date-times, calling <code>toString()</code> on any duration will return an ISO representation, such as <code>PT23H12M</code> or <code>P0D</code>. <code>String.toDuration()</code> or <code>String.toPeriod()</code> can be used to convert an ISO duration string into an object of the corresponding type.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">val</span><span class="w"> </span><span class="nv">period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">periodOf</span><span class="p">(</span><span class="m">5.</span><span class="n">years</span><span class="p">,</span><span class="w"> </span><span class="m">13.</span><span class="n">months</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="o">-</span><span class="m">10</span><span class="p">).</span><span class="na">days</span><span class="p">)</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">isoString</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">period</span><span class="p">.</span><span class="na">toString</span><span class="p">()</span><span class="w"> </span><span class="c1">// P5Y13M-10D</span>
+<span class="kd">val</span><span class="w"> </span><span class="nv">readPeriod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isoString</span><span class="p">.</span><span class="na">toPeriod</span><span class="p">()</span>
+</code></pre></div>
+<p>Currently, there's no way to represent a full ISO duration consisting of both date and time components and it's not possible to parse a string directly to a single duration unit. Some changes in this area are planned for the future.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+
+    <div class="md-copyright__highlight">
+    Copyright &copy; 2020-2024 Erik Christensen
+    </div>
+
+
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+        Material for MkDocs
+    </a>
+    | Icons made by
+    <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+    from
+    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "content.tabs.link"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1064 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Island Time - A Kotlin Multiplatform library for working with dates and times">
+      
+      
+        <meta name="author" content="Erik Christensen">
+      
+      
+        <link rel="canonical" href="https://islandtime.io/api/core/core/io.islandtime.measures/">
+      
+      
+      
+      
+      <link rel="icon" href="../../../../assets/images/logo.svg">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.3">
+    
+    
+      
+        <title>io.islandtime.measures - Island Time</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.50c56a3b.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#package-level-declarations" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Island Time" class="md-header__button md-logo" aria-label="Island Time" data-md-component="logo">
+      
+  <img src="../../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Island Time
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              io.islandtime.measures
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/erikc5000/island-time" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Island Time" class="md-nav__button md-logo" aria-label="Island Time" data-md-component="logo">
+      
+  <img src="../../../../assets/images/logo.svg" alt="logo">
+
+    </a>
+    Island Time
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/erikc5000/island-time" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    island-time
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    The Basics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            The Basics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/overview/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/dates-and-times/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Dates and Times
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/durations/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Durations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/intervals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Ranges and Intervals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/interop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Interoperating with Platform Libraries
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/formatting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Formatting
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/parsing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parsing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/serialization/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Serialization
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../basics/clocks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Clocks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced Topics
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced Topics
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../advanced/custom-providers/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom Providers
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Extensions
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Extensions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../extensions/parcelize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Parcelize
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    core
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../extensions/parcelize/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    parcelize-extensions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      Properties
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<p>//<a href="../../">core</a>/<a href="./">io.islandtime.measures</a></p>
+<h1 id="package-level-declarations">Package-level declarations<a class="headerlink" href="#package-level-declarations" title="Permalink">&para;</a></h1>
+<p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p>
+<p>Classes related to the measurement of time, including <code>Duration</code>, <code>Period</code>, and more specific units, such as <code>Hours</code> or <code>Years</code>.</p>
+<h2 id="types">Types<a class="headerlink" href="#types" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="-centuries/">Centuries</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-centuries/">Centuries</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-centuries/">Centuries</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-days/">Days</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-days/">Days</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-days/">Days</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-decades/">Decades</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-decades/">Decades</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-decades/">Decades</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-duration/">Duration</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@Serializable(with = <a href="../io.islandtime.serialization/-duration-iso-serializer/">DurationIsoSerializer::class</a>)<br><br>class <a href="-duration/">Duration</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-duration/">Duration</a>&gt; </code><br><br>A duration of time at nanosecond precision.</td>
+</tr>
+<tr>
+<td><a href="-hours/">Hours</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-hours/">Hours</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-hours/">Hours</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-microseconds/">Microseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-microseconds/">Microseconds</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-microseconds/">Microseconds</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-milliseconds/">Milliseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-milliseconds/">Milliseconds</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-milliseconds/">Milliseconds</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-minutes/">Minutes</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-minutes/">Minutes</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-minutes/">Minutes</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-months/">Months</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-months/">Months</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-months/">Months</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-nanoseconds/">Nanoseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-nanoseconds/">Nanoseconds</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-nanoseconds/">Nanoseconds</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-period/">Period</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@Serializable(with = <a href="../io.islandtime.serialization/-period-iso-serializer/">PeriodIsoSerializer::class</a>)<br><br>class <a href="-period/">Period</a></code><br><br>A date-based period of time, such as "2 years, 5 months, 16 days". Unlike <a href="-duration/">Duration</a>, which uses exact increments, a <a href="-period/">Period</a> works with conceptual days, months, and years, ignoring daylight savings and length differences.</td>
+</tr>
+<tr>
+<td><a href="-seconds/">Seconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-seconds/">Seconds</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-seconds/">Seconds</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-time-unit/">TimeUnit</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>enum <a href="-time-unit/">TimeUnit</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a>&lt;<a href="-time-unit/">TimeUnit</a>&gt; </code><br><br>A unit of time measurement.</td>
+</tr>
+<tr>
+<td><a href="-weeks/">Weeks</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-weeks/">Weeks</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-weeks/">Weeks</a>&gt; </code></td>
+</tr>
+<tr>
+<td><a href="-years/">Years</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>@<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-inline/index.html">JvmInline</a><br><br>value class <a href="-years/">Years</a>(val value: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>) : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/index.html">Comparable</a>&lt;<a href="-years/">Years</a>&gt; </code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="properties">Properties<a class="headerlink" href="#properties" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="centuries/">centuries</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="centuries/">centuries</a>: <a href="-centuries/">Centuries</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="centuries/">centuries</a>: <a href="-centuries/">Centuries</a></code><br><br>Converts this value to a duration of centuries.</td>
+</tr>
+<tr>
+<td><a href="days/">days</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="days/">days</a>: <a href="-days/">Days</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="days/">days</a>: <a href="-days/">Days</a></code><br><br>Converts this value to a duration of days.</td>
+</tr>
+<tr>
+<td><a href="decades/">decades</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="decades/">decades</a>: <a href="-decades/">Decades</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="decades/">decades</a>: <a href="-decades/">Decades</a></code><br><br>Converts this value to a duration of decades.</td>
+</tr>
+<tr>
+<td><a href="hours/">hours</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="hours/">hours</a>: <a href="-hours/">Hours</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="hours/">hours</a>: <a href="-hours/">Hours</a></code><br><br>Converts this value to a duration of hours.</td>
+</tr>
+<tr>
+<td><a href="microseconds/">microseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="microseconds/">microseconds</a>: <a href="-microseconds/">Microseconds</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="microseconds/">microseconds</a>: <a href="-microseconds/">Microseconds</a></code><br><br>Converts this value to a duration of microseconds.</td>
+</tr>
+<tr>
+<td><a href="milliseconds/">milliseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="milliseconds/">milliseconds</a>: <a href="-milliseconds/">Milliseconds</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="milliseconds/">milliseconds</a>: <a href="-milliseconds/">Milliseconds</a></code><br><br>Converts this value to a duration of milliseconds.</td>
+</tr>
+<tr>
+<td><a href="minutes/">minutes</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="minutes/">minutes</a>: <a href="-minutes/">Minutes</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="minutes/">minutes</a>: <a href="-minutes/">Minutes</a></code><br><br>Converts this value to a duration of minutes.</td>
+</tr>
+<tr>
+<td><a href="months/">months</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="months/">months</a>: <a href="-months/">Months</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="months/">months</a>: <a href="-months/">Months</a></code><br><br>Converts this value to a duration of months.</td>
+</tr>
+<tr>
+<td><a href="nanoseconds/">nanoseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="nanoseconds/">nanoseconds</a>: <a href="-nanoseconds/">Nanoseconds</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="nanoseconds/">nanoseconds</a>: <a href="-nanoseconds/">Nanoseconds</a></code><br><br>Converts this value to a duration of nanoseconds.</td>
+</tr>
+<tr>
+<td><a href="seconds/">seconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="seconds/">seconds</a>: <a href="-seconds/">Seconds</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="seconds/">seconds</a>: <a href="-seconds/">Seconds</a></code><br><br>Converts this value to a duration of seconds.</td>
+</tr>
+<tr>
+<td><a href="weeks/">weeks</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="weeks/">weeks</a>: <a href="-weeks/">Weeks</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="weeks/">weeks</a>: <a href="-weeks/">Weeks</a></code><br><br>Converts this value to a duration of weeks.</td>
+</tr>
+<tr>
+<td><a href="years/">years</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="years/">years</a>: <a href="-years/">Years</a></code><br><br><code>val <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="years/">years</a>: <a href="-years/">Years</a></code><br><br>Converts this value to a duration of years.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions">Functions<a class="headerlink" href="#functions" title="Permalink">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="abs/">abs</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="abs/">abs</a>(duration: <a href="-duration/">Duration</a>): <a href="-duration/">Duration</a></code><br><br>Returns the absolute value of a <a href="abs/">duration</a>.</td>
+</tr>
+<tr>
+<td><a href="as-duration/">asDuration</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="-days/">Days</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-hours/">Hours</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-microseconds/">Microseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-milliseconds/">Milliseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-minutes/">Minutes</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-nanoseconds/">Nanoseconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code><br><br><code>fun <a href="-seconds/">Seconds</a>.<a href="as-duration/">asDuration</a>(): <a href="-duration/">Duration</a></code></td>
+</tr>
+<tr>
+<td><a href="as-period/">asPeriod</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="-days/">Days</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="-months/">Months</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of months.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="-weeks/">Weeks</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of weeks.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="-years/">Years</a>.<a href="as-period/">asPeriod</a>(): <a href="-period/">Period</a></code><br><br>Converts this duration into a <a href="-period/">Period</a> with the same number of years.</td>
+</tr>
+<tr>
+<td><a href="duration-of/">durationOf</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(days: <a href="-days/">Days</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of 24-hour days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(hours: <a href="-hours/">Hours</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of hours.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(microseconds: <a href="-microseconds/">Microseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of microseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(milliseconds: <a href="-milliseconds/">Milliseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of milliseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(minutes: <a href="-minutes/">Minutes</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of minutes.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(nanoseconds: <a href="-nanoseconds/">Nanoseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of nanoseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-seconds/">Seconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a> of seconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="duration-of/">durationOf</a>(seconds: <a href="-seconds/">Seconds</a>, nanoseconds: <a href="-nanoseconds/">Nanoseconds</a>): <a href="-duration/">Duration</a></code><br><br>Creates a <a href="-duration/">Duration</a>.</td>
+</tr>
+<tr>
+<td><a href="minus/">minus</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="-days/">Days</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-months/">Months</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-weeks/">Weeks</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-years/">Years</a>.<a href="minus/">minus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code></td>
+</tr>
+<tr>
+<td><a href="period-of/">periodOf</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="period-of/">periodOf</a>(days: <a href="-days/">Days</a>): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(weeks: <a href="-weeks/">Weeks</a>): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(months: <a href="-months/">Months</a>, days: <a href="-days/">Days</a> = 0.days): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(years: <a href="-years/">Years</a>, days: <a href="-days/">Days</a>): <a href="-period/">Period</a></code><br><br><code>fun <a href="period-of/">periodOf</a>(years: <a href="-years/">Years</a>, months: <a href="-months/">Months</a> = 0.months, days: <a href="-days/">Days</a> = 0.days): <a href="-period/">Period</a></code><br><br>Creates a <a href="-period/">Period</a>.</td>
+</tr>
+<tr>
+<td><a href="plus/">plus</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="-days/">Days</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-months/">Months</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-weeks/">Weeks</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="-years/">Years</a>.<a href="plus/">plus</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code></td>
+</tr>
+<tr>
+<td><a href="times/">times</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(centuries: <a href="-centuries/">Centuries</a>): <a href="-centuries/">Centuries</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(centuries: <a href="-centuries/">Centuries</a>): <a href="-centuries/">Centuries</a></code><br><br>Multiplies this value by a duration of centuries.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(days: <a href="-days/">Days</a>): <a href="-days/">Days</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(days: <a href="-days/">Days</a>): <a href="-days/">Days</a></code><br><br>Multiplies this value by a duration of days.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(decades: <a href="-decades/">Decades</a>): <a href="-decades/">Decades</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(decades: <a href="-decades/">Decades</a>): <a href="-decades/">Decades</a></code><br><br>Multiplies this value by a duration of decades.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(duration: <a href="-duration/">Duration</a>): <a href="-duration/">Duration</a></code><br><br>Multiplies this value by a duration.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(hours: <a href="-hours/">Hours</a>): <a href="-hours/">Hours</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(hours: <a href="-hours/">Hours</a>): <a href="-hours/">Hours</a></code><br><br>Multiplies this value by a duration of hours.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(microseconds: <a href="-microseconds/">Microseconds</a>): <a href="-microseconds/">Microseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(microseconds: <a href="-microseconds/">Microseconds</a>): <a href="-microseconds/">Microseconds</a></code><br><br>Multiplies this value by a duration of microseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(milliseconds: <a href="-milliseconds/">Milliseconds</a>): <a href="-milliseconds/">Milliseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(milliseconds: <a href="-milliseconds/">Milliseconds</a>): <a href="-milliseconds/">Milliseconds</a></code><br><br>Multiplies this value by a duration of milliseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(minutes: <a href="-minutes/">Minutes</a>): <a href="-minutes/">Minutes</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(minutes: <a href="-minutes/">Minutes</a>): <a href="-minutes/">Minutes</a></code><br><br>Multiplies this value by a duration of minutes.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(months: <a href="-months/">Months</a>): <a href="-months/">Months</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(months: <a href="-months/">Months</a>): <a href="-months/">Months</a></code><br><br>Multiplies this value by a duration of months.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(nanoseconds: <a href="-nanoseconds/">Nanoseconds</a>): <a href="-nanoseconds/">Nanoseconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(nanoseconds: <a href="-nanoseconds/">Nanoseconds</a>): <a href="-nanoseconds/">Nanoseconds</a></code><br><br>Multiplies this value by a duration of nanoseconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(period: <a href="-period/">Period</a>): <a href="-period/">Period</a></code><br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(seconds: <a href="-seconds/">Seconds</a>): <a href="-seconds/">Seconds</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(seconds: <a href="-seconds/">Seconds</a>): <a href="-seconds/">Seconds</a></code><br><br>Multiplies this value by a duration of seconds.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(weeks: <a href="-weeks/">Weeks</a>): <a href="-weeks/">Weeks</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(weeks: <a href="-weeks/">Weeks</a>): <a href="-weeks/">Weeks</a></code><br><br>Multiplies this value by a duration of weeks.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a>.<a href="times/">times</a>(years: <a href="-years/">Years</a>): <a href="-years/">Years</a></code><br><br><code>operator fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a>.<a href="times/">times</a>(years: <a href="-years/">Years</a>): <a href="-years/">Years</a></code><br><br>Multiplies this value by a duration of years.</td>
+</tr>
+<tr>
+<td><a href="to-duration/">toDuration</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-duration/">toDuration</a>(): <a href="-duration/">Duration</a></code><br><br>Converts an ISO-8601 duration string to a <a href="-duration/">Duration</a>.<br><br><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-duration/">toDuration</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-duration/">Duration</a></code><br><br>Converts a string to a <a href="-duration/">Duration</a> using <a href="to-duration/">parser</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-days/">toIslandDays</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-days/">toIslandDays</a>(): <a href="-days/">Days</a></code><br><br>Converts this duration to Island Time <a href="-days/">Days</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-duration/">toIslandDuration</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-duration/">toIslandDuration</a>(): <a href="-duration/">Duration</a></code><br><br>Converts this duration to an equivalent Island Time <a href="-duration/">Duration</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-hours/">toIslandHours</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-hours/">toIslandHours</a>(): <a href="-hours/">Hours</a></code><br><br>Converts this duration to Island Time <a href="-hours/">Hours</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-microseconds/">toIslandMicroseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-microseconds/">toIslandMicroseconds</a>(): <a href="-microseconds/">Microseconds</a></code><br><br>Converts this duration to Island Time <a href="-microseconds/">Microseconds</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-milliseconds/">toIslandMilliseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-milliseconds/">toIslandMilliseconds</a>(): <a href="-milliseconds/">Milliseconds</a></code><br><br>Converts this duration to Island Time <a href="-milliseconds/">Milliseconds</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-minutes/">toIslandMinutes</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-minutes/">toIslandMinutes</a>(): <a href="-minutes/">Minutes</a></code><br><br>Converts this duration to Island Time <a href="-minutes/">Minutes</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-nanoseconds/">toIslandNanoseconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-nanoseconds/">toIslandNanoseconds</a>(): <a href="-nanoseconds/">Nanoseconds</a></code><br><br>Converts this duration to Island Time <a href="-nanoseconds/">Nanoseconds</a>.</td>
+</tr>
+<tr>
+<td><a href="to-island-seconds/">toIslandSeconds</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.time/-duration/index.html">Duration</a>.<a href="to-island-seconds/">toIslandSeconds</a>(): <a href="-seconds/">Seconds</a></code><br><br>Converts this duration to Island Time <a href="-seconds/">Seconds</a>.</td>
+</tr>
+<tr>
+<td><a href="to-period/">toPeriod</a></td>
+<td><p style="text-align: right"><span class="source-set-common source-set-tag">common</span></p><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-period/">toPeriod</a>(): <a href="-period/">Period</a></code><br><br><code>fun <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a>.<a href="to-period/">toPeriod</a>(parser: <a href="../io.islandtime.parser/-date-time-parser/">DateTimeParser</a>, settings: <a href="../io.islandtime.parser/-date-time-parser-settings/">DateTimeParserSettings</a> = DateTimeParserSettings.DEFAULT): <a href="-period/">Period</a></code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+
+    <div class="md-copyright__highlight">
+    Copyright &copy; 2020-2024 Erik Christensen
+    </div>
+
+
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+        Material for MkDocs
+    </a>
+    | Icons made by
+    <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
+    from
+    <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.instant", "content.tabs.link"], "search": "../../../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7c377c4.min.js"></script>
+      
+    
+  </body>
+</html>
