@@ -98,6 +98,11 @@ publishing {
     }
 }
 
+tasks.withType<AbstractPublishToMaven>().configureEach {
+    val signingTasks = tasks.withType<Sign>()
+    mustRunAfter(signingTasks)
+}
+
 tasks.withType<AbstractDokkaLeafTask>().configureEach {
     val pomArtifactId: String? by project
     val pomMppArtifactId: String? by project
