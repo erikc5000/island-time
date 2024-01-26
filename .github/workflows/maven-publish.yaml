@@ -22,7 +22,7 @@ jobs:
           java-version: '17'
 
       - name: Configure Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
 
       - name: Cache Konan
         uses: actions/cache@v4
