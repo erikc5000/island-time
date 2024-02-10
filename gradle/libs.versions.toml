@@ -25,7 +25,7 @@ androidGradle = { module = "com.android.tools.build:gradle", version.ref = "andr
 androidDesugarJdkLibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 androidxTestRunner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxTestOrchestrator" }
-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+atomicfu = { module = "org.jetbrains.kotlin:atomicfu", version.ref = "kotlin" }
 atomicfuGradle = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "atomicfu" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 dokkaCore = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
