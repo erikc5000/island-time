@@ -9,6 +9,7 @@ plugins {
 buildscript {
     dependencies {
         classpath(libs.atomicfuGradle)
+        classpath(libs.atomicfu)
     }
 }
 
