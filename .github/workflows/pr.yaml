@@ -8,7 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest ]
+    runs-on: ${{matrix.os}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -20,7 +23,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Configure Gradle
         uses: gradle/gradle-build-action@v3
@@ -36,6 +39,7 @@ jobs:
       - name: Cache AVD
         uses: actions/cache@v4
         id: avd-cache
+        if: matrix.os == 'ubuntu-latest'
         with:
           path: |
             ~/.android/avd/*
@@ -43,7 +47,7 @@ jobs:
           key: avd
 
       - name: Create AVD and generate snapshot
-        if: steps.avd-cache.outputs.cache-hit != 'true'
+        if: steps.avd-cache.outputs.cache-hit != 'true' && matrix.os == 'ubuntu-latest'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 24
@@ -53,10 +57,15 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       - name: Build and test
+        if: matrix.os == 'macos-latest'
+        run: ./gradlew build
+
+      - name: Run Android emulator tests
+        if: matrix.os == 'ubuntu-latest'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 24
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew build connectedCheck
+          script: ./gradlew connectedCheck
