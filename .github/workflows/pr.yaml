@@ -13,6 +13,13 @@ jobs:
         os: [ macos-latest, ubuntu-latest ]
     runs-on: ${{matrix.os}}
     steps:
+      - name: Enable KVM group permissions
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -23,7 +30,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '17'
 
       - name: Configure Gradle
         uses: gradle/gradle-build-action@v3
@@ -59,13 +66,6 @@ jobs:
       - name: Build and test
         if: matrix.os == 'macos-latest'
         run: ./gradlew build
-
-      - name: Enable KVM group permissions
-        if: matrix.os == 'ubuntu-latest'
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
 
       - name: Run Android emulator tests
         if: matrix.os == 'ubuntu-latest'
