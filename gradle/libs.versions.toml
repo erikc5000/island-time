@@ -1,7 +1,7 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "1.9.23"
 dokka = "1.9.10"
-serialization = "1.7.1"
+serialization = "1.6.3"
 atomicfu = "0.24.0"
 javamath2kmp = "1.1"
 kotlinpoet = "1.16.0"
@@ -9,8 +9,8 @@ kover = "0.7.6"
 truth = "1.4.2"
 androidGradle = "8.5.1"
 androidDesugarJdkLibs = "2.0.4"
-androidxTestOrchestrator = "1.5.0"
-androidxTestRunner = "1.6.1"
+androidxTestOrchestrator = "1.4.2"
+androidxTestRunner = "1.5.2"
 
 [plugins]
 atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
