@@ -10,7 +10,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ macos-latest, ubuntu-latest ]
+        os: [ macos-13, ubuntu-latest ]
     runs-on: ${{matrix.os}}
     steps:
       - name: Checkout
@@ -44,7 +44,7 @@ jobs:
             ${{ runner.os }}-konan-
 
       - name: Build and test
-        if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-13'
         run: ./gradlew build
 
       - name: Run Android emulator tests
