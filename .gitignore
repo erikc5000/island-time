@@ -2,6 +2,7 @@
 !/.idea/codeStyleSettings.xml
 !/.idea/codeStyles
 .gradle/
+.kotlin/
 build/
 docs/api/
 site/

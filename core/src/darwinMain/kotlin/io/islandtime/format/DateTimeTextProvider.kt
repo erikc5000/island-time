@@ -21,7 +21,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         val locale: Locale
     )
 
-    override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
+    actual override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList {
         if (styles.isEmpty() || !supports(field)) {
             return emptyList()
         }

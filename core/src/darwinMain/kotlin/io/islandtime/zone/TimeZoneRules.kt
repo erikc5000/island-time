@@ -29,13 +29,13 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
     private val cachedRegionIds = (NSTimeZone.knownTimeZoneNames as List<String>).toSet()
 
     override val databaseVersion: String get() = NSTimeZone.timeZoneDataVersion
-    override val availableRegionIds: Set<String> get() = cachedRegionIds
+    actual override val availableRegionIds: Set<String> get() = cachedRegionIds
 
-    override fun hasRulesFor(regionId: String): Boolean {
+    actual override fun hasRulesFor(regionId: String): Boolean {
         return cachedRegionIds.contains(regionId) || NSTimeZone.timeZoneWithName(regionId) != null
     }
 
-    override fun rulesFor(regionId: String): TimeZoneRules {
+    actual override fun rulesFor(regionId: String): TimeZoneRules {
         return timeZoneRules.getOrPut(regionId) {
             DarwinTimeZoneRules(
                 NSTimeZone.timeZoneWithName(regionId)

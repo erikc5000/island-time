@@ -23,7 +23,7 @@ actual object PlatformDateTimeTextProvider : DateTimeTextProvider {
         val locale: Locale
     )
 
-    override fun parsableTextFor(
+    actual override fun parsableTextFor(
         field: DateTimeField,
         styles: Set<TextStyle>,
         locale: Locale
