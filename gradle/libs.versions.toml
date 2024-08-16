@@ -7,10 +7,10 @@ javamath2kmp = "1.1"
 kotlinpoet = "1.18.1"
 kover = "0.8.3"
 truth = "1.4.4"
-androidGradle = "8.5.1"
+androidGradle = "8.5.2"
 androidDesugarJdkLibs = "2.0.4"
 androidxTestOrchestrator = "1.5.0"
-androidxTestRunner = "1.6.1"
+androidxTestRunner = "1.6.2"
 
 [plugins]
 atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
