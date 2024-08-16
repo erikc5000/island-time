@@ -28,14 +28,14 @@ actual object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
             throw TimeZoneRulesException(e.message, e)
         }
 
-    override val availableRegionIds: Set<String>
+    actual override val availableRegionIds: Set<String>
         get() = ZoneId.getAvailableZoneIds()
 
-    override fun hasRulesFor(regionId: String): Boolean {
+    actual override fun hasRulesFor(regionId: String): Boolean {
         return availableRegionIds.contains(regionId)
     }
 
-    override fun rulesFor(regionId: String): TimeZoneRules {
+    actual override fun rulesFor(regionId: String): TimeZoneRules {
         return try {
             JavaTimeZoneRules(ZoneId.of(regionId).rules)
         } catch (e: ZoneRulesException) {

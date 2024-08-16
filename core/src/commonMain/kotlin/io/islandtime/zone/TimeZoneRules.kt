@@ -58,7 +58,11 @@ interface TimeZoneRulesProvider {
 /**
  * The default time zone rules provider implementation for the current platform.
  */
-expect object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider
+expect object PlatformTimeZoneRulesProvider : TimeZoneRulesProvider {
+    override val availableRegionIds: Set<String>
+    override fun hasRulesFor(regionId: String): Boolean
+    override fun rulesFor(regionId: String): TimeZoneRules
+}
 
 /**
  * A discontinuity in the local timeline, usually caused by daylight savings time changes.

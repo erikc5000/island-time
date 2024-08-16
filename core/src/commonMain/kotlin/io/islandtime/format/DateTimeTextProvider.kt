@@ -138,4 +138,6 @@ interface DateTimeTextProvider {
 /**
  * The default provider of localized date-time text for the current platform.
  */
-expect object PlatformDateTimeTextProvider : DateTimeTextProvider
+expect object PlatformDateTimeTextProvider : DateTimeTextProvider {
+    override fun parsableTextFor(field: DateTimeField, styles: Set<TextStyle>, locale: Locale): ParsableTextList
+}
