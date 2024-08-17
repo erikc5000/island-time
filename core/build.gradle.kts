@@ -1,6 +1,6 @@
 plugins {
     `published-mpp-library`
-    id("kotlinx-atomicfu")
+    alias(libs.plugins.atomicfu)
     alias(libs.plugins.serialization)
     alias(libs.plugins.kover)
 }
