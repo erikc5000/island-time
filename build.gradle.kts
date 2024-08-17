@@ -6,13 +6,6 @@ plugins {
     alias(libs.plugins.kover)
 }
 
-buildscript {
-    dependencies {
-        classpath(libs.atomicfuGradle)
-        classpath(libs.atomicfu)
-    }
-}
-
 dependencies {
     kover(project(":core"))
 }

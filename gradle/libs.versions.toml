@@ -13,7 +13,7 @@ androidxTestOrchestrator = "1.5.0"
 androidxTestRunner = "1.6.2"
 
 [plugins]
-atomicfu = { id = "kotlinx-atomicfu", version.ref = "atomicfu" }
+atomicfu = { id = "org.jetbrains.kotlinx.atomicfu", version.ref = "atomicfu" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -25,8 +25,6 @@ androidGradle = { module = "com.android.tools.build:gradle", version.ref = "andr
 androidDesugarJdkLibs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
 androidxTestRunner = { module = "androidx.test:runner", version.ref = "androidxTestRunner" }
 androidxTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "androidxTestOrchestrator" }
-atomicfu = { module = "org.jetbrains.kotlin:atomicfu", version.ref = "kotlin" }
-atomicfuGradle = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "atomicfu" }
 dokka = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
 dokkaCore = { module = "org.jetbrains.dokka:dokka-core", version.ref = "dokka" }
 dokkaBase = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
