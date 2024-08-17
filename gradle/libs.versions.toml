@@ -2,7 +2,7 @@
 kotlin = "2.0.10"
 dokka = "1.9.10"
 serialization = "1.7.1"
-atomicfu = "0.24.0"
+atomicfu = "0.25.0"
 javamath2kmp = "1.1"
 kotlinpoet = "1.18.1"
 kover = "0.8.3"
