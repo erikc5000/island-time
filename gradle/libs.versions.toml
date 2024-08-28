@@ -8,7 +8,7 @@ kotlinpoet = "1.18.1"
 kover = "0.8.3"
 truth = "1.4.4"
 androidGradle = "8.5.2"
-androidDesugarJdkLibs = "2.0.4"
+androidDesugarJdkLibs = "2.1.1"
 androidxTestOrchestrator = "1.5.0"
 androidxTestRunner = "1.6.2"
 
