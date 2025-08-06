@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.21"
-dokka = "1.9.10"
+dokka = "1.9.20"
 serialization = "1.7.3"
 atomicfu = "0.25.0"
 javamath2kmp = "1.1"
